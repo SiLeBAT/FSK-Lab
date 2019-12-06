@@ -800,7 +800,12 @@ const ui = {
         "type": "text",
         "description": "A default value for the parameter. This is mandatory (needs to be provided) for all parameters of type 'Input'"
     },
-    // TODO: reference
+    {
+        "id": "reference",
+        "label": "Reference",
+        "type": "text",
+        "description": ""
+    },
     {
         "id": "variabilitySubject",
         "label": "Variability subject",

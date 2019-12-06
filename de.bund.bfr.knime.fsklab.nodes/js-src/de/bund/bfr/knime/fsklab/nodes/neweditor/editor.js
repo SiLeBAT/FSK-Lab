@@ -17,6 +17,25 @@ fskeditorjs = function () {
     });
   }
 
+  /** Temporary workaround for some metadata glitches. */
+  function metadataFix() {
+    // Ignore temporarily publication type
+    // TODO: publicationType takes the abbreviation instead of the full string
+    // used in the Reference dialog. Since KNIME runs getComponentValue twice,
+    // the value cannot be converted here. The 1st call to getComponentValue
+    // would get the abbreviation but the 2nd call would corrupt it. The HTML
+    // select should instead use the full string as label and the abreviation
+    // as value.
+    _metadata.generalInformation.reference.forEach(ref => delete ref.publicationType);
+
+    /* TODO: Ignore temporarily reference.
+    The reference property is of type Reference in the schema. Unfortunately,
+    nested dialogs are not supported in Bootstrap, so the type is changed
+    in the UI schema to text. Since the text type cannot be deserialized to
+    Reference, the values are discarded temporarily here.*/
+    _metadata.modelMath.parameter.forEach(param => delete param.reference);
+  }
+
   // Handler for generic model schema
   class GenericModel {
 
@@ -34,15 +53,6 @@ fskeditorjs = function () {
       _metadata.generalInformation.creator = this.panels.creator.data;
       _metadata.generalInformation.reference = this.panels.reference.data;
 
-      // Ignore temporarily publication type
-      // TODO: publicationType takes the abbreviation instead of the full string
-      // used in the Reference dialog. Since KNIME runs getComponentValue twice,
-      // the value cannot be converted here. The 1st call to getComponentValue
-      // would get the abbreviation but the 2nd call would corrupt it. The HTML
-      // select should instead use the full string as label and the abreviation
-      // as value.
-      _metadata.generalInformation.reference.forEach(ref => ref.publicationType = null);
-
       // Scope
       _metadata.scope = this.panels.scopeGeneral.data;
       _metadata.scope.product = this.panels.product.data;
@@ -59,11 +69,15 @@ fskeditorjs = function () {
       // Model math
       _metadata.modelMath = this.panels.modelMath.data;
       _metadata.modelMath.parameter = this.panels.parameter.data;
+      _metadata.modelMath.parameter.forEach(param => delete param.reference);
+
       _metadata.modelMath.qualityMeasures = this.panels.qualityMeasures.data;
       _metadata.modelMath.modelEquation = this.panels.modelEquation.data;
       _metadata.modelMath.exposure = this.panels.exposure.data;
 
       _metadata.modelType = "GenericModel";
+
+      metadataFix(); 
 
       return _metadata;
     }
@@ -158,15 +172,6 @@ fskeditorjs = function () {
       _metadata.generalInformation.creator = this.panels.creator.data;
       _metadata.generalInformation.reference = this.panels.reference.data;
 
-      // Ignore temporarily publication type
-      // TODO: publicationType takes the abbreviation instead of the full string
-      // used in the Reference dialog. Since KNIME runs getComponentValue twice,
-      // the value cannot be converted here. The 1st call to getComponentValue
-      // would get the abbreviation but the 2nd call would corrupt it. The HTML
-      // select should instead use the full string as label and the abreviation
-      // as value.
-      _metadata.generalInformation.reference.forEach(ref => ref.publicationType = null);
-
       // Scope
       _metadata.scope = this.panels.scopeGeneral.data;
       _metadata.scope.product = this.panels.product.data;
@@ -184,6 +189,8 @@ fskeditorjs = function () {
       _metadata.modelMath.parameter = this.panels.parameter.data;
 
       _metadata.modelType = "DataModel";
+
+      metadataFix();
 
       return _metadata;
     }
@@ -237,7 +244,6 @@ fskeditorjs = function () {
       this.menus = this._createMenus();
     }
 
-    // TODO: update get metaData
     get metaData() {
 
       // generalInformation
@@ -246,15 +252,6 @@ fskeditorjs = function () {
       _metadata.generalInformation.author = this.panels.author.data;
       _metadata.generalInformation.creator = this.panels.creator.data;
       _metadata.generalInformation.reference = this.panels.reference.data;
-
-      // Ignore temporarily publication type
-      // TODO: publicationType takes the abbreviation instead of the full string
-      // used in the Reference dialog. Since KNIME runs getComponentValue twice,
-      // the value cannot be converted here. The 1st call to getComponentValue
-      // would get the abbreviation but the 2nd call would corrupt it. The HTML
-      // select should instead use the full string as label and the abreviation
-      // as value.
-      _metadata.generalInformation.reference.forEach(ref => ref.publicationType = null);
 
       // Scope
       _metadata.scope = this.panels.scopeGeneral.data;
@@ -277,6 +274,8 @@ fskeditorjs = function () {
       _metadata.modelMath.exposure = this.panels.exposure.data;
 
       _metadata.modelType = "PredictiveModel";
+
+      metadataFix();
 
       return _metadata;
     }
@@ -345,15 +344,6 @@ fskeditorjs = function () {
       _metadata.generalInformation.creator = this.panels.creator.data;
       _metadata.generalInformation.reference = this.panels.reference.data;
 
-      // Ignore temporarily publication type
-      // TODO: publicationType takes the abbreviation instead of the full string
-      // used in the Reference dialog. Since KNIME runs getComponentValue twice,
-      // the value cannot be converted here. The 1st call to getComponentValue
-      // would get the abbreviation but the 2nd call would corrupt it. The HTML
-      // select should instead use the full string as label and the abreviation
-      // as value.
-      _metadata.generalInformation.reference.forEach(ref => ref.publicationType = null);
-
       // scope
       _metadata.scope = this.panels.scopeGeneral.data;
       _metadata.scope.product = this.panels.product.data;
@@ -373,6 +363,8 @@ fskeditorjs = function () {
       _metadata.modelMath.modelEquation = this.panels.modelEquation.data;
 
       _metadata.modelType = "OtherModel";
+
+      metadataFix();
 
       return _metadata;
     }
@@ -451,15 +443,6 @@ fskeditorjs = function () {
       _metadata.generalInformation.creator = this.panels.creator.data;
       _metadata.generalInformation.reference = this.panels.reference.data;
 
-      // Ignore temporarily publication type
-      // TODO: publicationType takes the abbreviation instead of the full string
-      // used in the Reference dialog. Since KNIME runs getComponentValue twice,
-      // the value cannot be converted here. The 1st call to getComponentValue
-      // would get the abbreviation but the 2nd call would corrupt it. The HTML
-      // select should instead use the full string as label and the abreviation
-      // as value.
-      _metadata.generalInformation.reference.forEach(ref => ref.publicationType = null);
-
       // scope
       _metadata.scope = this.panels.scopeGeneral.data;
       _metadata.scope.hazard = this.panels.hazard.data;
@@ -479,6 +462,8 @@ fskeditorjs = function () {
       _metadata.modelMath.exposure = this.panels.exposure.data;
 
       _metadata.modelType = "DoseResponseModel";
+
+      metadataFix();
 
       return _metadata;
     }
@@ -555,15 +540,6 @@ fskeditorjs = function () {
       _metadata.generalInformation.creator = this.panels.creator.data;
       _metadata.generalInformation.reference = this.panels.reference.data;
 
-      // Ignore temporarily publication type
-      // TODO: publicationType takes the abbreviation instead of the full string
-      // used in the Reference dialog. Since KNIME runs getComponentValue twice,
-      // the value cannot be converted here. The 1st call to getComponentValue
-      // would get the abbreviation but the 2nd call would corrupt it. The HTML
-      // select should instead use the full string as label and the abreviation
-      // as value.
-      _metadata.generalInformation.reference.forEach(ref => ref.publicationType = null);
-
       // Scope
       _metadata.scope = this.panels.scopeGeneral.data;
       _metadata.scope.hazard = this.panels.hazard.data;
@@ -584,6 +560,8 @@ fskeditorjs = function () {
       _metadata.modelMath.exposure = this.panels.exposure.data;
 
       _metadata.modelType = "ToxicologicalModel";
+
+      metadataFix();
 
       return _metadata;
     }
@@ -662,15 +640,6 @@ fskeditorjs = function () {
       _metadata.generalInformation.creator = this.panels.creator.data;
       _metadata.generalInformation.reference = this.panels.reference.data;
 
-      // Ignore temporarily publication type
-      // TODO: publicationType takes the abbreviation instead of the full string
-      // used in the Reference dialog. Since KNIME runs getComponentValue twice,
-      // the value cannot be converted here. The 1st call to getComponentValue
-      // would get the abbreviation but the 2nd call would corrupt it. The HTML
-      // select should instead use the full string as label and the abreviation
-      // as value.
-      _metadata.generalInformation.reference.forEach(ref => ref.publicationType = null);
-
       // scope
       _metadata.scope = this.panels.scopeGeneral.data;
       _metadata.scope.product = this.panels.product.data;
@@ -692,6 +661,8 @@ fskeditorjs = function () {
       _metadata.modelMath.exposure = this.panels.exposure.data;
 
       _metadata.modelType = "ExposureModel";
+
+      metadataFix();
 
       return _metadata;
     }
@@ -765,7 +736,6 @@ fskeditorjs = function () {
       this.menus = this._createMenus();
     }
 
-    // TODO: update get metaData
     get metaData() {
 
       // generalInformation
@@ -774,15 +744,6 @@ fskeditorjs = function () {
       _metadata.generalInformation.author = this.panels.author.data;
       _metadata.generalInformation.creator = this.panels.creator.data;
       _metadata.generalInformation.reference = this.panels.reference.data;
-
-      // Ignore temporarily publication type
-      // TODO: publicationType takes the abbreviation instead of the full string
-      // used in the Reference dialog. Since KNIME runs getComponentValue twice,
-      // the value cannot be converted here. The 1st call to getComponentValue
-      // would get the abbreviation but the 2nd call would corrupt it. The HTML
-      // select should instead use the full string as label and the abreviation
-      // as value.
-      _metadata.generalInformation.reference.forEach(ref => ref.publicationType = null);
 
       // Scope
       _metadata.scope = this.panels.scopeGeneral.data;
@@ -802,6 +763,8 @@ fskeditorjs = function () {
       _metadata.modelMath.modelEquation = this.panels.modelEquation.data;
 
       _metadata.modelType = "ProcessModel";
+
+      metadataFix();
 
       return _metadata;
     }
@@ -876,15 +839,6 @@ fskeditorjs = function () {
       _metadata.generalInformation.creator = this.panels.creator.data;
       _metadata.generalInformation.reference = this.panels.reference.data;
 
-      // Ignore temporarily publication type
-      // TODO: publicationType takes the abbreviation instead of the full string
-      // used in the Reference dialog. Since KNIME runs getComponentValue twice,
-      // the value cannot be converted here. The 1st call to getComponentValue
-      // would get the abbreviation but the 2nd call would corrupt it. The HTML
-      // select should instead use the full string as label and the abreviation
-      // as value.
-      _metadata.generalInformation.reference.forEach(ref => ref.publicationType = null);
-
       // Scope
       _metadata.scope = this.panels.scopeGeneral.data;
       _metadata.scope.product = this.panels.product.data;
@@ -904,6 +858,8 @@ fskeditorjs = function () {
       _metadata.modelMath.modelEquation = this.panels.modelEquation.data;
 
       _metadata.modelType = "ConsumptionModel";
+
+      metadataFix();
 
       return _metadata;
     }
@@ -974,7 +930,6 @@ fskeditorjs = function () {
       this.menus = this._createMenus();
     }
 
-    // TODO: update get metaData
     get metaData() {
 
       // generalInformation
@@ -983,15 +938,6 @@ fskeditorjs = function () {
       _metadata.generalInformation.author = this.panels.author.data;
       _metadata.generalInformation.creator = this.panels.creator.data;
       _metadata.generalInformation.reference = this.panels.reference.data;
-
-      // Ignore temporarily publication type
-      // TODO: publicationType takes the abbreviation instead of the full string
-      // used in the Reference dialog. Since KNIME runs getComponentValue twice,
-      // the value cannot be converted here. The 1st call to getComponentValue
-      // would get the abbreviation but the 2nd call would corrupt it. The HTML
-      // select should instead use the full string as label and the abreviation
-      // as value.
-      _metadata.generalInformation.reference.forEach(ref => ref.publicationType = null);
 
       // Scope
       _metadata.scope = this.panels.scopeGeneral.data;
@@ -1012,6 +958,8 @@ fskeditorjs = function () {
       _metadata.modelMath.exposure = this.panels.exposure.data;
 
       _metadata.modelType = "HealthModel";
+
+      metadataFix();
 
       return _metadata;
     }
@@ -1078,7 +1026,6 @@ fskeditorjs = function () {
     }
   }
 
-  // Handler for generic model schema
   class RiskModel {
 
     constructor() {
@@ -1094,15 +1041,6 @@ fskeditorjs = function () {
       _metadata.generalInformation.author = this.panels.author.data;
       _metadata.generalInformation.creator = this.panels.creator.data;
       _metadata.generalInformation.reference = this.panels.reference.data;
-
-      // Ignore temporarily publication type
-      // TODO: publicationType takes the abbreviation instead of the full string
-      // used in the Reference dialog. Since KNIME runs getComponentValue twice,
-      // the value cannot be converted here. The 1st call to getComponentValue
-      // would get the abbreviation but the 2nd call would corrupt it. The HTML
-      // select should instead use the full string as label and the abreviation
-      // as value.
-      _metadata.generalInformation.reference.forEach(ref => ref.publicationType = null);
 
       // Scope
       _metadata.scope = this.panels.scopeGeneral.data;
@@ -1125,6 +1063,8 @@ fskeditorjs = function () {
       _metadata.modelMath.exposure = this.panels.exposure.data;
 
       _metadata.modelType = "RiskModel";
+
+      metadataFix();
 
       return _metadata;
     }
@@ -1212,15 +1152,6 @@ fskeditorjs = function () {
       _metadata.generalInformation.creator = this.panels.creator.data;
       _metadata.generalInformation.reference = this.panels.reference.data;
 
-      // Ignore temporarily publication type
-      // TODO: publicationType takes the abbreviation instead of the full string
-      // used in the Reference dialog. Since KNIME runs getComponentValue twice,
-      // the value cannot be converted here. The 1st call to getComponentValue
-      // would get the abbreviation but the 2nd call would corrupt it. The HTML
-      // select should instead use the full string as label and the abreviation
-      // as value.
-      _metadata.generalInformation.reference.forEach(ref => ref.publicationType = null);
-
       // Scope
       _metadata.scope = this.panels.scopeGeneral.data;
       _metadata.scope.product = this.panels.product.data;
@@ -1242,6 +1173,8 @@ fskeditorjs = function () {
       _metadata.modelMath.exposure = this.panels.exposure.data;
 
       _metadata.modelType = "QraModel";
+
+      metadataFix();
 
       return _metadata;
     }
