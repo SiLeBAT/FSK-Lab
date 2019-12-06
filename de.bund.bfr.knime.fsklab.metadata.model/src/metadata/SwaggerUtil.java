@@ -1,6 +1,7 @@
 package metadata;
 
 import java.io.StringReader;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -13,6 +14,7 @@ import java.util.TreeMap;
 import javax.json.Json;
 import javax.json.JsonObject;
 
+import org.threeten.bp.Instant;
 import org.threeten.bp.LocalDate;
 
 import de.bund.bfr.metadata.swagger.ConsumptionModel;
@@ -539,7 +541,14 @@ public class SwaggerUtil {
 
 	@SuppressWarnings("deprecation")
 	private static LocalDate toLocalDate(Date date) {
-		return LocalDate.of(date.getYear(), date.getMonth() + 1, date.getDate());
+		
+		ZoneId defaultZoneId = ZoneId.systemDefault();
+		
+		int year = date.toInstant().atZone(defaultZoneId).toLocalDate().getYear();
+		int month = date.toInstant().atZone(defaultZoneId).toLocalDate().getMonthValue();
+		int day = date.toInstant().atZone(defaultZoneId).toLocalDate().getDayOfMonth();
+		
+		return LocalDate.of(year, month, day);
 	}
 
 	public static List<Parameter> getParameter(Model model) {
