@@ -772,7 +772,7 @@ const ui = {
     }, {
         "id": "dataType",
         "label": "Data type",
-        "type": "text",
+        "type": "enum",
         "description": "Information on the data format of the parameter, e.g. if it the input parameter is a file location or a date or a number. This is important for software tools interpreting the metadata and generate user interfaces for parameter input.",
         "vocabulary": "Parameter_data_type",
         "required": true
