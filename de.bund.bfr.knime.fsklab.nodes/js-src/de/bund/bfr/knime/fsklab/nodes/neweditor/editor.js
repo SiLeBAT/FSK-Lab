@@ -71,10 +71,11 @@ fskeditorjs = function () {
     // Validate this.panels and return boolean
     validate() {
       let isValid = true;
-      if (!this.panels.generalInformation.validate()) isValid = false;
-      if (!this.panels.modelCategory.validate()) isValid = false;
-      if (!this.panels.scopeGeneral.validate()) isValid = false;
-      if (!this.panels.study.validate()) isValid = false;
+      // TODO: Disable validation temporarily for the workshop on 9.12.19.
+      // if (!this.panels.generalInformation.validate()) isValid = false;
+      // if (!this.panels.modelCategory.validate()) isValid = false;
+      // if (!this.panels.scopeGeneral.validate()) isValid = false;
+      // if (!this.panels.study.validate()) isValid = false;
       return isValid;
     }
 
