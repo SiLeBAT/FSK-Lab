@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+- Add CodeMirror modes
+
 ## [1.7.2] - 2019.11.21
 - Selected simulation not saved in simulation configurator node: https://github.com/SiLeBAT/FSK-Lab/issues/380
 - Parameter data type Vector[Numbers] is lost: https://github.com/SiLeBAT/FSK-Lab/issues/381
