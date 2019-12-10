@@ -2377,14 +2377,8 @@ fskeditorjs = function () {
       }]
     };
 
-    // require(
-    //   ["codemirror", "codemirror/mode/javascript/javascript", "codemirror/mode/r/r"],
-    //     function(CodeMirror) {
-    //       _modelCodeMirror = CodeMirror.fromTextArea(document.getElementById("modelScriptArea"));
-    //       _visualizationCodeMirror = CodeMirror.fromTextArea(document.getElementById("visualizationScriptArea"));
-    //       _readmeCodeMirror = CodeMirror.fromTextArea(document.getElementById("readmeArea"));
-    //     });
-    let res = knimeService.loadConditionally(["codemirror"],
+    let res = knimeService.loadConditionally(
+      ["codemirror", "codemirror/mode/r/r", "codemirror/mode/markdown/markdown"],
         (arg) => {
           console.log("knimeService installed " + arg);
           console.log(arg);
@@ -2414,12 +2408,6 @@ fskeditorjs = function () {
         },
         (err) => console.log("knimeService failed to install " + err),
         require_config);
-
-    // _modelCodeMirror = createCodeMirror("modelScriptArea", "text/x-rsrc");
-    // _visualizationCodeMirror = createCodeMirror("visualizationScriptArea", "text/x-rsrc");
-    // _readmeCodeMirror = createCodeMirror("readmeArea", "text/x-markdown");
-
-
     
     $('#modelScript-tab').on('shown.bs.tab', () => {
       _modelCodeMirror.refresh(); 
