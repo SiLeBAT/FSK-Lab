@@ -111,6 +111,8 @@
        <webDependency webResourceBundleID="bootstrap_3.3.6"></webDependency>
        <webDependency webResourceBundleID="bootstrap3_typeahead_4.0.2"></webDependency>
        <webDependency webResourceBundleID="datepicker"></webDependency>
+       <webDependency webResourceBundleID="RequireJS_2.3.3"></webDependency>
+       <webDependency webResourceBundleID="knimeserviceConditionalLoad_1.0"></webDependency>
        
      </webResourceBundle>
      
@@ -299,9 +301,8 @@
     </webResourceBundle>
     
     <webResourceBundle debug="false" name="codemirror" usesDefine="true" version="5.49.2" webResourceBundleID="codemirror">    
-      <webResource relativePathSource="js-lib/codemirror/" relativePathTarget="codemirror"></webResource>
-	  <importResource relativePath="codemirror/codemirror.js" type="JAVASCRIPT" />
-	  <importResource relativePath="codemirror/codemirror.css" type="CSS" />
+      <webResource relativePathSource="js-lib/codemirror-5.49.2/" relativePathTarget="codemirror"></webResource>
+      <importResource relativePath="codemirror/codemirror.css" type="CSS" />
     </webResourceBundle>
     
     <webResourceBundle debug="false" name="Bootstrap 3 Typeahead" usesDefine="false" version="4.0.2" webResourceBundleID="bootstrap3_typeahead_4.0.2">

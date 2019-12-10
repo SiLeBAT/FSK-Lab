@@ -2218,6 +2218,8 @@ fskeditorjs = function () {
 
   view.init = function (representation, value) {
 
+
+
     _rep = representation;
     _val = value;
 
@@ -2359,13 +2361,65 @@ fskeditorjs = function () {
     document.getElementById("generalInformation").classList.add("active");
 
     // Create code mirrors for text areas with scripts and readme
-    _modelCodeMirror = createCodeMirror("modelScriptArea", "text/x-rsrc");
-    _visualizationCodeMirror = createCodeMirror("visualizationScriptArea", "text/x-rsrc");
-    _readmeCodeMirror = createCodeMirror("readmeArea", "text/x-markdown");
+    // Load CodeMirror
+    // require.config({
+    //   packages: [{
+    //       name: "codemirror",
+    //       location: "codemirror/",
+    //       main: "lib/codemirror"
+    //   }]
+    // });
+    let require_config = {
+      packages: [{
+        name: "codemirror",
+        location: "codemirror/",
+        main: "lib/codemirror"
+      }]
+    };
 
-    _modelCodeMirror.on("blur", () => { _modelCodeMirror.focus(); });
-    _visualizationCodeMirror.on("blur", () => { _visualizationCodeMirror.focus(); });
-    _readmeCodeMirror.on("blur", () =>{ _readmeCodeMirror.focus(); });
+    // require(
+    //   ["codemirror", "codemirror/mode/javascript/javascript", "codemirror/mode/r/r"],
+    //     function(CodeMirror) {
+    //       _modelCodeMirror = CodeMirror.fromTextArea(document.getElementById("modelScriptArea"));
+    //       _visualizationCodeMirror = CodeMirror.fromTextArea(document.getElementById("visualizationScriptArea"));
+    //       _readmeCodeMirror = CodeMirror.fromTextArea(document.getElementById("readmeArea"));
+    //     });
+    let res = knimeService.loadConditionally(["codemirror"],
+        (arg) => {
+          console.log("knimeService installed " + arg);
+          console.log(arg);
+          let CodeMirror = arg[0];
+          _modelCodeMirror = CodeMirror.fromTextArea(document.getElementById("modelScriptArea"), {
+              lineNumbers: true,
+              lineWrapping: true,
+              extraKeys: { 'Ctrl-Space': 'autocomplete' },
+              mode: { 'name': "text/x-rsrc" }
+            });
+          _visualizationCodeMirror = CodeMirror.fromTextArea(document.getElementById("visualizationScriptArea"), {
+            lineNumbers: true,
+            lineWrapping: true,
+            extraKeys: { 'Ctrl-Space': 'autocomplete' },
+            mode: { 'name': "text/x-rsrc" }
+          });
+          _readmeCodeMirror = CodeMirror.fromTextArea(document.getElementById("readmeArea"), {
+            lineNumbers: true,
+            lineWrapping: true,
+            extraKeys: { 'Ctrl-Space': 'autocomplete' },
+            mode: { 'name': "text/x-markdown" }
+          });
+
+          _modelCodeMirror.on("blur", () => { _modelCodeMirror.focus(); });
+          _visualizationCodeMirror.on("blur", () => { _visualizationCodeMirror.focus(); });
+          _readmeCodeMirror.on("blur", () =>{ _readmeCodeMirror.focus(); });
+        },
+        (err) => console.log("knimeService failed to install " + err),
+        require_config);
+
+    // _modelCodeMirror = createCodeMirror("modelScriptArea", "text/x-rsrc");
+    // _visualizationCodeMirror = createCodeMirror("visualizationScriptArea", "text/x-rsrc");
+    // _readmeCodeMirror = createCodeMirror("readmeArea", "text/x-markdown");
+
+
     
     $('#modelScript-tab').on('shown.bs.tab', () => {
       _modelCodeMirror.refresh(); 
@@ -2402,6 +2456,9 @@ fskeditorjs = function () {
 
   // Create a CodeMirror for a given text area
   function createCodeMirror(textAreaId, language) {
+    console.log(window);
+    console.log(window.CodeMirror);
+
     return window.CodeMirror.fromTextArea(document.getElementById(textAreaId),
       {
         lineNumbers: true,

@@ -741,7 +741,7 @@ const ui = {
     }, {
         "id": "classification",
         "label": "Classification",
-        "type": "text",
+        "type": "enum",
         "description": "General classification of the parameter (e.g. Input, Constant, Output...)",
         "vocabulary": "Parameter_classification",
         "required": true
