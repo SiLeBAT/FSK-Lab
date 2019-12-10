@@ -302,7 +302,7 @@
     
     <webResourceBundle debug="false" name="codemirror" usesDefine="true" version="5.49.2" webResourceBundleID="codemirror">    
       <webResource relativePathSource="js-lib/codemirror-5.49.2/" relativePathTarget="codemirror"></webResource>
-      <importResource relativePath="codemirror/codemirror.css" type="CSS" />
+      <importResource relativePath="codemirror/lib/codemirror.css" type="CSS" />
     </webResourceBundle>
     
     <webResourceBundle debug="false" name="Bootstrap 3 Typeahead" usesDefine="false" version="4.0.2" webResourceBundleID="bootstrap3_typeahead_4.0.2">
