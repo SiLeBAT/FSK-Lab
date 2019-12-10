@@ -2279,14 +2279,15 @@ fskeditorjs = function () {
     _metadata = handler.metaData;
     let metaDataString = JSON.stringify(_metadata);
 
+    // If the code mirrors are not created yet, use the original scripts.
     let viewValue = {
       modelMetaData: metaDataString,
-      firstModelScript: _modelCodeMirror.getValue(),
-      firstModelViz: _visualizationCodeMirror.getValue(),
-      readme: _readmeCodeMirror.getValue(),
+      firstModelScript: _modelCodeMirror ? _modelCodeMirror.getValue() : _metadata.firstModelScript,
+      firstModelViz: _visualizationCodeMirror ? _visualizationCodeMirror.getValue() : _metadata.firstModelViz,
+      readme: _readmeCodeMirror ? _readmeCodeMirror.getValue() : _metadata.readme,
       resourceFiles: _val.resourceFiles, // TODO: get actual resource files from editor
       serverName: _val.serverName // TODO: get actual serverName from editor?
-    }
+    };
 
     return viewValue;
   };
@@ -2361,14 +2362,6 @@ fskeditorjs = function () {
     document.getElementById("generalInformation").classList.add("active");
 
     // Create code mirrors for text areas with scripts and readme
-    // Load CodeMirror
-    // require.config({
-    //   packages: [{
-    //       name: "codemirror",
-    //       location: "codemirror/",
-    //       main: "lib/codemirror"
-    //   }]
-    // });
     let require_config = {
       packages: [{
         name: "codemirror",
@@ -2377,38 +2370,21 @@ fskeditorjs = function () {
       }]
     };
 
-    let res = knimeService.loadConditionally(
+    knimeService.loadConditionally(
       ["codemirror", "codemirror/mode/r/r", "codemirror/mode/markdown/markdown"],
-        (arg) => {
-          console.log("knimeService installed " + arg);
-          console.log(arg);
-          let CodeMirror = arg[0];
-          _modelCodeMirror = CodeMirror.fromTextArea(document.getElementById("modelScriptArea"), {
-              lineNumbers: true,
-              lineWrapping: true,
-              extraKeys: { 'Ctrl-Space': 'autocomplete' },
-              mode: { 'name': "text/x-rsrc" }
-            });
-          _visualizationCodeMirror = CodeMirror.fromTextArea(document.getElementById("visualizationScriptArea"), {
-            lineNumbers: true,
-            lineWrapping: true,
-            extraKeys: { 'Ctrl-Space': 'autocomplete' },
-            mode: { 'name': "text/x-rsrc" }
-          });
-          _readmeCodeMirror = CodeMirror.fromTextArea(document.getElementById("readmeArea"), {
-            lineNumbers: true,
-            lineWrapping: true,
-            extraKeys: { 'Ctrl-Space': 'autocomplete' },
-            mode: { 'name': "text/x-markdown" }
-          });
+      (arg) => {
+        window.CodeMirror = arg[0];
+        _modelCodeMirror = createCodeMirror("modelScriptArea", "text/x-rsrc");
+        _visualizationCodeMirror = createCodeMirror("visualizationScriptArea", "text/x-rsrc");
+        _readmeCodeMirror = createCodeMirror("readmeArea", "text/x-markdown");
 
-          _modelCodeMirror.on("blur", () => { _modelCodeMirror.focus(); });
-          _visualizationCodeMirror.on("blur", () => { _visualizationCodeMirror.focus(); });
-          _readmeCodeMirror.on("blur", () =>{ _readmeCodeMirror.focus(); });
-        },
-        (err) => console.log("knimeService failed to install " + err),
-        require_config);
-    
+        _modelCodeMirror.on("blur", () => { _modelCodeMirror.focus(); });
+        _visualizationCodeMirror.on("blur", () => { _visualizationCodeMirror.focus(); });
+        _readmeCodeMirror.on("blur", () =>{ _readmeCodeMirror.focus(); });
+      },
+      (err) => console.log("knimeService failed to install " + err),
+      require_config);
+
     $('#modelScript-tab').on('shown.bs.tab', () => {
       _modelCodeMirror.refresh(); 
       _modelCodeMirror.focus();
@@ -2444,8 +2420,6 @@ fskeditorjs = function () {
 
   // Create a CodeMirror for a given text area
   function createCodeMirror(textAreaId, language) {
-    console.log(window);
-    console.log(window.CodeMirror);
 
     return window.CodeMirror.fromTextArea(document.getElementById(textAreaId),
       {
