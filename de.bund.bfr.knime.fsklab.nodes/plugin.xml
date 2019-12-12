@@ -117,6 +117,7 @@
      </webResourceBundle>
      
      <!-- JS and CSS code for Fsk Joiner node -->
+     <!--
      <webResourceBundle
        debug="true"
        name="FSK Joiner"
@@ -134,11 +135,22 @@
        
        <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/bootstrap-treeview.min.css" type="CSS" />
        <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/bootstrap-treeview.min.js" type="JAVASCRIPT" />
-       <!-- Dependencies -->
        <webDependency webResourceBundleID="fskeditor" />
 	   <webDependency webResourceBundleID="de.bund.bfr.knime.fsklab.nodes.joiner.jointjs"></webDependency>
 	   <webDependency webResourceBundleID="de.bund.bfr.knime.fsklab.nodes.joiner.jointjscss"></webDependency>
 	   <webDependency webResourceBundleID="de.bund.bfr.knime.fsklab.nodes.joiner.bundle.js" />
+	 </webResourceBundle>
+	 -->
+	 
+	 <webResourceBundle debug="true" name="FSK Joiner" usesDefine="true" version="1.0.0" webResourceBundleID="de.bund.bfr.knime.fsklab.js.joiner.bundle">
+	   <webResource relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/newjoiner" relativePathTarget="js-src/de/bund/bfr/knime/fsklab/nodes/newjoiner" />
+	   
+	   <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/nodes/newjoiner/joiner.css" type="CSS" />
+	   <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/nodes/newjoiner/joiner.js" type="JAVASCRIPT" />
+	   
+	   <webDependency webResourceBundleID="jQuery_3.3.1" />
+	   <webDependency webResourceBundleID="Lodash_4.17.15" />
+	   <webDependency webResourceBundleID="backbone_1.4.0" />
 	 </webResourceBundle>
 	 
 	 <!-- JS and CSS code for Fsk Editor JS node -->
@@ -181,6 +193,22 @@
         relativePathTarget="de/bund/bfr/knime/fsklab/nodes/joiner/jointjs/lodash.min.js">
       </webResource>
       <importResource relativePath="de/bund/bfr/knime/fsklab/nodes/joiner/jointjs/lodash.min.js" type="JAVASCRIPT" />
+    </webResourceBundle>
+    
+    <webResourceBundle debug="false" name="lodash" version="4.17.15" webResourceBundleID="Lodash_4.17.15">
+      <webResource relativePathSource="js-lib/lodash/4.17.15" relativePathTarget="js-lib/lodash/4.17.15" />
+      <importResource relativePath="js-lib/lodash/4.17.15/core.min.js" type="JAVASCRIPT" />
+    </webResourceBundle>
+    
+    <webResourceBundle debug="false" name="underscore" version="1.9.1" webResourceBundleID="underscore_1.9.1">
+      <webResource relativePathSource="js-lib/underscore/1.9.1" relativePathTarget="js-lib/underscore/1.9.1" />
+      <importResource relativePath="js-lib/underscore/1.9.1/underscore-min.js" type="JAVASCRIPT" />
+    </webResourceBundle>
+    
+    <webResourceBundle debug="false" name="backbone" version="1.4.0" webResourceBundleID="backbone_1.4.0">
+      <webResource relativePathSource="js-lib/backbone/1.4.0" relativePathTarget="js-lib/backbone/1.4.0" />
+      <importResource relativePath="js-lib/backbone/1.4.0/backbone-min.js" type="JAVASCRIPT" />
+      <webDependency webResourceBundleID="underscore_1.9.1" />
     </webResourceBundle>
     
     <webResourceBundle debug="true" name="Jointjscss" version="1.0.0"
