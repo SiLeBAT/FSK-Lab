@@ -135,12 +135,9 @@ public class RConnectionFactory {
 	/**
 	 * Start an Rserve process with a given Rserve executable command.
 	 *
-	 * @param command
-	 *            Rserve executable command
-	 * @param host
-	 *            Host of the Rserve server
-	 * @param port
-	 *            Port to start the Rserve server on
+	 * @param command Rserve executable command
+	 * @param host    Host of the Rserve server
+	 * @param port    Port to start the Rserve server on
 	 * @return the started Rserve process
 	 */
 	private static Process launchRserveProcess(final String command, final String host, final Integer port)
@@ -188,18 +185,15 @@ public class RConnectionFactory {
 	/**
 	 * Attempt to start Rserve and create a connection to it.
 	 *
-	 * @param cmd
-	 *            command necessary to start Rserve ("Rserve.exe" on Windows)
-	 * @param host
-	 *            For creating the RConnection in RInstance. Launching a remote
-	 *            process, this should always be "127.0.0.1"
-	 * @param port
-	 *            Port to launch the Rserve process on.
+	 * @param cmd  command necessary to start Rserve ("Rserve.exe" on Windows)
+	 * @param host For creating the RConnection in RInstance. Launching a remote
+	 *             process, this should always be "127.0.0.1"
+	 * @param port Port to launch the Rserve process on.
 	 * @return <code>true</code> if Rserve is running or was successfully started,
 	 *         <code>false</code>
-	 * @throws IOException
-	 *             if Rserve could not be launched. This may be the case if R is
-	 *             either not found or does not have Rserve package installed.
+	 * @throws IOException if Rserve could not be launched. This may be the case if
+	 *                     R is either not found or does not have Rserve package
+	 *                     installed.
 	 */
 	private static RInstance launchRserve(final String command, final String host, final Integer port)
 			throws IOException {
@@ -285,10 +279,9 @@ public class RConnectionFactory {
 	 *
 	 * @return an RConnectionResource which has already been acquired, never
 	 *         <code>null</code>
-	 * @throws IOException
-	 *             if Rserve could not be launched. This may be the case if R is
-	 *             either not found or does not have Rserve package installed. Or if
-	 *             there was no open port found.
+	 * @throws IOException if Rserve could not be launched. This may be the case if
+	 *                     R is either not found or does not have Rserve package
+	 *                     installed. Or if there was no open port found.
 	 */
 	public static RConnectionResource createConnection() throws RserveException, IOException {
 		initializeShutdownHook(); // checks for re-initialization
@@ -385,10 +378,13 @@ public class RConnectionFactory {
 
 		// Configure .rprofile
 		List<String> lines = new ArrayList<>();
-		String line = ".libPaths(c('" + FilenameUtils.separatorsToUnix(installPath.toString()) + "', .libPaths()))";
-		String trace = "trace(utils:::unpackPkgZip, quote(Sys.sleep(2.5)), at = list(c(14,4,4,4,3,3)))";
-		lines.add(line);
-		lines.add(trace);
+		lines.add(".libPaths(c('" + FilenameUtils.separatorsToUnix(installPath.toString()) + "', .libPaths()))");
+
+		// Do not execute unpackPkgZip on Linux. It causes trouble on the VRE.
+		if (!Platform.isLinux()) {
+			lines.add("trace(utils:::unpackPkgZip, quote(Sys.sleep(2.5)), at = list(c(14,4,4,4,3,3)))");
+		}
+		
 		Path documentsFolder = FileSystemView.getFileSystemView().getDefaultDirectory().toPath();
 		Path rprofile = documentsFolder.resolve(".Rprofile");
 
@@ -433,12 +429,9 @@ public class RConnectionFactory {
 		/**
 		 * Constructor
 		 *
-		 * @param p
-		 *            An Rserve process
-		 * @param host
-		 *            Host on which the Rserve process is running.
-		 * @param port
-		 *            Port on which Rserve is running.
+		 * @param p    An Rserve process
+		 * @param host Host on which the Rserve process is running.
+		 * @param port Port on which Rserve is running.
 		 */
 		private RInstance(final Process p, final String host, final int port) {
 			m_process = p;
@@ -502,12 +495,9 @@ public class RConnectionFactory {
 		/**
 		 * Constructor
 		 *
-		 * @param stream
-		 *            to read from
-		 * @param name
-		 *            for the Thread
-		 * @param processor
-		 *            to process lines
+		 * @param stream    to read from
+		 * @param name      for the Thread
+		 * @param processor to process lines
 		 */
 		StreamReaderThread(final InputStream stream, final String name, final LineProcessor processor) {
 			super(name);
@@ -547,8 +537,7 @@ public class RConnectionFactory {
 		/**
 		 * Constructor
 		 *
-		 * @param inst
-		 *            RInstance which will provide the value of this resource.
+		 * @param inst RInstance which will provide the value of this resource.
 		 */
 		private RConnectionResource(final RInstance inst) {
 			if (inst == null) {
@@ -622,8 +611,7 @@ public class RConnectionFactory {
 		 * using this method.
 		 *
 		 * @return The value of the resource.
-		 * @throws IllegalAccessError
-		 *             If the resource has not been acquired yet.
+		 * @throws IllegalAccessError If the resource has not been acquired yet.
 		 */
 		public RConnection get() {
 			if (m_available) {
@@ -639,8 +627,7 @@ public class RConnectionFactory {
 		/**
 		 * Release ownership of this resource for it to be reacquired.
 		 *
-		 * @throws RException
-		 *             If the RConnection could not be closed/detached
+		 * @throws RException If the RConnection could not be closed/detached
 		 */
 		public synchronized void release() throws RException {
 			if (!m_available) {
@@ -712,8 +699,7 @@ public class RConnectionFactory {
 		/**
 		 * Destroy the underlying resource.
 		 *
-		 * @param remove
-		 *            Whether to automatically remove this resource from m_resources.
+		 * @param remove Whether to automatically remove this resource from m_resources.
 		 */
 		public synchronized void destroy(final boolean remove) {
 			if (m_instance == null) {
