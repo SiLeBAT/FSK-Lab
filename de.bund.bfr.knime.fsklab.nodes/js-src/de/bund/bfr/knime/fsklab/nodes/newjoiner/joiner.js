@@ -1,51 +1,53 @@
-joiner = function() {
+joiner = function () {
 
-    const view = { version: "1.0.0", name: "FSK Joiner"};
+  const view = { version: "1.0.0", name: "FSK Joiner" };
 
-    let _representation;
-    let _value;
+  let _representation;
+  let _value;
 
-    /** JointJS graph. */
-    let _graph;
+  /** JointJS graph. */
+  let _graph;
 
-    /** JointJS graph view. */
-    let _paper;
+  /** JointJS graph view. */
+  let _paper;
 
-    let _firstModelMath;
-    let _secondModelMath;
+  let _firstModelMath;
+  let _secondModelMath;
 
-    let _firstModelParameterMap = {};
-    let _secondModelParameterMap = {};
+  let _firstModelParameterMap = {};
+  let _secondModelParameterMap = {};
 
-    let _firstModelName;
-    let _secondModelName;
+  let _firstModelName;
+  let _secondModelName;
 
-    view.init = function(representation, value) {
-        _representation = representation;
-        _value = value;
+  view.init = function (representation, value) {
+    _representation = representation;
+    _value = value;
 
-        // TODO: before creating body:
-        // TODO: process metadata
+    // TODO: before creating body:
+    // TODO: process metadata
 
-        _firstModelName = value.firstModelName;
-        _secondModelName = value.secondModelName;
+    _firstModelName = value.firstModelName;
+    _secondModelName = value.secondModelName;
 
-        _firstModelMath = JSON.parse(value.modelMath1);
-        _secondModelMath = JSON.parse(value.modelMath2);
+    _firstModelMath = JSON.parse(value.modelMath1);
+    _secondModelMath = JSON.parse(value.modelMath2);
 
-        createBody();
-    }
+    window.joinRelationsMap = {};
 
-    view.getComponentValue = function() {
-        // TODO: getComponentValue
-        return _value;
-    }
+    createBody();
+  }
 
-    return view;
+  view.getComponentValue = function () {
+    // TODO: getComponentValue
+    return _value;
+  }
 
-    function createBody() {
+  return view;
 
-        $('body').html(`<div class="container-fluid">
+  function createBody() {
+
+    $('body').html(`<div class="container-fluid">
 <nav class="navbar navbar-default">
  <div class="navbar-collapse collapse">
    <ul class="nav navbar-nav" id="viewTab">
@@ -53,16 +55,16 @@ joiner = function() {
        <a id="join-tab" href="#joinPanel" aria-controls="joinPanel" role="tab" data-toggle="tab">Join</a>
      </li>
      <li role="presentation">
-       <a href="#generalInformationPanel" aria-controls="generalInformationPanel">General information</a>
+       <a href="#generalInformationPanel" aria-controls="generalInformationPanel" role="tab" data-toggle="tab">General information</a>
      </li>
      <li role="presentation">
-       <a href="#scopePanel" aria-controls="scopePanel">Scope</a>
+       <a href="#scopePanel" aria-controls="scopePanel" role="tab" data-toggle="tab">Scope</a>
      </li>
      <li role="presentation">
-       <a href="#dataBackgroundPanel" aria-controls="dataBackgroundPanel">Data background</a>
+       <a href="#dataBackgroundPanel" aria-controls="dataBackgroundPanel" role="tab" data-toggle="tab">Data background</a>
      </li>
      <li role="presentation">
-       <a href="#modelMathPanel" aria-controls="modelMathPanel">Model math</a>
+       <a href="#modelMathPanel" aria-controls="modelMathPanel" role="tab" data-toggle="tab">Model math</a>
      </li>
    </ul>
  </div>
@@ -73,257 +75,352 @@ joiner = function() {
      <div id="details" class="col-sm-12">
      </div>
    </div>
+   <div role="tabpanel" class="tab-pane" id="generalInformationPanel">
+   </div>
+   <div role="tabpanel" class="tab-pane" id="scopePanel">
+   </div>
+   <div role="tabpanel" class="tab-pane" id="dataBackgroundPanel">
+   </div>
+   <div role="tabpanel" class="tab-pane" id="modelMathPanel">
+   </div>
  </div>
 </nav>
 </div>`);
 
-        drawWorkflow();
+    drawWorkflow();
 
-        // Initialize tab function
-        $('.nav a').click((event) => {
-            event.preventDefault();
-            $(this).tab('show');
+    // Initialize tab function
+    $('#viewTab a').click((event) => {
+      event.preventDefault();
+      $(this).tab('show');
 
-            let canvas = $('#paper');
-            _paper.setDimensions(canvas.width(), canvas.height());
-        });
+      let canvas = $('#paper');
+      _paper.setDimensions(canvas.width(), canvas.height());
+    });
 
-        $('.nav a').on('shown.bs.tab', function(event) {
-            if (event.target.id === "join-tab") {
-              let canvas = $('#paper');
-              _paper.setDimensions(canvas.width(), canvas.height());
-            }
-        });
+    $('#join-tab').on('shown.bs.tab', (event) => {
+      let canvas = $('#paper');
+      _paper.setDimensions(canvas.width(), canvas.height());
+    });
+  }
+
+  function drawWorkflow() {
+
+    _graph = new joint.dia.Graph();
+
+    _paper = new joint.dia.Paper({
+      el: document.getElementById('paper'),
+      drawGrid: 'mesh',
+      gridSize: 10,
+      model: _graph,
+      snapLinks: true,
+      linkPinning: true,
+      drawGrid: true,
+
+      highlighting: {
+        'default': {
+          name: 'stroke',
+          options: {
+            padding: 6
+          }
+        }
+      },
+
+      interactive: (cellView) => {
+        // Disable the default vertex and add functionality on pointerdown
+        if (cellView.model instanceof joint.dia.Link) {
+          return { vertexAdd: false };
+        }
+        return true;
+      },
+      validateConnection: function (cellViewS, magnetS, cellViewT, magnetT, end, linkView) {
+        if (linkView.sourceView.id != linkView.paper.viewport.children[0].id)
+          return false;
+
+        if (cellViewT.id == linkView.paper.viewport.children[0].id &&
+          magnetT && magnetT.getAttribute('port-group') === 'in')
+          return false;
+
+        if (magnetT && magnetT.getAttribute('port-group') === 'out' &&
+          magnetS && magnetS.getAttribute('port-group') === 'out' &&
+          cellViewS.id === cellViewT.id)
+          return false;
+
+        if (magnetT && magnetT.getAttribute('port-group') === 'out' &&
+          magnetS && magnetS.getAttribute('port-group') === 'in' &&
+          cellViewS.id === cellViewT.id)
+          return false;
+
+        return true;
+      },
+      // Enable marking available cells and magnets
+      markAvailable: true
+    });
+
+    let previousOne;
+
+    // Pointer is clicked on a cell
+    _paper.on('cell:pointerclick', (cellView) => {
+      if (previousOne) previousOne.unhighlight();
+      previousOne = cellView;
+      cellView.highlight();
+    });
+
+
+    // Pointer is released after pressing down a link
+    _paper.on('link:pointerup', (event) => {
+      if (event.model instanceof joint.dia.Link) {
+        let sourcePort = event.model.attributes.source.port;
+        let targetPort = event.model.attributes.target.port;
+        if (!targetPort) {
+          event.remove();
+        }
+      }
+    });
+
+    // Pointer is double clicked on a target
+    _paper.on('cell:pointerdblclick', (cellView, event, x, y) => {
+      if (!(cellView.model instanceof joint.dia.Link)) return;
+
+      let link = cellView.model;
+
+      let sourcePort = link.get('source').port;
+      let targetPort = link.get('target').port;
+
+      window.sJoinRealtion = window.joinRelationsMap[sourcePort + "," + targetPort];
+
+      if (!document.getElementById("commandLanguage")) {
+        let detailsForm = createDetailsForm(sourcePort, targetPort);
+        $("#details").html(detailsForm);
+      }
+
+      document.getElementById("source").value = sourcePort;
+      document.getElementById("target").value = targetPort;
+
+      let commandLanguage = $("#commandLanguage");
+      commandLanguage.val(sJoinRealtion.language_written_in);
+      commandLanguage.onchange(() => window.sJoinRealtion.language_written_in = commandLanguage.val());
+
+      let commandTextArea = $("Command");
+      commandTextArea.val(sJoinRealtion.command);
+      commandTextArea.keyup(() => window.sJoinRealtion.command = commandTextArea.val());
+    });
+
+    let firstModelInputParameters = [];
+    let firstModelOutputParameters = [];
+    window.firstPortMap = {};
+    window.secondPortMap = {};
+    try {
+      _.each(_firstModelMath.parameter, function (param) {
+        if (!_firstModelParameterMap[param.id]) {
+          let port = {
+            id: param.id,
+            label: { markup: createMarkup(param.id, param.dataType) }
+          };
+          if (param.classification === "INPUT" || param.classification === "CONSTANT") {
+            port.group = "in";
+            firstModelInputParameters.push(port);
+          } else {
+            port.group = "out";
+            firstModelOutputParameters.push(port);
+          }
+          window.firstPortMap[param.id] = port;
+          _firstModelParameterMap[param.id] = param;
+        }
+      });
+    } catch (err) {
+      console.log(err);
     }
 
-    function drawWorkflow() {
+    let secondModelInputParameters = [];
+    let secondModelOutputParameters = [];
+    _.each(_secondModelMath.parameter, function (param) {
+      if (!_firstModelParameterMap[param.id]) {
+        let port = {
+          id: param.id,
+          label: { markup: createMarkup(param.id, param.dataType) }
+        };
+        if (param.classification === "INPUT" || param.classification === "CONSTANT") {
+          port.group = "in";
+          secondModelInputParameters.push(port);
+        } else {
+          port.group = "out";
+          secondModelOutputParameters.push(port);
+        }
+        window.secondPortMap[param.id] = port;
+        _secondModelParameterMap[param.id] = param;
+      }
+    });
 
-        _graph = new joint.dia.Graph();
+    let canvas = $("#paper");
+    canvas.height(Math.max(firstModelInputParameters.length,
+      secondModelInputParameters.length) * 25 + 300);
 
-        _paper = new joint.dia.Paper({
-            el: document.getElementById('paper'),
-            drawGrid: 'mesh',
-            gridSize : 10,
-            model : _graph,
-            snapLinks : true,
-            linkPinning : true,
-            drawGrid : true,
-            
-            highlighting: {
-              'default' : {
-                name : 'stroke',
-                options : {
-                  padding : 6
-                }
-              }
-            },
-            
-            interactive: (cellView) => {
-                // Disable the default vertex and add functionality on pointerdown
-                if (cellView.model instanceof joint.dia.Link) {
-                    return { vertexAdd: false};
-                }
-                return true;
-            },
-            validateConnection: function(cellViewS, magnetS, cellViewT, magnetT, end, linkView) {
-                if (linkView.sourceView.id != linkView.paper.viewport.children[0].id)
-                    return false;
-                
-                if (cellViewT.id == linkView.paper.viewport.children[0].id &&
-                    magnetT && magnetT.getAttribute('port-group') === 'in')
-                    return false;
-                
-                if (magnetT && magnetT.getAttribute('port-group') === 'out' &&
-                    magnetS && magnetS.getAttribute('port-group') === 'out' &&
-                    cellViewS.id === cellViewT.id)
-                    return false;
-                
-                if (magnetT && magnetT.getAttribute('port-group') === 'out' &&
-                    magnetS && magnetS.getAttribute('port-group') === 'in' &&
-                    cellViewS.id === cellViewT.id)
-                    return false;
-                
-                return true;
-            },
-            // Enable marking available cells and magnets
-            markAvailable: true
-        });
+    _paper.setDimensions(canvas.width(), canvas.height());
 
-        let previousOne;
+    let paperWidth = canvas.width();
+    let firstModelHeight = Math.max(firstModelInputParameters.length, firstModelOutputParameters.length) * 25;
 
-        // Pointer is clicked on a cell
-        _paper.on('cell:pointerclick', (cellView) => {
-          if (previousOne) previousOne.unhighlight();
-          previousOne = cellView;
-          cellView.highlight();
-        });
+    let firstModelNameWrap = joint.util.breakText(_firstModelName, {
+      width: 200,
+      height: firstModelHeight
+    });
 
-        
-        // Pointer is released after pressing down a link
-        _paper.on('link:pointerup', (event) => {
-          if (event.model instanceof joint.dia.Link) {
-            let sourcePort = event.model.attributes.source.port;
-            let targetPort = event.model.attributes.target.port;
-            if (!targetPort) {
-              event.remove();
-            }
-          }
-        });
+    let firstModelToJoin = createAtomic(paperWidth - 670, 60, 200,
+      firstModelHeight, firstModelNameWrap, firstModelInputParameters,
+      firstModelOutputParameters);
 
-        // Pointer is double clicked on a target
-        _paper.on('cell:pointerdblclick', (cellView, event, x, y) => {
-          if (!(cellView.model instanceof joint.dia.Link)) return;
+    let secondModelHeight = Math.max(secondModelInputParameters.length, secondModelOutputParameters.length) * 25;
+    let secondModelNameWrap = joint.util.breakText(_secondModelName, {
+      width: 200,
+      height: secondModelHeight
+    });
 
-          let link = cellView.model;
+    let secondModelToJoin = createAtomic(paperWidth - 330, 180, 200,
+      secondModelHeight, secondModelNameWrap, secondModelInputParameters,
+      secondModelOutputParameters);
 
-          let sourcePort = link.get('source').port;
-          let targetPort = link.get('target').port;
+    _paper.on('link:connect', function (evt, cellView, magnet, arrowhead) {
+      sourcePort = evt.model.attributes.source.port;
+      targetPort = evt.model.attributes.port;
+      if (!targetPort) {
+        return;
+      }
 
-          window.sJoinRealtion = window.joinRelationsMap[sourcePort + "," + targetPort];
+      $('#details').html(createDetailsForm(sourcePort, targetPort));
 
-          if (!document.getElementById("commandLanguage")) {
-            let detailsForm = createDetailsForm(sourcePort, targetPort);
-            $("#details").html(detailsForm);
-          }
+      let command = $("#Command");
+      command.keyup(() => window.sJoinRealtion.command = command.val());
 
-          document.getElementById("source").value = sourcePort;
-          document.getElementById("target").value = targetPort;
-          
-          let commandLanguage = $("#commandLanguage");
-          commandLanguage.val(sJoinRealtion.language_written_in);
-          commandLanguage.onchange(() => window.sJoinRealtion.language_written_in = commandLanguage.val());
+      command.blur(() => {
+        joinModelScript = "";
 
-          let commandTextArea = $("Command");
-          commandTextArea.val(sJoinRealtion.command);
-          commandTextArea.keyup(() => window.sJoinRealtion.command = commandTextArea.val());
-        });
-
-        let firstModelInputParameters = [];
-        let firstModelOutputParameters = [];
-        window.firstPortMap = {};
-        window.secondPortMap = {};
-        try {
-
-          _.each(_firstModelMath.parameter, function(param) {
-            if (!_firstModelParameterMap[param.id]) {
-              let port = {
-                id: param.id,
-                label: { markup: createMarkup(param.id, param.dataType)}
-              };
-              if (param.classification === "INPUT" || param.classification === "CONSTANT") {
-                port.group = "in";
-                firstModelInputParameters.push(port);
-              } else {
-                port.group = "out";
-                firstModelOutputParameters.push(port);
-              }
-              window.firstPortMap[param.id] = port;
-              _firstModelParameterMap[param.id] = param;
-            }
+        $.each(_viewValue.joinRelations, function (index, value) {
+          joinModelScript += `${value.targetParam.parameterID} <- ${value.command} \n`;
+          _modelScriptTree[1].script = joinModelScript
+          $('#tree').treeview({ data: _modelScriptTree, borderColor: 'blue' });
+          $('#tree').on('nodeSelected', function (event, data) {
+            scriptBeingEdited = data;
+            window.codeMirrorContainer.CodeMirror.setValue(data.script);
+            window.codeMirrorContainer.CodeMirror.refresh();
           });
-        } catch (err) {
-          console.log(err);
+        });
+      });
+
+      let sourceParameter = _firstModelParameterMap[sourcePort] ?
+        _firstModelParameterMap[sourcePort] : _secondModelParameterMap[sourcePort];
+
+      let targetParameter = _secondModelParameterMap[sourcePort] ?
+        _secondModelParameterMap[sourcePort] : _firstModelParameterMap[sourcePort];
+
+      if (targetParameter != undefined) {
+        window.sJoinRealtion = {
+          sourceParam: sourceParameter,
+          targetParam: targetParameter,
+          command: sourcePort
+        };
+
+        if (_firstModel.generalInformation.languageWrittenIn) {
+          window.sJoinRealtion.language_written_in = _firstModel.generalInformation.languageWrittenIn;
+          $('#commandLanguage').val(_firstModel.generalInformation.languageWrittenIn);
         }
 
-        let secondModelInputParameters = [];
-        let secondModelOutputParameters = [];
-        _.each(_secondModelMath.parameter, function(param) {
-          if (!_firstModelParameterMap[param.id]) {
-            let port = {
-              id: param.id,
-              label: { markup: createMarkup(param.id, param.dataType) }
-            };
-            if (param.classification === "INPUT" || param.classification === "CONSTANT") {
-              port.group = "in";
-              secondModelInputParameters.push(port);
-            } else {
-              port.group = "out";
-              secondModelOutputParameters.push(port);
-            }
-            window.secondPortMap[param.id] = port;
-            _secondModelParameterMap[param.id] = param;
+        if (!(_viewValue.joinRelations.push)) {
+          _viewValue.joinRelations = []
+        }
+
+        _viewValue.joinRelations.push(sJoinRealtion);
+        window.joinRelationsMap[sourcePort + "," + targetPort] = sJoinRealtion
+        joinModelScript = "";
+
+        $.each(_viewValue.joinRelations, function (index, value) {
+          joinModelScript += `${value.targetParam.parameterID} <- ${value.command}\n`;
+          _modelScriptTree[1].script = joinModelScript
+        });
+
+        $('#tree').treeview({ data: _modelScriptTree, borderColor: 'blue' });
+        $('#tree').on('nodeSelected', function (event, data) {
+          scriptBeingEdited = data;
+          window.codeMirrorContainer.CodeMirror.setValue(data.script);
+          window.codeMirrorContainer.CodeMirror.refresh();
+        });
+
+        _viewValue.jsonRepresentation = JSON.stringify(graph.toJSON());
+      }
+    }); // paper.on('link:connect')
+
+    _graph.on('remove', (link) => {
+      sourcePort = link.attributes.source.port;
+      targetPort = link.attributes.target.port;
+
+      let sourceParameter = _firstModelParameterMap[sourcePort] ?
+        _firstModelParameterMap[sourcePort] : _secondModelParameterMap[sourcePort];
+
+      let targetParameter = _secondModelParameterMap[sourcePort] ?
+        _secondModelParameterMap[sourcePort] : _firstModelParameterMap[sourcePort];
+
+      if (targetParameter != undefined) {
+        $.each(_viewValue.joinRelations, function (index, value) {
+
+          if (value != undefined && value.sourceParam.parameterID == sourceParameter.parameterID
+            && value.targetParam.parameterID == targetParameter.parameterID) {
+            _viewValue.joinRelations.splice(index, 1);
+          }
+        });
+        _viewValue.jsonRepresentation = JSON.stringify(graph.toJSON());
+      }
+    });
+
+    if (_value.jsonRepresentation != undefined) {
+      if (_value && _value.jsonRepresentation) {
+        try {
+          graphObject = JSON.parse(_value.jsonRepresentation)
+          graph.fromJSON(JSON.parse(_value.jsonRepresentation));
+          $.each(graphObject.cells, function (cellIndex, cell) {
+            $.each(cell.ports.items, function (index, item) {
+              graph.getCell(cell.id).addPort(item);
+            })
+          })
+
+        } catch (err) {
+        }
+      }
+    } else {
+      _graph.addCells([firstModelToJoin, secondModelToJoin]);
+      graphJSON = _graph.toJSON();
+      firstNodeId = graphJSON['cells'][0].id;
+      secondNodeId = graphJSON['cells'][1].id;
+      var links = [];
+      $.each(window.joinRelationsMap, function (key, value) {
+        var portIds = key.split(",");
+
+        firstPort = window.firstPortMap[portIds[0]]
+        secondPort = window.secondPortMap[portIds[1]]
+
+        var link = new joint.shapes.devs.Link({
+          source: {
+            id: firstNodeId,
+            port: portIds[0]
+          },
+          target: {
+            id: secondNodeId,
+            port: portIds[1]
           }
         });
 
-        let canvas = $("#paper");
-        canvas.height(Math.max(firstModelInputParameters.length,
-          secondModelInputParameters.length) * 25 + 300);
-
-        _paper.setDimensions(canvas.width(), canvas.height());
-
-        let paperWidth = canvas.width();
-        let firstModelHeight = Math.max(firstModelInputParameters.length, firstModelOutputParameters.length) * 25;
-
-        let firstModelNameWrap = joint.util.breakText(_firstModelName, {
-          width: 200,
-          height: firstModelHeight
-        });
-
-        let firstModelToJoin = new joint.shapes.devs.Atomic({
-          position: { x: paperWidth - 670, y: 60 },
-          size: { width: 200, height: firstModelHeight },
-          ports: {
-            groups: {
-              'in': {
-                attrs: { '.port-body': { fill: '#16A085' }}
-              },
-              'out': {
-                attrs: { '.port-body': { fill: '#E74C3C' }}
-              }
-            }
-          }
-        });
-
-        // Add input ports to firstModelToJoin
-        $.each(firstModelInputParameters, function(index, value) {
-          try {
-            firstModelToJoin.addPort(value);
-          } catch (err) {
-            console.log(err, value);
-          }
-        });
-
-        // Add output ports to firstModelToJoin
-        $.each(firstModelOutputParameters, function(index, value) {
-          try {
-            firstModelToJoin.addPort(value);
-          } catch (err) {
-            console.log(err, value);
-          }
-        });
-
-        firstModelTojoin.attr({
-          rect : { rx : 5, ry : 5, 'stroke-width' : 2, stroke : 'black' },
-          text : {
-            text : firstModelNameWrap,
-            'font-size' : 12,
-            'font-weight' : 'bold',
-            'font-variant' : 'small-caps',
-            'text-transform' : 'capitalize',
-            margin : '20px',
-            padding : '40px'
-          }
-        });
-
-        let secondModelHeight = Math.max(secondModelInputParameters.length, secondModelOutputParameters.length) * 25;
-        let secondModelNameWrap = joint.util.breakText(secondModelName, {
-          width: 200,
-          height: secondModelHeight
-        });
-
-        // TODO: ...
-        let secondModelToJoin = new joint.shapes.devs.Atomic({
-
-        });
+        links.push(link);
+      });
+      _graph.addCells(links);
     }
+  }
 
-    /**
-     * Return HTML string for the details form.
-     * @param {*} sourcePort 
-     * @param {*} targetPort 
-     */
-    function createDetailsForm(sourcePort, targetPort) {
-      return `<form action="">
+  /**
+ * Return HTML string for the details form.
+ * @param {*} sourcePort 
+ * @param {*} targetPort 
+ */
+  function createDetailsForm(sourcePort, targetPort) {
+    return `<form action="">
 <div class="form-group row">
   <label class="col-6 col-form-label" for="source">Source Port:</label>
   <div class="col-6">
@@ -349,14 +446,91 @@ joiner = function() {
   </div>
 </div>
 </form>`;
-    }
+  }
 
-    /**
-     * Create HTML markup for a parameter.
-     * @param {string} id Parameter id
-     * @param {string} type Parameter type
-     */
-    function createMarkup(id, type) {
-      return `<text class="label-text" fill="black"><title>${type}</title>${id}</text>`;
-    }
+  /**
+   * Create HTML markup for a parameter.
+   * @param {string} id Parameter id
+   * @param {string} type Parameter type
+   */
+  function createMarkup(id, type) {
+    return `<text class="label-text" fill="black"><title>${type}</title>${id}</text>`;
+  }
+
+  /** Create model to join.
+   * 
+   * @param {int} x X position
+   * @param {int} y Y position
+   * @param {int} width Width
+   * @param {int} height Height
+   * @param {string} modelName Model name
+   * @param {array} inputs Array of input parameter ports
+   * @param {array} inputs Array of output parameter ports
+  */
+  function createAtomic(x, y, width, height, modelName, inputs, outputs) {
+    let atomic = new joint.shapes.devs.Atomic({
+      position: {
+        x: x, y: y
+      },
+      size: {
+        width: width, height: height
+      },
+      ports: {
+        groups: {
+          'in': {
+            attrs: {
+              '.port-body': {
+                fill: '#16A085'
+              }
+            }
+          },
+          'out': {
+            attrs: {
+              '.port-body': {
+                fill: '#E74C3C'
+              }
+            }
+          }
+        }
+      }
+    });
+
+    atomic.attr({
+      rect: {
+        rx: 5,
+        ry: 5,
+        'stroke-width': 2,
+        stroke: 'black'
+      },
+      text: {
+        text: modelName,
+        'font-size': 12,
+        'font-weight': 'bold',
+        'font-variant': 'small-caps',
+        'text-transform': 'capitalize',
+        margin: '20px',
+        padding: '40px'
+      }
+    });
+
+    // Add input parameter ports
+    inputs.forEach((input) => {
+      try {
+        atomic.addPort(input);
+      } catch (err) {
+        console.log(err, input);
+      }
+    });
+
+    // Add output parameter ports
+    outputs.forEach((output) => {
+      try {
+        atomic.addPort(output);
+      } catch (err) {
+        console.log(err, output);
+      }
+    });
+
+    return atomic;
+  }
 }();
