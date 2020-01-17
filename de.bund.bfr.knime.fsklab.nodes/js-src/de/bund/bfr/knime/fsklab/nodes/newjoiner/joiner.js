@@ -97,7 +97,7 @@ joiner = function () {
     // Resize event. Resize the paper with the window.
     window.onresize = () => {
       _paper.setDimensions(getChartWidth(), getChartHeight());
-      _paper.scaleContentToFit({ padding: 20});
+      _paper.scaleContentToFit({ padding: 20 });
     };
   }
 
@@ -208,36 +208,29 @@ joiner = function () {
     let firstModelOutputParameters = [];
     window.firstPortMap = {};
     window.secondPortMap = {};
-    try {
-      _.each(_firstModelMath.parameter, function (param) {
-        if (!_firstModelParameterMap[param.id]) {
-          let port = {
-            id: param.id,
-            label: { markup: createMarkup(param.id, param.dataType) }
-          };
-          if (param.classification === "INPUT" || param.classification === "CONSTANT") {
-            port.group = "in";
-            firstModelInputParameters.push(port);
-          } else {
-            port.group = "out";
-            firstModelOutputParameters.push(port);
-          }
-          window.firstPortMap[param.id] = port;
-          _firstModelParameterMap[param.id] = param;
+
+    for (param of _firstModelMath.parameter) {
+      if (!_firstModelParameterMap[param.id]) {
+        let port = createPort(param.id, param.dataType);
+        if (param.classification === "INPUT" || param.classification === "CONSTANT") {
+          port.group = "in";
+          firstModelInputParameters.push(port);
+        } else {
+          port.group = "out";
+          firstModelOutputParameters.push(port);
         }
-      });
-    } catch (err) {
-      console.log(err);
+
+        window.firstPortMap[param.id] = port;
+        _firstModelParameterMap[param.id] = param;
+      }
     }
 
     let secondModelInputParameters = [];
     let secondModelOutputParameters = [];
-    _.each(_secondModelMath.parameter, function (param) {
+
+    for (param of _secondModelMath.parameter) {
       if (!_firstModelParameterMap[param.id]) {
-        let port = {
-          id: param.id,
-          label: { markup: createMarkup(param.id, param.dataType) }
-        };
+        let port = createPort(param.id, param.dataType);
         if (param.classification === "INPUT" || param.classification === "CONSTANT") {
           port.group = "in";
           secondModelInputParameters.push(port);
@@ -245,10 +238,11 @@ joiner = function () {
           port.group = "out";
           secondModelOutputParameters.push(port);
         }
+
         window.secondPortMap[param.id] = port;
         _secondModelParameterMap[param.id] = param;
       }
-    });
+    };
 
     let canvas = $("#paper");
     let paperWidth = canvas.width();
@@ -442,12 +436,18 @@ joiner = function () {
   }
 
   /**
-   * Create HTML markup for a parameter.
-   * @param {string} id Parameter id
-   * @param {string} type Parameter type
+   * Create a JointJS port for a model parameter.
+   * @param {string} id Parameter id 
+   * @param {string} dataType Parameter data type 
    */
-  function createMarkup(id, type) {
-    return `<text class="label-text" fill="black"><title>${type}</title>${id}</text>`;
+  function createPort(id, dataType) {
+    return {
+      'id': id,
+      'label': {
+        'markup': `<text class="label-text" fill="black"><title>${dataType}</title>${id}</text>`
+      },
+      'attrs': { 'font-size': 10}
+    };
   }
 
   /** Create model to join.
@@ -485,44 +485,31 @@ joiner = function () {
             }
           }
         }
-      }
-    });
-
-    atomic.attr({
-      rect: {
-        rx: 5,
-        ry: 5,
-        'stroke-width': 2,
-        stroke: 'black'
       },
-      text: {
-        text: modelName,
-        'font-size': 12,
-        'font-weight': 'bold',
-        'font-variant': 'small-caps',
-        'text-transform': 'capitalize',
-        margin: '20px',
-        padding: '40px'
+      attrs: {
+        rect: {
+          rx: 5,
+          ry: 5,
+          'stroke-width': 2,
+          stroke: 'black'
+        },
+        text: {
+          text: modelName,
+          'font-size': 12,
+          'font-weight': 'bold',
+          'font-variant': 'small-caps',
+          'text-transform': 'capitalize',
+          margin: '20px',
+          padding: '40px'
+        }
       }
     });
 
     // Add input parameter ports
-    inputs.forEach((input) => {
-      try {
-        atomic.addPort(input);
-      } catch (err) {
-        console.log(err, input);
-      }
-    });
+    inputs.forEach(input => atomic.addPort(input));
 
     // Add output parameter ports
-    outputs.forEach((output) => {
-      try {
-        atomic.addPort(output);
-      } catch (err) {
-        console.log(err, output);
-      }
-    });
+    outputs.forEach(output => atomic.addPort(output));
 
     return atomic;
   }
