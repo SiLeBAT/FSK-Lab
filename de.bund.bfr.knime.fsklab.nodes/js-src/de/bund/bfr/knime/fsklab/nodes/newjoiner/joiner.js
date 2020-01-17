@@ -1,5 +1,12 @@
 joiner = function () {
 
+  // Dimension utility functions.
+  // Returns the windows width minus the left and right padding.
+  const getChartWidth = () => window.innerWidth - 32;
+
+  // Returns the window height minus the navbar and modal footer
+  const getChartHeight = () => window.innerHeight - $(".navbar-collapse").height() - $(".modal-footer").height() - 30;
+
   const view = { version: "1.0.0", name: "FSK Joiner" };
 
   let _representation;
@@ -72,8 +79,6 @@ joiner = function () {
    <div role="tabpanel" class="tab-pane active" id="joinPanel">
      <div id="paper">
      </div>
-     <div id="details" class="col-sm-12">
-     </div>
    </div>
    <div role="tabpanel" class="tab-pane" id="generalInformationPanel">
    </div>
@@ -89,19 +94,11 @@ joiner = function () {
 
     drawWorkflow();
 
-    // Initialize tab function
-    $('#viewTab a').click((event) => {
-      event.preventDefault();
-      $(this).tab('show');
-
-      let canvas = $('#paper');
-      _paper.setDimensions(canvas.width(), canvas.height());
-    });
-
-    $('#join-tab').on('shown.bs.tab', (event) => {
-      let canvas = $('#paper');
-      _paper.setDimensions(canvas.width(), canvas.height());
-    });
+    // Resize event. Resize the paper with the window.
+    window.onresize = () => {
+      _paper.setDimensions(getChartWidth(), getChartHeight());
+      _paper.scaleContentToFit({ padding: 20});
+    };
   }
 
   function drawWorkflow() {
@@ -116,6 +113,8 @@ joiner = function () {
       snapLinks: true,
       linkPinning: true,
       drawGrid: true,
+      width: getChartWidth(),
+      height: getChartHeight(),
 
       highlighting: {
         'default': {
@@ -165,7 +164,6 @@ joiner = function () {
       previousOne = cellView;
       cellView.highlight();
     });
-
 
     // Pointer is released after pressing down a link
     _paper.on('link:pointerup', (event) => {
@@ -253,11 +251,6 @@ joiner = function () {
     });
 
     let canvas = $("#paper");
-    canvas.height(Math.max(firstModelInputParameters.length,
-      secondModelInputParameters.length) * 25 + 300);
-
-    _paper.setDimensions(canvas.width(), canvas.height());
-
     let paperWidth = canvas.width();
     let firstModelHeight = Math.max(firstModelInputParameters.length, firstModelOutputParameters.length) * 25;
 
@@ -287,7 +280,7 @@ joiner = function () {
         return;
       }
 
-      $('#details').html(createDetailsForm(sourcePort, targetPort));
+      // $('#details').html(createDetailsForm(sourcePort, targetPort));
 
       let command = $("#Command");
       command.keyup(() => window.sJoinRealtion.command = command.val());
