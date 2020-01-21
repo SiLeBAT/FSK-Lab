@@ -5,18 +5,22 @@ joiner = function () {
   const getChartWidth = () => window.innerWidth - 32;
 
   // Returns the window height minus the navbar and modal footer
-  const getChartHeight = () => window.innerHeight - $(".navbar-collapse").height() - $(".modal-footer").height() - 30;
+  const getChartHeight = () => window.innerHeight - $(".navbar-collapse").height() - $(".modal-footer").height() - 300;
 
   const view = { version: "1.0.0", name: "FSK Joiner" };
 
   let _representation;
   let _value;
 
+  let _modelScriptTree;
+
   /** JointJS graph. */
   let _graph;
 
   /** JointJS graph view. */
   let _paper;
+
+  let _firstModel;
 
   let _firstModelMath;
   let _secondModelMath;
@@ -34,11 +38,24 @@ joiner = function () {
     // TODO: before creating body:
     // TODO: process metadata
 
+    if (value.modelMetaData) {
+      _firstModel = JSON.parse(value.modelMetaData);
+    } else {
+      _firstModel = {
+        generalInformation: {},
+        scope: {},
+        dataBackground: {},
+        modelMath: {}
+      };
+    }
+
     _firstModelName = value.firstModelName;
     _secondModelName = value.secondModelName;
 
     _firstModelMath = JSON.parse(value.modelMath1);
     _secondModelMath = JSON.parse(value.modelMath2);
+
+    _modelScriptTree = JSON.parse(value.modelScriptTree);
 
     window.joinRelationsMap = {};
 
@@ -75,11 +92,37 @@ joiner = function () {
      </li>
    </ul>
  </div>
- <div class="tab-content" id="viewContent">
-   <div role="tabpanel" class="tab-pane active" id="joinPanel">
-     <div id="paper">
-     </div>
-   </div>
+
+  <div class="tab-content" id="viewContent">
+    <div role="tabpanel" class="tab-pane active" id="joinPanel">
+      <div id="paper"></div>
+      <form id="detailsForm">
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label" for="source">Source Port:</label>
+          <div class="col-sm-10"><input type="text" class="form-control" id="source"></div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label" for="target">Target Port:</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="target"">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label" for="commandLanguage">Command language:</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="commandLanguage">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label" for="Command">Conversion command:</label>
+          <div class="col-sm-10">
+            <textarea class="form-control" rows="3" id="Command"></textarea>
+          </div>
+        </div>
+      </form>
+    </div>
+
+   </div> <!-- tabpanel -->
    <div role="tabpanel" class="tab-pane" id="generalInformationPanel">
    </div>
    <div role="tabpanel" class="tab-pane" id="scopePanel">
@@ -168,7 +211,6 @@ joiner = function () {
     // Pointer is released after pressing down a link
     _paper.on('link:pointerup', (event) => {
       if (event.model instanceof joint.dia.Link) {
-        let sourcePort = event.model.attributes.source.port;
         let targetPort = event.model.attributes.target.port;
         if (!targetPort) {
           event.remove();
@@ -176,33 +218,11 @@ joiner = function () {
       }
     });
 
-    // Pointer is double clicked on a target
-    _paper.on('cell:pointerdblclick', (cellView, event, x, y) => {
-      if (!(cellView.model instanceof joint.dia.Link)) return;
+    // Update form when a link is clicked
+    _paper.on("link:pointerclick", updateForm);
 
-      let link = cellView.model;
-
-      let sourcePort = link.get('source').port;
-      let targetPort = link.get('target').port;
-
-      window.sJoinRealtion = window.joinRelationsMap[sourcePort + "," + targetPort];
-
-      if (!document.getElementById("commandLanguage")) {
-        let detailsForm = createDetailsForm(sourcePort, targetPort);
-        $("#details").html(detailsForm);
-      }
-
-      document.getElementById("source").value = sourcePort;
-      document.getElementById("target").value = targetPort;
-
-      let commandLanguage = $("#commandLanguage");
-      commandLanguage.val(sJoinRealtion.language_written_in);
-      commandLanguage.onchange(() => window.sJoinRealtion.language_written_in = commandLanguage.val());
-
-      let commandTextArea = $("Command");
-      commandTextArea.val(sJoinRealtion.command);
-      commandTextArea.keyup(() => window.sJoinRealtion.command = commandTextArea.val());
-    });
+    // Update form when a link is double clicked
+    _paper.on("cell:pointerdblclick", updateForm);
 
     let firstModelInputParameters = [];
     let firstModelOutputParameters = [];
@@ -267,32 +287,32 @@ joiner = function () {
       secondModelHeight, secondModelNameWrap, secondModelInputParameters,
       secondModelOutputParameters);
 
+    // Update form when a link is selected (clicked)
+    _paper.on("link:pointerclick", updateForm);
+
     _paper.on('link:connect', function (evt, cellView, magnet, arrowhead) {
       sourcePort = evt.model.attributes.source.port;
-      targetPort = evt.model.attributes.port;
+      targetPort = evt.model.attributes.target.port;
       if (!targetPort) {
         return;
       }
 
-      // $('#details').html(createDetailsForm(sourcePort, targetPort));
+      // Update form
+      document.getElementById("source").value = sourcePort;
+      document.getElementById("target").value = targetPort;
 
-      let command = $("#Command");
-      command.keyup(() => window.sJoinRealtion.command = command.val());
+      let command = document.getElementById("Command");
+      command.value = sourcePort;
+      command.onkeyup = () => window.sJoinRealtion.command = command.value;
 
-      command.blur(() => {
+      command.onblur = () => {
         joinModelScript = "";
 
         $.each(_viewValue.joinRelations, function (index, value) {
           joinModelScript += `${value.targetParam.parameterID} <- ${value.command} \n`;
-          _modelScriptTree[1].script = joinModelScript
-          $('#tree').treeview({ data: _modelScriptTree, borderColor: 'blue' });
-          $('#tree').on('nodeSelected', function (event, data) {
-            scriptBeingEdited = data;
-            window.codeMirrorContainer.CodeMirror.setValue(data.script);
-            window.codeMirrorContainer.CodeMirror.refresh();
-          });
+          _modelScriptTree[1].script = joinModelScript;
         });
-      });
+      }
 
       let sourceParameter = _firstModelParameterMap[sourcePort] ?
         _firstModelParameterMap[sourcePort] : _secondModelParameterMap[sourcePort];
@@ -312,27 +332,20 @@ joiner = function () {
           $('#commandLanguage').val(_firstModel.generalInformation.languageWrittenIn);
         }
 
-        if (!(_viewValue.joinRelations.push)) {
-          _viewValue.joinRelations = []
+        if (!_value.joinRelations) {
+          _value.joinRelations = []
         }
 
-        _viewValue.joinRelations.push(sJoinRealtion);
+        _value.joinRelations.push(sJoinRealtion);
         window.joinRelationsMap[sourcePort + "," + targetPort] = sJoinRealtion
         joinModelScript = "";
 
-        $.each(_viewValue.joinRelations, function (index, value) {
+        $.each(_value.joinRelations, function (index, value) {
           joinModelScript += `${value.targetParam.parameterID} <- ${value.command}\n`;
           _modelScriptTree[1].script = joinModelScript
         });
 
-        $('#tree').treeview({ data: _modelScriptTree, borderColor: 'blue' });
-        $('#tree').on('nodeSelected', function (event, data) {
-          scriptBeingEdited = data;
-          window.codeMirrorContainer.CodeMirror.setValue(data.script);
-          window.codeMirrorContainer.CodeMirror.refresh();
-        });
-
-        _viewValue.jsonRepresentation = JSON.stringify(graph.toJSON());
+        _value.jsonRepresentation = JSON.stringify(_graph.toJSON());
       }
     }); // paper.on('link:connect')
 
@@ -384,7 +397,7 @@ joiner = function () {
         firstPort = window.firstPortMap[portIds[0]]
         secondPort = window.secondPortMap[portIds[1]]
 
-        var link = new joint.shapes.devs.Link({
+        let link = new joint.shapes.devs.Link({
           source: {
             id: firstNodeId,
             port: portIds[0]
@@ -402,40 +415,6 @@ joiner = function () {
   }
 
   /**
- * Return HTML string for the details form.
- * @param {*} sourcePort 
- * @param {*} targetPort 
- */
-  function createDetailsForm(sourcePort, targetPort) {
-    return `<form action="">
-<div class="form-group row">
-  <label class="col-6 col-form-label" for="source">Source Port:</label>
-  <div class="col-6">
-    <input type="text" class="form-control" id="source" value="${sourcePort}">
-  </div>
-</div>
-<div class="form-group row">
-  <label class="col-6 col-form-label" for="target">Target Port:</label>
-  <div class="col-6">
-    <input type="text" class="form-control" id="target" value="${targetPort}">
-  </div>
-</div>
-<div class="form-group row">
-  <label class="col-6 col-form-label" for="commandLanguage">Command language:</label>
-  <div class="col-6">
-    <input type="text" class="form-control" id="commandLanguage">
-  </div>
-</div>
-<div class="form-group row">
-  <label class="col-6 col-form-label" for="Command">Conversion command:</label>
-  <div class="col-6">
-    <textarea class="form-control" rows="3" id="Command">${sourcePort}</textarea>
-  </div>
-</div>
-</form>`;
-  }
-
-  /**
    * Create a JointJS port for a model parameter.
    * @param {string} id Parameter id 
    * @param {string} dataType Parameter data type 
@@ -446,8 +425,29 @@ joiner = function () {
       'label': {
         'markup': `<text class="label-text" fill="black"><title>${dataType}</title>${id}</text>`
       },
-      'attrs': { 'font-size': 10}
+      'attrs': { 'font-size': 10 }
     };
+  }
+
+  /**
+   * Call-back function for updating the form when a link between two ports is clicked.
+   */
+  function updateForm(evt, cellView, magnet, arrowhead) {
+    let sourcePort = evt.model.get("source").port;
+    let targetPort = evt.model.get("target").port;
+
+    window.sJoinRealtion = window.joinRelationsMap[sourcePort + "," + targetPort];
+
+    document.getElementById("source").value = sourcePort;
+    document.getElementById("target").value = targetPort;
+
+    let commandLanguage = document.getElementById("commandLanguage");
+    commandLanguage.value = window.sJoinRealtion.language_written_in;
+    commandLanguage.onchange = () => window.sJoinRealtion.language_written_in = commandLanguage.value;
+
+    let commandTextArea = document.getElementById("Command");
+    commandTextArea.value = window.sJoinRealtion.command;
+    commandTextArea.onkeyup = () => window.sJoinRealtion.command = commandTextArea.val()
   }
 
   /** Create model to join.
