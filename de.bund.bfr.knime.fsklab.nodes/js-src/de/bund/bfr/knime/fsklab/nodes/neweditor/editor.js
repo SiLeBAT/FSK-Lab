@@ -94,7 +94,7 @@ fskeditorjs = function () {
 
     _createPanels() {
 
-      let schema = schemas.genericModel;
+      let schema = fskui.genericModel;
 
       return {
         generalInformation: new FormPanel("General", schema.generalInformation, _metadata.generalInformation),
@@ -196,7 +196,7 @@ fskeditorjs = function () {
 
     _createPanels() {
 
-      let schema = schemas.dataModel;
+      let schema = fskui.dataModel;
 
       return {
         generalInformation: new FormPanel("General", schema.generalInformation, _metadata.generalInformation),
@@ -291,7 +291,7 @@ fskeditorjs = function () {
 
     _createPanels() {
 
-      let schema = schemas.predictiveModel;
+      let schema = fskui.predictiveModel;
 
       return {
         generalInformation: new FormPanel("General", schema.generalInformation, _metadata.generalInformation),
@@ -380,7 +380,7 @@ fskeditorjs = function () {
 
     _createPanels() {
 
-      let schema = schemas.otherModel;
+      let schema = fskui.otherModel;
 
       return {
         generalInformation: new FormPanel("General", schema.generalInformation, _metadata.generalInformation),
@@ -477,7 +477,7 @@ fskeditorjs = function () {
     }
 
     _createPanels() {
-      let schema = schemas.doseResponseModel;
+      let schema = fskui.doseResponseModel;
 
       return {
         generalInformation: new FormPanel("General", schema.generalInformation, _metadata.generalInformation),
@@ -577,7 +577,7 @@ fskeditorjs = function () {
 
     _createPanels() {
 
-      let schema = schemas.toxicologicalModel;
+      let schema = fskui.toxicologicalModel;
 
       return {
         generalInformation: new FormPanel("General", schema.generalInformation, _metadata.generalInformation),
@@ -678,7 +678,7 @@ fskeditorjs = function () {
 
     _createPanels() {
 
-      let schema = schemas.exposureModel;
+      let schema = fskui.exposureModel;
 
       return {
         generalInformation: new FormPanel("General", schema.generalInformation, _metadata.generalInformation),
@@ -780,7 +780,7 @@ fskeditorjs = function () {
 
     _createPanels() {
 
-      let schema = schemas.processModel;
+      let schema = fskui.processModel;
 
       return {
         generalInformation: new FormPanel("General", schema.generalInformation, _metadata.generalInformation),
@@ -875,7 +875,7 @@ fskeditorjs = function () {
 
     _createPanels() {
 
-      let schema = schemas.consumptionModel;
+      let schema = fskui.consumptionModel;
 
       return {
         generalInformation: new FormPanel("General", schema.generalInformation, _metadata.generalInformation),
@@ -975,7 +975,7 @@ fskeditorjs = function () {
 
     _createPanels() {
 
-      let schema = schemas.healthModel;
+      let schema = fskui.healthModel;
 
       return {
         generalInformation: new FormPanel("General", schema.generalInformation, _metadata.generalInformation),
@@ -1080,7 +1080,7 @@ fskeditorjs = function () {
 
     _createPanels() {
 
-      let schema = schemas.genericModel;
+      let schema = fskui.genericModel;
 
       return {
         generalInformation: new FormPanel("General", schema.generalInformation, _metadata.generalInformation),
@@ -1190,7 +1190,7 @@ fskeditorjs = function () {
 
     _createPanels() {
 
-      let schema = schemas.qraModel;
+      let schema = fskui.qraModel;
 
       return {
         generalInformation: new FormPanel("General", schema.generalInformation, _metadata.generalInformation),
@@ -1317,7 +1317,7 @@ fskeditorjs = function () {
    *  it returns undefined.
    */
   function createForm(prop, value) {
-    let vocabulary = prop.vocabulary ? vocabularies[prop.vocabulary] : null;
+    let vocabulary = prop.vocabulary ? cv[prop.vocabulary] : null;
     let isMandatory = prop.required ? prop.required : false;
 
     if (prop.type === "text" || prop.type === "number" || prop.type === "url" ||
