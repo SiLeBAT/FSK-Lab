@@ -120,7 +120,6 @@
      </webResourceBundle>
      
      <!-- JS and CSS code for Fsk Joiner node -->
-     <!--
      <webResourceBundle
        debug="true"
        name="FSK Joiner"
@@ -143,8 +142,8 @@
 	   <webDependency webResourceBundleID="de.bund.bfr.knime.fsklab.nodes.joiner.jointjscss"></webDependency>
 	   <webDependency webResourceBundleID="de.bund.bfr.knime.fsklab.nodes.joiner.bundle.js" />
 	 </webResourceBundle>
-	 -->
 	 
+	 <!--
 	 <webResourceBundle debug="true" name="FSK Joiner" usesDefine="true" version="1.0.0" webResourceBundleID="de.bund.bfr.knime.fsklab.js.joiner.bundle">
 	   <webResource relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/newjoiner" relativePathTarget="js-src/de/bund/bfr/knime/fsklab/nodes/newjoiner" />
 	   
@@ -154,6 +153,7 @@
 	   <webDependency webResourceBundleID="JointJS_3.1.1" />
 	   <webDependency webResourceBundleID="bootstrap_3.3.6" />
 	 </webResourceBundle>
+	 -->
 	 
 	 <!-- JS and CSS code for Fsk Editor JS node -->
 	 <webResourceBundle debug="true" name="Jointjs" version="1.0.0"
