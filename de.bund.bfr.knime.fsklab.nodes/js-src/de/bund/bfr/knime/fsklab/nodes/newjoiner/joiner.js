@@ -31,6 +31,10 @@ joiner = function () {
   let _firstModelName;
   let _secondModelName;
 
+  let _handler;
+
+  fskutil = new fskutil();
+
   window.joinRelationsMap = {};
 
   view.init = function (representation, value) {
@@ -70,10 +74,13 @@ joiner = function () {
       _value.joinRelations = [];
     }
 
+    _handler = new fskutil.GenericModel(_metadata);
+
     createBody();
   }
 
   view.getComponentValue = function () {
+    _value.modelMetaData = JSON.stringify(_handler.metaData);
     return _value;
   }
 
@@ -88,18 +95,7 @@ joiner = function () {
      <li role="presentation">
        <a id="join-tab" href="#joinPanel" aria-controls="joinPanel" role="tab" data-toggle="tab">Join</a>
      </li>
-     <li role="presentation">
-       <a href="#generalInformationPanel" aria-controls="generalInformationPanel" role="tab" data-toggle="tab">General information</a>
-     </li>
-     <li role="presentation">
-       <a href="#scopePanel" aria-controls="scopePanel" role="tab" data-toggle="tab">Scope</a>
-     </li>
-     <li role="presentation">
-       <a href="#dataBackgroundPanel" aria-controls="dataBackgroundPanel" role="tab" data-toggle="tab">Data background</a>
-     </li>
-     <li role="presentation">
-       <a href="#modelMathPanel" aria-controls="modelMathPanel" role="tab" data-toggle="tab">Model math</a>
-     </li>
+     ${_handler.menus}
    </ul>
  </div>
 
@@ -144,6 +140,24 @@ joiner = function () {
  </div>
 </nav>
 </div>`);
+
+    // Add tab-pane(s)
+    const container = document.getElementsByClassName("container-fluid")[0];
+    const viewContent = document.getElementById("viewContent");
+    Object.entries(_handler.panels).forEach(([key, value]) => {
+      let tabPanel = document.createElement("div");
+      tabPanel.setAttribute("role", "tabpanel");
+      tabPanel.className = "tab-pane";
+      tabPanel.id = key;
+      tabPanel.appendChild(value.panel);
+
+      // Add dialog if fskutil.TablePanel
+      if (value.dialog) {
+        container.appendChild(value.dialog.modal);
+      }
+
+      viewContent.appendChild(tabPanel);
+    });
 
     drawWorkflow();
 

@@ -151,6 +151,11 @@
 	   
 	   <webDependency webResourceBundleID="JointJS_3.1.1" />
 	   <webDependency webResourceBundleID="bootstrap_3.3.6" />
+       <webDependency webResourceBundleID="bootstrap3_typeahead_4.0.2" />
+	   
+	   <webDependency webResourceBundleID="ControlledVocabularies_1.0.0" />
+	   <webDependency webResourceBundleID="FskMetadata_1.0.0" />
+	   <webDependency webResourceBundleID="FskUtil_1.0.0" />
 	 </webResourceBundle>
 	 
 	 <!-- JS and CSS code for Fsk Editor JS node -->
