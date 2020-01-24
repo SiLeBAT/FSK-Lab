@@ -49,29 +49,29 @@ fskeditorjs = function () {
     if (value.modelType === "genericModel") {
       handler = new fskutil.GenericModel(_metadata);
     } else if (value.modelType === "dataModel") {
-      handler = new DataModel(_metadata);
+      handler = new fskutil.DataModel(_metadata);
     } else if (value.modelType === "predictiveModel") {
-      handler = new PredictiveModel(_metadata);
+      handler = new fskutil.PredictiveModel(_metadata);
     } else if (value.modelType === "otherModel") {
-      handler = new OtherModel(_metadata);
+      handler = new fskutil.OtherModel(_metadata);
     } else if (value.modelType === "toxicologicalModel") {
-      handler = new ToxicologicalModel(_metadata);
+      handler = new fskutil.ToxicologicalModel(_metadata);
     } else if (value.modelType === "doseResponseModel") {
-      handler = new DoseResponseModel(_metadata);
+      handler = new fskutil.DoseResponseModel(_metadata);
     } else if (value.modelType === "exposureModel") {
-      handler = new ExposureModel(_metadata);
+      handler = new fskutil.ExposureModel(_metadata);
     } else if (value.modelType === "processModel") {
-      handler = new ProcessModel(_metadata);
+      handler = new fskutil.ProcessModel(_metadata);
     } else if (value.modelType === "consumptionModel") {
-      handler = new ConsumptionModel(_metadata);
+      handler = new fskutil.ConsumptionModel(_metadata);
     } else if (value.modelType === "healthModel") {
-      handler = new HealthModel(_metadata);
+      handler = new fskutil.HealthModel(_metadata);
     } else if (value.modelType === "riskModel") {
-      handler = new RiskModel(_metadata);
+      handler = new fskutil.RiskModel(_metadata);
     } else if (value.modelType === "qraModel") {
-      handler = new QraModel(_metadata);
+      handler = new fskutil.QraModel(_metadata);
     } else {
-      handler = new GenericModel(_metadata);
+      handler = new fskutil.GenericModel(_metadata);
     }
 
     createUI();
