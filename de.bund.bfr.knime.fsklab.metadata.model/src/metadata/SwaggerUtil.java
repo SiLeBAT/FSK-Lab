@@ -539,7 +539,7 @@ public class SwaggerUtil {
 	}
 
 	@SuppressWarnings("deprecation")
-	private static LocalDate toLocalDate(Date date) {
+	public static LocalDate toLocalDate(Date date) {
 		
 		ZoneId defaultZoneId = ZoneId.systemDefault();
 		

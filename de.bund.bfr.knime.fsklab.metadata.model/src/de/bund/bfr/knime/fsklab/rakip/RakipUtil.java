@@ -13,6 +13,7 @@ import com.gmail.gcolaianni5.jris.bean.Record;
 import com.gmail.gcolaianni5.jris.bean.Type;
 
 import de.bund.bfr.metadata.swagger.Reference.PublicationTypeEnum;
+import metadata.SwaggerUtil;
 
 public class RakipUtil {
 
@@ -24,10 +25,10 @@ public class RakipUtil {
 		generalInformation.setName(deprecatedGI.name);
 		generalInformation.setSource(deprecatedGI.source);
 		generalInformation.setIdentifier(deprecatedGI.identifier);
-		generalInformation.setCreationDate(toLocalDate(deprecatedGI.creationDate));
+		generalInformation.setCreationDate(SwaggerUtil.toLocalDate(deprecatedGI.creationDate));
 
 		for (Date date : deprecatedGI.modificationDate) {
-			generalInformation.addModificationDateItem(toLocalDate(date));
+			generalInformation.addModificationDateItem(SwaggerUtil.toLocalDate(date));
 		}
 
 		generalInformation.rights(deprecatedGI.rights);
@@ -141,11 +142,11 @@ public class RakipUtil {
 		product.setFisheriesArea(deprecated.fisheriesArea);
 
 		if (deprecated.productionDate != null) {
-			product.setProductionDate(toLocalDate(deprecated.productionDate));
+			product.setProductionDate(SwaggerUtil.toLocalDate(deprecated.productionDate));
 		}
 
 		if (deprecated.expirationDate != null) {
-			product.setExpiryDate(toLocalDate(deprecated.expirationDate));
+			product.setExpiryDate(SwaggerUtil.toLocalDate(deprecated.expirationDate));
 		}
 
 		return product;
@@ -477,10 +478,5 @@ public class RakipUtil {
 				de.bund.bfr.metadata.swagger.Parameter.DataTypeEnum.MATRIXOFSTRINGS);
 		TYPES.put(Parameter.DataTypes.Other, de.bund.bfr.metadata.swagger.Parameter.DataTypeEnum.OBJECT);
 		TYPES.put(Parameter.DataTypes.Object, de.bund.bfr.metadata.swagger.Parameter.DataTypeEnum.OBJECT);
-	}
-
-	@SuppressWarnings("deprecation")
-	private static LocalDate toLocalDate(Date date) {
-		return LocalDate.of(date.getYear(), date.getMonth(), date.getDay());
 	}
 }
