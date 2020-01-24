@@ -20,7 +20,7 @@ joiner = function () {
   /** JointJS graph view. */
   let _paper;
 
-  let _firstModel;
+  let _metadata;
 
   let _firstModelMath;
   let _secondModelMath;
@@ -31,6 +31,8 @@ joiner = function () {
   let _firstModelName;
   let _secondModelName;
 
+  window.joinRelationsMap = {};
+
   view.init = function (representation, value) {
     _representation = representation;
     _value = value;
@@ -39,9 +41,9 @@ joiner = function () {
     // TODO: process metadata
 
     if (value.modelMetaData) {
-      _firstModel = JSON.parse(value.modelMetaData);
+      _metadata = JSON.parse(value.modelMetaData);
     } else {
-      _firstModel = {
+      _metadata = {
         generalInformation: {},
         scope: {},
         dataBackground: {},
@@ -57,13 +59,21 @@ joiner = function () {
 
     _modelScriptTree = JSON.parse(value.modelScriptTree);
 
-    window.joinRelationsMap = {};
+		if (_value.joinRelations && _value.joinRelations != "") {
+      _value.joinRelations = JSON.parse(_value.joinRelations);
+			$.each(_value.joinRelations, function(index, value) {
+				if (value) {
+					window.joinRelationsMap[value.sourceParam.id+","+value.targetParam.id] = value ;	
+				}
+			});
+		} else {
+      _value.joinRelations = [];
+    }
 
     createBody();
   }
 
   view.getComponentValue = function () {
-    // TODO: getComponentValue
     return _value;
   }
 
@@ -327,9 +337,9 @@ joiner = function () {
           command: sourcePort
         };
 
-        if (_firstModel.generalInformation.languageWrittenIn) {
-          window.sJoinRealtion.language_written_in = _firstModel.generalInformation.languageWrittenIn;
-          $('#commandLanguage').val(_firstModel.generalInformation.languageWrittenIn);
+        if (_metadata.generalInformation.languageWrittenIn) {
+          window.sJoinRealtion.language_written_in = _metadata.generalInformation.languageWrittenIn;
+          $('#commandLanguage').val(_metadata.generalInformation.languageWrittenIn);
         }
 
         if (!_value.joinRelations) {
