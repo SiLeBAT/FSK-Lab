@@ -20,7 +20,7 @@ joiner = function () {
   /** JointJS graph view. */
   let _paper;
 
-  let _firstModel;
+  let _metadata;
 
   let _firstModelMath;
   let _secondModelMath;
@@ -31,6 +31,12 @@ joiner = function () {
   let _firstModelName;
   let _secondModelName;
 
+  let _handler;
+
+  fskutil = new fskutil();
+
+  window.joinRelationsMap = {};
+
   view.init = function (representation, value) {
     _representation = representation;
     _value = value;
@@ -39,9 +45,9 @@ joiner = function () {
     // TODO: process metadata
 
     if (value.modelMetaData) {
-      _firstModel = JSON.parse(value.modelMetaData);
+      _metadata = JSON.parse(value.modelMetaData);
     } else {
-      _firstModel = {
+      _metadata = {
         generalInformation: {},
         scope: {},
         dataBackground: {},
@@ -57,13 +63,24 @@ joiner = function () {
 
     _modelScriptTree = JSON.parse(value.modelScriptTree);
 
-    window.joinRelationsMap = {};
+		if (_value.joinRelations && _value.joinRelations != "") {
+      _value.joinRelations = JSON.parse(_value.joinRelations);
+			$.each(_value.joinRelations, function(index, value) {
+				if (value) {
+					window.joinRelationsMap[value.sourceParam.id+","+value.targetParam.id] = value ;	
+				}
+			});
+		} else {
+      _value.joinRelations = [];
+    }
+
+    _handler = new fskutil.GenericModel(_metadata);
 
     createBody();
   }
 
   view.getComponentValue = function () {
-    // TODO: getComponentValue
+    _value.modelMetaData = JSON.stringify(_handler.metaData);
     return _value;
   }
 
@@ -78,18 +95,7 @@ joiner = function () {
      <li role="presentation">
        <a id="join-tab" href="#joinPanel" aria-controls="joinPanel" role="tab" data-toggle="tab">Join</a>
      </li>
-     <li role="presentation">
-       <a href="#generalInformationPanel" aria-controls="generalInformationPanel" role="tab" data-toggle="tab">General information</a>
-     </li>
-     <li role="presentation">
-       <a href="#scopePanel" aria-controls="scopePanel" role="tab" data-toggle="tab">Scope</a>
-     </li>
-     <li role="presentation">
-       <a href="#dataBackgroundPanel" aria-controls="dataBackgroundPanel" role="tab" data-toggle="tab">Data background</a>
-     </li>
-     <li role="presentation">
-       <a href="#modelMathPanel" aria-controls="modelMathPanel" role="tab" data-toggle="tab">Model math</a>
-     </li>
+     ${_handler.menus}
    </ul>
  </div>
 
@@ -134,6 +140,24 @@ joiner = function () {
  </div>
 </nav>
 </div>`);
+
+    // Add tab-pane(s)
+    const container = document.getElementsByClassName("container-fluid")[0];
+    const viewContent = document.getElementById("viewContent");
+    Object.entries(_handler.panels).forEach(([key, value]) => {
+      let tabPanel = document.createElement("div");
+      tabPanel.setAttribute("role", "tabpanel");
+      tabPanel.className = "tab-pane";
+      tabPanel.id = key;
+      tabPanel.appendChild(value.panel);
+
+      // Add dialog if fskutil.TablePanel
+      if (value.dialog) {
+        container.appendChild(value.dialog.modal);
+      }
+
+      viewContent.appendChild(tabPanel);
+    });
 
     drawWorkflow();
 
@@ -327,9 +351,9 @@ joiner = function () {
           command: sourcePort
         };
 
-        if (_firstModel.generalInformation.languageWrittenIn) {
-          window.sJoinRealtion.language_written_in = _firstModel.generalInformation.languageWrittenIn;
-          $('#commandLanguage').val(_firstModel.generalInformation.languageWrittenIn);
+        if (_metadata.generalInformation.languageWrittenIn) {
+          window.sJoinRealtion.language_written_in = _metadata.generalInformation.languageWrittenIn;
+          $('#commandLanguage').val(_metadata.generalInformation.languageWrittenIn);
         }
 
         if (!_value.joinRelations) {
