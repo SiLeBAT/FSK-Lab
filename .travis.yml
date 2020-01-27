@@ -17,7 +17,7 @@ before_install:
 - sudo apt-get --allow-unauthenticated install r-base -qq
 # Install packages
 - sudo apt-get install libcurl4-openssl-dev libxml2-dev libssl-dev -qq
-- sudo R --vanilla -e 'install.packages(c("Rserve", "miniCRAN", "ggplot2", "svglite"), repos="http://cran.us.r-project.org", Ncpus=2)'
+- sudo R --vanilla -e 'install.packages(c("Rserve", "miniCRAN", "ggplot2", "svglite"), repos="https://cran.rstudio.com", Ncpus=2)'
 
 # If build succeeds upload test coverage report
 after_success:
