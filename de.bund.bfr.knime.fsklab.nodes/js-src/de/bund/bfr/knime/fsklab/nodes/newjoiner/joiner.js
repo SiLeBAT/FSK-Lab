@@ -80,7 +80,12 @@ joiner = function () {
   }
 
   view.getComponentValue = function () {
+        
     _value.modelMetaData = JSON.stringify(_handler.metaData);
+    if (_value.joinRelations instanceof array) {
+      _value.joinRelations = JSON.stringify(_value.joinRelations);
+    }
+
     return _value;
   }
 
