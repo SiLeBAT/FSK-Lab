@@ -29,56 +29,47 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.FskPlugin;
 
-
-
 class JoinerViewValue extends JSONViewContent {
 
   private static final NodeLogger LOGGER = NodeLogger.getLogger(JoinerViewValue.class);
+  
+  // Configuration keys
   private static final String CFG_ORIGINAL_MODEL_SCRIPT = "originalModelScript";
   private static final String CFG_ORIGINAL_VISUALIZATION_SCRIPT = "originalVisualizationScript";
   private static final String CFG_ORIGINAL_MODEL_SCRIPT2 = "originalModelScript2";
   private static final String CFG_ORIGINAL_VISUALIZATION_SCRIPT2 = "originalVisualizationScript2";
-  public final int pseudoIdentifier = (new Random()).nextInt();
   private static final String CFG_MODEL_METADATA = "ModelMetaData";
-
-
   private static final String CFG_MODEL_MATH1 = "modelMath1";
   private static final String CFG_MODEL_MATH2 = "modelMath2";
-
   private static final String CFG_JOINER_RELATION = "joinRelation";
-
   private static final String CFG_JSON_REPRESENTATION = "JSONRepresentation";
   private static final String CFG_MODELSCRIPT_TREE = "ModelScriptTree";
-
-  private static final String FIRST_MODEL_NAME = "firstModelName";
-  private static final String SECOND_MODEL_NAME = "secondModelName";
+  private static final String CFG_FIRST_MODEL_NAME = "firstModelName";
+  private static final String CFG_SECOND_MODEL_NAME = "secondModelName";
+  
+  private final int pseudoIdentifier = (new Random()).nextInt();
+  
   public String firstModelScript;
   public String secondModelScript;
-
   public String firstModelViz;
   public String secondModelViz;
-
   public String modelMetaData;
-
   public String modelMath1;
   public String modelMath2;
-
   public String joinRelations;
   public String jsonRepresentation;
   public String svgRepresentation;
   public String modelScriptTree;
-
   public String firstModelName;
   public String secondModelName;
-  
   public String validationErrors;
   public String different;
   public String modelType ;
 
   @Override
   public void saveToNodeSettings(NodeSettingsWO settings) {
-    settings.addString(FIRST_MODEL_NAME, firstModelName);
-    settings.addString(SECOND_MODEL_NAME, secondModelName);
+    settings.addString(CFG_FIRST_MODEL_NAME, firstModelName);
+    settings.addString(CFG_SECOND_MODEL_NAME, secondModelName);
     settings.addString(CFG_ORIGINAL_MODEL_SCRIPT, firstModelScript);
     settings.addString(CFG_ORIGINAL_VISUALIZATION_SCRIPT, firstModelViz);
     settings.addString(CFG_ORIGINAL_MODEL_SCRIPT2, secondModelScript);
@@ -101,8 +92,8 @@ class JoinerViewValue extends JSONViewContent {
 
   @Override
   public void loadFromNodeSettings(NodeSettingsRO settings) throws InvalidSettingsException {
-    firstModelName = settings.getString(FIRST_MODEL_NAME);
-    secondModelName = settings.getString(SECOND_MODEL_NAME);
+    firstModelName = settings.getString(CFG_FIRST_MODEL_NAME);
+    secondModelName = settings.getString(CFG_SECOND_MODEL_NAME);
     firstModelScript = settings.getString(CFG_ORIGINAL_MODEL_SCRIPT);
     firstModelViz = settings.getString(CFG_ORIGINAL_VISUALIZATION_SCRIPT);
     secondModelScript = settings.getString(CFG_ORIGINAL_MODEL_SCRIPT2);
@@ -137,12 +128,10 @@ class JoinerViewValue extends JSONViewContent {
 
   private static String getEObject(NodeSettingsRO settings, String key)
       throws InvalidSettingsException {
-
     String jsonStr = settings.getString(key);
     jsonStr = StringEscapeUtils.unescapeJson(jsonStr);
     jsonStr = jsonStr.substring(1, jsonStr.length() - 1);
     return jsonStr;
-
   }
 
   @Override
