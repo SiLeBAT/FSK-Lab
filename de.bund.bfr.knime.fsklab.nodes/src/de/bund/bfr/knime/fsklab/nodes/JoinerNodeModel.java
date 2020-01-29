@@ -23,7 +23,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -73,24 +72,27 @@ import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskSimulation;
 import de.bund.bfr.knime.fsklab.JoinRelation;
-import de.bund.bfr.metadata.swagger.Model;
 import de.bund.bfr.metadata.swagger.Parameter;
 import metadata.SwaggerUtil;
-
 
 /**
  * Fsk Joiner node model.
  */
-
 final class JoinerNodeModel extends
     AbstractWizardNodeModel<JoinerViewRepresentation, JoinerViewValue> implements PortObjectHolder {
+  
   private final JoinerNodeSettings nodeSettings = new JoinerNodeSettings();
+  
   private FskPortObject m_port;
-  public final static String suffix = "_dup";
+  
+  public final static String SUFFIX = "_dup";
+  
   // Input and output port types
   private static final PortType[] IN_TYPES = {FskPortObject.TYPE, FskPortObject.TYPE};
   private static final PortType[] OUT_TYPES = {CombinedFskPortObject.TYPE, ImagePortObject.TYPE};
+  
   private static final String VIEW_NAME = new JoinerNodeFactory().getInteractiveViewName();
+  
   String nodeWithId;
   String nodeName;
   String nodeId;
@@ -106,7 +108,6 @@ final class JoinerNodeModel extends
 
   @Override
   public JoinerViewValue createEmptyViewValue() {
-
     return new JoinerViewValue();
   }
 
@@ -150,20 +151,25 @@ final class JoinerNodeModel extends
   @Override
   protected PortObject[] performExecute(PortObject[] inObjects, ExecutionContext exec)
       throws Exception {
+    
     nodeWithId = NodeContext.getContext().getNodeContainer().getNameWithID();
     nodeName = NodeContext.getContext().getNodeContainer().getName();
     nodeId = NodeContext.getContext().getNodeContainer().getID().toString().split(":")[1];
+    
     FskPortObject inObj1 = (FskPortObject) inObjects[0];
     FskPortObject inObj2 = (FskPortObject) inObjects[1];
+    
     resolveParameterNamesConflict(inObj1, inObj2);
+    
     CombinedFskPortObject outObj = new CombinedFskPortObject(
         FileUtil.createTempDir("combined").getAbsolutePath(), new ArrayList<>(), inObj1, inObj2);
+    
     ImagePortObject imagePort = null;
     List<JoinRelation> joinerRelation = new ArrayList<>();
     // Clone input object
     synchronized (getLock()) {
       JoinerViewValue joinerProxyValue = getViewValue();
-      
+
       // If not executed
       if (joinerProxyValue.modelMetaData == null) {
         joinerProxyValue.modelScriptTree = buildModelscriptAsTree(inObj1, inObj2);
@@ -173,42 +179,6 @@ final class JoinerNodeModel extends
         loadJsonSetting();
         if (joinerProxyValue.modelMetaData == null) {
           loadFromPorts(inObj1, inObj2, joinerProxyValue);
-        } else {
-          // validate the content of the metadata loaded from the eobject with the one come from the
-          // input ports
-          File directory = NodeContext.getContext().getWorkflowManager().getProjectWFM()
-              .getContext().getCurrentLocation();
-          String containerName = nodeName + " (#" + nodeId + ") setting";
-          String settingFolderPath = directory.getPath().concat("/" + containerName);
-          try {
-
-            // TODO later: do the validation
-            /*
-             * ModelMath modelMath1 = getEObjectFromJson(joinerProxyValue.modelMath1,
-             * ModelMath.class); ModelMath modelMath2 =
-             * getEObjectFromJson(joinerProxyValue.modelMath2, ModelMath.class); if
-             * (!EcoreUtil.equals(modelMath1.getParameter(), inObj1.modelMath.getParameter()) ||
-             * !EcoreUtil.equals(modelMath2.getParameter(), inObj2.modelMath.getParameter())) {
-             * reloadSetting(settingFolderPath, inObj1, inObj2, joinerProxyValue); }
-             * GeneralInformation generalInformation =
-             * getEObjectFromJson(joinerProxyValue.generalInformation, GeneralInformation.class);
-             * Scope scope = getEObjectFromJson(joinerProxyValue.scope, Scope.class); DataBackground
-             * dataBackground = getEObjectFromJson(joinerProxyValue.dataBackground,
-             * DataBackground.class); EMFComparator comperator = new EMFComparator(); if
-             * (!comperator.equals(generalInformation,
-             * combineGeneralInformation(inObj1.generalInformation, inObj2.generalInformation)) ||
-             * !comperator.equals(scope, combineScope(inObj1.scope, inObj2.scope)) ||
-             * !comperator.equals(dataBackground, combineDataBackground(inObj1.dataBackground,
-             * inObj2.dataBackground))) { joinerProxyValue.different =
-             * "isDifferent,"+settingFolderPath; }
-             */
-
-          } catch (NullPointerException ex) {
-            // model math setting files are missing
-            reloadSetting(settingFolderPath, inObj1, inObj2, joinerProxyValue);
-          }
-
-
         }
         if (!StringUtils.isNotBlank(joinerProxyValue.secondModelViz)) {
           if (!(inObj2 instanceof CombinedFskPortObject)) {
@@ -230,21 +200,26 @@ final class JoinerNodeModel extends
               + (joinerProxyValue.validationErrors).replaceAll("\"", "").replaceAll(",,,", "\n"));
         }
       }
+      
       if (joinerProxyValue.joinRelations != null) {
         String relation = joinerProxyValue.joinRelations;
         creatRelationList(relation, joinerProxyValue, joinerRelation);
       } else if (StringUtils.isNotBlank(nodeSettings.joinScript)) {
         creatRelationList(nodeSettings.joinScript, joinerProxyValue, joinerRelation);
       }
+      
       // Consider Here that the model type is the same as the second model
-      outObj.modelMetadata = getObjectFromJson(joinerProxyValue.modelMetaData,SwaggerUtil.modelClasses.get(inObj2.modelMetadata.getModelType()));
+      outObj.modelMetadata = getObjectFromJson(joinerProxyValue.modelMetaData,
+          SwaggerUtil.modelClasses.get(inObj2.modelMetadata.getModelType()));
       joinerProxyValue.modelType = inObj2.modelMetadata.getModelType();
+      
       if (StringUtils.isNotEmpty(joinerProxyValue.modelScriptTree)) {
         JsonArray scriptTree = getScriptArray(joinerProxyValue.modelScriptTree);
         setScriptBack(inObj1, inObj2, scriptTree);
       } else {
         joinerProxyValue.modelScriptTree = buildModelscriptAsTree(inObj1, inObj2);
       }
+      
       inObj2.viz = joinerProxyValue.secondModelViz;
 
       Set<String> packageSet = new HashSet<>();
@@ -253,11 +228,16 @@ final class JoinerNodeModel extends
       outObj.packages.addAll(packageSet);
       resolveParameters(joinerRelation, outObj);
 
-
       outObj.setJoinerRelation(joinerRelation);
+      
+      // Create default simulation out of parameters metadata
       if (SwaggerUtil.getModelMath(outObj.modelMetadata) != null) {
-        createSimulation(outObj);
+        List<Parameter> params = SwaggerUtil.getParameter(outObj.modelMetadata);
+        FskSimulation defaultSimulation = NodeUtils.createDefaultSimulation(params);
+        outObj.simulations.add(defaultSimulation);
+        outObj.selectedSimulationIndex = 0;
       }
+      
       imagePort = createSVGImagePortObject(joinerProxyValue.svgRepresentation);
     }
 
@@ -317,7 +297,8 @@ final class JoinerNodeModel extends
   }
 
   private void creatRelationList(String relation, JoinerViewValue joinerProxyValue,
-      List<JoinRelation> joinerRelation) throws InvalidSettingsException, JsonParseException, JsonMappingException, IOException {
+      List<JoinRelation> joinerRelation)
+      throws InvalidSettingsException, JsonParseException, JsonMappingException, IOException {
     if (StringUtils.isNotBlank(relation)) {
       joinerProxyValue.joinRelations = relation;
       JsonReader jsonReader = Json.createReader(new StringReader(relation));
@@ -346,28 +327,6 @@ final class JoinerNodeModel extends
 
       }
     }
-  }
-
-  private void createSimulation(FskPortObject inObj) {
-
-    if (inObj instanceof CombinedFskPortObject) {
-
-      inObj.simulations.clear();
-      FskSimulation defaultSimulation =
-          NodeUtils.createDefaultSimulation(SwaggerUtil.getParameter(inObj.modelMetadata));
-      inObj.simulations.add(defaultSimulation);
-
-      createSimulation(((CombinedFskPortObject) inObj).getFirstFskPortObject());
-      createSimulation(((CombinedFskPortObject) inObj).getSecondFskPortObject());
-
-    } else {
-      inObj.simulations.clear();
-      FskSimulation defaultSimulation =
-          NodeUtils.createDefaultSimulation(SwaggerUtil.getParameter(inObj.modelMetadata));
-      inObj.simulations.add(defaultSimulation);
-
-    }
-    inObj.selectedSimulationIndex = 0;
   }
 
   // second visualization script is the script which draw and control the plotting!
@@ -571,30 +530,14 @@ final class JoinerNodeModel extends
     } catch (IOException | CanceledExecutionException e) {
       e.printStackTrace();
     }
-    /*
-     * nodeSettings.joinScript = getViewValue().getJoinRelations(); nodeSettings.generalInformation
-     * = getViewValue().getGeneralInformation(); nodeSettings.scope = getViewValue().getScope();
-     * nodeSettings.dataBackground = getViewValue().getDataBackground(); nodeSettings.modelMath =
-     * getViewValue().getModelMath();
-     * 
-     * nodeSettings.save(settings);
-     */
   }
 
   @Override
   protected void loadValidatedSettingsFrom(NodeSettingsRO settings)
       throws InvalidSettingsException {
-    /*
-     * nodeSettings.load(settings); getViewValue().setJoinRelations(nodeSettings.joinScript);
-     * getViewValue().setGeneralInformation(nodeSettings.generalInformation);
-     * getViewValue().setScope(nodeSettings.scope);
-     * getViewValue().setDataBackground(nodeSettings.dataBackground);
-     * getViewValue().setModelMath(nodeSettings.modelMath);
-     */
     try {
       loadJsonSetting();
     } catch (IOException | CanceledExecutionException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
   }
@@ -618,16 +561,8 @@ final class JoinerNodeModel extends
     for (Parameter firstParam : SwaggerUtil.getParameter(fskPort1.modelMetadata)) {
       for (Parameter secondParam : SwaggerUtil.getParameter(fskPort2.modelMetadata)) {
         if (secondParam.getId().equals(firstParam.getId())) {
-          firstParam.setName(firstParam.getId() + suffix);
-          firstParam.setId(firstParam.getId() + suffix);
-        }
-      }
-    }
-    for (Parameter firstParam : SwaggerUtil.getParameter(fskPort1.modelMetadata)) {
-      for (Parameter secondParam : SwaggerUtil.getParameter(fskPort2.modelMetadata)) {
-        if (secondParam.getId().equals(firstParam.getId())) {
-          firstParam.setName(firstParam.getId() + suffix);
-          firstParam.setId(firstParam.getId() + suffix);
+          firstParam.setName(firstParam.getId() + SUFFIX);
+          firstParam.setId(firstParam.getId() + SUFFIX);
         }
       }
     }
@@ -656,109 +591,13 @@ final class JoinerNodeModel extends
   }// resolveParameters
 
   // TODO: finalize joining meta data after 1.04
-
-  /*
-   * public GeneralInformation combineGeneralInformation(GeneralInformation firstGeneralInformation,
-   * GeneralInformation secondGeneralInformation) { // GeneralInformation --------------
-   * GeneralInformation combinedGeneralInformation =
-   * MetadataFactoryImpl.eINSTANCE.createGeneralInformation(); // TODO: Who is author?
-   * combinedGeneralInformation.setAuthor(firstGeneralInformation.getAuthor()); // TODO: different
-   * Availabilities? combinedGeneralInformation.setAvailable(firstGeneralInformation.isAvailable());
-   * 
-   * combinedGeneralInformation.setDescription(firstGeneralInformation.getDescription() + "\n" +
-   * secondGeneralInformation.getDescription());
-   * combinedGeneralInformation.setFormat(firstGeneralInformation.getFormat());
-   * combinedGeneralInformation.setIdentifier( firstGeneralInformation.getIdentifier() + " | " +
-   * secondGeneralInformation.getIdentifier());
-   * 
-   * // TODO: different Languages?
-   * combinedGeneralInformation.setLanguage(firstGeneralInformation.getLanguage());
-   * 
-   * // TODO: Language written in?
-   * combinedGeneralInformation.setLanguageWrittenIn(firstGeneralInformation.getLanguageWrittenIn())
-   * ;
-   * 
-   * combinedGeneralInformation .setName(firstGeneralInformation.getName() + " | " +
-   * secondGeneralInformation.getName()); combinedGeneralInformation.setObjective(
-   * firstGeneralInformation.getObjective() + " | " + firstGeneralInformation.getObjective());
-   * 
-   * // TODO: different Rights?
-   * combinedGeneralInformation.setRights(firstGeneralInformation.getRights());
-   * 
-   * // TODO: different Software?
-   * combinedGeneralInformation.setSoftware(firstGeneralInformation.getSoftware());
-   * 
-   * // TODO: different Sources?
-   * combinedGeneralInformation.setSource(firstGeneralInformation.getSource());
-   * 
-   * // TODO: different Status?
-   * combinedGeneralInformation.setStatus(firstGeneralInformation.getStatus());
-   * 
-   * // creators
-   * combinedGeneralInformation.getCreators().addAll(firstGeneralInformation.getCreators());
-   * combinedGeneralInformation.getCreators().addAll(secondGeneralInformation.getCreators());
-   * 
-   * // references
-   * combinedGeneralInformation.getReference().addAll(firstGeneralInformation.getReference());
-   * combinedGeneralInformation.getReference().addAll(secondGeneralInformation.getReference());
-   * 
-   * // TODO: different modelCategories? combinedGeneralInformation.getModelCategory()
-   * .addAll(firstGeneralInformation.getModelCategory()); return combinedGeneralInformation; }
-   * 
-   * public Scope combineScope(Scope firstScope, Scope secondScope) { // Scope -------------- Scope
-   * combinedScope = MetadataFactoryImpl.eINSTANCE.createScope();
-   * 
-   * combinedScope.setGeneralComment( firstScope.getGeneralComment() + " | " +
-   * secondScope.getGeneralComment());
-   * 
-   * // TODO: different spatial information(region/country)?
-   * combinedScope.setSpatialInformation(firstScope.getSpatialInformation());
-   * 
-   * combinedScope.setTemporalInformation( firstScope.getTemporalInformation() + " | " +
-   * secondScope.getTemporalInformation());
-   * 
-   * // products combinedScope.getProduct().addAll(firstScope.getProduct());
-   * combinedScope.getProduct().addAll(secondScope.getProduct());
-   * 
-   * 
-   * // hazards combinedScope.getHazard().addAll(firstScope.getHazard());
-   * combinedScope.getHazard().addAll(secondScope.getHazard());
-   * 
-   * // population groups
-   * combinedScope.getPopulationGroup().addAll(firstScope.getPopulationGroup());
-   * combinedScope.getPopulationGroup().addAll(secondScope.getPopulationGroup());
-   * 
-   * return combinedScope; }
-   * 
-   * public DataBackground combineDataBackground(DataBackground firstDataBackground, DataBackground
-   * secondDataBackground) { // DataBackground -------------- DataBackground combinedDataBackground
-   * = MetadataFactoryImpl.eINSTANCE.createDataBackground(); // TODO: different studies?
-   * combinedDataBackground.setStudy(firstDataBackground.getStudy());
-   * 
-   * // study samples
-   * combinedDataBackground.getStudySample().addAll(firstDataBackground.getStudySample());
-   * combinedDataBackground.getStudySample().addAll(secondDataBackground.getStudySample()); //
-   * dietary assessment methods combinedDataBackground.getDietaryAssessmentMethod()
-   * .addAll(firstDataBackground.getDietaryAssessmentMethod());
-   * combinedDataBackground.getDietaryAssessmentMethod()
-   * .addAll(secondDataBackground.getDietaryAssessmentMethod()); // laboratories
-   * combinedDataBackground.getLaboratory().addAll(firstDataBackground.getLaboratory());
-   * combinedDataBackground.getLaboratory().addAll(secondDataBackground.getLaboratory()); // assay
-   * combinedDataBackground.getAssay().addAll(firstDataBackground.getAssay());
-   * combinedDataBackground.getAssay().addAll(secondDataBackground.getAssay());
-   * 
-   * return combinedDataBackground; }
-   */
   public List<Parameter> combineParameters(List<Parameter> firstParameterList,
       List<Parameter> secondParameterList) {
-    // DataBackground --------------
 
     // parameters
     List<Parameter> combinedList = Stream.of(firstParameterList, secondParameterList)
         .flatMap(x -> x.stream()).collect(Collectors.toList());
 
-
     return combinedList;
-
   }
 }

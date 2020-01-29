@@ -341,8 +341,8 @@ class ReaderNodeModel extends NoInternalsModel {
                 SwaggerUtil.getParameter(secondFskPortObject.modelMetadata).stream().filter(cp -> {
                   String paramId = cp.getId();
                   String compareTo = param.getId();
-                  if (paramId.replaceAll(JoinerNodeModel.suffix, "")
-                      .equals(compareTo.replaceAll(JoinerNodeModel.suffix, ""))) {
+                  if (paramId.replaceAll(JoinerNodeModel.SUFFIX, "")
+                      .equals(compareTo.replaceAll(JoinerNodeModel.SUFFIX, ""))) {
                     cp.setId(param.getId());
                     return true;
                   } else {
@@ -360,8 +360,8 @@ class ReaderNodeModel extends NoInternalsModel {
             Parameter sourceParam =
                 SwaggerUtil.getParameter(firstFskPortObject.modelMetadata).stream().filter(cp -> {
                   String paramId = cp.getId();
-                  if (paramId.replaceAll(JoinerNodeModel.suffix, "")
-                      .equals(replacmentLement.replaceAll(JoinerNodeModel.suffix, ""))) {
+                  if (paramId.replaceAll(JoinerNodeModel.SUFFIX, "")
+                      .equals(replacmentLement.replaceAll(JoinerNodeModel.SUFFIX, ""))) {
                     cp.setId(a.getReplacedBy().getIdRef());
                     return true;
                   } else {

@@ -248,7 +248,7 @@ class JSSimulatorNodeModel
         inputParams.stream().forEach(param -> {
           final Parameter paramCopy = SwaggerUtil.cloneParameter(param);
           final String paramWithSuffix = paramCopy.getId();
-          final String paramWithoutSuffix = paramWithSuffix.replaceAll(JoinerNodeModel.suffix, "");
+          final String paramWithoutSuffix = paramWithSuffix.replaceAll(JoinerNodeModel.SUFFIX, "");
           if (modelMathParameter.contains(paramWithoutSuffix)
               || modelMathParameter.contains(paramWithSuffix)) {
             paramCopy.setId(paramWithoutSuffix);

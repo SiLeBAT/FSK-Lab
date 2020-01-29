@@ -203,14 +203,14 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
           firstFskObj.simulations.get(firstFskObj.selectedSimulationIndex);
       // recreate the INPUT or CONSTANT parameters which cause parameterId conflicts
       List<Parameter> alternativeParams = SwaggerUtil.getParameter(firstFskObj.modelMetadata).stream()
-          .filter(p -> p.getId().endsWith(JoinerNodeModel.suffix))
+          .filter(p -> p.getId().endsWith(JoinerNodeModel.SUFFIX))
           .collect(Collectors.toList());
       for (Parameter param : alternativeParams) {
         if (param.getClassification().equals(Parameter.ClassificationEnum.INPUT)
             || param.getClassification().equals(Parameter.ClassificationEnum.CONSTANT)) {
           // cut out the old Parameter ID
           String oldId = param.getId().substring(0,
-              param.getId().indexOf(JoinerNodeModel.suffix));
+              param.getId().indexOf(JoinerNodeModel.SUFFIX));
           // make the old parameter available for the Model script
           if (fskSimulation.getParameters().get(param.getId()) != null) {
             handler.runScript(
@@ -271,7 +271,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
         // || param.getParameterClassification().equals(ParameterClassification.CONSTANT))) {
         String alternativeId = param.getId();
         String oldId = param.getId().substring(0,
-            param.getId().indexOf(JoinerNodeModel.suffix));
+            param.getId().indexOf(JoinerNodeModel.SUFFIX));
         handler.runScript(alternativeId + " <- " + oldId, exec, false);
         // controller.eval("rm(" + oldId + ")", false);
         // }
@@ -309,14 +309,14 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 
         if (joinRelations != null) {
           List<Parameter> alternativeParamsx = SwaggerUtil.getParameter(firstFskObj.modelMetadata).stream()
-              .filter(p -> p.getId().endsWith(JoinerNodeModel.suffix))
+              .filter(p -> p.getId().endsWith(JoinerNodeModel.SUFFIX))
               .collect(Collectors.toList());
           for (Parameter param : alternativeParamsx) {
             // if (!(param.getParameterClassification().equals(ParameterClassification.INPUT)
             // || param.getParameterClassification().equals(ParameterClassification.CONSTANT))) {
             String alternativeId = param.getId();
             String oldId = param.getId().substring(0,
-                param.getId().indexOf(JoinerNodeModel.suffix));
+                param.getId().indexOf(JoinerNodeModel.SUFFIX));
             handler.runScript(alternativeId + " <- " + oldId, exec, false);
             // controller.eval("rm(" + oldId + ")", false);
             // }
