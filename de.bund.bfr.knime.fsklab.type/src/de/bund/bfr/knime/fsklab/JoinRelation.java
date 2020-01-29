@@ -24,54 +24,52 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.bund.bfr.metadata.swagger.Parameter;
 
-
 /**
  * An object that describe the relation between two FSK Objects.
  * 
  * @author Ahmad Swaid, BfR, Berlin.
  */
 public class JoinRelation {
-  private Parameter sourceParam;
-  private Parameter targetParam;
-  private String command;
-  private String language_written_in;
-  
- 
- 
-  public String getLanguage_written_in() {
-    return language_written_in;
-  }
-  public void setLanguage_written_in(String language_written_in) {
-    this.language_written_in = language_written_in;
-  }
-  public String getCommand() {
-    return command;
-  }
-  public void setCommand(String command) {
-    this.command = command;
-  }
-  public Parameter getSourceParam() {
-    return sourceParam;
-  }
-  public void setSourceParam(Parameter sourceParam) {
-    this.sourceParam = sourceParam;
-  }
-  public Parameter getTargetParam() {
-    return targetParam;
-  }
-  public void setTargetParam(Parameter targetParam) {
-    this.targetParam = targetParam;
-  }
-  public String getJsonReresentaion() {
-    ObjectMapper mapper = EMFModule.setupDefaultMapper();
-    String out = "";
-    try {
-      String sourceParamAsJSONString = mapper.writeValueAsString(sourceParam);
-      String targetParamAsJSONString = mapper.writeValueAsString(targetParam);
-      out = "{\"sourceParam\" :"+sourceParamAsJSONString+",\"targetParam\" :"+targetParamAsJSONString+",\"language_written_in\" :\""+language_written_in+"\",\"command\" :\""+command+"\"}";
-    } catch (JsonProcessingException e) {
-      e.printStackTrace();
-    }
-    return out; 
-  }
+
+	private Parameter sourceParam;
+	private Parameter targetParam;
+	private String command;
+	private String language_written_in;
+	
+	public JoinRelation(Parameter sourceParam, Parameter targetParam, String command, String languageWrittenIn) {
+		this.sourceParam = sourceParam;
+		this.targetParam = targetParam;
+		this.command = command;
+		this.language_written_in = languageWrittenIn;
+	}
+
+	public String getLanguage_written_in() {
+		return language_written_in;
+	}
+
+	public String getCommand() {
+		return command;
+	}
+
+	public Parameter getSourceParam() {
+		return sourceParam;
+	}
+
+	public Parameter getTargetParam() {
+		return targetParam;
+	}
+
+	public String getJsonReresentaion() {
+		ObjectMapper mapper = EMFModule.setupDefaultMapper();
+		String out = "";
+		try {
+			String sourceParamAsJSONString = mapper.writeValueAsString(sourceParam);
+			String targetParamAsJSONString = mapper.writeValueAsString(targetParam);
+			out = "{\"sourceParam\" :" + sourceParamAsJSONString + ",\"targetParam\" :" + targetParamAsJSONString
+					+ ",\"language_written_in\" :\"" + language_written_in + "\",\"command\" :\"" + command + "\"}";
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		return out;
+	}
 }

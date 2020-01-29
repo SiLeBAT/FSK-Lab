@@ -335,7 +335,6 @@ class ReaderNodeModel extends NoInternalsModel {
           }
           // String s = subModels.getReplacedBy().getIdRef();
           for (org.sbml.jsbml.Parameter param : params) {
-            JoinRelation jR = new JoinRelation();
 
             List<Parameter> coll =
                 SwaggerUtil.getParameter(secondFskPortObject.modelMetadata).stream().filter(cp -> {
@@ -354,7 +353,7 @@ class ReaderNodeModel extends NoInternalsModel {
               continue;
             }
             Parameter targetParam = coll.get(0);
-            jR.setTargetParam(targetParam);
+            
             CompSBasePlugin a = (CompSBasePlugin) param.getExtension("comp");
             String replacmentLement = a.getReplacedBy().getIdRef();
             Parameter sourceParam =
@@ -370,7 +369,8 @@ class ReaderNodeModel extends NoInternalsModel {
 
                 }).filter(cp -> cp.getId().equals(replacmentLement))
                     .collect(Collectors.toList()).get(0);
-            jR.setSourceParam(sourceParam);
+            
+            String command = null;
             Annotation annotation = param.getAnnotation();
             if (annotation != null) {
               XMLNode nonRDFAnnotation = annotation.getNonRDFannotation();
@@ -379,16 +379,12 @@ class ReaderNodeModel extends NoInternalsModel {
                 while (childEnum.hasMoreElements()) {
                   XMLNode child = (XMLNode) childEnum.nextElement();
                   XMLAttributes atts = child.getAttributes();
-                  String commandValue = atts.getValue(WriterNodeModel.METADATA_COMMAND_VALUE);
-                  if (commandValue != null && !commandValue.equals("")) {
-                    jR.setCommand(commandValue);
-                  }
-
+                  command = atts.getValue(WriterNodeModel.METADATA_COMMAND_VALUE);
                 }
               }
             }
 
-            joinerRelation.add(jR);
+            joinerRelation.add(new JoinRelation(sourceParam, targetParam, command, null));
           }
         }
 

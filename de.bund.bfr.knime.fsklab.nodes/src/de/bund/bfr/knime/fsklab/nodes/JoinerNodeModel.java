@@ -306,25 +306,21 @@ final class JoinerNodeModel extends
       jsonReader.close();
       for (JsonValue element : relationJsonArray) {
         JsonObject sourceTargetRelation = ((JsonObject) element);
-        JoinRelation jR = new JoinRelation();
-        if (sourceTargetRelation.containsKey("command")) {
-          jR.setCommand(sourceTargetRelation.getString("command"));
-        }
-        if (sourceTargetRelation.containsKey("language_written_in")) {
-          jR.setLanguage_written_in(sourceTargetRelation.getString("language_written_in"));
-        }
+
+        String command = sourceTargetRelation.getString("command", null);
+        String languageWrittenIn = sourceTargetRelation.getString("language_written_in", null);
+        
+        Parameter sourceParam = null;
         if (sourceTargetRelation.containsKey("sourceParam")) {
-          jR.setSourceParam(getObjectFromJson(sourceTargetRelation.get("sourceParam").toString(),
-              Parameter.class));
+          sourceParam = getObjectFromJson(sourceTargetRelation.get("sourceParam").toString(), Parameter.class);
         }
+        
+        Parameter targetParam = null;
         if (sourceTargetRelation.containsKey("targetParam")) {
-          jR.setTargetParam(getObjectFromJson(sourceTargetRelation.get("targetParam").toString(),
-              Parameter.class));
+          targetParam = getObjectFromJson(sourceTargetRelation.get("targetParam").toString(), Parameter.class);
         }
-
-
-        joinerRelation.add(jR);
-
+        
+        joinerRelation.add(new JoinRelation(sourceParam, targetParam, command, languageWrittenIn));
       }
     }
   }

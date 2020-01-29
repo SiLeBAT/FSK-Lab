@@ -232,7 +232,6 @@ public class CombinedFskPortObject extends FskPortObject {
 		private static final String LIBRARY_LIST = "library.list";
 		private static final String BREAK = "break";
 
-		
 		/** Object mapper for 1.0.2 metadata. */
 		private static final ObjectMapper MAPPER102;
 
@@ -262,7 +261,7 @@ public class CombinedFskPortObject extends FskPortObject {
 				MAPPER104 = new ObjectMapper(jsonFactory);
 				MAPPER104.registerModule(new ThreeTenModule());
 
-				modelClasses =  new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+				modelClasses = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 				modelClasses.put("genericModel", GenericModel.class);
 				modelClasses.put("dataModel", DataModel.class);
 				modelClasses.put("predictiveModel", PredictiveModel.class);
@@ -501,14 +500,13 @@ public class CombinedFskPortObject extends FskPortObject {
 					}
 					entry = in.getNextEntry();
 					entryName = entry.getName();
-					if (entryName.equals("modelType"+ level)) {
+					if (entryName.equals("modelType" + level)) {
 						// deserialize new models
 						String modelClass = IOUtils.toString(in, "UTF-8");
 						in.getNextEntry();
 
 						modelMetadata = MAPPER104.readValue(in, modelClasses.get(modelClass));
-					}
-					else if (entryName.startsWith(JOINED_GENERAL_INFORMATION + level)) {
+					} else if (entryName.startsWith(JOINED_GENERAL_INFORMATION + level)) {
 						metadata.GeneralInformation deprecatedInformation = readEObject(in,
 								metadata.GeneralInformation.class);
 						in.getNextEntry();
@@ -560,7 +558,7 @@ public class CombinedFskPortObject extends FskPortObject {
 					} else if (entryName.startsWith(VIZ)) {
 						visualizationScript = IOUtils.toString(in, "UTF-8");
 					}
-					
+
 					if (entryName.startsWith("modelType")) {
 						// deserialize new models
 						String modelClass = IOUtils.toString(in, "UTF-8");
@@ -681,25 +679,26 @@ public class CombinedFskPortObject extends FskPortObject {
 				JsonReader jsonReader = Json.createReader(new StringReader(jsonStr));
 				JsonArray relationJsonArray = jsonReader.readArray();
 				jsonReader.close();
-				
+
 				for (JsonValue element : relationJsonArray) {
 					JsonObject sourceTargetRelation = ((JsonObject) element);
-					JoinRelation jR = new JoinRelation();
-					if (sourceTargetRelation.containsKey("command")) {
-						jR.setCommand(sourceTargetRelation.getString("command"));
-					}
+
+					String command = sourceTargetRelation.getString("command", null);
+
+					Parameter sourceParam = null;
 					if (sourceTargetRelation.containsKey("sourceParam")) {
-						jR.setSourceParam(getEObjectFromJson(sourceTargetRelation.get("sourceParam").toString(),
-								Parameter.class));
+						sourceParam = getEObjectFromJson(sourceTargetRelation.get("sourceParam").toString(),
+								Parameter.class);
 					}
+
+					Parameter targetParam = null;
 					if (sourceTargetRelation.containsKey("targetParam")) {
-						jR.setTargetParam(getEObjectFromJson(sourceTargetRelation.get("targetParam").toString(),
-								Parameter.class));
+						targetParam = getEObjectFromJson(sourceTargetRelation.get("targetParam").toString(),
+								Parameter.class);
 					}
-					joinerRelation.add(jR);
 
+					joinerRelation.add(new JoinRelation(sourceParam, targetParam, command, null));
 				}
-
 			}
 
 			return (List<T>) joinerRelation;
