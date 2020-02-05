@@ -308,8 +308,7 @@ class JSSimulatorNodeModel
         NodeContext.getContext().getWorkflowManager().getContext().getCurrentLocation();
     final String containerName = buildContainerName();
 
-    final String settingFolderPath = directory.getPath().concat("/" + containerName);
-    final File settingFolder = new File(settingFolderPath);
+    final File settingFolder = new File(directory, containerName);
 
     // Read configuration strings
     final String simulationString = NodeUtils.readConfigString(settingFolder, "simulations.json");
@@ -338,8 +337,7 @@ class JSSimulatorNodeModel
 
     final String containerName = buildContainerName();
 
-    final String settingFolderPath = directory.getPath().concat("/" + containerName);
-    final File settingFolder = new File(settingFolderPath);
+    final File settingFolder = new File(directory, containerName);
     if (!settingFolder.exists()) {
       settingFolder.mkdir();
     }

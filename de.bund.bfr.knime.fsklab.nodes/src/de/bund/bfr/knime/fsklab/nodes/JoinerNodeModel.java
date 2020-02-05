@@ -23,10 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -240,7 +237,7 @@ final class JoinerNodeModel extends
 
   public void reloadSetting(String settingFolderPath, FskPortObject inObj1, FskPortObject inObj2,
       JoinerViewValue joinerProxyValue) throws IOException, CanceledExecutionException {
-    deleteSettingFolder(settingFolderPath);
+    FileUtil.deleteRecursively(new File(settingFolderPath));
     performReset();
     loadJsonSetting();
     loadFromPorts(inObj1, inObj2, joinerProxyValue);
@@ -255,19 +252,6 @@ final class JoinerNodeModel extends
     joinerProxyValue.modelMetaData = FromOjectToJSON(inObj2.modelMetadata);
     joinerProxyValue.modelMath1 = FromOjectToJSON(SwaggerUtil.getModelMath(inObj1.modelMetadata));
     joinerProxyValue.modelMath2 = FromOjectToJSON(SwaggerUtil.getModelMath(inObj2.modelMetadata));
-  }
-
-  public void deleteSettingFolder(String settingFolderPath) {
-    File settingFolder = new File(settingFolderPath);
-
-    try {
-      if (settingFolder.exists()) {
-        Files.walk(settingFolder.toPath()).sorted(Comparator.reverseOrder()).map(Path::toFile)
-            .forEach(File::delete);
-      }
-    } catch (IOException e) {
-      // nothing to do
-    }
   }
 
   private void creatRelationList(String relation, JoinerViewValue joinerProxyValue,
@@ -442,8 +426,7 @@ final class JoinerNodeModel extends
         NodeContext.getContext().getWorkflowManager().getContext().getCurrentLocation();
     String containerName = buildContainerName();
 
-    String settingFolderPath = directory.getPath().concat("/" + containerName);
-    File settingFolder = new File(settingFolderPath);
+    File settingFolder = new File(directory, containerName);
 
     nodeSettings.joinScript = NodeUtils.readConfigString(settingFolder, "JoinRelations.json");
     nodeSettings.modelMetaData = NodeUtils.readConfigString(settingFolder, "modelMetaData.json");
@@ -472,8 +455,7 @@ final class JoinerNodeModel extends
         NodeContext.getContext().getWorkflowManager().getContext().getCurrentLocation();
     String containerName = buildContainerName();
 
-    String settingFolderPath = directory.getPath().concat("/" + containerName);
-    File settingFolder = new File(settingFolderPath);
+    File settingFolder = new File(directory, containerName);
     if (!settingFolder.exists()) {
       settingFolder.mkdir();
     }

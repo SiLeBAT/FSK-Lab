@@ -387,9 +387,7 @@ final class FSKEditorJSNodeModel
     File directory =
         NodeContext.getContext().getWorkflowManager().getContext().getCurrentLocation();
     String containerName = buildContainerName();
-
-    String settingFolderPath = directory.getPath().concat("/" + containerName);
-    File settingFolder = new File(settingFolderPath);
+    File settingFolder = new File(directory, containerName);
 
     // Read configuration strings
     nodeSettings.modelMetaData = NodeUtils.readConfigString(settingFolder, "modelMetaData.json");
@@ -411,8 +409,7 @@ final class FSKEditorJSNodeModel
         NodeContext.getContext().getWorkflowManager().getContext().getCurrentLocation();
     String containerName = buildContainerName();
 
-    String settingFolderPath = directory.getPath().concat("/" + containerName);
-    File settingFolder = new File(settingFolderPath);
+    File settingFolder = new File(directory, containerName);
     if (!settingFolder.exists()) {
       settingFolder.mkdir();
     }
