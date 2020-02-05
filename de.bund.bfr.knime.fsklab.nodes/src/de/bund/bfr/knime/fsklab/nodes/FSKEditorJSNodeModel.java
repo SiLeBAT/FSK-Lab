@@ -25,10 +25,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -48,12 +45,9 @@ import org.knime.core.node.port.PortObjectHolder;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.web.ValidationError;
-import org.knime.core.node.workflow.NativeNodeContainer;
 import org.knime.core.node.workflow.NodeContainer;
 import org.knime.core.node.workflow.NodeContext;
 import org.knime.core.node.workflow.WorkflowContext;
-import org.knime.core.node.workflow.WorkflowEvent;
-import org.knime.core.node.workflow.WorkflowListener;
 import org.knime.core.node.workflow.WorkflowManager;
 import org.knime.core.util.FileUtil;
 import org.knime.core.util.IRemoteFileUtilsService;
@@ -94,9 +88,6 @@ final class FSKEditorJSNodeModel
   private static final String VIEW_NAME = new FSKEditorJSNodeFactory().getInteractiveViewName();
 
   static final AtomicLong TEMP_DIR_UNIFIER = new AtomicLong((int) (100000 * Math.random()));
-  String nodeWithId;
-  String nodeName;
-  String nodeId;
 
   public FSKEditorJSNodeModel() {
     super(IN_TYPES, OUT_TYPES, VIEW_NAME);
@@ -146,7 +137,6 @@ final class FSKEditorJSNodeModel
      * 
      */
     return null;
-
   }
 
   @Override
@@ -193,14 +183,14 @@ final class FSKEditorJSNodeModel
     }
   }
 
-
-
   @Override
   protected PortObject[] performExecute(PortObject[] inObjects, ExecutionContext exec)
       throws Exception {
-    nodeWithId = NodeContext.getContext().getNodeContainer().getNameWithID();
-    nodeName = NodeContext.getContext().getNodeContainer().getName();
-    nodeId = NodeContext.getContext().getNodeContainer().getID().toString().split(":")[1];
+    
+    final String nodeWithId = NodeContext.getContext().getNodeContainer().getNameWithID();
+    NodeContext.getContext().getWorkflowManager()
+        .addListener(new NodeRemovedListener(nodeWithId, buildContainerName()));
+
     FskPortObject inObj1;
     FskPortObject outObj;
 
@@ -232,7 +222,7 @@ final class FSKEditorJSNodeModel
         currentWorkingDirectory.mkdir();
         workingDirectory = currentWorkingDirectory.getPath();
       }
-      
+
       inObj1 = new FskPortObject(workingDirectory, readme, new ArrayList<>());
       inObj1.model = "";
       inObj1.viz = "";
@@ -243,27 +233,27 @@ final class FSKEditorJSNodeModel
     // Clone input object
     synchronized (getLock()) {
       FSKEditorJSViewValue fskEditorProxyValue = getViewValue();
-      
+
       if (!StringUtils.isBlank(nodeSettings.modelType)) {
         fskEditorProxyValue.modelType = nodeSettings.modelType;
-      } else if(inObj1 != null && inObj1.modelMetadata != null) {
+      } else if (inObj1 != null && inObj1.modelMetadata != null) {
         fskEditorProxyValue.modelType = inObj1.modelMetadata.getModelType();
       } else {
         fskEditorProxyValue.modelType = "GenericModel";
       }
-      
+
       // If not executed
       if (fskEditorProxyValue.getModelMetaData() == null) {
         if (inObjects[0] == null) {
           loadJsonSetting();
         }
         if (fskEditorProxyValue.getModelMetaData() == null) {
-          fskEditorProxyValue.setModelMetaData( FromOjectToJSON(inObj1.modelMetadata));
+          fskEditorProxyValue.setModelMetaData(FromOjectToJSON(inObj1.modelMetadata));
           fskEditorProxyValue.firstModelScript = inObj1.model;
           fskEditorProxyValue.firstModelViz = inObj1.viz;
           fskEditorProxyValue.modelType = inObj1.modelMetadata.getModelType();
           fskEditorProxyValue.readme = inObj1.getReadme();
-          
+
         }
       } else {
         if (fskEditorProxyValue.notCompleted) {
@@ -276,7 +266,8 @@ final class FSKEditorJSNodeModel
       }
       outObj = inObj1;
 
-      Class <? extends Model> modelClass = SwaggerUtil.modelClasses.get(fskEditorProxyValue.modelType);
+      Class<? extends Model> modelClass =
+          SwaggerUtil.modelClasses.get(fskEditorProxyValue.modelType);
       outObj.modelMetadata = getObjectFromJson(fskEditorProxyValue.getModelMetaData(), modelClass);
 
       if (outObj.modelMetadata != null && SwaggerUtil.getModelMath(outObj.modelMetadata) != null) {
@@ -299,7 +290,7 @@ final class FSKEditorJSNodeModel
           outObj.simulations.add(0, NodeUtils.createDefaultSimulation(parametersList));
         }
       }
-      
+
       outObj.model = fskEditorProxyValue.firstModelScript;
       outObj.viz = fskEditorProxyValue.firstModelViz;
       outObj.setReadme(fskEditorProxyValue.readme);
@@ -335,35 +326,7 @@ final class FSKEditorJSNodeModel
       outObj.packages.clear();
       outObj.packages.addAll(new ArrayList<>(librariesSet));
     }
-    NodeContext.getContext().getWorkflowManager().addListener(new WorkflowListener() {
 
-      @Override
-      public void workflowChanged(WorkflowEvent event) {
-        if (event.getType().equals(WorkflowEvent.Type.NODE_REMOVED)
-            && event.getOldValue() instanceof NativeNodeContainer) {
-          NativeNodeContainer nnc = (NativeNodeContainer) event.getOldValue();
-          File directory =
-              nnc.getDirectNCParent().getProjectWFM().getContext().getCurrentLocation();
-          String nncnamewithId = nnc.getNameWithID();
-          if (nncnamewithId.equals(nodeWithId)) {
-
-            String containerName = buildContainerName();
-
-            String settingFolderPath = directory.getPath().concat("/" + containerName);
-            File settingFolder = new File(settingFolderPath);
-
-            try {
-              if (settingFolder.exists()) {
-                Files.walk(settingFolder.toPath()).sorted(Comparator.reverseOrder())
-                    .map(Path::toFile).forEach(File::delete);
-              }
-            } catch (IOException e) {
-              // nothing to do
-            }
-          }
-        }
-      }
-    });
     return new PortObject[] {outObj};
   }
 
@@ -436,7 +399,7 @@ final class FSKEditorJSNodeModel
 
     // Update view value
     FSKEditorJSViewValue viewValue = getViewValue();
-    viewValue.setModelMetaData( nodeSettings.modelMetaData);
+    viewValue.setModelMetaData(nodeSettings.modelMetaData);
     viewValue.firstModelScript = modelScript;
     viewValue.firstModelViz = visualizationScript;
     viewValue.readme = readme;
@@ -474,7 +437,7 @@ final class FSKEditorJSNodeModel
   }
 
   public void setHideInWizard(boolean hide) {}
-  
+
   /** @return string with node name and id with format "{name} (#{id}) setting". */
   private static String buildContainerName() {
     final NodeContainer nodeContainer = NodeContext.getContext().getNodeContainer();
