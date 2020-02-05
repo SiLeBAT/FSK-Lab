@@ -37,6 +37,7 @@ import org.knime.core.node.web.ValidationError;
 import org.knime.core.node.workflow.NodeContainer;
 import org.knime.core.node.workflow.NodeContext;
 import org.knime.core.node.workflow.WorkflowEvent;
+import org.knime.core.node.workflow.WorkflowListener;
 import org.knime.core.util.FileUtil;
 import org.knime.core.util.Pair;
 import org.knime.js.core.node.AbstractWizardNodeModel;
@@ -97,8 +98,7 @@ class JSSimulatorNodeModel
   }
 
   @Override
-  public void saveCurrentValue(NodeSettingsWO content) {
-  }
+  public void saveCurrentValue(NodeSettingsWO content) {}
 
   @Override
   public JSSimulatorViewValue getViewValue() {
@@ -151,6 +151,8 @@ class JSSimulatorNodeModel
 
     final String nameWithID = NodeContext.getContext().getNodeContainer().getNameWithID();
     final String containerName = buildContainerName();
+    NodeContext.getContext().getWorkflowManager()
+        .addListener(new NodeRemovedListener(nameWithID, containerName));
 
     final FskPortObject inObj = (FskPortObject) inObjects[0];
 
@@ -184,32 +186,7 @@ class JSSimulatorNodeModel
     }
 
     exec.setProgress(1);
-    
-    // Listener to remove extra settings folder when the node is removed in the workflow.
-    NodeContext.getContext().getWorkflowManager().addListener(event -> {
 
-      // Check event in the workflow. A node must be removed and the event must be a NodeContainer
-      if (event.getType() == WorkflowEvent.Type.NODE_REMOVED && event.getOldValue() instanceof NodeContainer) {
-      
-        // Get NodeContainer
-        final NodeContainer nodeContainer = (NodeContainer) event.getOldValue();
-        
-        // Check that the name of the node being removed is the same as the previously created simulator node
-        if (nodeContainer.getNameWithID().equals(nameWithID)) {
-          
-          // Get path to the workflow containing the node being removed
-          final File workflowDir = nodeContainer.getDirectNCParent().getProjectWFM().getContext()
-              .getCurrentLocation();
-          
-          // Get path to the extra settings folder of the node being removed
-          final File extraSettingsFolder = new File(workflowDir, containerName);
-          if (extraSettingsFolder.exists()) {
-            FileUtil.deleteRecursively(extraSettingsFolder);
-          }
-        }
-      }
-    });
-    
     return new PortObject[] {inObj};
   }
 
@@ -273,12 +250,10 @@ class JSSimulatorNodeModel
   }
 
   @Override
-  protected void useCurrentValueAsDefault() {
-  }
+  protected void useCurrentValueAsDefault() {}
 
   @Override
-  protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
-  }
+  protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {}
 
   @Override
   public PortObject[] getInternalPortObjects() {
@@ -291,8 +266,7 @@ class JSSimulatorNodeModel
   }
 
   @Override
-  public void setHideInWizard(boolean hide) {
-  }
+  public void setHideInWizard(boolean hide) {}
 
   private static JSSimulation toJSSimulation(FskSimulation fskSim, List<Parameter> parameters) {
     final JSSimulation jsSim = new JSSimulation();
@@ -390,5 +364,52 @@ class JSSimulatorNodeModel
   private static String buildContainerName() {
     final NodeContainer nodeContainer = NodeContext.getContext().getNodeContainer();
     return nodeContainer.getName() + " (#" + nodeContainer.getID().getIndex() + ") setting";
+  }
+
+  // Listener to remove extra settings folder when the node is removed in the workflow.
+  private static class NodeRemovedListener implements WorkflowListener {
+
+    /**
+     * Name of the node with ID. E.g. FSK Simulation Configurator JS 0:12.
+     */
+    private final String nameWithId;
+
+    /**
+     * Name of the folder with the extra settings inside the workflow folder. E.g. FSK Simulation
+     * Configurator JS (#12) setting
+     */
+    private final String containerName;
+
+    NodeRemovedListener(final String nameWithId, final String containerName) {
+      this.nameWithId = nameWithId;
+      this.containerName = containerName;
+    }
+
+    @Override
+    public void workflowChanged(WorkflowEvent event) {
+      // Check event in the workflow. A node must be removed and the event must be a NodeContainer
+      if (event.getType() == WorkflowEvent.Type.NODE_REMOVED
+          && event.getOldValue() instanceof NodeContainer) {
+
+        // Get NodeContainer
+        final NodeContainer nodeContainer = (NodeContainer) event.getOldValue();
+
+        // Check that the name of the node being removed is the same as the previously created
+        // simulator node
+        if (nodeContainer.getNameWithID().equals(nameWithId)) {
+
+          // Get path to the workflow containing the node being removed
+          final File workflowDir =
+              nodeContainer.getDirectNCParent().getProjectWFM().getContext().getCurrentLocation();
+
+          // Get path to the extra settings folder of the node being removed
+          final File extraSettingsFolder = new File(workflowDir, containerName);
+          if (extraSettingsFolder.exists()) {
+            FileUtil.deleteRecursively(extraSettingsFolder);
+          }
+        }
+      }
+    }
+
   }
 }
