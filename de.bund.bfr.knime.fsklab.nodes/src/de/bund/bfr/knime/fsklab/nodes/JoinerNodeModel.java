@@ -56,10 +56,8 @@ import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.image.ImagePortObject;
 import org.knime.core.node.port.image.ImagePortObjectSpec;
 import org.knime.core.node.web.ValidationError;
-import org.knime.core.node.workflow.NativeNodeContainer;
+import org.knime.core.node.workflow.NodeContainer;
 import org.knime.core.node.workflow.NodeContext;
-import org.knime.core.node.workflow.WorkflowEvent;
-import org.knime.core.node.workflow.WorkflowListener;
 import org.knime.core.util.FileUtil;
 import org.knime.js.core.node.AbstractWizardNodeModel;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -93,10 +91,6 @@ final class JoinerNodeModel extends
   
   private static final String VIEW_NAME = new JoinerNodeFactory().getInteractiveViewName();
   
-  String nodeWithId;
-  String nodeName;
-  String nodeId;
-
   public JoinerNodeModel() {
     super(IN_TYPES, OUT_TYPES, VIEW_NAME);
   }
@@ -152,9 +146,9 @@ final class JoinerNodeModel extends
   protected PortObject[] performExecute(PortObject[] inObjects, ExecutionContext exec)
       throws Exception {
     
-    nodeWithId = NodeContext.getContext().getNodeContainer().getNameWithID();
-    nodeName = NodeContext.getContext().getNodeContainer().getName();
-    nodeId = NodeContext.getContext().getNodeContainer().getID().toString().split(":")[1];
+    final String nodeWithId = NodeContext.getContext().getNodeContainer().getNameWithID();
+    NodeContext.getContext().getWorkflowManager()
+      .addListener(new NodeRemovedListener(nodeWithId, buildContainerName()));
     
     FskPortObject inObj1 = (FskPortObject) inObjects[0];
     FskPortObject inObj2 = (FskPortObject) inObjects[1];
@@ -241,26 +235,6 @@ final class JoinerNodeModel extends
       imagePort = createSVGImagePortObject(joinerProxyValue.svgRepresentation);
     }
 
-    NodeContext.getContext().getWorkflowManager().addListener(new WorkflowListener() {
-
-      @Override
-      public void workflowChanged(WorkflowEvent event) {
-        if (event.getType().equals(WorkflowEvent.Type.NODE_REMOVED)
-            && event.getOldValue() instanceof NativeNodeContainer) {
-          NativeNodeContainer nnc = (NativeNodeContainer) event.getOldValue();
-          File directory =
-              nnc.getDirectNCParent().getProjectWFM().getContext().getCurrentLocation();
-          String nncnamewithId = nnc.getNameWithID();
-          if (nncnamewithId.equals(nodeWithId)) {
-
-            String containerName = nodeName + " (#" + nodeId + ") setting";
-
-            String settingFolderPath = directory.getPath().concat("/" + containerName);
-            deleteSettingFolder(settingFolderPath);
-          }
-        }
-      }
-    });
     return new PortObject[] {outObj, imagePort};
   }
 
@@ -466,9 +440,7 @@ final class JoinerNodeModel extends
 
     File directory =
         NodeContext.getContext().getWorkflowManager().getContext().getCurrentLocation();
-    String name = NodeContext.getContext().getNodeContainer().getName();
-    String id = NodeContext.getContext().getNodeContainer().getID().toString().split(":")[1];
-    String containerName = name + " (#" + id + ") setting";
+    String containerName = buildContainerName();
 
     String settingFolderPath = directory.getPath().concat("/" + containerName);
     File settingFolder = new File(settingFolderPath);
@@ -498,9 +470,7 @@ final class JoinerNodeModel extends
       throws IOException, CanceledExecutionException {
     File directory =
         NodeContext.getContext().getWorkflowManager().getContext().getCurrentLocation();
-    String name = NodeContext.getContext().getNodeContainer().getName();
-    String id = NodeContext.getContext().getNodeContainer().getID().toString().split(":")[1];
-    String containerName = name + " (#" + id + ") setting";
+    String containerName = buildContainerName();
 
     String settingFolderPath = directory.getPath().concat("/" + containerName);
     File settingFolder = new File(settingFolderPath);
@@ -595,5 +565,11 @@ final class JoinerNodeModel extends
         .flatMap(x -> x.stream()).collect(Collectors.toList());
 
     return combinedList;
+  }
+  
+  /** @return string with node name and id with format "{name} (#{id}) setting". */
+  private static String buildContainerName() {
+    final NodeContainer nodeContainer = NodeContext.getContext().getNodeContainer();
+    return nodeContainer.getName() + " (#" + nodeContainer.getID().getIndex() + ") setting";
   }
 }
