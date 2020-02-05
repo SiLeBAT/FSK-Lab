@@ -49,6 +49,7 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.web.ValidationError;
 import org.knime.core.node.workflow.NativeNodeContainer;
+import org.knime.core.node.workflow.NodeContainer;
 import org.knime.core.node.workflow.NodeContext;
 import org.knime.core.node.workflow.WorkflowContext;
 import org.knime.core.node.workflow.WorkflowEvent;
@@ -346,7 +347,7 @@ final class FSKEditorJSNodeModel
           String nncnamewithId = nnc.getNameWithID();
           if (nncnamewithId.equals(nodeWithId)) {
 
-            String containerName = nodeName + " (#" + nodeId + ") setting";
+            String containerName = buildContainerName();
 
             String settingFolderPath = directory.getPath().concat("/" + containerName);
             File settingFolder = new File(settingFolderPath);
@@ -422,9 +423,7 @@ final class FSKEditorJSNodeModel
   protected void loadJsonSetting() throws IOException, CanceledExecutionException {
     File directory =
         NodeContext.getContext().getWorkflowManager().getContext().getCurrentLocation();
-    String name = NodeContext.getContext().getNodeContainer().getName();
-    String id = NodeContext.getContext().getNodeContainer().getID().toString().split(":")[1];
-    String containerName = name + " (#" + id + ") setting";
+    String containerName = buildContainerName();
 
     String settingFolderPath = directory.getPath().concat("/" + containerName);
     File settingFolder = new File(settingFolderPath);
@@ -447,9 +446,7 @@ final class FSKEditorJSNodeModel
       String visualizationScript, String readme) throws IOException, CanceledExecutionException {
     File directory =
         NodeContext.getContext().getWorkflowManager().getContext().getCurrentLocation();
-    String name = NodeContext.getContext().getNodeContainer().getName();
-    String id = NodeContext.getContext().getNodeContainer().getID().toString().split(":")[1];
-    String containerName = name + " (#" + id + ") setting";
+    String containerName = buildContainerName();
 
     String settingFolderPath = directory.getPath().concat("/" + containerName);
     File settingFolder = new File(settingFolderPath);
@@ -477,4 +474,10 @@ final class FSKEditorJSNodeModel
   }
 
   public void setHideInWizard(boolean hide) {}
+  
+  /** @return string with node name and id with format "{name} (#{id}) setting". */
+  private static String buildContainerName() {
+    final NodeContainer nodeContainer = NodeContext.getContext().getNodeContainer();
+    return nodeContainer.getName() + " (#" + nodeContainer.getID().getIndex() + ") setting";
+  }
 }
