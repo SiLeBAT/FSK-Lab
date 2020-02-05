@@ -38,6 +38,7 @@ public class JSSimulatorViewValue extends JSONViewContent {
   List<JSSimulation> simulations;
   int selectedSimulationIndex = 0;
   String modelMath;
+  
   @Override
   public void saveToNodeSettings(NodeSettingsWO settings) {}
 

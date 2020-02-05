@@ -23,8 +23,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
@@ -42,9 +40,7 @@ import org.knime.core.node.workflow.WorkflowEvent;
 import org.knime.core.util.FileUtil;
 import org.knime.core.util.Pair;
 import org.knime.js.core.node.AbstractWizardNodeModel;
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.CombinedFskPortObject;
 import de.bund.bfr.knime.fsklab.FskPlugin;
@@ -383,12 +379,6 @@ class JSSimulatorNodeModel
     NodeUtils.writeConfigString(modelMath, settingFolder, "modelMath.json");
   }
 
-  private static <T> T getObjectFromJson(String jsonStr, Class<T> valueType)
-      throws InvalidSettingsException, JsonParseException, JsonMappingException, IOException {
-    final ResourceSet resourceSet = new ResourceSetImpl();
-    final ObjectMapper mapper = FskPlugin.getDefault().OBJECT_MAPPER;
-    return mapper.readValue(jsonStr, valueType);
-  }
 
   private static String FromOjectToJSON(final Object object) throws JsonProcessingException {
     final ObjectMapper objectMapper = FskPlugin.getDefault().OBJECT_MAPPER;
