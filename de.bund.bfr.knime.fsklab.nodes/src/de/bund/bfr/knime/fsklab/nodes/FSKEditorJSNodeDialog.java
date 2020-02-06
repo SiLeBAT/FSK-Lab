@@ -19,11 +19,8 @@
 package de.bund.bfr.knime.fsklab.nodes;
 
 import java.awt.BorderLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -32,7 +29,6 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -69,7 +65,6 @@ import org.knime.core.node.util.FilesHistoryPanel.LocationValidation;
 import org.knime.core.node.workflow.FlowVariable;
 import org.knime.core.node.workflow.NodeContext;
 import org.knime.core.node.workflow.WorkflowContext;
-import org.knime.core.node.workflow.WorkflowManager;
 import org.knime.core.util.FileUtil;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.FBrowseButton;
@@ -77,32 +72,40 @@ import de.bund.bfr.knime.fsklab.nodes.common.ui.FBrowseButton;
 class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
 
   private FSKEditorJSNodeSettings settings;
-  
+
   private final DefaultComboBoxModel<String> modeltype;
+
   private final FilesHistoryPanel m_readmePanel;
+
   private final FilesHistoryPanel m_workingDirectoryPanel;
-  private final FlowVariableModel directoryVariable;
+
   private FileTableModel fileModel = new FileTableModel();
+
   private JTable fileTable = new JTable(fileModel);
-  private JScrollPane centerPane;
-  private JPanel container = new JPanel();
+
   private File currentWorkingDirectory;
+
   private WorkingDirectoryChangeListener changeListener = new WorkingDirectoryChangeListener();
-  String [] modelTypes = {"GenericModel","DataModel","PredictiveModel","ExposureModel","ToxicologicalModel","DoseResponseModel","ProcessModel",
-      "ConsumptionModel","HealthModel","RiskModel","QraModel","OtherModel"};
+
+  private static final String[] MODEL_TYPES = {"GenericModel", "DataModel", "PredictiveModel",
+      "ExposureModel", "ToxicologicalModel", "DoseResponseModel", "ProcessModel",
+      "ConsumptionModel", "HealthModel", "RiskModel", "QraModel", "OtherModel"};
+
   public FSKEditorJSNodeDialog() {
     settings = new FSKEditorJSNodeSettings();
-    modeltype = new DefaultComboBoxModel<>();
-    for(String modelType: modelTypes) {
-      modeltype.addElement(modelType);
-    }
+
+    modeltype = new DefaultComboBoxModel<>(MODEL_TYPES);
+
     FlowVariableModel readmeVariable = createFlowVariableModel("readme", FlowVariable.Type.STRING);
     m_readmePanel =
         new FilesHistoryPanel(readmeVariable, "readme", LocationValidation.None, ".txt");
-    directoryVariable = createFlowVariableModel("workingDirectory", FlowVariable.Type.STRING);
+
+    FlowVariableModel directoryVariable =
+        createFlowVariableModel("workingDirectory", FlowVariable.Type.STRING);
     m_workingDirectoryPanel =
         new FilesHistoryPanel(directoryVariable, "directory", LocationValidation.None);
     m_workingDirectoryPanel.getComponent(0).setEnabled(false);
+
     createUI();
   }
 
@@ -115,7 +118,7 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
       this.settings.load(settings);
       modeltype.setSelectedItem(this.settings.modelType);
       m_readmePanel.setSelectedFile(this.settings.getReadme());
-      
+
       m_workingDirectoryPanel.setSelectedFile(this.settings.getWorkingDirectory());
 
       if (!m_workingDirectoryPanel.getSelectedFile().toString().isEmpty()) {
@@ -214,31 +217,27 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
   private void createUI() {
 
     final NodeContext nodeContext = NodeContext.getContext();
-    final WorkflowManager wfm = nodeContext.getWorkflowManager();
-    final WorkflowContext workflowContext = wfm.getContext();
+    final WorkflowContext workflowContext = nodeContext.getWorkflowManager().getContext();
+
+    // Model type panel
     final JPanel modelTypePanel = new JPanel(new BorderLayout());
-    modelTypePanel
-        .setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Model Type:"));
-    JComboBox combo = new JComboBox<>(modeltype);
- 
-    combo.addItemListener(new ItemListener() {
-      
-      @Override
-      public void itemStateChanged(ItemEvent e) {
-        settings.modelType = (String) e.getItem();
-        
-      }
-    });
+    modelTypePanel.setBorder(
+        BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Model Type:"));
+
+    JComboBox<String> combo = new JComboBox<>(modeltype);
+    combo.addItemListener(event -> settings.modelType = (String) event.getItem());
     modelTypePanel.add(combo, BorderLayout.NORTH);
+
     modelTypePanel.add(Box.createHorizontalGlue());
-    
-    
+
+    // Readme panel
     final JPanel readmePanel = new JPanel(new BorderLayout());
     readmePanel
         .setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Readme:"));
     readmePanel.add(m_readmePanel, BorderLayout.NORTH);
     readmePanel.add(Box.createHorizontalGlue());
 
+    // Working directory panel
     final JPanel workingDirectoryPanel = new JPanel(new BorderLayout());
     workingDirectoryPanel.setBorder(
         BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Working directory:"));
@@ -262,13 +261,13 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
 
           File[] files = fc.getSelectedFiles();
 
-          if (m_workingDirectoryPanel.getSelectedFile().trim() != null
-              && !m_workingDirectoryPanel.getSelectedFile().trim().equals("")) {
+          // Get working directory
+          if (StringUtils.isNotEmpty(m_workingDirectoryPanel.getSelectedFile())) {
             try {
               currentWorkingDirectory = FileUtil
-                  .getFileFromURL(FileUtil.toURL(m_workingDirectoryPanel.getSelectedFile().trim()));
-            } catch (InvalidPathException | MalformedURLException e1) {
-              e1.printStackTrace();
+                  .getFileFromURL(FileUtil.toURL(m_workingDirectoryPanel.getSelectedFile()));
+            } catch (InvalidPathException | MalformedURLException err) {
+              err.printStackTrace();
             }
           } else {
             currentWorkingDirectory = new File(workflowContext.getCurrentLocation(),
@@ -276,27 +275,29 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
                     .replace(" ", "") + "_" + "workingDirectory"
                     + FSKEditorJSNodeModel.TEMP_DIR_UNIFIER.getAndIncrement());
             currentWorkingDirectory.mkdir();
-            m_workingDirectoryPanel.setSelectedFile(currentWorkingDirectory.toString());
+            m_workingDirectoryPanel.setSelectedFile(currentWorkingDirectory.getAbsolutePath());
           }
-          for (File oneFile : files) {
-            SwingWorker worker = new SwingWorker() {
-              @Override
-              protected Object doInBackground() throws Exception {
-                resourcesButton.setEnabled(false);
-                Path targetPath = currentWorkingDirectory.toPath().resolve(oneFile.getName());
-                Files.copy(oneFile.toPath(), targetPath);
 
-                return null;
+          resourcesButton.setEnabled(false);
+          new SwingWorker<Void, Void>() {
+
+            @Override
+            protected Void doInBackground() throws IOException {
+
+              for (File oneFile : files) {
+                File targetFile = new File(currentWorkingDirectory, oneFile.getName());
+                FileUtils.copyFile(oneFile, targetFile);
               }
 
-              @Override
-              protected void done() {
-                resourcesButton.setEnabled(true);
-              }
-            };
+              return null;
+            }
 
-            worker.execute();
-          }
+            protected void done() {
+              resourcesButton.setEnabled(true);
+            }
+
+          }.execute();
+
           fileModel.filenames.addAll(
               Arrays.stream(files).map(p -> p.toPath().toString()).collect(Collectors.toList()));
 
@@ -305,68 +306,59 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
       }
     });
 
+    JPanel container = new JPanel();
     container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
-  
     container.add(modelTypePanel);
     container.add(readmePanel);
     container.add(workingDirectoryPanel);
+
     JPanel fileSelector = new JPanel(new BorderLayout());
 
     TitledBorder border = new TitledBorder("Select Resource(s) - to move to the working directory");
     border.setTitleJustification(TitledBorder.CENTER);
     border.setTitlePosition(TitledBorder.TOP);
 
-    centerPane = new JScrollPane(fileTable);
-
     fileSelector.add(resourcesButton, BorderLayout.NORTH);
-    fileSelector.add(centerPane, BorderLayout.CENTER);
-
+    fileSelector.add(new JScrollPane(fileTable), BorderLayout.CENTER);
     fileSelector.setBorder(border);
 
     container.add(fileSelector);
 
-    
+
     addTab("Options", container);
   }
 
   class FileTableModel extends AbstractTableModel {
 
+    private static final long serialVersionUID = 7828275630230509962L;
+
     protected List<String> filenames;
 
-    protected String[] columnNames =
-        new String[] {"name", "size", "last modified", "readable?", "writable?"};
-
-    protected Class[] columnClasses =
-        new Class[] {String.class, Long.class, Date.class, Boolean.class, Boolean.class};
+    private final String[] columnNames =
+        {"Name", "Size", "Last modified", "Readable?", "Writable?"};
 
     // This table model works for any one given directory
     public FileTableModel() {
-      filenames = new ArrayList<String>();
+      filenames = new ArrayList<>();
     }
 
-    public FileTableModel(List<String> files) {
-      this.filenames = files; // Store a list of files in the directory
-    }
-
-    // These are easy methods.
+    @Override
     public int getColumnCount() {
       return 5;
-    } // A constant for this model
+    }
 
+    @Override
     public int getRowCount() {
       return filenames.size();
     } // # of files in dir
 
-    // Information about each column.
+    @Override
     public String getColumnName(int col) {
       return columnNames[col];
     }
 
-    public Class getColumnClass(int col) {
-      return columnClasses[col];
-    }
-
     // The method that must actually return the value of each cell.
+    @Override
     public Object getValueAt(int row, int col) {
       File f = new File(filenames.get(row));
       switch (col) {
@@ -394,56 +386,39 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
       // Disable text field
       m_workingDirectoryPanel.getComponent(0).setEnabled(false);
 
-      // Get selected directory
-      String selectedDirectory = m_workingDirectoryPanel.getSelectedFile();
-      try {
-        // If selected directory is not null or empty
-        if (StringUtils.isNotEmpty(selectedDirectory)) {
+      // If selected director is not null or empty
+      if (StringUtils.isNotEmpty(m_workingDirectoryPanel.getSelectedFile())) {
+
+        // Get selected directory
+        String selectedDirectory = m_workingDirectoryPanel.getSelectedFile();
+        try {
+          File newDirectory = FileUtil.getFileFromURL(FileUtil.toURL(selectedDirectory));
 
           // Create new working directory
-          String modifiedSelectedDirectory =
-              FileUtil.getFileFromURL(FileUtil.toURL(selectedDirectory)).toString();
-          Path newDirectory = Paths.get(modifiedSelectedDirectory);
-          if (!Files.exists(newDirectory)) {
-            Files.createDirectory(newDirectory);
+          if (!newDirectory.exists()) {
+            newDirectory.mkdir();
           }
 
-          // If old working directory is set, copy the old directory to the new one
-          if (currentWorkingDirectory != null
-              && !modifiedSelectedDirectory.equals(currentWorkingDirectory.toString())) {
-            changeWorkingDirectory(modifiedSelectedDirectory);
+          // If old working directory is set, copy the old directory to the new one.
+          if (!newDirectory.equals(currentWorkingDirectory)) {
+            int choice = JOptionPane.showConfirmDialog(null, "Working directory is already set to "
+                + currentWorkingDirectory + " \nAre you sure you want to change?");
+            if (choice == JOptionPane.YES_OPTION) {
+              FileUtils.copyDirectory(currentWorkingDirectory, newDirectory);
+            }
           }
-
-          // Update fileModel.filenames with the files in the new working directory
-          try {
-            fileModel.filenames.clear();
-            Files.walk(newDirectory).filter(Files::isRegularFile).map(Path::toString)
-                .forEach(fileModel.filenames::add);
-            fileTable.revalidate();
-          } catch (IOException e1) {
-            e1.printStackTrace();
+          
+          // Update fileModel.filenames with the files in newDirectory
+          fileModel.filenames.clear();
+          for (File file : newDirectory.listFiles()) {
+            fileModel.filenames.add(file.getAbsolutePath());
           }
+          
+          // Update currentWorkingDirectory
+          currentWorkingDirectory = newDirectory;
 
-          // Update currentWorkingDirectory to the new one
-          currentWorkingDirectory = newDirectory.toFile();
-        }
-      } catch (InvalidPathException | IOException e1) {
-        e1.printStackTrace();
-      }
-    }
-
-    private void changeWorkingDirectory(String selectedDirectory) {
-
-      int choice = JOptionPane.showConfirmDialog(null, "Working directory is already set to "
-          + currentWorkingDirectory + " \nAre you sure you want to change?");
-
-      if (choice == JOptionPane.YES_OPTION) {
-        try {
-          URL url = FileUtil.toURL(currentWorkingDirectory.toString());
-          Path localPath = FileUtil.resolveToPath(url);
-          FileUtils.copyDirectory(localPath.toFile(), new File(selectedDirectory));
-        } catch (IOException | URISyntaxException e1) {
-          e1.printStackTrace();
+        } catch (InvalidPathException | IOException err) {
+          err.printStackTrace();
         }
       }
     }

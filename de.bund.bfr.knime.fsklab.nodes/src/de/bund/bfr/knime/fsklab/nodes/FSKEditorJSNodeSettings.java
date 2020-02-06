@@ -95,6 +95,5 @@ class FSKEditorJSNodeSettings {
     settings.addString(CFG_WORKING_DIRECTORY, workingDirectory);
     settings.addString(CFG_MODEL_METADATA, modelMetaData);
     settings.addString(CFG_MODELTYPE, modelType);
-
   }
 }
