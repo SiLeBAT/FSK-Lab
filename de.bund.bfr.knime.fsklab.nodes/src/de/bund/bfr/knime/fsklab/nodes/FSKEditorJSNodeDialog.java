@@ -118,12 +118,11 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
       this.settings.load(settings);
       modeltype.setSelectedItem(this.settings.modelType);
       m_readmePanel.setSelectedFile(this.settings.getReadme());
-
       m_workingDirectoryPanel.setSelectedFile(this.settings.getWorkingDirectory());
 
-      if (!m_workingDirectoryPanel.getSelectedFile().toString().isEmpty()) {
+      if (!m_workingDirectoryPanel.getSelectedFile().isEmpty()) {
         try {
-          URL url = FileUtil.toURL(m_workingDirectoryPanel.getSelectedFile().toString());
+          URL url = FileUtil.toURL(m_workingDirectoryPanel.getSelectedFile());
           Path localPath = FileUtil.resolveToPath(url);
           if (localPath != null) {
 
@@ -184,7 +183,7 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
     m_workingDirectoryPanel.addChangeListener(changeListener);
 
     try {
-      URL url = FileUtil.toURL(m_workingDirectoryPanel.getSelectedFile().toString());
+      URL url = FileUtil.toURL(m_workingDirectoryPanel.getSelectedFile());
       Path localPath = FileUtil.resolveToPath(url);
 
       // Clear and load file names from directory localPath
