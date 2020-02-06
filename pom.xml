@@ -19,8 +19,8 @@
 
 	<repositories>
 		<repository>
-			<id>knime-36</id>
-			<url>https://update.knime.org/analytics-platform/3.6</url>
+			<id>knime-37</id>
+			<url>https://update.knime.org/analytics-platform/3.7</url>
 			<layout>p2</layout>
 		</repository>
 		<repository>
