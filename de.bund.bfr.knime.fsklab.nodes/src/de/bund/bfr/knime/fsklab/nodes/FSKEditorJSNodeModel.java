@@ -244,7 +244,6 @@ final class FSKEditorJSNodeModel
             setWarningMessage(error);
           }
         }
-        Arrays.stream(fskEditorProxyValue.validationErrors).forEach(this::setWarningMessage);
       }
       outObj = inObj1;
 
