@@ -26,6 +26,7 @@ import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -47,7 +48,6 @@ import org.knime.core.node.web.ValidationError;
 import org.knime.core.node.workflow.NodeContainer;
 import org.knime.core.node.workflow.NodeContext;
 import org.knime.core.node.workflow.WorkflowContext;
-import org.knime.core.node.workflow.WorkflowManager;
 import org.knime.core.util.FileUtil;
 import org.knime.core.util.IRemoteFileUtilsService;
 import org.knime.js.core.node.AbstractWizardNodeModel;
@@ -165,7 +165,7 @@ final class FSKEditorJSNodeModel
   @Override
   protected PortObject[] performExecute(PortObject[] inObjects, ExecutionContext exec)
       throws Exception {
-    
+
     final String nodeWithId = NodeContext.getContext().getNodeContainer().getNameWithID();
     NodeContext.getContext().getWorkflowManager()
         .addListener(new NodeRemovedListener(nodeWithId, buildContainerName()));
@@ -177,25 +177,31 @@ final class FSKEditorJSNodeModel
       inObj1 = (FskPortObject) inObjects[0];
     } else {
       String workingDirectory = "";
-      
+
       // Import readme
       String readme = StringUtils.defaultString(nodeSettings.getReadme());
 
+      // Create working directory if not set in settings
       if (!nodeSettings.getWorkingDirectory().isEmpty()) {
         workingDirectory = nodeSettings.getWorkingDirectory();
       } else {
-        // each sub Model has it's own working directory to avoid resource conflict.
-        // get current node's and workflow's context
-        NodeContext nodeContext = NodeContext.getContext();
-        WorkflowManager wfm = nodeContext.getWorkflowManager();
-        WorkflowContext workflowContext = wfm.getContext();
-        File currentWorkingDirectory =
-            new File(workflowContext.getCurrentLocation(),
-                nodeContext.getNodeContainer().getNameWithID().toString().replaceAll("\\W", "")
-                    .replace(" ", "") + "_" + "workingDirectory"
-                    + TEMP_DIR_UNIFIER.getAndIncrement());
-        currentWorkingDirectory.mkdir();
-        workingDirectory = currentWorkingDirectory.getPath();
+        // Create a folder named after the node that will be used as working
+        // directory if the node does not have a working directory
+        final NodeContext nodeContext = NodeContext.getContext();
+        WorkflowContext workflowContext = nodeContext.getWorkflowManager().getContext();
+
+        // The new working directory will be named as the node's name with id and no spaces,
+        // followed by _workingDirectory<COUNTER>.
+        final String newWorkingDirectoryName =
+            nodeContext.getNodeContainer().getNameWithID().replaceAll("\\W", "").replace(" ", "")
+                + "_workingDirectory" + TEMP_DIR_UNIFIER.getAndIncrement();
+
+        // This folder is placed in the workflow.
+        File newWorkingDirectory =
+            new File(workflowContext.getCurrentLocation(), newWorkingDirectoryName);
+        newWorkingDirectory.mkdir();
+
+        workingDirectory = newWorkingDirectory.getPath();
       }
 
       inObj1 = new FskPortObject(workingDirectory, readme, new ArrayList<>());
@@ -209,7 +215,7 @@ final class FSKEditorJSNodeModel
     synchronized (getLock()) {
       FSKEditorJSViewValue fskEditorProxyValue = getViewValue();
 
-      if (!StringUtils.isBlank(nodeSettings.modelType)) {
+      if (StringUtils.isNotBlank(nodeSettings.modelType)) {
         fskEditorProxyValue.modelType = nodeSettings.modelType;
       } else if (inObj1 != null && inObj1.modelMetadata != null) {
         fskEditorProxyValue.modelType = inObj1.modelMetadata.getModelType();
@@ -228,16 +234,17 @@ final class FSKEditorJSNodeModel
           fskEditorProxyValue.firstModelViz = inObj1.viz;
           fskEditorProxyValue.modelType = inObj1.modelMetadata.getModelType();
           fskEditorProxyValue.readme = inObj1.getReadme();
-
         }
       } else {
         if (fskEditorProxyValue.notCompleted) {
           setWarningMessage("Output Parameters are not configured correctly");
+        }     
+        if (fskEditorProxyValue.validationErrors != null && fskEditorProxyValue.validationErrors.length > 0) {
+          for (String error : fskEditorProxyValue.validationErrors) {
+            setWarningMessage(error);
+          }
         }
-        if (StringUtils.isNotEmpty(fskEditorProxyValue.validationErrors)) {
-          setWarningMessage("\n" + (fskEditorProxyValue.validationErrors).replaceAll("\"", "")
-              .replaceAll(",,,", "\n"));
-        }
+        Arrays.stream(fskEditorProxyValue.validationErrors).forEach(this::setWarningMessage);
       }
       outObj = inObj1;
 

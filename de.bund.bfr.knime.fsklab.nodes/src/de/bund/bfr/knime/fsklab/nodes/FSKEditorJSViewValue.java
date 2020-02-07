@@ -35,7 +35,6 @@ class FSKEditorJSViewValue extends JSONViewContent {
   private static final String CFG_ORIGINAL_MODEL_SCRIPT = "originalModelScript";
   private static final String CFG_ORIGINAL_VISUALIZATION_SCRIPT = "originalVisualizationScript";
   private static final String CFG_ORIGINAL_README = "README";
-
   private static final String CFG_MODEL_METADATA = "ModelMetaData";
 
   public final int pseudoIdentifier = (new Random()).nextInt();
@@ -49,7 +48,7 @@ class FSKEditorJSViewValue extends JSONViewContent {
   public String[] resourcesFiles;
   public String serverName;
   public boolean notCompleted;
-  public String validationErrors;
+  public String[] validationErrors;
   public String modelType ;
 
   @Override
@@ -59,7 +58,6 @@ class FSKEditorJSViewValue extends JSONViewContent {
     settings.addString(CFG_ORIGINAL_README, readme);
 
     saveSettings(settings, CFG_MODEL_METADATA, getModelMetaData());
-   
   }
 
   @Override
@@ -70,7 +68,6 @@ class FSKEditorJSViewValue extends JSONViewContent {
 
     // load meta data
     setModelMetaData(getEObject(settings, CFG_MODEL_METADATA));
-   
   }
 
   private static void saveSettings(final NodeSettingsWO settings, final String key,
