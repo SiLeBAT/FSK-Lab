@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.knime.core.node.CanceledExecutionException;
@@ -114,28 +113,8 @@ final class FSKEditorJSNodeModel
     return false;
   }
 
-  // This method is being called just when user click apply or close with saving options
   @Override
   public ValidationError validateViewValue(FSKEditorJSViewValue viewContent) {
-    // TODO
-    /*
-     * Use SchemaFactory to create new Schema and Validator from it and then apply
-     * validator.validate() to validate the EMF Object. Any error after the validate can be return
-     * back to the javascript view as ValidationError Object which can contains the error message
-     * EObject generalInformation; try { generalInformation =
-     * getEObjectFromJson(viewContent.getGeneralInformation(), GeneralInformation.class); EObject
-     * feed =
-     * (EObject)generalInformation.eGet(generalInformation.eClass().getEStructuralFeature("feed"));
-     *
-     * Diagnostician validator = Diagnostician.INSTANCE;
-     *
-     * // Validate the feed and inspect the resulting diagnostic.
-     * org.eclipse.emf.common.util.Diagnostic diagnostic = validator.validate(feed);
-     *
-     * return new ValidationError(diagnostic.toString()); } catch (InvalidSettingsException e) {
-     * e.printStackTrace(); }
-     * 
-     */
     return null;
   }
 
@@ -198,13 +177,9 @@ final class FSKEditorJSNodeModel
       inObj1 = (FskPortObject) inObjects[0];
     } else {
       String workingDirectory = "";
-      String readme = "";
-
+      
       // Import readme
-      if (!nodeSettings.getReadme().isEmpty()) {
-        File readmeFile = FileUtil.getFileFromURL(FileUtil.toURL(nodeSettings.getReadme()));
-        readme = FileUtils.readFileToString(readmeFile, "UTF-8");
-      }
+      String readme = StringUtils.defaultString(nodeSettings.getReadme());
 
       if (!nodeSettings.getWorkingDirectory().isEmpty()) {
         workingDirectory = nodeSettings.getWorkingDirectory();
