@@ -26,12 +26,11 @@ import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Collectors;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.knime.core.node.CanceledExecutionException;
@@ -238,8 +237,9 @@ final class FSKEditorJSNodeModel
       } else {
         if (fskEditorProxyValue.notCompleted) {
           setWarningMessage("Output Parameters are not configured correctly");
-        }     
-        if (fskEditorProxyValue.validationErrors != null && fskEditorProxyValue.validationErrors.length > 0) {
+        }
+        if (fskEditorProxyValue.validationErrors != null
+            && fskEditorProxyValue.validationErrors.length > 0) {
           for (String error : fskEditorProxyValue.validationErrors) {
             setWarningMessage(error);
           }
@@ -254,27 +254,35 @@ final class FSKEditorJSNodeModel
       if (outObj.modelMetadata != null && SwaggerUtil.getModelMath(outObj.modelMetadata) != null) {
         List<Parameter> parametersList = SwaggerUtil.getParameter(outObj.modelMetadata);
 
-        // Create simulation
         if (parametersList != null && parametersList.size() > 0) {
-          FskSimulation defaultSimulation = NodeUtils.createDefaultSimulation(parametersList);
+
+          // Create a new default simulation and replace the old default simulation in outObj
+          // (if it has one). Otherwise, just add the new default simulation.
+          FskSimulation newDefaultSimulation = NodeUtils.createDefaultSimulation(parametersList);
+
           if (outObj.simulations.size() > 0) {
-            List<FskSimulation> defaultSim =
-                outObj.simulations.stream().filter(sim -> "defaultSimulation".equals(sim.getName()))
-                    .collect(Collectors.toList());
-            defaultSim.stream().forEach(sim -> {
-              outObj.simulations.remove(sim);
-            });
+            Optional<FskSimulation> oldDefaultSimulation = outObj.simulations.stream()
+                .filter(sim -> "defaultSimulation".equals(sim.getName())).findAny();
+            
+            // If there is an old default simulation just update the parameter values. If not, then
+            // just add the entire newDefaultSimulation.
+            if (oldDefaultSimulation.isPresent()) {
+              oldDefaultSimulation.get().getParameters().clear();
+              oldDefaultSimulation.get().getParameters().putAll(newDefaultSimulation.getParameters());
+            } else {
+              outObj.simulations.add(0, newDefaultSimulation);
+            }
+          } else {
+            // If there is no simulations yet, add newDefaultSimulation.
+            outObj.simulations.add(newDefaultSimulation);
           }
-          outObj.simulations.add(0, defaultSimulation);
-        } else {
-          parametersList = new ArrayList<>();
-          outObj.simulations.add(0, NodeUtils.createDefaultSimulation(parametersList));
         }
       }
 
       outObj.model = fskEditorProxyValue.firstModelScript;
       outObj.viz = fskEditorProxyValue.firstModelViz;
       outObj.setReadme(fskEditorProxyValue.readme);
+      
       // resources files via fskEditorProxyValue will be available only in online mode of the JS
       // editor
       if (fskEditorProxyValue.resourcesFiles != null
@@ -298,8 +306,8 @@ final class FSKEditorJSNodeModel
             ctx.ungetService(ref);
           }
         }
-
       }
+      
       // Collect R packages
       final Set<String> librariesSet = new HashSet<>();
       librariesSet.addAll(new RScript(outObj.model).getLibraries());
