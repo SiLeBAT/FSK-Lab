@@ -36,12 +36,12 @@ along with this program.  If not, see &amp;quot;http://www.gnu.org/licenses/&amp
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.ui.workbench"/>
       <import plugin="com.sun.jna"/>
+      <import plugin="org.knime.ext.r.type"/>
       <import plugin="org.eclipse.emf.ecore"/>
       <import plugin="com.fasterxml.jackson.core.jackson-annotations"/>
       <import plugin="com.fasterxml.jackson.core.jackson-core"/>
       <import plugin="com.fasterxml.jackson.core.jackson-databind"/>
       <import plugin="org.apache.servicemix.bundles.poi"/>
-      <import plugin="org.junit"/>
       <import plugin="org.glassfish.javax.json" version="1.0.4" match="greaterOrEqual"/>
       <import plugin="com.google.gson"/>
       <import plugin="com.fifesoft.rsyntaxtextarea"/>
@@ -52,19 +52,10 @@ along with this program.  If not, see &amp;quot;http://www.gnu.org/licenses/&amp
       <import plugin="org.knime.ext.svg"/>
       <import plugin="org.knime.js.core"/>
       <import plugin="org.knime.json"/>
-      <import plugin="org.knime.workbench.repository"/>
       <import plugin="org.slf4j.api"/>
       <import plugin="org.knime.python2"/>
       <import plugin="org.apache.commons.io" version="2.5.0" match="greaterOrEqual"/>
-      <import plugin="org.knime.ext.r.type"/>
    </requires>
-
-   <plugin
-         id="de.bund.bfr.knime.fsklab.util"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
 
    <plugin
          id="de.bund.bfr.knime.nodes.util"

@@ -40,7 +40,7 @@ along with this program.  If not, see &quot;http://www.gnu.org/licenses/&quot;.
       <import plugin="org.knime.ext.r.type"/>
       <import plugin="org.knime.workbench.repository"/>
       <import plugin="org.jdom2"/>
-      <import plugin="de.bund.bfr.knime.fsklab.type" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="de.bund.bfr.formats"/>
       <import plugin="com.toedter.jcalendar"/>
       <import plugin="org.apache.commons.lang3"/>
       <import plugin="org.eclipse.core.runtime"/>
@@ -49,11 +49,11 @@ along with this program.  If not, see &quot;http://www.gnu.org/licenses/&quot;.
       <import plugin="org.jsoup"/>
       <import plugin="org.eclipse.emf.ecore"/>
       <import plugin="org.glassfish.javax.json" version="1.0.4" match="greaterOrEqual"/>
+      <import plugin="com.google.gson"/>
       <import plugin="org.apache.commons.io"/>
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.ui.workbench"/>
       <import plugin="com.sun.jna"/>
-      <import plugin="de.bund.bfr.formats"/>
    </requires>
 
    <plugin
@@ -86,13 +86,6 @@ along with this program.  If not, see &quot;http://www.gnu.org/licenses/&quot;.
 
    <plugin
          id="de.bund.bfr.knime.fsklab.r"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="de.bund.bfr.knime.fsklab.util"
          download-size="0"
          install-size="0"
          version="0.0.0"
