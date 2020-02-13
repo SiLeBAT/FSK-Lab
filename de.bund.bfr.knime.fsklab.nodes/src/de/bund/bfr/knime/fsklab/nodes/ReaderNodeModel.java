@@ -418,7 +418,6 @@ class ReaderNodeModel extends NoInternalsModel {
       String visualizationScript = "";
       File workspace = null; // null if missing
       String pathToResource = ListOfPaths.get(0);
-      String spreadsheetPath = "";
       String readme = "";
 
       for (final ArchiveEntry entry : archive.getEntriesWithFormat(URIS.get("r"))) {
@@ -489,16 +488,13 @@ class ReaderNodeModel extends NoInternalsModel {
       }
 
       // Get metadata spreadsheet
-      URI xlsxURI = URIS.get("xlsx");
-      List<ArchiveEntry> excelEntries = archive.getEntriesWithFormat(xlsxURI);
-      for (ArchiveEntry excelEntry : excelEntries) {
-        String path = excelEntry.getEntityPath();
-        if (path.indexOf(pathToResource) == 0) {
-          File excelFile = FileUtil.createTempFile("metadata", ".xlsx");
-          excelEntry.extractFile(excelFile);
-          spreadsheetPath = excelFile.getAbsolutePath();
-        }
-
+      String spreadsheetPath = "";
+      Optional<ArchiveEntry> excelEntry = archive.getEntriesWithFormat(URIS.get("xlsx")).stream()
+          .filter(entry -> entry.getEntityPath().indexOf(pathToResource) == 0).findAny();
+      if (excelEntry.isPresent()) {
+        File tempFile = FileUtil.createTempFile("metadata", ".xlsx");
+        excelEntry.get().extractFile(tempFile);
+        spreadsheetPath = tempFile.getAbsolutePath();
       }
 
       // Retrieve missing libraries from CRAN
