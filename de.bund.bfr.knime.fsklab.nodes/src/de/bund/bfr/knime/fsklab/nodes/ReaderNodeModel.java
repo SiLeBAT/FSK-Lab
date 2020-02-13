@@ -35,6 +35,7 @@ import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -68,6 +69,7 @@ import org.sbml.jsbml.ext.comp.CompSBasePlugin;
 import org.sbml.jsbml.ext.comp.Submodel;
 import org.sbml.jsbml.xml.XMLAttributes;
 import org.sbml.jsbml.xml.XMLNode;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.fskml.FSKML;
@@ -198,24 +200,26 @@ class ReaderNodeModel extends NoInternalsModel {
       // If there is only one SBML document the archive contains a single model and several
       // SBML documents means a joined model.
       List<String> modelFolders;
-      
-      if (numberOfSBML > 1) {  
+
+      if (numberOfSBML > 1) {
         // Get directories inside the archive without duplication. The directories are
         // sorted to have the related directories after each other.
         // E.g.:
         // /SimpleModel2/SimpleModel2 <- Joined model
         // /SimpleModel2/SimpleModel2/SimpleModel1 <- Child model 1
         // /SimpleModel2/SimpleModel1/SimpleModel2 <- Child model 2
-        TreeSet<String> entries = archive.getEntries().parallelStream().map(ArchiveEntry::getFilePath)
+        TreeSet<String> entries = archive.getEntries().parallelStream()
+            .map(ArchiveEntry::getFilePath)
             .map(fullPath -> fullPath.substring(0, fullPath.lastIndexOf("/") + 1))
-            .filter(path -> StringUtils.countMatches(path, "/") > 2 && !path.endsWith("simulations/"))
+            .filter(
+                path -> StringUtils.countMatches(path, "/") > 2 && !path.endsWith("simulations/"))
             .collect(Collectors.toCollection(TreeSet::new));
-        
+
         modelFolders = new ArrayList<>(entries);
       } else {
         modelFolders = Arrays.asList("/");
       }
-      
+
       // 4. Create working directory for the model read inside the workflow folder.
       // E.g.: ..\InitializeParentsAnimals\FSKXReader021_workingDirectory
       // where ..\InitializeParentsAnimals is the relative path to the workflow.
@@ -225,7 +229,7 @@ class ReaderNodeModel extends NoInternalsModel {
       File workingDirectory = new File(workflowContext.getCurrentLocation(),
           nodeContext.getNodeContainer().getNameWithID().toString().replaceAll("\\W", "")
               .replace(" ", "") + "_workingDirectory");
-      
+
       fskObj = readFskPortObject(archive, modelFolders, 0, workingDirectory);
     }
 
@@ -278,45 +282,20 @@ class ReaderNodeModel extends NoInternalsModel {
           new File(currentWorkingDirectory, "sub" + readLevel));
       String tempString = firstelement.substring(0, firstelement.length() - 2);
       String parentPath = tempString.substring(0, tempString.lastIndexOf('/'));
+
       // Gets metadata
       {
-
-        // Create temporary file with metadata
-        Path temp = Files.createTempFile("metadata", ".json");
-        List<ArchiveEntry> jsonEntries = archive.getEntriesWithFormat(URIS.get("json"));
-
-        for (ArchiveEntry jsonEntry : jsonEntries) {
-          String path = jsonEntry.getEntityPath();
-          if (path.startsWith(parentPath)
-              && (StringUtils.countMatches(path,
-                  "/") == (StringUtils.countMatches(parentPath, "/") + 1))
-              && path.endsWith("metaData.json")) {
-            jsonEntry.extractFile(temp.toFile());
-
-            // Loads metadata from temporary file
-            final ObjectMapper mapper = FskPlugin.getDefault().OBJECT_MAPPER;
-
-            JsonNode modelNode = mapper.readTree(temp.toFile());
-            if (modelNode.has("modelType")) {
-              Class<? extends Model> modelClass =
-                  FskPortObject.Serializer.modelClasses.get(modelNode.get("modelType").asText());
-              model = mapper.readValue(temp.toFile(), modelClass);
-            } else if (modelNode.get("version") != null) {
-              GenericModel gm = new GenericModel();
-              gm.setModelType("genericModel");
-              gm.setGeneralInformation(SwaggerUtil.convert(mapper.treeToValue(
-                  modelNode.get("generalInformation"), metadata.GeneralInformation.class)));
-              gm.setScope(SwaggerUtil
-                  .convert(mapper.treeToValue(modelNode.get("scope"), metadata.Scope.class)));
-              gm.setDataBackground(SwaggerUtil.convert(mapper
-                  .treeToValue(modelNode.get("dataBackground"), metadata.DataBackground.class)));
-              gm.setModelMath(SwaggerUtil.convert(
-                  mapper.treeToValue(modelNode.get("modelMath"), metadata.ModelMath.class)));
-              model = gm;
-            }
-          }
+        // Find metadata entry
+        Optional<ArchiveEntry> metadataEntry = archive.getEntriesWithFormat(URIS.get("json"))
+            .stream().filter(entry -> entry.getEntityPath().startsWith(parentPath))
+            .filter(entry -> StringUtils.countMatches(entry.getEntityPath(),
+                "/") == StringUtils.countMatches(parentPath, "/") + 1)
+            .filter(entry -> entry.getEntityPath().endsWith("metaData.json"))
+            .findAny();
+        
+        if (metadataEntry.isPresent()) {
+          model = readMetadata(metadataEntry.get());
         }
-        Files.delete(temp); // Deletes temporary file
       }
 
       String firstModelId = "";
@@ -501,57 +480,18 @@ class ReaderNodeModel extends NoInternalsModel {
 
       // Gets metadata
       {
-        // Create temporary file with metadata
-        Path temp = Files.createTempFile("metadata", ".json");
-        List<ArchiveEntry> jsonEntries = archive.getEntriesWithFormat(URIS.get("json"));
-        for (ArchiveEntry jsonEntry : jsonEntries) {
-          String path = jsonEntry.getEntityPath();
-          // read the metaData.json file only!
-          if (path.indexOf(pathToResource) == 0 && path.endsWith("metaData.json")) {
-            jsonEntry.extractFile(temp.toFile());
-
-            // Loads metadata from temporary file
-            final ObjectMapper mapper = FskPlugin.getDefault().OBJECT_MAPPER;
-
-            JsonNode modelNode = mapper.readTree(temp.toFile());
-            Object version = modelNode.get("version");
-
-            if (modelNode.has("modelType")) {
-              Class<? extends Model> modelClass =
-                  FskPortObject.Serializer.modelClasses.get(modelNode.get("modelType").asText());
-              model = FskPlugin.getDefault().MAPPER104.readValue(temp.toFile(), modelClass);
-            } else if (version != null) {
-              // 1.0.3 (with EMF)
-
-              GenericModel gm = new GenericModel();
-              gm.setModelType("genericModel");
-              gm.setGeneralInformation(SwaggerUtil.convert(mapper.treeToValue(
-                  modelNode.get("generalInformation"), metadata.GeneralInformation.class)));
-              gm.setScope(SwaggerUtil
-                  .convert(mapper.treeToValue(modelNode.get("scope"), metadata.Scope.class)));
-              gm.setDataBackground(SwaggerUtil.convert(mapper
-                  .treeToValue(modelNode.get("dataBackground"), metadata.DataBackground.class)));
-              gm.setModelMath(SwaggerUtil.convert(
-                  mapper.treeToValue(modelNode.get("modelMath"), metadata.ModelMath.class)));
-              model = gm;
-
-            } else {
-              // pre Rakip
-              GenericModel gm = new GenericModel();
-              gm.setModelType("genericModel");
-              modelNode = mapper.readTree(temp.toFile());
-              de.bund.bfr.knime.fsklab.rakip.GenericModel genericModel = mapper
-                  .readValue(temp.toFile(), de.bund.bfr.knime.fsklab.rakip.GenericModel.class);
-              gm.setGeneralInformation(RakipUtil.convert(genericModel.generalInformation));
-              gm.setScope(RakipUtil.convert(genericModel.scope));
-              gm.dataBackground(RakipUtil.convert(genericModel.dataBackground));
-              gm.modelMath(RakipUtil.convert(genericModel.modelMath));
-              model = gm;
-            }
-          }
+        // Find metadata entry
+        Optional<ArchiveEntry> metadataEntry = archive.getEntriesWithFormat(URIS.get("json"))
+            .stream()
+            .filter(entry -> entry.getEntityPath().indexOf(pathToResource) == 0)
+            .filter(entry -> entry.getEntityPath().endsWith("metaData.json"))
+            .findAny();
+        
+        if (metadataEntry.isPresent()) {
+          model = readMetadata(metadataEntry.get());
         }
-        Files.delete(temp); // Deletes temporary file
       }
+      
       int selectedIndex = 0;
       // Get simulations
       List<ArchiveEntry> sedmlEntries = archive.getEntriesWithFormat(URIS.get("sedml"));
@@ -678,5 +618,55 @@ class ReaderNodeModel extends NoInternalsModel {
     }
 
     return simulations;
+  }
+
+  private Model readMetadata(ArchiveEntry metadataEntry)
+      throws JsonProcessingException, IOException {
+
+    // Create temporary file with metadata
+    File temp = File.createTempFile("metadata", ".json");
+    metadataEntry.extractFile(temp);
+
+    // Load metadata from temporary file
+    final ObjectMapper mapper = FskPlugin.getDefault().MAPPER104;
+    JsonNode jsonNode = mapper.readTree(temp);
+
+    temp.delete(); // Delete temporary file
+
+    Model model;
+
+    // New swagger models have the modelType property (1.0.4)
+    if (jsonNode.has("modelType")) {
+      String modelType = jsonNode.get("modelType").asText();
+      Class<? extends Model> modelClass = FskPortObject.Serializer.modelClasses.get(modelType);
+      model = mapper.treeToValue(jsonNode, modelClass);
+    } else if (jsonNode.has("version")) {
+      // 1.0.3 (with EMF)
+      GenericModel gm = new GenericModel();
+      gm.setModelType("genericModel");
+      gm.setGeneralInformation(SwaggerUtil.convert(mapper
+          .treeToValue(jsonNode.get("generalInformation"), metadata.GeneralInformation.class)));
+      gm.setScope(
+          SwaggerUtil.convert(mapper.treeToValue(jsonNode.get("scope"), metadata.Scope.class)));
+      gm.setDataBackground(SwaggerUtil.convert(
+          mapper.treeToValue(jsonNode.get("dataBackground"), metadata.DataBackground.class)));
+      gm.setModelMath(SwaggerUtil
+          .convert(mapper.treeToValue(jsonNode.get("modelMath"), metadata.ModelMath.class)));
+      model = gm;
+    } else {
+      // Pre-RAKIP
+      de.bund.bfr.knime.fsklab.rakip.GenericModel rakipModel =
+          mapper.treeToValue(jsonNode, de.bund.bfr.knime.fsklab.rakip.GenericModel.class);;
+
+      GenericModel gm = new GenericModel();
+      gm.setModelType("genericModel");
+      gm.setGeneralInformation(RakipUtil.convert(rakipModel.generalInformation));
+      gm.setScope(RakipUtil.convert(rakipModel.scope));
+      gm.dataBackground(RakipUtil.convert(rakipModel.dataBackground));
+      gm.modelMath(RakipUtil.convert(rakipModel.modelMath));
+      model = gm;
+    }
+
+    return model;
   }
 }
