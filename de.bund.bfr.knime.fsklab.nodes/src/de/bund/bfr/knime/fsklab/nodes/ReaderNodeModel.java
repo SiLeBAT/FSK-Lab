@@ -134,11 +134,11 @@ class ReaderNodeModel extends NoInternalsModel {
               .contains(nodeContext.getNodeContainer().getNameWithID().toString()
                   .replaceAll("\\W", "").replace(" ", "") + "_" + "workingDirectory"))
           .sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(file -> {
-           try {
-             file.delete();
-           }catch(Exception ex) {
-             ex.printStackTrace();
-           }
+            try {
+              file.delete();
+            } catch (Exception ex) {
+              ex.printStackTrace();
+            }
           });
     } catch (IOException e) {
       e.printStackTrace();
@@ -167,7 +167,9 @@ class ReaderNodeModel extends NoInternalsModel {
       File temporaryFile = FileUtil.createTempFile("model", "fskx");
       temporaryFile.delete();
 
-      try (InputStream inStream = FileUtil.openStreamWithTimeout(new URL(nodeSettings.filePath),10000);
+      try (
+          InputStream inStream =
+              FileUtil.openStreamWithTimeout(new URL(nodeSettings.filePath), 10000);
           OutputStream outStream = new FileOutputStream(temporaryFile)) {
         IOUtils.copy(inStream, outStream);
       }
@@ -185,29 +187,46 @@ class ReaderNodeModel extends NoInternalsModel {
 
     try (final CombineArchive archive = new CombineArchive(in)) {
 
-      // Get the directories inside the archive without duplication
-      // The directories are sorted to have the related directories (Joiner One) after each other
-      TreeSet<String> entries = archive.getEntries().parallelStream().map(ArchiveEntry::getFilePath)
-          .map(fullPath -> fullPath.substring(0, fullPath.lastIndexOf("/") + 1))
-          .filter(path -> StringUtils.countMatches(path, "/") > 2 && !path.endsWith("simulations/"))
-          .collect(Collectors.toCollection(TreeSet::new));
+      // 1. Get SBML URI
+      URI sbmlURI = FSKML.getURIS(1, 0, 12).get("sbml");
 
-      // Get the number of SBML files available in this archive
-      // to be used as tag of joining if they are more than one.
-      URI sbmlUri = FSKML.getURIS(1, 0, 12).get("sbml");
+      // 2. Get number of SBML documents
+      final int numberOfSBML = archive.getNumEntriesWithFormat(sbmlURI);
 
-      // If only one SBML entry then no joining, just normal FSK object
-      List<String> listOfPaths =
-          archive.getNumEntriesWithFormat(sbmlUri) > 1 ? new ArrayList<>(entries)
-              : Arrays.asList("/");
+      // 3. Get the paths or model folders. A model folder contains a model and is the root
+      // folder in case of a single model or can be nested folders in case of joined models.
+      // If there is only one SBML document the archive contains a single model and several
+      // SBML documents means a joined model.
+      List<String> modelFolders;
       
+      if (numberOfSBML > 1) {  
+        // Get directories inside the archive without duplication. The directories are
+        // sorted to have the related directories after each other.
+        // E.g.:
+        // /SimpleModel2/SimpleModel2 <- Joined model
+        // /SimpleModel2/SimpleModel2/SimpleModel1 <- Child model 1
+        // /SimpleModel2/SimpleModel1/SimpleModel2 <- Child model 2
+        TreeSet<String> entries = archive.getEntries().parallelStream().map(ArchiveEntry::getFilePath)
+            .map(fullPath -> fullPath.substring(0, fullPath.lastIndexOf("/") + 1))
+            .filter(path -> StringUtils.countMatches(path, "/") > 2 && !path.endsWith("simulations/"))
+            .collect(Collectors.toCollection(TreeSet::new));
+        
+        modelFolders = new ArrayList<>(entries);
+      } else {
+        modelFolders = Arrays.asList("/");
+      }
+      
+      // 4. Create working directory for the model read inside the workflow folder.
+      // E.g.: ..\InitializeParentsAnimals\FSKXReader021_workingDirectory
+      // where ..\InitializeParentsAnimals is the relative path to the workflow.
+      // FSKXReader021 is the name with id of the node container after removing whitespaces.
       NodeContext nodeContext = NodeContext.getContext();
-      WorkflowManager wfm = nodeContext.getWorkflowManager();
-      WorkflowContext workflowContext = wfm.getContext();
-      File currentWorkingDirectory = new File(workflowContext.getCurrentLocation(),
-              nodeContext.getNodeContainer().getNameWithID().toString().replaceAll("\\W", "").replace(" ",
-                  "") + "_" + "workingDirectory" );
-      fskObj = readFskPortObject(archive, listOfPaths, 0, currentWorkingDirectory);
+      WorkflowContext workflowContext = nodeContext.getWorkflowManager().getContext();
+      File workingDirectory = new File(workflowContext.getCurrentLocation(),
+          nodeContext.getNodeContainer().getNameWithID().toString().replaceAll("\\W", "")
+              .replace(" ", "") + "_workingDirectory");
+      
+      fskObj = readFskPortObject(archive, modelFolders, 0, workingDirectory);
     }
 
     return fskObj;
@@ -226,11 +245,11 @@ class ReaderNodeModel extends NoInternalsModel {
     Map<String, URI> URIS = FSKML.getURIS(1, 0, 12);
     // each sub Model has it's own working directory to avoid resource conflict.
     // get current node's and workflow's context
-   
+
 
     // get the location of the current Workflow to create the working directory in it and use the
     // name with current reader node id for the prefix of the working directory name
-   
+
     if (!currentWorkingDirectory.exists()) {
       currentWorkingDirectory.mkdir();
     }
@@ -253,8 +272,10 @@ class ReaderNodeModel extends NoInternalsModel {
       }
 
       // invoke this mothod recursively to get the sub model using the corresponding path group
-      FskPortObject firstFskPortObject = readFskPortObject(archive, firstGroup, ++readLevel,new File(currentWorkingDirectory,"sub"+readLevel));
-      FskPortObject secondFskPortObject = readFskPortObject(archive, secondGroup, ++readLevel,new File(currentWorkingDirectory,"sub"+readLevel));
+      FskPortObject firstFskPortObject = readFskPortObject(archive, firstGroup, ++readLevel,
+          new File(currentWorkingDirectory, "sub" + readLevel));
+      FskPortObject secondFskPortObject = readFskPortObject(archive, secondGroup, ++readLevel,
+          new File(currentWorkingDirectory, "sub" + readLevel));
       String tempString = firstelement.substring(0, firstelement.length() - 2);
       String parentPath = tempString.substring(0, tempString.lastIndexOf('/'));
       // Gets metadata
@@ -276,28 +297,23 @@ class ReaderNodeModel extends NoInternalsModel {
             final ObjectMapper mapper = FskPlugin.getDefault().OBJECT_MAPPER;
 
             JsonNode modelNode = mapper.readTree(temp.toFile());
-            if(modelNode.has("modelType")) {
-              Class<? extends Model> modelClass = FskPortObject.Serializer.modelClasses.get(modelNode.get("modelType").asText());
+            if (modelNode.has("modelType")) {
+              Class<? extends Model> modelClass =
+                  FskPortObject.Serializer.modelClasses.get(modelNode.get("modelType").asText());
               model = mapper.readValue(temp.toFile(), modelClass);
-            }
-            else if(modelNode.get("version") != null) {
+            } else if (modelNode.get("version") != null) {
               GenericModel gm = new GenericModel();
               gm.setModelType("genericModel");
-              gm.setGeneralInformation(SwaggerUtil.convert(mapper.treeToValue(modelNode.get("generalInformation"), metadata.GeneralInformation.class)));
-              gm.setScope(SwaggerUtil.convert(mapper.treeToValue(modelNode.get("scope"), metadata.Scope.class)));
-              gm.setDataBackground(SwaggerUtil.convert(mapper.treeToValue(modelNode.get("dataBackground"), metadata.DataBackground.class)));
-              gm.setModelMath(SwaggerUtil.convert(mapper.treeToValue(modelNode.get("modelMath"), metadata.ModelMath.class)));
+              gm.setGeneralInformation(SwaggerUtil.convert(mapper.treeToValue(
+                  modelNode.get("generalInformation"), metadata.GeneralInformation.class)));
+              gm.setScope(SwaggerUtil
+                  .convert(mapper.treeToValue(modelNode.get("scope"), metadata.Scope.class)));
+              gm.setDataBackground(SwaggerUtil.convert(mapper
+                  .treeToValue(modelNode.get("dataBackground"), metadata.DataBackground.class)));
+              gm.setModelMath(SwaggerUtil.convert(
+                  mapper.treeToValue(modelNode.get("modelMath"), metadata.ModelMath.class)));
               model = gm;
             }
-            
-           
-//            generalInformation =
-//                mapper.treeToValue(modelNode.get("generalInformation"), GeneralInformation.class);
-//            scope = mapper.treeToValue(modelNode.get("scope"), Scope.class);
-//            dataBackground =
-//                mapper.treeToValue(modelNode.get("dataBackground"), DataBackground.class);
-//            modelMath = mapper.treeToValue(modelNode.get("modelMath"), ModelMath.class);
-
           }
         }
         Files.delete(temp); // Deletes temporary file
@@ -353,7 +369,7 @@ class ReaderNodeModel extends NoInternalsModel {
               continue;
             }
             Parameter targetParam = coll.get(0);
-            
+
             CompSBasePlugin a = (CompSBasePlugin) param.getExtension("comp");
             String replacmentLement = a.getReplacedBy().getIdRef();
             Parameter sourceParam =
@@ -367,9 +383,9 @@ class ReaderNodeModel extends NoInternalsModel {
                     return false;
                   }
 
-                }).filter(cp -> cp.getId().equals(replacmentLement))
-                    .collect(Collectors.toList()).get(0);
-            
+                }).filter(cp -> cp.getId().equals(replacmentLement)).collect(Collectors.toList())
+                    .get(0);
+
             String command = null;
             Annotation annotation = param.getAnnotation();
             if (annotation != null) {
@@ -405,17 +421,14 @@ class ReaderNodeModel extends NoInternalsModel {
         }
       }
       CombinedFskPortObject topfskObj;
-      String currentModelID = SwaggerUtil.getModelName(firstFskPortObject.modelMetadata).replaceAll("\\W", "");
+      String currentModelID =
+          SwaggerUtil.getModelName(firstFskPortObject.modelMetadata).replaceAll("\\W", "");
       if (currentModelID.equals(firstModelId)) {
-        topfskObj = new CombinedFskPortObject("", "", model, workingDirectory.toString(), new ArrayList<>(), firstFskPortObject,
-            secondFskPortObject);
+        topfskObj = new CombinedFskPortObject("", "", model, workingDirectory.toString(),
+            new ArrayList<>(), firstFskPortObject, secondFskPortObject);
       } else {
-//        topfskObj = new CombinedFskPortObject("", "", generalInformation, scope, dataBackground,
-//      modelMath, workingDirectory.toString(), new ArrayList<>(), secondFskPortObject,
-//      firstFskPortObject);
-        topfskObj = new CombinedFskPortObject("", "", model, workingDirectory.toString(), new ArrayList<>(), secondFskPortObject,
-          firstFskPortObject);
-      
+        topfskObj = new CombinedFskPortObject("", "", model, workingDirectory.toString(),
+            new ArrayList<>(), secondFskPortObject, firstFskPortObject);
       }
 
       topfskObj.viz = getEmbedSecondFSKObject(topfskObj).viz;
@@ -456,7 +469,8 @@ class ReaderNodeModel extends NoInternalsModel {
       Set<ArchiveEntry> resourceEntries = new HashSet<>();
 
       // Take README.txt and leave other txt as resources.
-      List<ArchiveEntry> txtEntries = archive.getEntriesWithFormat(URI.create("http://purl.org/NET/mediatypes/text-xplain"));
+      List<ArchiveEntry> txtEntries =
+          archive.getEntriesWithFormat(URI.create("http://purl.org/NET/mediatypes/text-xplain"));
       for (ArchiveEntry entry : txtEntries) {
         String path = entry.getEntityPath();
         if (path.indexOf(pathToResource) == 0) {
@@ -475,12 +489,12 @@ class ReaderNodeModel extends NoInternalsModel {
         String path = entry.getEntityPath();
         if (path.indexOf(pathToResource) == 0) {
           Path targetPath = workingDirectory.resolve(entry.getFileName());
-          
+
           try {
             Files.createFile(targetPath);
             entry.extractFile(targetPath.toFile());
-          }catch (FileAlreadyExistsException e) {
-            //Do nothing, the resource is already there
+          } catch (FileAlreadyExistsException e) {
+            // Do nothing, the resource is already there
           }
         }
       }
@@ -502,26 +516,32 @@ class ReaderNodeModel extends NoInternalsModel {
             JsonNode modelNode = mapper.readTree(temp.toFile());
             Object version = modelNode.get("version");
 
-            if(modelNode.has("modelType")) {
-              Class<? extends Model> modelClass = FskPortObject.Serializer.modelClasses.get(modelNode.get("modelType").asText());
+            if (modelNode.has("modelType")) {
+              Class<? extends Model> modelClass =
+                  FskPortObject.Serializer.modelClasses.get(modelNode.get("modelType").asText());
               model = FskPlugin.getDefault().MAPPER104.readValue(temp.toFile(), modelClass);
             } else if (version != null) {
               // 1.0.3 (with EMF)
-              
+
               GenericModel gm = new GenericModel();
               gm.setModelType("genericModel");
-              gm.setGeneralInformation(SwaggerUtil.convert(mapper.treeToValue(modelNode.get("generalInformation"), metadata.GeneralInformation.class)));
-              gm.setScope(SwaggerUtil.convert(mapper.treeToValue(modelNode.get("scope"), metadata.Scope.class)));
-              gm.setDataBackground(SwaggerUtil.convert(mapper.treeToValue(modelNode.get("dataBackground"), metadata.DataBackground.class)));
-              gm.setModelMath(SwaggerUtil.convert(mapper.treeToValue(modelNode.get("modelMath"), metadata.ModelMath.class)));
+              gm.setGeneralInformation(SwaggerUtil.convert(mapper.treeToValue(
+                  modelNode.get("generalInformation"), metadata.GeneralInformation.class)));
+              gm.setScope(SwaggerUtil
+                  .convert(mapper.treeToValue(modelNode.get("scope"), metadata.Scope.class)));
+              gm.setDataBackground(SwaggerUtil.convert(mapper
+                  .treeToValue(modelNode.get("dataBackground"), metadata.DataBackground.class)));
+              gm.setModelMath(SwaggerUtil.convert(
+                  mapper.treeToValue(modelNode.get("modelMath"), metadata.ModelMath.class)));
               model = gm;
-              
+
             } else {
               // pre Rakip
               GenericModel gm = new GenericModel();
               gm.setModelType("genericModel");
               modelNode = mapper.readTree(temp.toFile());
-              de.bund.bfr.knime.fsklab.rakip.GenericModel genericModel = mapper.readValue(temp.toFile(), de.bund.bfr.knime.fsklab.rakip.GenericModel.class);
+              de.bund.bfr.knime.fsklab.rakip.GenericModel genericModel = mapper
+                  .readValue(temp.toFile(), de.bund.bfr.knime.fsklab.rakip.GenericModel.class);
               gm.setGeneralInformation(RakipUtil.convert(genericModel.generalInformation));
               gm.setScope(RakipUtil.convert(genericModel.scope));
               gm.dataBackground(RakipUtil.convert(genericModel.dataBackground));
@@ -544,11 +564,12 @@ class ReaderNodeModel extends NoInternalsModel {
           // Loads simulations from temporary file
           SedML sedml = Libsedml.readDocument(simulationsFile).getSedMLModel();
           List<org.jlibsedml.Annotation> annotations = sedml.getAnnotation();
-          if(annotations != null && annotations.size() > 0) {
-            org.jlibsedml.Annotation selectedIndexAnno=  annotations.get(0);
-            org.jdom.Text e =  (org.jdom.Text) selectedIndexAnno.getAnnotationElement().getContent().get(0);
+          if (annotations != null && annotations.size() > 0) {
+            org.jlibsedml.Annotation selectedIndexAnno = annotations.get(0);
+            org.jdom.Text e =
+                (org.jdom.Text) selectedIndexAnno.getAnnotationElement().getContent().get(0);
             selectedIndex = Integer.parseInt(e.getText());
-           
+
           }
           simulations.addAll(loadSimulations(sedml));
         }
@@ -567,7 +588,6 @@ class ReaderNodeModel extends NoInternalsModel {
 
       }
 
-
       // Retrieve missing libraries from CRAN
       HashSet<String> packagesSet = new HashSet<>();
       if (!modelScript.isEmpty()) {
@@ -584,8 +604,9 @@ class ReaderNodeModel extends NoInternalsModel {
       // empty string is used.
       String plotPath = "";
 
-      FskPortObject fskObj = new FskPortObject(modelScript, visualizationScript, model, workspacePath, packagesList,
-          workingDirectory.toString(), plotPath, readme, spreadsheetPath);
+      FskPortObject fskObj =
+          new FskPortObject(modelScript, visualizationScript, model, workspacePath, packagesList,
+              workingDirectory.toString(), plotPath, readme, spreadsheetPath);
       fskObj.simulations.addAll(simulations);
       fskObj.selectedSimulationIndex = selectedIndex;
       return fskObj;
@@ -647,12 +668,12 @@ class ReaderNodeModel extends NoInternalsModel {
 
       Map<String, String> params = model.getListOfChanges().stream()
           .filter(change -> change.getChangeKind().equals(SEDMLTags.CHANGE_ATTRIBUTE_KIND))
-          .map(change -> (ChangeAttribute) change)
-          .collect(Collectors.toMap(change -> change.getTargetXPath().toString(), ChangeAttribute::getNewValue));
-      
+          .map(change -> (ChangeAttribute) change).collect(Collectors
+              .toMap(change -> change.getTargetXPath().toString(), ChangeAttribute::getNewValue));
+
       FskSimulation sim = new FskSimulation(model.getId());
       sim.getParameters().putAll(params);
-      
+
       simulations.add(sim);
     }
 
