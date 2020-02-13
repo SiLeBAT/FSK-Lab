@@ -43,10 +43,12 @@ import javax.swing.tree.TreeNode;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.jdom.Text;
 import org.jlibsedml.ChangeAttribute;
 import org.jlibsedml.Libsedml;
 import org.jlibsedml.SEDMLTags;
 import org.jlibsedml.SedML;
+import org.jlibsedml.XMLException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NoInternalsModel;
@@ -290,9 +292,8 @@ class ReaderNodeModel extends NoInternalsModel {
             .stream().filter(entry -> entry.getEntityPath().startsWith(parentPath))
             .filter(entry -> StringUtils.countMatches(entry.getEntityPath(),
                 "/") == StringUtils.countMatches(parentPath, "/") + 1)
-            .filter(entry -> entry.getEntityPath().endsWith("metaData.json"))
-            .findAny();
-        
+            .filter(entry -> entry.getEntityPath().endsWith("metaData.json")).findAny();
+
         if (metadataEntry.isPresent()) {
           model = readMetadata(metadataEntry.get());
         }
@@ -384,21 +385,7 @@ class ReaderNodeModel extends NoInternalsModel {
         }
 
       }
-      // Get simulations for combined FSKObject
-      List<FskSimulation> simulations = new ArrayList<>();
-      List<ArchiveEntry> sedmlEntries = archive.getEntriesWithFormat(URIS.get("sedml"));
-      for (ArchiveEntry simEntry : sedmlEntries) {
-        String path = simEntry.getEntityPath();
-        if (path.startsWith(parentPath) && (StringUtils.countMatches(path,
-            "/") == (StringUtils.countMatches(parentPath, "/") + 1))) {
-          File simulationsFile = FileUtil.createTempFile("sim", ".sedml");
-          simEntry.extractFile(simulationsFile);
 
-          // Loads simulations from temporary file
-          SedML sedml = Libsedml.readDocument(simulationsFile).getSedMLModel();
-          simulations.addAll(loadSimulations(sedml));
-        }
-      }
       CombinedFskPortObject topfskObj;
       String currentModelID =
           SwaggerUtil.getModelName(firstFskPortObject.modelMetadata).replaceAll("\\W", "");
@@ -411,7 +398,19 @@ class ReaderNodeModel extends NoInternalsModel {
       }
 
       topfskObj.viz = getEmbedSecondFSKObject(topfskObj).viz;
-      topfskObj.simulations.addAll(simulations);
+
+      // Get select simulation index and simulations for joined model
+      Optional<ArchiveEntry> simulationsEntry = archive.getEntriesWithFormat(URIS.get("sedml"))
+          .stream().filter(entry -> entry.getEntityPath().startsWith(parentPath))
+          .filter(entry -> StringUtils.countMatches(entry.getEntityPath(),
+              "/") == StringUtils.countMatches(parentPath, "/") + 1)
+          .findAny();
+      if (simulationsEntry.isPresent()) {
+        SimulationSettings simulationSettings = readSimulationSettings(simulationsEntry.get());
+        topfskObj.selectedSimulationIndex = simulationSettings.selectedSimulationIndex;
+        topfskObj.simulations.addAll(simulationSettings.simulations);
+      }
+
       topfskObj.setJoinerRelation(joinerRelation);
       return topfskObj;
     } else {
@@ -420,7 +419,6 @@ class ReaderNodeModel extends NoInternalsModel {
       File workspace = null; // null if missing
       String pathToResource = ListOfPaths.get(0);
       String spreadsheetPath = "";
-      List<FskSimulation> simulations = new ArrayList<>();
       String readme = "";
 
       for (final ArchiveEntry entry : archive.getEntriesWithFormat(URIS.get("r"))) {
@@ -482,36 +480,11 @@ class ReaderNodeModel extends NoInternalsModel {
       {
         // Find metadata entry
         Optional<ArchiveEntry> metadataEntry = archive.getEntriesWithFormat(URIS.get("json"))
-            .stream()
-            .filter(entry -> entry.getEntityPath().indexOf(pathToResource) == 0)
-            .filter(entry -> entry.getEntityPath().endsWith("metaData.json"))
-            .findAny();
-        
+            .stream().filter(entry -> entry.getEntityPath().indexOf(pathToResource) == 0)
+            .filter(entry -> entry.getEntityPath().endsWith("metaData.json")).findAny();
+
         if (metadataEntry.isPresent()) {
           model = readMetadata(metadataEntry.get());
-        }
-      }
-      
-      int selectedIndex = 0;
-      // Get simulations
-      List<ArchiveEntry> sedmlEntries = archive.getEntriesWithFormat(URIS.get("sedml"));
-      for (ArchiveEntry simEntry : sedmlEntries) {
-        String path = simEntry.getEntityPath();
-        if (path.indexOf(pathToResource) == 0) {
-          File simulationsFile = FileUtil.createTempFile("sim", ".sedml");
-          simEntry.extractFile(simulationsFile);
-
-          // Loads simulations from temporary file
-          SedML sedml = Libsedml.readDocument(simulationsFile).getSedMLModel();
-          List<org.jlibsedml.Annotation> annotations = sedml.getAnnotation();
-          if (annotations != null && annotations.size() > 0) {
-            org.jlibsedml.Annotation selectedIndexAnno = annotations.get(0);
-            org.jdom.Text e =
-                (org.jdom.Text) selectedIndexAnno.getAnnotationElement().getContent().get(0);
-            selectedIndex = Integer.parseInt(e.getText());
-
-          }
-          simulations.addAll(loadSimulations(sedml));
         }
       }
 
@@ -547,8 +520,16 @@ class ReaderNodeModel extends NoInternalsModel {
       FskPortObject fskObj =
           new FskPortObject(modelScript, visualizationScript, model, workspacePath, packagesList,
               workingDirectory.toString(), plotPath, readme, spreadsheetPath);
-      fskObj.simulations.addAll(simulations);
-      fskObj.selectedSimulationIndex = selectedIndex;
+
+      // Read selected simulation index and simulations
+      Optional<ArchiveEntry> simulationsEntry = archive.getEntriesWithFormat(URIS.get("sedml"))
+          .stream().filter(entry -> entry.getEntityPath().indexOf(pathToResource) == 0).findAny();
+      if (simulationsEntry.isPresent()) {
+        SimulationSettings simulationSettings = readSimulationSettings(simulationsEntry.get());
+        fskObj.selectedSimulationIndex = simulationSettings.selectedSimulationIndex;
+        fskObj.simulations.addAll(simulationSettings.simulations);
+      }
+
       return fskObj;
     }
   }
@@ -574,50 +555,6 @@ class ReaderNodeModel extends NoInternalsModel {
     }
 
     return contents;
-  }
-
-  /**
-   * @return list of simulations from a SedML document.
-   * 
-   *         <p>
-   *         In SedML every simulation is encoded as a {@link org.jlibsedml.Model} with the
-   *         parameter values defined as a {@link org.jlibsedml.ChangeAttribute}.
-   * 
-   *         <pre>
-   * {@code
-   * <model id="simulation1">
-   *   <listOfChanges>
-   *     <changeAttribute newValue="1" target="a" />
-   *     <changeAttribute newValue="2" target="b" />
-   *   </listOfChanges>
-   * </model>
-   * <model id="simulation2">
-   *   <listOfChanges>
-   *     <changeAttribute newValue="3" target="c" />
-   *     <changeAttribute newValue="4" target="d" />
-   *   </listOfChanges>
-   * </model> 
-   * }
-   *         </pre>
-   */
-  private static List<FskSimulation> loadSimulations(SedML sedml) {
-
-    List<FskSimulation> simulations = new ArrayList<>(sedml.getModels().size());
-
-    for (org.jlibsedml.Model model : sedml.getModels()) {
-
-      Map<String, String> params = model.getListOfChanges().stream()
-          .filter(change -> change.getChangeKind().equals(SEDMLTags.CHANGE_ATTRIBUTE_KIND))
-          .map(change -> (ChangeAttribute) change).collect(Collectors
-              .toMap(change -> change.getTargetXPath().toString(), ChangeAttribute::getNewValue));
-
-      FskSimulation sim = new FskSimulation(model.getId());
-      sim.getParameters().putAll(params);
-
-      simulations.add(sim);
-    }
-
-    return simulations;
   }
 
   private Model readMetadata(ArchiveEntry metadataEntry)
@@ -668,5 +605,78 @@ class ReaderNodeModel extends NoInternalsModel {
     }
 
     return model;
+  }
+
+  private static class SimulationSettings {
+    final int selectedSimulationIndex;
+    final List<FskSimulation> simulations;
+
+    SimulationSettings(final int selectedSimulationIndex, final List<FskSimulation> simulations) {
+      this.selectedSimulationIndex = selectedSimulationIndex;
+      this.simulations = simulations;
+    }
+  }
+
+  /**
+   * @return SimulationSettings with selected simulation index and list of simulations.
+   * 
+   *         <p>
+   *         In SedML every simulation is encoded as a {@link org.jlibsedml.Model} with the
+   *         parameter values defined as a {@link org.jlibsedml.ChangeAttribute}.
+   *         </p>
+   * 
+   *         <pre>
+   * {@code
+   * <model id="simulation1">
+   *   <listOfChanges>
+   *     <changeAttribute newValue="1" target="a" />
+   *     <changeAttribute newValue="2" target="b" />
+   *   </listOfChanges>
+   * </model>
+   * <model id="simulation2">
+   *   <listOfChanges>
+   *     <changeAttribute newValue="3" target="c" />
+   *     <changeAttribute newValue="4" target="d" />
+   *   </listOfChanges>
+   * </model> 
+   * }
+   *         </pre>
+   */
+  private SimulationSettings readSimulationSettings(ArchiveEntry simulationsEntry)
+      throws IOException, XMLException {
+
+    // Create temporary file for extracting SEDML and read it.
+    File tempFile = File.createTempFile("simulations", ".sedml");
+    simulationsEntry.extractFile(tempFile);
+
+    // Read SEDML and delete temporary file
+    SedML sedml = Libsedml.readDocument(tempFile).getSedMLModel();
+    tempFile.delete();
+
+    // Read selected simulation
+    int selectedSimulationIndex = 0;
+    final List<org.jlibsedml.Annotation> annotations = sedml.getAnnotation();
+    if (annotations != null && annotations.size() > 0) {
+      org.jlibsedml.Annotation indexAnnotation = annotations.get(0);
+      Text indexAnnotationText = (Text) indexAnnotation.getAnnotationElement().getContent().get(0);
+      selectedSimulationIndex = Integer.parseInt(indexAnnotationText.getText());
+    }
+
+    // Read simulations
+    List<FskSimulation> simulations = new ArrayList<>(sedml.getModels().size());
+    for (org.jlibsedml.Model model : sedml.getModels()) {
+
+      Map<String, String> params = model.getListOfChanges().stream()
+          .filter(change -> change.getChangeKind().equals(SEDMLTags.CHANGE_ATTRIBUTE_KIND))
+          .map(change -> (ChangeAttribute) change).collect(Collectors
+              .toMap(change -> change.getTargetXPath().toString(), ChangeAttribute::getNewValue));
+
+      FskSimulation sim = new FskSimulation(model.getId());
+      sim.getParameters().putAll(params);
+
+      simulations.add(sim);
+    }
+
+    return new SimulationSettings(selectedSimulationIndex, simulations);
   }
 }
