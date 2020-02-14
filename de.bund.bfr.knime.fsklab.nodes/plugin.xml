@@ -54,7 +54,6 @@
        name="FSK Joiner"
        namespace="joiner">
      </javascriptComponent>
-     
      <!-- Javascript component for Fsk Editor JS node -->
      <javascriptComponent
        validate-method-name="validate"
@@ -93,7 +92,7 @@
        <webDependency webResourceBundleID="bootstrap_3.3.6"></webDependency>
      </webResourceBundle>
      
-	 <!-- JS and CSS for editor -->
+	 <!-- JS and CSS for experimental editor (Miguel) -->
      <webResourceBundle
        debug="true"
        name="FSK Editor JS"
@@ -121,6 +120,29 @@
      </webResourceBundle>
      
      <!-- JS and CSS code for Fsk Joiner node -->
+     <!--<webResourceBundle
+       debug="true"
+       name="FSK Joiner"
+       usesDefine="true"
+       version="1.0.0"
+       webResourceBundleID="de.bund.bfr.knime.fsklab.js.joiner.bundle">
+     
+       <webResource
+         relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/"
+         relativePathTarget="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/">
+       </webResource>
+       
+       <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/joiner.css" type="CSS" />
+       <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/joiner.js" type="JAVASCRIPT" />
+       
+       <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/bootstrap-treeview.min.css" type="CSS" />
+       <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/bootstrap-treeview.min.js" type="JAVASCRIPT" />
+       <webDependency webResourceBundleID="fskeditor" />
+	   <webDependency webResourceBundleID="de.bund.bfr.knime.fsklab.nodes.joiner.jointjs"></webDependency>
+	   <webDependency webResourceBundleID="de.bund.bfr.knime.fsklab.nodes.joiner.jointjscss"></webDependency>
+	   <webDependency webResourceBundleID="de.bund.bfr.knime.fsklab.nodes.joiner.bundle.js" />
+	 </webResourceBundle>-->
+	 
 	 <webResourceBundle debug="true" name="FSK Joiner" usesDefine="true" version="1.0.0" webResourceBundleID="de.bund.bfr.knime.fsklab.js.joiner.bundle">
 	   <webResource relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/newjoiner" relativePathTarget="js-src/de/bund/bfr/knime/fsklab/nodes/newjoiner" />
 	   
@@ -137,6 +159,47 @@
 	 </webResourceBundle>
 	 
 	 <!-- JS and CSS code for Fsk Editor JS node -->
+	 <webResourceBundle debug="true" name="Jointjs" version="1.0.0"
+	   webResourceBundleID="de.bund.bfr.knime.fsklab.nodes.joiner.jointjs">
+	   <webResource
+	     relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/jointjs.js"
+	     relativePathTarget="de/bund/bfr/knime/fsklab/nodes/joiner/jointjs.js">
+	   </webResource>
+	   <importResource relativePath="de/bund/bfr/knime/fsklab/nodes/joiner/jointjs.js" type="JAVASCRIPT" />
+	   
+	   <webDependency webResourceBundleID="de.bund.bfr.knime.fsklab.nodes.joiner.backbone" />
+	   <webDependency webResourceBundleID="de.bund.bfr.knime.fsklab.nodes.joiner.lodash.min.js" />
+	 </webResourceBundle>
+      
+     <webResourceBundle debug="true" name="backbone" version="1.0.0"
+       webResourceBundleID="de.bund.bfr.knime.fsklab.nodes.joiner.backbone">
+       <webResource
+         relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/jointjs/backbone.js"
+         relativePathTarget="de/bund/bfr/knime/fsklab/nodes/joiner/jointjs/backbone.js">
+       </webResource>
+       <importResource relativePath="de/bund/bfr/knime/fsklab/nodes/joiner/jointjs/backbone.js" type="JAVASCRIPT" />
+       
+       <webDependency webResourceBundleID="de.bund.bfr.knime.fsklab.nodes.joiner.underscore.js" />
+    </webResourceBundle>
+    
+    <webResourceBundle debug="true" name="underscore" version="1.0.0"
+      webResourceBundleID="de.bund.bfr.knime.fsklab.nodes.joiner.underscore.js">
+      <webResource
+        relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/jointjs/underscore.js"
+        relativePathTarget="de/bund/bfr/knime/fsklab/nodes/joiner/jointjs/underscore.js">
+      </webResource>
+      <importResource relativePath="de/bund/bfr/knime/fsklab/nodes/joiner/jointjs/underscore.js" type="JAVASCRIPT" />
+    </webResourceBundle>
+    
+    <webResourceBundle debug="true" name="lodash" version="1.0.0"
+      webResourceBundleID="de.bund.bfr.knime.fsklab.nodes.joiner.lodash.min.js">
+      <webResource
+        relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/jointjs/lodash.min.js"
+        relativePathTarget="de/bund/bfr/knime/fsklab/nodes/joiner/jointjs/lodash.min.js">
+      </webResource>
+      <importResource relativePath="de/bund/bfr/knime/fsklab/nodes/joiner/jointjs/lodash.min.js" type="JAVASCRIPT" />
+    </webResourceBundle>
+    
     <webResourceBundle debug="false" name="lodash" version="4.17.15" webResourceBundleID="Lodash_4.17.15">
       <webResource relativePathSource="js-lib/lodash/4.17.15" relativePathTarget="js-lib/lodash/4.17.15" />
       <importResource relativePath="js-lib/lodash/4.17.15/lodash.min.js" type="JAVASCRIPT" />
@@ -160,6 +223,123 @@
       <webDependency webResourceBundleID="jQuery_3.3.1" />
 	  <webDependency webResourceBundleID="backbone_1.4.0" />
 	  <webDependency webResourceBundleID="Lodash_4.17.15" />
+    </webResourceBundle> 
+    
+    <webResourceBundle debug="true" name="Jointjscss" version="1.0.0"
+      webResourceBundleID="de.bund.bfr.knime.fsklab.nodes.joiner.jointjscss">
+      <webResource
+        relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/jointjs.css"
+        relativePathTarget="de/bund/bfr/knime/fsklab/nodes/joiner/jointjs.css">
+      </webResource>
+      <importResource relativePath="de/bund/bfr/knime/fsklab/nodes/joiner/jointjs.css" type="CSS" />
+    </webResourceBundle>
+    
+    <webResourceBundle debug="true" name="fskeditor" usesDefine="true" version="1.0.0" webResourceBundleID="fskeditor">
+    
+      <webResource
+        relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/fskemfeditor/jquery.min.js"
+        relativePathTarget="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/fskemfeditor/jquery.min.js">
+      </webResource>
+      <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/fskemfeditor/jquery.min.js" type="JAVASCRIPT" />
+      <webResource
+        relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/fskemfeditor/JQueryUI.js"
+        relativePathTarget="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/fskemfeditor/JQueryUI.js">
+      </webResource>
+      <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/fskemfeditor/JQueryUI.js" type="JAVASCRIPT" />
+      <webResource
+        relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/fskemfeditor/jquery-ui.css"
+        relativePathTarget="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/fskemfeditor/jquery-ui.css">
+      </webResource>
+      <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/fskemfeditor/jquery-ui.css" type="CSS" />
+      <webResource
+        relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/fskemfeditor/jquery.min.js"
+        relativePathTarget="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/fskemfeditor/jquery.min.js">
+      </webResource>
+      <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/fskemfeditor/jquery.min.js" type="JAVASCRIPT" />
+      <webResource
+        relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/emfbundle/punycode.js"
+        relativePathTarget="de/bund/bfr/knime/fsklab/nodes/joiner/emfbundle/punycode.js">
+      </webResource>
+      <importResource relativePath="de/bund/bfr/knime/fsklab/nodes/joiner/emfbundle/punycode.js" type="JAVASCRIPT" />
+      
+      <webResource
+        relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/emfbundle/sweetalert.js"
+        relativePathTarget="de/bund/bfr/knime/fsklab/nodes/joiner/emfbundle/sweetalert.js">
+      </webResource>
+      <importResource relativePath="de/bund/bfr/knime/fsklab/nodes/joiner/emfbundle/sweetalert.js" type="JAVASCRIPT" />
+      
+      <webResource
+        relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/emfbundle/ajv.min.js"
+        relativePathTarget="de/bund/bfr/knime/fsklab/nodes/joiner/emfbundle/ajv.min.js">
+      </webResource>
+      <importResource relativePath="de/bund/bfr/knime/fsklab/nodes/joiner/emfbundle/ajv.min.js" type="JAVASCRIPT" />
+      
+      <webResource
+        relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/emfbundle/lodash.js"
+        relativePathTarget="de/bund/bfr/knime/fsklab/nodes/joiner/emfbundle/lodash.js">
+      </webResource>
+      <importResource relativePath="de/bund/bfr/knime/fsklab/nodes/joiner/emfbundle/lodash.js" type="JAVASCRIPT" />
+      
+      <webResource
+        relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/fskemfeditor/codemirror.js"
+        relativePathTarget="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/fskemfeditor/codemirror.js">
+      </webResource>
+	  <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/fskemfeditor/codemirror.js" type="JAVASCRIPT" />
+	  
+	  <webResource
+        relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/fskemfeditor/codemirror.css"
+        relativePathTarget="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/fskemfeditor/codemirror.css">
+      </webResource>
+      <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/fskemfeditor/codemirror.css" type="CSS" />
+      
+      <webResource
+        relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/emfbundle/App.css"
+        relativePathTarget="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/emfbundle/App.css">
+      </webResource>
+      <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/emfbundle/App.css" type="CSS" />
+      
+      <webResource
+        relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/fskemfeditor/bootstrap.min.css"
+        relativePathTarget="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/fskemfeditor/bootstrap.min.css">
+      </webResource>
+      <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/fskemfeditor/bootstrap.min.css" type="CSS" />
+      
+      <webResource
+        relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/fskemfeditor/bootstrap-tabcollapse.js"
+        relativePathTarget="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/fskemfeditor/bootstrap-tabcollapse.js">
+      </webResource>
+      <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/fskemfeditor/bootstrap-tabcollapse.js" type="JAVASCRIPT" />
+      
+      <webResource
+        relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/fskemfeditor/bootstrap.min.js"
+        relativePathTarget="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/fskemfeditor/bootstrap.min.js">
+      </webResource>
+      <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/fskemfeditor/bootstrap.min.js" type="JAVASCRIPT" />
+      
+    </webResourceBundle>
+    
+    <webResourceBundle debug="true" name="de.bund.bfr.knime.fsklab.nodes.joiner.bundle.js" usesDefine="true" version="1.0.0"
+      webResourceBundleID="de.bund.bfr.knime.fsklab.nodes.joiner.bundle.js">
+      
+      <webResource
+        relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/emfbundle/bundle.js"
+        relativePathTarget="de/bund/bfr/knime/fsklab/nodes/joiner/emfbundle/bundle.js">
+      </webResource>
+      <importResource relativePath="de/bund/bfr/knime/fsklab/nodes/joiner/emfbundle/bundle.js" type="JAVASCRIPT" />
+      
+      <webDependency webResourceBundleID="react" />
+      <webDependency webResourceBundleID="de.bund.bfr.knime.fsklab.nodes.joiner.lodash.min.js" />
+    </webResourceBundle>
+    
+    <webResourceBundle debug="true" name="react" usesDefine="true" version="1.0.0" webResourceBundleID="react">
+      
+      <webResource
+        relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/react/"
+        relativePathTarget="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/react/">
+      </webResource>
+      
+      <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/react/react.min.js" type="JAVASCRIPT" />
+      <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/react/react-dom.min.js" type="JAVASCRIPT" />      
     </webResourceBundle>
     
     <webResourceBundle debug="false" name="codemirror" usesDefine="true" version="5.49.2" webResourceBundleID="codemirror">    
@@ -185,8 +365,15 @@
     	version="1.0.0"
     	webResourceBundleID="ControlledVocabularies_1.0.0">
     	
-    	<webResource relativePathSource="js-lib/bfr/controlled_vocabularies_1.0.0.js" relativePathTarget="js-lib/bfr/controlled_vocabularies_1.0.0.js" />    	
-    	<importResource relativePath="js-lib/bfr/controlled_vocabularies_1.0.0.js" type="JAVASCRIPT" />
+    	<webResource
+    		relativePathSource="js-lib/bfr/controlled_vocabularies_1.0.0.js"
+    		relativePathTarget="js-lib/bfr/controlled_vocabularies_1.0.0.js">
+    	</webResource>
+    	
+    	<importResource
+    		relativePath="js-lib/bfr/controlled_vocabularies_1.0.0.js"
+    		type="JAVASCRIPT">
+    	</importResource>
     </webResourceBundle>
 
 	<webResourceBundle
@@ -197,8 +384,15 @@
 		version="1.0.0"
 		webResourceBundleID="FskMetadata_1.0.0">
 		
-		<webResource relativePathSource="js-lib/bfr/fskmetadata_1.0.0.js" relativePathTarget="js-lib/bfr/fskmetadata_1.0.0.js" />
-		<importResource relativePath="js-lib/bfr/fskmetadata_1.0.0.js" type="JAVASCRIPT" />
+		<webResource
+			relativePathSource="js-lib/bfr/fskmetadata_1.0.0.js"
+			relativePathTarget="js-lib/bfr/fskmetadata_1.0.0.js">
+		</webResource>
+		
+		<importResource
+			relativePath="js-lib/bfr/fskmetadata_1.0.0.js"
+			type="JAVASCRIPT">
+		</importResource>
 	</webResourceBundle>
 	
 	<webResourceBundle
@@ -209,8 +403,15 @@
 		version="1.0.0"
 		webResourceBundleID="FskUtil_1.0.0">
 		
-		<webResource relativePathSource="js-lib/bfr/fskutil_1.0.0.js" relativePathTarget="js-lib/bfr/fskutil_1.0.0.js" />
-		<importResource relativePath="js-lib/bfr/fskutil_1.0.0.js" type="JAVASCRIPT" />
+		<webResource
+			relativePathSource="js-lib/bfr/fskutil_1.0.0.js"
+			relativePathTarget="js-lib/bfr/fskutil_1.0.0.js">
+		</webResource>
+		
+		<importResource
+			relativePath="js-lib/bfr/fskutil_1.0.0.js"
+			type="JAVASCRIPT">
+		</importResource>
 	</webResourceBundle>
 
   </extension>
