@@ -441,23 +441,18 @@ class ReaderNodeModel extends NoInternalsModel {
         }
       }
 
-      // Gets resources
-      Set<ArchiveEntry> resourceEntries = new HashSet<>();
-
-      // Take README.txt and leave other txt as resources.
-      List<ArchiveEntry> txtEntries =
-          archive.getEntriesWithFormat(URI.create("http://purl.org/NET/mediatypes/text-xplain"));
-      for (ArchiveEntry entry : txtEntries) {
-        String path = entry.getEntityPath();
-        if (path.indexOf(pathToResource) == 0) {
-          // If a txt entry has a description then it must be a README.
-          if (entry.getDescriptions().size() > 0) {
-            readme = loadTextEntry(entry);
-          } else {
-            resourceEntries.add(entry);
-          }
-        }
+      // Read readme
+      URI textUri = URI.create("http://purl.org/NET/mediatypes/text-xplain");
+      Optional<ArchiveEntry> readmeEntry = archive.getEntriesWithFormat(textUri).stream()
+          .filter(entry -> entry.getDescriptions().size() > 0).findAny();
+      if (readmeEntry.isPresent()) {
+        readme = loadTextEntry(readmeEntry.get());
       }
+
+      // Extract resources
+      Set<ArchiveEntry> resourceEntries = new HashSet<>();
+      archive.getEntriesWithFormat(textUri).stream()
+          .filter(entry -> entry.getDescriptions().size() == 0).forEach(resourceEntries::add);
       resourceEntries.addAll(archive.getEntriesWithFormat(URIS.get("csv")));
       resourceEntries.addAll(archive.getEntriesWithFormat(URIS.get("rdata")));
 
