@@ -31,7 +31,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +38,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
-import javax.swing.tree.TreeNode;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -62,14 +60,11 @@ import org.knime.core.node.workflow.NodeContext;
 import org.knime.core.node.workflow.WorkflowContext;
 import org.knime.core.node.workflow.WorkflowManager;
 import org.knime.core.util.FileUtil;
-import org.sbml.jsbml.Annotation;
-import org.sbml.jsbml.JSBML;
-import org.sbml.jsbml.ListOf;
 import org.sbml.jsbml.SBMLDocument;
+import org.sbml.jsbml.SBMLReader;
 import org.sbml.jsbml.ext.comp.CompModelPlugin;
 import org.sbml.jsbml.ext.comp.CompSBasePlugin;
-import org.sbml.jsbml.ext.comp.Submodel;
-import org.sbml.jsbml.xml.XMLAttributes;
+import org.sbml.jsbml.ext.comp.ReplacedBy;
 import org.sbml.jsbml.xml.XMLNode;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -299,91 +294,79 @@ class ReaderNodeModel extends NoInternalsModel {
         }
       }
 
+      List<JoinRelation> connections = new ArrayList<>();
+
+      // Find SBML entry in archive
+      Optional<ArchiveEntry> sbmlEntry =
+          archive.getEntriesWithFormat(URIS.get("sbml")).stream().filter(entry -> {
+            final String path = entry.getEntityPath();
+            return path.startsWith(parentPath) && StringUtils.countMatches(path,
+                "/") == StringUtils.countMatches(parentPath, "/") + 1;
+          }).findAny();
+      
       String firstModelId = "";
-      // get Joiner Relations
-      List<JoinRelation> joinerRelation = new ArrayList<>();
-      {
-        SBMLDocument parentSBMLDoc = null;
-
-        List<ArchiveEntry> sbmlEntries = archive.getEntriesWithFormat(URIS.get("sbml"));
-        for (ArchiveEntry sbmlEntry : sbmlEntries) {
-          String path = sbmlEntry.getEntityPath();
-          if (path.startsWith(parentPath) && (StringUtils.countMatches(path,
-              "/") == (StringUtils.countMatches(parentPath, "/") + 1))) {
-            Path parentFile = Files.createTempFile("Model", ".sbml");
-            sbmlEntry.extractFile(parentFile.toFile());
-            try {
-              parentSBMLDoc = JSBML.readSBMLFromFile(parentFile.toString());
-            } catch (Exception ex) {
-              ex.printStackTrace();
-            }
-            Files.delete(parentFile); // Deletes temporary file
-          }
-        }
-
-        if (parentSBMLDoc != null) {
-          ListOf<org.sbml.jsbml.Parameter> params = parentSBMLDoc.getModel().getListOfParameters();
-          CompModelPlugin subModels =
-              (CompModelPlugin) parentSBMLDoc.getModel().getExtension("comp");
-          List<Submodel> listOfSubModels = subModels.getListOfSubmodels();
-          if (listOfSubModels.size() > 0) {
-            firstModelId = listOfSubModels.get(0).getModelRef();
-          }
-          // String s = subModels.getReplacedBy().getIdRef();
-          for (org.sbml.jsbml.Parameter param : params) {
-
-            List<Parameter> coll =
-                SwaggerUtil.getParameter(secondFskPortObject.modelMetadata).stream().filter(cp -> {
-                  String paramId = cp.getId();
-                  String compareTo = param.getId();
-                  if (paramId.replaceAll(JoinerNodeModel.SUFFIX, "")
-                      .equals(compareTo.replaceAll(JoinerNodeModel.SUFFIX, ""))) {
-                    cp.setId(param.getId());
-                    return true;
-                  } else {
-                    return false;
-                  }
-
-                }).collect(Collectors.toList());
-            if (coll.size() == 0) {
-              continue;
-            }
-            Parameter targetParam = coll.get(0);
-
-            CompSBasePlugin a = (CompSBasePlugin) param.getExtension("comp");
-            String replacmentLement = a.getReplacedBy().getIdRef();
-            Parameter sourceParam =
-                SwaggerUtil.getParameter(firstFskPortObject.modelMetadata).stream().filter(cp -> {
-                  String paramId = cp.getId();
-                  if (paramId.replaceAll(JoinerNodeModel.SUFFIX, "")
-                      .equals(replacmentLement.replaceAll(JoinerNodeModel.SUFFIX, ""))) {
-                    cp.setId(a.getReplacedBy().getIdRef());
-                    return true;
-                  } else {
-                    return false;
-                  }
-
-                }).filter(cp -> cp.getId().equals(replacmentLement)).collect(Collectors.toList())
-                    .get(0);
-
-            String command = null;
-            Annotation annotation = param.getAnnotation();
-            if (annotation != null) {
-              XMLNode nonRDFAnnotation = annotation.getNonRDFannotation();
-              if (nonRDFAnnotation != null) {
-                Enumeration<TreeNode> childEnum = nonRDFAnnotation.children();
-                while (childEnum.hasMoreElements()) {
-                  XMLNode child = (XMLNode) childEnum.nextElement();
-                  XMLAttributes atts = child.getAttributes();
-                  command = atts.getValue(WriterNodeModel.METADATA_COMMAND_VALUE);
+      if (sbmlEntry.isPresent()) {
+        
+        // Extract entry to temporary file
+        File temporaryFile = File.createTempFile("model", ".sbml");
+        sbmlEntry.get().extractFile(temporaryFile);
+        SBMLDocument sbmlDocument = SBMLReader.read(temporaryFile);
+        temporaryFile.delete();
+        
+        // Get first model's id
+        CompModelPlugin compModelPlugin = (CompModelPlugin)sbmlDocument.getModel().getExtension("comp");
+        firstModelId = compModelPlugin.getNumSubmodels() > 0 ? compModelPlugin.getSubmodel(0).getModelRef() : "";
+        
+        for (org.sbml.jsbml.Parameter parameter : sbmlDocument.getModel().getListOfParameters()) {
+          
+          // Find metadata of target parameter. Connected parameter in 2nd model
+          final String parameterId = parameter.getId().replaceAll(JoinerNodeModel.SUFFIX, "");
+          Optional<Parameter> targetParameter = SwaggerUtil.getParameter(secondFskPortObject.modelMetadata)
+              .stream().filter(currentParameter -> {
+                final String currentParameterId = currentParameter.getId().replaceAll(JoinerNodeModel.SUFFIX, "");
+                if (parameterId.equals(currentParameterId)) {
+                  currentParameter.setId(parameter.getId());
+                  return true;
+                } else {
+                  return false;
                 }
-              }
-            }
-
-            joinerRelation.add(new JoinRelation(sourceParam, targetParam, command, null));
+              }).findAny();
+          
+          // If the metadata of targetParamter is not found, skip to next parameter
+          if (!targetParameter.isPresent()) {
+            continue;
           }
+          
+          // Find metadata of source parameter (connected parameter of 1st model)
+          final ReplacedBy replacedBy = ((CompSBasePlugin) parameter.getExtension("comp")).getReplacedBy();
+          final String replacement = replacedBy.getIdRef().replaceAll(JoinerNodeModel.SUFFIX, "");
+          Optional<Parameter> sourceParameter = SwaggerUtil.getParameter(firstFskPortObject.modelMetadata).stream()
+              .filter(currentParameter -> {
+                final String currentParameterId = currentParameter.getId().replaceAll(JoinerNodeModel.SUFFIX,  "");
+                if (replacement.equals(currentParameterId)) {
+                  currentParameter.setId(replacedBy.getIdRef());
+                  return true;
+                } else {
+                  return false;
+                }
+              }).findAny();
+          
+          // If the metadata of sourceParmeter is not found, skip to next parameter
+          if (!sourceParameter.isPresent()) {
+            continue;
+          }
+          
+          String command = null;
+          if (parameter.getAnnotation() != null && parameter.getAnnotation().getNonRDFannotation() != null) {
+            XMLNode nonRDFannotation = parameter.getAnnotation().getNonRDFannotation();
+            XMLNode commandNode = nonRDFannotation.getChildElement("command", "");
+            if (commandNode != null && commandNode.hasAttr(WriterNodeModel.METADATA_COMMAND_VALUE)) {
+              command = commandNode.getAttrValue(WriterNodeModel.METADATA_COMMAND_VALUE);
+            }
+          }
+          
+          connections.add(new JoinRelation(sourceParameter.get(), targetParameter.get(), command, null));
         }
-
       }
 
       CombinedFskPortObject topfskObj;
@@ -411,7 +394,7 @@ class ReaderNodeModel extends NoInternalsModel {
         topfskObj.simulations.addAll(simulationSettings.simulations);
       }
 
-      topfskObj.setJoinerRelation(joinerRelation);
+      topfskObj.setJoinerRelation(connections);
       return topfskObj;
     } else {
       String modelScript = "";
