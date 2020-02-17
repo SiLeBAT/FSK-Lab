@@ -54,7 +54,6 @@ import org.jlibsedml.SedML;
 import org.jlibsedml.SteadyState;
 import org.jlibsedml.Task;
 import org.jlibsedml.XPathTarget;
-import org.jmathml.ASTNode;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NoInternalsModel;
@@ -156,11 +155,13 @@ class WriterNodeModel extends NoInternalsModel {
 
     addVersion(archive);
     // Adds model script
-    final ArchiveEntry modelEntry = addRScript(archive, fskObj.model, filePrefix + "model." + scriptHandler.getFileExtension());
+    final ArchiveEntry modelEntry =
+        addRScript(archive, fskObj.model, filePrefix + "model." + scriptHandler.getFileExtension());
     modelEntry.addDescription(new FskMetaDataObject(ResourceType.modelScript).metaDataObject);
 
     // Adds visualization script
-    final ArchiveEntry vizEntry = addRScript(archive, fskObj.viz, filePrefix + "visualization." + scriptHandler.getFileExtension());
+    final ArchiveEntry vizEntry = addRScript(archive, fskObj.viz,
+        filePrefix + "visualization." + scriptHandler.getFileExtension());
     vizEntry.addDescription(new FskMetaDataObject(ResourceType.visualizationScript).metaDataObject);
 
     // Adds R workspace file
@@ -280,13 +281,14 @@ class WriterNodeModel extends NoInternalsModel {
   protected PortObject[] execute(PortObject[] inObjects, ExecutionContext exec) throws Exception {
 
     FskPortObject in = (FskPortObject) inObjects[0];
-    scriptHandler = ScriptHandler.createHandler(SwaggerUtil.getLanguageWrittenIn(in.modelMetadata), in.packages);
+    scriptHandler = ScriptHandler.createHandler(SwaggerUtil.getLanguageWrittenIn(in.modelMetadata),
+        in.packages);
     URL url = FileUtil.toURL(nodeSettings.filePath);
-    Path localPath = FileUtil.resolveToPath(url);
+    File localPath = FileUtil.getFileFromURL(url);
 
     if (localPath != null) {
-      Files.deleteIfExists(localPath);
-      writeArchive(localPath.toFile(), in, exec);
+      localPath.delete();
+      writeArchive(localPath, in, exec);
     } else {
 
       // Creates archive in temporary archive file
@@ -339,15 +341,15 @@ class WriterNodeModel extends NoInternalsModel {
 
         archive.addEntry(tempFile, targetName, URIS.get("sbml"));
       }
-      
+
       // get package version
-      try  {
-        
+      try {
+
         // Gets library URI for the running platform
         final URI libUri = NodeUtils.getLibURI();
         JsonArrayBuilder rBuilder = Json.createArrayBuilder();
         List<String> packagesWithoutInfo = new ArrayList<String>();
-        
+
         // Adds R libraries and their info
         for (String pkg : portObject.packages) {
           try {
@@ -364,7 +366,7 @@ class WriterNodeModel extends NoInternalsModel {
             archive.addEntry(file, file.getName(), libUri);
           }
         }
-        
+
         // try to get package info for libraries not installed yet.
         if (packagesWithoutInfo.size() > 0) {
           try {
@@ -397,9 +399,8 @@ class WriterNodeModel extends NoInternalsModel {
 
         addPackagesFile(archive, StringEscapeUtils.unescapeJson(packageList.toString()),
             "packages.json");
-      }catch(Exception e)
-      {
-        
+      } catch (Exception e) {
+
       }
 
       archive.pack();
@@ -443,13 +444,14 @@ class WriterNodeModel extends NoInternalsModel {
         CompModelPlugin compMainModel = (CompModelPlugin) fskmodel.getPlugin("comp");
 
         FskPortObject firstFskObj = comFskObj.getFirstFskPortObject();
-        
+
         SBMLDocument doc1 =
             createSBML(firstFskObj, archive, normalizeName(firstFskObj), URIS, filePrefix);
         String doc1FileName = writeSBMLFile(doc1, archive,
             filePrefix + normalizeName(firstFskObj) + System.getProperty("file.separator"), URIS);
-        createExtSubModel(doc1, doc1FileName, filePrefix + SwaggerUtil.getModelName(firstFskObj.modelMetadata),
-            compDoc, compMainModel, SUB_MODEL1);
+        createExtSubModel(doc1, doc1FileName,
+            filePrefix + SwaggerUtil.getModelName(firstFskObj.modelMetadata), compDoc,
+            compMainModel, SUB_MODEL1);
 
         FskPortObject secondFskObj = comFskObj.getSecondFskPortObject();
         SBMLDocument doc2 =
@@ -457,8 +459,8 @@ class WriterNodeModel extends NoInternalsModel {
         String doc2FileName = writeSBMLFile(doc2, archive,
             filePrefix + normalizeName(secondFskObj) + System.getProperty("file.separator"), URIS);
         createExtSubModel(doc2, doc2FileName,
-            filePrefix + SwaggerUtil.getModelName(secondFskObj.modelMetadata), compDoc, compMainModel,
-            SUB_MODEL2);
+            filePrefix + SwaggerUtil.getModelName(secondFskObj.modelMetadata), compDoc,
+            compMainModel, SUB_MODEL2);
 
         fskmodel.setId(normalizeName(fskObj));
 
@@ -492,12 +494,12 @@ class WriterNodeModel extends NoInternalsModel {
     } else {
 
       org.sbml.jsbml.Model fskmodel = doc.createModel(ModelId);
-      for (Parameter param : SwaggerUtil.getParameter(fskObj.modelMetadata) ) {
+      for (Parameter param : SwaggerUtil.getParameter(fskObj.modelMetadata)) {
         org.sbml.jsbml.Parameter sbmlParameter = fskmodel.createParameter();
         sbmlParameter.setName(param.getName());
         sbmlParameter.setId(param.getId());
-        sbmlParameter.setConstant(
-            param.getClassification().equals(Parameter.ClassificationEnum.CONSTANT));
+        sbmlParameter
+            .setConstant(param.getClassification().equals(Parameter.ClassificationEnum.CONSTANT));
         if (param.getValue() != null && !param.getValue().equals("")) {
           org.sbml.jsbml.Annotation annot = sbmlParameter.getAnnotation();
           XMLAttributes attrs = new XMLAttributes();
@@ -546,8 +548,8 @@ class WriterNodeModel extends NoInternalsModel {
     return entry;
   }
 
-  private static ArchiveEntry addMetaData(CombineArchive archive,
-      Model model, String filename) throws IOException {
+  private static ArchiveEntry addMetaData(CombineArchive archive, Model model, String filename)
+      throws IOException {
 
     JsonFactory jsonFactory = new JsonFactory();
     jsonFactory.configure(JsonGenerator.Feature.AUTO_CLOSE_TARGET, false);
@@ -557,7 +559,7 @@ class WriterNodeModel extends NoInternalsModel {
     mapper.setSerializationInclusion(Include.NON_NULL);
 
     File file = File.createTempFile("temp", ".json");
-    
+
     mapper.writeValue(file, model);
 
 
@@ -588,43 +590,43 @@ class WriterNodeModel extends NoInternalsModel {
     SEDMLDocument doc = Libsedml.createDocument();
     SedML sedml = doc.getSedMLModel();
 
-    for (Parameter param : SwaggerUtil.getParameter(portObj.modelMetadata)) {
-      // Ignore not output parameters (inputs or constants)
-      if (param.getClassification() != Parameter.ClassificationEnum.CONSTANT) {
-        continue;
-      }
+    SwaggerUtil.getParameter(portObj.modelMetadata).stream()
+        .filter(param -> param.getClassification() == Parameter.ClassificationEnum.OUTPUT)
+        .map(param -> param.getId())
+        .map(id -> new DataGenerator(id, "", Libsedml.parseFormulaString(id)))
+        .forEach(sedml::addDataGenerator);
 
-      ASTNode node = Libsedml.parseFormulaString(param.getId());
-      DataGenerator dg = new DataGenerator(param.getId(), "", node);
-      sedml.addDataGenerator(dg);
-    }
+    final String languageUri =
+        "https://iana.org/assignments/mediatypes/text/x-" + scriptHandler.getFileExtension();
 
     // Add simulation
     SteadyState simulation = new SteadyState("steadyState", "", new Algorithm(" "));
     {
       SourceScript ss =
-          new SourceScript("https://iana.org/assignments/mediatypes/text/x-"+scriptHandler.getFileExtension(), "./param."+scriptHandler.getFileExtension());
+          new SourceScript(languageUri, "./param." + scriptHandler.getFileExtension());
       simulation.addAnnotation(new Annotation(ss));
     }
     sedml.addSimulation(simulation);
-    //add selected simulation index
-    org.jdom.Element selectedSimulation = new  org.jdom.Element("SelectedSimulation");
-    selectedSimulation.addContent(""+(portObj.selectedSimulationIndex));
-    sedml.addAnnotation(new Annotation(selectedSimulation));
-    
+
+    // Add selected simulation index
+    {
+      org.jdom.Element selectedSimulation = new org.jdom.Element("SelectedSimulation");
+      selectedSimulation.addContent(Integer.toString(portObj.selectedSimulationIndex));
+      sedml.addAnnotation(new Annotation(selectedSimulation));
+    }
+
     for (FskSimulation fskSimulation : portObj.simulations) {
 
       // Add model
-      org.jlibsedml.Model model = new org.jlibsedml.Model(fskSimulation.getName(), "",
-          "https://iana.org/assignments/mediatypes/text/x-"+scriptHandler.getFileExtension(), "./model."+scriptHandler.getFileExtension());
+      org.jlibsedml.Model model = new org.jlibsedml.Model(fskSimulation.getName(), "", languageUri,
+          "./model." + scriptHandler.getFileExtension());
       sedml.addModel(model);
 
       // Add task
       {
         String taskId = "task" + sedml.getTasks().size();
         String taskName = "";
-        Task task = new Task(taskId, taskName, model.getId(), simulation.getId());
-        sedml.addTask(task);
+        sedml.addTask(new Task(taskId, taskName, model.getId(), simulation.getId()));
       }
 
       // Add changes to model
@@ -642,7 +644,7 @@ class WriterNodeModel extends NoInternalsModel {
     // Add plot
     {
       SourceScript ss =
-          new SourceScript("https://iana.org/assignments/mediatypes/text/x-"+scriptHandler.getFileExtension(), "./visualization."+scriptHandler.getFileExtension());
+          new SourceScript(languageUri, "./visualization." + scriptHandler.getFileExtension());
 
       Plot2D plot = new Plot2D("plot1", "");
       plot.addAnnotation(new Annotation(ss));
@@ -682,7 +684,8 @@ class WriterNodeModel extends NoInternalsModel {
     // Only save R workspace smaller than 100 MB
     if (fileSizeInMB < 100) {
       final ArchiveEntry workspaceEntry = archive.addEntry(workspace.toFile(),
-          filePrefix + "workspace."+ scriptHandler.getFileExtension(), FSKML.getURIS(1, 0, 12).get(scriptHandler.getFileExtension()));
+          filePrefix + "workspace." + scriptHandler.getFileExtension(),
+          FSKML.getURIS(1, 0, 12).get(scriptHandler.getFileExtension()));
       workspaceEntry.addDescription(new FskMetaDataObject(ResourceType.workspace).metaDataObject);
     } else {
       LOGGER.warn("Results file larger than 100 MB -> Skipping file");
@@ -695,11 +698,13 @@ class WriterNodeModel extends NoInternalsModel {
 
     String script = scriptHandler.buildParameterScript(simulation);
 
-    File tempFile = File.createTempFile("temp",  "." + scriptHandler.getFileExtension());
+    File tempFile = File.createTempFile("temp", "." + scriptHandler.getFileExtension());
     FileUtils.writeStringToFile(tempFile, script, "UTF-8");
 
-    String targetName = filePrefix + "simulations/" + simulation.getName() +  "." + scriptHandler.getFileExtension();
-    archive.addEntry(tempFile, targetName, FSKML.getURIS(1, 0, 12).get( scriptHandler.getFileExtension()));
+    String targetName =
+        filePrefix + "simulations/" + simulation.getName() + "." + scriptHandler.getFileExtension();
+    archive.addEntry(tempFile, targetName,
+        FSKML.getURIS(1, 0, 12).get(scriptHandler.getFileExtension()));
 
     tempFile.delete();
   }
