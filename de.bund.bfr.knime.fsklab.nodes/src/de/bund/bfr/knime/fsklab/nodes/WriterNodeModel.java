@@ -325,21 +325,22 @@ class WriterNodeModel extends NoInternalsModel {
         writeFSKObject(portObject, archive, "", URIS);
       }
 
-      // add SBML document
+      // Add SBML document
       {
-        SBMLDocument sbmlModelDoc = createSBML(portObject, archive, "model", URIS, "");
+        SBMLDocument sbmlDocument = createSBML(portObject, archive, "model", URIS, "");
 
-        File tempFile = FileUtil.createTempFile("sbml", "");
-        new SBMLWriter().write(sbmlModelDoc, tempFile);
+        // Create temporary file and write sbmlDocument into it
+        File temporaryFile = File.createTempFile("connections", ".sbml");
+        SBMLWriter.write(sbmlDocument, temporaryFile, null, null);
 
         String targetName;
         if (portObject instanceof CombinedFskPortObject) {
-          targetName = normalizeName(portObject) + "/" + sbmlModelDoc.getModel().getId() + ".sbml";
+          targetName = normalizeName(portObject) + "/" + sbmlDocument.getModel().getId() + ".sbml";
         } else {
-          targetName = sbmlModelDoc.getModel().getId() + ".sbml";
+          targetName = sbmlDocument.getModel().getId() + ".sbml";
         }
 
-        archive.addEntry(tempFile, targetName, URIS.get("sbml"));
+        archive.addEntry(temporaryFile, targetName, URIS.get("sbml"));
       }
 
       // get package version
