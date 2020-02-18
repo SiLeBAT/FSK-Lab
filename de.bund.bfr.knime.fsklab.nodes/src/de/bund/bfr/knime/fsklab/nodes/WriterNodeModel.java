@@ -30,16 +30,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
 import javax.xml.stream.XMLStreamException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.jdom2.DefaultJDOMFactory;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
@@ -79,6 +73,7 @@ import org.sbml.jsbml.xml.XMLAttributes;
 import org.sbml.jsbml.xml.XMLNode;
 import org.sbml.jsbml.xml.XMLTriple;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
@@ -89,6 +84,7 @@ import de.bund.bfr.fskml.FskMetaDataObject;
 import de.bund.bfr.fskml.FskMetaDataObject.ResourceType;
 import de.bund.bfr.fskml.sedml.SourceScript;
 import de.bund.bfr.knime.fsklab.CombinedFskPortObject;
+import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskSimulation;
 import de.bund.bfr.knime.fsklab.JoinRelation;
@@ -343,76 +339,98 @@ class WriterNodeModel extends NoInternalsModel {
         archive.addEntry(temporaryFile, targetName, URIS.get("sbml"));
       }
 
-      // get package version
-      try {
+      final URI libUri = NodeUtils.getLibURI();
+      List<String> missingPackages = new ArrayList<>();
+      List<VersionedPackage> versionedPackages = new ArrayList<>(portObject.packages.size());
 
-        // Gets library URI for the running platform
-        final URI libUri = NodeUtils.getLibURI();
-        JsonArrayBuilder rBuilder = Json.createArrayBuilder();
-        List<String> packagesWithoutInfo = new ArrayList<String>();
+      // Get versions of R packages
+      for (String packageName : portObject.packages) {
+        String command = scriptHandler.getPackageVersionCommand(packageName);
 
-        // Adds R libraries and their info
-        for (String pkg : portObject.packages) {
-          try {
-            String command = scriptHandler.getPackageVersionCommand(pkg);
-            String[] execResult = scriptHandler.runScript(command, exec, true);
-            rBuilder.add(getJsonObject(pkg, execResult[0]));
-          } catch (Exception e) {
-            packagesWithoutInfo.add(pkg);
-          }
+        try {
+          String packageVersion = scriptHandler.runScript(command, exec, true)[0];
+          versionedPackages.add(new VersionedPackage(packageName, packageVersion));
 
-          Path path = LibRegistry.instance().getPath(pkg);
+          Path path = LibRegistry.instance().getPath(packageName);
           if (path != null) {
             File file = path.toFile();
             archive.addEntry(file, file.getName(), libUri);
           }
+        } catch (Exception err) {
+          missingPackages.add(packageName);
         }
-
-        // try to get package info for libraries not installed yet.
-        if (packagesWithoutInfo.size() > 0) {
-          try {
-            String command = scriptHandler.getPackageVersionCommand(packagesWithoutInfo);
-            String[] execResult = scriptHandler.runScript(command, exec, true);
-
-            for (int index = 0; index < packagesWithoutInfo.size(); index++) {
-              rBuilder.add(getJsonObject(packagesWithoutInfo.get(index),
-                  execResult[index + packagesWithoutInfo.size()]));
-            }
-          } // not able to get package info for some reason. then add only package name.
-          catch (Exception e) {
-            LOGGER.info("not able to get package version for: " + packagesWithoutInfo);
-            for (int index = 0; index < packagesWithoutInfo.size(); index++) {
-              rBuilder.add(getJsonObject(packagesWithoutInfo.get(index), ""));
-            }
-          }
-        }
-
-        JsonArray packageJsonArray = rBuilder.build();
-        JsonObjectBuilder mainBuilder = Json.createObjectBuilder();
-        // TODO is this accepted to put R as default language?
-        if (StringUtils.isBlank(SwaggerUtil.getLanguageWrittenIn(portObject.modelMetadata))) {
-          mainBuilder.add("Language", "R");
-        } else {
-          mainBuilder.add("Language", SwaggerUtil.getLanguageWrittenIn(portObject.modelMetadata));
-        }
-        mainBuilder.add("PackageList", packageJsonArray);
-        JsonObject packageList = mainBuilder.build();
-
-        addPackagesFile(archive, StringEscapeUtils.unescapeJson(packageList.toString()),
-            "packages.json");
-      } catch (Exception e) {
-
       }
 
+      // Try to retrieve versions of missing packages from the repository
+      if (!missingPackages.isEmpty()) {
+        String command = scriptHandler.getPackageVersionCommand(missingPackages);
+
+        try {
+          String[] execResult = scriptHandler.runScript(command, exec, true);
+
+          for (int index = 0; index < missingPackages.size(); index++) {
+            String packageName = missingPackages.get(index);
+            String packageVersion = execResult[missingPackages.size() + index];
+            versionedPackages.add(new VersionedPackage(packageName, packageVersion));
+          }
+        } catch (Exception err) {
+          // If not able to get package versions from repository, then only add the
+          // package names
+          LOGGER.info("not able to get package version for: " + missingPackages);
+          missingPackages.stream().map(name -> new VersionedPackage(name, ""))
+              .forEach(versionedPackages::add);
+        }
+      }
+      
+      final String language = StringUtils.defaultIfBlank(
+          SwaggerUtil.getLanguageWrittenIn(portObject.modelMetadata), "R");
+      PackagesInfo packagesInfo = new PackagesInfo(language, versionedPackages);
+
+      try {
+        String jsonString = FskPlugin.getDefault().MAPPER104.writeValueAsString(packagesInfo);
+        addPackagesFile(archive, jsonString, "packages.json");
+      } catch (Exception err) {
+        // do nothing
+      }
+      
       archive.pack();
     }
   }
 
-  public static JsonObject getJsonObject(String pkg, String version) {
-    JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder();
-    jsonObjectBuilder.add("Package", pkg);
-    jsonObjectBuilder.add("Version", version);
-    return jsonObjectBuilder.build();
+  /**
+   * Utility class for serializing package information to JSON. The properties "Package" and
+   * "Version" are kept for backward-compatibility.
+   */
+  private static class VersionedPackage {
+
+    @JsonProperty("Package")
+    private final String packageName;
+
+    @JsonProperty("Version")
+    private final String version;
+
+    VersionedPackage(final String packageName, final String version) {
+      this.packageName = packageName;
+      this.version = version;
+    }
+  }
+
+  /**
+   * Utility class for the packages information files. It is used for serializing/deserializing
+   * packages information.
+   */
+  private static class PackagesInfo {
+
+    @JsonProperty("Language")
+    private final String language;
+
+    @JsonProperty("PackageList")
+    private final List<VersionedPackage> packages;
+
+    PackagesInfo(final String language, final List<VersionedPackage> packages) {
+      this.language = language;
+      this.packages = packages;
+    }
   }
 
   private static void addPackagesFile(final CombineArchive archive, final String packageInfoList,
