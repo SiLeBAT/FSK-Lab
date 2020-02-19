@@ -38,11 +38,9 @@ joiner = function () {
   window.joinRelationsMap = {};
 
   view.init = function (representation, value) {
+    
     _representation = representation;
     _value = value;
-
-    // TODO: before creating body:
-    // TODO: process metadata
 
     if (value.modelMetaData) {
       _metadata = JSON.parse(value.modelMetaData);
@@ -79,16 +77,16 @@ joiner = function () {
     createBody();
   }
 
-  view.getComponentValue = function () {
+  view.getComponentValue = function() {
         
     _value.modelMetaData = JSON.stringify(_handler.metaData);
-    
+
     if (Array.isArray(_value.joinRelations)) {
       _value.joinRelations = JSON.stringify(_value.joinRelations);
     }
 
     return _value;
-  }
+  };
 
   return view;
 
