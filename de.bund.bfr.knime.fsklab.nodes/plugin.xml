@@ -119,30 +119,7 @@
        
      </webResourceBundle>
      
-     <!-- JS and CSS code for Fsk Joiner node -->
-     <!--<webResourceBundle
-       debug="true"
-       name="FSK Joiner"
-       usesDefine="true"
-       version="1.0.0"
-       webResourceBundleID="de.bund.bfr.knime.fsklab.js.joiner.bundle">
-     
-       <webResource
-         relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/"
-         relativePathTarget="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/">
-       </webResource>
-       
-       <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/joiner.css" type="CSS" />
-       <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/joiner.js" type="JAVASCRIPT" />
-       
-       <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/bootstrap-treeview.min.css" type="CSS" />
-       <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/bootstrap-treeview.min.js" type="JAVASCRIPT" />
-       <webDependency webResourceBundleID="fskeditor" />
-	   <webDependency webResourceBundleID="de.bund.bfr.knime.fsklab.nodes.joiner.jointjs"></webDependency>
-	   <webDependency webResourceBundleID="de.bund.bfr.knime.fsklab.nodes.joiner.jointjscss"></webDependency>
-	   <webDependency webResourceBundleID="de.bund.bfr.knime.fsklab.nodes.joiner.bundle.js" />
-	 </webResourceBundle>-->
-	 
+     <!-- JS and CSS code for Fsk Joiner node -->	 
 	 <webResourceBundle debug="true" name="FSK Joiner" usesDefine="true" version="1.0.0" webResourceBundleID="de.bund.bfr.knime.fsklab.js.joiner.bundle">
 	   <webResource relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/newjoiner" relativePathTarget="js-src/de/bund/bfr/knime/fsklab/nodes/newjoiner" />
 	   

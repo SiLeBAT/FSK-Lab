@@ -82,7 +82,8 @@ joiner = function () {
   view.getComponentValue = function () {
         
     _value.modelMetaData = JSON.stringify(_handler.metaData);
-    if (_value.joinRelations instanceof array) {
+    
+    if (Array.isArray(_value.joinRelations)) {
       _value.joinRelations = JSON.stringify(_value.joinRelations);
     }
 
