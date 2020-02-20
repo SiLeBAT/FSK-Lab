@@ -38,7 +38,7 @@ joiner = function () {
   window.joinRelationsMap = {};
 
   view.init = function (representation, value) {
-    
+
     _representation = representation;
     _value = value;
 
@@ -257,19 +257,21 @@ joiner = function () {
     window.firstPortMap = {};
     window.secondPortMap = {};
 
-    for (param of _firstModelMath.parameter) {
-      if (!_firstModelParameterMap[param.id]) {
-        let port = createPort(param.id, param.dataType);
-        if (param.classification === "INPUT" || param.classification === "CONSTANT") {
-          port.group = "in";
-          firstModelInputParameters.push(port);
-        } else {
-          port.group = "out";
-          firstModelOutputParameters.push(port);
-        }
+    if (_firstModelMath) {
+      for (param of _firstModelMath.parameter) {
+        if (!_firstModelParameterMap[param.id]) {
+          let port = createPort(param.id, param.dataType);
+          if (param.classification === "INPUT" || param.classification === "CONSTANT") {
+            port.group = "in";
+            firstModelInputParameters.push(port);
+          } else {
+            port.group = "out";
+            firstModelOutputParameters.push(port);
+          }
 
-        window.firstPortMap[param.id] = port;
-        _firstModelParameterMap[param.id] = param;
+          window.firstPortMap[param.id] = port;
+          _firstModelParameterMap[param.id] = param;
+        }
       }
     }
 
@@ -290,7 +292,7 @@ joiner = function () {
         window.secondPortMap[param.id] = port;
         _secondModelParameterMap[param.id] = param;
       }
-    };
+    }
 
     let canvas = $("#paper");
     let paperWidth = canvas.width();
@@ -340,7 +342,7 @@ joiner = function () {
           joinModelScript += `${value.targetParam.parameterID} <- ${value.command} \n`;
           _modelScriptTree[1].script = joinModelScript;
         });
-      }
+      };
 
       let sourceParameter = _firstModelParameterMap[sourcePort] ?
         _firstModelParameterMap[sourcePort] : _secondModelParameterMap[sourcePort];
@@ -395,24 +397,22 @@ joiner = function () {
             _viewValue.joinRelations.splice(index, 1);
           }
         });
-        _viewValue.jsonRepresentation = JSON.stringify(graph.toJSON());
+        _viewValue.jsonRepresentation = JSON.stringify(_graph.toJSON());
       }
     });
 
-    if (_value.jsonRepresentation != undefined) {
-      if (_value && _value.jsonRepresentation) {
-        try {
-          graphObject = JSON.parse(_value.jsonRepresentation)
-          graph.fromJSON(JSON.parse(_value.jsonRepresentation));
-          $.each(graphObject.cells, function (cellIndex, cell) {
-            $.each(cell.ports.items, function (index, item) {
-              graph.getCell(cell.id).addPort(item);
-            })
-          })
+    if (_value && _value.jsonRepresentation) {
+        let graphObject = JSON.parse(_value.jsonRepresentation)
+        _graph.fromJSON(graphObject);
 
-        } catch (err) {
+        if (graphObject.cells) {
+          for (const cell of graphObject.cells) {
+            if (cell.ports && cell.ports.items) {
+              let currentCell = _graph.getCell(cell.id);
+              cell.ports.items.forEach(currentCell.addPort);
+            }
+          }
         }
-      }
     } else {
       _graph.addCells([firstModelToJoin, secondModelToJoin]);
       graphJSON = _graph.toJSON();
@@ -426,14 +426,8 @@ joiner = function () {
         secondPort = window.secondPortMap[portIds[1]]
 
         let link = new joint.shapes.devs.Link({
-          source: {
-            id: firstNodeId,
-            port: portIds[0]
-          },
-          target: {
-            id: secondNodeId,
-            port: portIds[1]
-          }
+          source: { id: firstNodeId, port: portIds[0] },
+          target: { id: secondNodeId, port: portIds[1] }
         });
 
         links.push(link);
