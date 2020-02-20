@@ -33,6 +33,11 @@ joiner = function () {
 
   let _handler;
 
+  let _firstModelScriptMirror;
+  let _secondModelScriptMirror;
+  let _firstVisualizationScriptMirror;
+  let _secondVisualizationScriptMirror;
+
   fskutil = new fskutil();
 
   window.joinRelationsMap = {};
@@ -75,6 +80,8 @@ joiner = function () {
     _handler = new fskutil.GenericModel(_metadata);
 
     createBody();
+
+
   }
 
   view.getComponentValue = function() {
@@ -100,6 +107,28 @@ joiner = function () {
        <a id="join-tab" href="#joinPanel" aria-controls="joinPanel" role="tab" data-toggle="tab">Join</a>
      </li>
      ${_handler.menus}
+
+     <li class="dropdown">
+       <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+         aria-haspopup="true" aria-expanded="false">Model script<span class="caret"></a>
+       <ul class="dropdown-menu">
+         <li><a id="modelScriptA-tab" href="#modelScriptA" aria-controls="#modelScriptA"
+           role="button" data-toggle="tab">Model A</a></li>
+         <li><a id="modelScriptB-tab" href="#modelScriptB" aria-controls="#modelScriptB"
+           role="button" data-toggle="tab">Model B</a></li>
+       </ul>
+     </li>
+
+      <li class="dropdown">
+       <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+         aria-haspopup="true" aria-expanded="false">Visualization script<span class="caret"></a>
+       <ul class="dropdown-menu">
+         <li><a id="visualizationScriptA-tab" href="#visualizationScriptA" aria-controls="#visualizationScriptA"
+           role="button" data-toggle="tab">Model A</a></li>
+         <li><a id="visualizationScriptB-tab" href="#visualizationScriptB" aria-controls="#visualizationScriptB"
+           role="button" data-toggle="tab">Model B</a></li>
+       </ul>
+     </li>
    </ul>
  </div>
 
@@ -130,17 +159,32 @@ joiner = function () {
           </div>
         </div>
       </form>
+    </div> <!-- tabpanel -->
+
+    <div role="tabpanel" class="tab-pane" id="generalInformationPanel" />
+    <div role="tabpanel" class="tab-pane" id="scopePanel" />
+    <div role="tabpanel" class="tab-pane" id="dataBackgroundPanel" />
+    <div role="tabpanel" class="tab-pane" id="modelMathPanel" />
+
+    <!-- Add code panels -->
+    <div role="tabpanel" class="tab-pane" id="modelScriptA">
+      <textarea id="modelScriptAArea">${_value.firstModelScript}</textarea>
+    </div>
+    
+    <div role="tabpanel" class="tab-pane" id="modelScriptB">
+     <textarea id="modelScriptBArea">${_value.secondModelScript}</textarea>
     </div>
 
-   </div> <!-- tabpanel -->
-   <div role="tabpanel" class="tab-pane" id="generalInformationPanel">
-   </div>
-   <div role="tabpanel" class="tab-pane" id="scopePanel">
-   </div>
-   <div role="tabpanel" class="tab-pane" id="dataBackgroundPanel">
-   </div>
-   <div role="tabpanel" class="tab-pane" id="modelMathPanel">
-   </div>
+    <div role="tabpanel" class="tab-pane" id="visualizationScriptA">
+      <textarea id="visualizationScriptAArea">${_value.firstModelViz}</textarea>
+    </div>
+
+    <div role="tabpanel" class="tab-pane" id="visualizationScriptB">
+      <textarea id="visualizationScriptBArea">${_value.secondModelViz}</textarea>
+    </div>
+
+   </div> <!-- viewContent -->
+
  </div>
 </nav>
 </div>`);
@@ -170,6 +214,49 @@ joiner = function () {
       _paper.setDimensions(getChartWidth(), getChartHeight());
       _paper.scaleContentToFit({ padding: 20 });
     };
+
+
+    // Configure CodeMirror
+    let require_config = {
+      packages: [{ name: "codemirror", location: "codemirror/", main: "lib/codemirror"}]
+    };
+    knimeService.loadConditionally(
+      ["codemirror", "codemirror/mode/r/r"],
+      (arg) => {
+        window.CodeMirror = arg[0];
+
+        _firstModelScriptMirror = createCodeMirror("modelScriptAArea", "text/x-rsrc");
+        _firstVisualizationScriptMirror = createCodeMirror("visualizationScriptAArea", "text/x-rsrc");
+
+        _secondModelScriptMirror = createCodeMirror("modelScriptBArea", "text/x-rsrc");
+        _secondVisualizationScriptMirror = createCodeMirror("visualizationScriptBArea", "text/x-rsrc");
+      },
+      (err) => console.log("knimeService failed to install " + err),
+      require_config);
+
+    $('#modelScriptA-tab').on('shown.bs.tab', () => {
+      console.log("modelScriptA");
+      _firstModelScriptMirror.refresh(); 
+      _firstModelScriptMirror.focus();
+    });
+
+    $('#modelScriptB-tab').on('shown.bs.tab', () => {
+      console.log("modelScriptB");
+      _secondModelScriptMirror.refresh();
+      _secondModelScriptMirror.focus();
+    });
+
+    $('#visualizationScriptA-tab').on('shown.bs.tab', () => {
+      console.log("visualizationScriptA");
+      _firstVisualizationScriptMirror.refresh();
+      _firstVisualizationScriptMirror.focus();
+    });
+
+    $('#visualizationScriptB-tab').on('shown.bs.tab', () => {
+      console.log("visualizationScriptB");
+      _secondVisualizationScriptMirror.refresh();
+      _secondVisualizationScriptMirror.focus();
+    });
   }
 
   function drawWorkflow() {
@@ -409,7 +496,7 @@ joiner = function () {
           for (const cell of graphObject.cells) {
             if (cell.ports && cell.ports.items) {
               let currentCell = _graph.getCell(cell.id);
-              cell.ports.items.forEach(currentCell.addPort);
+              cell.ports.items.forEach(item => currentCell.addPort(item));
             }
           }
         }
@@ -534,5 +621,18 @@ joiner = function () {
     outputs.forEach(output => atomic.addPort(output));
 
     return atomic;
+  }
+
+  // Create a CodeMirror for a given text area
+  function createCodeMirror(textAreaId, language) {
+
+    return window.CodeMirror.fromTextArea(document.getElementById(textAreaId),
+      {
+        lineNumbers: true,
+        lineWrapping: true,
+        extraKeys: { 'Ctrl-Space': 'autocomplete' },
+        mode: { 'name': language },
+        readOnly: true
+      });
   }
 }();

@@ -171,6 +171,11 @@ final class JoinerNodeModel extends
         if (joinerProxyValue.modelMetaData == null) {
           loadFromPorts(inObj1, inObj2, joinerProxyValue);
         }
+        
+        joinerProxyValue.firstModelScript = inObj1.model;
+        joinerProxyValue.firstModelViz = inObj1.viz;
+        joinerProxyValue.secondModelScript = inObj2.model;
+        
         if (!StringUtils.isNotBlank(joinerProxyValue.secondModelViz)) {
           if (!(inObj2 instanceof CombinedFskPortObject)) {
             joinerProxyValue.secondModelViz = inObj2.viz;
