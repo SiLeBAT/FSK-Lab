@@ -62,7 +62,6 @@ class JoinerViewValue extends JSONViewContent {
   public String modelScriptTree;
   public String firstModelName;
   public String secondModelName;
-  public String validationErrors;
   public String different;
   public String modelType ;
 

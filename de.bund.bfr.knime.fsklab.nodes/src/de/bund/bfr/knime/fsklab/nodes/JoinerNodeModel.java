@@ -190,11 +190,6 @@ final class JoinerNodeModel extends
         }
 
         exec.setProgress(1);
-      } else {
-        if (StringUtils.isNotEmpty(joinerProxyValue.validationErrors)) {
-          setWarningMessage("\n"
-              + (joinerProxyValue.validationErrors).replaceAll("\"", "").replaceAll(",,,", "\n"));
-        }
       }
       
       if (joinerProxyValue.joinRelations != null) {
