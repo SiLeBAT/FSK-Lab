@@ -248,7 +248,7 @@ final class JoinerNodeModel extends
     loadFromPorts(inObj1, inObj2, joinerProxyValue);
   }
 
-  public void loadFromPorts(FskPortObject inObj1, FskPortObject inObj2,
+  private void loadFromPorts(FskPortObject inObj1, FskPortObject inObj2,
       JoinerViewValue joinerProxyValue) throws JsonProcessingException {
 
     SwaggerUtil.setParameter(inObj2.modelMetadata,
@@ -289,7 +289,7 @@ final class JoinerNodeModel extends
   }
 
   // second visualization script is the script which draw and control the plotting!
-  public String extractSecondObjectVis(FskPortObject object) {
+  private String extractSecondObjectVis(FskPortObject object) {
     if (!(object instanceof CombinedFskPortObject)) {
       return object.viz;
     } else {
@@ -297,7 +297,7 @@ final class JoinerNodeModel extends
     }
   }
 
-  public void setScriptBack(FskPortObject fskObject1, FskPortObject fskObject2,
+  private void setScriptBack(FskPortObject fskObject1, FskPortObject fskObject2,
       JsonArray scriptTree) {
     JsonObject obj1 = scriptTree.getJsonObject(0);
     if (obj1.containsKey("script")) {
@@ -317,7 +317,7 @@ final class JoinerNodeModel extends
     }
   }
 
-  public String buildModelscriptAsTree(FskPortObject inObj1, FskPortObject inObj2) {
+  private String buildModelscriptAsTree(FskPortObject inObj1, FskPortObject inObj2) {
     JsonArrayBuilder array = Json.createArrayBuilder();
     array.add(getModelScriptNode(inObj1).build());
     JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder();
@@ -330,14 +330,14 @@ final class JoinerNodeModel extends
     return array.build().toString();
   }
 
-  public JsonArray getScriptArray(String input) {
+  private JsonArray getScriptArray(String input) {
     JsonReader jsonReader = Json.createReader(new StringReader(input));
     JsonArray array = jsonReader.readArray();
     jsonReader.close();
     return array;
   }
 
-  public JsonObjectBuilder getModelScriptNode(FskPortObject object) {
+  private JsonObjectBuilder getModelScriptNode(FskPortObject object) {
     JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder();
     jsonObjectBuilder.add("id", "" + generateRandomUnifier());
     if (object instanceof CombinedFskPortObject) {
@@ -365,13 +365,11 @@ final class JoinerNodeModel extends
     return jsonObjectBuilder;
   }
 
-
-
-  public String generateRandomUnifier() {
+  private String generateRandomUnifier() {
     return new AtomicLong((int) (100000 * Math.random())).toString();
   }
 
-  public ImagePortObject createSVGImagePortObject(String svgString) {
+  private ImagePortObject createSVGImagePortObject(String svgString) {
 
     ImagePortObject imagePort = null;
     if (svgString == null || svgString.equals("")) {
@@ -510,7 +508,7 @@ final class JoinerNodeModel extends
 
   public void setHideInWizard(boolean hide) {}
 
-  public void resolveParameterNamesConflict(FskPortObject fskPort1, FskPortObject fskPort2) {
+  private void resolveParameterNamesConflict(FskPortObject fskPort1, FskPortObject fskPort2) {
     for (Parameter firstParam : SwaggerUtil.getParameter(fskPort1.modelMetadata)) {
       for (Parameter secondParam : SwaggerUtil.getParameter(fskPort2.modelMetadata)) {
         if (secondParam.getId().equals(firstParam.getId())) {
@@ -521,7 +519,7 @@ final class JoinerNodeModel extends
     }
   }
 
-  public void resolveParameters(List<JoinRelation> relations, FskPortObject outfskPort) {
+  private void resolveParameters(List<JoinRelation> relations, FskPortObject outfskPort) {
 
     if (relations != null)
       for (JoinRelation relation : relations) {
@@ -544,7 +542,7 @@ final class JoinerNodeModel extends
   }// resolveParameters
 
   // TODO: finalize joining meta data after 1.04
-  public List<Parameter> combineParameters(List<Parameter> firstParameterList,
+  private List<Parameter> combineParameters(List<Parameter> firstParameterList,
       List<Parameter> secondParameterList) {
 
     // parameters
