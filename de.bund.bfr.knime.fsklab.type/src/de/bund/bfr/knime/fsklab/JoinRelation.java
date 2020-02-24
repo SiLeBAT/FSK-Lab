@@ -18,11 +18,7 @@
  */
 package de.bund.bfr.knime.fsklab;
 
-import org.emfjson.jackson.module.EMFModule;
-
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * An object that describe the relation between two FSK Objects.
@@ -62,19 +58,5 @@ public class JoinRelation {
 
 	public String getTargetParam() {
 		return targetParam;
-	}
-
-	public String getJsonReresentaion() {
-		ObjectMapper mapper = EMFModule.setupDefaultMapper();
-		String out = "";
-		try {
-			String sourceParamAsJSONString = mapper.writeValueAsString(sourceParam);
-			String targetParamAsJSONString = mapper.writeValueAsString(targetParam);
-			out = "{\"sourceParam\" :" + sourceParamAsJSONString + ",\"targetParam\" :" + targetParamAsJSONString
-					+ ",\"language_written_in\" :\"" + language_written_in + "\",\"command\" :\"" + command + "\"}";
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
-		return out;
 	}
 }
