@@ -242,14 +242,6 @@ final class JoinerNodeModel extends
     return new PortObject[] {outObj, imagePort};
   }
 
-  public void reloadSetting(String settingFolderPath, FskPortObject inObj1, FskPortObject inObj2,
-      JoinerViewValue joinerProxyValue) throws IOException, CanceledExecutionException {
-    FileUtil.deleteRecursively(new File(settingFolderPath));
-    performReset();
-    loadJsonSetting();
-    loadFromPorts(inObj1, inObj2, joinerProxyValue);
-  }
-
   private void loadFromPorts(FskPortObject inObj1, FskPortObject inObj2,
       JoinerViewValue joinerProxyValue) throws JsonProcessingException {
 
