@@ -77,7 +77,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
   // Input and output port types
   private static final PortType[] IN_TYPES = {FskPortObject.TYPE};
   private static final PortType[] OUT_TYPES = {FskPortObject.TYPE, ImagePortObject.TYPE_OPTIONAL};
-  
+
   // isTest field is only used by maven build
   public static boolean isTest = false;
 
@@ -139,13 +139,13 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
           .findFirst().ifPresent(index -> reSelectSimulation(fskObjk, index));
     }
 
-    try (ScriptHandler handler =
-        ScriptHandler.createHandler(SwaggerUtil.getLanguageWrittenIn(fskObj.modelMetadata), fskObj.packages)) {
+    try (ScriptHandler handler = ScriptHandler
+        .createHandler(SwaggerUtil.getLanguageWrittenIn(fskObj.modelMetadata), fskObj.packages)) {
       runFskPortObject(handler, fskObj, exec);
     } catch (Exception e) {
       e.printStackTrace();
     }
-    
+
     try (FileInputStream fis = new FileInputStream(internalSettings.imageFile)) {
       final SvgImageContent content = new SvgImageContent(fis);
       ImagePortObject imgObj = new ImagePortObject(content, SVG_SPEC);
@@ -183,9 +183,11 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
   public FskPortObject runFskPortObject(ScriptHandler handler, FskPortObject fskObj,
       ExecutionContext exec) throws Exception {
     LOGGER.info("Running Model: " + fskObj);
+    
     if (fskObj instanceof CombinedFskPortObject) {
       CombinedFskPortObject comFskObj = (CombinedFskPortObject) fskObj;
-      List<JoinRelation> joinRelations = comFskObj.getJoinerRelation();
+      JoinRelation[] joinRelations = comFskObj.getJoinerRelation();
+      
       FskPortObject firstFskObj = comFskObj.getFirstFskPortObject();
       if (firstFskObj instanceof CombinedFskPortObject) {
         firstFskObj = runFskPortObject(handler, firstFskObj, exec);
@@ -202,20 +204,18 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
       FskSimulation fskSimulation =
           firstFskObj.simulations.get(firstFskObj.selectedSimulationIndex);
       // recreate the INPUT or CONSTANT parameters which cause parameterId conflicts
-      List<Parameter> alternativeParams = SwaggerUtil.getParameter(firstFskObj.modelMetadata).stream()
-          .filter(p -> p.getId().endsWith(JoinerNodeModel.SUFFIX))
-          .collect(Collectors.toList());
+      List<Parameter> alternativeParams =
+          SwaggerUtil.getParameter(firstFskObj.modelMetadata).stream()
+              .filter(p -> p.getId().endsWith(JoinerNodeModel.SUFFIX)).collect(Collectors.toList());
       for (Parameter param : alternativeParams) {
         if (param.getClassification().equals(Parameter.ClassificationEnum.INPUT)
             || param.getClassification().equals(Parameter.ClassificationEnum.CONSTANT)) {
           // cut out the old Parameter ID
-          String oldId = param.getId().substring(0,
-              param.getId().indexOf(JoinerNodeModel.SUFFIX));
+          String oldId = param.getId().substring(0, param.getId().indexOf(JoinerNodeModel.SUFFIX));
           // make the old parameter available for the Model script
           if (fskSimulation.getParameters().get(param.getId()) != null) {
-            handler.runScript(
-                oldId + " <- " + fskSimulation.getParameters().get(param.getId()), exec,
-                false);
+            handler.runScript(oldId + " <- " + fskSimulation.getParameters().get(param.getId()),
+                exec, false);
           }
         }
       }
@@ -262,7 +262,6 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
         }
       }
 
-
       // assign the value of parameters which are causing parameterId conflicts to alternative
       // Parameter which is (maybe) used later in the joining
 
@@ -270,8 +269,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
         // if (!(param.getParameterClassification().equals(ParameterClassification.INPUT)
         // || param.getParameterClassification().equals(ParameterClassification.CONSTANT))) {
         String alternativeId = param.getId();
-        String oldId = param.getId().substring(0,
-            param.getId().indexOf(JoinerNodeModel.SUFFIX));
+        String oldId = param.getId().substring(0, param.getId().indexOf(JoinerNodeModel.SUFFIX));
         handler.runScript(alternativeId + " <- " + oldId, exec, false);
         // controller.eval("rm(" + oldId + ")", false);
         // }
@@ -283,13 +281,11 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
         for (JoinRelation joinRelation : joinRelations) {
           for (Parameter sourceParameter : SwaggerUtil.getParameter(firstFskObj.modelMetadata)) {
 
-            if (joinRelation.getSourceParam().getId()
-                .equals(sourceParameter.getId())) {
+            if (joinRelation.getSourceParam().equals(sourceParameter)) {
               // override the value of the target parameter with the value generated by the
               // command
               for (FskSimulation sim : secondFskObj.simulations) {
-                sim.getParameters().put(joinRelation.getTargetParam().getId(),
-                    joinRelation.getCommand());
+                sim.getParameters().put(joinRelation.getTargetParam(), joinRelation.getCommand());
               }
             }
           }
@@ -308,15 +304,15 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
             getSecondEmbedFSKObject((CombinedFskPortObject) secondFskObj);
 
         if (joinRelations != null) {
-          List<Parameter> alternativeParamsx = SwaggerUtil.getParameter(firstFskObj.modelMetadata).stream()
-              .filter(p -> p.getId().endsWith(JoinerNodeModel.SUFFIX))
+          List<Parameter> alternativeParamsx = SwaggerUtil.getParameter(firstFskObj.modelMetadata)
+              .stream().filter(p -> p.getId().endsWith(JoinerNodeModel.SUFFIX))
               .collect(Collectors.toList());
           for (Parameter param : alternativeParamsx) {
             // if (!(param.getParameterClassification().equals(ParameterClassification.INPUT)
             // || param.getParameterClassification().equals(ParameterClassification.CONSTANT))) {
             String alternativeId = param.getId();
-            String oldId = param.getId().substring(0,
-                param.getId().indexOf(JoinerNodeModel.SUFFIX));
+            String oldId =
+                param.getId().substring(0, param.getId().indexOf(JoinerNodeModel.SUFFIX));
             handler.runScript(alternativeId + " <- " + oldId, exec, false);
             // controller.eval("rm(" + oldId + ")", false);
             // }
@@ -324,25 +320,22 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
           for (JoinRelation joinRelation : joinRelations) {
             for (Parameter sourceParameter : SwaggerUtil.getParameter(firstFskObj.modelMetadata)) {
 
-              if (joinRelation.getSourceParam().getId()
-                  .equals(sourceParameter.getId())) {
+              if (joinRelation.getSourceParam().equals(sourceParameter.getId())) {
                 // override the value of the target parameter with the value generated by the
                 // command
                 for (FskSimulation sim : embedFSKObject.simulations) {
-                  final String embedParametername = joinRelation.getTargetParam().getId();
-                  List<Parameter> params = SwaggerUtil.getParameter(embedFSKObject.modelMetadata).stream()
-                      .filter(p -> embedParametername.startsWith(p.getId()))
+                  final String embedParametername = joinRelation.getTargetParam();
+                  List<Parameter> params = SwaggerUtil.getParameter(embedFSKObject.modelMetadata)
+                      .stream().filter(p -> embedParametername.startsWith(p.getId()))
                       .collect(Collectors.toList());
                   if (params.size() > 0) {
-                    sim.getParameters().put(params.get(0).getId(),
-                        joinRelation.getCommand());
+                    sim.getParameters().put(params.get(0).getId(), joinRelation.getCommand());
                   } else {
                     params = SwaggerUtil.getParameter(secondEmbedFSKObject.modelMetadata).stream()
                         .filter(p -> embedParametername.startsWith(p.getId()))
                         .collect(Collectors.toList());
                     if (params.size() > 0) {
-                      sim.getParameters().put(params.get(0).getId(),
-                          joinRelation.getCommand());
+                      sim.getParameters().put(params.get(0).getId(), joinRelation.getCommand());
                     }
                   }
                 }

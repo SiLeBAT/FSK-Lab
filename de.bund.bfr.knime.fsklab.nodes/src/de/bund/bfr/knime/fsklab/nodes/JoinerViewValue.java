@@ -18,6 +18,7 @@
  */
 package de.bund.bfr.knime.fsklab.nodes;
 
+import java.io.IOException;
 import java.util.Random;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.knime.core.node.InvalidSettingsException;
@@ -28,11 +29,12 @@ import org.knime.js.core.JSONViewContent;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.FskPlugin;
+import de.bund.bfr.knime.fsklab.JoinRelation;
 
 class JoinerViewValue extends JSONViewContent {
 
   private static final NodeLogger LOGGER = NodeLogger.getLogger(JoinerViewValue.class);
-  
+
   // Configuration keys
   private static final String CFG_ORIGINAL_MODEL_SCRIPT = "originalModelScript";
   private static final String CFG_ORIGINAL_VISUALIZATION_SCRIPT = "originalVisualizationScript";
@@ -46,9 +48,10 @@ class JoinerViewValue extends JSONViewContent {
   private static final String CFG_MODELSCRIPT_TREE = "ModelScriptTree";
   private static final String CFG_FIRST_MODEL_NAME = "firstModelName";
   private static final String CFG_SECOND_MODEL_NAME = "secondModelName";
-  
+
   private final int pseudoIdentifier = (new Random()).nextInt();
-  
+  private final ObjectMapper MAPPER = FskPlugin.getDefault().MAPPER104;
+
   public String firstModelScript;
   public String secondModelScript;
   public String firstModelViz;
@@ -56,14 +59,14 @@ class JoinerViewValue extends JSONViewContent {
   public String modelMetaData;
   public String modelMath1;
   public String modelMath2;
-  public String joinRelations;
+  public JoinRelation[] joinRelations;
   public String jsonRepresentation;
   public String svgRepresentation;
   public String modelScriptTree;
   public String firstModelName;
   public String secondModelName;
   public String different;
-  public String modelType ;
+  public String modelType;
 
   @Override
   public void saveToNodeSettings(NodeSettingsWO settings) {
@@ -74,11 +77,20 @@ class JoinerViewValue extends JSONViewContent {
     settings.addString(CFG_ORIGINAL_MODEL_SCRIPT2, secondModelScript);
     settings.addString(CFG_ORIGINAL_VISUALIZATION_SCRIPT2, secondModelViz);
 
-    settings.addString(CFG_JOINER_RELATION, joinRelations);
+    // Add joinRelations as string
+    if (joinRelations != null) {
+      try {
+        String relationsAsString = MAPPER.writeValueAsString(joinRelations);
+        settings.addString(CFG_JOINER_RELATION, relationsAsString);
+      } catch (JsonProcessingException err) {
+        // do nothing
+      }
+    }
+
     settings.addString(CFG_JSON_REPRESENTATION, jsonRepresentation);
     settings.addString(CFG_MODELSCRIPT_TREE, modelScriptTree);
     if (modelMetaData != null) {
-      saveSettings(settings,CFG_MODEL_METADATA, modelMetaData);
+      saveSettings(settings, CFG_MODEL_METADATA, modelMetaData);
     }
 
     if (modelMath1 != null) {
@@ -97,14 +109,24 @@ class JoinerViewValue extends JSONViewContent {
     firstModelViz = settings.getString(CFG_ORIGINAL_VISUALIZATION_SCRIPT);
     secondModelScript = settings.getString(CFG_ORIGINAL_MODEL_SCRIPT2);
     secondModelViz = settings.getString(CFG_ORIGINAL_VISUALIZATION_SCRIPT2);
-    joinRelations = settings.getString(CFG_JOINER_RELATION);
+    
+    // Read relations as string
+    String relationsAsString = settings.getString(CFG_JOINER_RELATION);
+    if (relationsAsString != null) {
+      try {
+        joinRelations = MAPPER.readValue(relationsAsString, JoinRelation[].class);
+      } catch (IOException err) {
+        // do nothing
+      }
+    }
+    
     jsonRepresentation = settings.getString(CFG_JSON_REPRESENTATION);
     modelScriptTree = settings.getString(CFG_MODELSCRIPT_TREE);
     // load meta data
     if (settings.containsKey(CFG_MODEL_METADATA)) {
       modelMetaData = getEObject(settings, CFG_MODEL_METADATA);
     }
-    
+
     if (settings.containsKey(CFG_MODEL_MATH1)) {
       modelMath1 = getEObject(settings, CFG_MODEL_MATH1);
     }

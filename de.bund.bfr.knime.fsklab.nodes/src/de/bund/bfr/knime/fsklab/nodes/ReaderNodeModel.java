@@ -294,7 +294,7 @@ class ReaderNodeModel extends NoInternalsModel {
         }
       }
 
-      List<JoinRelation> connections = new ArrayList<>();
+      List<JoinRelation> connectionList = new ArrayList<>();
 
       // Find SBML entry in archive
       Optional<ArchiveEntry> sbmlEntry =
@@ -303,27 +303,31 @@ class ReaderNodeModel extends NoInternalsModel {
             return path.startsWith(parentPath) && StringUtils.countMatches(path,
                 "/") == StringUtils.countMatches(parentPath, "/") + 1;
           }).findAny();
-      
+
       String firstModelId = "";
       if (sbmlEntry.isPresent()) {
-        
+
         // Extract entry to temporary file
         File temporaryFile = File.createTempFile("model", ".sbml");
         sbmlEntry.get().extractFile(temporaryFile);
         SBMLDocument sbmlDocument = SBMLReader.read(temporaryFile);
         temporaryFile.delete();
-        
+
         // Get first model's id
-        CompModelPlugin compModelPlugin = (CompModelPlugin)sbmlDocument.getModel().getExtension("comp");
-        firstModelId = compModelPlugin.getNumSubmodels() > 0 ? compModelPlugin.getSubmodel(0).getModelRef() : "";
-        
+        CompModelPlugin compModelPlugin =
+            (CompModelPlugin) sbmlDocument.getModel().getExtension("comp");
+        firstModelId =
+            compModelPlugin.getNumSubmodels() > 0 ? compModelPlugin.getSubmodel(0).getModelRef()
+                : "";
+
         for (org.sbml.jsbml.Parameter parameter : sbmlDocument.getModel().getListOfParameters()) {
-          
+
           // Find metadata of target parameter. Connected parameter in 2nd model
           final String parameterId = parameter.getId().replaceAll(JoinerNodeModel.SUFFIX, "");
-          Optional<Parameter> targetParameter = SwaggerUtil.getParameter(secondFskPortObject.modelMetadata)
-              .stream().filter(currentParameter -> {
-                final String currentParameterId = currentParameter.getId().replaceAll(JoinerNodeModel.SUFFIX, "");
+          Optional<Parameter> targetParameter = SwaggerUtil
+              .getParameter(secondFskPortObject.modelMetadata).stream().filter(currentParameter -> {
+                final String currentParameterId =
+                    currentParameter.getId().replaceAll(JoinerNodeModel.SUFFIX, "");
                 if (parameterId.equals(currentParameterId)) {
                   currentParameter.setId(parameter.getId());
                   return true;
@@ -331,18 +335,20 @@ class ReaderNodeModel extends NoInternalsModel {
                   return false;
                 }
               }).findAny();
-          
+
           // If the metadata of targetParamter is not found, skip to next parameter
           if (!targetParameter.isPresent()) {
             continue;
           }
-          
+
           // Find metadata of source parameter (connected parameter of 1st model)
-          final ReplacedBy replacedBy = ((CompSBasePlugin) parameter.getExtension("comp")).getReplacedBy();
+          final ReplacedBy replacedBy =
+              ((CompSBasePlugin) parameter.getExtension("comp")).getReplacedBy();
           final String replacement = replacedBy.getIdRef().replaceAll(JoinerNodeModel.SUFFIX, "");
-          Optional<Parameter> sourceParameter = SwaggerUtil.getParameter(firstFskPortObject.modelMetadata).stream()
-              .filter(currentParameter -> {
-                final String currentParameterId = currentParameter.getId().replaceAll(JoinerNodeModel.SUFFIX,  "");
+          Optional<Parameter> sourceParameter = SwaggerUtil
+              .getParameter(firstFskPortObject.modelMetadata).stream().filter(currentParameter -> {
+                final String currentParameterId =
+                    currentParameter.getId().replaceAll(JoinerNodeModel.SUFFIX, "");
                 if (replacement.equals(currentParameterId)) {
                   currentParameter.setId(replacedBy.getIdRef());
                   return true;
@@ -350,22 +356,25 @@ class ReaderNodeModel extends NoInternalsModel {
                   return false;
                 }
               }).findAny();
-          
+
           // If the metadata of sourceParmeter is not found, skip to next parameter
           if (!sourceParameter.isPresent()) {
             continue;
           }
-          
+
           String command = null;
-          if (parameter.getAnnotation() != null && parameter.getAnnotation().getNonRDFannotation() != null) {
+          if (parameter.getAnnotation() != null
+              && parameter.getAnnotation().getNonRDFannotation() != null) {
             XMLNode nonRDFannotation = parameter.getAnnotation().getNonRDFannotation();
             XMLNode commandNode = nonRDFannotation.getChildElement("command", "");
-            if (commandNode != null && commandNode.hasAttr(WriterNodeModel.METADATA_COMMAND_VALUE)) {
+            if (commandNode != null
+                && commandNode.hasAttr(WriterNodeModel.METADATA_COMMAND_VALUE)) {
               command = commandNode.getAttrValue(WriterNodeModel.METADATA_COMMAND_VALUE);
             }
           }
-          
-          connections.add(new JoinRelation(sourceParameter.get(), targetParameter.get(), command, null));
+
+          connectionList.add(new JoinRelation(sourceParameter.get().getId(),
+              targetParameter.get().getId(), command, null));
         }
       }
 
@@ -394,7 +403,8 @@ class ReaderNodeModel extends NoInternalsModel {
         topfskObj.simulations.addAll(simulationSettings.simulations);
       }
 
-      topfskObj.setJoinerRelation(connections);
+      topfskObj.setJoinerRelation(connectionList.toArray(new JoinRelation[connectionList.size()]));
+      
       return topfskObj;
     } else {
       String modelScript = "";

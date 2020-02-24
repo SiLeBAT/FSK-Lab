@@ -66,8 +66,7 @@ joiner = function () {
 
     _modelScriptTree = JSON.parse(value.modelScriptTree);
 
-		if (_value.joinRelations && _value.joinRelations != "") {
-      _value.joinRelations = JSON.parse(_value.joinRelations);
+		if (_value.joinRelations && _value.joinRelations.length > 0) {
 			$.each(_value.joinRelations, function(index, value) {
 				if (value) {
 					window.joinRelationsMap[value.sourceParam.id+","+value.targetParam.id] = value ;	
@@ -84,14 +83,8 @@ joiner = function () {
 
   }
 
-  view.getComponentValue = function() {
-        
+  view.getComponentValue = function() {  
     _value.modelMetaData = JSON.stringify(_handler.metaData);
-
-    if (Array.isArray(_value.joinRelations)) {
-      _value.joinRelations = JSON.stringify(_value.joinRelations);
-    }
-
     return _value;
   };
 
@@ -423,24 +416,15 @@ joiner = function () {
       command.onkeyup = () => window.sJoinRealtion.command = command.value;
 
       command.onblur = () => {
-        joinModelScript = "";
-
-        $.each(_viewValue.joinRelations, function (index, value) {
-          joinModelScript += `${value.targetParam.parameterID} <- ${value.command} \n`;
-          _modelScriptTree[1].script = joinModelScript;
-        });
+        _modelScriptTree[1].script = _value.joinRelations
+          .map(relation => `${relation.targetParam} <- ${relation.command}`)
+          .join("\n");
       };
 
-      let sourceParameter = _firstModelParameterMap[sourcePort] ?
-        _firstModelParameterMap[sourcePort] : _secondModelParameterMap[sourcePort];
-
-      let targetParameter = _secondModelParameterMap[sourcePort] ?
-        _secondModelParameterMap[sourcePort] : _firstModelParameterMap[sourcePort];
-
-      if (targetParameter != undefined) {
+      if (targetPort != undefined) {
         window.sJoinRealtion = {
-          sourceParam: sourceParameter,
-          targetParam: targetParameter,
+          sourceParam: sourcePort,
+          targetParam: targetPort,
           command: sourcePort
         };
 
@@ -455,12 +439,10 @@ joiner = function () {
 
         _value.joinRelations.push(sJoinRealtion);
         window.joinRelationsMap[sourcePort + "," + targetPort] = sJoinRealtion
-        joinModelScript = "";
-
-        $.each(_value.joinRelations, function (index, value) {
-          joinModelScript += `${value.targetParam.parameterID} <- ${value.command}\n`;
-          _modelScriptTree[1].script = joinModelScript
-        });
+        
+        _modelScriptTree[1].script = _value.joinRelations
+          .map(relation => `${relation.targetParam} <- ${relation.command}`)
+          .join("\n");
 
         _value.jsonRepresentation = JSON.stringify(_graph.toJSON());
       }

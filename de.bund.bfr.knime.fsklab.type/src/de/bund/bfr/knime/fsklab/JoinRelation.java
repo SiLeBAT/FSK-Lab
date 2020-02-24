@@ -19,24 +19,29 @@
 package de.bund.bfr.knime.fsklab;
 
 import org.emfjson.jackson.module.EMFModule;
+
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import de.bund.bfr.metadata.swagger.Parameter;
 
 /**
  * An object that describe the relation between two FSK Objects.
  * 
  * @author Ahmad Swaid, BfR, Berlin.
  */
+@JsonAutoDetect
 public class JoinRelation {
 
-	private Parameter sourceParam;
-	private Parameter targetParam;
+	private String sourceParam;
+	private String targetParam;
 	private String command;
 	private String language_written_in;
 	
-	public JoinRelation(Parameter sourceParam, Parameter targetParam, String command, String languageWrittenIn) {
+	public JoinRelation() {
+		this("", "", "", "");
+	}
+	
+	public JoinRelation(String sourceParam, String targetParam, String command, String languageWrittenIn) {
 		this.sourceParam = sourceParam;
 		this.targetParam = targetParam;
 		this.command = command;
@@ -51,11 +56,11 @@ public class JoinRelation {
 		return command;
 	}
 
-	public Parameter getSourceParam() {
+	public String getSourceParam() {
 		return sourceParam;
 	}
 
-	public Parameter getTargetParam() {
+	public String getTargetParam() {
 		return targetParam;
 	}
 

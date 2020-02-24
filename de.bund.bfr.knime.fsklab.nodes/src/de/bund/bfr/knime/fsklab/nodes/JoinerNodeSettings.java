@@ -18,38 +18,60 @@
  */
 package de.bund.bfr.knime.fsklab.nodes;
 
+import java.io.IOException;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import de.bund.bfr.knime.fsklab.FskPlugin;
+import de.bund.bfr.knime.fsklab.JoinRelation;
 
 class JoinerNodeSettings {
-    private static final String CFG_JOIN_SCRIPT = "JoinScript";    
-    private static final String CFG_MODEL_METADATA = "modelMetaData";
-   
-    private static final String CFG_MODEL_MATH1 = "modelMath1";
-    private static final String CFG_MODEL_MATH2 = "modelMath2";
 
-    String modelMetaData;
-  
-    String modelMath1;
-    String modelMath2;
-    
-    /** Path to model script. */
-    public String joinScript = "";
+  private static final String CFG_JOIN_SCRIPT = "JoinScript";
+  private static final String CFG_MODEL_METADATA = "modelMetaData";
+  private static final String CFG_MODEL_MATH1 = "modelMath1";
+  private static final String CFG_MODEL_MATH2 = "modelMath2";
 
-    void load(final NodeSettingsRO settings) throws InvalidSettingsException {
-      joinScript = settings.getString(CFG_JOIN_SCRIPT, "");
-      modelMetaData = settings.getString(CFG_MODEL_METADATA, "");
-      
-      modelMath1 = settings.getString(CFG_MODEL_MATH1, "");
-      modelMath2 = settings.getString(CFG_MODEL_MATH2, "");
+  private static final ObjectMapper MAPPER = FskPlugin.getDefault().MAPPER104;
+
+  String modelMetaData;
+
+  String modelMath1;
+  String modelMath2;
+
+  JoinRelation[] connections;
+
+  void load(final NodeSettingsRO settings) throws InvalidSettingsException {
+
+    // Load connections from string in settings
+    String connectionString = settings.getString(CFG_JOIN_SCRIPT, "");
+    if (!connectionString.isEmpty()) {
+      try {
+        connections = MAPPER.readValue(connectionString, JoinRelation[].class);
+      } catch (IOException err) {
+        // do nothing
+      }
     }
 
-    void save(final NodeSettingsWO settings) {
-      settings.addString(CFG_JOIN_SCRIPT, joinScript);
-      settings.addString(CFG_MODEL_METADATA, modelMetaData);
-      
-      settings.addString(CFG_MODEL_MATH1, modelMath1);
-      settings.addString(CFG_MODEL_MATH2, modelMath2);
-    }
+    modelMetaData = settings.getString(CFG_MODEL_METADATA, "");
+    modelMath1 = settings.getString(CFG_MODEL_MATH1, "");
+    modelMath2 = settings.getString(CFG_MODEL_MATH2, "");
   }
+
+  void save(final NodeSettingsWO settings) {
+    
+    // Save connections as a string in settings
+    try {
+      String connectionString = MAPPER.writeValueAsString(connections);
+      settings.addString(CFG_JOIN_SCRIPT, connectionString);
+    } catch (JsonProcessingException err) {
+      // do nothing
+    }
+    
+    settings.addString(CFG_MODEL_METADATA, modelMetaData);
+    settings.addString(CFG_MODEL_MATH1, modelMath1);
+    settings.addString(CFG_MODEL_MATH2, modelMath2);
+  }
+}

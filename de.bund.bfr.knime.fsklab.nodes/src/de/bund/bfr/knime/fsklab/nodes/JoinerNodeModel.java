@@ -23,10 +23,14 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
@@ -37,7 +41,7 @@ import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonReader;
-import javax.json.JsonValue;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.knime.base.data.xml.SvgCell;
 import org.knime.base.data.xml.SvgImageContent;
@@ -53,6 +57,7 @@ import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.image.ImagePortObject;
 import org.knime.core.node.port.image.ImagePortObjectSpec;
 import org.knime.core.node.web.ValidationError;
+import org.knime.core.node.workflow.FlowVariable;
 import org.knime.core.node.workflow.NodeContainer;
 import org.knime.core.node.workflow.NodeContext;
 import org.knime.core.util.FileUtil;
@@ -75,19 +80,21 @@ import metadata.SwaggerUtil;
  */
 final class JoinerNodeModel extends
     AbstractWizardNodeModel<JoinerViewRepresentation, JoinerViewValue> implements PortObjectHolder {
-  
+
   private final JoinerNodeSettings nodeSettings = new JoinerNodeSettings();
-  
+
   private FskPortObject m_port;
-  
+
   public final static String SUFFIX = "_dup";
-  
+
+  private final static ObjectMapper MAPPER = FskPlugin.getDefault().MAPPER104;
+
   // Input and output port types
   private static final PortType[] IN_TYPES = {FskPortObject.TYPE, FskPortObject.TYPE};
   private static final PortType[] OUT_TYPES = {CombinedFskPortObject.TYPE, ImagePortObject.TYPE};
-  
+
   private static final String VIEW_NAME = new JoinerNodeFactory().getInteractiveViewName();
-  
+
   public JoinerNodeModel() {
     super(IN_TYPES, OUT_TYPES, VIEW_NAME);
   }
@@ -142,21 +149,22 @@ final class JoinerNodeModel extends
   @Override
   protected PortObject[] performExecute(PortObject[] inObjects, ExecutionContext exec)
       throws Exception {
-    
+
     final String nodeWithId = NodeContext.getContext().getNodeContainer().getNameWithID();
     NodeContext.getContext().getWorkflowManager()
-      .addListener(new NodeRemovedListener(nodeWithId, buildContainerName()));
-    
+        .addListener(new NodeRemovedListener(nodeWithId, buildContainerName()));
+
     FskPortObject inObj1 = (FskPortObject) inObjects[0];
     FskPortObject inObj2 = (FskPortObject) inObjects[1];
-    
+
     resolveParameterNamesConflict(inObj1, inObj2);
-    
+
     CombinedFskPortObject outObj = new CombinedFskPortObject(
         FileUtil.createTempDir("combined").getAbsolutePath(), new ArrayList<>(), inObj1, inObj2);
-    
+
     ImagePortObject imagePort = null;
-    List<JoinRelation> joinerRelation = new ArrayList<>();
+    JoinRelation[] connections = new JoinRelation[0];
+
     // Clone input object
     synchronized (getLock()) {
       JoinerViewValue joinerProxyValue = getViewValue();
@@ -171,11 +179,11 @@ final class JoinerNodeModel extends
         if (joinerProxyValue.modelMetaData == null) {
           loadFromPorts(inObj1, inObj2, joinerProxyValue);
         }
-        
+
         joinerProxyValue.firstModelScript = inObj1.model;
         joinerProxyValue.firstModelViz = inObj1.viz;
         joinerProxyValue.secondModelScript = inObj2.model;
-        
+
         if (!StringUtils.isNotBlank(joinerProxyValue.secondModelViz)) {
           if (!(inObj2 instanceof CombinedFskPortObject)) {
             joinerProxyValue.secondModelViz = inObj2.viz;
@@ -191,36 +199,35 @@ final class JoinerNodeModel extends
 
         exec.setProgress(1);
       }
-      
+
       if (joinerProxyValue.joinRelations != null) {
-        String relation = joinerProxyValue.joinRelations;
-        creatRelationList(relation, joinerProxyValue, joinerRelation);
-      } else if (StringUtils.isNotBlank(nodeSettings.joinScript)) {
-        creatRelationList(nodeSettings.joinScript, joinerProxyValue, joinerRelation);
+        connections = joinerProxyValue.joinRelations;
+      } else if (nodeSettings.connections != null) {
+        connections = nodeSettings.connections;
       }
-      
+
       // Consider Here that the model type is the same as the second model
       outObj.modelMetadata = getObjectFromJson(joinerProxyValue.modelMetaData,
           SwaggerUtil.modelClasses.get(inObj2.modelMetadata.getModelType()));
       joinerProxyValue.modelType = inObj2.modelMetadata.getModelType();
-      
+
       if (StringUtils.isNotEmpty(joinerProxyValue.modelScriptTree)) {
         JsonArray scriptTree = getScriptArray(joinerProxyValue.modelScriptTree);
         setScriptBack(inObj1, inObj2, scriptTree);
       } else {
         joinerProxyValue.modelScriptTree = buildModelscriptAsTree(inObj1, inObj2);
       }
-      
+
       inObj2.viz = joinerProxyValue.secondModelViz;
 
       Set<String> packageSet = new HashSet<>();
       packageSet.addAll(inObj1.packages);
       packageSet.addAll(inObj2.packages);
       outObj.packages.addAll(packageSet);
-      resolveParameters(joinerRelation, outObj);
+      resolveParameters(connections, outObj);
 
-      outObj.setJoinerRelation(joinerRelation);
-      
+      outObj.setJoinerRelation(connections);
+
       // Create default simulation out of parameters metadata
       if (SwaggerUtil.getModelMath(outObj.modelMetadata) != null) {
         List<Parameter> params = SwaggerUtil.getParameter(outObj.modelMetadata);
@@ -228,7 +235,7 @@ final class JoinerNodeModel extends
         outObj.simulations.add(defaultSimulation);
         outObj.selectedSimulationIndex = 0;
       }
-      
+
       imagePort = createSVGImagePortObject(joinerProxyValue.svgRepresentation);
     }
 
@@ -252,35 +259,6 @@ final class JoinerNodeModel extends
     joinerProxyValue.modelMetaData = FromOjectToJSON(inObj2.modelMetadata);
     joinerProxyValue.modelMath1 = FromOjectToJSON(SwaggerUtil.getModelMath(inObj1.modelMetadata));
     joinerProxyValue.modelMath2 = FromOjectToJSON(SwaggerUtil.getModelMath(inObj2.modelMetadata));
-  }
-
-  private void creatRelationList(String relation, JoinerViewValue joinerProxyValue,
-      List<JoinRelation> joinerRelation)
-      throws InvalidSettingsException, JsonParseException, JsonMappingException, IOException {
-    if (StringUtils.isNotBlank(relation)) {
-      joinerProxyValue.joinRelations = relation;
-      JsonReader jsonReader = Json.createReader(new StringReader(relation));
-      JsonArray relationJsonArray = jsonReader.readArray();
-      jsonReader.close();
-      for (JsonValue element : relationJsonArray) {
-        JsonObject sourceTargetRelation = ((JsonObject) element);
-
-        String command = sourceTargetRelation.getString("command", null);
-        String languageWrittenIn = sourceTargetRelation.getString("language_written_in", null);
-        
-        Parameter sourceParam = null;
-        if (sourceTargetRelation.containsKey("sourceParam")) {
-          sourceParam = getObjectFromJson(sourceTargetRelation.get("sourceParam").toString(), Parameter.class);
-        }
-        
-        Parameter targetParam = null;
-        if (sourceTargetRelation.containsKey("targetParam")) {
-          targetParam = getObjectFromJson(sourceTargetRelation.get("targetParam").toString(), Parameter.class);
-        }
-        
-        joinerRelation.add(new JoinRelation(sourceParam, targetParam, command, languageWrittenIn));
-      }
-    }
   }
 
   // second visualization script is the script which draw and control the plotting!
@@ -340,9 +318,8 @@ final class JoinerNodeModel extends
 
       StringBuilder joinModel = new StringBuilder();
       if (((CombinedFskPortObject) object).getJoinerRelation() != null) {
-        ((CombinedFskPortObject) object).getJoinerRelation().stream().forEach(connection -> {
-          joinModel.append(
-              connection.getTargetParam().getId() + " <- " + connection.getCommand() + ";\n");
+        Arrays.stream(((CombinedFskPortObject) object).getJoinerRelation()).forEach(connection -> {
+          joinModel.append(connection.getTargetParam() + " <- " + connection.getCommand() + ";\n");
         });
       }
       jsonObjectBuilder.add("script", joinModel.toString());
@@ -410,7 +387,7 @@ final class JoinerNodeModel extends
     createEmptyViewValue();
     nodeSettings.modelMetaData = "";
 
-    nodeSettings.joinScript = "";
+    nodeSettings.connections = null;
     m_port = null;
   }
 
@@ -422,20 +399,80 @@ final class JoinerNodeModel extends
 
     File directory =
         NodeContext.getContext().getWorkflowManager().getContext().getCurrentLocation();
-    String containerName = buildContainerName();
+    File settingFolder = new File(directory, buildContainerName());
 
-    File settingFolder = new File(directory, containerName);
+    // Get flow variables
+    Map<String, FlowVariable> flowVariables;
+    if (NodeContext.getContext().getNodeContainer().getFlowObjectStack() != null) {
+      flowVariables = NodeContext.getContext().getNodeContainer().getFlowObjectStack()
+          .getAvailableFlowVariables();
+    } else {
+      flowVariables = Collections.emptyMap();
+    }
 
-    nodeSettings.joinScript = NodeUtils.readConfigString(settingFolder, "JoinRelations.json");
-    nodeSettings.modelMetaData = NodeUtils.readConfigString(settingFolder, "modelMetaData.json");
+    if (flowVariables.containsKey("JoinRelations.json")) {
+      String connectionString = flowVariables.get("JoinRelations.json").getStringValue();
+      nodeSettings.connections = MAPPER.readValue(connectionString, JoinRelation[].class);
+    } else {
+      File configFile = new File(settingFolder, "JoinRelation.json");
+      if (configFile.exists()) {
+        nodeSettings.connections = MAPPER.readValue(configFile, JoinRelation[].class);
+      }
+    }
 
-    nodeSettings.modelMath1 = NodeUtils.readConfigString(settingFolder, "modelMath1.json");
-    nodeSettings.modelMath2 = NodeUtils.readConfigString(settingFolder, "modelMath2.json");
-    String sourceTree = NodeUtils.readConfigString(settingFolder, "sourceTree.json");
-    String visualizationScript = NodeUtils.readConfigString(settingFolder, "visualization.txt");
+    if (flowVariables.containsKey("modelMetaData.json")) {
+      nodeSettings.modelMetaData = flowVariables.get("modelMetaData.json").getStringValue();
+    } else {
+      File configFile = new File(settingFolder, "modelMetaData.json");
+      if (configFile.exists()) {
+        nodeSettings.modelMetaData = FileUtils.readFileToString(configFile, StandardCharsets.UTF_8);
+      }
+    }
+
+    if (flowVariables.containsKey("modelMath1.json")) {
+      nodeSettings.modelMath1 = flowVariables.get("modelMath1.json").getStringValue();
+    } else {
+      File configFile = new File(settingFolder, "modelMath1.json");
+      if (configFile.exists()) {
+        nodeSettings.modelMath1 = FileUtils.readFileToString(configFile, StandardCharsets.UTF_8);
+      }
+    }
+
+    if (flowVariables.containsKey("modelMath2.json")) {
+      nodeSettings.modelMath2 = flowVariables.get("modelMath2.json").getStringValue();
+    } else {
+      File configFile = new File(settingFolder, "modelMath2.json");
+      if (configFile.exists()) {
+        nodeSettings.modelMath2 = FileUtils.readFileToString(configFile, StandardCharsets.UTF_8);
+      }
+    }
+
+    String sourceTree;
+    if (flowVariables.containsKey("sourceTree.json")) {
+      sourceTree = flowVariables.get("sourceTree.json").getStringValue();
+    } else {
+      File configFile = new File(settingFolder, "sourceTree.json");
+      if (configFile.exists()) {
+        sourceTree = FileUtils.readFileToString(configFile, StandardCharsets.UTF_8);
+      } else {
+        sourceTree = null;
+      }
+    }
+
+    String visualizationScript;
+    if (flowVariables.containsKey("visualization.txt")) {
+      visualizationScript = flowVariables.get("visualization.txt").getStringValue();
+    } else {
+      File configFile = new File(settingFolder, "visualization.txt");
+      if (configFile.exists()) {
+        visualizationScript = FileUtils.readFileToString(configFile, StandardCharsets.UTF_8);
+      } else {
+        visualizationScript = null;
+      }
+    }
 
     JoinerViewValue viewValue = getViewValue();
-    viewValue.joinRelations = nodeSettings.joinScript;
+    viewValue.joinRelations = nodeSettings.connections;
     viewValue.modelMetaData = nodeSettings.modelMetaData;
 
     if (nodeSettings.modelMath1 != null)
@@ -446,35 +483,70 @@ final class JoinerNodeModel extends
     viewValue.secondModelViz = visualizationScript;
   }
 
-  protected void saveJsonSetting(String joinRelation, String modelMetaData, String modelScriptTree,
-      String visualizationScript, String modelMath1, String modelMath2)
-      throws IOException, CanceledExecutionException {
-    File directory =
-        NodeContext.getContext().getWorkflowManager().getContext().getCurrentLocation();
-    String containerName = buildContainerName();
-
-    File settingFolder = new File(directory, containerName);
-    if (!settingFolder.exists()) {
-      settingFolder.mkdir();
-    }
-
-    NodeUtils.writeConfigString(joinRelation, settingFolder, "JoinRelations.json");
-    NodeUtils.writeConfigString(modelMetaData, settingFolder, "modelMetaData.json");
-
-    NodeUtils.writeConfigString(modelMath1, settingFolder, "modelMath1.json");
-    NodeUtils.writeConfigString(modelMath2, settingFolder, "modelMath2.json");
-    NodeUtils.writeConfigString(modelScriptTree, settingFolder, "sourceTree.json");
-    NodeUtils.writeConfigString(visualizationScript, settingFolder, "visualization.txt");
-  }
-
   @Override
   protected void saveSettingsTo(NodeSettingsWO settings) {
-    try {
-      JoinerViewValue vv = getViewValue();
-      saveJsonSetting(vv.joinRelations, vv.modelMetaData, vv.modelScriptTree, vv.secondModelViz,
-          vv.modelMath1, vv.modelMath2);
-    } catch (IOException | CanceledExecutionException e) {
-      e.printStackTrace();
+
+    File directory =
+        NodeContext.getContext().getWorkflowManager().getContext().getCurrentLocation();
+    File settingsFolder = new File(directory, buildContainerName());
+    if (!settingsFolder.exists()) {
+      settingsFolder.mkdir();
+    }
+
+    JoinerViewValue viewValue = getViewValue();
+
+    if (viewValue.joinRelations != null && viewValue.joinRelations.length > 0) {
+      File configFile = new File(settingsFolder, "JoinRelations.json");
+      try {
+        MAPPER.writeValue(configFile, viewValue.joinRelations);
+      } catch (IOException e) {
+        // do nothing
+      }
+    }
+
+    if (viewValue.modelMetaData != null && !viewValue.modelMetaData.isEmpty()) {
+      File configFile = new File(settingsFolder, "modelMetaData.json");
+      try {
+        FileUtils.writeStringToFile(configFile, viewValue.modelMetaData, StandardCharsets.UTF_8);
+      } catch (IOException e) {
+        // do nothing
+      }
+    }
+
+    if (viewValue.modelMath1 != null && !viewValue.modelMath1.isEmpty()) {
+      File configFile = new File(settingsFolder, "modelMath1.json");
+      try {
+        FileUtils.writeStringToFile(configFile, viewValue.modelMath1, StandardCharsets.UTF_8);
+      } catch (IOException e) {
+        // do nothing
+      }
+    }
+
+    if (viewValue.modelMath2 != null && !viewValue.modelMath2.isEmpty()) {
+      File configFile = new File(settingsFolder, "modelMath2.json");
+      try {
+        FileUtils.writeStringToFile(configFile, viewValue.modelMath2, StandardCharsets.UTF_8);
+      } catch (IOException e) {
+        // do nothing
+      }
+    }
+
+    if (viewValue.modelScriptTree != null && !viewValue.modelScriptTree.isEmpty()) {
+      File configFile = new File(settingsFolder, "sourceTree.json");
+      try {
+        FileUtils.writeStringToFile(configFile, viewValue.modelScriptTree, StandardCharsets.UTF_8);
+      } catch (IOException e) {
+        // do nothing
+      }
+    }
+
+    if (viewValue.secondModelViz != null && !viewValue.secondModelViz.isEmpty()) {
+      File configFile = new File(settingsFolder, "visualization.txt");
+      try {
+        FileUtils.writeStringToFile(configFile, viewValue.secondModelViz, StandardCharsets.UTF_8);
+      } catch (IOException e) {
+        // do nothing
+      }
     }
   }
 
@@ -514,7 +586,7 @@ final class JoinerNodeModel extends
     }
   }
 
-  private void resolveParameters(List<JoinRelation> relations, FskPortObject outfskPort) {
+  private void resolveParameters(JoinRelation[] relations, FskPortObject outfskPort) {
 
     if (relations != null)
       for (JoinRelation relation : relations) {
@@ -526,7 +598,7 @@ final class JoinerNodeModel extends
           // Boolean b1 = p.getParameterID().equals(relation.getSourceParam().getParameterID());
 
           // remove input from second model
-          Boolean b2 = p.getId().equals(relation.getTargetParam().getId());
+          Boolean b2 = p.getId().equals(relation.getTargetParam());
 
 
           if (b2) {
@@ -546,7 +618,7 @@ final class JoinerNodeModel extends
 
     return combinedList;
   }
-  
+
   /** @return string with node name and id with format "{name} (#{id}) setting". */
   private static String buildContainerName() {
     final NodeContainer nodeContainer = NodeContext.getContext().getNodeContainer();

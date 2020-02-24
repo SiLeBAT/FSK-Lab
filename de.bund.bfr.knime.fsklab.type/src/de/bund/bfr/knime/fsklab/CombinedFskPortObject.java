@@ -33,12 +33,12 @@ import java.awt.event.FocusListener;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -48,11 +48,6 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonObject;
-import javax.json.JsonReader;
-import javax.json.JsonValue;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.Icon;
@@ -77,7 +72,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.emfjson.jackson.module.EMFModule;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionMonitor;
-import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortObjectZipInputStream;
@@ -88,9 +82,7 @@ import org.knime.core.util.FileUtil;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.threetenbp.ThreeTenModule;
 import com.google.gson.Gson;
@@ -110,7 +102,6 @@ import de.bund.bfr.metadata.swagger.GenericModel;
 import de.bund.bfr.metadata.swagger.HealthModel;
 import de.bund.bfr.metadata.swagger.Model;
 import de.bund.bfr.metadata.swagger.OtherModel;
-import de.bund.bfr.metadata.swagger.Parameter;
 import de.bund.bfr.metadata.swagger.PredictiveModel;
 import de.bund.bfr.metadata.swagger.ProcessModel;
 import de.bund.bfr.metadata.swagger.QraModel;
@@ -136,14 +127,15 @@ public class CombinedFskPortObject extends FskPortObject {
 	}
 
 	final FskPortObject secondFskPortObject;
-	List<JoinRelation> joinerRelation;
 
-	public List<JoinRelation> getJoinerRelation() {
-		return joinerRelation;
+	private JoinRelation[] relations;
+
+	public JoinRelation[] getJoinerRelation() {
+		return relations;
 	}
 
-	public void setJoinerRelation(List<JoinRelation> joinerRelation) {
-		this.joinerRelation = joinerRelation;
+	public void setJoinerRelation(JoinRelation[] relations) {
+		this.relations = relations;
 	}
 
 	public static final PortType TYPE = PortTypeRegistry.getInstance().getPortType(FskPortObject.class);
@@ -294,6 +286,7 @@ public class CombinedFskPortObject extends FskPortObject {
 			// First FSK Object
 			// model entry (file with model script)
 			if (portObject instanceof CombinedFskPortObject) {
+
 				// write tag value to check the type of the fsk port object when read it back
 				int level = ran.nextInt();
 				out.putNextEntry(new ZipEntry(COMBINED + level));
@@ -302,16 +295,21 @@ public class CombinedFskPortObject extends FskPortObject {
 
 				CombinedFskPortObject joinedPortObject = (CombinedFskPortObject) portObject;
 
-				if (joinedPortObject.joinerRelation == null) {
-					joinedPortObject.joinerRelation = new ArrayList<>();
+				if (joinedPortObject.relations == null) {
+					joinedPortObject.relations = new JoinRelation[0];
 				}
-				writeEObjectList(JOINER_RELATION + level, joinedPortObject.joinerRelation, out);
+
+				out.putNextEntry(new ZipEntry(JOINER_RELATION + level));
+				MAPPER104.writeValue(out, joinedPortObject.relations);
+				out.closeEntry();
+
 				// workspace entry
 				if (portObject.workspace != null) {
 					out.putNextEntry(new ZipEntry(JOINED_WORKSPACE + level));
 					Files.copy(portObject.workspace, out);
 					out.closeEntry();
 				}
+
 				// Save simulations
 				if (!portObject.simulations.isEmpty()) {
 					out.putNextEntry(new ZipEntry(JOINED_SIMULATION + level));
@@ -455,7 +453,8 @@ public class CombinedFskPortObject extends FskPortObject {
 
 			List<FskSimulation> simulations = new ArrayList<>();
 			int selectedSimulationIndex = 0;
-			List<JoinRelation> joinerRelation = new ArrayList<>();
+
+			JoinRelation[] relations = null;
 
 			ZipEntry entry;
 			while ((entry = in.getNextEntry()) != null) {
@@ -468,12 +467,7 @@ public class CombinedFskPortObject extends FskPortObject {
 					entry = in.getNextEntry();
 					entryName = entry.getName();
 					if (entryName.startsWith(JOINER_RELATION + level)) {
-						try {
-							joinerRelation = ((List<JoinRelation>) readEObjectList(in, JoinRelation.class));
-						} catch (InvalidSettingsException e) {
-							e.printStackTrace();
-						}
-
+						relations = MAPPER104.readValue(in, JoinRelation[].class);
 					}
 					entry = in.getNextEntry();
 					entryName = entry.getName();
@@ -543,12 +537,15 @@ public class CombinedFskPortObject extends FskPortObject {
 							modelMetadata, FileUtil.createTempDir("combined").getAbsolutePath(), new ArrayList<>(),
 							firstFSKObject, secondFSKObject);
 					portObj.workspace = workspacePath;
-					if (!joinerRelation.isEmpty()) {
-						portObj.setJoinerRelation(joinerRelation);
+
+					if (relations != null && relations.length > 0) {
+						portObj.setJoinerRelation(relations);
 					}
+
 					if (!simulations.isEmpty()) {
 						portObj.simulations.addAll(simulations);
 					}
+
 					return portObj;
 
 				} else {
@@ -661,69 +658,6 @@ public class CombinedFskPortObject extends FskPortObject {
 			ObjectMapper mapper = EMFModule.setupDefaultMapper();
 			return mapper.readValue(jsonStr, valueType);
 		}
-
-		private static <T> T getEObjectFromJson(String jsonStr, Class<T> valueType)
-				throws InvalidSettingsException, JsonParseException, JsonMappingException, IOException {
-			ObjectMapper mapper = EMFModule.setupDefaultMapper();
-			return mapper.readValue(jsonStr, valueType);
-		}
-
-		@SuppressWarnings("unchecked")
-		private <T> List<T> readEObjectList(PortObjectZipInputStream zipStream, Class<T> valueType)
-				throws IOException, InvalidSettingsException {
-			List<JoinRelation> joinerRelation = new ArrayList<>();
-			String jsonStr = IOUtils.toString(zipStream, "UTF-8");
-
-			if (jsonStr != null) {
-
-				JsonReader jsonReader = Json.createReader(new StringReader(jsonStr));
-				JsonArray relationJsonArray = jsonReader.readArray();
-				jsonReader.close();
-
-				for (JsonValue element : relationJsonArray) {
-					JsonObject sourceTargetRelation = ((JsonObject) element);
-
-					String command = sourceTargetRelation.getString("command", null);
-
-					Parameter sourceParam = null;
-					if (sourceTargetRelation.containsKey("sourceParam")) {
-						sourceParam = getEObjectFromJson(sourceTargetRelation.get("sourceParam").toString(),
-								Parameter.class);
-					}
-
-					Parameter targetParam = null;
-					if (sourceTargetRelation.containsKey("targetParam")) {
-						targetParam = getEObjectFromJson(sourceTargetRelation.get("targetParam").toString(),
-								Parameter.class);
-					}
-
-					joinerRelation.add(new JoinRelation(sourceParam, targetParam, command, null));
-				}
-			}
-
-			return (List<T>) joinerRelation;
-		}
-
-		private static <T extends List> void writeEObjectList(String entryName, T value, PortObjectZipOutputStream out)
-				throws IOException {
-
-			out.putNextEntry(new ZipEntry(entryName));
-			String jsonStr = "[";
-			for (Object o : value) {
-				JoinRelation jR = ((JoinRelation) o);
-				String repre = jR.getJsonReresentaion();
-				jsonStr += repre + ",";
-			}
-			if (jsonStr.length() > 1) {
-				jsonStr = jsonStr.substring(0, jsonStr.length() - 1) + "]";
-			} else {
-				jsonStr += "]";
-			}
-			IOUtils.write(jsonStr, out, "UTF-8");
-
-			out.closeEntry();
-		}
-
 	}
 
 	class CommandScript {
@@ -760,22 +694,25 @@ public class CombinedFskPortObject extends FskPortObject {
 	public void buildScriptNodes(DefaultMutableTreeNode top, FskPortObject currentPortObject, boolean modelScriptFlag) {
 		if (currentPortObject instanceof CombinedFskPortObject) {
 			DefaultMutableTreeNode anotherJoinedModel = new DefaultMutableTreeNode("joined");
-			buildScriptNodes(anotherJoinedModel, ((CombinedFskPortObject) currentPortObject).getFirstFskPortObject(),
-					modelScriptFlag);
-			if (modelScriptFlag) {
-				StringBuilder script = new StringBuilder();
-				String language = "";
-				if (((CombinedFskPortObject) currentPortObject).getJoinerRelation() != null
-						&& ((CombinedFskPortObject) currentPortObject).getJoinerRelation().size() > 0) {
-					((CombinedFskPortObject) currentPortObject).getJoinerRelation().stream().forEach(connection -> {
-						script.append(connection.getTargetParam().getId() + " <- " + connection.getCommand() + "\n");
-					});
 
-					language = ((CombinedFskPortObject) currentPortObject).getJoinerRelation().get(0)
-							.getLanguage_written_in();
+			CombinedFskPortObject combinedObject = (CombinedFskPortObject) currentPortObject;
+
+			buildScriptNodes(anotherJoinedModel, combinedObject.getFirstFskPortObject(), modelScriptFlag);
+
+			if (modelScriptFlag) {
+
+				String script = "";
+				String language = "";
+				JoinRelation[] relations = combinedObject.getJoinerRelation();
+
+				if (relations != null && relations.length > 0) {
+					script = Arrays.stream(relations).map(it -> it.getTargetParam() + " <- " + it.getCommand())
+							.collect(Collectors.joining("\n"));
+
+					language = relations[0].getLanguage_written_in();
 				}
 				anotherJoinedModel.add(new DefaultMutableTreeNode(new CommandScript(
-						"Joining Model Script" + (language != null ? "( " + language + " )" : ""), script.toString())));
+						"Joining Model Script" + (language != null ? "( " + language + " )" : ""), script)));
 			}
 			buildScriptNodes(anotherJoinedModel, ((CombinedFskPortObject) currentPortObject).getSecondFskPortObject(),
 					modelScriptFlag);
