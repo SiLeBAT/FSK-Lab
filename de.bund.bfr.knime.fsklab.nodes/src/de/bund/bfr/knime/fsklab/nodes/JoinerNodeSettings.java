@@ -26,6 +26,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.JoinRelation;
+import de.bund.bfr.metadata.swagger.Parameter;
 
 class JoinerNodeSettings {
 
@@ -38,30 +39,44 @@ class JoinerNodeSettings {
 
   String modelMetaData;
 
-  String modelMath1;
-  String modelMath2;
-
   JoinRelation[] connections;
+  Parameter[] firstModelParameters;
+  Parameter[] secondModelParameters;
 
   void load(final NodeSettingsRO settings) throws InvalidSettingsException {
 
     // Load connections from string in settings
-    String connectionString = settings.getString(CFG_JOIN_SCRIPT, "");
-    if (!connectionString.isEmpty()) {
+    if (settings.containsKey(CFG_JOIN_SCRIPT)) {
       try {
-        connections = MAPPER.readValue(connectionString, JoinRelation[].class);
+        connections = MAPPER.readValue(settings.getString(CFG_JOIN_SCRIPT), JoinRelation[].class);
       } catch (IOException err) {
         // do nothing
       }
     }
 
     modelMetaData = settings.getString(CFG_MODEL_METADATA, "");
-    modelMath1 = settings.getString(CFG_MODEL_MATH1, "");
-    modelMath2 = settings.getString(CFG_MODEL_MATH2, "");
+
+    if (settings.containsKey(CFG_MODEL_MATH1)) {
+      try {
+        firstModelParameters =
+            MAPPER.readValue(settings.getString(CFG_MODEL_MATH1), Parameter[].class);
+      } catch (IOException err) {
+        // do nothing
+      }
+    }
+
+    if (settings.containsKey(CFG_MODEL_MATH2)) {
+      try {
+        secondModelParameters =
+            MAPPER.readValue(settings.getString(CFG_MODEL_MATH2), Parameter[].class);
+      } catch (IOException err) {
+        // do nothing
+      }
+    }
   }
 
   void save(final NodeSettingsWO settings) {
-    
+
     // Save connections as a string in settings
     try {
       String connectionString = MAPPER.writeValueAsString(connections);
@@ -69,9 +84,19 @@ class JoinerNodeSettings {
     } catch (JsonProcessingException err) {
       // do nothing
     }
-    
+
     settings.addString(CFG_MODEL_METADATA, modelMetaData);
-    settings.addString(CFG_MODEL_MATH1, modelMath1);
-    settings.addString(CFG_MODEL_MATH2, modelMath2);
+    
+    try {
+      settings.addString(CFG_MODEL_MATH1, MAPPER.writeValueAsString(firstModelParameters));
+    } catch (JsonProcessingException err) {
+      // do nothing
+    }
+    
+    try {
+      settings.addString(CFG_MODEL_MATH2, MAPPER.writeValueAsString(secondModelParameters));
+    } catch (JsonProcessingException err) {
+      // do nothing
+    }
   }
 }

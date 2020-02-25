@@ -41,8 +41,6 @@ class JoinerViewValue extends JSONViewContent {
   private static final String CFG_ORIGINAL_MODEL_SCRIPT2 = "originalModelScript2";
   private static final String CFG_ORIGINAL_VISUALIZATION_SCRIPT2 = "originalVisualizationScript2";
   private static final String CFG_MODEL_METADATA = "ModelMetaData";
-  private static final String CFG_MODEL_MATH1 = "modelMath1";
-  private static final String CFG_MODEL_MATH2 = "modelMath2";
   private static final String CFG_JOINER_RELATION = "joinRelation";
   private static final String CFG_JSON_REPRESENTATION = "JSONRepresentation";
   private static final String CFG_MODELSCRIPT_TREE = "ModelScriptTree";
@@ -57,8 +55,6 @@ class JoinerViewValue extends JSONViewContent {
   public String firstModelViz;
   public String secondModelViz;
   public String modelMetaData;
-  public String modelMath1;
-  public String modelMath2;
   public JoinRelation[] joinRelations;
   public String jsonRepresentation;
   public String svgRepresentation;
@@ -92,13 +88,6 @@ class JoinerViewValue extends JSONViewContent {
     if (modelMetaData != null) {
       saveSettings(settings, CFG_MODEL_METADATA, modelMetaData);
     }
-
-    if (modelMath1 != null) {
-      saveSettings(settings, CFG_MODEL_MATH1, modelMath1);
-    }
-    if (modelMath2 != null) {
-      saveSettings(settings, CFG_MODEL_MATH2, modelMath2);
-    }
   }
 
   @Override
@@ -125,13 +114,6 @@ class JoinerViewValue extends JSONViewContent {
     // load meta data
     if (settings.containsKey(CFG_MODEL_METADATA)) {
       modelMetaData = getEObject(settings, CFG_MODEL_METADATA);
-    }
-
-    if (settings.containsKey(CFG_MODEL_MATH1)) {
-      modelMath1 = getEObject(settings, CFG_MODEL_MATH1);
-    }
-    if (settings.containsKey(CFG_MODEL_MATH2)) {
-      modelMath2 = getEObject(settings, CFG_MODEL_MATH2);
     }
   }
 

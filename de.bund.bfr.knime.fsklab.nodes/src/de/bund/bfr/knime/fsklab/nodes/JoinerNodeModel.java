@@ -168,6 +168,24 @@ final class JoinerNodeModel extends
     // Clone input object
     synchronized (getLock()) {
       JoinerViewValue joinerProxyValue = getViewValue();
+      JoinerViewRepresentation representation = getViewRepresentation();
+
+      // Initialize representation if uninitialized
+      if (representation.getFirstModelParameters() == null
+          || representation.getSecondModelParameters() == null) {
+        
+        List<Parameter> firstModelParams = SwaggerUtil.getParameter(inObj1.modelMetadata);
+        if (firstModelParams != null && !firstModelParams.isEmpty()) {
+          representation.setFirstModelParameters(
+              firstModelParams.toArray(new Parameter[firstModelParams.size()]));
+        }
+
+        List<Parameter> secondModelParams = SwaggerUtil.getParameter(inObj2.modelMetadata);
+        if (secondModelParams != null && !secondModelParams.isEmpty()) {
+          representation.setSecondModelParameters(
+              secondModelParams.toArray(new Parameter[secondModelParams.size()]));
+        }
+      }
 
       // If not executed
       if (joinerProxyValue.modelMetaData == null) {
@@ -249,8 +267,20 @@ final class JoinerNodeModel extends
         combineParameters(SwaggerUtil.getParameter(inObj1.modelMetadata),
             SwaggerUtil.getParameter(inObj2.modelMetadata)));
     joinerProxyValue.modelMetaData = FromOjectToJSON(inObj2.modelMetadata);
-    joinerProxyValue.modelMath1 = FromOjectToJSON(SwaggerUtil.getModelMath(inObj1.modelMetadata));
-    joinerProxyValue.modelMath2 = FromOjectToJSON(SwaggerUtil.getModelMath(inObj2.modelMetadata));
+
+    JoinerViewRepresentation repr = getViewRepresentation();
+
+    List<Parameter> firstModelParams = SwaggerUtil.getParameter(inObj1.modelMetadata);
+    if (firstModelParams != null && !firstModelParams.isEmpty()) {
+      repr.setFirstModelParameters(
+          firstModelParams.toArray(new Parameter[firstModelParams.size()]));
+    }
+
+    List<Parameter> secondModelParams = SwaggerUtil.getParameter(inObj2.modelMetadata);
+    if (secondModelParams != null && !secondModelParams.isEmpty()) {
+      repr.setSecondModelParameters(
+          secondModelParams.toArray(new Parameter[secondModelParams.size()]));
+    }
   }
 
   // second visualization script is the script which draw and control the plotting!
@@ -421,21 +451,23 @@ final class JoinerNodeModel extends
       }
     }
 
-    if (flowVariables.containsKey("modelMath1.json")) {
-      nodeSettings.modelMath1 = flowVariables.get("modelMath1.json").getStringValue();
+    if (flowVariables.containsKey("firstModelParameters.json")) {
+      String parametersString = flowVariables.get("firstModelParameters.json").getStringValue();
+      nodeSettings.firstModelParameters = MAPPER.readValue(parametersString, Parameter[].class);
     } else {
-      File configFile = new File(settingFolder, "modelMath1.json");
+      File configFile = new File(settingFolder, "firstModelParameters.json");
       if (configFile.exists()) {
-        nodeSettings.modelMath1 = FileUtils.readFileToString(configFile, StandardCharsets.UTF_8);
+        nodeSettings.firstModelParameters = MAPPER.readValue(configFile, Parameter[].class);
       }
     }
 
-    if (flowVariables.containsKey("modelMath2.json")) {
-      nodeSettings.modelMath2 = flowVariables.get("modelMath2.json").getStringValue();
+    if (flowVariables.containsKey("secondModelParameters.json")) {
+      String parametersString = flowVariables.get("secondModelParameters.json").getStringValue();
+      nodeSettings.secondModelParameters = MAPPER.readValue(parametersString, Parameter[].class);
     } else {
-      File configFile = new File(settingFolder, "modelMath2.json");
+      File configFile = new File(settingFolder, "secondModelParameters.json");
       if (configFile.exists()) {
-        nodeSettings.modelMath2 = FileUtils.readFileToString(configFile, StandardCharsets.UTF_8);
+        nodeSettings.secondModelParameters = MAPPER.readValue(configFile, Parameter[].class);
       }
     }
 
@@ -466,13 +498,16 @@ final class JoinerNodeModel extends
     JoinerViewValue viewValue = getViewValue();
     viewValue.joinRelations = nodeSettings.connections;
     viewValue.modelMetaData = nodeSettings.modelMetaData;
-
-    if (nodeSettings.modelMath1 != null)
-      viewValue.modelMath1 = nodeSettings.modelMath1;
-    if (nodeSettings.modelMath1 != null)
-      viewValue.modelMath2 = nodeSettings.modelMath2;
     viewValue.modelScriptTree = sourceTree;
     viewValue.secondModelViz = visualizationScript;
+
+    JoinerViewRepresentation representation = getViewRepresentation();
+    if (nodeSettings.firstModelParameters != null) {
+      representation.setFirstModelParameters(nodeSettings.firstModelParameters);
+    }
+    if (nodeSettings.secondModelParameters != null) {
+      representation.setSecondModelParameters(nodeSettings.secondModelParameters);
+    }
   }
 
   @Override
@@ -486,6 +521,7 @@ final class JoinerNodeModel extends
     }
 
     JoinerViewValue viewValue = getViewValue();
+    JoinerViewRepresentation representation = getViewRepresentation();
 
     if (viewValue.joinRelations != null && viewValue.joinRelations.length > 0) {
       File configFile = new File(settingsFolder, "JoinRelations.json");
@@ -505,19 +541,19 @@ final class JoinerNodeModel extends
       }
     }
 
-    if (viewValue.modelMath1 != null && !viewValue.modelMath1.isEmpty()) {
-      File configFile = new File(settingsFolder, "modelMath1.json");
+    if (representation != null && representation.getFirstModelParameters() != null) {
+      File configFile = new File(settingsFolder, "firstModelParameters.json");
       try {
-        FileUtils.writeStringToFile(configFile, viewValue.modelMath1, StandardCharsets.UTF_8);
+        MAPPER.writeValue(configFile, representation.getFirstModelParameters());
       } catch (IOException e) {
         // do nothing
       }
     }
 
-    if (viewValue.modelMath2 != null && !viewValue.modelMath2.isEmpty()) {
-      File configFile = new File(settingsFolder, "modelMath2.json");
+    if (representation != null && representation.getSecondModelParameters() != null) {
+      File configFile = new File(settingsFolder, "secondModelParameters.json");
       try {
-        FileUtils.writeStringToFile(configFile, viewValue.modelMath2, StandardCharsets.UTF_8);
+        MAPPER.writeValue(configFile, representation.getSecondModelParameters());
       } catch (IOException e) {
         // do nothing
       }

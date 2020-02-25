@@ -22,9 +22,6 @@ joiner = function () {
 
   let _metadata;
 
-  let _firstModelMath;
-  let _secondModelMath;
-
   let _firstModelParameterMap = {};
   let _secondModelParameterMap = {};
 
@@ -44,6 +41,8 @@ joiner = function () {
 
   view.init = function (representation, value) {
 
+    console.log(representation);
+
     _representation = representation;
     _value = value;
 
@@ -60,9 +59,6 @@ joiner = function () {
 
     _firstModelName = value.firstModelName;
     _secondModelName = value.secondModelName;
-
-    _firstModelMath = JSON.parse(value.modelMath1);
-    _secondModelMath = JSON.parse(value.modelMath2);
 
     _modelScriptTree = JSON.parse(value.modelScriptTree);
 
@@ -337,28 +333,26 @@ joiner = function () {
     window.firstPortMap = {};
     window.secondPortMap = {};
 
-    if (_firstModelMath) {
-      for (param of _firstModelMath.parameter) {
-        if (!_firstModelParameterMap[param.id]) {
-          let port = createPort(param.id, param.dataType);
-          if (param.classification === "INPUT" || param.classification === "CONSTANT") {
-            port.group = "in";
-            firstModelInputParameters.push(port);
-          } else {
-            port.group = "out";
-            firstModelOutputParameters.push(port);
-          }
-
-          window.firstPortMap[param.id] = port;
-          _firstModelParameterMap[param.id] = param;
+    for (param of _representation.firstModelParameters) {
+      if (!_firstModelParameterMap[param.id]) {
+        let port = createPort(param.id, param.dataType);
+        if (param.classification === "INPUT" || param.classification === "CONSTANT") {
+          port.group = "in";
+          firstModelInputParameters.push(port);
+        } else {
+          port.group = "out";
+          firstModelOutputParameters.push(port);
         }
+
+        window.firstPortMap[param.id] = port;
+        _firstModelParameterMap[param.id] = param;
       }
     }
 
     let secondModelInputParameters = [];
     let secondModelOutputParameters = [];
 
-    for (param of _secondModelMath.parameter) {
+    for (param of _representation.secondModelParameters) {
       if (!_firstModelParameterMap[param.id]) {
         let port = createPort(param.id, param.dataType);
         if (param.classification === "INPUT" || param.classification === "CONSTANT") {
