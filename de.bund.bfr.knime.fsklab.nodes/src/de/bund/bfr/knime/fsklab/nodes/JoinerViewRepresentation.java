@@ -18,31 +18,95 @@
  */
 package de.bund.bfr.knime.fsklab.nodes;
 
-import java.util.Random;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Objects;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.js.core.JSONViewContent;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import de.bund.bfr.knime.fsklab.FskPlugin;
+import de.bund.bfr.metadata.swagger.Parameter;
 
 
 @JsonAutoDetect
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 final class JoinerViewRepresentation extends JSONViewContent {
 
-  // no members to hash on
-  public final int pseudoIdentifier = (new Random()).nextInt();
+  private static final String CFG_MODEL1_PARAMETERS = "params1";
+  private static final String CFG_MODEL2_PARAMETERS = "params2";
+  private static final ObjectMapper MAPPER = FskPlugin.getDefault().MAPPER104;
+
+  private Parameter[] firstModelParameters;
+  private Parameter[] secondModelParameters;
+  
+  public Parameter[] getFirstModelParameters() {
+    return firstModelParameters;
+  }
+  
+  public void setFirstModelParameters(Parameter[] firstModelParameters) {
+    this.firstModelParameters = firstModelParameters;
+  }
+  
+  public Parameter[] getSecondModelParameters() {
+    return secondModelParameters;
+  }
+  
+  public void setSecondModelParameters(Parameter[] secondModelParameters) {
+    this.secondModelParameters = secondModelParameters;
+  }
 
   @Override
-  public void saveToNodeSettings(NodeSettingsWO settings) {}
+  public void saveToNodeSettings(NodeSettingsWO settings) {
+
+    if (firstModelParameters != null && firstModelParameters.length > 0) {
+      try {
+        String parametersAsString = MAPPER.writeValueAsString(firstModelParameters);
+        settings.addString(CFG_MODEL1_PARAMETERS, parametersAsString);
+      } catch (JsonProcessingException err) {
+        // do nothing
+      }
+    }
+
+    if (secondModelParameters != null && secondModelParameters.length > 0) {
+      try {
+        String parametersAsString = MAPPER.writeValueAsString(secondModelParameters);
+        settings.addString(CFG_MODEL2_PARAMETERS, parametersAsString);
+      } catch (JsonProcessingException err) {
+        // do nothing
+      }
+    }
+  }
 
   @Override
-  public void loadFromNodeSettings(NodeSettingsRO settings) throws InvalidSettingsException {}
+  public void loadFromNodeSettings(NodeSettingsRO settings) throws InvalidSettingsException {
+
+    if (settings.containsKey(CFG_MODEL1_PARAMETERS)) {
+      try {
+        firstModelParameters =
+            MAPPER.readValue(settings.getString(CFG_MODEL1_PARAMETERS), Parameter[].class);
+      } catch (IOException err) {
+        // do nothing
+      }
+    }
+
+    if (settings.containsKey(CFG_MODEL2_PARAMETERS)) {
+      try {
+        secondModelParameters =
+            MAPPER.readValue(settings.getString(CFG_MODEL2_PARAMETERS), Parameter[].class);
+      } catch (IOException err) {
+        // do nothing
+      }
+    }
+  }
 
   @Override
   public int hashCode() {
-    return pseudoIdentifier;
+    return Objects.hash(firstModelParameters, secondModelParameters);
   }
 
   @Override
@@ -56,6 +120,9 @@ final class JoinerViewRepresentation extends JSONViewContent {
     if (obj.getClass() != getClass()) {
       return false;
     }
-    return false; // maybe add other criteria here
+    
+    JoinerViewRepresentation other = (JoinerViewRepresentation)obj;
+    return Arrays.deepEquals(firstModelParameters, other.firstModelParameters) &&
+        Arrays.deepEquals(secondModelParameters, other.secondModelParameters);
   }
 }
