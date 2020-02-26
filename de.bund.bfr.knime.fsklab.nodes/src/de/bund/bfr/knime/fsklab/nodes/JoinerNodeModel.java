@@ -83,7 +83,8 @@ final class JoinerNodeModel extends
 
   private final JoinerNodeSettings nodeSettings = new JoinerNodeSettings();
 
-  private FskPortObject m_port;
+  private FskPortObject firstInputPort;
+  private FskPortObject secondInputPort;
 
   public final static String SUFFIX = "_dup";
 
@@ -141,6 +142,39 @@ final class JoinerNodeModel extends
   }
 
   @Override
+  public JoinerViewRepresentation getViewRepresentation() {
+    
+    JoinerViewRepresentation representation;
+    
+    synchronized (getLock()) {
+      representation = super.getViewRepresentation();
+      if (representation == null) {
+        representation = createEmptyViewRepresentation();
+      }
+
+      // Set first model parameters
+      if (representation.getFirstModelParameters() == null && firstInputPort != null) {
+        List<Parameter> firstModelParams = SwaggerUtil.getParameter(firstInputPort.modelMetadata);
+        if (firstModelParams != null && !firstModelParams.isEmpty()) {
+          representation.setFirstModelParameters(
+              firstModelParams.toArray(new Parameter[firstModelParams.size()]));
+        }
+      }
+
+      // Set second model parameters
+      if (representation.getSecondModelParameters() == null && secondInputPort != null) {
+        List<Parameter> secondModelParams = SwaggerUtil.getParameter(secondInputPort.modelMetadata);
+        if (secondModelParams != null && !secondModelParams.isEmpty()) {
+          representation.setSecondModelParameters(
+              secondModelParams.toArray(new Parameter[secondModelParams.size()]));
+        }
+      }
+    }
+
+    return representation;
+  }
+
+  @Override
   protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
     ImagePortObjectSpec imageSpec = new ImagePortObjectSpec(SvgCell.TYPE);
     return new PortObjectSpec[] {CombinedFskPortObjectSpec.INSTANCE, imageSpec};
@@ -156,6 +190,7 @@ final class JoinerNodeModel extends
 
     FskPortObject inObj1 = (FskPortObject) inObjects[0];
     FskPortObject inObj2 = (FskPortObject) inObjects[1];
+    setInternalPortObjects(inObjects);
 
     resolveParameterNamesConflict(inObj1, inObj2);
 
@@ -168,24 +203,6 @@ final class JoinerNodeModel extends
     // Clone input object
     synchronized (getLock()) {
       JoinerViewValue joinerProxyValue = getViewValue();
-      JoinerViewRepresentation representation = getViewRepresentation();
-
-      // Initialize representation if uninitialized
-      if (representation.getFirstModelParameters() == null
-          || representation.getSecondModelParameters() == null) {
-        
-        List<Parameter> firstModelParams = SwaggerUtil.getParameter(inObj1.modelMetadata);
-        if (firstModelParams != null && !firstModelParams.isEmpty()) {
-          representation.setFirstModelParameters(
-              firstModelParams.toArray(new Parameter[firstModelParams.size()]));
-        }
-
-        List<Parameter> secondModelParams = SwaggerUtil.getParameter(inObj2.modelMetadata);
-        if (secondModelParams != null && !secondModelParams.isEmpty()) {
-          representation.setSecondModelParameters(
-              secondModelParams.toArray(new Parameter[secondModelParams.size()]));
-        }
-      }
 
       // If not executed
       if (joinerProxyValue.modelMetaData == null) {
@@ -267,20 +284,6 @@ final class JoinerNodeModel extends
         combineParameters(SwaggerUtil.getParameter(inObj1.modelMetadata),
             SwaggerUtil.getParameter(inObj2.modelMetadata)));
     joinerProxyValue.modelMetaData = FromOjectToJSON(inObj2.modelMetadata);
-
-    JoinerViewRepresentation repr = getViewRepresentation();
-
-    List<Parameter> firstModelParams = SwaggerUtil.getParameter(inObj1.modelMetadata);
-    if (firstModelParams != null && !firstModelParams.isEmpty()) {
-      repr.setFirstModelParameters(
-          firstModelParams.toArray(new Parameter[firstModelParams.size()]));
-    }
-
-    List<Parameter> secondModelParams = SwaggerUtil.getParameter(inObj2.modelMetadata);
-    if (secondModelParams != null && !secondModelParams.isEmpty()) {
-      repr.setSecondModelParameters(
-          secondModelParams.toArray(new Parameter[secondModelParams.size()]));
-    }
   }
 
   // second visualization script is the script which draw and control the plotting!
@@ -407,10 +410,13 @@ final class JoinerNodeModel extends
   @Override
   protected void performReset() {
     createEmptyViewValue();
+    setViewRepresentation(null);
+
     nodeSettings.modelMetaData = "";
 
     nodeSettings.connections = null;
-    m_port = null;
+    firstInputPort = null;
+    secondInputPort = null;
   }
 
   @Override
@@ -593,12 +599,15 @@ final class JoinerNodeModel extends
 
   @Override
   public PortObject[] getInternalPortObjects() {
-    return new PortObject[] {m_port};
+    return new PortObject[] {firstInputPort, secondInputPort};
   }
 
   @Override
   public void setInternalPortObjects(PortObject[] portObjects) {
-    m_port = (FskPortObject) portObjects[0];
+    if (portObjects != null && portObjects.length == 2) {
+      firstInputPort = (FskPortObject) portObjects[0];
+      secondInputPort = (FskPortObject) portObjects[1];
+    }
   }
 
   public void setHideInWizard(boolean hide) {}
