@@ -43,6 +43,7 @@ import javax.json.JsonObjectBuilder;
 import javax.json.JsonReader;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.knime.base.data.xml.SvgCell;
 import org.knime.base.data.xml.SvgImageContent;
 import org.knime.core.node.CanceledExecutionException;
@@ -540,7 +541,7 @@ final class JoinerNodeModel extends
     JoinerViewValue viewValue = getViewValue();
     JoinerViewRepresentation representation = getViewRepresentation();
 
-    if (viewValue.joinRelations != null && viewValue.joinRelations.length > 0) {
+    if (ArrayUtils.isNotEmpty(viewValue.joinRelations)) {
       File configFile = new File(settingsFolder, "JoinRelations.json");
       try {
         MAPPER.writeValue(configFile, viewValue.joinRelations);
@@ -549,7 +550,7 @@ final class JoinerNodeModel extends
       }
     }
 
-    if (viewValue.modelMetaData != null && !viewValue.modelMetaData.isEmpty()) {
+    if (StringUtils.isNotEmpty(viewValue.modelMetaData)) {
       File configFile = new File(settingsFolder, "modelMetaData.json");
       try {
         FileUtils.writeStringToFile(configFile, viewValue.modelMetaData, StandardCharsets.UTF_8);
@@ -558,7 +559,7 @@ final class JoinerNodeModel extends
       }
     }
 
-    if (representation != null && representation.getFirstModelParameters() != null) {
+    if (ArrayUtils.isNotEmpty(representation.getFirstModelParameters())) {
       File configFile = new File(settingsFolder, "firstModelParameters.json");
       try {
         MAPPER.writeValue(configFile, representation.getFirstModelParameters());
@@ -567,7 +568,7 @@ final class JoinerNodeModel extends
       }
     }
 
-    if (representation != null && representation.getSecondModelParameters() != null) {
+    if (ArrayUtils.isNotEmpty(representation.getSecondModelParameters())) {
       File configFile = new File(settingsFolder, "secondModelParameters.json");
       try {
         MAPPER.writeValue(configFile, representation.getSecondModelParameters());
@@ -576,7 +577,7 @@ final class JoinerNodeModel extends
       }
     }
 
-    if (viewValue.modelScriptTree != null && !viewValue.modelScriptTree.isEmpty()) {
+    if (StringUtils.isNotEmpty(viewValue.modelScriptTree)) {
       File configFile = new File(settingsFolder, "sourceTree.json");
       try {
         FileUtils.writeStringToFile(configFile, viewValue.modelScriptTree, StandardCharsets.UTF_8);
@@ -585,7 +586,7 @@ final class JoinerNodeModel extends
       }
     }
 
-    if (representation != null && !representation.getSecondModelViz().isEmpty()) {
+    if (StringUtils.isNotEmpty(representation.getSecondModelViz())) {
       File configFile = new File(settingsFolder, "visualization.txt");
       try {
         FileUtils.writeStringToFile(configFile, representation.getSecondModelViz(),
