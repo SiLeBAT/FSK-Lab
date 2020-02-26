@@ -25,9 +25,6 @@ joiner = function () {
   let _firstModelParameterMap = {};
   let _secondModelParameterMap = {};
 
-  let _firstModelName;
-  let _secondModelName;
-
   let _handler;
 
   let _firstModelScriptMirror;
@@ -40,8 +37,6 @@ joiner = function () {
   window.joinRelationsMap = {};
 
   view.init = function (representation, value) {
-
-    console.log(representation);
 
     _representation = representation;
     _value = value;
@@ -56,9 +51,6 @@ joiner = function () {
         modelMath: {}
       };
     }
-
-    _firstModelName = value.firstModelName;
-    _secondModelName = value.secondModelName;
 
     _modelScriptTree = JSON.parse(value.modelScriptTree);
 
@@ -372,7 +364,7 @@ joiner = function () {
     let paperWidth = canvas.width();
     let firstModelHeight = Math.max(firstModelInputParameters.length, firstModelOutputParameters.length) * 25;
 
-    let firstModelNameWrap = joint.util.breakText(_firstModelName, {
+    let firstModelNameWrap = joint.util.breakText(_representation.firstModelName, {
       width: 200,
       height: firstModelHeight
     });
@@ -382,7 +374,7 @@ joiner = function () {
       firstModelOutputParameters);
 
     let secondModelHeight = Math.max(secondModelInputParameters.length, secondModelOutputParameters.length) * 25;
-    let secondModelNameWrap = joint.util.breakText(_secondModelName, {
+    let secondModelNameWrap = joint.util.breakText(_representation.secondModelName, {
       width: 200,
       height: secondModelHeight
     });

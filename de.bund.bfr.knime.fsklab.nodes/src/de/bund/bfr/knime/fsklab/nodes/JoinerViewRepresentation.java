@@ -39,25 +39,45 @@ final class JoinerViewRepresentation extends JSONViewContent {
 
   private static final String CFG_MODEL1_PARAMETERS = "params1";
   private static final String CFG_MODEL2_PARAMETERS = "params2";
+  private static final String CFG_FIRST_MODEL_NAME = "firstModelName";
+  private static final String CFG_SECOND_MODEL_NAME = "secondModelName";
   private static final ObjectMapper MAPPER = FskPlugin.getDefault().MAPPER104;
 
   private Parameter[] firstModelParameters;
   private Parameter[] secondModelParameters;
-  
+  private String firstModelName;
+  private String secondModelName;
+
   public Parameter[] getFirstModelParameters() {
     return firstModelParameters;
   }
-  
+
   public void setFirstModelParameters(Parameter[] firstModelParameters) {
     this.firstModelParameters = firstModelParameters;
   }
-  
+
   public Parameter[] getSecondModelParameters() {
     return secondModelParameters;
   }
-  
+
   public void setSecondModelParameters(Parameter[] secondModelParameters) {
     this.secondModelParameters = secondModelParameters;
+  }
+
+  public String getFirstModelName() {
+    return firstModelName;
+  }
+
+  public void setFirstModelName(String firstModelName) {
+    this.firstModelName = firstModelName;
+  }
+
+  public String getSecondModelName() {
+    return secondModelName;
+  }
+
+  public void setSecondModelName(String secondModelName) {
+    this.secondModelName = secondModelName;
   }
 
   @Override
@@ -80,6 +100,9 @@ final class JoinerViewRepresentation extends JSONViewContent {
         // do nothing
       }
     }
+
+    settings.addString(CFG_FIRST_MODEL_NAME, firstModelName);
+    settings.addString(CFG_SECOND_MODEL_NAME, secondModelName);
   }
 
   @Override
@@ -102,11 +125,15 @@ final class JoinerViewRepresentation extends JSONViewContent {
         // do nothing
       }
     }
+
+    firstModelName = settings.getString(CFG_FIRST_MODEL_NAME);
+    secondModelName = settings.getString(CFG_SECOND_MODEL_NAME);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(firstModelParameters, secondModelParameters);
+    return Objects.hash(firstModelParameters, secondModelParameters, firstModelName,
+        secondModelName);
   }
 
   @Override
@@ -120,9 +147,11 @@ final class JoinerViewRepresentation extends JSONViewContent {
     if (obj.getClass() != getClass()) {
       return false;
     }
-    
-    JoinerViewRepresentation other = (JoinerViewRepresentation)obj;
-    return Arrays.deepEquals(firstModelParameters, other.firstModelParameters) &&
-        Arrays.deepEquals(secondModelParameters, other.secondModelParameters);
+
+    JoinerViewRepresentation other = (JoinerViewRepresentation) obj;
+    return Arrays.deepEquals(firstModelParameters, other.firstModelParameters)
+        && Arrays.deepEquals(secondModelParameters, other.secondModelParameters)
+        && firstModelName.equals(other.firstModelName)
+        && secondModelName.equals(other.secondModelName);
   }
 }

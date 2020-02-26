@@ -44,8 +44,6 @@ class JoinerViewValue extends JSONViewContent {
   private static final String CFG_JOINER_RELATION = "joinRelation";
   private static final String CFG_JSON_REPRESENTATION = "JSONRepresentation";
   private static final String CFG_MODELSCRIPT_TREE = "ModelScriptTree";
-  private static final String CFG_FIRST_MODEL_NAME = "firstModelName";
-  private static final String CFG_SECOND_MODEL_NAME = "secondModelName";
 
   private final int pseudoIdentifier = (new Random()).nextInt();
   private final ObjectMapper MAPPER = FskPlugin.getDefault().MAPPER104;
@@ -59,15 +57,12 @@ class JoinerViewValue extends JSONViewContent {
   public String jsonRepresentation;
   public String svgRepresentation;
   public String modelScriptTree;
-  public String firstModelName;
-  public String secondModelName;
+
   public String different;
   public String modelType;
 
   @Override
   public void saveToNodeSettings(NodeSettingsWO settings) {
-    settings.addString(CFG_FIRST_MODEL_NAME, firstModelName);
-    settings.addString(CFG_SECOND_MODEL_NAME, secondModelName);
     settings.addString(CFG_ORIGINAL_MODEL_SCRIPT, firstModelScript);
     settings.addString(CFG_ORIGINAL_VISUALIZATION_SCRIPT, firstModelViz);
     settings.addString(CFG_ORIGINAL_MODEL_SCRIPT2, secondModelScript);
@@ -92,8 +87,6 @@ class JoinerViewValue extends JSONViewContent {
 
   @Override
   public void loadFromNodeSettings(NodeSettingsRO settings) throws InvalidSettingsException {
-    firstModelName = settings.getString(CFG_FIRST_MODEL_NAME);
-    secondModelName = settings.getString(CFG_SECOND_MODEL_NAME);
     firstModelScript = settings.getString(CFG_ORIGINAL_MODEL_SCRIPT);
     firstModelViz = settings.getString(CFG_ORIGINAL_VISUALIZATION_SCRIPT);
     secondModelScript = settings.getString(CFG_ORIGINAL_MODEL_SCRIPT2);

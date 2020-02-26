@@ -169,6 +169,14 @@ final class JoinerNodeModel extends
               secondModelParams.toArray(new Parameter[secondModelParams.size()]));
         }
       }
+      
+      if (representation.getFirstModelName() == null && firstInputPort != null) {
+        representation.setFirstModelName(SwaggerUtil.getModelName(firstInputPort.modelMetadata));
+      }
+      
+      if (representation.getSecondModelName() == null && secondInputPort != null) {
+        representation.setSecondModelName(SwaggerUtil.getModelName(secondInputPort.modelMetadata));
+      }
     }
 
     return representation;
@@ -208,8 +216,6 @@ final class JoinerNodeModel extends
       if (joinerProxyValue.modelMetaData == null) {
         joinerProxyValue.modelScriptTree = buildModelscriptAsTree(inObj1, inObj2);
 
-        joinerProxyValue.firstModelName = SwaggerUtil.getModelName(inObj1.modelMetadata);
-        joinerProxyValue.secondModelName = SwaggerUtil.getModelName(inObj2.modelMetadata);
         loadJsonSetting();
         if (joinerProxyValue.modelMetaData == null) {
           loadFromPorts(inObj1, inObj2, joinerProxyValue);
@@ -391,12 +397,9 @@ final class JoinerNodeModel extends
   }
 
   private static String FromOjectToJSON(final Object Object) throws JsonProcessingException {
-
-
     ObjectMapper objectMapper = FskPlugin.getDefault().OBJECT_MAPPER;
     String jsonStr = objectMapper.writeValueAsString(Object);
     return jsonStr;
-
   }
 
   private static <T> T getObjectFromJson(String jsonStr, Class<T> valueType)
