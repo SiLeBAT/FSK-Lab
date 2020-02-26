@@ -40,13 +40,21 @@ final class JoinerViewRepresentation extends JSONViewContent {
   private static final String CFG_MODEL1_PARAMETERS = "params1";
   private static final String CFG_MODEL2_PARAMETERS = "params2";
   private static final String CFG_FIRST_MODEL_NAME = "firstModelName";
+  private static final String CFG_FIRST_MODEL_SCRIPT = "firstModelScript";
+  private static final String CFG_FIRST_MODEL_VISUALIZATION = "firstModelViz";
   private static final String CFG_SECOND_MODEL_NAME = "secondModelName";
+  private static final String CFG_SECOND_MODEL_SCRIPT = "secondModelScript";
+  private static final String CFG_SECOND_MODEL_VISUALIZATION = "secondModelViz";
   private static final ObjectMapper MAPPER = FskPlugin.getDefault().MAPPER104;
 
   private Parameter[] firstModelParameters;
   private Parameter[] secondModelParameters;
   private String firstModelName;
+  private String firstModelScript;
+  private String firstModelViz;
   private String secondModelName;
+  private String secondModelScript;
+  private String secondModelViz;
 
   public Parameter[] getFirstModelParameters() {
     return firstModelParameters;
@@ -80,6 +88,38 @@ final class JoinerViewRepresentation extends JSONViewContent {
     this.secondModelName = secondModelName;
   }
 
+  public String getFirstModelScript() {
+    return firstModelScript;
+  }
+
+  public void setFirstModelScript(String firstModelScript) {
+    this.firstModelScript = firstModelScript;
+  }
+
+  public String getFirstModelViz() {
+    return firstModelViz;
+  }
+
+  public void setFirstModelViz(String firstModelViz) {
+    this.firstModelViz = firstModelViz;
+  }
+
+  public String getSecondModelScript() {
+    return secondModelScript;
+  }
+
+  public void setSecondModelScript(String secondModelScript) {
+    this.secondModelScript = secondModelScript;
+  }
+
+  public String getSecondModelViz() {
+    return secondModelViz;
+  }
+
+  public void setSecondModelViz(String secondModelViz) {
+    this.secondModelViz = secondModelViz;
+  }
+
   @Override
   public void saveToNodeSettings(NodeSettingsWO settings) {
 
@@ -102,7 +142,11 @@ final class JoinerViewRepresentation extends JSONViewContent {
     }
 
     settings.addString(CFG_FIRST_MODEL_NAME, firstModelName);
+    settings.addString(CFG_FIRST_MODEL_SCRIPT, firstModelScript);
+    settings.addString(CFG_FIRST_MODEL_VISUALIZATION, firstModelViz);
     settings.addString(CFG_SECOND_MODEL_NAME, secondModelName);
+    settings.addString(CFG_SECOND_MODEL_SCRIPT, secondModelScript);
+    settings.addString(CFG_SECOND_MODEL_VISUALIZATION, secondModelViz);
   }
 
   @Override
@@ -127,13 +171,17 @@ final class JoinerViewRepresentation extends JSONViewContent {
     }
 
     firstModelName = settings.getString(CFG_FIRST_MODEL_NAME);
+    firstModelScript = settings.getString(CFG_FIRST_MODEL_SCRIPT);
+    firstModelViz = settings.getString(CFG_FIRST_MODEL_VISUALIZATION);
     secondModelName = settings.getString(CFG_SECOND_MODEL_NAME);
+    secondModelScript = settings.getString(CFG_SECOND_MODEL_SCRIPT);
+    secondModelViz = settings.getString(CFG_SECOND_MODEL_VISUALIZATION);
   }
 
   @Override
   public int hashCode() {
     return Objects.hash(firstModelParameters, secondModelParameters, firstModelName,
-        secondModelName);
+        firstModelScript, firstModelViz, secondModelName, secondModelScript, secondModelViz);
   }
 
   @Override
@@ -152,6 +200,10 @@ final class JoinerViewRepresentation extends JSONViewContent {
     return Arrays.deepEquals(firstModelParameters, other.firstModelParameters)
         && Arrays.deepEquals(secondModelParameters, other.secondModelParameters)
         && firstModelName.equals(other.firstModelName)
-        && secondModelName.equals(other.secondModelName);
+        && firstModelScript.equals(other.firstModelScript)
+        && firstModelViz.equals(other.firstModelViz)
+        && secondModelName.equals(other.secondModelName)
+        && secondModelScript.equals(other.secondModelScript)
+        && secondModelViz.equals(other.secondModelViz);
   }
 }

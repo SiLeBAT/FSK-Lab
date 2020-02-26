@@ -36,10 +36,6 @@ class JoinerViewValue extends JSONViewContent {
   private static final NodeLogger LOGGER = NodeLogger.getLogger(JoinerViewValue.class);
 
   // Configuration keys
-  private static final String CFG_ORIGINAL_MODEL_SCRIPT = "originalModelScript";
-  private static final String CFG_ORIGINAL_VISUALIZATION_SCRIPT = "originalVisualizationScript";
-  private static final String CFG_ORIGINAL_MODEL_SCRIPT2 = "originalModelScript2";
-  private static final String CFG_ORIGINAL_VISUALIZATION_SCRIPT2 = "originalVisualizationScript2";
   private static final String CFG_MODEL_METADATA = "ModelMetaData";
   private static final String CFG_JOINER_RELATION = "joinRelation";
   private static final String CFG_JSON_REPRESENTATION = "JSONRepresentation";
@@ -48,10 +44,6 @@ class JoinerViewValue extends JSONViewContent {
   private final int pseudoIdentifier = (new Random()).nextInt();
   private final ObjectMapper MAPPER = FskPlugin.getDefault().MAPPER104;
 
-  public String firstModelScript;
-  public String secondModelScript;
-  public String firstModelViz;
-  public String secondModelViz;
   public String modelMetaData;
   public JoinRelation[] joinRelations;
   public String jsonRepresentation;
@@ -63,10 +55,6 @@ class JoinerViewValue extends JSONViewContent {
 
   @Override
   public void saveToNodeSettings(NodeSettingsWO settings) {
-    settings.addString(CFG_ORIGINAL_MODEL_SCRIPT, firstModelScript);
-    settings.addString(CFG_ORIGINAL_VISUALIZATION_SCRIPT, firstModelViz);
-    settings.addString(CFG_ORIGINAL_MODEL_SCRIPT2, secondModelScript);
-    settings.addString(CFG_ORIGINAL_VISUALIZATION_SCRIPT2, secondModelViz);
 
     // Add joinRelations as string
     if (joinRelations != null) {
@@ -87,10 +75,6 @@ class JoinerViewValue extends JSONViewContent {
 
   @Override
   public void loadFromNodeSettings(NodeSettingsRO settings) throws InvalidSettingsException {
-    firstModelScript = settings.getString(CFG_ORIGINAL_MODEL_SCRIPT);
-    firstModelViz = settings.getString(CFG_ORIGINAL_VISUALIZATION_SCRIPT);
-    secondModelScript = settings.getString(CFG_ORIGINAL_MODEL_SCRIPT2);
-    secondModelViz = settings.getString(CFG_ORIGINAL_VISUALIZATION_SCRIPT2);
     
     // Read relations as string
     String relationsAsString = settings.getString(CFG_JOINER_RELATION);

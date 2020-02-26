@@ -143,9 +143,9 @@ final class JoinerNodeModel extends
 
   @Override
   public JoinerViewRepresentation getViewRepresentation() {
-    
+
     JoinerViewRepresentation representation;
-    
+
     synchronized (getLock()) {
       representation = super.getViewRepresentation();
       if (representation == null) {
@@ -169,13 +169,40 @@ final class JoinerNodeModel extends
               secondModelParams.toArray(new Parameter[secondModelParams.size()]));
         }
       }
-      
-      if (representation.getFirstModelName() == null && firstInputPort != null) {
-        representation.setFirstModelName(SwaggerUtil.getModelName(firstInputPort.modelMetadata));
+
+      if (firstInputPort != null) {
+
+        if (representation.getFirstModelName() == null) {
+          representation.setFirstModelName(SwaggerUtil.getModelName(firstInputPort.modelMetadata));
+        }
+
+        if (representation.getFirstModelScript() == null) {
+          representation.setFirstModelScript(firstInputPort.model);
+        }
+
+        if (representation.getFirstModelViz() == null) {
+          representation.setFirstModelViz(firstInputPort.viz);
+        }
       }
-      
-      if (representation.getSecondModelName() == null && secondInputPort != null) {
-        representation.setSecondModelName(SwaggerUtil.getModelName(secondInputPort.modelMetadata));
+
+      if (secondInputPort != null) {
+
+        if (representation.getSecondModelName() == null) {
+          representation
+              .setSecondModelName(SwaggerUtil.getModelName(secondInputPort.modelMetadata));
+        }
+
+        if (representation.getSecondModelScript() == null) {
+          representation.setSecondModelScript(secondInputPort.model);
+        }
+
+        if (representation.getSecondModelViz() == null) {
+          if (secondInputPort instanceof CombinedFskPortObject) {
+            representation.setSecondModelViz(extractSecondObjectVis(secondInputPort));
+          } else {
+            representation.setSecondModelViz(secondInputPort.viz);
+          }
+        }
       }
     }
 
@@ -221,23 +248,6 @@ final class JoinerNodeModel extends
           loadFromPorts(inObj1, inObj2, joinerProxyValue);
         }
 
-        joinerProxyValue.firstModelScript = inObj1.model;
-        joinerProxyValue.firstModelViz = inObj1.viz;
-        joinerProxyValue.secondModelScript = inObj2.model;
-
-        if (!StringUtils.isNotBlank(joinerProxyValue.secondModelViz)) {
-          if (!(inObj2 instanceof CombinedFskPortObject)) {
-            joinerProxyValue.secondModelViz = inObj2.viz;
-
-          } else {
-            /*
-             * extract the visualization script of the second model which may be also an joined
-             * object!
-             */
-            joinerProxyValue.secondModelViz = extractSecondObjectVis(inObj2);
-          }
-        }
-
         exec.setProgress(1);
       }
 
@@ -258,8 +268,6 @@ final class JoinerNodeModel extends
       } else {
         joinerProxyValue.modelScriptTree = buildModelscriptAsTree(inObj1, inObj2);
       }
-
-      inObj2.viz = joinerProxyValue.secondModelViz;
 
       Set<String> packageSet = new HashSet<>();
       packageSet.addAll(inObj1.packages);
@@ -508,7 +516,6 @@ final class JoinerNodeModel extends
     viewValue.joinRelations = nodeSettings.connections;
     viewValue.modelMetaData = nodeSettings.modelMetaData;
     viewValue.modelScriptTree = sourceTree;
-    viewValue.secondModelViz = visualizationScript;
 
     JoinerViewRepresentation representation = getViewRepresentation();
     if (nodeSettings.firstModelParameters != null) {
@@ -517,6 +524,7 @@ final class JoinerNodeModel extends
     if (nodeSettings.secondModelParameters != null) {
       representation.setSecondModelParameters(nodeSettings.secondModelParameters);
     }
+    representation.setSecondModelViz(visualizationScript);
   }
 
   @Override
@@ -577,10 +585,11 @@ final class JoinerNodeModel extends
       }
     }
 
-    if (viewValue.secondModelViz != null && !viewValue.secondModelViz.isEmpty()) {
+    if (representation != null && !representation.getSecondModelViz().isEmpty()) {
       File configFile = new File(settingsFolder, "visualization.txt");
       try {
-        FileUtils.writeStringToFile(configFile, viewValue.secondModelViz, StandardCharsets.UTF_8);
+        FileUtils.writeStringToFile(configFile, representation.getSecondModelViz(),
+            StandardCharsets.UTF_8);
       } catch (IOException e) {
         // do nothing
       }

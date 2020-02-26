@@ -149,19 +149,19 @@ joiner = function () {
 
     <!-- Add code panels -->
     <div role="tabpanel" class="tab-pane" id="modelScriptA">
-      <textarea id="modelScriptAArea">${_value.firstModelScript}</textarea>
+      <textarea id="modelScriptAArea">${_representation.firstModelScript}</textarea>
     </div>
     
     <div role="tabpanel" class="tab-pane" id="modelScriptB">
-     <textarea id="modelScriptBArea">${_value.secondModelScript}</textarea>
+     <textarea id="modelScriptBArea">${_representation.secondModelScript}</textarea>
     </div>
 
     <div role="tabpanel" class="tab-pane" id="visualizationScriptA">
-      <textarea id="visualizationScriptAArea">${_value.firstModelViz}</textarea>
+      <textarea id="visualizationScriptAArea">${_representation.firstModelViz}</textarea>
     </div>
 
     <div role="tabpanel" class="tab-pane" id="visualizationScriptB">
-      <textarea id="visualizationScriptBArea">${_value.secondModelViz}</textarea>
+      <textarea id="visualizationScriptBArea">${_representation.secondModelViz}</textarea>
     </div>
 
    </div> <!-- viewContent -->
