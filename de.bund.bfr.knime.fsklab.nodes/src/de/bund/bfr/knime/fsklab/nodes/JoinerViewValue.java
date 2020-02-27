@@ -20,9 +20,7 @@ package de.bund.bfr.knime.fsklab.nodes;
 
 import java.io.IOException;
 import java.util.Random;
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.knime.core.node.InvalidSettingsException;
-import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.js.core.JSONViewContent;
@@ -32,8 +30,6 @@ import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.JoinRelation;
 
 class JoinerViewValue extends JSONViewContent {
-
-  private static final NodeLogger LOGGER = NodeLogger.getLogger(JoinerViewValue.class);
 
   // Configuration keys
   private static final String CFG_MODEL_METADATA = "ModelMetaData";
@@ -67,9 +63,7 @@ class JoinerViewValue extends JSONViewContent {
 
     settings.addString(CFG_JSON_REPRESENTATION, jsonRepresentation);
     settings.addString(CFG_MODELSCRIPT_TREE, modelScriptTree);
-    if (modelMetaData != null) {
-      saveSettings(settings, CFG_MODEL_METADATA, modelMetaData);
-    }
+    settings.addString(CFG_MODEL_METADATA, modelMetaData);
   }
 
   @Override
@@ -87,30 +81,7 @@ class JoinerViewValue extends JSONViewContent {
     
     jsonRepresentation = settings.getString(CFG_JSON_REPRESENTATION);
     modelScriptTree = settings.getString(CFG_MODELSCRIPT_TREE);
-    // load meta data
-    if (settings.containsKey(CFG_MODEL_METADATA)) {
-      modelMetaData = getEObject(settings, CFG_MODEL_METADATA);
-    }
-  }
-
-  private static void saveSettings(final NodeSettingsWO settings, final String key,
-      final String eObject) {
-
-    try {
-      ObjectMapper objectMapper = FskPlugin.getDefault().OBJECT_MAPPER;
-      String jsonStr = objectMapper.writeValueAsString(eObject);
-      settings.addString(key, jsonStr);
-    } catch (JsonProcessingException exception) {
-      LOGGER.warn("Error saving " + key);
-    }
-  }
-
-  private static String getEObject(NodeSettingsRO settings, String key)
-      throws InvalidSettingsException {
-    String jsonStr = settings.getString(key);
-    jsonStr = StringEscapeUtils.unescapeJson(jsonStr);
-    jsonStr = jsonStr.substring(1, jsonStr.length() - 1);
-    return jsonStr;
+    modelMetaData = settings.getString(CFG_MODEL_METADATA);
   }
 
   @Override
