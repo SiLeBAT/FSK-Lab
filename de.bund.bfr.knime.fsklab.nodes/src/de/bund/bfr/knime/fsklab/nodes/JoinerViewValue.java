@@ -51,7 +51,6 @@ class JoinerViewValue extends JSONViewContent {
   public String modelScriptTree;
 
   public String different;
-  public String modelType;
 
   @Override
   public void saveToNodeSettings(NodeSettingsWO settings) {

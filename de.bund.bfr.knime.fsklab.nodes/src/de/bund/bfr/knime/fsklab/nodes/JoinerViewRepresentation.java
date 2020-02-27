@@ -55,6 +55,7 @@ final class JoinerViewRepresentation extends JSONViewContent {
   private String secondModelName;
   private String secondModelScript;
   private String secondModelViz;
+  private String modelType;
 
   public Parameter[] getFirstModelParameters() {
     return firstModelParameters;
@@ -120,6 +121,14 @@ final class JoinerViewRepresentation extends JSONViewContent {
     this.secondModelViz = secondModelViz;
   }
 
+  public String getModelType() {
+    return modelType;
+  }
+
+  public void setModelType(String modelType) {
+    this.modelType = modelType;
+  }
+
   @Override
   public void saveToNodeSettings(NodeSettingsWO settings) {
 
@@ -181,7 +190,8 @@ final class JoinerViewRepresentation extends JSONViewContent {
   @Override
   public int hashCode() {
     return Objects.hash(firstModelParameters, secondModelParameters, firstModelName,
-        firstModelScript, firstModelViz, secondModelName, secondModelScript, secondModelViz);
+        firstModelScript, firstModelViz, secondModelName, secondModelScript, secondModelViz,
+        modelType);
   }
 
   @Override
@@ -204,6 +214,7 @@ final class JoinerViewRepresentation extends JSONViewContent {
         && firstModelViz.equals(other.firstModelViz)
         && secondModelName.equals(other.secondModelName)
         && secondModelScript.equals(other.secondModelScript)
-        && secondModelViz.equals(other.secondModelViz);
+        && secondModelViz.equals(other.secondModelViz)
+        && modelType.equals(other.modelType);
   }
 }

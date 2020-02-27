@@ -204,6 +204,8 @@ final class JoinerNodeModel extends
             representation.setSecondModelViz(secondInputPort.viz);
           }
         }
+        
+        representation.setModelType(secondInputPort.modelMetadata.getModelType());
       }
     }
 
@@ -261,7 +263,6 @@ final class JoinerNodeModel extends
       // Consider Here that the model type is the same as the second model
       outObj.modelMetadata = getObjectFromJson(joinerProxyValue.modelMetaData,
           SwaggerUtil.modelClasses.get(inObj2.modelMetadata.getModelType()));
-      joinerProxyValue.modelType = inObj2.modelMetadata.getModelType();
 
       if (StringUtils.isNotEmpty(joinerProxyValue.modelScriptTree)) {
         JsonArray scriptTree = getScriptArray(joinerProxyValue.modelScriptTree);
