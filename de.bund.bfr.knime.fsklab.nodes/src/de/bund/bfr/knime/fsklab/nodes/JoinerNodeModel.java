@@ -63,9 +63,7 @@ import org.knime.core.node.workflow.NodeContainer;
 import org.knime.core.node.workflow.NodeContext;
 import org.knime.core.util.FileUtil;
 import org.knime.js.core.node.AbstractWizardNodeModel;
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.CombinedFskPortObject;
 import de.bund.bfr.knime.fsklab.CombinedFskPortObjectSpec;
@@ -204,7 +202,7 @@ final class JoinerNodeModel extends
             representation.setSecondModelViz(secondInputPort.viz);
           }
         }
-        
+
         representation.setModelType(secondInputPort.modelMetadata.getModelType());
       }
     }
@@ -261,7 +259,7 @@ final class JoinerNodeModel extends
       }
 
       // Consider Here that the model type is the same as the second model
-      outObj.modelMetadata = getObjectFromJson(joinerProxyValue.modelMetaData,
+      outObj.modelMetadata = MAPPER.readValue(joinerProxyValue.modelMetaData,
           SwaggerUtil.modelClasses.get(inObj2.modelMetadata.getModelType()));
 
       if (StringUtils.isNotEmpty(joinerProxyValue.modelScriptTree)) {
@@ -299,7 +297,8 @@ final class JoinerNodeModel extends
     SwaggerUtil.setParameter(inObj2.modelMetadata,
         combineParameters(SwaggerUtil.getParameter(inObj1.modelMetadata),
             SwaggerUtil.getParameter(inObj2.modelMetadata)));
-    joinerProxyValue.modelMetaData = FromOjectToJSON(inObj2.modelMetadata);
+
+    joinerProxyValue.modelMetaData = MAPPER.writeValueAsString(inObj2.modelMetadata);
   }
 
   // second visualization script is the script which draw and control the plotting!
@@ -404,20 +403,6 @@ final class JoinerNodeModel extends
 
     return imagePort;
 
-  }
-
-  private static String FromOjectToJSON(final Object Object) throws JsonProcessingException {
-    ObjectMapper objectMapper = FskPlugin.getDefault().OBJECT_MAPPER;
-    String jsonStr = objectMapper.writeValueAsString(Object);
-    return jsonStr;
-  }
-
-  private static <T> T getObjectFromJson(String jsonStr, Class<T> valueType)
-      throws InvalidSettingsException, JsonParseException, JsonMappingException, IOException {
-    ObjectMapper mapper = FskPlugin.getDefault().OBJECT_MAPPER;
-    Object object = mapper.readValue(jsonStr, valueType);
-
-    return valueType.cast(object);
   }
 
   @Override
