@@ -27,7 +27,8 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations,
  org.knime.json,
  org.slf4j.api,
  org.knime.python2,
- de.bund.bfr.formats
+ de.bund.bfr.formats,
+ com.google.gson
 Bundle-Vendor: German Federal Institute for Risk Assessment (BfR)
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: de.bund.bfr.knime.fsklab.FskPlugin
@@ -47,22 +48,25 @@ Bundle-ClassPath: .,
  libs/fskml-1.0.13.jar
 Export-Package: de.bund.bfr.knime.fsklab;
   uses:="org.osgi.framework,
-   org.emfjson.jackson.resource,
+   javax.swing.tree,
    com.fasterxml.jackson.databind,
-   org.eclipse.ui.plugin",
+   org.knime.core.node,
+   org.eclipse.ui.plugin,
+   de.bund.bfr.metadata.swagger,
+   org.knime.core.node.port",
  de.bund.bfr.knime.fsklab.features;uses:="org.togglz.core.manager,org.togglz.core.spi,org.togglz.core",
  de.bund.bfr.knime.fsklab.nodes;
   uses:="de.bund.bfr.knime.fsklab,
    org.knime.base.node.util.exttool,
    metadata,
+   de.bund.bfr.knime.fsklab.nodes.plot,
    javax.swing.table,
    org.knime.js.core,
-   org.knime.core.node.port.image,
    org.knime.js.core.node,
    org.apache.poi.ss.usermodel,
    org.knime.python2.kernel,
+   org.knime.core.util,
    org.knime.core.node,
-   javax.json,
    org.knime.core.node.workflow,
    org.sbml.jsbml.ext.comp,
    org.knime.core.node.web,
@@ -70,6 +74,6 @@ Export-Package: de.bund.bfr.knime.fsklab;
    org.knime.core.node.wizard,
    org.sbml.jsbml,
    de.unirostock.sems.cbarchive,
-   de.bund.bfr.knime.fsklab.r.client,
-   javax.swing",
- de.bund.bfr.knime.fsklab.nodes.plot;uses:="de.bund.bfr.knime.fsklab.r.client"
+   javax.swing,
+   de.bund.bfr.knime.fsklab.r.client",
+ de.bund.bfr.knime.fsklab.nodes.plot;uses:="org.knime.python2.kernel,de.bund.bfr.knime.fsklab.r.client"
