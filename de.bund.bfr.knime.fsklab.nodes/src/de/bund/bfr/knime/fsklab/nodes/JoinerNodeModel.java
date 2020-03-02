@@ -18,10 +18,8 @@
  */
 package de.bund.bfr.knime.fsklab.nodes;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -45,7 +43,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.knime.base.data.xml.SvgCell;
-import org.knime.base.data.xml.SvgImageContent;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
@@ -62,7 +59,7 @@ import org.knime.core.node.workflow.FlowVariable;
 import org.knime.core.node.workflow.NodeContainer;
 import org.knime.core.node.workflow.NodeContext;
 import org.knime.core.util.FileUtil;
-import org.knime.js.core.node.AbstractWizardNodeModel;
+import org.knime.js.core.node.AbstractSVGWizardNodeModel;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.CombinedFskPortObject;
@@ -77,8 +74,9 @@ import metadata.SwaggerUtil;
 /**
  * Fsk Joiner node model.
  */
-final class JoinerNodeModel extends
-    AbstractWizardNodeModel<JoinerViewRepresentation, JoinerViewValue> implements PortObjectHolder {
+final class JoinerNodeModel
+    extends AbstractSVGWizardNodeModel<JoinerViewRepresentation, JoinerViewValue>
+    implements PortObjectHolder {
 
   private final JoinerNodeSettings nodeSettings = new JoinerNodeSettings();
 
@@ -216,89 +214,13 @@ final class JoinerNodeModel extends
     return new PortObjectSpec[] {CombinedFskPortObjectSpec.INSTANCE, imageSpec};
   }
 
-  @Override
-  protected PortObject[] performExecute(PortObject[] inObjects, ExecutionContext exec)
-      throws Exception {
+  private void loadFromPorts(JoinerViewValue joinerProxyValue) throws JsonProcessingException {
 
-    final String nodeWithId = NodeContext.getContext().getNodeContainer().getNameWithID();
-    NodeContext.getContext().getWorkflowManager()
-        .addListener(new NodeRemovedListener(nodeWithId, buildContainerName()));
+    SwaggerUtil.setParameter(secondInputPort.modelMetadata,
+        combineParameters(SwaggerUtil.getParameter(firstInputPort.modelMetadata),
+            SwaggerUtil.getParameter(secondInputPort.modelMetadata)));
 
-    FskPortObject inObj1 = (FskPortObject) inObjects[0];
-    FskPortObject inObj2 = (FskPortObject) inObjects[1];
-    setInternalPortObjects(inObjects);
-
-    resolveParameterNamesConflict(inObj1, inObj2);
-
-    CombinedFskPortObject outObj = new CombinedFskPortObject(
-        FileUtil.createTempDir("combined").getAbsolutePath(), new ArrayList<>(), inObj1, inObj2);
-
-    ImagePortObject imagePort = null;
-    JoinRelation[] connections = new JoinRelation[0];
-
-    // Clone input object
-    synchronized (getLock()) {
-      JoinerViewValue joinerProxyValue = getViewValue();
-
-      // If not executed
-      if (joinerProxyValue.modelMetaData == null) {
-        joinerProxyValue.modelScriptTree = buildModelscriptAsTree(inObj1, inObj2);
-
-        loadJsonSetting();
-        if (joinerProxyValue.modelMetaData == null) {
-          loadFromPorts(inObj1, inObj2, joinerProxyValue);
-        }
-
-        exec.setProgress(1);
-      }
-
-      if (joinerProxyValue.joinRelations != null) {
-        connections = joinerProxyValue.joinRelations;
-      } else if (nodeSettings.connections != null) {
-        connections = nodeSettings.connections;
-      }
-
-      // Consider Here that the model type is the same as the second model
-      outObj.modelMetadata = MAPPER.readValue(joinerProxyValue.modelMetaData,
-          SwaggerUtil.modelClasses.get(inObj2.modelMetadata.getModelType()));
-
-      if (StringUtils.isNotEmpty(joinerProxyValue.modelScriptTree)) {
-        JsonArray scriptTree = getScriptArray(joinerProxyValue.modelScriptTree);
-        setScriptBack(inObj1, inObj2, scriptTree);
-      } else {
-        joinerProxyValue.modelScriptTree = buildModelscriptAsTree(inObj1, inObj2);
-      }
-
-      Set<String> packageSet = new HashSet<>();
-      packageSet.addAll(inObj1.packages);
-      packageSet.addAll(inObj2.packages);
-      outObj.packages.addAll(packageSet);
-      resolveParameters(connections, outObj);
-
-      outObj.setJoinerRelation(connections);
-
-      // Create default simulation out of parameters metadata
-      if (SwaggerUtil.getModelMath(outObj.modelMetadata) != null) {
-        List<Parameter> params = SwaggerUtil.getParameter(outObj.modelMetadata);
-        FskSimulation defaultSimulation = NodeUtils.createDefaultSimulation(params);
-        outObj.simulations.add(defaultSimulation);
-        outObj.selectedSimulationIndex = 0;
-      }
-
-      imagePort = createSVGImagePortObject(joinerProxyValue.svgRepresentation);
-    }
-
-    return new PortObject[] {outObj, imagePort};
-  }
-
-  private void loadFromPorts(FskPortObject inObj1, FskPortObject inObj2,
-      JoinerViewValue joinerProxyValue) throws JsonProcessingException {
-
-    SwaggerUtil.setParameter(inObj2.modelMetadata,
-        combineParameters(SwaggerUtil.getParameter(inObj1.modelMetadata),
-            SwaggerUtil.getParameter(inObj2.modelMetadata)));
-
-    joinerProxyValue.modelMetaData = MAPPER.writeValueAsString(inObj2.modelMetadata);
+    joinerProxyValue.modelMetaData = MAPPER.writeValueAsString(secondInputPort.modelMetadata);
   }
 
   // second visualization script is the script which draw and control the plotting!
@@ -312,42 +234,47 @@ final class JoinerNodeModel extends
 
   private void setScriptBack(FskPortObject fskObject1, FskPortObject fskObject2,
       JsonArray scriptTree) {
+
     JsonObject obj1 = scriptTree.getJsonObject(0);
     if (obj1.containsKey("script")) {
       fskObject1.model = obj1.getString("script");
     } else {
-      setScriptBack(((CombinedFskPortObject) fskObject1).getFirstFskPortObject(),
-          ((CombinedFskPortObject) fskObject1).getSecondFskPortObject(),
-          obj1.getJsonArray("nodes"));
+      CombinedFskPortObject firstCombinedModel = (CombinedFskPortObject) fskObject1;
+      setScriptBack(firstCombinedModel.getFirstFskPortObject(),
+          firstCombinedModel.getSecondFskPortObject(), obj1.getJsonArray("nodes"));
     }
+
     JsonObject obj2 = scriptTree.getJsonObject(2);
     if (obj2.containsKey("script")) {
       fskObject2.model = obj2.getString("script");
     } else {
-      setScriptBack(((CombinedFskPortObject) fskObject2).getFirstFskPortObject(),
-          ((CombinedFskPortObject) fskObject2).getSecondFskPortObject(),
-          obj2.getJsonArray("nodes"));
+      CombinedFskPortObject secondCombinedModel = (CombinedFskPortObject) fskObject2;
+      setScriptBack(secondCombinedModel.getFirstFskPortObject(),
+          secondCombinedModel.getSecondFskPortObject(), obj2.getJsonArray("nodes"));
     }
   }
 
-  private String buildModelscriptAsTree(FskPortObject inObj1, FskPortObject inObj2) {
+  private String buildModelscriptAsTree() {
+    
     JsonArrayBuilder array = Json.createArrayBuilder();
-    array.add(getModelScriptNode(inObj1).build());
+    array.add(getModelScriptNode(firstInputPort).build());
+    
     JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder();
     jsonObjectBuilder.add("id", "" + generateRandomUnifier());
     jsonObjectBuilder.add("text", "Joining Script");
+    
     StringBuilder joinModel = new StringBuilder();
     jsonObjectBuilder.add("script", joinModel.toString());
     array.add(jsonObjectBuilder.build());
-    array.add(getModelScriptNode(inObj2).build());
+    array.add(getModelScriptNode(secondInputPort).build());
+    
     return array.build().toString();
   }
 
-  private JsonArray getScriptArray(String input) {
-    JsonReader jsonReader = Json.createReader(new StringReader(input));
-    JsonArray array = jsonReader.readArray();
-    jsonReader.close();
-    return array;
+  private static JsonArray getScriptArray(String input) {
+    try (JsonReader jsonReader = Json.createReader(new StringReader(input))) {
+      return jsonReader.readArray();
+    }
   }
 
   private JsonObjectBuilder getModelScriptNode(FskPortObject object) {
@@ -377,32 +304,8 @@ final class JoinerNodeModel extends
     return jsonObjectBuilder;
   }
 
-  private String generateRandomUnifier() {
+  private static String generateRandomUnifier() {
     return new AtomicLong((int) (100000 * Math.random())).toString();
-  }
-
-  private ImagePortObject createSVGImagePortObject(String svgString) {
-
-    ImagePortObject imagePort = null;
-    if (svgString == null || svgString.equals("")) {
-      svgString = "<svg xmlns=\"http://www.w3.org/2000/svg\"/>";
-    }
-    String xmlPrimer = "<?xml version=\"1.0\" encoding=\"utf-8\"?>";
-    String svgPrimer = xmlPrimer + "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.0//EN\" "
-        + "\"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd\">";
-    String xmlString = null;
-    xmlString = svgPrimer + svgString;
-    try {
-      InputStream is = new ByteArrayInputStream(xmlString.getBytes("UTF-8"));
-      ImagePortObjectSpec imageSpec = new ImagePortObjectSpec(SvgCell.TYPE);
-
-      imagePort = new ImagePortObject(new SvgImageContent(is), imageSpec);
-    } catch (IOException e) {
-      // LOGGER.error("Creating SVG port object failed: " + e.getMessage(), e);
-    }
-
-    return imagePort;
-
   }
 
   @Override
@@ -419,7 +322,6 @@ final class JoinerNodeModel extends
 
   @Override
   protected void useCurrentValueAsDefault() {}
-
 
   protected void loadJsonSetting() throws IOException, CanceledExecutionException {
 
@@ -611,9 +513,9 @@ final class JoinerNodeModel extends
 
   public void setHideInWizard(boolean hide) {}
 
-  private void resolveParameterNamesConflict(FskPortObject fskPort1, FskPortObject fskPort2) {
-    for (Parameter firstParam : SwaggerUtil.getParameter(fskPort1.modelMetadata)) {
-      for (Parameter secondParam : SwaggerUtil.getParameter(fskPort2.modelMetadata)) {
+  private void resolveParameterNamesConflict() {
+    for (Parameter firstParam : SwaggerUtil.getParameter(firstInputPort.modelMetadata)) {
+      for (Parameter secondParam : SwaggerUtil.getParameter(secondInputPort.modelMetadata)) {
         if (secondParam.getId().equals(firstParam.getId())) {
           firstParam.setName(firstParam.getId() + SUFFIX);
           firstParam.setId(firstParam.getId() + SUFFIX);
@@ -622,7 +524,7 @@ final class JoinerNodeModel extends
     }
   }
 
-  private void resolveParameters(JoinRelation[] relations, FskPortObject outfskPort) {
+  private static void resolveParameters(JoinRelation[] relations, FskPortObject outfskPort) {
 
     if (relations != null)
       for (JoinRelation relation : relations) {
@@ -645,7 +547,7 @@ final class JoinerNodeModel extends
   }// resolveParameters
 
   // TODO: finalize joining meta data after 1.04
-  private List<Parameter> combineParameters(List<Parameter> firstParameterList,
+  private static List<Parameter> combineParameters(List<Parameter> firstParameterList,
       List<Parameter> secondParameterList) {
 
     // parameters
@@ -659,5 +561,87 @@ final class JoinerNodeModel extends
   private static String buildContainerName() {
     final NodeContainer nodeContainer = NodeContext.getContext().getNodeContainer();
     return nodeContainer.getName() + " (#" + nodeContainer.getID().getIndex() + ") setting";
+  }
+
+  @Override
+  protected void performExecuteCreateView(PortObject[] inObjects, ExecutionContext exec)
+      throws Exception {
+
+    final String nodeWithId = NodeContext.getContext().getNodeContainer().getNameWithID();
+    NodeContext.getContext().getWorkflowManager()
+        .addListener(new NodeRemovedListener(nodeWithId, buildContainerName()));
+
+    setInternalPortObjects(inObjects);
+    resolveParameterNamesConflict();
+
+    synchronized (getLock()) {
+
+      JoinerViewValue value = getViewValue();
+      if (value.modelMetaData == null) {
+        value.modelScriptTree = buildModelscriptAsTree();
+        loadJsonSetting();
+
+        if (value.modelMetaData == null) {
+          loadFromPorts(value);
+        }
+
+        exec.setProgress(1);
+      }
+    }
+  }
+
+  @Override
+  protected PortObject[] performExecuteCreatePortObjects(PortObject svgImageFromView,
+      PortObject[] inObjects, ExecutionContext exec) throws Exception {
+
+    CombinedFskPortObject outObj =
+        new CombinedFskPortObject(FileUtil.createTempDir("combined").getAbsolutePath(),
+            new ArrayList<>(), firstInputPort, secondInputPort);
+
+    JoinRelation[] connections = new JoinRelation[0];
+
+    synchronized (getLock()) {
+
+      JoinerViewValue value = getViewValue();
+
+      if (value.joinRelations != null) {
+        connections = value.joinRelations;
+      } else if (nodeSettings.connections != null) {
+        connections = nodeSettings.connections;
+      }
+      outObj.setJoinerRelation(connections);
+
+      // Consider Here that the model type is the same as the second model
+      outObj.modelMetadata = MAPPER.readValue(value.modelMetaData,
+          SwaggerUtil.modelClasses.get(secondInputPort.modelMetadata.getModelType()));
+
+      if (StringUtils.isNotEmpty(value.modelScriptTree)) {
+        JsonArray scriptTree = getScriptArray(value.modelScriptTree);
+        setScriptBack(firstInputPort, secondInputPort, scriptTree);
+      } else {
+        value.modelScriptTree = buildModelscriptAsTree();
+      }
+
+      Set<String> packageSet = new HashSet<>();
+      packageSet.addAll(firstInputPort.packages);
+      packageSet.addAll(secondInputPort.packages);
+      outObj.packages.addAll(packageSet);
+      resolveParameters(connections, outObj);
+
+      // Create default simulation out of parameters metadata
+      if (SwaggerUtil.getModelMath(outObj.modelMetadata) != null) {
+        List<Parameter> params = SwaggerUtil.getParameter(outObj.modelMetadata);
+        FskSimulation defaultSimulation = NodeUtils.createDefaultSimulation(params);
+        outObj.simulations.add(defaultSimulation);
+        outObj.selectedSimulationIndex = 0;
+      }
+    }
+
+    return new PortObject[] {outObj, svgImageFromView};
+  }
+
+  @Override
+  protected boolean generateImage() {
+    return true;
   }
 }
