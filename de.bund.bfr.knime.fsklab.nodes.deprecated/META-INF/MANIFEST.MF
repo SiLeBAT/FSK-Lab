@@ -6,17 +6,8 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: de.bund.bfr.knime.fsklab.nodes.fsk.Activator
 Bundle-Vendor: German Federal Institute for Risk Assessment (BfR)
 Require-Bundle: com.fasterxml.jackson.core.jackson-annotations,
- com.fasterxml.jackson.core.jackson-core,
- com.fasterxml.jackson.core.jackson-databind,
- com.fifesoft.rsyntaxtextarea,
- com.google.guava,
- com.toedter.jcalendar,
- org.knime.workbench.repository,
  org.apache.commons.lang3,
  org.apache.servicemix.bundles.poi,
- org.eclipse.core.runtime,
- org.junit,
- org.knime.core,
  org.knime.base,
  org.knime.ext.r.type,
  org.knime.js.core,
@@ -25,9 +16,9 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations,
  de.bund.bfr.knime.nodes.util,
  de.bund.bfr.knime.fsklab.r,
  de.bund.bfr.knime.fsklab.nodes.common,
- de.bund.bfr.knime.fsklab.type,
  de.bund.bfr.knime.fsklab.metadata.model,
- de.bund.bfr.formats
+ de.bund.bfr.formats,
+ com.toedter.jcalendar
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: libs/fskml-1.0.5.jar,

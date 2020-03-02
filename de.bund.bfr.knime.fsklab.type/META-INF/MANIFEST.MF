@@ -11,6 +11,5 @@ Require-Bundle: de.bund.bfr.knime.fsklab.metadata.model,
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Automatic-Module-Name: de.bund.bfr.knime.fsklab.nodes.type
 Bundle-ActivationPolicy: lazy
-Export-Package: de.bund.bfr.knime.fsklab.nodes.type,
- de.bund.bfr.knime.pmm.fskx.port
+Export-Package: de.bund.bfr.knime.fsklab.nodes.type
 Bundle-Vendor: German Federal Institute for Risk Assessment (BfR)
