@@ -67,13 +67,18 @@ joiner = function () {
     _handler = new fskutil.GenericModel(_metadata);
 
     createBody();
-
-
   }
 
   view.getComponentValue = function() {  
     _value.modelMetaData = JSON.stringify(_handler.metaData);
     return _value;
+  };
+
+  view.getSVG = function() {
+    if (!_paper) return null;
+    _paper.svg.setAttribute("width", 750);
+    _paper.svg.setAttribute("height", 750);
+    return (new XMLSerializer()).serializeToString(_paper.svg);
   };
 
   return view;
