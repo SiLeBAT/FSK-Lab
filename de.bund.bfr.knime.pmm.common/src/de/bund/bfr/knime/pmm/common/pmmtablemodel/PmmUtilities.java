@@ -55,12 +55,7 @@ public class PmmUtilities {
 
 		for (KnimeTuple tuple : tuples) {
 			PmmXmlDoc indep = tuple.getPmmXml(Model1Schema.ATT_INDEPENDENT);
-
-			for (PmmXmlElementConvertable el : indep.getElementSet()) {
-				IndepXml element = (IndepXml) el;
-
-				indepSet.add(element.name);
-			}
+			indep.getElementSet().stream().map(it -> ((IndepXml)it).name).forEach(indepSet::add);
 		}
 
 		return new ArrayList<>(indepSet);
