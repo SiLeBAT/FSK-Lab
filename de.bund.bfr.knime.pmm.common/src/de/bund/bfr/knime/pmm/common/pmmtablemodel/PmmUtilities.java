@@ -78,12 +78,8 @@ public class PmmUtilities {
 
 		for (KnimeTuple tuple : tuples) {
 			PmmXmlDoc misc = tuple.getPmmXml(TimeSeriesSchema.ATT_MISC);
-
-			for (PmmXmlElementConvertable el : misc.getElementSet()) {
-				MiscXml element = (MiscXml) el;
-
-				map.put(element.name, element.categories);
-			}
+			misc.getElementSet().stream().map(it -> (MiscXml)it)
+				.forEach(element -> map.put(element.name, element.categories));
 		}
 
 		return map;
