@@ -1,0 +1,39 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: FoodProcess-Node extension for KNIME Workbench
+Bundle-SymbolicName: de.bund.bfr.knime.foodprocess; singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-ClassPath: foodprocess.jar,
+ lib/jgoodies-forms-1.5.1.jar,
+ lib/jgoodies-common-1.3.1.jar,
+ lib/jcm1.0-config.jar,
+ lib/jcommon-1.0.16.jar,
+ lib/jfreechart-1.0.13.jar
+Bundle-Activator: de.bund.bfr.knime.foodprocess.FoodProcessNodePlugin
+Bundle-Vendor: BfR
+Require-Bundle: org.eclipse.core.runtime,
+ org.knime.workbench.core,
+ org.knime.workbench.repository,
+ org.knime.base,
+ de.bund.bfr.knime.foodprocess.pcml,
+ de.bund.bfr.knime.pmm.bfrdbiface.lib;bundle-version="1.0.0",
+ de.bund.bfr.knime.pmm.common;bundle-version="1.0.0",
+ org.knime.workbench.ui.layout,
+ org.hsh.bfr.db;bundle-version="1.0.0",
+ de.bund.bfr.knime.pmm.nodes
+Bundle-ActivationPolicy: lazy
+Export-Package: de.bund.bfr.knime.foodprocess,
+ de.bund.bfr.knime.foodprocess.lib
+Import-Package: de.bund.bfr.knime.pcml.port,
+ de.bund.bfr.knime.pmm.estimatedmodelreader,
+ de.bund.bfr.knime.util,
+ org.eclipse.core.resources,
+ org.eclipse.ui.dialogs,
+ org.eclipse.ui.ide,
+ org.hsh.bfr.db,
+ org.hsh.bfr.db.imports,
+ org.knime.workbench.editor2,
+ org.knime.workbench.ui.layout.commands,
+ org.knime.workbench.ui.nature
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+

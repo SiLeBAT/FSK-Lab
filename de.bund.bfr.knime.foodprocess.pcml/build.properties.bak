@@ -1,0 +1,10 @@
+source.. = src/
+output.. = bin/
+bin.includes = META-INF/,\
+               .,\
+               lib/xmlbeans-pcml-1-0.jar,\
+               lib/lombok.jar
+src.includes = lib/src/,\
+               src/,\
+               META-INF/,\
+               build.properties

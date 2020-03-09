@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE knimeNode PUBLIC "-//UNIKN//DTD KNIME Node 2.0//EN" "http://www.knime.org/Node.dtd">
+<knimeNode icon="./PCMLtoTable.png" type="Manipulator">
+    <name>PCML to Data Table</name>
+    
+    <shortDescription>
+        Saves the Data elements of a PCML in a DataTable.
+    </shortDescription>
+    
+    <fullDescription>
+        <intro>
+            Extracts the data elements of a PCML document and stores them
+            in a table. Columns may represent matrices, agents or physical
+            properties like the temperature.
+        </intro>       
+    </fullDescription>
+    
+    <ports>
+        <inPort index="0" name="PCML Inport">Port expects process chain markup language (PCML)</inPort>
+        <outPort index="0" name="DataTable within PCML">A table with data.</outPort>
+    </ports>    
+</knimeNode>

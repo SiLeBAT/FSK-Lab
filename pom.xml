@@ -55,6 +55,11 @@
 		<module>de.bund.bfr.knime.pmm.common</module>
 		<module>de.bund.bfr.knime.pmm.nodes</module>
 		<module>org.hsh.bfr.db</module>
+		
+		<module>de.bund.bfr.knime.foodprocess</module>
+		<module>de.bund.bfr.knime.foodprocess.pcml</module>
+		<module>de.bund.bfr.knime.foodprocess.util</module>
+		<module>de.bund.bfr.knime.foodprocess.view</module>
 
 		<!-- Test plugins and fragments -->
 		<module>de.bund.bfr.knime.tests</module>

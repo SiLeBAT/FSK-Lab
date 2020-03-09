@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry exported="true" kind="lib" path="lib/jcm1.0-config.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jcommon-1.0.16.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jfreechart-1.0.13.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jgoodies-common-1.3.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jgoodies-forms-1.5.1.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
