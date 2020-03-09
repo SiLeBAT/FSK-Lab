@@ -1,0 +1,23 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: View-Node extension for KNIME Workbench
+Bundle-SymbolicName: de.bund.bfr.knime.foodprocess.view; singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-ClassPath: view.jar
+Bundle-Activator: de.bund.bfr.knime.foodprocess.view.ViewNodePlugin
+Bundle-Vendor: BfR
+Require-Bundle: org.eclipse.core.runtime,
+ org.knime.workbench.core,
+ org.knime.workbench.repository,
+ org.knime.base,
+ de.bund.bfr.knime.pmm.common,
+ de.bund.bfr.knime.foodprocess
+Bundle-ActivationPolicy: lazy
+Export-Package: de.bund.bfr.knime.foodprocess.view
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Import-Package: de.bund.bfr.knime.foodprocess.lib,
+ de.bund.bfr.knime.pcml.node.pcmltotable,
+ de.bund.bfr.knime.pcml.port,
+ de.bund.bfr.knime.util,
+ de.bund.bfr.pcml10
+

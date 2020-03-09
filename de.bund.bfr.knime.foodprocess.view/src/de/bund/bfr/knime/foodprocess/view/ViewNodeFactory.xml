@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE knimeNode PUBLIC "-//UNIKN//DTD KNIME Node 2.0//EN" "http://www.knime.org/Node.dtd">
+<knimeNode icon="./View2.png" type="Visualizer">
+    <name>View</name>
+    
+    <shortDescription>        
+    </shortDescription>
+    
+    <fullDescription>
+        <intro>
+        </intro>       
+    </fullDescription>
+    
+    <ports>
+        <inPort index="0" name="PCML Inport">Port expects process chain markup language (pcml)</inPort>
+        
+        <outPort index="0" name="DataTable">Port exports a DataTable containing timeseries of all produced data</outPort>
+        <outPort index="1" name="Image of the View">Image of the results</outPort>
+    </ports>    
+    
+    <views>
+        <view index="0" name="Results">Description of first view...</view>
+    </views>
+</knimeNode>

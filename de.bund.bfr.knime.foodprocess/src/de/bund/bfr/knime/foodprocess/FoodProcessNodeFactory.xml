@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE knimeNode PUBLIC "-//UNIKN//DTD KNIME Node 2.0//EN" "http://www.knime.org/Node.dtd">
+<knimeNode icon="./FoodProcess.png" type="Manipulator">
+    <name>FoodProcess</name>
+    
+    <shortDescription>        
+    </shortDescription>
+    
+    <fullDescription>
+        <intro>Please mind that the temperature chosen in the models section (Filter models -> Select Models) overrides the temperature set in the FoodProcess settings. This can result in a food process at 20°C which is modelled for a temperature of 35°C. Both temperatures should have the same value.
+        </intro>      
+    </fullDescription>
+    
+    <ports>
+        <inPort index="0" name="PCML Inport 1">Port expects process chain markup language (pcml)</inPort>
+        <inPort index="1" name="PCML Inport 2">Port expects process chain markup language (pcml)</inPort>
+        <inPort index="2" name="PCML Inport 3">Port expects process chain markup language (pcml)</inPort>
+        <inPort index="3" name="PCML Inport 4">Port expects process chain markup language (pcml)</inPort>
+        
+        <outPort index="0" name="PCML Outport 1">Port exports process chain markup language (pcml)</outPort>
+        <outPort index="1" name="PCML Outport 2">Port exports process chain markup language (pcml)</outPort>
+        <outPort index="2" name="PCML Outport 3">Port exports process chain markup language (pcml)</outPort>
+        <outPort index="3" name="PCML Outport 4">Port exports process chain markup language (pcml)</outPort>
+        <outPort index="4" name="Selected Models">Port exports the selected Models</outPort>
+    </ports>    
+</knimeNode>

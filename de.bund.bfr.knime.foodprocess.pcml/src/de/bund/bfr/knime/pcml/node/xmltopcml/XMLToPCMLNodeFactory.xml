@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE knimeNode PUBLIC "-//UNIKN//DTD KNIME Node 2.0//EN" "http://www.knime.org/Node.dtd">
+<knimeNode icon="./XMLtoPCML.png" type="Manipulator">
+    <name>XML to PCML</name>
+    
+    <shortDescription>
+        Converts a XML cell to the process chain port type.
+    </shortDescription>
+    
+    <fullDescription>
+        <intro>Converts a XML cell to the process chain port type. Only the
+        first cell of the selected row is processed.
+        </intro>
+        
+        
+        <option name="Column">Select a column with XML cells to be send 
+        to the output</option>
+    </fullDescription>
+    
+    <ports>
+        <inPort index="0" name="XML with PCML">A table with XML cells.</inPort>
+        <outPort index="0" name="PCML Outport">The PCML</outPort>
+    </ports>    
+</knimeNode>
