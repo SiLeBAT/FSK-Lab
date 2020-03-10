@@ -111,38 +111,21 @@ public class FoodProcessNodeModel extends NodeModel {
 	private static boolean doModelsOut = false;
 	
 	private FoodProcessNodeSettings settings;
-	/*
-	private String filename;
-	private String login;
-	private String passwd;
-	private boolean override;
-	*/
 	private HashMap<String, EmReaderUi> emReaderUiMap;
 	private static String warnings = "";
 	private static Category presCat = Categories.getCategory("Pressure");
+	
+	private static final PortType MANDATORY_PCML_TYPE = PortTypeRegistry.getInstance().getPortType(PCMLPortObject.class, false);
+	private static final PortType OPTIONAL_PCML_TYPE = PortTypeRegistry.getInstance().getPortType(PCMLPortObject.class, true);
 
 	/**
      * Constructor for the node model.
      */
     protected FoodProcessNodeModel() {    	
-        super(new PortType[] {
-        	PortTypeRegistry.getInstance().getPortType(PCMLPortObject.class, false),
-        	PortTypeRegistry.getInstance().getPortType(PCMLPortObject.class, true),
-        	PortTypeRegistry.getInstance().getPortType(PCMLPortObject.class, true),
-        	PortTypeRegistry.getInstance().getPortType(PCMLPortObject.class, true),
-        }, doModelsOut ?
-        		new PortType[] {
-        				PortTypeRegistry.getInstance().getPortType(PCMLPortObject.class, false),
-        				PortTypeRegistry.getInstance().getPortType(PCMLPortObject.class, false),
-        				PortTypeRegistry.getInstance().getPortType(PCMLPortObject.class, false),
-        				PortTypeRegistry.getInstance().getPortType(PCMLPortObject.class, false),BufferedDataTable.TYPE
-            } :
-            	new PortType[] {
-            			PortTypeRegistry.getInstance().getPortType(PCMLPortObject.class, false),
-            			PortTypeRegistry.getInstance().getPortType(PCMLPortObject.class, false),
-            			PortTypeRegistry.getInstance().getPortType(PCMLPortObject.class, false),
-            			PortTypeRegistry.getInstance().getPortType(PCMLPortObject.class, false)
-	        });
+        super(new PortType[] { MANDATORY_PCML_TYPE, OPTIONAL_PCML_TYPE, OPTIONAL_PCML_TYPE, OPTIONAL_PCML_TYPE},
+        		doModelsOut ?
+        		new PortType[] { MANDATORY_PCML_TYPE, MANDATORY_PCML_TYPE, MANDATORY_PCML_TYPE, MANDATORY_PCML_TYPE, BufferedDataTable.TYPE} :
+            	new PortType[] { MANDATORY_PCML_TYPE, MANDATORY_PCML_TYPE, MANDATORY_PCML_TYPE, MANDATORY_PCML_TYPE });
         settings = new FoodProcessNodeSettings();
         emReaderUiMap = new HashMap<String, EmReaderUi>();
     }
