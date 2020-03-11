@@ -30,4 +30,4 @@ deploy:
 - provider: script
   skip_cleanup: true # to upload artifacts created during the build
   script: bash bintray.sh
-  on: FPL
+  on: test
