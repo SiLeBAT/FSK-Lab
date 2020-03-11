@@ -19,14 +19,11 @@
  *******************************************************************************/
 package de.bund.bfr.knime.pcml.node.xls2pcml;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import de.bund.bfr.knime.pcml.node.xls2pcml.ExpColumnList;
 
 public class ExpColumnListTest {
 
@@ -39,46 +36,21 @@ public class ExpColumnListTest {
 
 	@Test
 	public void testColumnList() {
-		assertTrue(colList.getColumnList().sizeOfColumnArray() > 0);
+		assertTrue(colList.columnList.sizeOfColumnArray() > 0);
 	}
 
 	@Test
 	public void testColumnNames() {
 
-		// Tests time column name
-		assertNotNull(colList.getTimeColName());
-		assertFalse(colList.getTimeColName().getLocalPart().isEmpty());
-
-		// Tests concentration column name
-		assertNotNull(colList.getConcColName());
-		assertFalse(colList.getConcColName().getLocalPart().isEmpty());
-
-		// Tests temperature column name
-		assertNotNull(colList.getTempColName());
-		assertFalse(colList.getTempColName().getLocalPart().isEmpty());
-
-		// Tests pH column name
-		assertNotNull(colList.getpHColName());
-		assertFalse(colList.getpHColName().getLocalPart().isEmpty());
-
-		// Tests salt concentration column name
-		assertNotNull(colList.getNaclColName());
-		assertFalse(colList.getNaclColName().getLocalPart().isEmpty());
-
-		// Tests water activity column name
-		assertNotNull(colList.getAwColName());
-		assertFalse(colList.getAwColName().getLocalPart().isEmpty());
-
-		// Tests air humidity column name
-		assertNotNull(colList.getAirHumColName());
-		assertFalse(colList.getAwColName().getLocalPart().isEmpty());
-
-		// Tests matrix column name
-		assertNotNull(colList.getMatrixColName());
-		assertFalse(colList.getMatrixColName().getLocalPart().isEmpty());
-
-		// Tests agent column name
-		assertNotNull(colList.getAgentColName());
-		assertFalse(colList.getAgentColName().getLocalPart().isEmpty());
+		assertEquals("c0", colList.timeColName.getLocalPart());
+		assertEquals("c1", colList.concColName.getLocalPart());
+		assertEquals("c2", colList.tempColName.getLocalPart());
+		assertEquals("c3", colList.pHColName.getLocalPart());
+		assertEquals("c4", colList.naclColName.getLocalPart());
+		assertEquals("c5", colList.awColName.getLocalPart());
+		assertEquals("c6", colList.waterConcColName.getLocalPart());
+		assertEquals("c7", colList.airHumColName.getLocalPart());
+		assertEquals("c8", colList.matrixColName.getLocalPart());
+		assertEquals("c9", colList.agentColName.getLocalPart());
 	}
 }

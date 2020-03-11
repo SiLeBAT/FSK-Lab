@@ -29,70 +29,73 @@ import de.bund.bfr.pcml10.NameAndDatabaseId;
 /** Column list of an experiment */
 public class ExpColumnList {
 
-	QName timeColName; // time column name
-	QName concColName; // concentration column name
-	QName tempColName; // temperature column name
-	QName pHColName; // pH column name
-	QName naclColName; // salt concentration column name
-	QName awColName; // water activity column name
-	QName waterConcColName; // water concentration column name
-	QName airHumColName; // air humidity column name
-	QName matrixColName; // matrix column name
-	QName agentColName; // agent column name
+	/** Time column name. */
+	public final QName timeColName;
+	
+	/** Concentration column name. */
+	public final QName concColName;
+	
+	/** Temperature column name. */
+	public final QName tempColName;
+	
+	/** pH column name. */
+	public final QName pHColName;
+	
+	/** Salt concentration column name. */
+	public final QName naclColName;
+	
+	/** Water activity column name. */
+	public final QName awColName;
+	
+	/** Water concentration column name. */
+	public final QName waterConcColName;
+	
+	/** Air humidity column name. */
+	public final QName airHumColName;
+	
+	/** Matrix column name. */
+	public final QName matrixColName;
+	
+	/** Agent column name. */
+	public final QName agentColName;
 
-	ColumnList columnList;
+	public final ColumnList columnList;
 
 	public ExpColumnList(String pcmlNamespace) {
 
 		columnList = ColumnList.Factory.newInstance();
 
 		// Time column
-		Column timeCol = columnList.addNewColumn();
-		timeCol.addNewColumnId().setName(AttributeUtilities.TIME + " [sec]");
 		timeColName = new QName(pcmlNamespace, "c0");
-		timeCol.setName(timeColName.getLocalPart());
+		createColumn(AttributeUtilities.TIME + " [sec]", "c0");
 
 		// Concentration column
-		Column concCol = columnList.addNewColumn();
-		concCol.addNewColumnId().setName("Concentration []");
 		concColName = new QName(pcmlNamespace, "c1");
-		concCol.setName(concColName.getLocalPart());
+		createColumn("Concentration []", "c1");
 
 		// Temperature column
-		Column tempCol = columnList.addNewColumn();
-		tempCol.addNewColumnId().setName(AttributeUtilities.ATT_TEMPERATURE + " [°C]");
 		tempColName = new QName(pcmlNamespace, "c2");
-		tempCol.setName(tempColName.getLocalPart());
+		createColumn(AttributeUtilities.ATT_TEMPERATURE + " [°C]", "c2");
 
 		// pH column
-		Column pHCol = columnList.addNewColumn();
-		pHCol.addNewColumnId().setName(AttributeUtilities.ATT_PH);
 		pHColName = new QName(pcmlNamespace, "c3");
-		pHCol.setName(pHColName.getLocalPart());
+		createColumn(AttributeUtilities.ATT_PH, "c3");
 
 		// salt concentration column
-		Column naclCol = columnList.addNewColumn();
-		naclCol.addNewColumnId().setName("NaCl [%]");
 		naclColName = new QName(pcmlNamespace, "c4");
-		naclCol.setName(naclColName.getLocalPart());
+		createColumn("NaCl [%]", "c4");
 
 		// water activity column
-		Column awCol = columnList.addNewColumn();
-		awCol.addNewColumnId().setName(AttributeUtilities.ATT_AW);
 		awColName = new QName(pcmlNamespace, "c5");
-		awCol.setName(awColName.getLocalPart());
+		createColumn(AttributeUtilities.ATT_AW, "c5");
 
 		// water concentration column
-		Column waterConcCol = columnList.addNewColumn();
-		waterConcCol.addNewColumnId().setName("waterConcentration [%]");
 		waterConcColName = new QName(pcmlNamespace, "c6");
-		waterConcCol.setName(waterConcColName.getLocalPart());
+		createColumn("waterConcentration [%]", "c6");
 
 		// air humidity
-		Column airHumCol = columnList.addNewColumn();
-		airHumCol.addNewColumnId().setName("airHumidity [%]");
 		airHumColName = new QName(pcmlNamespace, "c7");
-		airHumCol.setName(airHumColName.getLocalPart());
+		createColumn("airHumidity [%]", "c7");
 
 		// matrix column
 		Column matrixCol = columnList.addNewColumn();
@@ -110,48 +113,10 @@ public class ExpColumnList {
 		agentColName = new QName(pcmlNamespace, "c9");
 		agentCol.setName(agentColName.getLocalPart());
 	}
-
-	public QName getTimeColName() {
-		return timeColName;
-	}
-
-	public QName getConcColName() {
-		return concColName;
-	}
-
-	public QName getTempColName() {
-		return tempColName;
-	}
-
-	public QName getpHColName() {
-		return pHColName;
-	}
-
-	public QName getNaclColName() {
-		return naclColName;
-	}
-
-	public QName getAwColName() {
-		return awColName;
-	}
-
-	public QName getWaterConcColName() {
-		return waterConcColName;
-	}
-
-	public QName getAirHumColName() {
-		return airHumColName;
-	}
-
-	public QName getMatrixColName() {
-		return matrixColName;
-	}
-
-	public QName getAgentColName() {
-		return agentColName;
-	}
-
-	public ColumnList getColumnList() {
-		return columnList;
+	
+	private void createColumn(String id, String name) {
+		Column newColumn = columnList.addNewColumn();
+		newColumn.addNewColumnId().setName(id);
+		newColumn.setName(name);
 	}
 }
