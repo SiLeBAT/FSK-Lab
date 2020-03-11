@@ -117,5 +117,35 @@
 			<version>1.0.0-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
+		<dependency>
+			<groupId>de.bund.bfr.knime</groupId>
+			<artifactId>de.bund.bfr.knime.foodprocess</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>de.bund.bfr.knime</groupId>
+			<artifactId>de.bund.bfr.knime.foodprocess.pcml</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>de.bund.bfr.knime</groupId>
+			<artifactId>de.bund.bfr.knime.foodprocess.util</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>de.bund.bfr.knime</groupId>
+			<artifactId>de.bund.bfr.knime.foodprocess.view</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>de.bund.bfr.knime</groupId>
+			<artifactId>de.bund.bfr.knime.foodprocess.tests</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 </project>

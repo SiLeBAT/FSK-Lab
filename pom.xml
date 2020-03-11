@@ -66,6 +66,7 @@
 		<!-- <module>de.bund.bfr.knime.testflows</module> -->
 		<module>de.bund.bfr.knime.fsklab.metadata.model.tests</module>
 		<module>de.bund.bfr.knime.pmm.common.tests</module>
+		<module>de.bund.bfr.knime.foodprocess.tests</module>
 
 		<!-- Test report -->
 		<module>de.bund.bfr.knime.testreport</module>
