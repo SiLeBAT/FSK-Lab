@@ -76,8 +76,8 @@ joiner = function () {
 
   view.getSVG = function() {
     if (!_paper) return null;
-    _paper.svg.setAttribute("width", 750);
-    _paper.svg.setAttribute("height", 750);
+    _paper.svg.setAttribute("width", 900);
+    _paper.svg.setAttribute("height", 500);
     return (new XMLSerializer()).serializeToString(_paper.svg);
   };
 
@@ -197,7 +197,7 @@ joiner = function () {
 
     // Resize event. Resize the paper with the window.
     window.onresize = () => {
-      _paper.setDimensions(getChartWidth(), getChartHeight());
+    //  _paper.setDimensions(getChartWidth(), getChartHeight());
       _paper.scaleContentToFit({ padding: 20 });
     };
 
@@ -257,8 +257,10 @@ joiner = function () {
       snapLinks: true,
       linkPinning: true,
       drawGrid: true,
-      width: getChartWidth(),
-      height: getChartHeight(),
+      //width: getChartWidth(),
+      width: 1200,
+      height: 600,
+     // height: getChartHeight(),
 
       highlighting: {
         'default': {
