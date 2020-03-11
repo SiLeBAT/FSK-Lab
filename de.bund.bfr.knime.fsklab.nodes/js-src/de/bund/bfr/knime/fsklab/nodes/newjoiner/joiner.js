@@ -257,11 +257,8 @@ joiner = function () {
       snapLinks: true,
       linkPinning: true,
       drawGrid: true,
-      //width: getChartWidth(),
       width: 1200,
       height: 600,
-     // height: getChartHeight(),
-
       highlighting: {
         'default': {
           name: 'stroke',
