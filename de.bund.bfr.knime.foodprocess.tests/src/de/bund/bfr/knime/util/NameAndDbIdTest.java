@@ -11,7 +11,7 @@ public class NameAndDbIdTest {
 	@Test
 	public void testNameConstructor() {
 		NameAndDbId identifier = new NameAndDbId("name");
-		assertTrue(identifier.getId() < 0);
+		assertEquals(-1, identifier.getId());
 		assertEquals("name", identifier.getName());
 	}
 

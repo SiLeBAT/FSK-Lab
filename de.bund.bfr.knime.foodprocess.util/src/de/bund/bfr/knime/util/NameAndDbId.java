@@ -19,29 +19,32 @@
  *******************************************************************************/
 package de.bund.bfr.knime.util;
 
+import java.util.Objects;
+
 /**
  * A identifier which is either defined by a name or defined by a database ID
+ * 
  * @author Heiko Hofer
- *
  */
 public class NameAndDbId {
 	private final String name;
 	private final int id;
-	
+
 	/**
 	 * Creates a new instance.
-	 * @param name the name 
+	 * 
+	 * @param name the name
 	 */
 	public NameAndDbId(final String name) {
 		this(name, -1);
 	}
-	
+
 	/**
 	 * Creates a new instance.
+	 * 
 	 * @param name the name
-	 * @param id the id of the field in the database use -1 if field does
-	 * not have an id.  
-	 * matrices.
+	 * @param id   the id of the field in the database use -1 if field does not have
+	 *             an id. matrices.
 	 */
 	public NameAndDbId(final String name, final int id) {
 		this.name = name;
@@ -51,24 +54,16 @@ public class NameAndDbId {
 	public String getName() {
 		return name;
 	}
+
 	public int getId() {
 		return id;
 	}
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + id;
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		return result;
+		return Objects.hash(id, name);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean equals(final Object obj) {
 		if (this == obj)
@@ -77,16 +72,8 @@ public class NameAndDbId {
 			return false;
 		if (!(obj instanceof NameAndDbId))
 			return false;
+
 		NameAndDbId other = (NameAndDbId) obj;
-		if (id != other.id)
-			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		return true;
+		return id == other.id && Objects.equals(name, other.name);
 	}
-    
-    
 }
