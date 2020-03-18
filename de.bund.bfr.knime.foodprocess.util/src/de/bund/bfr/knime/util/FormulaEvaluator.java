@@ -50,22 +50,19 @@ public final class FormulaEvaluator {
 
 	public static double getSeconds(String unit) {
 		if (unit == null) return 1;
-		else if (unit.equalsIgnoreCase("min")) return 60;
-    	else if (unit.equalsIgnoreCase("h")) return 60*60;
-    	else if (unit.equalsIgnoreCase("d")) return 24*60*60;
-    	else if (unit.equalsIgnoreCase("m")) return 24*60*60*30;
-    	else if (unit.equalsIgnoreCase("y")) return 24*60*60*365;
-    	else return 1; // s
+		if (unit.equalsIgnoreCase("min")) return 60;
+    	if (unit.equalsIgnoreCase("h")) return 60*60;
+    	if (unit.equalsIgnoreCase("d")) return 24*60*60;
+    	if (unit.equalsIgnoreCase("m")) return 24*60*60*30;
+    	if (unit.equalsIgnoreCase("y")) return 24*60*60*365;
+    	return 1;
     }
+
 	public static double getGrams(String unit) {
 		if (unit == null) return 1;
-		/*
-		else if (unit.equalsIgnoreCase("l")) return 1000;
-    	else if (unit.equalsIgnoreCase("ml")) return 1;
-    	*/
     	else if (unit.equalsIgnoreCase("kg")) return 1000;
     	else if (unit.equalsIgnoreCase("t")) return 1000000;
     	else if (unit.equalsIgnoreCase("cfu")) return Math.pow(10, -12); // Nauta
-    	else return 1; // g
+    	else return 1;
     }
 }

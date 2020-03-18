@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Tests
+Bundle-SymbolicName: de.bund.bfr.knime.pmm.nodes.tests
+Bundle-Version: 1.0.0.qualifier
+Fragment-Host: de.bund.bfr.knime.pmm.nodes;bundle-version="1.0.0"
+Automatic-Module-Name: de.bund.bfr.knime.pmm.nodes.tests
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
