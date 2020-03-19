@@ -8,4 +8,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.junit,
  de.bund.bfr.knime.foodprocess.pcml,
  de.bund.bfr.knime.foodprocess.util,
- de.bund.bfr.knime.pmm.common
+ de.bund.bfr.knime.pmm.common,
+ de.bund.bfr.knime.foodprocess,
+ de.bund.bfr.knime.pmm.nodes,
+ org.knime.core
