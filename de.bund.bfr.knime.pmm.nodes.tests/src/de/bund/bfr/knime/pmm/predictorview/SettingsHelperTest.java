@@ -1,9 +1,6 @@
 package de.bund.bfr.knime.pmm.predictorview;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.awt.Color;
 import java.awt.Shape;
@@ -14,6 +11,7 @@ import java.util.Map;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettings;
 
 import de.bund.bfr.knime.pmm.common.XmlConverter;
@@ -423,5 +421,75 @@ public class SettingsHelperTest {
 		assertEquals(exampleLagParameter, helper.getNewLagParameters());
 		assertEquals(exampleColumnWidths, helper.getColumnWidths());
 		assertTrue(helper.isSampleInverse());
+	}
+	
+	@Test
+	public void testSaveSettings() throws InvalidSettingsException {
+		
+		SettingsHelper helper = new SettingsHelper();
+		helper.setSelectedIDs(exampleSelectedIds);
+		helper.setParamXValues(exampleXValues);
+		helper.setTimeValues(exampleTimeValues);
+		helper.setColors(exampleColors);
+		helper.setShapes(exampleShapes);
+		helper.setManualRange(true);
+		helper.setMinX(1.0);
+		helper.setMaxX(100.0);
+		helper.setMinY(1.0);
+		helper.setMaxY(100.0);
+		helper.setDrawLines(true);
+		helper.setShowLegend(true);
+		helper.setAddLegendInfo(true);
+		helper.setDisplayHighlighted(true);
+		helper.setExportAsSvg(true);
+		helper.setUnitX("UnitX");
+		helper.setUnitY("UnitY");
+		helper.setTransformX("TransformX");
+		helper.setTransformY("TransformY");
+		helper.setStandardVisibleColumns(true);
+		helper.setVisibleColumns(exampleVisibleColumns);
+		helper.setFittedFilter("FittedFilter");
+		helper.setConcentrationParameters(exampleConcentrationParameters);
+		helper.setLagParameters(exampleLagParameter);
+		helper.setSelectedTuples(exampleSelectedTuples);
+		helper.setSelectedOldTuples(exampleSelectedTuples);
+		helper.setNewConcentrationParameters(exampleConcentrationParameters);
+		helper.setNewLagParameters(exampleLagParameter);
+		helper.setColumnWidths(exampleColumnWidths);
+		helper.setSampleInverse(true);
+		
+		NodeSettings settings = new NodeSettings("identifier");
+		helper.saveSettings(settings);
+
+		assertEquals(XmlConverter.objectToXml(exampleSelectedIds), settings.getString("SelectedIDs"));
+		assertEquals(XmlConverter.objectToXml(exampleXValues), settings.getString("ParamXValues"));
+		assertEquals(XmlConverter.objectToXml(exampleTimeValues), settings.getString("TimeValues"));
+		assertEquals(XmlConverter.colorMapToXml(exampleColors), settings.getString("Colors"));
+		assertEquals(XmlConverter.shapeMapToXml(exampleShapes), settings.getString("Shapes"));
+		assertTrue(settings.getBoolean("ManualRange"));
+		assertEquals(1.0, settings.getDouble("MinX"), .0);
+		assertEquals(100.0, settings.getDouble("MaxX"), .0);
+		assertEquals(1.0, settings.getDouble("MinY"), .0);
+		assertEquals(100.0, settings.getDouble("MaxY"), .0);
+		assertTrue(settings.getBoolean("DrawLines"));
+		assertTrue(settings.getBoolean("ShowLegend"));
+		assertTrue(settings.getBoolean("AddLegendInfo"));
+		assertTrue(settings.getBoolean("DisplayHighlighted"));
+		assertTrue(settings.getBoolean("ExportAsSvg"));
+		assertEquals("UnitX", settings.getString("UnitX"));
+		assertEquals("UnitY", settings.getString("UnitY"));
+		assertEquals("TransformX", settings.getString("TransformX"));
+		assertEquals("TransformY", settings.getString("TransformY"));
+		assertTrue(settings.getBoolean("StandardVisibleColumns"));
+		assertEquals(XmlConverter.objectToXml(exampleVisibleColumns), settings.getString("VisibleColumns"));
+		assertEquals("FittedFilter", settings.getString("FittedFilter"));
+		assertEquals(XmlConverter.objectToXml(exampleConcentrationParameters), settings.getString("ConcentrationParameters"));
+		assertEquals(XmlConverter.objectToXml(exampleLagParameter), settings.getString("LagParameters"));
+		assertEquals(XmlConverter.tupleListToXml(exampleSelectedTuples), settings.getString("SelectedTuples"));
+		assertEquals(XmlConverter.tupleListToXml(exampleSelectedTuples), settings.getString("SelectedOldTuples"));
+		assertEquals(XmlConverter.objectToXml(exampleConcentrationParameters), settings.getString("NewConcentrationParameters"));
+		assertEquals(XmlConverter.objectToXml(exampleLagParameter), settings.getString("NewLagParameters"));
+		assertEquals(XmlConverter.objectToXml(exampleColumnWidths), settings.getString("ColumnWidths"));
+		assertTrue(settings.getBoolean("SampleInverse"));
 	}
 }
