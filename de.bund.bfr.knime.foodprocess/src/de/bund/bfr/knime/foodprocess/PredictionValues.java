@@ -98,6 +98,7 @@ public class PredictionValues {
 	}
 
 	private SettingsHelper set;
+
 	public SettingsHelper getSet() {
 		return set;
 	}
@@ -111,17 +112,15 @@ public class PredictionValues {
 	private String unitTemp;
 	private String unitLog10N;
 	private String unitPres;
-	//private String unitLag = "h"
-	
+
 	public PredictionValues(SettingsHelper set) {
 		this.set = set;
 		log10N0 = "log10N0";
 		lag = "lag";
-		unitLog10N0 = FoodProcessNodeModel.defaultBacterialUnit;//"log10(count/g)";
+		unitLog10N0 = FoodProcessNodeModel.defaultBacterialUnit; // "log10(count/g)"
 		unitTime = "h";
 		unitTemp = "°C";
-		unitLog10N = FoodProcessNodeModel.defaultBacterialUnit;//"log10(count/g)";
+		unitLog10N = FoodProcessNodeModel.defaultBacterialUnit; // "log10(count/g)"
 		unitPres = "bar";
-		// , unitLag = "h"
 	}
 }
