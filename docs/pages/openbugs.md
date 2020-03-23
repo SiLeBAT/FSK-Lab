@@ -67,4 +67,4 @@ schools.sim <- bugs(data, inits,
 The visualization script is pretty straightforward and produces the following plot.
 `plot(schools.sim)`
 
-![](assets/openbugs/schooldata.png)
+![](assets/schooldata.png)
