@@ -589,7 +589,10 @@ public class FoodProcessNodeModel extends NodeModel {
 						//System.err.println(parser.evaluate(f) + "\t" + paramX + "\t" + paramY + "\t" + unitX + "\t" + unitY + "\t" + y + "\t" + minX + "\t" + inverseTransform(minX, transformX) + "\t" + convertFromUnit(paramX, inverseTransform(minX, transformX),unitX));
 						return null;
 					}
-					else newT += stepWidth;
+					else {
+						newT = convert(Categories.getTimeCategory(), pv.getUnitTime(), newT,timeUnit );
+						newT += stepWidth;
+					}
 				}
 				Double newTime = convert(Categories.getTimeCategory(), timeUnit, newT, pv.getUnitTime()); //  Categories.getTimeCategory().getStandardUnit()
 				Double theNewVal = getNextLogC(pvnd, newTime);
