@@ -272,6 +272,7 @@ public class MyChartCreator {
 					rendererType = 0;
 				}
 				renderer = new StandardXYItemRenderer(rendererType);
+				renderer.setSeriesPaint(0, color);
 				plot.setRenderer(i, renderer);
 				NumberAxis rangeAxis = getNumberAxis(param, color);
 				plot.setRangeAxis(i, rangeAxis);
