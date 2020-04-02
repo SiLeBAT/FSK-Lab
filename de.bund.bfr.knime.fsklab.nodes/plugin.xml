@@ -51,8 +51,11 @@
      <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.JSSimulatorNodeFactory" />
      <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.JoinerNodeFactory" />
      <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.FSKEditorJSNodeFactory" />
+     
+     <!-- Disable workflow writer and reader nodes (unfinished)
      <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.WorkflowWriterNodeFactory" />
      <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.WorkflowReaderNodeFactory" />
+     -->
    </extension>
    
    <extension point="org.knime.js.core.javascriptComponents">
