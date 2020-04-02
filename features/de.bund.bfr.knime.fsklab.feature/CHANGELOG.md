@@ -6,17 +6,26 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.8.0] - 2020-4-2
+
 ### Fixed
 - Add CodeMirror modes
+- Output view of the joiner node. Refactored to use KNIME's AbstractSVGWizardNodeModel. The view is now always available.
 
-## [1.7.2] - 2019.11.21
+### Changed
+- Changed the UI of the metadata in the joiner to use the new UI of the editor.
+
+### Added
+- Support for different model classes in the joiner
+
+## [1.7.2] - 2019-11-21
 - Selected simulation not saved in simulation configurator node: https://github.com/SiLeBAT/FSK-Lab/issues/380
 - Parameter data type Vector[Numbers] is lost: https://github.com/SiLeBAT/FSK-Lab/issues/381
 - Not responsive tables in editor: https://github.com/SiLeBAT/FSK-Lab/issues/382
 - Add validation in editor: https://github.com/SiLeBAT/FSK-Lab/issues/385
 - Support all the model classes in editor node.
 
-## [1.7.1] - 2019.11.12
+## [1.7.1] - 2019-11-12
 
 ### Fixed
 - Table events in editor node for adding and removing items.
