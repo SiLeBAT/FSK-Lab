@@ -8,15 +8,25 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [1.8.0] - 2020-4-2
 
-### Fixed
-- Add CodeMirror modes
-- Output view of the joiner node. Refactored to use KNIME's AbstractSVGWizardNodeModel. The view is now always available.
+### Added
+- Support for different model classes in the joiner.
+- Syntax highlighting to the joiner for R, Python and Markdown (readme) using the CodeMirror modes.
 
 ### Changed
 - Changed the UI of the metadata in the joiner to use the new UI of the editor.
+- Refactor controlled vocabularies, schemas and most of the editor UI code as JS libraries that can be resused in KNIME: fskmetadata_1.0.0.js, controlled_vocabularies_1.0.0.js and fskutil_1.0.0.js.
+- JoinRelation made immutable
+- Reuse NodeRemovedListener in joiner, editor and simulator nodes. This listener is removing the extra settings folder when the node is removed as was duplicated in these three nodes.
+- packages.json file generation. Replace manual serialization to JSON with Jackson databind (automatic).
+- Make JoinerViewValue.joinerRelations an array. The type of JoinerViewValue.joinerRelations is changed from string to array (JoinRelation[]). Now the serialization/deserialization is done by KNIME instead of the JS view which is now simplified. For simplicity an array is used instead of a list which needs Jackson type boilerplate. Regarding JoinRelation, the source and target parameters are replaced with the IDs of the source and target parameters. This means that instead of the entire parameter metadata, only the ids are saved which is the only information needed in the JS view.
+- Move parameters to view representation (joiner). Remove the first and second model maths (model1Math and model2Math) in the Joiner
+ViewValue and save instead the list of parameters of model 1 and model 2. Only the parameters are used in the view and the rest of the model math is unnecessary.  Also since the parameters are static and do not change, they are moved to the view representation.
+- Move scripts and model type from view value to view representation.
 
-### Added
-- Support for different model classes in the joiner
+### Fixed
+- Output view of the joiner node. Refactored to use KNIME's AbstractSVGWizardNodeModel. The view is now always available.
+- Readme issue in the editor. The readme in the node settings was stored as a string but the source code was trying to read it as a file. If the readme was not empty, then the node would fail because the file did not exist.
+- Remove duplicated warning lines in editor.
 
 ## [1.7.2] - 2019-11-21
 - Selected simulation not saved in simulation configurator node: https://github.com/SiLeBAT/FSK-Lab/issues/380
