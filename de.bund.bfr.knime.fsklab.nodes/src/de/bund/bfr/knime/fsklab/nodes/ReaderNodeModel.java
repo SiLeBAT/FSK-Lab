@@ -563,16 +563,18 @@ class ReaderNodeModel extends NoInternalsModel {
       model = mapper.treeToValue(jsonNode, modelClass);
     } else if (jsonNode.has("version")) {
       // 1.0.3 (with EMF)
+      final ObjectMapper emfMapper = FskPlugin.getDefault().OBJECT_MAPPER;
+      
       GenericModel gm = new GenericModel();
       gm.setModelType("genericModel");
-      gm.setGeneralInformation(SwaggerUtil.convert(mapper
+      gm.setGeneralInformation(SwaggerUtil.convert(emfMapper
           .treeToValue(jsonNode.get("generalInformation"), metadata.GeneralInformation.class)));
       gm.setScope(
-          SwaggerUtil.convert(mapper.treeToValue(jsonNode.get("scope"), metadata.Scope.class)));
+          SwaggerUtil.convert(emfMapper.treeToValue(jsonNode.get("scope"), metadata.Scope.class)));
       gm.setDataBackground(SwaggerUtil.convert(
-          mapper.treeToValue(jsonNode.get("dataBackground"), metadata.DataBackground.class)));
+          emfMapper.treeToValue(jsonNode.get("dataBackground"), metadata.DataBackground.class)));
       gm.setModelMath(SwaggerUtil
-          .convert(mapper.treeToValue(jsonNode.get("modelMath"), metadata.ModelMath.class)));
+          .convert(emfMapper.treeToValue(jsonNode.get("modelMath"), metadata.ModelMath.class)));
       model = gm;
     } else {
       // Pre-RAKIP
