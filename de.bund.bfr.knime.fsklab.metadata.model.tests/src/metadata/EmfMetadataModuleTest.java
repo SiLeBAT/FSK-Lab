@@ -1,9 +1,6 @@
 package metadata;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.net.URI;
@@ -15,8 +12,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.threeten.bp.LocalDate;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.threetenbp.ThreeTenModule;
 
@@ -217,7 +212,7 @@ public class EmfMetadataModuleTest {
 		OLD_PARAMETER.setParameterValueMin("false");
 		OLD_PARAMETER.setParameterValueMax("true");
 		OLD_PARAMETER.setParameterError("2.718");
-		OLD_PARAMETER.setReference(metadata.MetadataFactory.eINSTANCE.createReference());
+		OLD_PARAMETER.setReference(OLD_REFERENCE);
 		
 		OLD_EQUATION = metadata.MetadataFactory.eINSTANCE.createModelEquation();
 		OLD_EQUATION.setModelEquationName("name");
@@ -235,7 +230,7 @@ public class EmfMetadataModuleTest {
 	}
 
 	@Test
-	public void testContact() throws IOException {
+	public void testContact() {
 
 		Contact contact = EmfMetadataModule.convertContact(MAPPER.valueToTree(OLD_CONTACT));
 
@@ -253,9 +248,30 @@ public class EmfMetadataModuleTest {
 		assertEquals("note", contact.getNote());
 		assertEquals("organization", contact.getOrganization());
 	}
+	
+	@Test
+	public void testEmptyContact() {
+		
+		metadata.Contact emptyOldContact = metadata.MetadataFactory.eINSTANCE.createContact();
+		Contact contact = EmfMetadataModule.convertContact(MAPPER.valueToTree(emptyOldContact));
+		
+		assertNull(contact.getTitle());
+		assertNull(contact.getFamilyName());
+		assertNull(contact.getGivenName());
+		assertNull(contact.getEmail());
+		assertNull(contact.getTelephone());
+		assertNull(contact.getStreetAddress());
+		assertNull(contact.getCountry());
+		assertNull(contact.getZipCode());
+		assertNull(contact.getRegion());
+		assertNull(contact.getTimeZone());
+		assertNull(contact.getGender());
+		assertNull(contact.getNote());
+		assertNull(contact.getOrganization());
+	}
 
 	@Test
-	public void testReference() throws Exception {
+	public void testReference() {
 
 		Reference reference = EmfMetadataModule.convertReference(MAPPER.valueToTree(OLD_REFERENCE));
 
@@ -271,9 +287,29 @@ public class EmfMetadataModuleTest {
 		assertEquals("Published", reference.getStatus());
 		assertEquals("www.efsa.europa.eu", reference.getWebsite());
 	}
+	
+	@Test
+	public void testEmptyReference() {
+		
+		metadata.Reference emptyOldReference = metadata.MetadataFactory.eINSTANCE.createReference();
+		Reference reference = EmfMetadataModule.convertReference(MAPPER.valueToTree(emptyOldReference));
+		
+		assertFalse(reference.isIsReferenceDescription());
+		assertNull(reference.getPublicationType());
+		assertNull(reference.getDate());
+		assertNull(reference.getPmid());
+		assertNull(reference.getDoi());
+		assertNull(reference.getTitle());
+		assertNull(reference.getAbstract());
+		assertNull(reference.getAbstract());
+		assertNull(reference.getVolume());
+		assertNull(reference.getIssue());
+		assertNull(reference.getStatus());
+		assertNull(reference.getWebsite());
+	}
 
 	@Test
-	public void testModelCategory() throws Exception {
+	public void testModelCategory() {
 
 		ModelCategory category = EmfMetadataModule.convertModelCategory(MAPPER.valueToTree(OLD_CATEGORY));
 
@@ -281,6 +317,18 @@ public class EmfMetadataModuleTest {
 		assertEquals("subClass", category.getModelSubClass().get(0));
 		assertEquals("classComment", category.getModelClassComment());
 		assertEquals("basicProcess", category.getBasicProcess().get(0));
+	}
+	
+	@Test
+	public void testEmptyModelCategory() {
+		
+		metadata.ModelCategory emptyOldCategory = metadata.MetadataFactory.eINSTANCE.createModelCategory();
+		ModelCategory category = EmfMetadataModule.convertModelCategory(MAPPER.valueToTree(emptyOldCategory));
+		
+		assertNull(category.getModelClass());
+		assertNull(category.getModelSubClass());
+		assertNull(category.getModelClassComment());
+		assertNull(category.getBasicProcess());
 	}
 
 	@Test
@@ -389,6 +437,25 @@ public class EmfMetadataModuleTest {
 	}
 
 	@Test
+	public void testEmptyProduct() {
+		
+		metadata.Product emptyOldProduct = metadata.MetadataFactory.eINSTANCE.createProduct();
+		Product product = EmfMetadataModule.convertProduct(MAPPER.valueToTree(emptyOldProduct));
+		
+		assertNull(product.getName());
+		assertNull(product.getDescription());
+		assertNull(product.getUnit());
+		assertNull(product.getMethod());
+		assertNull(product.getPackaging());
+		assertNull(product.getTreatment());
+		assertNull(product.getOriginCountry());
+		assertNull(product.getOriginArea());
+		assertNull(product.getFisheriesArea());
+		assertNull(product.getProductionDate());
+		assertNull(product.getExpiryDate());
+	}
+	
+	@Test
 	public void testHazard() {
 
 		Hazard hazard = EmfMetadataModule.convertHazard(MAPPER.valueToTree(OLD_HAZARD));
@@ -407,6 +474,28 @@ public class EmfMetadataModuleTest {
 		assertEquals("dose", hazard.getAcuteReferenceDose());
 		assertEquals("intake", hazard.getAcceptableDailyIntake());
 		assertEquals("sum", hazard.getIndSum());
+	}
+	
+	@Test
+	public void testEmptyHazard() {
+		
+		metadata.Hazard emptyOldHazard = metadata.MetadataFactory.eINSTANCE.createHazard();
+		Hazard hazard = EmfMetadataModule.convertHazard(MAPPER.valueToTree(emptyOldHazard));
+		
+		assertNull(hazard.getType());
+		assertNull(hazard.getName());
+		assertNull(hazard.getDescription());
+		assertNull(hazard.getUnit());
+		assertNull(hazard.getAdverseEffect());
+		assertNull(hazard.getSourceOfContamination());
+		assertNull(hazard.getBenchmarkDose());
+		assertNull(hazard.getMaximumResidueLimit());
+		assertNull(hazard.getNoObservedAdverseAffectLevel());
+		assertNull(hazard.getLowestObservedAdverseAffectLevel());
+		assertNull(hazard.getAcceptableOperatorsExposureLevel());
+		assertNull(hazard.getAcuteReferenceDose());
+		assertNull(hazard.getAcceptableDailyIntake());
+		assertNull(hazard.getIndSum());
 	}
 
 	@Test
@@ -428,6 +517,27 @@ public class EmfMetadataModuleTest {
 		assertEquals("factor", group.getPopulationRiskFactor().get(0));
 		assertEquals("season", group.getSeason().get(0));
 	}
+	
+	@Test
+	public void testEmptyPopulationGroup() {
+		
+		metadata.PopulationGroup emptyOldGroup = metadata.MetadataFactory.eINSTANCE.createPopulationGroup();
+		PopulationGroup group = EmfMetadataModule.convertPopulationGroup(MAPPER.valueToTree(emptyOldGroup));
+		
+		assertNull(group.getName());
+		assertNull(group.getTargetPopulation());
+		assertNull(group.getPopulationSpan());
+		assertNull(group.getPopulationDescription());
+		assertNull(group.getPopulationAge());
+		assertNull(group.getPopulationGender());
+		assertNull(group.getBmi());
+		assertNull(group.getSpecialDietGroups());
+		assertNull(group.getPatternConsumption());
+		assertNull(group.getRegion());
+		assertNull(group.getCountry());
+		assertNull(group.getPopulationRiskFactor());
+		assertNull(group.getSeason());
+	}
 
 	@Test
 	public void testAssay() {
@@ -444,6 +554,23 @@ public class EmfMetadataModuleTest {
 		assertEquals("contamination", assay.getContaminationRange());
 		assertEquals("value", assay.getUncertaintyValue());
 	}
+	
+	@Test
+	public void testEmptyAssay() {
+		
+		metadata.Assay emptyOldAssay = metadata.MetadataFactory.eINSTANCE.createAssay();
+		Assay assay = EmfMetadataModule.convertAssay(MAPPER.valueToTree(emptyOldAssay));
+		
+		assertNull(assay.getName());
+		assertNull(assay.getDescription());
+		assertNull(assay.getMoisturePercentage());
+		assertNull(assay.getFatPercentage());
+		assertNull(assay.getDetectionLimit());
+		assertNull(assay.getQuantificationLimit());
+		assertNull(assay.getLeftCensoredData());
+		assertNull(assay.getContaminationRange());
+		assertNull(assay.getUncertaintyValue());
+	}
 
 	@Test
 	public void testLaboratory() {
@@ -453,6 +580,17 @@ public class EmfMetadataModuleTest {
 		assertEquals("name", laboratory.getName());
 		assertEquals("country", laboratory.getCountry());
 		assertEquals("accreditation", laboratory.getAccreditation().get(0));
+	}
+	
+	@Test
+	public void testEmptyLaboratory() {
+		
+		metadata.Laboratory emptyOldLaboratory = metadata.MetadataFactory.eINSTANCE.createLaboratory();
+		Laboratory laboratory = EmfMetadataModule.convertLaboratory(MAPPER.valueToTree(emptyOldLaboratory));
+		
+		assertNull(laboratory.getName());
+		assertNull(laboratory.getCountry());
+		assertTrue(laboratory.getAccreditation().isEmpty());
 	}
 
 	@Test
@@ -471,6 +609,24 @@ public class EmfMetadataModuleTest {
 		assertEquals("unit", sample.getLotSizeUnit());
 		assertEquals("point", sample.getSamplingPoint());
 	}
+	
+	@Test
+	public void testEmptyStudySample() {
+		
+		metadata.StudySample emptyOldSample = metadata.MetadataFactory.eINSTANCE.createStudySample();
+		StudySample sample = EmfMetadataModule.convertStudySample(MAPPER.valueToTree(emptyOldSample));
+		
+		assertNull(sample.getSampleName());
+		assertNull(sample.getProtocolOfSampleCollection());
+		assertNull(sample.getSamplingStrategy());
+		assertNull(sample.getTypeOfSamplingProgram());
+		assertNull(sample.getSamplingMethod());
+		assertNull(sample.getSamplingPlan());
+		assertNull(sample.getSamplingWeight());
+		assertNull(sample.getSamplingSize());
+		assertNull(sample.getLotSizeUnit());
+		assertNull(sample.getSamplingPoint());
+	}
 
 	@Test
 	public void testDietaryAssessmentMethod() {
@@ -484,6 +640,20 @@ public class EmfMetadataModuleTest {
 		assertEquals("items", method.getNumberOfFoodItems().get(0));
 		assertEquals("types", method.getRecordTypes().get(0));
 		assertEquals("descriptors", method.getFoodDescriptors().get(0));
+	}
+	
+	@Test
+	public void testEmptyDietaryAssessmentMethod() {
+		
+		metadata.DietaryAssessmentMethod emptyOldMethod = metadata.MetadataFactory.eINSTANCE.createDietaryAssessmentMethod();
+		DietaryAssessmentMethod method = EmfMetadataModule.convertDietaryAssessmentMethod(MAPPER.valueToTree(emptyOldMethod));
+		
+		assertNull(method.getCollectionTool());
+		assertNull(method.getNumberOfNonConsecutiveOneDay());
+		assertNull(method.getSoftwareTool());
+		assertTrue(method.getNumberOfFoodItems().isEmpty());
+		assertTrue(method.getRecordTypes().isEmpty());
+		assertTrue(method.getFoodDescriptors().isEmpty());
 	}
 
 	@Test
@@ -507,6 +677,30 @@ public class EmfMetadataModuleTest {
 		assertEquals("name", study.getProtocolParametersName());
 		assertEquals("name", study.getProtocolComponentsName());
 		assertEquals("type", study.getProtocolComponentsType());
+	}
+	
+	@Test
+	public void testEmptyStudy() {
+		
+		metadata.Study emptyOldStudy = metadata.MetadataFactory.eINSTANCE.createStudy();
+		Study study = EmfMetadataModule.convertStudy(MAPPER.valueToTree(emptyOldStudy));
+		
+		assertNull(study.getIdentifier());
+		assertNull(study.getTitle());
+		assertNull(study.getDescription());
+		assertNull(study.getDesignType());
+		assertNull(study.getAssayMeasurementType());
+		assertNull(study.getAssayTechnologyType());
+		assertNull(study.getAssayTechnologyPlatform());
+		assertNull(study.getAccreditationProcedureForTheAssayTechnology());
+		assertNull(study.getProtocolName());
+		assertNull(study.getProtocolType());
+		assertNull(study.getProtocolDescription());
+		assertNull(study.getProtocolURI());
+		assertNull(study.getProtocolVersion());
+		assertNull(study.getProtocolParametersName());
+		assertNull(study.getProtocolComponentsName());
+		assertNull(study.getProtocolComponentsType());
 	}
 
 	@Test
@@ -553,7 +747,31 @@ public class EmfMetadataModuleTest {
 	}
 	
 	@Test
-	public void testConvertModelEquation() {
+	public void testEmptyParameter() {
+		
+		metadata.Parameter emptyOldParameter = metadata.MetadataFactory.eINSTANCE.createParameter();
+		Parameter parameter = EmfMetadataModule.convertParameter(MAPPER.valueToTree(emptyOldParameter));
+		
+		assertNull(parameter.getId());
+		assertNull(parameter.getClassification());
+		assertNull(parameter.getName());
+		assertNull(parameter.getDescription());
+		assertNull(parameter.getUnit());
+		assertNull(parameter.getUnitCategory());
+		assertNull(parameter.getDataType());
+		assertNull(parameter.getSource());
+		assertNull(parameter.getSubject());
+		assertNull(parameter.getDistribution());
+		assertNull(parameter.getValue());
+		assertNull(parameter.getSubject());
+		assertNull(parameter.getMinValue());
+		assertNull(parameter.getMaxValue());
+		assertNull(parameter.getError());
+		assertNull(parameter.getReference());
+	}
+	
+	@Test
+	public void testModelEquation() {
 
 		ModelEquation equation = EmfMetadataModule.convertModelEquation(MAPPER.valueToTree(OLD_EQUATION));
 
@@ -565,7 +783,20 @@ public class EmfMetadataModuleTest {
 	}
 	
 	@Test
-	public void testConvertExposure() {
+	public void testEmptyModelEquation() {
+		
+		metadata.ModelEquation emptyOldEquation = metadata.MetadataFactory.eINSTANCE.createModelEquation();
+		ModelEquation equation = EmfMetadataModule.convertModelEquation(MAPPER.valueToTree(emptyOldEquation));
+		
+		assertNull(equation.getName());
+		assertNull(equation.getModelEquationClass());
+		assertNull(equation.getModelEquation());
+		assertNull(equation.getReference());
+		assertNull(equation.getModelHypothesis());
+	}
+	
+	@Test
+	public void testExposure() {
 		
 		Exposure exposure = EmfMetadataModule.convertExposure(MAPPER.valueToTree(OLD_EXPOSURE));
 
@@ -577,7 +808,20 @@ public class EmfMetadataModuleTest {
 	}
 	
 	@Test
-	public void testConvertModelMath() throws IOException {
+	public void testEmptyExposure() {
+		
+		metadata.Exposure emptyOldExposure = metadata.MetadataFactory.eINSTANCE.createExposure();
+		Exposure exposure = EmfMetadataModule.convertExposure(MAPPER.valueToTree(emptyOldExposure));
+		
+		assertNull(exposure.getType());
+		assertNull(exposure.getUncertaintyEstimation());
+		assertNull(exposure.getTreatment());
+		assertNull(exposure.getContamination());
+		assertNull(exposure.getScenario());
+	}
+	
+	@Test
+	public void testModelMath() throws IOException {
 		
 		final metadata.ModelMath oldMath = metadata.MetadataFactory.eINSTANCE.createModelMath();
 		oldMath.setFittingProcedure("procedure");
