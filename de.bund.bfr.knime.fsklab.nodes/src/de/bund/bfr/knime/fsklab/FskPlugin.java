@@ -29,6 +29,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.threetenbp.ThreeTenModule;
 import de.bund.bfr.knime.fsklab.rakip.RakipModule;
+import metadata.EmfMetadataModule;
 
 public class FskPlugin extends AbstractUIPlugin {
 
@@ -53,7 +54,7 @@ public class FskPlugin extends AbstractUIPlugin {
   @Override
   public void start(BundleContext context) throws Exception {
     super.start(context);
-    
+
     // ObjectMapper defaults to use a JsonFactory that automatically closes
     // the stream. When further entries are added to the archive the stream
     // is closed and fails. The AUTO_CLOSE_TARGET needs to be disabled.
@@ -61,8 +62,9 @@ public class FskPlugin extends AbstractUIPlugin {
     JsonFactory jsonFactory = new JsonFactory();
     jsonFactory.configure(JsonGenerator.Feature.AUTO_CLOSE_TARGET, false);
     jsonFactory.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, false);
-    MAPPER104 = new ObjectMapper(jsonFactory);
-    MAPPER104.registerModule(new ThreeTenModule());
+    MAPPER104 = new ObjectMapper(jsonFactory).registerModule(new ThreeTenModule())
+        .registerModule(new EMFModule()).registerModule(new EmfMetadataModule());
+
     MAPPER104.setSerializationInclusion(Include.NON_NULL);
 
     OBJECT_MAPPER = EMFModule.setupDefaultMapper();

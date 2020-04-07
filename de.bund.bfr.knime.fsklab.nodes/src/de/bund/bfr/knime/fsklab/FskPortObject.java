@@ -43,7 +43,6 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
-
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.Icon;
@@ -59,7 +58,6 @@ import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.Border;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -74,7 +72,6 @@ import org.knime.core.node.port.PortObjectZipOutputStream;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.PortTypeRegistry;
 import org.knime.core.util.FileUtil;
-
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
@@ -82,7 +79,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.threetenbp.ThreeTenModule;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
 import de.bund.bfr.knime.fsklab.nodes.common.ui.FLabel;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.FPanel;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.ScriptPanel;
@@ -94,6 +90,10 @@ import de.bund.bfr.metadata.swagger.DataModel;
 import de.bund.bfr.metadata.swagger.DoseResponseModel;
 import de.bund.bfr.metadata.swagger.ExposureModel;
 import de.bund.bfr.metadata.swagger.GenericModel;
+import de.bund.bfr.metadata.swagger.GenericModelDataBackground;
+import de.bund.bfr.metadata.swagger.GenericModelGeneralInformation;
+import de.bund.bfr.metadata.swagger.GenericModelModelMath;
+import de.bund.bfr.metadata.swagger.GenericModelScope;
 import de.bund.bfr.metadata.swagger.HealthModel;
 import de.bund.bfr.metadata.swagger.Model;
 import de.bund.bfr.metadata.swagger.OtherModel;
@@ -102,7 +102,7 @@ import de.bund.bfr.metadata.swagger.ProcessModel;
 import de.bund.bfr.metadata.swagger.QraModel;
 import de.bund.bfr.metadata.swagger.RiskModel;
 import de.bund.bfr.metadata.swagger.ToxicologicalModel;
-import metadata.SwaggerUtil;
+import metadata.EmfMetadataModule;
 
 /**
  * A port object for an FSK model port providing R scripts and model meta data.
@@ -264,7 +264,7 @@ public class FskPortObject implements PortObject {
 		private static final ObjectMapper MAPPER103;
 
 		/** Object mapper for 1.0.4 metadata. */
-		private static final ObjectMapper MAPPER104;
+		private static final ObjectMapper MAPPER104 = FskPlugin.getDefault().MAPPER104;
 
 		public static Map<String, Class<? extends Model>> modelClasses;
 
@@ -282,9 +282,6 @@ public class FskPortObject implements PortObject {
 
 				MAPPER103 = new ObjectMapper(jsonFactory);
 				MAPPER103.registerModule(new EMFModule());
-
-				MAPPER104 = new ObjectMapper(jsonFactory);
-				MAPPER104.registerModule(new ThreeTenModule());
 
 				modelClasses = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 				modelClasses.put("genericModel", GenericModel.class);
@@ -448,27 +445,21 @@ public class FskPortObject implements PortObject {
 
 				else if (entryName.equals(CFG_GENERAL_INFORMATION)) {
 					// Read deprecated EMF metadata
-					final metadata.GeneralInformation deprecatedInformation = MAPPER103.readValue(in,
-							metadata.GeneralInformation.class);
-					in.getNextEntry();
-
-					final metadata.Scope deprecatedScope = MAPPER103.readValue(in, metadata.Scope.class);
-					in.getNextEntry();
-
-					final metadata.DataBackground deprecatedBackground = MAPPER103.readValue(in,
-							metadata.DataBackground.class);
-					in.getNextEntry();
-
-					final metadata.ModelMath deprecatedMath = MAPPER103.readValue(in, metadata.ModelMath.class);
-					in.getNextEntry();
-
-					// Convert to new metadata schema
 					final GenericModel gm = new GenericModel();
 					gm.setModelType("genericModel");
-					gm.setGeneralInformation(SwaggerUtil.convert(deprecatedInformation));
-					gm.setScope(SwaggerUtil.convert(deprecatedScope));
-					gm.setDataBackground(SwaggerUtil.convert(deprecatedBackground));
-					gm.setModelMath(SwaggerUtil.convert(deprecatedMath));
+
+					gm.setGeneralInformation(MAPPER104.readValue(in, GenericModelGeneralInformation.class));
+					in.getNextEntry();
+
+					gm.setScope(MAPPER104.readValue(in, GenericModelScope.class));
+					in.getNextEntry();
+					
+					gm.setDataBackground(MAPPER104.readValue(in, GenericModelDataBackground.class));
+					in.getNextEntry();
+					
+					gm.setModelMath(MAPPER104.readValue(in, GenericModelModelMath.class));
+					in.getNextEntry();
+					
 					modelMetadata = gm;
 				} else if (entryName.equals("modelType")) {
 					// deserialize new models

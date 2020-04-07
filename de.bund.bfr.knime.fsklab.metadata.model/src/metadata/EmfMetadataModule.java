@@ -16,7 +16,9 @@ import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.datatype.threetenbp.ThreeTenModule;
 
 import de.bund.bfr.metadata.swagger.Assay;
 import de.bund.bfr.metadata.swagger.Contact;
@@ -45,6 +47,8 @@ public class EmfMetadataModule extends SimpleModule {
 	private static final long serialVersionUID = 7262661075920787239L;
 
 	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+	
+	private static final ObjectMapper originalMapper = new ObjectMapper().registerModule(new ThreeTenModule());
 
 	public EmfMetadataModule() {
 		super("EmfMetadataModule", Version.unknownVersion());
@@ -158,9 +162,10 @@ public class EmfMetadataModule extends SimpleModule {
 				}
 
 				return information;
-			} else {
+			}
+			else {
 				// Swagger information
-				return parser.readValueAs(GenericModelGeneralInformation.class);
+				return originalMapper.treeToValue(node, GenericModelGeneralInformation.class);
 			}
 		}
 	}
@@ -208,7 +213,7 @@ public class EmfMetadataModule extends SimpleModule {
 				return scope;
 			} else {
 				// Swagger scope
-				return parser.readValueAs(GenericModelScope.class);
+				return originalMapper.treeToValue(node, GenericModelScope.class);
 			}
 		}
 	}
@@ -256,7 +261,7 @@ public class EmfMetadataModule extends SimpleModule {
 				return background;
 			} else {
 				// Swagger data background
-				return parser.readValueAs(GenericModelDataBackground.class);
+				return originalMapper.treeToValue(node, GenericModelDataBackground.class);
 			}
 		}
 	}
@@ -277,20 +282,24 @@ public class EmfMetadataModule extends SimpleModule {
 					math.setFittingProcedure(node.get("fittingProcedure").asText());
 				}
 
-				for (JsonNode child : node.get("parameter")) {
-					math.addParameterItem(convertParameter(child));
+				if (node.has("parameter")) {
+					for (JsonNode child : node.get("parameter")) {
+						math.addParameterItem(convertParameter(child));
+					}
 				}
-				
-				for (JsonNode child : node.get("modelEquation")) {
-					math.addModelEquationItem(convertModelEquation(child));
+
+				if (node.has("modelEquation")) {
+					for (JsonNode child : node.get("modelEquation")) {
+						math.addModelEquationItem(convertModelEquation(child));
+					}
 				}
-				
+
 				if (node.has("exposure")) {
 					math.addExposureItem(convertExposure(node.get("exposure")));
 				}
-				
+
 				// TODO: qualityMeasures (list<StringObject>)
-				
+
 				if (node.has("event")) {
 					for (JsonNode child : node.get("event")) {
 						math.addEventItem(child.get("value").asText());
@@ -300,7 +309,7 @@ public class EmfMetadataModule extends SimpleModule {
 				return math;
 			} else {
 				// Swagger math
-				return parser.readValueAs(GenericModelModelMath.class);
+				return originalMapper.treeToValue(node, GenericModelModelMath.class);
 			}
 		}
 
@@ -964,68 +973,68 @@ public class EmfMetadataModule extends SimpleModule {
 
 		return parameter;
 	}
-	
+
 	static ModelEquation convertModelEquation(JsonNode node) {
-		
+
 		ModelEquation equation = new ModelEquation();
-		
+
 		if (node.has("modelEquationName")) {
 			equation.setName(node.get("modelEquationName").asText());
 		}
-		
+
 		if (node.has("modelEquationClass")) {
 			equation.setModelEquationClass(node.get("modelEquationClass").asText());
 		}
-		
+
 		if (node.has("modelEquation")) {
 			equation.setModelEquation(node.get("modelEquation").asText());
 		}
-		
+
 		if (node.has("reference")) {
 			for (JsonNode child : node.get("reference")) {
 				equation.addReferenceItem(convertReference(child));
 			}
 		}
-		
+
 		if (node.has("hypothesisOfTheModel")) {
 			for (JsonNode child : node.get("hypothesisOfTheModel")) {
 				equation.addModelHypothesisItem(child.get("value").asText());
 			}
 		}
-		
+
 		return equation;
 	}
-	
+
 	static Exposure convertExposure(JsonNode node) {
-		
+
 		Exposure exposure = new Exposure();
-		
+
 		if (node.has("typeOfExposure")) {
 			exposure.setType(node.get("typeOfExposure").asText());
 		}
-		
+
 		if (node.has("uncertaintyEstimation")) {
 			exposure.setUncertaintyEstimation(node.get("uncertaintyEstimation").asText());
 		}
-		
+
 		if (node.has("methodologicalTreatmentOfLeftCensoredData")) {
 			for (JsonNode child : node.get("methodologicalTreatmentOfLeftCensoredData")) {
 				exposure.addTreatmentItem(child.get("value").asText());
 			}
 		}
-		
+
 		if (node.has("levelOfContaminationAfterLeftCensoredDataTreatment")) {
 			for (JsonNode child : node.get("levelOfContaminationAfterLeftCensoredDataTreatment")) {
 				exposure.addContaminationItem(child.get("value").asText());
 			}
 		}
-		
+
 		if (node.has("scenario")) {
 			for (JsonNode child : node.get("scenario")) {
 				exposure.addScenarioItem(child.get("value").asText());
 			}
 		}
-		
+
 		return exposure;
 	}
 
@@ -1102,7 +1111,7 @@ public class EmfMetadataModule extends SimpleModule {
 		CLASSIF.put(metadata.ParameterClassification.OUTPUT.getLiteral(), ClassificationEnum.OUTPUT);
 		CLASSIF.put(metadata.ParameterClassification.CONSTANT.getLiteral(), ClassificationEnum.CONSTANT);
 	}
-	
+
 	/** Internal map used to convert parameter types (literal) to 1.0.4. */
 	public static Map<String, DataTypeEnum> TYPES;
 	static {
