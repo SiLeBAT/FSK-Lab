@@ -612,8 +612,13 @@ final class JoinerNodeModel
       outObj.setJoinerRelation(connections);
 
       // Consider Here that the model type is the same as the second model
-      outObj.modelMetadata = MAPPER.readValue(value.modelMetaData,
-          SwaggerUtil.modelClasses.get(secondInputPort.modelMetadata.getModelType()));
+      if (StringUtils.isNotEmpty(value.modelMetaData)) {
+        outObj.modelMetadata = MAPPER.readValue(value.modelMetaData,
+            SwaggerUtil.modelClasses.get(secondInputPort.modelMetadata.getModelType())); 
+      } else {
+        outObj.modelMetadata = secondInputPort.modelMetadata;
+      }
+      
 
       if (StringUtils.isNotEmpty(value.modelScriptTree)) {
         JsonArray scriptTree = getScriptArray(value.modelScriptTree);
