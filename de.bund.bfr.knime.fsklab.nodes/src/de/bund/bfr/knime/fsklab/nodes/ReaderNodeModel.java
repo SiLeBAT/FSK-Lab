@@ -81,6 +81,10 @@ import de.bund.bfr.knime.fsklab.FskSimulation;
 import de.bund.bfr.knime.fsklab.JoinRelation;
 import de.bund.bfr.knime.fsklab.rakip.RakipUtil;
 import de.bund.bfr.metadata.swagger.GenericModel;
+import de.bund.bfr.metadata.swagger.GenericModelDataBackground;
+import de.bund.bfr.metadata.swagger.GenericModelGeneralInformation;
+import de.bund.bfr.metadata.swagger.GenericModelModelMath;
+import de.bund.bfr.metadata.swagger.GenericModelScope;
 import de.bund.bfr.metadata.swagger.Model;
 import de.bund.bfr.metadata.swagger.Parameter;
 import de.unirostock.sems.cbarchive.ArchiveEntry;
@@ -563,23 +567,18 @@ class ReaderNodeModel extends NoInternalsModel {
       model = mapper.treeToValue(jsonNode, modelClass);
     } else if (jsonNode.has("version")) {
       // 1.0.3 (with EMF)
-      final ObjectMapper emfMapper = FskPlugin.getDefault().OBJECT_MAPPER;
-      
       GenericModel gm = new GenericModel();
       gm.setModelType("genericModel");
-      gm.setGeneralInformation(SwaggerUtil.convert(emfMapper
-          .treeToValue(jsonNode.get("generalInformation"), metadata.GeneralInformation.class)));
-      gm.setScope(
-          SwaggerUtil.convert(emfMapper.treeToValue(jsonNode.get("scope"), metadata.Scope.class)));
-      gm.setDataBackground(SwaggerUtil.convert(
-          emfMapper.treeToValue(jsonNode.get("dataBackground"), metadata.DataBackground.class)));
-      gm.setModelMath(SwaggerUtil
-          .convert(emfMapper.treeToValue(jsonNode.get("modelMath"), metadata.ModelMath.class)));
+      gm.setGeneralInformation(mapper.treeToValue(jsonNode.get("generalInformation"), GenericModelGeneralInformation.class));
+      gm.setScope(mapper.treeToValue(jsonNode.get("scope"), GenericModelScope.class));
+      gm.setDataBackground(mapper.treeToValue(jsonNode.get("dataBackground"), GenericModelDataBackground.class));
+      gm.setModelMath(mapper.treeToValue(jsonNode.get("modelMath"), GenericModelModelMath.class));
+      
       model = gm;
     } else {
       // Pre-RAKIP
       de.bund.bfr.knime.fsklab.rakip.GenericModel rakipModel =
-          mapper.treeToValue(jsonNode, de.bund.bfr.knime.fsklab.rakip.GenericModel.class);;
+          mapper.treeToValue(jsonNode, de.bund.bfr.knime.fsklab.rakip.GenericModel.class);
 
       GenericModel gm = new GenericModel();
       gm.setModelType("genericModel");
