@@ -18,14 +18,14 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations,
  org.apache.commons.lang3,
  org.apache.servicemix.bundles.poi,
  org.eclipse.ui,
- org.knime.base,
  org.knime.ext.r.type,
  org.knime.ext.svg,
  org.knime.js.core,
  org.knime.json,
  org.slf4j.api,
  org.knime.python2,
- com.google.gson
+ com.google.gson,
+ org.knime.core;bundle-version="3.7.2"
 Bundle-Vendor: German Federal Institute for Risk Assessment (BfR)
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: de.bund.bfr.knime.fsklab.FskPlugin
@@ -80,6 +80,7 @@ Import-Package: com.gmail.gcolaianni5.jris.bean,
  de.unirostock.sems.cbarchive,
  de.unirostock.sems.cbarchive.meta,
  org.jdom2,
+ org.knime.base.node.util.exttool,
  org.sbml.jsbml,
  org.sbml.jsbml.ext.comp,
  org.sbml.jsbml.xml
