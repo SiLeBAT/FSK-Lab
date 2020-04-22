@@ -94,7 +94,7 @@ public class SecDialog extends JDialog {
 
 		//======== dialogPane ========
 		{
-			dialogPane.setBorder(Borders.DIALOG_BORDER);
+			dialogPane.setBorder(Borders.DIALOG);
 			dialogPane.setLayout(new BorderLayout());
 
 			//======== contentPanel ========

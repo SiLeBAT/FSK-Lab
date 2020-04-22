@@ -18,7 +18,6 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations,
  org.apache.commons.lang3,
  org.apache.servicemix.bundles.poi,
  org.eclipse.ui,
- org.jdom2,
  org.knime.base,
  org.knime.ext.r.type,
  org.knime.ext.svg,
@@ -26,7 +25,6 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations,
  org.knime.json,
  org.slf4j.api,
  org.knime.python2,
- de.bund.bfr.formats,
  com.google.gson
 Bundle-Vendor: German Federal Institute for Risk Assessment (BfR)
 Bundle-ActivationPolicy: lazy
@@ -76,3 +74,12 @@ Export-Package: de.bund.bfr.knime.fsklab;
    javax.swing,
    de.bund.bfr.knime.fsklab.r.client",
  de.bund.bfr.knime.fsklab.nodes.plot;uses:="org.knime.python2.kernel,de.bund.bfr.knime.fsklab.r.client"
+Import-Package: com.gmail.gcolaianni5.jris.bean,
+ com.gmail.gcolaianni5.jris.engine,
+ com.gmail.gcolaianni5.jris.exception,
+ de.unirostock.sems.cbarchive,
+ de.unirostock.sems.cbarchive.meta,
+ org.jdom2,
+ org.sbml.jsbml,
+ org.sbml.jsbml.ext.comp,
+ org.sbml.jsbml.xml

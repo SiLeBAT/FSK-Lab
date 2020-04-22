@@ -10,7 +10,6 @@ Require-Bundle: org.eclipse.ui,
  org.apache.poi,
  org.knime.ext.jfreechart,
  org.knime.ext.jep,
- com.jgoodies,
  com.thoughtworks.xstream,
  net.sf.jabref,
  quick.dbtable;visibility:=reexport,
@@ -48,3 +47,6 @@ Bundle-ClassPath: .,
  lib/sqltool.jar
 Bundle-Vendor: BfR
 Automatic-Module-Name: org.hsh.bfr.db
+Import-Package: com.jgoodies.forms.factories,
+ com.jgoodies.forms.layout,
+ com.jgoodies.looks.windows

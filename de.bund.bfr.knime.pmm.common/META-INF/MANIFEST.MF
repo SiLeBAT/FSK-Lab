@@ -7,7 +7,6 @@ Bundle-Activator: de.bund.bfr.knime.pmm.common.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.knime.core,
- org.jdom2;visibility:=reexport,
  org.hsh.bfr.db,
  org.knime.ext.svg,
  org.apache.poi;visibility:=reexport,
@@ -16,8 +15,8 @@ Require-Bundle: org.eclipse.ui,
  com.thoughtworks.xstream;visibility:=reexport,
  org.knime.ext.jep;visibility:=reexport,
  org.apache.commons.math3;visibility:=reexport,
- com.jgoodies;visibility:=reexport,
- com.google.guava
+ com.google.guava,
+ com.jgoodies.common;bundle-version="1.4.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ClassPath: .,
@@ -35,3 +34,6 @@ Export-Package: de.bund.bfr.knime.pmm.common,
  de.bund.bfr.knime.pmm.extendedtable.items,
  de.bund.bfr.knime.pmm.extendedtable.pmmtablemodel
 Automatic-Module-Name: de.bund.bfr.knime.pmm.common
+Import-Package: org.jdom2,
+ org.jdom2.input,
+ org.jdom2.output

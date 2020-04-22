@@ -20,7 +20,9 @@ Require-Bundle: org.eclipse.core.runtime,
  de.bund.bfr.knime.pmm.common;bundle-version="1.0.0",
  org.knime.workbench.ui.layout,
  org.hsh.bfr.db;bundle-version="1.0.0",
- de.bund.bfr.knime.pmm.nodes
+ de.bund.bfr.knime.pmm.nodes,
+ org.knime.workbench.editor;bundle-version="3.7.2",
+ org.knime.workbench.ui;bundle-version="3.7.0"
 Bundle-ActivationPolicy: lazy
 Export-Package: de.bund.bfr.knime.foodprocess,
  de.bund.bfr.knime.foodprocess.lib
@@ -31,9 +33,6 @@ Import-Package: de.bund.bfr.knime.pcml.port,
  org.eclipse.ui.dialogs,
  org.eclipse.ui.ide,
  org.hsh.bfr.db,
- org.hsh.bfr.db.imports,
- org.knime.workbench.editor2,
- org.knime.workbench.ui.layout.commands,
- org.knime.workbench.ui.nature
+ org.hsh.bfr.db.imports
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 

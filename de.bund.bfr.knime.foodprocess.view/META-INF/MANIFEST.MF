@@ -15,7 +15,9 @@ Require-Bundle: org.eclipse.core.runtime,
 Bundle-ActivationPolicy: lazy
 Export-Package: de.bund.bfr.knime.foodprocess.view
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Import-Package: de.bund.bfr.knime.foodprocess.lib,
+Import-Package: com.jgoodies.forms.factories,
+ com.jgoodies.forms.layout,
+ de.bund.bfr.knime.foodprocess.lib,
  de.bund.bfr.knime.pcml.node.pcmltotable,
  de.bund.bfr.knime.pcml.port,
  de.bund.bfr.knime.util,

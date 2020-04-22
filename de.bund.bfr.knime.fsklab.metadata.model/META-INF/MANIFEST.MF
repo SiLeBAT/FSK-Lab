@@ -52,7 +52,12 @@ Require-Bundle: org.eclipse.core.runtime,
  org.apache.commons.lang3,
  org.junit,
  org.glassfish.javax.json,
- de.bund.bfr.formats,
  com.google.gson
 Bundle-ActivationPolicy: lazy
 Automatic-Module-Name: de.bund.bfr.knime.fsklab.metadata.model
+Import-Package: com.gmail.gcolaianni5.jris.bean,
+ com.gmail.gcolaianni5.jris.engine,
+ com.gmail.gcolaianni5.jris.exception,
+ de.bund.bfr.pmfml,
+ ezvcard,
+ ezvcard.io.chain;version="0.10.6"

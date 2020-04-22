@@ -7,7 +7,6 @@ Bundle-Activator: de.bund.bfr.knime.fsklab.nodes.common.Activator
 Require-Bundle: com.fifesoft.rsyntaxtextarea,
  com.google.guava,
  com.toedter.jcalendar,
- de.bund.bfr.formats,
  de.bund.bfr.knime.fsklab.metadata.model,
  org.eclipse.core.runtime,
  org.knime.core
@@ -20,3 +19,4 @@ Export-Package:
 Bundle-ClassPath: .,
  libs/bfr-swing-1.0-SNAPSHOT.jar
 Bundle-Vendor: German Federal Institute for Risk Assessment (BfR)
+Import-Package: de.bund.bfr.pmfml

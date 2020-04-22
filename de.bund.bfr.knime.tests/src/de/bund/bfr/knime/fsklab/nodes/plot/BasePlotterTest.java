@@ -4,12 +4,14 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import de.bund.bfr.knime.fsklab.r.client.RController;
 
+@Ignore
 public class BasePlotterTest {
 	
 	@Rule

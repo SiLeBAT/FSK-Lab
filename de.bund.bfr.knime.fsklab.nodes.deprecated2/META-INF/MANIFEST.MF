@@ -10,11 +10,18 @@ Require-Bundle: com.google.guava,
  de.bund.bfr.knime.fsklab.r,
  org.apache.servicemix.bundles.poi,
  org.knime.base,
- org.knime.ext.r.type,
- org.jdom2,
- de.bund.bfr.formats
+ org.knime.ext.r.type
 Bundle-ClassPath: .,
  libs/fskml-0.0.1-SNAPSHOT.jar
 Automatic-Module-Name: de.bund.bfr.knime.fsklab.nodes.deprecated2
 Export-Package: de.bund.bfr.knime.pmm.fskx.creator
 Bundle-Vendor: German Federal Institute for Risk Assessment (BfR)
+Import-Package: de.bund.bfr.pmfml,
+ de.bund.bfr.pmfml.sbml,
+ de.unirostock.sems.cbarchive,
+ de.unirostock.sems.cbarchive.meta,
+ org.jdom2,
+ org.sbml.jsbml,
+ org.sbml.jsbml.util.filters,
+ org.sbml.jsbml.xml,
+ org.sbml.jsbml.xml.stax

@@ -12,12 +12,10 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations,
  org.knime.ext.r.type,
  org.knime.js.core,
  org.jsoup,
- org.jdom2,
  de.bund.bfr.knime.nodes.util,
  de.bund.bfr.knime.fsklab.r,
  de.bund.bfr.knime.fsklab.nodes.common,
  de.bund.bfr.knime.fsklab.metadata.model,
- de.bund.bfr.formats,
  com.toedter.jcalendar
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
@@ -26,3 +24,12 @@ Bundle-ClassPath: libs/fskml-1.0.5.jar,
  libs/bfr-swing-1.0-SNAPSHOT.jar
 Export-Package: de.bund.bfr.knime.fsklab.nodes
 Automatic-Module-Name: de.bund.bfr.knime.fsklab.nodes.deprecated
+Import-Package: de.bund.bfr.pmfml,
+ de.bund.bfr.pmfml.sbml,
+ de.unirostock.sems.cbarchive,
+ de.unirostock.sems.cbarchive.meta,
+ org.jdom2,
+ org.sbml.jsbml,
+ org.sbml.jsbml.ext.arrays,
+ org.sbml.jsbml.xml,
+ org.sbml.jsbml.xml.stax

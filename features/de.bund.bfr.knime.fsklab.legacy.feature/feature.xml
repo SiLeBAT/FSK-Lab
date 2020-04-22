@@ -33,8 +33,6 @@ along with this program.  If not, see &quot;http://www.gnu.org/licenses/&quot;.
       <import plugin="org.apache.servicemix.bundles.poi"/>
       <import plugin="org.knime.base"/>
       <import plugin="org.knime.ext.r.type"/>
-      <import plugin="org.jdom2"/>
-      <import plugin="de.bund.bfr.formats"/>
       <import plugin="com.fasterxml.jackson.core.jackson-annotations"/>
       <import plugin="org.apache.commons.lang3"/>
       <import plugin="org.knime.js.core"/>
@@ -53,6 +51,13 @@ along with this program.  If not, see &quot;http://www.gnu.org/licenses/&quot;.
       <import plugin="org.knime.core"/>
       <import plugin="com.sun.jna"/>
       <import plugin="com.fifesoft.rsyntaxtextarea"/>
+      <import plugin="de.bund.bfr.pmfml"/>
+      <import plugin="de.unirostock.sems.CombineArchive"/>
+      <import plugin="org.jdom.2"/>
+      <import plugin="org.sbml.jsbml.core"/>
+      <import plugin="org.sbml.jsbml.ext.jsbml-arrays"/>
+      <import plugin="com.gmail.gcolaianni5.jris"/>
+      <import plugin="com.googlecode.ez-vcard"/>
    </requires>
 
    <plugin

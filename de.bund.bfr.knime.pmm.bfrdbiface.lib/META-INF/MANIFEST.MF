@@ -16,3 +16,6 @@ Export-Package: de.bund.bfr.knime.pmm.bfrdbiface.lib
 Bundle-ClassPath: .
 Bundle-Vendor: BfR
 Automatic-Module-Name: de.bund.bfr.knime.pmm.bfrdbiface.lib
+Import-Package: com.jgoodies.forms.factories,
+ com.jgoodies.forms.layout,
+ org.jdom2

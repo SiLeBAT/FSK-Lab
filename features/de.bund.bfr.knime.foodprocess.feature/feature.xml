@@ -54,16 +54,21 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       <import plugin="org.knime.workbench.core"/>
       <import plugin="org.knime.workbench.repository"/>
       <import plugin="org.knime.base"/>
-      <import plugin="de.bund.bfr.knime.pmm.bfrdbiface.lib"/>
-      <import plugin="de.bund.bfr.knime.pmm.common"/>
       <import plugin="org.knime.workbench.ui.layout"/>
       <import plugin="de.bund.bfr.knime.pmm.nodes"/>
-      <import plugin="org.hsh.bfr.db"/>
       <import plugin="org.eclipse.core.resources"/>
       <import plugin="org.eclipse.ui.ide"/>
       <import plugin="org.knime.workbench.editor"/>
       <import plugin="org.knime.workbench.ui"/>
-      <import plugin="org.knime.core"/>
+      <import plugin="de.bund.bfr.knime.pmm.bfrdbiface.lib" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="de.bund.bfr.knime.pmm.common" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.hsh.bfr.db" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.knime.core" version="2.5.4" match="greaterOrEqual"/>
+      <import plugin="de.bund.bfr.knime.foodprocess.util" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.junit"/>
+      <import plugin="org.knime.core.pmml"/>
+      <import plugin="org.knime.jsnippets"/>
+      <import plugin="com.jgoodies.forms"/>
    </requires>
 
    <plugin

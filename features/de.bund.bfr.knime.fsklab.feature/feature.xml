@@ -55,7 +55,7 @@ along with this program.  If not, see &amp;quot;http://www.gnu.org/licenses/&amp
       <import plugin="org.knime.json"/>
       <import plugin="org.slf4j.api"/>
       <import plugin="org.knime.python2"/>
-      <import plugin="org.apache.commons.io" version="2.5.0" match="greaterOrEqual"/>
+      <import plugin="org.jdom.2"/>
    </requires>
 
    <plugin
@@ -101,24 +101,6 @@ along with this program.  If not, see &amp;quot;http://www.gnu.org/licenses/&amp
          unpack="false"/>
 
    <plugin
-         id="org.jdom2"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="de.bund.bfr.formats"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="com.jgoodies"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
          id="com.thoughtworks.xstream"
          download-size="0"
          install-size="0"
@@ -153,5 +135,61 @@ along with this program.  If not, see &amp;quot;http://www.gnu.org/licenses/&amp
          download-size="0"
          install-size="0"
          version="0.0.0"/>
+
+   <plugin
+         id="com.gmail.gcolaianni5.jris"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="de.bund.bfr.pmfml"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="de.unirostock.sems.CombineArchive"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.googlecode.ez-vcard"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.github.mangstadt.vinnie"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.sbml.jsbml.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.sbml.jsbml.ext.jsbml-arrays"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.sbml.jsbml.ext.jsbml-comp"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
 </feature>

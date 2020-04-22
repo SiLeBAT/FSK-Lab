@@ -30,7 +30,7 @@
 		</repository>
 		<repository>
 			<id>fsk-dependencies</id>
-			<url>https://dl.bintray.com/silebat/fsk_dependencies</url>
+			<url>https://dl.bintray.com/miguelalba/fsk-dependencies</url>
 			<layout>p2</layout>
 		</repository>
 		<repository>
@@ -55,7 +55,7 @@
 		<module>de.bund.bfr.knime.pmm.common</module>
 		<module>de.bund.bfr.knime.pmm.nodes</module>
 		<module>org.hsh.bfr.db</module>
-		
+
 		<module>de.bund.bfr.knime.foodprocess</module>
 		<module>de.bund.bfr.knime.foodprocess.pcml</module>
 		<module>de.bund.bfr.knime.foodprocess.util</module>
@@ -72,9 +72,16 @@
 		<!-- Test report -->
 		<module>de.bund.bfr.knime.testreport</module>
 
+		<!-- Old dependencies -->
+		<module>com.thoughtworks.xstream</module>
+		<module>net.sf.jabref</module>
+		<module>org.freixas.jcalendar</module>
+		<module>org.javers</module>
+		<module>quick.dbtable</module>
+
 		<!-- Features -->
 		<module>features</module>
-		
+
 		<!-- Update site -->
 		<module>de.bund.bfr.knime.update</module>
 	</modules>
