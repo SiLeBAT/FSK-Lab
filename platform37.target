@@ -33,7 +33,7 @@
 <repository location="https://3d-e-chem.github.io/updates"/>
 </location>
 	<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-		<repository location="https://dl.bintray.com/miguelalba/fsk-dependencies/plugins/"/>
+		<repository location="https://dl.bintray.com/miguelalba/fsk-dependencies/"/>
 		<unit id="com.gmail.gcolaianni5.jris" version="1.0.0"/>
 		<unit id="com.googlecode.ez-vcard" version="0.10.6"/>		
 	    <unit id="com.jgoodies.common" version="1.4.0"/>
