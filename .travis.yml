@@ -31,7 +31,3 @@ deploy:
   skip_cleanup: true # to upload artifacts created during the build
   script: bash bintray.sh
   on: test
-- provider: script
-  skip_cleanup: true # to upload artifacts created during the build
-  script: bash bintray_test.sh
-  on: fix_osgi_deps
