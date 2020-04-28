@@ -2,7 +2,7 @@ API="https://api.bintray.com"
 PROPS=";bt_package=update;bt_version=version;publish=1;override=1"
 FOLDER="target/repository"
 
-SUBJECT=miguelalba
+SUBJECT=silebat
 REPO=fsk-dependencies
 
 BINTRAY_USER=$1

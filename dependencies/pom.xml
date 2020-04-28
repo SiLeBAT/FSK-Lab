@@ -13,10 +13,6 @@
             <id>bfr-formats</id>
             <url>https://dl.bintray.com/silebat/bfr-formats</url>
         </repository>
-        <repository>
-            <id>miguelalba-libs</id>
-            <url>https://dl.bintray.com/miguelalba/libs</url>
-        </repository>
     </repositories>
 
     <build>

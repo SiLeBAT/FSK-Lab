@@ -30,7 +30,7 @@
 		</repository>
 		<repository>
 			<id>fsk-dependencies</id>
-			<url>https://dl.bintray.com/miguelalba/fsk-dependencies</url>
+			<url>https://dl.bintray.com/silebat/fsk-dependencies</url>
 			<layout>p2</layout>
 		</repository>
 		<repository>
