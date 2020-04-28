@@ -14,7 +14,9 @@ Require-Bundle: org.eclipse.ui,
  net.sf.jabref,
  quick.dbtable;visibility:=reexport,
  org.freixas.jcalendar,
- org.knime.core
+ org.knime.core,
+ com.jgoodies.forms;bundle-version="1.6.0",
+ com.jgoodies.looks;bundle-version="2.5.2"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.hsh.bfr.db,
@@ -47,6 +49,3 @@ Bundle-ClassPath: .,
  lib/sqltool.jar
 Bundle-Vendor: BfR
 Automatic-Module-Name: org.hsh.bfr.db
-Import-Package: com.jgoodies.forms.factories,
- com.jgoodies.forms.layout,
- com.jgoodies.looks.windows

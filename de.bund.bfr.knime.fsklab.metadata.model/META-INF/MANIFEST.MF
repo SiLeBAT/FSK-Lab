@@ -51,12 +51,9 @@ Require-Bundle: org.eclipse.emf.ecore;visibility:=reexport,
  org.apache.commons.lang3,
  org.junit,
  org.glassfish.javax.json,
- com.google.gson
+ com.google.gson,
+ com.gmail.gcolaianni5.jris;bundle-version="1.0.0",
+ de.bund.bfr.pmfml;bundle-version="0.0.12",
+ com.googlecode.ez-vcard;bundle-version="0.10.6"
 Bundle-ActivationPolicy: lazy
 Automatic-Module-Name: de.bund.bfr.knime.fsklab.metadata.model
-Import-Package: com.gmail.gcolaianni5.jris.bean,
- com.gmail.gcolaianni5.jris.engine,
- com.gmail.gcolaianni5.jris.exception,
- de.bund.bfr.pmfml,
- ezvcard,
- ezvcard.io.chain;version="0.10.6"

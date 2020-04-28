@@ -15,6 +15,6 @@ Require-Bundle: de.bund.bfr.knime.pmm.nodes,
  de.bund.bfr.knime.fsklab.r,
  org.knime.python2,
  de.bund.bfr.knime.pmm.common,
- org.hamcrest.library
-Import-Package: de.bund.bfr.pmfml,
- org.jdom2
+ org.hamcrest.library,
+ de.bund.bfr.pmfml;bundle-version="0.0.12",
+ org.jdom.2;bundle-version="2.0.6"

@@ -42,21 +42,17 @@ along with this program.  If not, see &amp;quot;http://www.gnu.org/licenses/&amp
       <import plugin="com.fasterxml.jackson.core.jackson-databind" version="2.8.9" match="compatible"/>
       <import plugin="org.apache.servicemix.bundles.poi"/>
       <import plugin="org.junit"/>
+      <import plugin="org.glassfish.javax.json" version="1.0.4" match="compatible"/>
       <import plugin="com.google.gson"/>
       <import plugin="com.fifesoft.rsyntaxtextarea"/>
       <import plugin="com.google.guava"/>
       <import plugin="com.toedter.jcalendar" version="1.4.0" match="equivalent"/>
-      <import plugin="org.apache.commons.lang"/>
       <import plugin="org.knime.js.core"/>
       <import plugin="org.knime.json"/>
       <import plugin="org.slf4j.api"/>
       <import plugin="org.knime.python2"/>
       <import plugin="org.knime.core" version="3.7.2" match="greaterOrEqual"/>
-      <import plugin="org.jdom.2"/>
-      <import plugin="org.knime.ext.svg"/>
-      <import plugin="org.knime.base"/>
       <import plugin="org.eclipse.osgi" version="3.10.0" match="compatible"/>
-      <import plugin="org.w3c.dom.svg"/>
       <import plugin="org.apache.xmlbeans" version="2.6.0" match="compatible"/>
       <import plugin="org.apache.log4j" version="1.2.15" match="equivalent"/>
       <import plugin="org.knime.core.util" version="5.10.0" match="compatible"/>
@@ -68,7 +64,21 @@ along with this program.  If not, see &amp;quot;http://www.gnu.org/licenses/&amp
       <import plugin="org.apache.commons.codec" version="1.3.0" match="compatible"/>
       <import plugin="com.fasterxml.jackson.datatype.jackson-datatype-jdk8" version="2.7.1" match="compatible"/>
       <import plugin="com.sun.jna" version="3.5.2"/>
-      <import plugin="org.glassfish.javax.json" version="1.0.4" match="compatible"/>
+      <import plugin="com.gmail.gcolaianni5.jris" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="de.bund.bfr.pmfml" version="0.0.12" match="greaterOrEqual"/>
+      <import plugin="com.googlecode.ez-vcard" version="0.10.6" match="greaterOrEqual"/>
+      <import plugin="org.knime.base" version="3.7.2" match="greaterOrEqual"/>
+      <import plugin="org.apache.servicemix.bundles.poi" version="3.17.0" match="greaterOrEqual"/>
+      <import plugin="de.unirostock.sems.CombineArchive" version="1.2.1" match="greaterOrEqual"/>
+      <import plugin="org.jdom.2" version="2.0.6" match="greaterOrEqual"/>
+      <import plugin="org.sbml.jsbml.core" version="1.3.0" match="greaterOrEqual"/>
+      <import plugin="org.sbml.jsbml.ext.jsbml-arrays" version="1.3.0" match="greaterOrEqual"/>
+      <import plugin="org.sbml.jsbml.ext.jsbml-comp" version="1.3.0" match="greaterOrEqual"/>
+      <import plugin="com.sun.jna" version="4.4.0" match="greaterOrEqual"/>
+      <import plugin="org.apache.commons.lang3" version="3.3.1" match="greaterOrEqual"/>
+      <import plugin="org.knime.ext.svg" version="3.7.0" match="greaterOrEqual"/>
+      <import plugin="org.apache.commons.lang" version="2.6.0" match="greaterOrEqual"/>
+      <import plugin="org.w3c.dom.events"/>
    </requires>
 
    <plugin
