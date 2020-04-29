@@ -80,4 +80,3 @@ Export-Package: de.bund.bfr.knime.fsklab;
    javax.swing,
    de.bund.bfr.knime.fsklab.r.client",
  de.bund.bfr.knime.fsklab.nodes.plot;uses:="org.knime.python2.kernel,de.bund.bfr.knime.fsklab.r.client"
-Import-Package: org.w3c.dom.events;version="[3.0.0,4.0.0)"
