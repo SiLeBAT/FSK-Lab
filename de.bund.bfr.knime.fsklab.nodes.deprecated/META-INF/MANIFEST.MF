@@ -6,8 +6,8 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: de.bund.bfr.knime.fsklab.nodes.fsk.Activator
 Bundle-Vendor: German Federal Institute for Risk Assessment (BfR)
 Require-Bundle: com.fasterxml.jackson.core.jackson-annotations,
- org.apache.commons.lang3,
- org.apache.servicemix.bundles.poi,
+ org.apache.commons.lang3;bundle-version="3.3.1",
+ org.apache.servicemix.bundles.poi;bundle-version="3.17.0",
  org.knime.base,
  org.knime.ext.r.type,
  org.knime.js.core,

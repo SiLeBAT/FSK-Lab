@@ -5,12 +5,12 @@ Bundle-SymbolicName: de.bund.bfr.knime.fsklab.r;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: de.bund.bfr.knime.fsklab.r.Activator
 Bundle-Vendor: German Federal Institute for Risk Assessment (BfR)
-Require-Bundle: com.sun.jna,
- de.bund.bfr.knime.fsklab.preferences,
- org.apache.commons.lang3,
+Require-Bundle: com.sun.jna;bundle-version="4.4.0",
+ de.bund.bfr.knime.fsklab.preferences;bundle-version="1.0.0",
+ org.apache.commons.lang3;bundle-version="3.3.1",
  org.eclipse.core.runtime,
- org.knime.core,
- org.knime.ext.r.type
+ org.knime.core;bundle-version="[3.7.2,5.0.0)",
+ org.knime.ext.r.type;bundle-version="[3.7.0,5.0.0)"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Automatic-Module-Name: de.bund.bfr.knime.fsklab.r
 Bundle-ActivationPolicy: lazy

@@ -9,7 +9,7 @@ Require-Bundle: com.fifesoft.rsyntaxtextarea,
  com.toedter.jcalendar,
  de.bund.bfr.knime.fsklab.metadata.model,
  org.eclipse.core.runtime,
- org.knime.core,
+ org.knime.core;bundle-version="[3.7.2,5.0.0)",
  de.bund.bfr.pmfml;bundle-version="0.0.12"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Automatic-Module-Name: de.bund.bfr.knime.fsklab.nodes.common
