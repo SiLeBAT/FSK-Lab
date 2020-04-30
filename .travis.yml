@@ -2,7 +2,9 @@ language: java
 dist: trusty
 jdk:
   - openjdk8
-script: xvfb-run mvn verify -B -Pjacoco
+script:
+- xvfb-run mvn verify -B -Pjacoco
+- bash deployment_check.sh
 
 # Cache maven repository to speed up build
 cache:
