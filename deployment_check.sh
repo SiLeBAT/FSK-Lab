@@ -1,8 +1,8 @@
-FOLDER="$TRAVIS_BUILD_DIR/de.bund.bfr.knime.update/target/repository"
-KNIME_FILE="knime_3.7.2.linux.gtk.x86_64.tar.gz"
-wget -v "http://download.knime.org/analytics-platform/linux/$KNIME_FILE"
-tar -xzf $KNIME_FILE
-rm $KNIME_FILE
+#FOLDER="$TRAVIS_BUILD_DIR/de.bund.bfr.knime.update/target/repository"
+#KNIME_FILE="knime_3.7.2.linux.gtk.x86_64.tar.gz"
+#wget -v "http://download.knime.org/analytics-platform/linux/$KNIME_FILE"
+#tar -xzf $KNIME_FILE
+#rm $KNIME_FILE
 
 KNIME37="https://update.knime.org/analytics-platform/3.7"
 
