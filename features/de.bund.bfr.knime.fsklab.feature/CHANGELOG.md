@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+- Broken visualization of scripts in the view of combined port objects https://github.com/SiLeBAT/FSK-Lab/issues/413
+
 ## [1.8.0] - 2020-4-2
 
 ### Added
