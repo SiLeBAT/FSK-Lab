@@ -70,6 +70,7 @@ script:
 - knime_4.1.2/knime -application org.eclipse.equinox.p2.director -repository "$KNIME41,$NEW_FSK" -installIU de.bund.bfr.knime.fsklab.feature.feature.group,org.knime.features.testing.application.feature.group
 - knime_4.1.2/knime -application org.eclipse.equinox.p2.director -lir
 - wget -v "$WF/$WF_NAME"
+- knime_4.1.2/knime -nosplash -application org.knime.product.KNIME_BATCH_APPLICATION -workflowFile="$WF_NAME"
 - KNIME_OUT=$(knime_4.1.2/knime -nosplash -application org.knime.product.KNIME_BATCH_APPLICATION -workflowFile="$WF_NAME" --launcher.suppressErrors)
 - if [[ "$KNIME_OUT" != *"$KNIME_SUCCESS"* ]]; then  echo "Workflow failed";exit 1; else echo "4.1.2 WORKFLOW SUCCESSFUL ON FRESH INSTALL"; fi
 - rm $WF_NAME
