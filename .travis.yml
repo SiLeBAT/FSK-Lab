@@ -16,7 +16,7 @@ script:
 - OLD_FSK="https://dl.bintray.com/silebat/fsklab_test"
 - NEW_FSK="file:$TRAVIS_BUILD_DIR/de.bund.bfr.knime.update/target/repository"
 
-- WF="https://dl.bintray.com/schuelet-test/test_wf"
+- WF="https://dl.bintray.com/silebat/build_pipeline_test_wf"
 - WF_NAME="fsk_lab_test_wf.knwf"
 - wget -v "$WF/$WF_NAME"
 - KNIME_SUCCESS="Workflow executed sucessfully"
