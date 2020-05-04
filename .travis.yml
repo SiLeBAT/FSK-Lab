@@ -18,7 +18,7 @@ script:
 
 - WF="https://dl.bintray.com/schuelet-test/test_wf"
 - WF_NAME="fsk_lab_test_wf.knwf"
-
+- wget -v "$WF/$WF_NAME"
 - KNIME_SUCCESS="Workflow executed sucessfully"
 
 
@@ -27,10 +27,10 @@ script:
 - echo "INSTALL NEW FSK-LAB INTO FRESH KNIME"
 - knime_3.7.2/knime -application org.eclipse.equinox.p2.director -repository "$KNIME37,$NEW_FSK" -installIU de.bund.bfr.knime.fsklab.feature.feature.group,org.knime.features.testingapplication.feature.group
 - knime_3.7.2/knime -application org.eclipse.equinox.p2.director -lir
-- wget -v "$WF/$WF_NAME"
-- KNIME_OUT=$(knime_3.7.2/knime -nosplash -application org.knime.product.KNIME_BATCH_APPLICATION -workflowFile="$WF_NAME" --launcher.suppressErrors)
+
+- KNIME_OUT=$(knime_3.7.2/knime -nosplash -reset -nosave -application org.knime.product.KNIME_BATCH_APPLICATION -workflowFile="$WF_NAME" --launcher.suppressErrors)
 - if [[ "$KNIME_OUT" != *"$KNIME_SUCCESS"* ]]; then  echo "Workflow failed";exit 1; else echo "3.7.2 WORKFLOW SUCCESSFUL ON FRESH INSTALL"; fi
-- rm $WF_NAME
+
 - echo "REMOVE NEW FSK TO TEST UPDATE FROM OLDER VERSION"
 - knime_3.7.2/knime -application org.eclipse.equinox.p2.director -uninstallIU de.bund.bfr.knime.fsklab.feature.feature.group
 - knime_3.7.2/knime -application org.eclipse.equinox.p2.director -lir
@@ -47,10 +47,10 @@ script:
 - echo "REINSTALLING NEW FSK-LAB"
 - knime_3.7.2/knime -application org.eclipse.equinox.p2.director -repository "$KNIME37,$NEW_FSK" -installIU de.bund.bfr.knime.fsklab.feature.feature.group
 - knime_3.7.2/knime -application org.eclipse.equinox.p2.director -lir
-- wget -v "$WF/$WF_NAME"
-- KNIME_OUT=$(knime_3.7.2/knime -nosplash -application org.knime.product.KNIME_BATCH_APPLICATION -workflowFile="$WF_NAME" --launcher.suppressErrors)
+
+- KNIME_OUT=$(knime_3.7.2/knime -nosplash -reset -nosave -application org.knime.product.KNIME_BATCH_APPLICATION -workflowFile="$WF_NAME" --launcher.suppressErrors)
 - if [[ "$KNIME_OUT" != *"$KNIME_SUCCESS"* ]]; then  echo "Workflow failed";exit 1; else echo "3.7.2 WORKFLOW SUCCESSFUL ON UPDATE"; fi
-- rm $WF_NAME
+
 
 - echo "CLEANING KNIME"
 - rm -Rf knime_3.7.2
@@ -70,10 +70,12 @@ script:
 - knime_4.1.2/knime -application org.eclipse.equinox.p2.director -repository "$KNIME41,$NEW_FSK" -installIU de.bund.bfr.knime.fsklab.feature.feature.group,org.knime.features.testing.application.feature.group
 - knime_4.1.2/knime -application org.eclipse.equinox.p2.director -lir
 - wget -v "$WF/$WF_NAME"
-- knime_4.1.2/knime -nosplash -application org.knime.product.KNIME_BATCH_APPLICATION -workflowFile="$WF_NAME"
-- KNIME_OUT=$(knime_4.1.2/knime -nosplash -application org.knime.product.KNIME_BATCH_APPLICATION -workflowFile="$WF_NAME" --launcher.suppressErrors)
-- if [[ "$KNIME_OUT" != *"$KNIME_SUCCESS"* ]]; then  echo "Workflow failed";exit 1; else echo "4.1.2 WORKFLOW SUCCESSFUL ON FRESH INSTALL"; fi
-- rm $WF_NAME
+- 
+- knime_4.1.2/knime -nosplash -reset -nosave -application org.knime.product.KNIME_BATCH_APPLICATION -workflowFile="$WF_NAME" --launcher.suppressErrors
+- OUTFILE=outfile.table
+- if test -f "$OUTFILE"; then echo "4.1.2 WORKFLOW SUCCESSFUL ON FRESH INSTALL"; else echo "WORKFLOW NOT EXECUTED";exit 1; fi
+- rm outfile.table
+
 - echo "REMOVE NEW FSK TO TEST UPDATE FROM OLDER VERSION"
 - knime_4.1.2/knime -application org.eclipse.equinox.p2.director -uninstallIU de.bund.bfr.knime.fsklab.feature.feature.group
 - knime_4.1.2/knime -application org.eclipse.equinox.p2.director -lir
@@ -90,9 +92,10 @@ script:
 - echo "REINSTALLING NEW FSK-LAB"
 - knime_4.1.2/knime -application org.eclipse.equinox.p2.director -repository "$KNIME41,$NEW_FSK" -installIU de.bund.bfr.knime.fsklab.feature.feature.group
 - knime_4.1.2/knime -application org.eclipse.equinox.p2.director -lir
-- wget -v "$WF/$WF_NAME"
-- KNIME_OUT=$(knime_4.1.2/knime -nosplash -application org.knime.product.KNIME_BATCH_APPLICATION -workflowFile="$WF_NAME" --launcher.suppressErrors)
-- if [[ "$KNIME_OUT" != *"$KNIME_SUCCESS"* ]]; then  echo "Workflow failed";exit 1; else echo "4.1.2 WORKFLOW SUCCESSFUL ON UPDATE"; fi
+- knime_4.1.2/knime -nosplash -reset -nosave -application org.knime.product.KNIME_BATCH_APPLICATION -workflowFile="$WF_NAME" --launcher.suppressErrors
+- OUTFILE=outfile.table
+- if test -f "$OUTFILE"; then echo "4.1.2 WORKFLOW SUCCESSFUL ON UPDATE"; else echo "WORKFLOW NOT EXECUTED";exit 1; fi
+- rm outfile.table
 - rm $WF_NAME
 
 - echo "CLEANING KNIME"
