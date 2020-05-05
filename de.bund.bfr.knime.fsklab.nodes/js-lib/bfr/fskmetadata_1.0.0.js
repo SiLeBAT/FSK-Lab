@@ -318,7 +318,7 @@ ui = {
             "id": "originArea",
             "label": "Origin area",
             "type": "text",
-            "description": "Area of origin of the food/product (Nomenclature of territorial units for statistics â€“ NUTS â€“ coding system valid only for EEA and Switzerland)",
+            "description": "Area of origin of the food/product (Nomenclature of territorial units for statistics – NUTS – coding system valid only for EEA and Switzerland).",
             "vocabulary": "Area_of_origin"
         }, {
             "id": "fisheriesArea",
@@ -615,7 +615,7 @@ ui = {
         "id": "samplingPoint",
         "label": "Sampling point",
         "type": "text",
-        "description": "Point in the food chain where the sample was taken. (Doc. ESTAT/F5/ES/155 â€œData dictionary of activities of the establishmentsâ€�)",
+        "description": "Point in the food chain where the sample was taken. (Doc. ESTAT/F5/ES/155 “Data dictionary of activities of the establishments”).",
         "vocabulary": "Sampling_point"
     }],
     "dietaryAssessmentMethod": [{
