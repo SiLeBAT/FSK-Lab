@@ -1,6 +1,6 @@
 FOLDER="$TRAVIS_BUILD_DIR/de.bund.bfr.knime.update/target/repository"
 KNIME_FILE="knime_3.7.2.linux.gtk.x86_64.tar.gz"
-wget -v "http://download.knime.org/analytics-platform/linux/$KNIME_FILE"
+wget -q "http://download.knime.org/analytics-platform/linux/$KNIME_FILE"
 tar -xzf $KNIME_FILE
 rm $KNIME_FILE
 
@@ -10,7 +10,7 @@ NEW_FSK="file:$TRAVIS_BUILD_DIR/de.bund.bfr.knime.update/target/repository"
 
 WF_REP="https://dl.bintray.com/silebat/build_pipeline_test_wf"
 WF_ZIP_FOLDER="wf.zip"
-wget -v $WF_REP/$WF_ZIP_FOLDER
+wget -q $WF_REP/$WF_ZIP_FOLDER
 
 unzip $WF_ZIP_FOLDER -d wf
 rm $WF_ZIP_FOLDER
@@ -54,7 +54,7 @@ rm -Rf knime_3.7.2
 # -------------------------------------------DO THE SAME FOR KNIME 4.1.2 -------------------------------------------------------------------
 
 KNIME_FILE="knime_4.1.2.linux.gtk.x86_64.tar.gz"
-wget -v "http://download.knime.org/analytics-platform/linux/$KNIME_FILE"
+wget -q "http://download.knime.org/analytics-platform/linux/$KNIME_FILE"
 tar -xzf $KNIME_FILE
 rm $KNIME_FILE
 KNIME41="https://update.knime.com/analytics-platform/4.1"
