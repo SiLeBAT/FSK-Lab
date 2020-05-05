@@ -60,19 +60,24 @@ public abstract class ScriptHandler implements AutoCloseable {
     exec.setProgress(0.72, "Set parameter values");
     LOGGER.info(" Running with '" + simulation.getName() + "' simulation!");
     
-    //load libraries before (python) parameters are evaluated 
-    String paramScript = buildParameterScript(simulation);
-    Arrays.stream(fskObj.model.split("\\r?\\n")).filter(id -> id.startsWith("import")).forEach(line -> {
-      try {
-        runScript(line,exec,false);
-        
-      } catch (Exception e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
-    });//.map(id -> id.split(" ")[1]).forEach(libraries::add);
+    //load libraries before (python) parameters are evaluated
+    
+    // Dirty workaround. Only execute simulation if there are parameters configured.
+    if (!simulation.getParameters().isEmpty()) {
+      String paramScript = buildParameterScript(simulation);
+      Arrays.stream(fskObj.model.split("\\r?\\n")).filter(id -> id.startsWith("import")).forEach(line -> {
+        try {
+          runScript(line,exec,false);
+          
+        } catch (Exception e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+      });
 
-    runScript(paramScript, exec, true);
+      runScript(paramScript, exec, true);      
+    }
+
     exec.setProgress(0.75, "Run models script");
     runScript(fskObj.model, exec, false);
 
