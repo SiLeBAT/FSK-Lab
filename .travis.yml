@@ -3,7 +3,7 @@ dist: trusty
 jdk:
   - openjdk8
 script:
-- xvfb-run mvn verify -B -Pjacoco --no-transfer-progress
+- xvfb-run mvn verify -B -Pjacoco -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
 #- if[$TRAVIS_BRANCH = 'test'];then
 - bash check_on_deploy.sh
 
