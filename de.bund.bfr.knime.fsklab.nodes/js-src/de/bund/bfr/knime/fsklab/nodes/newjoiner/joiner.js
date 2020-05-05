@@ -554,14 +554,14 @@ joiner = function () {
           'in': {
             attrs: {
               '.port-body': {
-                fill: '#16A085'
+                fill: '#0000FF'
               }
             }
           },
           'out': {
             attrs: {
               '.port-body': {
-                fill: '#E74C3C'
+                fill: '#FF0000'
               }
             }
           }

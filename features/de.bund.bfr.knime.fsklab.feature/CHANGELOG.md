@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed execution of joined models. Simulation of single models were removed.
 - Fixed encoding of some tooltips in editor node https://github.com/SiLeBAT/FSK-Lab/issues/409
 
+### Changed
+- Color of inputs and outputs in joiner node https://github.com/SiLeBAT/FSK-Lab/issues/401
+
 ## [1.8.0] - 2020-4-2
 
 ### Added
