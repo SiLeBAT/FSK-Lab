@@ -4,7 +4,7 @@ jdk:
   - openjdk8
 script:
 - xvfb-run mvn verify -B -Pjacoco
-
+- if[$TRAVIS_BRANCH = 'test'];
 - FOLDER="$TRAVIS_BUILD_DIR/de.bund.bfr.knime.update/target/repository"
 - KNIME_FILE="knime_3.7.2.linux.gtk.x86_64.tar.gz"
 - wget -v "http://download.knime.org/analytics-platform/linux/$KNIME_FILE"
@@ -119,7 +119,7 @@ script:
 - echo "CLEANING KNIME"
 - rm -Rf knime_4.1.2
 - rm -Rf wf
-
+- fi
 
 
 
