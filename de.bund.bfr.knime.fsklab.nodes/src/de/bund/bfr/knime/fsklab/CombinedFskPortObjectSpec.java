@@ -20,7 +20,6 @@ package de.bund.bfr.knime.fsklab;
 
 import java.io.IOException;
 import javax.swing.JComponent;
-import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortObjectSpecZipInputStream;
 import org.knime.core.node.port.PortObjectSpecZipOutputStream;
 

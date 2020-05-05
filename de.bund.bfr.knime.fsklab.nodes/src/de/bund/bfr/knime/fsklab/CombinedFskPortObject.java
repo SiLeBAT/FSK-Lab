@@ -38,7 +38,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -644,13 +643,6 @@ public class CombinedFskPortObject extends FskPortObject {
       in.close();
       return portObj;
     }
-
-    private <T> T readEObject(PortObjectZipInputStream zipStream, Class<T> valueType)
-        throws IOException {
-      String jsonStr = IOUtils.toString(zipStream, "UTF-8");
-      ObjectMapper mapper = EMFModule.setupDefaultMapper();
-      return mapper.readValue(jsonStr, valueType);
-    }
   }
 
   /** {Override} */
@@ -710,36 +702,6 @@ public class CombinedFskPortObject extends FskPortObject {
     });
 
     return scriptPanel;
-  }
-
-  /**
-   * @return JPanel with a JTree for READMEs.
-   */
-  private JPanel createReadmePanel() {
-
-    DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode();
-    buildNode(rootNode, this, 2);
-
-    JTree tree = new JTree(rootNode);
-    tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-    tree.setVisible(true);
-
-    ScriptPanel readmePanel = new ScriptPanel("README", false);
-    readmePanel.setScriptTree(tree);
-
-    tree.addTreeSelectionListener(event -> {
-      DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-
-      if (node == null)
-        return;
-
-      if (node.getUserObject() instanceof TreeEntry) {
-        TreeEntry treeEntry = (TreeEntry) node.getUserObject();
-        readmePanel.setText(treeEntry.script);
-      }
-    });
-
-    return readmePanel;
   }
 
   /**
@@ -812,7 +774,6 @@ public class CombinedFskPortObject extends FskPortObject {
 
     private final FormPanel formPanel;
     private Map<Object, Icon> icons = new HashMap<Object, Icon>();
-    private final String SELETCTED_SIMULATION_STR = "selected";
 
     public SimulationsPanel() {
       // Panel to show parameters (show initially the simulation 0)
