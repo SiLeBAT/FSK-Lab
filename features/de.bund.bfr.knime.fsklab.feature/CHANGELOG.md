@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 - Color of inputs and outputs in joiner node https://github.com/SiLeBAT/FSK-Lab/issues/401
+- Vertical alignment of parameters in joiner node https://github.com/SiLeBAT/FSK-Lab/issues/400
 
 ## [1.8.0] - 2020-4-2
 

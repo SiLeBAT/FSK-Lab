@@ -556,12 +556,24 @@ joiner = function () {
               '.port-body': {
                 fill: '#0000FF'
               }
+            },
+            label: {
+              position: {
+                name : 'left',
+                args: { y: -0.3 }
+              }
             }
           },
           'out': {
             attrs: {
               '.port-body': {
                 fill: '#FF0000'
+              }
+            },
+            label: {
+              position: {
+                name : 'right',
+                args: { y: -0.3 }
               }
             }
           }
