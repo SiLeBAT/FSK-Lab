@@ -11,8 +11,8 @@ folder: home
 Food Safety Knowledge Lab (FSK-Lab) is an open-source extension plugin to the Konstanz Information Miner ([KNIME](https://knime.org/)). FSK-Lab enables KNIME users to work with FSK models within KNIME.
 
 | Source code | [https://github.com/SiLeBAT/FSK-Lab](https://github.com/SiLeBAT/FSK-Lab) |
-| FSK-ML software developer guide | [Download](https://foodrisklabs.bfr.bund.de/wp-content/uploads/2017/01/FSK-ML_guidance_document_021216.pdf) |
-| FSK-ML software developer guide latest | [Download](https://goo.gl/CbLbJm)|
+| FSK-ML developer guide | [Download](https://foodrisklabs.bfr.bund.de/wp-content/uploads/fsk/FSK_guidance_document_V3_1.pdf) |
+| FSK-ML developer guide supplement | [Download](https://foodrisklabs.bfr.bund.de/wp-content/uploads/fsk/Supplement_FSK_guidance_document_restructured_V3_1.pdf) |
 
 ### Example files
 In order to test the FSK-Lab nodes in KNIME, there is a [zip-file provided here](https://dl.bintray.com/silebat/FSK_example_models/example_models.zip). It contains the needed files to create FSKX model files by using the FSKX Creator node in KNIME. Please make sure to assign the corresponding files in the configuration dialogue of the Creator nodes.
