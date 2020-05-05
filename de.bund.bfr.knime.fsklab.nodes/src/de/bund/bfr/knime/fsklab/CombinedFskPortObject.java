@@ -38,7 +38,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -61,8 +60,6 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.border.Border;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
 import org.apache.commons.io.IOUtils;
@@ -106,6 +103,7 @@ import de.bund.bfr.metadata.swagger.ProcessModel;
 import de.bund.bfr.metadata.swagger.QraModel;
 import de.bund.bfr.metadata.swagger.RiskModel;
 import de.bund.bfr.metadata.swagger.ToxicologicalModel;
+import metadata.SwaggerUtil;
 
 /**
  * A port object for an combined FSK model port providing two FSK Models.
@@ -508,10 +506,10 @@ public class CombinedFskPortObject extends FskPortObject {
 
             gm.setGeneralInformation(MAPPER104.readValue(in, GenericModelGeneralInformation.class));
             in.getNextEntry();
-            
+
             gm.setScope(MAPPER104.readValue(in, GenericModelScope.class));
             in.getNextEntry();
-            
+
             gm.setDataBackground(MAPPER104.readValue(in, GenericModelDataBackground.class));
             in.getNextEntry();
 
@@ -581,7 +579,7 @@ public class CombinedFskPortObject extends FskPortObject {
           }
 
           else if (entryName.startsWith(CFG_GENERAL_INFORMATION)) {
-            
+
             GenericModel gm = new GenericModel();
             gm.setModelType("genericModel");
             gm.setGeneralInformation(MAPPER104.readValue(in, GenericModelGeneralInformation.class));
@@ -592,7 +590,7 @@ public class CombinedFskPortObject extends FskPortObject {
             in.getNextEntry();
             gm.setModelMath(MAPPER104.readValue(in, GenericModelModelMath.class));
             in.getNextEntry();
-            
+
             modelMetadata = gm;
           } else if (entryName.startsWith(WORKSPACE)) {
             Files.copy(in, workspacePath, StandardCopyOption.REPLACE_EXISTING);
@@ -645,139 +643,11 @@ public class CombinedFskPortObject extends FskPortObject {
       in.close();
       return portObj;
     }
-
-    private <T> T readEObject(PortObjectZipInputStream zipStream, Class<T> valueType)
-        throws IOException {
-      String jsonStr = IOUtils.toString(zipStream, "UTF-8");
-      ObjectMapper mapper = EMFModule.setupDefaultMapper();
-      return mapper.readValue(jsonStr, valueType);
-    }
-  }
-
-  class CommandScript {
-    String id;
-    String script;
-
-    public CommandScript(String id, String script) {
-      this.id = id;
-      this.script = script;
-    }
-
-    public String getId() {
-      return id;
-    }
-
-    public void setId(String id) {
-      this.id = id;
-    }
-
-    public String getScript() {
-      return script;
-    }
-
-    public void setScript(String script) {
-      this.script = script;
-    }
-
-    public String toString() {
-      return id;
-    }
-
-  }
-
-  public void buildScriptNodes(DefaultMutableTreeNode top, FskPortObject currentPortObject,
-      boolean modelScriptFlag) {
-    if (currentPortObject instanceof CombinedFskPortObject) {
-      DefaultMutableTreeNode anotherJoinedModel = new DefaultMutableTreeNode("joined");
-
-      CombinedFskPortObject combinedObject = (CombinedFskPortObject) currentPortObject;
-
-      buildScriptNodes(anotherJoinedModel, combinedObject.getFirstFskPortObject(), modelScriptFlag);
-
-      if (modelScriptFlag) {
-
-        String script = "";
-        String language = "";
-        JoinRelation[] relations = combinedObject.getJoinerRelation();
-
-        if (relations != null && relations.length > 0) {
-          script =
-              Arrays.stream(relations).map(it -> it.getTargetParam() + " <- " + it.getCommand())
-                  .collect(Collectors.joining("\n"));
-
-          language = relations[0].getLanguage_written_in();
-        }
-        anotherJoinedModel.add(new DefaultMutableTreeNode(new CommandScript(
-            "Joining Model Script" + (language != null ? "( " + language + " )" : ""), script)));
-      }
-      buildScriptNodes(anotherJoinedModel,
-          ((CombinedFskPortObject) currentPortObject).getSecondFskPortObject(), modelScriptFlag);
-
-      top.add(anotherJoinedModel);
-    } else {
-      DefaultMutableTreeNode childModel = new DefaultMutableTreeNode(currentPortObject);
-      top.add(childModel);
-    }
   }
 
   /** {Override} */
   @Override
   public JComponent[] getViews() {
-    JPanel modelScriptPanel = new ScriptPanel("Model script", false);
-    DefaultMutableTreeNode top = new DefaultMutableTreeNode("Model Scripts");
-    buildScriptNodes(top, this, true);
-    JTree modelTree = new JTree(top);
-    modelTree.addTreeSelectionListener(new TreeSelectionListener() {
-
-      @Override
-      public void valueChanged(TreeSelectionEvent e) {
-        DefaultMutableTreeNode node =
-            (DefaultMutableTreeNode) modelTree.getLastSelectedPathComponent();
-
-        if (node == null)
-          return;
-
-        Object script = node.getUserObject();
-        if (node.isLeaf()) {
-          if (script instanceof FskPortObject) {
-            FskPortObject selectedFSK = (FskPortObject) script;
-            ((ScriptPanel) modelScriptPanel).setText(selectedFSK.model);
-          } else {
-            ((ScriptPanel) modelScriptPanel).setText(((CommandScript) script).getScript());
-          }
-        }
-
-      }
-    });
-    modelTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-    modelTree.setVisible(true);
-    ((ScriptPanel) modelScriptPanel).setScriptTree(modelTree);
-
-    JPanel vizScriptPanel = new ScriptPanel("Visualization script", false);
-    DefaultMutableTreeNode visTop = new DefaultMutableTreeNode("Visualization Scripts");
-    buildScriptNodes(visTop, this, false);
-    JTree visTree = new JTree(visTop);
-    visTree.addTreeSelectionListener(new TreeSelectionListener() {
-
-      @Override
-      public void valueChanged(TreeSelectionEvent e) {
-        DefaultMutableTreeNode node =
-            (DefaultMutableTreeNode) visTree.getLastSelectedPathComponent();
-
-        if (node == null)
-          return;
-
-        Object script = node.getUserObject();
-        if (node.isLeaf()) {
-          FskPortObject selectedFSK = (FskPortObject) script;
-          ((ScriptPanel) vizScriptPanel).setText(selectedFSK.viz);
-        }
-
-      }
-    });
-    visTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-    visTree.setVisible(true);
-    ((ScriptPanel) vizScriptPanel).setScriptTree(visTree);
 
     Gson gson = new GsonBuilder().setPrettyPrinting().create();
     String jsonString = gson.toJson(modelMetadata);
@@ -789,38 +659,113 @@ public class CombinedFskPortObject extends FskPortObject {
 
     JPanel simulationsPanel = new SimulationsPanel();
 
-    // Readme
-    JTextArea readmeArea = new JTextArea("");
-    readmeArea.setEnabled(false);
+    return new JComponent[] {createScriptPanel(), metaDataPane, librariesPanel, simulationsPanel};
+  }
 
-    JPanel readmePanel = new ScriptPanel("README", false);
-    DefaultMutableTreeNode readmetop = new DefaultMutableTreeNode("Readme");
-    buildScriptNodes(readmetop, this, false);
-    JTree readmeTree = new JTree(readmetop);
-    readmeTree.addTreeSelectionListener(new TreeSelectionListener() {
+  /**
+   * @return JPanel with a JTree for model and visualization scripts.
+   */
+  private JPanel createScriptPanel() {
 
-      @Override
-      public void valueChanged(TreeSelectionEvent e) {
-        DefaultMutableTreeNode node =
-            (DefaultMutableTreeNode) readmeTree.getLastSelectedPathComponent();
+    DefaultMutableTreeNode modelNode = new DefaultMutableTreeNode("Model scripts");
+    buildNode(modelNode, this, 0);
 
-        if (node == null)
-          return;
+    DefaultMutableTreeNode visualizationNode = new DefaultMutableTreeNode("Visualization scripts");
+    buildNode(visualizationNode, this, 1);
 
-        Object script = node.getUserObject();
-        if (node.isLeaf()) {
-          FskPortObject selectedFSK = (FskPortObject) script;
-          ((ScriptPanel) readmePanel).setText(selectedFSK.getReadme());
-        }
+    DefaultMutableTreeNode readmeNode = new DefaultMutableTreeNode("README");
+    buildNode(readmeNode, this, 2);
 
+    DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode();
+    rootNode.add(modelNode);
+    rootNode.add(visualizationNode);
+    rootNode.add(readmeNode);
+
+    JTree tree = new JTree(rootNode);
+    tree.setRootVisible(false);
+    tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+    tree.setVisible(true);
+
+    ScriptPanel scriptPanel = new ScriptPanel("Scripts", false);
+    scriptPanel.setScriptTree(tree);
+
+    tree.addTreeSelectionListener(event -> {
+      DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+
+      if (node == null)
+        return;
+
+      if (node.getUserObject() instanceof TreeEntry) {
+        TreeEntry treeEntry = (TreeEntry) node.getUserObject();
+        scriptPanel.setText(treeEntry.script);
       }
     });
-    readmeTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-    readmeTree.setVisible(true);
-    ((ScriptPanel) readmePanel).setScriptTree(readmeTree);
 
-    return new JComponent[] {modelScriptPanel, vizScriptPanel, metaDataPane, librariesPanel,
-        simulationsPanel, readmePanel};
+    return scriptPanel;
+  }
+
+  /**
+   * Populate recursively a node for a number of model or visualization scripts
+   * 
+   * @param node Parent node
+   * @param portObject Port object with model information
+   * @param nodeType Type of the node. 0 for model scripts, 1 for visualization scripts and 2 for
+   *        readmes.
+   */
+  private void buildNode(DefaultMutableTreeNode node, FskPortObject portObject, int nodeType) {
+
+    String modelId = StringUtils.defaultIfEmpty(SwaggerUtil.getModelName(portObject.modelMetadata),
+        "Missing name");
+
+    if (portObject instanceof CombinedFskPortObject) {
+
+      String script;
+      if (nodeType == 0) {
+        script = buildJoiningScript();
+      } else if (nodeType == 2) {
+        script = portObject.getReadme();
+      } else {
+        script = "";
+      }
+
+      DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(new TreeEntry(modelId, script));
+      node.add(childNode);
+
+      buildNode(childNode, ((CombinedFskPortObject) portObject).firstFskPortObject, nodeType);
+      buildNode(childNode, ((CombinedFskPortObject) portObject).secondFskPortObject, nodeType);
+    } else {
+
+      String script;
+      if (nodeType == 0) {
+        script = portObject.model;
+      } else if (nodeType == 1) {
+        script = portObject.viz;
+      } else if (nodeType == 2) {
+        script = portObject.getReadme();
+      }
+
+      else {
+        script = "";
+      }
+
+      DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(new TreeEntry(modelId, script));
+      node.add(childNode);
+    }
+  }
+
+  private class TreeEntry {
+    final String name;
+    final String script;
+
+    TreeEntry(String name, String script) {
+      this.name = name;
+      this.script = script;
+    }
+
+    @Override
+    public String toString() {
+      return name;
+    }
   }
 
   private class SimulationsPanel extends FPanel {
@@ -829,7 +774,6 @@ public class CombinedFskPortObject extends FskPortObject {
 
     private final FormPanel formPanel;
     private Map<Object, Icon> icons = new HashMap<Object, Icon>();
-    private final String SELETCTED_SIMULATION_STR = "selected";
 
     public SimulationsPanel() {
       // Panel to show parameters (show initially the simulation 0)
@@ -1046,5 +990,20 @@ public class CombinedFskPortObject extends FskPortObject {
     }
 
     return paramScript;
+  }
+
+  /** Utility method to get the joining script out of the relations of a combined model. */
+  private String buildJoiningScript() {
+
+    StringBuilder stringBuilder = new StringBuilder();
+
+    JoinRelation[] relations = getJoinerRelation();
+    if (relations != null && relations.length > 0) {
+      for (JoinRelation relation : relations) {
+        stringBuilder.append(relation.getTargetParam() + " <- " + relation.getCommand() + "\n");
+      }
+    }
+
+    return stringBuilder.toString();
   }
 }

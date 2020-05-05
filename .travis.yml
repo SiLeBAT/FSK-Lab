@@ -6,8 +6,6 @@ script:
 - xvfb-run mvn verify -B -Pjacoco
 - if [$TRAVIS_BRANCH == "test"]; then bash check_on_deploy.sh; fi
 
-
-
 # Cache maven repository to speed up build
 cache:
    directories:
