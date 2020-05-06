@@ -628,8 +628,8 @@ fskutil = function () {
                 vocabulary);
 
         if (prop.type === "boolean")
-            return new fskutil.InputForm(prop.label, isMandatory, "checkbox",
-                prop.description, value, prop.description);
+            return new fskutil.InputForm(prop.label, false, "checkbox",
+                prop.description, value);
 
         if (prop.type === "text-array")
             return new fskutil.ArrayForm(prop.label, isMandatory, prop.type,
