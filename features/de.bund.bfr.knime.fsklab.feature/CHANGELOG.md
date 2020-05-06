@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Broken visualization of scripts in the view of combined port objects https://github.com/SiLeBAT/FSK-Lab/issues/413
 - Fixed execution of joined models. Simulation of single models were removed.
 - Fixed encoding of some tooltips in editor node https://github.com/SiLeBAT/FSK-Lab/issues/409
+- Missing tooltips of quality measures https://github.com/SiLeBAT/FSK-Lab/issues/410
 
 ### Changed
 - Color of inputs and outputs in joiner node https://github.com/SiLeBAT/FSK-Lab/issues/401

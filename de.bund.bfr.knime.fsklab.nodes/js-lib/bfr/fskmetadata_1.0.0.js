@@ -831,32 +831,32 @@ ui = {
         "id": "sse",
         "label": "SSE",
         "type": "number",
-        "description": "Statistical values calculated to describe the performance of the model fitting procedure"
+        "description": "Sum of squared estimate of errors"
     }, {
         "id": "mse",
         "label": "MSE",
         "type": "number",
-        "description": "Statistical values calculated to describe the performance of the model fitting procedure"
+        "description": "Mean squared error"
     }, {
         "id": "rmse",
         "label": "RMSE",
         "type": "number",
-        "description": "Statistical values calculated to describe the performance of the model fitting procedure"
+        "description": "Root-mean-square error"
     }, {
         "id": "rsquared",
         "label": "R squared",
         "type": "number",
-        "description": "Statistical values calculated to describe the performance of the model fitting procedure"
+        "description": "Coefficient of determination"
     }, {
         "id": "aic",
         "label": "AIC",
         "type": "number",
-        "description": "Statistical values calculated to describe the performance of the model fitting procedure"
+        "description": "Akaike information criterion"
     }, {
         "id": "bic",
         "label": "BIC",
         "type": "number",
-        "description": "Statistical values calculated to describe the performance of the model fitting procedure"
+        "description": "Bayesian information criterion"
     }, {
         "id": "sensitivityAnalysis",
         "label": "Sensitivity analysis",
