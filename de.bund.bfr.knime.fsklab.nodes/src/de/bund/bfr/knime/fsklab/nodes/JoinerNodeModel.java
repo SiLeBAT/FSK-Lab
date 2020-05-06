@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -68,6 +69,7 @@ import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskSimulation;
 import de.bund.bfr.knime.fsklab.JoinRelation;
+import de.bund.bfr.metadata.swagger.Model;
 import de.bund.bfr.metadata.swagger.Parameter;
 import metadata.SwaggerUtil;
 
@@ -84,7 +86,8 @@ final class JoinerNodeModel
   private FskPortObject secondInputPort;
 
   public final static String SUFFIX = "_dup";
-
+  Map<String,String> originals = new LinkedHashMap<String,String>();
+  
   private final static ObjectMapper MAPPER = FskPlugin.getDefault().MAPPER104;
 
   // Input and output port types
@@ -513,12 +516,17 @@ final class JoinerNodeModel
 
   public void setHideInWizard(boolean hide) {}
 
+  
+ 
+  
   private void resolveParameterNamesConflict() {
     for (Parameter firstParam : SwaggerUtil.getParameter(firstInputPort.modelMetadata)) {
       for (Parameter secondParam : SwaggerUtil.getParameter(secondInputPort.modelMetadata)) {
         if (secondParam.getId().equals(firstParam.getId())) {
+          originals.put(firstParam.getId() , firstParam.getId()+ SUFFIX );
           firstParam.setName(firstParam.getId() + SUFFIX);
           firstParam.setId(firstParam.getId() + SUFFIX);
+          
         }
       }
     }
@@ -572,6 +580,7 @@ final class JoinerNodeModel
         .addListener(new NodeRemovedListener(nodeWithId, buildContainerName()));
 
     setInternalPortObjects(inObjects);
+    //setSimulationValues();
     resolveParameterNamesConflict();
 
     synchronized (getLock()) {
@@ -632,10 +641,11 @@ final class JoinerNodeModel
       packageSet.addAll(secondInputPort.packages);
       outObj.packages.addAll(packageSet);
       resolveParameters(connections, outObj);
-
+     
+     
       // Create default simulation out of parameters metadata
       if (SwaggerUtil.getModelMath(outObj.modelMetadata) != null) {
-        List<Parameter> params = SwaggerUtil.getParameter(outObj.modelMetadata);
+        List<Parameter> params = resolveSimulationParameters(outObj.modelMetadata);
         FskSimulation defaultSimulation = NodeUtils.createDefaultSimulation(params);
         outObj.simulations.add(defaultSimulation);
         outObj.selectedSimulationIndex = 0;
@@ -644,7 +654,32 @@ final class JoinerNodeModel
 
     return new PortObject[] {outObj, svgImageFromView};
   }
-
+  // update parameters with the values from the selected simulation
+  private List<Parameter> resolveSimulationParameters(Model metadata){
+    
+    // get Parameters from selected simulations
+    Map<String,String> sim1 = firstInputPort.simulations.get(firstInputPort.selectedSimulationIndex).getParameters(); 
+    Map<String,String> sim2 = secondInputPort.simulations.get(secondInputPort.selectedSimulationIndex).getParameters();
+    
+    // find the parameters that have been renamed with a Suffix and put the new id into the first simulation map
+    originals.forEach((old_id,new_id) ->{ 
+      if (sim1.containsKey(old_id))
+      {
+        String temp_value = sim1.get(old_id);
+        sim1.remove(old_id);
+        sim1.put(new_id, temp_value);
+      }} );
+      
+    // set the values of the new parameters to that of the simulations
+    List<Parameter> params = SwaggerUtil.getParameter(metadata);
+    for (Parameter p : params) {
+      if(sim1.containsKey(p.getId()))
+        p.setValue(sim1.get(p.getId()));
+      if(sim2.containsKey(p.getId()))
+        p.setValue(sim2.get(p.getId()));
+    }
+    return params;
+  }
   @Override
   protected boolean generateImage() {
     return true;
