@@ -151,11 +151,11 @@ simulator = function() {
       }
 
       let metadataId = parameter.id + "-metadata";
-
+      let readonly = (parameter.classification == "CONSTANT")? "readonly" : "";
       let parameterHtml = `<div class="form-group form-group-sm">
         <label class="col-sm-3 control-label">${parameter.id}</label>
         <div class="col-sm-8">
-          <input type="${inputType}" class="form-control parameter-input" value=""></input>
+          <input type="${inputType}" class="form-control parameter-input" value="" ${readonly}></input>
           <span class="help-block"></span>
           <div class="collapse" id="${metadataId}" >
             <div class="alert alert-info card card-body">
