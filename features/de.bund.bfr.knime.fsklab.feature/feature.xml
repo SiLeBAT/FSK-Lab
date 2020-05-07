@@ -66,9 +66,6 @@ along with this program.  If not, see &amp;quot;http://www.gnu.org/licenses/&amp
       <import plugin="org.jdom.2" version="2.0.6" match="greaterOrEqual"/>
       <import plugin="org.knime.ext.svg" version="3.7.0"/>
       <import plugin="org.apache.commons.lang" version="2.6.0" match="greaterOrEqual"/>
-      <import plugin="org.sbml.jsbml.core" version="1.3.0" match="greaterOrEqual"/>
-      <import plugin="org.sbml.jsbml.ext.jsbml-arrays" version="1.3.0" match="greaterOrEqual"/>
-      <import plugin="org.sbml.jsbml.ext.jsbml-comp" version="1.3.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin
@@ -179,13 +176,6 @@ along with this program.  If not, see &amp;quot;http://www.gnu.org/licenses/&amp
 
    <plugin
          id="com.github.mangstadt.vinnie"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="com.googlecode.json-simple"
          download-size="0"
          install-size="0"
          version="0.0.0"
