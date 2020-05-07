@@ -28,6 +28,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see &amp;quot;http://www.gnu.org/licenses/&amp;quot;.
    </license>
 
+   <url>
+      <discovery label="New discovery site" url="http://newsite"/>
+   </url>
+
    <requires>
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.knime.core"/>
@@ -60,11 +64,11 @@ along with this program.  If not, see &amp;quot;http://www.gnu.org/licenses/&amp
       <import plugin="org.knime.base" version="3.7.2"/>
       <import plugin="de.unirostock.sems.CombineArchive" version="1.2.1" match="greaterOrEqual"/>
       <import plugin="org.jdom.2" version="2.0.6" match="greaterOrEqual"/>
+      <import plugin="org.knime.ext.svg" version="3.7.0"/>
+      <import plugin="org.apache.commons.lang" version="2.6.0" match="greaterOrEqual"/>
       <import plugin="org.sbml.jsbml.core" version="1.3.0" match="greaterOrEqual"/>
       <import plugin="org.sbml.jsbml.ext.jsbml-arrays" version="1.3.0" match="greaterOrEqual"/>
       <import plugin="org.sbml.jsbml.ext.jsbml-comp" version="1.3.0" match="greaterOrEqual"/>
-      <import plugin="org.knime.ext.svg" version="3.7.0"/>
-      <import plugin="org.apache.commons.lang" version="2.6.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin
@@ -181,35 +185,7 @@ along with this program.  If not, see &amp;quot;http://www.gnu.org/licenses/&amp
          unpack="false"/>
 
    <plugin
-         id="org.sbml.jsbml.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.sbml.jsbml.ext.jsbml-arrays"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.sbml.jsbml.ext.jsbml-comp"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="staxmate"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.w3c.jigsaw"
+         id="com.googlecode.json-simple"
          download-size="0"
          install-size="0"
          version="0.0.0"

@@ -7,6 +7,7 @@ Automatic-Module-Name: de.bund.bfr.knime.fsklab.nodes.deprecated.test
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: de.bund.bfr.knime.fsklab.nodes.deprecated,
  org.junit,
- de.bund.bfr.pmfml;bundle-version="0.0.12",
- org.sbml.jsbml.core;bundle-version="1.3.0"
+ de.bund.bfr.pmfml;bundle-version="0.0.12"
 Bundle-Vendor: German Federal Institute for Risk Assessment (BfR)
+Bundle-ClassPath: jsbml-1.3.1-with-dependencies.jar,
+ .
