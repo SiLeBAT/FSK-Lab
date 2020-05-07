@@ -151,7 +151,7 @@ simulator = function() {
       }
 
       let metadataId = parameter.id + "-metadata";
-      let readonly = (parameter.classification == "CONSTANT")? "readonly" : "";
+      let readonly = parameter.classification === "CONSTANT" ? "readonly" : "";
       let parameterHtml = `<div class="form-group form-group-sm">
         <label class="col-sm-3 control-label">${parameter.id}</label>
         <div class="col-sm-8">
