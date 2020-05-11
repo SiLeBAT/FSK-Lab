@@ -52,7 +52,9 @@ joiner = function () {
       };
     }
 
-    _modelScriptTree = JSON.parse(value.modelScriptTree);
+    if (value.modelScriptTree) {
+      _modelScriptTree = JSON.parse(value.modelScriptTree);
+    }
 
 		if (_value.joinRelations && _value.joinRelations.length > 0) {
 			$.each(_value.joinRelations, function(index, value) {
@@ -406,9 +408,11 @@ joiner = function () {
       command.onkeyup = () => window.sJoinRealtion.command = command.value;
 
       command.onblur = () => {
-        _modelScriptTree[1].script = _value.joinRelations
+        if (_modelScriptTree) {
+          _modelScriptTree[1].script = _value.joinRelations
           .map(relation => `${relation.targetParam} <- ${relation.command}`)
           .join("\n");
+        }
       };
 
       if (targetPort != undefined) {
@@ -430,9 +434,11 @@ joiner = function () {
         _value.joinRelations.push(sJoinRealtion);
         window.joinRelationsMap[sourcePort + "," + targetPort] = sJoinRealtion
         
-        _modelScriptTree[1].script = _value.joinRelations
-          .map(relation => `${relation.targetParam} <- ${relation.command}`)
-          .join("\n");
+        if (_modelScriptTree) {
+          _modelScriptTree[1].script = _value.joinRelations
+            .map(relation => `${relation.targetParam} <- ${relation.command}`)
+            .join("\n");
+        }
 
         _value.jsonRepresentation = JSON.stringify(_graph.toJSON());
       }
