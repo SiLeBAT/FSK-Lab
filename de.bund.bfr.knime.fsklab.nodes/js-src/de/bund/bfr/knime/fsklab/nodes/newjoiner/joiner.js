@@ -323,9 +323,6 @@ joiner = function () {
     // Update form when a link is clicked
     _paper.on("link:pointerclick", updateForm);
 
-    // Update form when a link is double clicked
-    _paper.on("cell:pointerdblclick", updateForm);
-
     let firstModelInputParameters = [];
     let firstModelOutputParameters = [];
     window.firstPortMap = {};
