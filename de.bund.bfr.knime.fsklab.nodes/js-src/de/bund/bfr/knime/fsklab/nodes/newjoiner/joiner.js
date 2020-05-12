@@ -302,13 +302,14 @@ joiner = function () {
     });
 
     let previousOne;
-
-    // Pointer is clicked on a cell
-    _paper.on('cell:pointerclick', (cellView) => {
+    function highlight(cellView) {
       if (previousOne) previousOne.unhighlight();
       previousOne = cellView;
       cellView.highlight();
-    });
+    }
+
+    // Highlight a cell when clicked
+    _paper.on('cell:pointerclick', highlight);
 
     // Pointer is released after pressing down a link
     _paper.on('link:pointerup', (event) => {
@@ -375,6 +376,10 @@ joiner = function () {
     let firstModelToJoin = createAtomic(paperWidth - 670, 60, 200,
       firstModelHeight, firstModelNameWrap, firstModelInputParameters,
       firstModelOutputParameters);
+    firstModelToJoin.on('change:position', (element) => {
+      let cellView = _paper.findViewByModel(element);
+      highlight(cellView);
+    });
 
     let secondModelHeight = Math.max(secondModelInputParameters.length, secondModelOutputParameters.length) * 25;
     let secondModelNameWrap = joint.util.breakText(_representation.secondModelName, {
@@ -385,16 +390,22 @@ joiner = function () {
     let secondModelToJoin = createAtomic(paperWidth - 330, 180, 200,
       secondModelHeight, secondModelNameWrap, secondModelInputParameters,
       secondModelOutputParameters);
+    secondModelToJoin.on('change:position', (element) => {
+      let cellView = _paper.findViewByModel(element);
+      highlight(cellView);
+    });
 
     // Update form when a link is selected (clicked)
     _paper.on("link:pointerclick", updateForm);
 
-    _paper.on('link:connect', function (evt, cellView, magnet, arrowhead) {
-      sourcePort = evt.model.attributes.source.port;
-      targetPort = evt.model.attributes.target.port;
+    _paper.on('link:connect', function(linkView, evt, elementViewDisconnected, magnet, arrowhead) {
+      sourcePort = linkView.model.attributes.source.port;
+      targetPort = linkView.model.attributes.target.port;
       if (!targetPort) {
         return;
       }
+
+      highlight(linkView);
 
       // Update form
       document.getElementById("source").value = sourcePort;
