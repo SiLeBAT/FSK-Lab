@@ -59,6 +59,12 @@
 		</dependency>
 		<dependency>
 			<groupId>de.bund.bfr.knime</groupId>
+			<artifactId>de.bund.bfr.knime.fsklab.nodes.tests</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>de.bund.bfr.knime</groupId>
 			<artifactId>de.bund.bfr.knime.fsklab.nodes.common</artifactId>
 			<version>1.0.0-SNAPSHOT</version>
 			<scope>compile</scope>
@@ -108,12 +114,6 @@
 		<dependency>
 			<groupId>de.bund.bfr.knime</groupId>
 			<artifactId>de.bund.bfr.knime.pmm.common.tests</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>de.bund.bfr.knime</groupId>
-			<artifactId>de.bund.bfr.knime.tests</artifactId>
 			<version>1.0.0-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
