@@ -17,3 +17,5 @@ defaults:
     type: "pages"
   values:
     layout: "page"
+
+plugins: ['jekyll/scholar']

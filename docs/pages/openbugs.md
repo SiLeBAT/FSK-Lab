@@ -7,16 +7,13 @@ permalink: openbugs.html
 folder: home
 ---
 
-OpenBUGS is a software application for the Bayesian analysis of complex statistical models using Markov chain Monte Carlo (MCMC) methods. OpenBUGS is the open source variant of WinBUGS (Bayesian inference Using Gibbs Sampling). It runs under Microsoft Windows and Linux, as well as from inside the R statistical package. Versions from v3.0.7 onwards have been designed to be at least as efficient and reliable as WinBUGS over a range of test applications. ([Wikipedia](https://en.wikipedia.org/wiki/OpenBUGS))
+OpenBUGS {% cite openbugs %} is an open source software for analysing complex statistical models using Markov chain Monte Carlo (MCMC) methods. BUGS stands for Bayesian inference Using Gibbs Sampling. The OpenBUGS software is freely available at http://www.openbugs.net/w/FrontPage. OpenBUGS is based on WinBUGS {% cite winbugs %}: a fundamental difference between the two versions is the license. FSK-Lab facilitates the usage of OpenBUGS through the R package R2OpenBUGS {% cite r2openbugs %}. R models in FSK-Lab can make use of BUGS files as long as they are stored in plaintext files (.txt).
 
-[OpenBUGS](http://www.openbugs.net/w/FrontPage) is supported in FSK-Lab through the R package [R2OpenBUGS](https://cran.r-project.org/web/packages/R2OpenBUGS/index.html). R models in FSK-Lab can make use of BUGS files as long as they are stored in plaintext files (.txt). This page includes a minimal example from the R2OpenBUGS vignettes implemented in FSK-Lab.
+# Example
+In the following there is a minimal example of how to include OpenBUGS into an R model created with FSK-Lab. The example is taken from the R2OpenBUGS vignettes {% cite r2openbugs_vignettes %}.
 
-# School data
-
-## OpenBUGS model: schools.txt
-
-From the [R2OpenBugs vignettes](https://cran.r-project.org/web/packages/R2OpenBUGS/vignettes/R2OpenBUGS.pdf):
-> For modeling these data, we use a hierarchical model as proposed by Gelman et al. (2003, Section 5.5). We assume a normal distribution for the observed estimate for each school with mean theta and inverse-variance tau.y. The inverse-variance is given as 1/sigma.y2 and its prior distribu- tion is uniform on (0,1000). For the mean theta, we employ another normal distribution with mean mu.theta and inverse-variance tau.theta.
+## OpenBUGS model: school.txt
+This is the OpenBUGS-code, which is the basis for the MCMC simulation that estimates *theta*, *mu.theta* and *sigma.theta* (copied from {% cite r2openbugs_vignettes %}, p. 6). It should be saved as txt-file, e.g. school.txt.
 
 ```R
 model {
@@ -33,14 +30,12 @@ model {
 ```
 
 # Parameters
-This model has two input parameters that have to be entered in the model metadata: *n_chains* and *n_iter*. These two parameters have the equivalent R code:
-```R
-n_chains <- 3
-n_iter <- 1000
-```
+The MCMC simulation requires two input parameters (both have to be entered in the model metadata in the metadata.xlsx-file). *n_chains* and *n_iter* specify the number of chains and number of iterations of the MCMC simulation.
+
+![](assets/spreadsheet_parameters.png)
 
 ## Model script: model.R
-The model script prepares the data inputs for the *bugs* function and run a MCMC simulation to get estimates for *theta*, *mu.theta* and *sigma.theta*.
+To create an FSKX-model, the before mentiones bugs-model needs to be included into a full R model script. The model script (1) loads the R2OpenBUGS package, (2) loads the data of the dataset "schools", (3) prepares the data inputs for the *bugs*-functions, and (4) runs a MCMC simulation using the *bugs*-function to get estimates for *theta*, *mu.theta* and *sigma.theta*. The parameter *schools.sim* contains the results of the MCMC simulation.
 
 ```R
 library(R2OpenBUGS)
@@ -60,11 +55,14 @@ inits <- function() {
 schools.sim <- bugs(data, inits,
                     model.file = "schools.txt",
                     parameters = c("theta", "mu.theta", "sigma.theta"),
-                    n.chains = 3, n.iter = 1000)
+                    n.chains, n.iter)
 ```
 
 ## Visualization script: visualization.R
-The visualization script is pretty straightforward and produces the following plot.
-`plot(schools.sim)`
+In FSK-Lab a visualiztion script can be specified. The visualization script uses the plot-function: `plot(schools.sim)` and produces the following plot.
 
 ![](assets/schooldata.png)
+
+References
+----------
+{% bibliography --cited %}
