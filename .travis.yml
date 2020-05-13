@@ -4,7 +4,7 @@ jdk:
   - openjdk8
 script:
 - xvfb-run mvn verify -B -Pjacoco
-- if [[ $TRAVIS_BRANCH == *"master"* ]]; then bash deploy_test_linux.sh; fi
+- if [[ $TRAVIS_BRANCH == *"deploy_win"* ]]; then bash deploy_test_linux.sh; fi
 
 # Cache maven repository to speed up build
 cache:
