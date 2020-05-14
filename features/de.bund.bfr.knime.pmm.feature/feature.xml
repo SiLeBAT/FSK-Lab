@@ -34,7 +34,7 @@ along with this program.  If not, see &quot;http://www.gnu.org/licenses/&quot;.
       <import plugin="org.eclipse.core.resources"/>
       <import plugin="org.knime.core"/>
       <import plugin="org.jdom.2" version="2.0.6" match="greaterOrEqual"/>
-      <import plugin="com.jgoodies.forms" version="1.6.0" match="greaterOrEqual"/>
+      <import plugin="com.jgoodies" version="1.4.0" match="greaterOrEqual"/>
       <import plugin="org.knime.ext.svg"/>
       <import plugin="org.apache.poi"/>
       <import plugin="org.apache.poi.ooxml"/>
@@ -42,8 +42,6 @@ along with this program.  If not, see &quot;http://www.gnu.org/licenses/&quot;.
       <import plugin="org.knime.ext.jep"/>
       <import plugin="org.apache.commons.math3"/>
       <import plugin="com.google.guava"/>
-      <import plugin="com.jgoodies.common" version="1.4.0" match="greaterOrEqual"/>
-      <import plugin="com.jgoodies.looks" version="2.5.2" match="greaterOrEqual"/>
       <import plugin="com.fasterxml.jackson.core.jackson-annotations"/>
       <import plugin="com.fasterxml.jackson.core.jackson-core"/>
       <import plugin="com.fasterxml.jackson.core.jackson-databind"/>
@@ -56,11 +54,12 @@ along with this program.  If not, see &quot;http://www.gnu.org/licenses/&quot;.
       <import plugin="org.knime.ext.poi"/>
       <import plugin="org.apache.log4j"/>
       <import plugin="org.junit"/>
-      <import plugin="de.bund.bfr.pmfml" version="0.0.12" match="greaterOrEqual"/>
-      <import plugin="de.unirostock.sems.CombineArchive" version="1.2.1" match="greaterOrEqual"/>
-      <import plugin="org.apache.servicemix.bundles.poi" version="3.17.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.osgi"/>
       <import plugin="org.apache.commons.lang3" version="3.3.1" match="greaterOrEqual"/>
+      <import plugin="de.bund.bfr.pmfml" version="0.0.12" match="greaterOrEqual"/>
+      <import plugin="org.apache.servicemix.bundles.poi" version="3.17.0" match="greaterOrEqual"/>
+      <import plugin="org.sbml.jsbml" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="de.unirostock.sems.CombineArchive" version="1.4.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.osgi"/>
    </requires>
 
    <plugin
@@ -131,30 +130,22 @@ along with this program.  If not, see &quot;http://www.gnu.org/licenses/&quot;.
          version="0.0.0"/>
 
    <plugin
-         id="com.jgoodies.forms"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="com.jgoodies.looks"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="com.jgoodies.common"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.sbml.jsbml"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
+
+   <plugin
+         id="com.jgoodies"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="de.unirostock.sems.CombineArchive"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
 </feature>

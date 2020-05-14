@@ -12,10 +12,10 @@ Require-Bundle: org.eclipse.core.runtime,
  org.knime.base,
  de.bund.bfr.knime.pmm.common,
  de.bund.bfr.knime.foodprocess,
- com.jgoodies.forms;bundle-version="1.6.0",
  de.bund.bfr.knime.foodprocess.pcml;bundle-version="1.0.0",
- de.bund.bfr.knime.foodprocess.util
+ de.bund.bfr.knime.foodprocess.util,
+ com.jgoodies;bundle-version="1.4.0"
 Bundle-ActivationPolicy: lazy
 Export-Package: de.bund.bfr.knime.foodprocess.view
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-
+Automatic-Module-Name: de.bund.bfr.knime.foodprocess.view

@@ -15,8 +15,7 @@ Require-Bundle: org.eclipse.ui,
  quick.dbtable;visibility:=reexport,
  org.freixas.jcalendar,
  org.knime.core,
- com.jgoodies.forms;bundle-version="1.6.0",
- com.jgoodies.looks;bundle-version="2.5.2"
+ com.jgoodies;bundle-version="1.4.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.hsh.bfr.db,

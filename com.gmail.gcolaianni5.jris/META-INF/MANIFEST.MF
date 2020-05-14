@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Jris
+Bundle-SymbolicName: com.gmail.gcolaianni5.jris
+Bundle-Version: 1.0.0
+Bundle-ClassPath: jris-1.0.0.jar
+Export-Package: com.gmail.gcolaianni5.jris.bean,
+ com.gmail.gcolaianni5.jris.engine,
+ com.gmail.gcolaianni5.jris.exception
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Automatic-Module-Name: com.gmail.gcolaianni5.jris

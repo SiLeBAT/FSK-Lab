@@ -29,11 +29,6 @@
 			<layout>p2</layout>
 		</repository>
 		<repository>
-			<id>fsk-dependencies</id>
-			<url>https://dl.bintray.com/silebat/fsk-dependencies</url>
-			<layout>p2</layout>
-		</repository>
-		<repository>
 			<id>RBundles</id>
 			<url>https://dl.bintray.com/silebat/RBundles</url>
 			<layout>p2</layout>
@@ -80,6 +75,11 @@
 		<module>org.javers</module>
 		<module>quick.dbtable</module>
 		<module>org.sbml.jsbml</module>
+		<module>de.unirostock.sems.CombineArchive</module>
+		<module>com.jgoodies</module>
+		<module>de.bund.bfr.pmfml</module>
+		<module>com.gmail.gcolaianni5.jris</module>
+		<module>com.google.ez-vcard</module>
 
 		<!-- Features -->
 		<module>features</module>

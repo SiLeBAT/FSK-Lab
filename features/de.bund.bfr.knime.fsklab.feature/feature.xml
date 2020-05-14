@@ -53,7 +53,6 @@ along with this program.  If not, see &amp;quot;http://www.gnu.org/licenses/&amp
       <import plugin="com.google.gson"/>
       <import plugin="com.gmail.gcolaianni5.jris" version="1.0.0" match="greaterOrEqual"/>
       <import plugin="de.bund.bfr.pmfml" version="0.0.12" match="greaterOrEqual"/>
-      <import plugin="com.googlecode.ez-vcard" version="0.10.6" match="greaterOrEqual"/>
       <import plugin="com.fifesoft.rsyntaxtextarea"/>
       <import plugin="com.google.guava"/>
       <import plugin="com.toedter.jcalendar" version="1.4.0" match="equivalent"/>
@@ -67,6 +66,9 @@ along with this program.  If not, see &amp;quot;http://www.gnu.org/licenses/&amp
       <import plugin="org.knime.ext.svg" version="3.7.0"/>
       <import plugin="org.apache.commons.lang" version="2.6.0" match="greaterOrEqual"/>
       <import plugin="org.sbml.jsbml" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="com.google.ez-vcard" version="0.10.6" match="greaterOrEqual"/>
+      <import plugin="com.fasterxml.jackson.core.jackson-core" version="2.8.9" match="greaterOrEqual"/>
+      <import plugin="org.jsoup" version="1.11.2" match="greaterOrEqual"/>
    </requires>
 
    <plugin
@@ -169,21 +171,13 @@ along with this program.  If not, see &amp;quot;http://www.gnu.org/licenses/&amp
          unpack="false"/>
 
    <plugin
-         id="com.googlecode.ez-vcard"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="com.github.mangstadt.vinnie"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.sbml.jsbml"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="com.google.ez-vcard"
          download-size="0"
          install-size="0"
          version="0.0.0"/>

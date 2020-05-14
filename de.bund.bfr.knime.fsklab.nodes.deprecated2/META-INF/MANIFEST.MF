@@ -12,9 +12,9 @@ Require-Bundle: com.google.guava,
  org.knime.base,
  org.knime.ext.r.type,
  de.bund.bfr.pmfml;bundle-version="0.0.12",
- de.unirostock.sems.CombineArchive;bundle-version="1.2.1",
  org.jdom.2;bundle-version="2.0.6",
- org.sbml.jsbml;bundle-version="1.0.0"
+ org.sbml.jsbml;bundle-version="1.0.0",
+ de.unirostock.sems.CombineArchive;bundle-version="1.4.0"
 Bundle-ClassPath: .,
  libs/fskml-0.0.1-SNAPSHOT.jar
 Automatic-Module-Name: de.bund.bfr.knime.fsklab.nodes.deprecated2

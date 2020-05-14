@@ -30,34 +30,35 @@ along with this program.  If not, see &quot;http://www.gnu.org/licenses/&quot;.
 
    <requires>
       <import plugin="com.google.guava"/>
-      <import plugin="org.apache.servicemix.bundles.poi"/>
+      <import plugin="org.apache.servicemix.bundles.poi" version="3.17.0" match="greaterOrEqual"/>
       <import plugin="org.knime.base"/>
       <import plugin="org.knime.ext.r.type"/>
+      <import plugin="de.bund.bfr.pmfml" version="0.0.12" match="greaterOrEqual"/>
+      <import plugin="de.unirostock.sems.CombineArchive" version="1.2.1" match="greaterOrEqual"/>
+      <import plugin="org.jdom.2" version="2.0.6" match="greaterOrEqual"/>
+      <import plugin="org.sbml.jsbml" version="1.0.0" match="greaterOrEqual"/>
       <import plugin="com.fasterxml.jackson.core.jackson-annotations"/>
-      <import plugin="org.apache.commons.lang3"/>
+      <import plugin="org.apache.commons.lang3" version="3.3.1" match="greaterOrEqual"/>
       <import plugin="org.knime.js.core"/>
       <import plugin="org.jsoup"/>
       <import plugin="com.toedter.jcalendar"/>
-      <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.eclipse.emf.ecore"/>
       <import plugin="com.fasterxml.jackson.core.jackson-core"/>
       <import plugin="com.fasterxml.jackson.core.jackson-databind"/>
       <import plugin="org.junit"/>
       <import plugin="org.glassfish.javax.json" version="1.0.4" match="greaterOrEqual"/>
       <import plugin="com.google.gson"/>
+      <import plugin="com.gmail.gcolaianni5.jris" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="com.google.ez-vcard" version="0.10.6" match="greaterOrEqual"/>
       <import plugin="org.apache.commons.io"/>
+      <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.ui.workbench"/>
-      <import plugin="org.knime.core"/>
-      <import plugin="com.sun.jna"/>
+      <import plugin="org.knime.core" version="3.7.2"/>
+      <import plugin="com.sun.jna" version="4.4.0" match="greaterOrEqual"/>
+      <import plugin="de.bund.bfr.knime.fsklab.preferences" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.knime.ext.r.type" version="3.7.0"/>
       <import plugin="com.fifesoft.rsyntaxtextarea"/>
-      <import plugin="de.bund.bfr.pmfml"/>
-      <import plugin="de.unirostock.sems.CombineArchive"/>
-      <import plugin="org.jdom.2"/>
-      <import plugin="org.sbml.jsbml.core"/>
-      <import plugin="org.sbml.jsbml.ext.jsbml-arrays"/>
-      <import plugin="com.gmail.gcolaianni5.jris"/>
-      <import plugin="com.googlecode.ez-vcard"/>
    </requires>
 
    <plugin
@@ -114,5 +115,12 @@ along with this program.  If not, see &quot;http://www.gnu.org/licenses/&quot;.
          download-size="0"
          install-size="0"
          version="0.0.0"/>
+
+   <plugin
+         id="de.bund.bfr.pmfml"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
 </feature>
