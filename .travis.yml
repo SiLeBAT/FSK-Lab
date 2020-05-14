@@ -38,5 +38,6 @@ deploy:
 - provider: script
   skip_cleanup: true # to upload artifacts created during the build
   script: bash bintray_nightly.sh
-  on: master
-  condition: $TRAVIS_EVENT_TYPE = cron
+  on: 
+    branch: master
+    condition: $TRAVIS_EVENT_TYPE = cron
