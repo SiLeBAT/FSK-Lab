@@ -79,6 +79,7 @@
 		<module>org.freixas.jcalendar</module>
 		<module>org.javers</module>
 		<module>quick.dbtable</module>
+		<module>org.sbml.jsbml</module>
 
 		<!-- Features -->
 		<module>features</module>
