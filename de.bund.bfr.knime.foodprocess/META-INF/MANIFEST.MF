@@ -30,4 +30,4 @@ Bundle-ActivationPolicy: lazy
 Export-Package: de.bund.bfr.knime.foodprocess,
  de.bund.bfr.knime.foodprocess.lib
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-
+Automatic-Module-Name: de.bund.bfr.knime.foodprocess

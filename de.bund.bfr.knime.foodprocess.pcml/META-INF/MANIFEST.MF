@@ -18,3 +18,4 @@ Export-Package: de.bund.bfr.knime.pcml.node.pcmltotable,
  de.bund.bfr.knime.pcml.port,
  de.bund.bfr.pcml10
 Bundle-Vendor: BfR
+Automatic-Module-Name: de.bund.bfr.knime.foodprocess.pcml

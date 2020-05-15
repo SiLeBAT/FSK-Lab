@@ -41,3 +41,4 @@ Export-Package: org.javers.common.collections,
  org.javers.repository.api,
  org.javers.repository.jql
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Automatic-Module-Name: org.javers
