@@ -68,20 +68,7 @@
 		<!-- Test report -->
 		<module>de.bund.bfr.knime.testreport</module>
 
-		<!-- Old dependencies -->
-		<module>com.thoughtworks.xstream</module>
-		<module>net.sf.jabref</module>
-		<module>org.freixas.jcalendar</module>
-		<module>org.javers</module>
-		<module>quick.dbtable</module>
-		<module>org.sbml.jsbml</module>
-		<module>de.unirostock.sems.CombineArchive</module>
-		<module>com.jgoodies</module>
-		<module>de.bund.bfr.pmfml</module>
-		<module>com.gmail.gcolaianni5.jris</module>
-		<module>com.google.ez-vcard</module>
-
-		<!-- Features -->
+		<module>dependencies</module>
 		<module>features</module>
 
 		<!-- Update site -->

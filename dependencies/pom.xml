@@ -1,62 +1,27 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001 XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>de.bund.bfr.knime.dependencies</artifactId>
+	<packaging>pom</packaging>
 
-    <groupId>de.bund.bfr.knime</groupId>
-    <artifactId>dependencies</artifactId>
-    <packaging>pom</packaging>
-    <version>1.0.0-SNAPSHOT</version>
+	<parent>
+		<groupId>de.bund.bfr.knime</groupId>
+		<artifactId>de.bund.bfr.knime.root</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
 
-    <repositories>
-        <repository>
-            <id>bfr-formats</id>
-            <url>https://dl.bintray.com/silebat/bfr-formats</url>
-        </repository>
-    </repositories>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.reficio</groupId>
-                <artifactId>p2-maven-plugin</artifactId>
-                <version>1.3.0</version>
-                <executions>
-                    <execution>
-                        <id>default-cli</id>
-                        <configuration>
-                            <artifacts>
-                                <!-- specify your depencies here -->
-                                <!-- groupId:artifactId:version -->
-                                <artifact><id>com.googlecode.ez-vcard:ez-vcard:0.10.6</id></artifact>
-                                <artifact><id>org.sbml.jsbml:jsbml-core:1.3</id></artifact>
-                                <artifact><id>org.sbml.jsbml.ext:jsbml-arrays:1.3</id></artifact>
-                                <artifact><id>org.sbml.jsbml.ext:jsbml-comp:1.3</id></artifact>
-                                <artifact><id>de.bund.bfr:pmfml:0.0.12</id></artifact>
-                                <artifact><id>com.gmail.gcolaianni5:jris:1.0.0</id></artifact>
-                                <artifact><id>com.jgoodies:jgoodies-common:1.4.0</id></artifact>
-                                <artifact><id>com.jgoodies:jgoodies-forms:1.6.0</id></artifact>
-                                <artifact><id>com.jgoodies:jgoodies-looks:2.5.2</id></artifact>
-                            </artifacts>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.mortbay.jetty</groupId>
-                <artifactId>jetty-maven-plugin</artifactId>
-                <version>8.1.5.v20120716</version>
-                <configuration>
-                    <scanIntervalSeconds>10</scanIntervalSeconds>
-                    <webAppSourceDirectory>${basedir}/target/repository/</webAppSourceDirectory>
-                    <webApp>
-                        <contextPath>/site</contextPath>
-                    </webApp>
-                </configuration>
-            </plugin>
-
-        </plugins>
-    </build>
-
+	<modules>
+		<module>com.gmail.gcolaianni5.jris</module>
+		<module>com.google.ez-vcard</module>
+		<module>com.jgoodies</module>
+		<module>com.thoughtworks.xstream</module>
+		<module>de.bund.bfr.pmfml</module>
+		<module>de.unirostock.sems.CombineArchive</module>
+		<module>net.sf.jabref</module>
+		<module>org.freixas.jcalendar</module>
+		<module>org.javers</module>
+		<module>org.sbml.jsbml</module>
+		<module>quick.dbtable</module>
+	</modules>
 </project>
