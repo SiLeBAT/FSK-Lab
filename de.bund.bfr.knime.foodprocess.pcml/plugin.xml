@@ -14,18 +14,11 @@
       specSerializer="de.bund.bfr.knime.pcml.port.PCMLPortObjectSpecSerializer">
     </portType>
     
-  </extension>
-   <extension
-         point="org.knime.workbench.repository.nodes">
-      <node
-            category-path="/foodprocess"
-            factory-class="de.bund.bfr.knime.pcml.node.pcmltotable.PCMLToDataTableNodeFactory"
-            id="de.bund.bfr.knime.pcml.node.pcmltotable.PCMLToDataTableNodeFactory"/>
-     <node
-            category-path="/foodprocess"            
-            factory-class="de.bund.bfr.knime.pcml.node.xls2pcml.XLS2PCMLNodeFactory"
-            id="de.bund.bfr.knime.pcml.node.xls2pcml.XLS2PCMLNodeFactory">
-      </node>
-   </extension>
+</extension>
+  
+<extension point="org.knime.workbench.repository.nodes">
+	<node category-path="/foodprocess" factory-class="de.bund.bfr.knime.pcml.node.pcmltotable.PCMLToDataTableNodeFactory" />
+	<node category-path="/foodprocess" factory-class="de.bund.bfr.knime.pcml.node.xls2pcml.XLS2PCMLNodeFactory" />
+</extension>
    
 </plugin>
