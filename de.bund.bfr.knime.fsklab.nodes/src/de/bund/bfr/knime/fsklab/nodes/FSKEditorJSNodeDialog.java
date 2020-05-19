@@ -21,7 +21,6 @@ package de.bund.bfr.knime.fsklab.nodes;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -68,14 +67,13 @@ import org.knime.core.node.workflow.NodeContext;
 import org.knime.core.node.workflow.WorkflowContext;
 import org.knime.core.util.FileUtil;
 import de.bund.bfr.knime.fsklab.FskPortObject;
-import de.bund.bfr.knime.fsklab.nodes.EditorNodeSettings.ModelType;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.FBrowseButton;
 
-class EditorNodeDialog extends DataAwareNodeDialogPane {
+class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
 
-  private EditorNodeSettings settings;
+  private FSKEditorJSNodeSettings settings;
 
-  private final DefaultComboBoxModel<ModelType> modelType;
+  private final DefaultComboBoxModel<String> modeltype;
 
   private final FilesHistoryPanel m_readmePanel;
 
@@ -88,11 +86,15 @@ class EditorNodeDialog extends DataAwareNodeDialogPane {
   private File currentWorkingDirectory;
 
   private WorkingDirectoryChangeListener changeListener = new WorkingDirectoryChangeListener();
-  
-  public EditorNodeDialog() {
-    settings = new EditorNodeSettings();
 
-    modelType = new DefaultComboBoxModel<>(ModelType.values());
+  private static final String[] MODEL_TYPES = {"GenericModel", "DataModel", "PredictiveModel",
+      "ExposureModel", "ToxicologicalModel", "DoseResponseModel", "ProcessModel",
+      "ConsumptionModel", "HealthModel", "RiskModel", "QraModel", "OtherModel"};
+
+  public FSKEditorJSNodeDialog() {
+    settings = new FSKEditorJSNodeSettings();
+
+    modeltype = new DefaultComboBoxModel<>(MODEL_TYPES);
 
     FlowVariableModel readmeVariable = createFlowVariableModel("readme", FlowVariable.Type.STRING);
     m_readmePanel =
@@ -114,12 +116,7 @@ class EditorNodeDialog extends DataAwareNodeDialogPane {
       throws NotConfigurableException {
     try {
       this.settings.load(settings);
-      
-      // Select the model type in settings
-      if (StringUtils.isNotEmpty(this.settings.modelType)) {
-        modelType.setSelectedItem(ModelType.valueOf(this.settings.modelType));
-      }
-      
+      modeltype.setSelectedItem(this.settings.modelType);
       m_readmePanel.setSelectedFile(this.settings.getReadme());
       m_workingDirectoryPanel.setSelectedFile(this.settings.getWorkingDirectory());
 
@@ -152,7 +149,7 @@ class EditorNodeDialog extends DataAwareNodeDialogPane {
   protected void loadSettingsFrom(NodeSettingsRO settings, PortObject[] input)
       throws NotConfigurableException {
 
-    final EditorNodeSettings editorSettings = new EditorNodeSettings();
+    final FSKEditorJSNodeSettings editorSettings = new FSKEditorJSNodeSettings();
     try {
       editorSettings.load(settings);
     } catch (InvalidSettingsException exception) {
@@ -199,8 +196,7 @@ class EditorNodeDialog extends DataAwareNodeDialogPane {
     } catch (IOException | URISyntaxException e) {
       e.printStackTrace();
     }
-    
-    this.settings.modelType = ((ModelType) modelType.getSelectedItem()).name();
+    this.settings.modelType = (String) modeltype.getSelectedItem();
     this.settings = editorSettings;
   }
 
@@ -227,12 +223,8 @@ class EditorNodeDialog extends DataAwareNodeDialogPane {
     modelTypePanel.setBorder(
         BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Model Type:"));
 
-    JComboBox<ModelType> combo = new JComboBox<>(modelType);
-    combo.addItemListener(event -> {
-      if (event.getStateChange() == ItemEvent.SELECTED) {
-        settings.modelType = ((ModelType) event.getItem()).name();
-      }
-    });
+    JComboBox<String> combo = new JComboBox<>(modeltype);
+    combo.addItemListener(event -> settings.modelType = (String) event.getItem());
     modelTypePanel.add(combo, BorderLayout.NORTH);
 
     modelTypePanel.add(Box.createHorizontalGlue());

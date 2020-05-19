@@ -18,7 +18,7 @@
  */
 package de.bund.bfr.knime.fsklab.nodes;
 
-import java.util.Objects;
+import java.util.Random;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
@@ -31,27 +31,18 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 final class FSKEditorJSViewRepresentation extends JSONViewContent {
 
-  private String modelType;
+  // no members to hash on
+  public final int pseudoIdentifier = (new Random()).nextInt();
 
   @Override
-  public void saveToNodeSettings(NodeSettingsWO settings) {
-  }
+  public void saveToNodeSettings(NodeSettingsWO settings) {}
 
   @Override
-  public void loadFromNodeSettings(NodeSettingsRO settings) throws InvalidSettingsException {
-  }
-
-  public String getModelType() {
-    return modelType;
-  }
-
-  public void setModelType(String modelType) {
-    this.modelType = modelType;
-  }
+  public void loadFromNodeSettings(NodeSettingsRO settings) throws InvalidSettingsException {}
 
   @Override
   public int hashCode() {
-    return Objects.hash(modelType);
+    return pseudoIdentifier;
   }
 
   @Override
@@ -65,8 +56,6 @@ final class FSKEditorJSViewRepresentation extends JSONViewContent {
     if (obj.getClass() != getClass()) {
       return false;
     }
-
-    FSKEditorJSViewRepresentation other = (FSKEditorJSViewRepresentation) obj;
-    return modelType.equals(other.modelType);
+    return false; // maybe add other criteria here
   }
 }
