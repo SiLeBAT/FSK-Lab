@@ -49,7 +49,6 @@ class FSKEditorJSViewValue extends JSONViewContent {
   public String serverName;
   public boolean notCompleted;
   public String[] validationErrors;
-  public String modelType ;
 
   @Override
   public void saveToNodeSettings(NodeSettingsWO settings) {

@@ -46,29 +46,29 @@ fskeditorjs = function () {
       _metadata.modelMath = metaData.modelMath ? metaData.modelMath : {};
     }
 
-    if (value.modelType === "genericModel") {
+    if (representation.modelType === "genericModel") {
       handler = new fskutil.GenericModel(_metadata);
-    } else if (value.modelType === "dataModel") {
+    } else if (representation.modelType === "dataModel") {
       handler = new fskutil.DataModel(_metadata);
-    } else if (value.modelType === "predictiveModel") {
+    } else if (representation.modelType === "predictiveModel") {
       handler = new fskutil.PredictiveModel(_metadata);
-    } else if (value.modelType === "otherModel") {
+    } else if (representation.modelType === "otherModel") {
       handler = new fskutil.OtherModel(_metadata);
-    } else if (value.modelType === "toxicologicalModel") {
+    } else if (representation.modelType === "toxicologicalModel") {
       handler = new fskutil.ToxicologicalModel(_metadata);
-    } else if (value.modelType === "doseResponseModel") {
+    } else if (representation.modelType === "doseResponseModel") {
       handler = new fskutil.DoseResponseModel(_metadata);
-    } else if (value.modelType === "exposureModel") {
+    } else if (representation.modelType === "exposureModel") {
       handler = new fskutil.ExposureModel(_metadata);
-    } else if (value.modelType === "processModel") {
+    } else if (representation.modelType === "processModel") {
       handler = new fskutil.ProcessModel(_metadata);
-    } else if (value.modelType === "consumptionModel") {
+    } else if (representation.modelType === "consumptionModel") {
       handler = new fskutil.ConsumptionModel(_metadata);
-    } else if (value.modelType === "healthModel") {
+    } else if (representation.modelType === "healthModel") {
       handler = new fskutil.HealthModel(_metadata);
-    } else if (value.modelType === "riskModel") {
+    } else if (representation.modelType === "riskModel") {
       handler = new fskutil.RiskModel(_metadata);
-    } else if (value.modelType === "qraModel") {
+    } else if (representation.modelType === "qraModel") {
       handler = new fskutil.QraModel(_metadata);
     } else {
       handler = new fskutil.GenericModel(_metadata);

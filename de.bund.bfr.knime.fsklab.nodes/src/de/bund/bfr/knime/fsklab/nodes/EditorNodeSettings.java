@@ -22,7 +22,41 @@ import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 
-class FSKEditorJSNodeSettings {
+class EditorNodeSettings {
+  
+  enum ModelType {
+    genericModel,
+    dataModel,
+    predictiveModel,
+    exposureModel,
+    toxicologicalModel,
+    doseResponseModel,
+    processModel,
+    consumptionModel,
+    healthModel,
+    riskModel,
+    qraModel,
+    otherModel;
+    
+    @Override
+    public String toString() {
+      switch(this) {
+        case genericModel: return "Generic model";
+        case dataModel: return "Data model";
+        case predictiveModel: return "Predictive model";
+        case exposureModel: return "Exposure model";
+        case toxicologicalModel: return "Toxicological model";
+        case doseResponseModel: return "Dose response model";
+        case processModel: return "Process model";
+        case consumptionModel: return "Consumption model";
+        case healthModel: return "Health model";
+        case riskModel: return "Risk model";
+        case qraModel: return "QRA model";
+        case otherModel: return "Other model";
+        default: throw new IllegalArgumentException();
+      }
+    }
+  }
 
   private static final String JSON_REPRESENTATION = "jsonRepresentation";
   private static final String CFG_README = "readme";

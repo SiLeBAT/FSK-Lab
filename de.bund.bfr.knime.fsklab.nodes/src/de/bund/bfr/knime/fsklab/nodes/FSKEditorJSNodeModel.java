@@ -47,6 +47,7 @@ import org.knime.core.node.web.ValidationError;
 import org.knime.core.node.workflow.NodeContainer;
 import org.knime.core.node.workflow.NodeContext;
 import org.knime.core.node.workflow.WorkflowContext;
+import org.knime.core.node.workflow.WorkflowManager;
 import org.knime.core.util.FileUtil;
 import org.knime.core.util.IRemoteFileUtilsService;
 import org.knime.js.core.node.AbstractWizardNodeModel;
@@ -62,7 +63,6 @@ import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.FskSimulation;
-import de.bund.bfr.metadata.swagger.GenericModel;
 import de.bund.bfr.metadata.swagger.Model;
 import de.bund.bfr.metadata.swagger.Parameter;
 import metadata.SwaggerUtil;
@@ -76,7 +76,7 @@ final class FSKEditorJSNodeModel
     implements PortObjectHolder {
   private static final NodeLogger LOGGER = NodeLogger.getLogger("Fskx JS Editor Model");
 
-  private final FSKEditorJSNodeSettings nodeSettings = new FSKEditorJSNodeSettings();
+  private final EditorNodeSettings nodeSettings = new EditorNodeSettings();
   private FskPortObject m_port;
 
   // Input and output port types
@@ -98,7 +98,6 @@ final class FSKEditorJSNodeModel
 
   @Override
   public FSKEditorJSViewValue createEmptyViewValue() {
-
     return new FSKEditorJSViewValue();
   }
 
@@ -118,24 +117,108 @@ final class FSKEditorJSNodeModel
   }
 
   @Override
-  public void saveCurrentValue(NodeSettingsWO content) {}
+  public void saveCurrentValue(NodeSettingsWO content) {
+  }
 
   @Override
   public FSKEditorJSViewValue getViewValue() {
-    FSKEditorJSViewValue val;
+
+    FSKEditorJSViewValue value;
+
     synchronized (getLock()) {
-      val = super.getViewValue();
-      if (val == null) {
-        val = createEmptyViewValue();
+
+      value = super.getViewValue();
+      if (value == null) {
+        value = createEmptyViewValue();
+      }
+
+      // Load value from JSON internal settings if no node is connected. Otherwise, load from the
+      // input port.
+      if (StringUtils.isEmpty(value.getModelMetaData())) {
+        if (m_port == null) {
+          try {
+            loadJsonSetting();
+
+            // set metadata
+            if (StringUtils.isNotEmpty(nodeSettings.modelMetaData)) {
+              try {
+                String jsonMetadata = FskPlugin.getDefault().OBJECT_MAPPER
+                    .writeValueAsString(nodeSettings.modelMetaData);
+                value.setModelMetaData(jsonMetadata);
+              } catch (JsonProcessingException e) {
+              }
+            }
+
+            // set firstModelScript
+            if (StringUtils.isNotEmpty(nodeSettings.model)) {
+              value.firstModelScript = nodeSettings.model;
+            }
+
+            // set firstModelViz
+            if (StringUtils.isNotEmpty(nodeSettings.viz)) {
+              value.firstModelViz = nodeSettings.viz;
+            }
+
+            // set readme
+            if (StringUtils.isNotEmpty(nodeSettings.getReadme())) {
+              value.readme = nodeSettings.getReadme();
+            }
+
+          } catch (IOException | CanceledExecutionException e) {
+          }
+        } else {
+
+          // set metadata
+          try {
+            String jsonMetadata =
+                FskPlugin.getDefault().OBJECT_MAPPER.writeValueAsString(m_port.modelMetadata);
+            value.setModelMetaData(jsonMetadata);
+          } catch (JsonProcessingException e) {
+          }
+
+          // set firstModelScript
+          if (StringUtils.isEmpty(value.firstModelScript)) {
+            value.firstModelScript = m_port.model;
+          }
+
+          // set firstModelViz
+          if (StringUtils.isEmpty(value.firstModelViz)) {
+            value.firstModelViz = m_port.viz;
+          }
+
+          // set readme
+          if (StringUtils.isEmpty(value.readme)) {
+            value.readme = m_port.getReadme();
+          }
+        }
       }
     }
 
-    return val;
+    return value;
+  }
+
+  @Override
+  public FSKEditorJSViewRepresentation getViewRepresentation() {
+    FSKEditorJSViewRepresentation representation;
+
+    synchronized (getLock()) {
+
+      representation = super.getViewRepresentation();
+      if (representation == null) {
+        representation = createEmptyViewRepresentation();
+      }
+
+      // Set model type
+      if (representation.getModelType() == null) {
+        representation.setModelType(nodeSettings.modelType);
+      }
+    }
+
+    return representation;
   }
 
   @Override
   protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
-
     return new PortObjectSpec[] {FskPortObjectSpec.INSTANCE};
   }
 
@@ -164,6 +247,8 @@ final class FSKEditorJSNodeModel
   @Override
   protected PortObject[] performExecute(PortObject[] inObjects, ExecutionContext exec)
       throws Exception {
+
+    setInternalPortObjects(inObjects);
 
     final String nodeWithId = NodeContext.getContext().getNodeContainer().getNameWithID();
     NodeContext.getContext().getWorkflowManager()
@@ -206,50 +291,21 @@ final class FSKEditorJSNodeModel
       inObj1 = new FskPortObject(workingDirectory, readme, new ArrayList<>());
       inObj1.model = "";
       inObj1.viz = "";
-      inObj1.modelMetadata = new GenericModel();
-      inObj1.modelMetadata.modelType("genericModel");
     }
 
     // Clone input object
     synchronized (getLock()) {
-      FSKEditorJSViewValue fskEditorProxyValue = getViewValue();
+      FSKEditorJSViewValue viewValue = getViewValue();
 
-      if (StringUtils.isNotBlank(nodeSettings.modelType)) {
-        fskEditorProxyValue.modelType = nodeSettings.modelType;
-      } else if (inObj1 != null && inObj1.modelMetadata != null) {
-        fskEditorProxyValue.modelType = inObj1.modelMetadata.getModelType();
-      } else {
-        fskEditorProxyValue.modelType = "GenericModel";
-      }
-
-      // If not executed
-      if (fskEditorProxyValue.getModelMetaData() == null) {
-        if (inObjects[0] == null) {
-          loadJsonSetting();
-        }
-        if (fskEditorProxyValue.getModelMetaData() == null) {
-          fskEditorProxyValue.setModelMetaData(FromOjectToJSON(inObj1.modelMetadata));
-          fskEditorProxyValue.firstModelScript = inObj1.model;
-          fskEditorProxyValue.firstModelViz = inObj1.viz;
-          fskEditorProxyValue.modelType = inObj1.modelMetadata.getModelType();
-          fskEditorProxyValue.readme = inObj1.getReadme();
-        }
-      } else {
-        if (fskEditorProxyValue.notCompleted) {
-          setWarningMessage("Output Parameters are not configured correctly");
-        }
-        if (fskEditorProxyValue.validationErrors != null
-            && fskEditorProxyValue.validationErrors.length > 0) {
-          for (String error : fskEditorProxyValue.validationErrors) {
-            setWarningMessage(error);
-          }
-        }
-      }
       outObj = inObj1;
 
-      Class<? extends Model> modelClass =
-          SwaggerUtil.modelClasses.get(fskEditorProxyValue.modelType);
-      outObj.modelMetadata = getObjectFromJson(fskEditorProxyValue.getModelMetaData(), modelClass);
+      FSKEditorJSViewRepresentation representation = getViewRepresentation();
+
+      if (viewValue.getModelMetaData() != null) {
+        Class<? extends Model> modelClass =
+            SwaggerUtil.modelClasses.get(representation.getModelType());
+        outObj.modelMetadata = getObjectFromJson(viewValue.getModelMetaData(), modelClass);
+      }
 
       if (outObj.modelMetadata != null && SwaggerUtil.getModelMath(outObj.modelMetadata) != null) {
         List<Parameter> parametersList = SwaggerUtil.getParameter(outObj.modelMetadata);
@@ -263,12 +319,13 @@ final class FSKEditorJSNodeModel
           if (outObj.simulations.size() > 0) {
             Optional<FskSimulation> oldDefaultSimulation = outObj.simulations.stream()
                 .filter(sim -> "defaultSimulation".equals(sim.getName())).findAny();
-            
+
             // If there is an old default simulation just update the parameter values. If not, then
             // just add the entire newDefaultSimulation.
             if (oldDefaultSimulation.isPresent()) {
               oldDefaultSimulation.get().getParameters().clear();
-              oldDefaultSimulation.get().getParameters().putAll(newDefaultSimulation.getParameters());
+              oldDefaultSimulation.get().getParameters()
+                  .putAll(newDefaultSimulation.getParameters());
             } else {
               outObj.simulations.add(0, newDefaultSimulation);
             }
@@ -279,21 +336,20 @@ final class FSKEditorJSNodeModel
         }
       }
 
-      outObj.model = fskEditorProxyValue.firstModelScript;
-      outObj.viz = fskEditorProxyValue.firstModelViz;
-      outObj.setReadme(fskEditorProxyValue.readme);
-      
+      outObj.model = viewValue.firstModelScript;
+      outObj.viz = viewValue.firstModelViz;
+      outObj.setReadme(viewValue.readme);
+
       // resources files via fskEditorProxyValue will be available only in online mode of the JS
       // editor
-      if (fskEditorProxyValue.resourcesFiles != null
-          && fskEditorProxyValue.resourcesFiles.length != 0) {
-        for (String fileRequestString : fskEditorProxyValue.resourcesFiles) {
+      if (viewValue.resourcesFiles != null && viewValue.resourcesFiles.length != 0) {
+        for (String fileRequestString : viewValue.resourcesFiles) {
           downloadFileToWorkingDir(fileRequestString, outObj.getWorkingDirectory());
         }
         // delete the parent folder of the uploaded files after moving them to the working
         // directory.
         // parentFolderPath is always uses KNIME protocol
-        String firstFile = fskEditorProxyValue.resourcesFiles[0];
+        String firstFile = viewValue.resourcesFiles[0];
         String parentFolderPath = firstFile.substring(0, firstFile.lastIndexOf("/"));
         BundleContext ctx =
             FrameworkUtil.getBundle(IRemoteFileUtilsService.class).getBundleContext();
@@ -307,22 +363,20 @@ final class FSKEditorJSNodeModel
           }
         }
       }
-      
+
       // Collect R packages
       final Set<String> librariesSet = new HashSet<>();
-      librariesSet.addAll(new RScript(outObj.model).getLibraries());
-      librariesSet.addAll(new RScript(outObj.viz).getLibraries());
+      if (StringUtils.isNotEmpty(outObj.model)) {
+        librariesSet.addAll(new RScript(outObj.model).getLibraries());
+      }
+      if (StringUtils.isNotEmpty(outObj.viz)) {
+        librariesSet.addAll(new RScript(outObj.viz).getLibraries());
+      }
       outObj.packages.clear();
       outObj.packages.addAll(new ArrayList<>(librariesSet));
     }
 
     return new PortObject[] {outObj};
-  }
-
-  private static String FromOjectToJSON(final Object object) throws JsonProcessingException {
-    ObjectMapper objectMapper = FskPlugin.getDefault().OBJECT_MAPPER;
-    String jsonStr = objectMapper.writeValueAsString(object);
-    return jsonStr;
   }
 
   private static <T> T getObjectFromJson(String jsonStr, Class<T> valueType)
@@ -341,7 +395,8 @@ final class FSKEditorJSNodeModel
   }
 
   @Override
-  protected void useCurrentValueAsDefault() {}
+  protected void useCurrentValueAsDefault() {
+  }
 
   @Override
   protected void saveSettingsTo(NodeSettingsWO settings) {
@@ -373,23 +428,28 @@ final class FSKEditorJSNodeModel
   }
 
   protected void loadJsonSetting() throws IOException, CanceledExecutionException {
-    File directory =
-        NodeContext.getContext().getWorkflowManager().getContext().getCurrentLocation();
+
+    NodeContext nodeContext = NodeContext.getContext();
+    if (nodeContext == null)
+      return;
+
+    WorkflowManager workflowManager = nodeContext.getWorkflowManager();
+    if (workflowManager == null)
+      return;
+
+    WorkflowContext workflowContext = workflowManager.getContext();
+    if (workflowContext == null)
+      return;
+
+    File directory = workflowContext.getCurrentLocation();
     String containerName = buildContainerName();
     File settingFolder = new File(directory, containerName);
 
     // Read configuration strings
     nodeSettings.modelMetaData = NodeUtils.readConfigString(settingFolder, "modelMetaData.json");
-    String modelScript = NodeUtils.readConfigString(settingFolder, "modelScript.txt");
-    String visualizationScript = NodeUtils.readConfigString(settingFolder, "visualization.txt");
-    String readme = NodeUtils.readConfigString(settingFolder, "readme.txt");
-
-    // Update view value
-    FSKEditorJSViewValue viewValue = getViewValue();
-    viewValue.setModelMetaData(nodeSettings.modelMetaData);
-    viewValue.firstModelScript = modelScript;
-    viewValue.firstModelViz = visualizationScript;
-    viewValue.readme = readme;
+    nodeSettings.model = NodeUtils.readConfigString(settingFolder, "modelScript.txt");
+    nodeSettings.viz = NodeUtils.readConfigString(settingFolder, "visualization.txt");
+    nodeSettings.setReadme(NodeUtils.readConfigString(settingFolder, "readme.txt"));
   }
 
   protected void saveJsonSetting(String modelMetaData, String modelScript,
@@ -410,7 +470,8 @@ final class FSKEditorJSNodeModel
   }
 
   @Override
-  protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {}
+  protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
+  }
 
   @Override
   public PortObject[] getInternalPortObjects() {
@@ -419,10 +480,13 @@ final class FSKEditorJSNodeModel
 
   @Override
   public void setInternalPortObjects(PortObject[] portObjects) {
-    m_port = (FskPortObject) portObjects[0];
+    if (portObjects != null && portObjects.length == 1) {
+      m_port = (FskPortObject) portObjects[0];
+    }
   }
 
-  public void setHideInWizard(boolean hide) {}
+  public void setHideInWizard(boolean hide) {
+  }
 
   /** @return string with node name and id with format "{name} (#{id}) setting". */
   private static String buildContainerName() {

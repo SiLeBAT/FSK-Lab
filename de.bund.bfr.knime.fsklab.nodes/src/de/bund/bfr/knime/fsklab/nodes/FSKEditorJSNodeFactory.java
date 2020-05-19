@@ -45,7 +45,7 @@ public class FSKEditorJSNodeFactory extends NodeFactory<FSKEditorJSNodeModel> im
 
   @Override
   protected NodeDialogPane createNodeDialogPane() {
-    return new FSKEditorJSNodeDialog();
+    return new EditorNodeDialog();
   }
 
   @Override
