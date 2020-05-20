@@ -71,8 +71,8 @@ import metadata.SwaggerUtil;
 /**
  * Fsk Editor JS node model.
  */
-final class FSKEditorJSNodeModel
-    extends AbstractWizardNodeModel<FSKEditorJSViewRepresentation, FSKEditorJSViewValue>
+final class EditorNodeModel
+    extends AbstractWizardNodeModel<EditorViewRepresentation, EditorViewValue>
     implements PortObjectHolder {
   private static final NodeLogger LOGGER = NodeLogger.getLogger("Fskx JS Editor Model");
 
@@ -87,18 +87,18 @@ final class FSKEditorJSNodeModel
 
   static final AtomicLong TEMP_DIR_UNIFIER = new AtomicLong((int) (100000 * Math.random()));
 
-  public FSKEditorJSNodeModel() {
+  public EditorNodeModel() {
     super(IN_TYPES, OUT_TYPES, VIEW_NAME);
   }
 
   @Override
-  public FSKEditorJSViewRepresentation createEmptyViewRepresentation() {
-    return new FSKEditorJSViewRepresentation();
+  public EditorViewRepresentation createEmptyViewRepresentation() {
+    return new EditorViewRepresentation();
   }
 
   @Override
-  public FSKEditorJSViewValue createEmptyViewValue() {
-    return new FSKEditorJSViewValue();
+  public EditorViewValue createEmptyViewValue() {
+    return new EditorViewValue();
   }
 
   @Override
@@ -112,7 +112,7 @@ final class FSKEditorJSNodeModel
   }
 
   @Override
-  public ValidationError validateViewValue(FSKEditorJSViewValue viewContent) {
+  public ValidationError validateViewValue(EditorViewValue viewContent) {
     return null;
   }
 
@@ -121,9 +121,9 @@ final class FSKEditorJSNodeModel
   }
 
   @Override
-  public FSKEditorJSViewValue getViewValue() {
+  public EditorViewValue getViewValue() {
 
-    FSKEditorJSViewValue value;
+    EditorViewValue value;
 
     synchronized (getLock()) {
 
@@ -150,17 +150,17 @@ final class FSKEditorJSNodeModel
             }
 
             // set firstModelScript
-            if (StringUtils.isNotEmpty(nodeSettings.model)) {
-              value.firstModelScript = nodeSettings.model;
+            if (nodeSettings.hasModel()) {
+              value.firstModelScript = nodeSettings.getModel();
             }
 
             // set firstModelViz
-            if (StringUtils.isNotEmpty(nodeSettings.viz)) {
-              value.firstModelViz = nodeSettings.viz;
+            if (nodeSettings.hasViz()) {
+              value.firstModelViz = nodeSettings.getViz();
             }
 
             // set readme
-            if (StringUtils.isNotEmpty(nodeSettings.getReadme())) {
+            if (nodeSettings.hasReadme()) {
               value.readme = nodeSettings.getReadme();
             }
 
@@ -198,8 +198,8 @@ final class FSKEditorJSNodeModel
   }
 
   @Override
-  public FSKEditorJSViewRepresentation getViewRepresentation() {
-    FSKEditorJSViewRepresentation representation;
+  public EditorViewRepresentation getViewRepresentation() {
+    EditorViewRepresentation representation;
 
     synchronized (getLock()) {
 
@@ -210,7 +210,7 @@ final class FSKEditorJSNodeModel
 
       // Set model type
       if (representation.getModelType() == null) {
-        representation.setModelType(nodeSettings.modelType);
+        representation.setModelType(nodeSettings.getModelType().name());
       }
     }
 
@@ -295,11 +295,11 @@ final class FSKEditorJSNodeModel
 
     // Clone input object
     synchronized (getLock()) {
-      FSKEditorJSViewValue viewValue = getViewValue();
+      EditorViewValue viewValue = getViewValue();
 
       outObj = inObj1;
 
-      FSKEditorJSViewRepresentation representation = getViewRepresentation();
+      EditorViewRepresentation representation = getViewRepresentation();
 
       if (viewValue.getModelMetaData() != null) {
         Class<? extends Model> modelClass =
@@ -400,15 +400,8 @@ final class FSKEditorJSNodeModel
 
   @Override
   protected void saveSettingsTo(NodeSettingsWO settings) {
-    /*
-     * nodeSettings.generalInformation = getViewValue().getGeneralInformation(); nodeSettings.scope
-     * = getViewValue().getScope(); nodeSettings.dataBackground =
-     * getViewValue().getDataBackground(); nodeSettings.modelMath = getViewValue().getModelMath();
-     * nodeSettings.model = getViewValue().getFirstModelScript(); nodeSettings.viz =
-     * getViewValue().getFirstModelViz(); nodeSettings.save(settings);
-     */
     try {
-      FSKEditorJSViewValue vv = getViewValue();
+      EditorViewValue vv = getViewValue();
       saveJsonSetting(vv.getModelMetaData(), vv.firstModelScript, vv.firstModelViz, vv.readme);
     } catch (IOException | CanceledExecutionException e) {
       e.printStackTrace();
@@ -447,8 +440,8 @@ final class FSKEditorJSNodeModel
 
     // Read configuration strings
     nodeSettings.modelMetaData = NodeUtils.readConfigString(settingFolder, "modelMetaData.json");
-    nodeSettings.model = NodeUtils.readConfigString(settingFolder, "modelScript.txt");
-    nodeSettings.viz = NodeUtils.readConfigString(settingFolder, "visualization.txt");
+    nodeSettings.setModel(NodeUtils.readConfigString(settingFolder, "modelScript.txt"));
+    nodeSettings.setViz(NodeUtils.readConfigString(settingFolder, "visualization.txt"));
     nodeSettings.setReadme(NodeUtils.readConfigString(settingFolder, "readme.txt"));
   }
 

@@ -58,48 +58,107 @@ class EditorNodeSettings {
     }
   }
 
-  private static final String JSON_REPRESENTATION = "jsonRepresentation";
   private static final String CFG_README = "readme";
   private static final String CFG_RESOURCES = "resources";
   private static final String CFG_WORKING_DIRECTORY = "workingDirectory";
-
   private static final String CFG_MODEL_METADATA = "ModelMetaData";
-  
   private static final String CFG_MODELTYPE = "modelType";
+  
   public String modelMetaData;
-  public String model;
-  public String viz;
-  public String modelType = "GenericModel"; 
-  String jsonRepresentation = "";
 
+  private String model;
+  private String viz;
+  
+  private ModelType modelType;
+  
   /** Paths to resources: plain text files and R workspace files (.rdata). */
-  private String workingDirectory = "";
+  private String workingDirectory;
+  
   /** Resources that will be load into the working directory */
-  private String resources = "";
+  private String resources;
 
-  /** README. */
-  private String readme = "";
-
+  private String readme;
+  
+  
+  public EditorNodeSettings() {
+    this.model = "";
+    this.viz = "";
+    this.modelType = ModelType.genericModel;
+    this.workingDirectory = "";
+    this.resources = "";
+    this.readme = "";
+  }
+  
+  /** @return empty string if not set. */
+  public String getModel() {
+    return model;
+  }
+  
+  /** @param model null or empty string are ignored. */
+  public void setModel(String model) {
+    if (model != null && !model.isEmpty()) {
+      this.model = model;
+    }
+  }
+  
+  public boolean hasModel() {
+    return !model.isEmpty();
+  }
+  
+  /** @return empty string if not set. */
+  public String getViz() {
+    return viz;
+  }
+  
+  /** @param viz null or empty string are ignored. */
+  public void setViz(String viz) {
+    if (viz != null && !viz.isEmpty()) {
+      this.viz = viz;
+    }
+  }
+  
+  public ModelType getModelType() {
+    return modelType;
+  }
+  
+  public void setModelType(ModelType anotherType) {
+    this.modelType = anotherType;
+  }
+  
+  public boolean hasViz() {
+    return !viz.isEmpty();
+  }
+  
   /** @return empty string if not set. */
   public String getResources() {
-    return resources != null ? resources : "";
+    return resources;
   }
 
+  /** @param resource null or empty string are ignored. */
   public void setResources(String resources) {
-    if (resources != null) {
+    if (resources != null && !resources.isEmpty()) {
       this.resources = resources;
     }
+  }
+  
+  public boolean hasResources() {
+    return !resources.isEmpty();
   }
 
   /** @return empty string if not set. */
   public String getReadme() {
-    return readme != null ? readme : "";
+    return readme;
   }
 
+  /** @param readme null or empty string are ignored. */
   public void setReadme(String readme) {
-    if (readme != null) {
+    if (readme != null && !readme.isEmpty()) {
       this.readme = readme;
     }
+  }
+  
+  public boolean hasReadme() {
+    return !readme.isEmpty();
   }
 
   /** @return empty string if not set. */
@@ -107,27 +166,39 @@ class EditorNodeSettings {
     return workingDirectory != null ? workingDirectory : "";
   }
 
+  /** @param workingDirectory null or empty string are ignored. */
   public void setWorkingDirectory(String workingDirectory) {
-    if (workingDirectory != null) {
+    if (workingDirectory != null && !workingDirectory.isEmpty()) {
       this.workingDirectory = workingDirectory;
     }
   }
+  
+  public boolean hasWorkingDirectory() {
+    return !workingDirectory.isEmpty();
+  }
 
-  void load(final NodeSettingsRO settings) throws InvalidSettingsException {
-    jsonRepresentation = settings.getString(JSON_REPRESENTATION, "");
+  void load(final NodeSettingsRO settings) {
     resources = settings.getString(CFG_RESOURCES, "");
     readme = settings.getString(CFG_README, "");
     workingDirectory = settings.getString(CFG_WORKING_DIRECTORY, "");
     modelMetaData = settings.getString(CFG_MODEL_METADATA, "");
-    modelType = settings.getString(CFG_MODELTYPE,"");
+    
+    if (settings.containsKey(CFG_MODELTYPE)) {
+      try {
+        modelType = ModelType.valueOf(settings.getString(CFG_MODELTYPE));
+      } catch (InvalidSettingsException e) {
+        modelType = ModelType.genericModel;
+      }
+    } else {
+      modelType = ModelType.genericModel;
+    }
   }
 
   void save(final NodeSettingsWO settings) {
-    settings.addString(JSON_REPRESENTATION, jsonRepresentation);
     settings.addString(CFG_RESOURCES, resources);
     settings.addString(CFG_README, readme);
     settings.addString(CFG_WORKING_DIRECTORY, workingDirectory);
     settings.addString(CFG_MODEL_METADATA, modelMetaData);
-    settings.addString(CFG_MODELTYPE, modelType);
+    settings.addString(CFG_MODELTYPE, modelType.name());
   }
 }

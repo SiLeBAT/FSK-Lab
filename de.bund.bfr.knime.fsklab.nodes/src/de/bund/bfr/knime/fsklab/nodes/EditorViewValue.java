@@ -29,9 +29,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.FskPlugin;
 
-class FSKEditorJSViewValue extends JSONViewContent {
+class EditorViewValue extends JSONViewContent {
 
-  private static final NodeLogger LOGGER = NodeLogger.getLogger(FSKEditorJSViewValue.class);
+  private static final NodeLogger LOGGER = NodeLogger.getLogger(EditorViewValue.class);
   private static final String CFG_ORIGINAL_MODEL_SCRIPT = "originalModelScript";
   private static final String CFG_ORIGINAL_VISUALIZATION_SCRIPT = "originalVisualizationScript";
   private static final String CFG_ORIGINAL_README = "README";
@@ -40,15 +40,11 @@ class FSKEditorJSViewValue extends JSONViewContent {
   public final int pseudoIdentifier = (new Random()).nextInt();
 
   private String modelMetaData;
-
-  public String firstModelScript;
-  public String firstModelViz;
-  public String readme;
-
+  public String firstModelScript = "";
+  public String firstModelViz = "";
+  public String readme = "";
   public String[] resourcesFiles;
   public String serverName;
-  public boolean notCompleted;
-  public String[] validationErrors;
 
   @Override
   public void saveToNodeSettings(NodeSettingsWO settings) {

@@ -29,7 +29,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 @JsonAutoDetect
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
-final class FSKEditorJSViewRepresentation extends JSONViewContent {
+final class EditorViewRepresentation extends JSONViewContent {
 
   private String modelType;
 
@@ -66,7 +66,7 @@ final class FSKEditorJSViewRepresentation extends JSONViewContent {
       return false;
     }
 
-    FSKEditorJSViewRepresentation other = (FSKEditorJSViewRepresentation) obj;
+    EditorViewRepresentation other = (EditorViewRepresentation) obj;
     return modelType.equals(other.modelType);
   }
 }

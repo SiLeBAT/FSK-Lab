@@ -108,42 +108,35 @@ class EditorNodeDialog extends DataAwareNodeDialogPane {
   }
 
   /** Loads settings from saved settings. */
-
   @Override
   protected void loadSettingsFrom(NodeSettingsRO settings, PortObjectSpec[] specs)
       throws NotConfigurableException {
-    try {
-      this.settings.load(settings);
-      
-      // Select the model type in settings
-      if (StringUtils.isNotEmpty(this.settings.modelType)) {
-        modelType.setSelectedItem(ModelType.valueOf(this.settings.modelType));
-      }
-      
-      m_readmePanel.setSelectedFile(this.settings.getReadme());
-      m_workingDirectoryPanel.setSelectedFile(this.settings.getWorkingDirectory());
+    this.settings.load(settings);
+    
+    // Select the model type in settings
+    modelType.setSelectedItem(this.settings.getModelType());
+    
+    m_readmePanel.setSelectedFile(this.settings.getReadme());
+    m_workingDirectoryPanel.setSelectedFile(this.settings.getWorkingDirectory());
 
-      if (!m_workingDirectoryPanel.getSelectedFile().isEmpty()) {
-        try {
-          URL url = FileUtil.toURL(m_workingDirectoryPanel.getSelectedFile());
-          Path localPath = FileUtil.resolveToPath(url);
-          if (localPath != null) {
+    if (!m_workingDirectoryPanel.getSelectedFile().isEmpty()) {
+      try {
+        URL url = FileUtil.toURL(m_workingDirectoryPanel.getSelectedFile());
+        Path localPath = FileUtil.resolveToPath(url);
+        if (localPath != null) {
 
-            // Clear and load file names from directory localPath
-            fileModel.filenames.clear();
-            Files.walk(localPath).filter(Files::isRegularFile).map(Path::toString)
-                .forEach(fileModel.filenames::add);
+          // Clear and load file names from directory localPath
+          fileModel.filenames.clear();
+          Files.walk(localPath).filter(Files::isRegularFile).map(Path::toString)
+              .forEach(fileModel.filenames::add);
 
-            fileTable.revalidate();
-            currentWorkingDirectory = new File(this.settings.getWorkingDirectory());
-          }
-
-        } catch (IOException | URISyntaxException e) {
-          e.printStackTrace();
+          fileTable.revalidate();
+          currentWorkingDirectory = new File(this.settings.getWorkingDirectory());
         }
+
+      } catch (IOException | URISyntaxException e) {
+        e.printStackTrace();
       }
-    } catch (InvalidSettingsException exception) {
-      throw new NotConfigurableException(exception.getMessage(), exception);
     }
   }
 
@@ -153,11 +146,7 @@ class EditorNodeDialog extends DataAwareNodeDialogPane {
       throws NotConfigurableException {
 
     final EditorNodeSettings editorSettings = new EditorNodeSettings();
-    try {
-      editorSettings.load(settings);
-    } catch (InvalidSettingsException exception) {
-      throw new NotConfigurableException("InvalidSettingsException", exception);
-    }
+    editorSettings.load(settings);
 
     final FskPortObject inObj = (FskPortObject) input[0];
 
@@ -200,12 +189,15 @@ class EditorNodeDialog extends DataAwareNodeDialogPane {
       e.printStackTrace();
     }
     
-    this.settings.modelType = ((ModelType) modelType.getSelectedItem()).name();
+    this.settings.setModelType((ModelType) modelType.getSelectedItem());
     this.settings = editorSettings;
   }
 
   @Override
   protected void saveSettingsTo(NodeSettingsWO settings) throws InvalidSettingsException {
+    
+    this.settings.setModelType((ModelType)modelType.getSelectedItem());
+    
     this.settings.setReadme(m_readmePanel.getSelectedFile().trim());
     m_readmePanel.addToHistory();
 
@@ -230,7 +222,7 @@ class EditorNodeDialog extends DataAwareNodeDialogPane {
     JComboBox<ModelType> combo = new JComboBox<>(modelType);
     combo.addItemListener(event -> {
       if (event.getStateChange() == ItemEvent.SELECTED) {
-        settings.modelType = ((ModelType) event.getItem()).name();
+        settings.setModelType((ModelType) event.getItem());
       }
     });
     modelTypePanel.add(combo, BorderLayout.NORTH);
@@ -280,7 +272,7 @@ class EditorNodeDialog extends DataAwareNodeDialogPane {
             currentWorkingDirectory = new File(workflowContext.getCurrentLocation(),
                 nodeContext.getNodeContainer().getNameWithID().toString().replaceAll("\\W", "")
                     .replace(" ", "") + "_" + "workingDirectory"
-                    + FSKEditorJSNodeModel.TEMP_DIR_UNIFIER.getAndIncrement());
+                    + EditorNodeModel.TEMP_DIR_UNIFIER.getAndIncrement());
             currentWorkingDirectory.mkdir();
             m_workingDirectoryPanel.setSelectedFile(currentWorkingDirectory.getAbsolutePath());
           }
