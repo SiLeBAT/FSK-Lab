@@ -28,3 +28,4 @@ Bundle-ClassPath: libs/fskml-1.0.5.jar,
  libs/bfr-swing-1.0-SNAPSHOT.jar
 Export-Package: de.bund.bfr.knime.fsklab.nodes
 Automatic-Module-Name: de.bund.bfr.knime.fsklab.nodes.deprecated
+Import-Package: org.w3c.dom.events;version="[3.0.0,4.0.0)";resolution:=optional
