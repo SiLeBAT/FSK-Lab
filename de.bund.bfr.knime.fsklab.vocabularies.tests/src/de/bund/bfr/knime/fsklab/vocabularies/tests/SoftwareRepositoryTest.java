@@ -1,0 +1,54 @@
+package de.bund.bfr.knime.fsklab.vocabularies.tests;
+
+import static org.junit.Assert.*;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import de.bund.bfr.knime.fsklab.vocabularies.data.SoftwareRepository;
+import de.bund.bfr.knime.fsklab.vocabularies.domain.Software;
+
+public class SoftwareRepositoryTest {
+
+	private static Connection connection;
+
+	@BeforeClass
+	public static void setUp() throws SQLException {
+		DriverManager.registerDriver(new org.h2.Driver());
+		connection = DriverManager.getConnection("jdbc:h2:mem:SoftwareRepositoryTest");
+		
+		Statement statement = connection.createStatement();
+		statement.execute("CREATE TABLE software ("
+				+ "id INTEGER not NULL,"
+				+ "name VARCHAR(255) not NULL,"
+				+ "PRIMARY KEY (id))");
+		
+		statement.execute("INSERT INTO software VALUES(0, 'name')");
+	}
+	
+	@AfterClass
+	public static void tearDown() throws SQLException {
+		connection.close();
+	}
+
+	@Test
+	public void testGetById() throws SQLException {
+		SoftwareRepository repository = new SoftwareRepository(connection);
+		Software software = repository.getById(0);
+		
+		assertEquals(0, software.getId());
+		assertEquals("name", software.getName());
+	}
+	
+	@Test
+	public void testGetAll() throws SQLException {
+		SoftwareRepository repository = new SoftwareRepository(connection);
+		assertTrue(repository.getAll().length > 0);
+	}
+}
