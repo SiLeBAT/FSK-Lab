@@ -56,8 +56,10 @@ public class ProductionMethodRepositoryTest {
 	}
 	
 	@Test
-	public void testGetById_() throws Exception {
-		
+	public void testGetById_MissingId_ShouldReturnEmptyOptional() throws Exception {
+		ProductionMethodRepository repository = new ProductionMethodRepository(connection);
+		Optional<ProductionMethod> optional = repository.getById(-1);
+		assertFalse(optional.isPresent());
 	}
 	
 	@Test
