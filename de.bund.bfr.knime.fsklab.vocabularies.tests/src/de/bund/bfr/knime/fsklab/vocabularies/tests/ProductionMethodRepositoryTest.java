@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Optional;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -44,8 +45,11 @@ public class ProductionMethodRepositoryTest {
 	public void testGetById() throws Exception {
 		
 		ProductionMethodRepository repository = new ProductionMethodRepository(connection);
-		ProductionMethod method = repository.getById(0);
 		
+		Optional<ProductionMethod> optional = repository.getById(0);
+		assertTrue(optional.isPresent());
+
+		ProductionMethod method = optional.get();
 		assertEquals(0, method.getId());
 		assertEquals("name", method.getName());
 		assertEquals("ssd", method.getSsd());

@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import de.bund.bfr.knime.fsklab.vocabularies.domain.Packaging;
 
@@ -16,9 +17,8 @@ public class PackagingRepository implements BasicRepository<Packaging> {
         this.connection = connection;
     }
 
-
     @Override
-    public Packaging getById(int id) throws SQLException {
+    public Optional<Packaging> getById(int id) throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT * FROM packaging WHERE id = " + id);
 
@@ -27,9 +27,9 @@ public class PackagingRepository implements BasicRepository<Packaging> {
             String ssd = resultSet.getString("ssd");
             String comment = resultSet.getString("comment");
 
-            return new Packaging(id, name, ssd, comment);
+            return Optional.of(new Packaging(id, name, ssd, comment));
         } else {
-            return null;
+            return Optional.empty();
         }
     }
 

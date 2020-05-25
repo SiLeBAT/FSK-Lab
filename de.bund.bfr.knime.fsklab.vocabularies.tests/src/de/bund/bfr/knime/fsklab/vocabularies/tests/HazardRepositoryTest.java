@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Optional;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -44,8 +45,11 @@ public class HazardRepositoryTest {
 		
 		// Get mocked hazard
 		HazardRepository repository = new HazardRepository(connection);
-		Hazard hazard = repository.getById(0);
 		
+		Optional<Hazard> optional = repository.getById(0);
+		assertTrue(optional.isPresent());
+
+		Hazard hazard = optional.get();
 		assertEquals(0, hazard.getId());
 		assertEquals("name", hazard.getName());
 		assertEquals("ssd", hazard.getSsd());

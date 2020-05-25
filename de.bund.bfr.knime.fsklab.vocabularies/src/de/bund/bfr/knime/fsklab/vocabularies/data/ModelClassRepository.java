@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import de.bund.bfr.knime.fsklab.vocabularies.domain.ModelClass;
 
@@ -17,16 +18,15 @@ public class ModelClassRepository implements BasicRepository<ModelClass> {
     }
 
     @Override
-    public ModelClass getById(int id) throws SQLException {
+    public Optional<ModelClass> getById(int id) throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT * FROM model_class WHERE id = " + id);
 
         if (resultSet.next()) {
             String name = resultSet.getString("name");
-
-            return new ModelClass(id, name);
+            return Optional.of(new ModelClass(id, name));
         } else {
-            return null;
+            return Optional.empty();
         }
     }
 

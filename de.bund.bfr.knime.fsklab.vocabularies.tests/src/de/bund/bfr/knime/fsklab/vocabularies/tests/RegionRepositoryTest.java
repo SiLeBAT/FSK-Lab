@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Optional;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -42,8 +43,11 @@ public class RegionRepositoryTest {
 	@Test
 	public void testGetById() throws SQLException {
 		RegionRepository repository = new RegionRepository(connection);
-		Region region = repository.getById(0);
 		
+		Optional<Region> optional = repository.getById(0);
+		assertTrue(optional.isPresent());
+		
+		Region region = optional.get();
 		assertEquals(0, region.getId());
 		assertEquals("name", region.getName());
 		assertEquals("nuts", region.getSsd());

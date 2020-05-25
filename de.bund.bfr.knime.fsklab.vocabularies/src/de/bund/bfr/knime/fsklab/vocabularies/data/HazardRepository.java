@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import de.bund.bfr.knime.fsklab.vocabularies.domain.Hazard;
 
@@ -17,7 +18,7 @@ public class HazardRepository implements BasicRepository<Hazard> {
     }
 
     @Override
-    public Hazard getById(int id) throws SQLException {
+    public Optional<Hazard> getById(int id) throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT * FROM hazard WHERE id = " + id);
 
@@ -25,9 +26,9 @@ public class HazardRepository implements BasicRepository<Hazard> {
             String name = resultSet.getString("name");
             String ssd = resultSet.getString("ssd");
 
-            return new Hazard(id, name, ssd);
+            return Optional.of(new Hazard(id, name, ssd));
         } else {
-            return null;
+            return Optional.empty();
         }
     }
 

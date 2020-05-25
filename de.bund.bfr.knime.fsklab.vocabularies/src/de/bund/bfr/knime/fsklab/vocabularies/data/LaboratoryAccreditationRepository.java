@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import de.bund.bfr.knime.fsklab.vocabularies.domain.LaboratoryAccreditation;
 
@@ -17,7 +18,7 @@ public class LaboratoryAccreditationRepository implements BasicRepository<Labora
     }
 
     @Override
-    public LaboratoryAccreditation getById(int id) throws SQLException {
+    public Optional<LaboratoryAccreditation> getById(int id) throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT * FROM laboratory_accreditation WHERE id = " + id);
 
@@ -25,9 +26,9 @@ public class LaboratoryAccreditationRepository implements BasicRepository<Labora
             String name = resultSet.getString("name");
             String ssd = resultSet.getString("ssd");
 
-            return new LaboratoryAccreditation(id, name, ssd);
+            return Optional.of(new LaboratoryAccreditation(id, name, ssd));
         } else {
-            return null;
+            return Optional.empty();
         }
     }
 

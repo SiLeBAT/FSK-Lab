@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import de.bund.bfr.knime.fsklab.vocabularies.domain.ParameterSource;
 
@@ -17,16 +18,15 @@ public class ParameterSourceRepository implements BasicRepository<ParameterSourc
     }
 
     @Override
-    public ParameterSource getById(int id) throws SQLException {
+    public Optional<ParameterSource> getById(int id) throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT * FROM parameter_source WHERE id = " + id);
 
         if (resultSet.next()) {
             String name = resultSet.getString("name");
-
-            return new ParameterSource(id, name);
+            return Optional.of(new ParameterSource(id, name));
         } else {
-            return null;
+            return Optional.empty();
         }
     }
 

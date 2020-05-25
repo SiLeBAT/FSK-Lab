@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Optional;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -42,8 +43,11 @@ public class ParameterSubjectRepositoryTest {
 		
 		// Get mocked subject
 		ParameterSubjectRepository repository = new ParameterSubjectRepository(connection);
-		ParameterSubject subject = repository.getById(0);
 		
+		Optional<ParameterSubject> optional = repository.getById(0);
+		assertTrue(optional.isPresent());
+		
+		ParameterSubject subject = optional.get();
 		assertEquals(0, subject.getId());
 		assertEquals("name", subject.getName());
 	}

@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import de.bund.bfr.knime.fsklab.vocabularies.domain.ProductTreatment;
 
@@ -17,7 +18,7 @@ public class ProductTreatmentRepository implements BasicRepository<ProductTreatm
     }
 
     @Override
-    public ProductTreatment getById(int id) throws SQLException {
+    public Optional<ProductTreatment> getById(int id) throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT * FROM prodTreat WHERE id = " + id);
 
@@ -25,10 +26,10 @@ public class ProductTreatmentRepository implements BasicRepository<ProductTreatm
             String name = resultSet.getString("name");
             String ssd = resultSet.getString("ssd");
             String comment = resultSet.getString("comment");
-
-            return new ProductTreatment(id, name, ssd, comment);
+            
+            return Optional.of(new ProductTreatment(id, name, ssd, comment));
         } else {
-            return null;
+            return Optional.empty();
         }
     }
 

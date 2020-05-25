@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Optional;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -44,8 +45,11 @@ public class AvailabilityRepositoryTest {
 
 		// Get mocked availability
 		AvailabilityRepository repository = new AvailabilityRepository(connection);
-		Availability availability = repository.getById(0);
 		
+		Optional<Availability> optional = repository.getById(0);
+		assertTrue(optional.isPresent());
+		
+		Availability availability = optional.get();
 		assertEquals(0, availability.getId());
 		assertEquals("name", availability.getName());
 		assertEquals("comment", availability.getComment());

@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import de.bund.bfr.knime.fsklab.vocabularies.domain.PublicationStatus;
 
@@ -17,7 +18,7 @@ public class PublicationStatusRepository implements BasicRepository<PublicationS
     }
 
     @Override
-    public PublicationStatus getById(int id) throws SQLException {
+    public Optional<PublicationStatus> getById(int id) throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT * FROM publication_status WHERE id = " + id);
 
@@ -25,9 +26,9 @@ public class PublicationStatusRepository implements BasicRepository<PublicationS
             String name = resultSet.getString("name");
             String comment = resultSet.getString("comment");
 
-            return new PublicationStatus(id, name, comment);
+            return Optional.of(new PublicationStatus(id, name, comment));
         } else {
-            return null;
+            return Optional.empty();
         }
     }
 

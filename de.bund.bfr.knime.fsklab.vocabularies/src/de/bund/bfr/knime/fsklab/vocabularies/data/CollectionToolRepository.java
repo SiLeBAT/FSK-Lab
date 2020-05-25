@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import de.bund.bfr.knime.fsklab.vocabularies.domain.CollectionTool;
 
@@ -17,16 +18,16 @@ public class CollectionToolRepository implements BasicRepository<CollectionTool>
     }
 
     @Override
-    public CollectionTool getById(int id) throws SQLException {
+    public Optional<CollectionTool> getById(int id) throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT * FROM collection_tool WHERE id = '" + id + "'");
 
         if (resultSet.next()) {
             String name = resultSet.getString("name");
 
-            return new CollectionTool(id, name);
+            return Optional.of(new CollectionTool(id, name));
         } else {
-            return null;
+            return Optional.empty();
         }
     }
 

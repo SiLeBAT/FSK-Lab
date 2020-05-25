@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Optional;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -43,8 +44,11 @@ public class LanguageWrittenInTest {
 		
 		// Get mocked language written in
 		LanguageWrittenInRepository repository = new LanguageWrittenInRepository(connection);
-		LanguageWrittenIn language = repository.getById(0);
 		
+		Optional<LanguageWrittenIn> optional = repository.getById(0);
+		assertTrue(optional.isPresent());
+		
+		LanguageWrittenIn language = optional.get();
 		assertEquals(0, language.getId());
 		assertEquals("name", language.getName());
 	}

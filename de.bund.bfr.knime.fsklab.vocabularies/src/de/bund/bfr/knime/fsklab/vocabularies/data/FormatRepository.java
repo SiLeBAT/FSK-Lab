@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import de.bund.bfr.knime.fsklab.vocabularies.domain.Format;
 
@@ -17,7 +18,7 @@ public class FormatRepository implements BasicRepository<Format> {
     }
 
     @Override
-    public Format getById(int id) throws SQLException {
+    public Optional<Format> getById(int id) throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT * FROM format WHERE id = " + id);
 
@@ -25,9 +26,9 @@ public class FormatRepository implements BasicRepository<Format> {
             String name = resultSet.getString("name");
             String comment = resultSet.getString("comment");
 
-            return new Format(id, name, comment);
+            return Optional.of(new Format(id, name, comment));
         } else {
-            return null;
+            return Optional.empty();
         }
     }
 

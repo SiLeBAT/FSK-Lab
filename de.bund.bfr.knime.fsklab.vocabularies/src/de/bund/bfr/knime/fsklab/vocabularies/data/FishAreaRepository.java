@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import de.bund.bfr.knime.fsklab.vocabularies.domain.FishArea;
 
@@ -17,7 +18,7 @@ public class FishAreaRepository implements BasicRepository<FishArea> {
     }
 
     @Override
-    public FishArea getById(int id) throws SQLException {
+    public Optional<FishArea> getById(int id) throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT * FROM fish_area WHERE id = " + id);
 
@@ -25,9 +26,9 @@ public class FishAreaRepository implements BasicRepository<FishArea> {
             String name = resultSet.getString("name");
             String ssd = resultSet.getString("ssd");
 
-            return new FishArea(id, name, ssd);
+            return Optional.of(new FishArea(id, name, ssd));
         } else {
-            return null;
+            return Optional.empty();
         }
     }
 

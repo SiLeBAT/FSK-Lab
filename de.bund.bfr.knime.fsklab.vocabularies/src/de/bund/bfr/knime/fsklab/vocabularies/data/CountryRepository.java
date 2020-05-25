@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import de.bund.bfr.knime.fsklab.vocabularies.domain.Country;
 
@@ -17,7 +18,7 @@ public class CountryRepository implements BasicRepository<Country> {
     }
 
     @Override
-    public Country getById(int id) throws SQLException {
+    public Optional<Country> getById(int id) throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT * FROM country WHERE id = " + id);
 
@@ -25,9 +26,9 @@ public class CountryRepository implements BasicRepository<Country> {
             String name = resultSet.getString("name");
             String iso = resultSet.getString("iso");
 
-            return new Country(id, name, iso);
+            return Optional.of(new Country(id, name, iso));
         } else {
-            return null;
+            return Optional.empty();
         }
     }
 

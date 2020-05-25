@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Optional;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -42,8 +43,11 @@ public class ParameterSourceRepositoryTest {
 		
 		// Get mocked source
 		ParameterSourceRepository repository = new ParameterSourceRepository(connection);
-		ParameterSource source = repository.getById(0);
 		
+		Optional<ParameterSource> optional = repository.getById(0);
+		assertTrue(optional.isPresent());
+		
+		ParameterSource source = optional.get();
 		assertEquals(0, source.getId());
 		assertEquals("name", source.getName());
 	}

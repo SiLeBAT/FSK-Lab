@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Optional;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -43,8 +44,11 @@ public class ModelClassRepositoryTest {
 		
 		// Get mocked class
 		ModelClassRepository repository = new ModelClassRepository(connection);
-		ModelClass modelClass = repository.getById(0);
 		
+		Optional<ModelClass> optional = repository.getById(0);
+		assertTrue(optional.isPresent());
+		
+		ModelClass modelClass = optional.get();
 		assertEquals(0, modelClass.getId());
 		assertEquals("name", modelClass.getName());
 	}

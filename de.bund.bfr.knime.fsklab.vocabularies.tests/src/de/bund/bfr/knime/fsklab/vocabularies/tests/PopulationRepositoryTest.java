@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Optional;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -43,8 +44,11 @@ public class PopulationRepositoryTest {
 		
 		// Get mocked population
 		PopulationRepository repository = new PopulationRepository(connection);
-		Population population = repository.getById(0);
 		
+		Optional<Population> optional = repository.getById(0);
+		assertTrue(optional.isPresent());
+		
+		Population population = optional.get();
 		assertEquals(0, population.getId());
 		assertEquals("name", population.getName());
 		assertEquals("foodon", population.getFoodon());

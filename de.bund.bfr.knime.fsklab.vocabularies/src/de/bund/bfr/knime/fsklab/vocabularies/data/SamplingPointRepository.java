@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import de.bund.bfr.knime.fsklab.vocabularies.domain.SamplingPoint;
 
@@ -17,17 +18,16 @@ public class SamplingPointRepository implements BasicRepository<SamplingPoint> {
     }
 
     @Override
-    public SamplingPoint getById(int id) throws SQLException {
+    public Optional<SamplingPoint> getById(int id) throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT * FROM sampling_point WHERE id = " + id);
 
         if (resultSet.next()) {
             String name = resultSet.getString("name");
             String sampnt = resultSet.getString("sampnt");
-
-            return new SamplingPoint(id, name, sampnt);
+            return Optional.of(new SamplingPoint(id, name, sampnt));
         } else {
-            return null;
+            return Optional.empty();
         }
     }
 

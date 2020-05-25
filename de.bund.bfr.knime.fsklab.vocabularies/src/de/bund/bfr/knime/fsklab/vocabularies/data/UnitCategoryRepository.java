@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import de.bund.bfr.knime.fsklab.vocabularies.domain.UnitCategory;
 
@@ -17,15 +18,15 @@ public class UnitCategoryRepository implements BasicRepository<UnitCategory> {
     }
 
     @Override
-    public UnitCategory getById(int id) throws SQLException {
+    public Optional<UnitCategory> getById(int id) throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT * FROM unit_category WHERE id = " + id);
 
         if (resultSet.next()) {
             String name = resultSet.getString("name");
-            return new UnitCategory(id, name);
+            return Optional.of(new UnitCategory(id, name));
         } else {
-            return null;
+            return Optional.empty();
         }
     }
 

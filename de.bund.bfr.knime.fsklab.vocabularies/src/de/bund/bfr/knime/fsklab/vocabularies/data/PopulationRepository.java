@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import de.bund.bfr.knime.fsklab.vocabularies.domain.Population;
 
@@ -17,17 +18,16 @@ public class PopulationRepository implements BasicRepository<Population> {
     }
 
     @Override
-    public Population getById(int id) throws SQLException {
+    public Optional<Population> getById(int id) throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT * FROM population WHERE id = " + id);
 
         if (resultSet.next()) {
             String name = resultSet.getString("name");
             String foodon = resultSet.getString("foodon");
-
-            return new Population(id, name, foodon);
+            return Optional.of(new Population(id, name, foodon));
         } else {
-            return null;
+            return Optional.empty();
         }
     }
 

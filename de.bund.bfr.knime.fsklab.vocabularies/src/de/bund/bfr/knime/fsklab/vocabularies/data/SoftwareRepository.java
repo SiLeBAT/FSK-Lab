@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import de.bund.bfr.knime.fsklab.vocabularies.domain.Software;
 
@@ -17,13 +18,13 @@ public class SoftwareRepository implements BasicRepository<Software> {
     }
 
     @Override
-    public Software getById(int id) throws SQLException {
+    public Optional<Software> getById(int id) throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT * FROM software WHERE id = " + id);
 
         if (resultSet.next()) {
             String name = resultSet.getString("name");
-            return new Software(id, name);
+            return Optional.of(new Software(id, name));
         } else {
             return null;
         }

@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import de.bund.bfr.knime.fsklab.vocabularies.domain.SamplingMethod;
 
@@ -17,7 +18,7 @@ public class SamplingMethodRepository implements BasicRepository<SamplingMethod>
     }
 
     @Override
-    public SamplingMethod getById(int id) throws SQLException {
+    public Optional<SamplingMethod> getById(int id) throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT * FROM sampling_method WHERE id = " + id);
 
@@ -26,9 +27,9 @@ public class SamplingMethodRepository implements BasicRepository<SamplingMethod>
             String sampmd = resultSet.getString("sampmd");
             String comment = resultSet.getString("comment");
 
-            return new SamplingMethod(id, name, sampmd, comment);
+            return Optional.of(new SamplingMethod(id, name, sampmd, comment));
         } else {
-            return null;
+            return Optional.empty();
         }
     }
 

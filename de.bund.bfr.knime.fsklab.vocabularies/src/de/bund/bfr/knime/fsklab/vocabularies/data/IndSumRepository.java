@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import de.bund.bfr.knime.fsklab.vocabularies.domain.IndSum;
 
@@ -17,7 +18,7 @@ public class IndSumRepository implements BasicRepository<IndSum> {
     }
 
     @Override
-    public IndSum getById(int id) throws SQLException {
+    public Optional<IndSum> getById(int id) throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT * FROM ind_sum WHERE id = " + id);
 
@@ -25,9 +26,9 @@ public class IndSumRepository implements BasicRepository<IndSum> {
             String name = resultSet.getString("name");
             String ssd = resultSet.getString("ssd");
 
-            return new IndSum(id, name, ssd);
+            return Optional.of(new IndSum(id, name, ssd));
         } else {
-            return null;
+            return Optional.empty();
         }
     }
 

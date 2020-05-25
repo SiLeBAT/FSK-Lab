@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Optional;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -42,8 +43,11 @@ public class PublicationStatusRepositoryTest {
 	@Test
 	public void testGetById() throws Exception {
 		PublicationStatusRepository repository = new PublicationStatusRepository(connection);
-		PublicationStatus publicationStatus = repository.getById(0);
 		
+		Optional<PublicationStatus> optional = repository.getById(0);
+		assertTrue(optional.isPresent());
+		
+		PublicationStatus publicationStatus = optional.get();
 		assertEquals(0, publicationStatus.getId());
 		assertEquals("name", publicationStatus.getName());
 		assertEquals("comment", publicationStatus.getComment());

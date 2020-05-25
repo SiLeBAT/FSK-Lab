@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import de.bund.bfr.knime.fsklab.vocabularies.domain.PublicationType;
 
@@ -17,7 +18,7 @@ public class PublicationTypeRepository implements BasicRepository<PublicationTyp
     }
 
     @Override
-    public PublicationType getById(int id) throws SQLException {
+    public Optional<PublicationType> getById(int id) throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT * FROM publication_type WHERE id = '" + id + "'");
 
@@ -25,9 +26,9 @@ public class PublicationTypeRepository implements BasicRepository<PublicationTyp
             String shortName = resultSet.getString("shortName");
             String fullName = resultSet.getString("fullName");
 
-            return new PublicationType(id, shortName, fullName);
+            return Optional.of(new PublicationType(id, shortName, fullName));
         } else {
-            return null;
+            return Optional.empty();
         }
     }
 

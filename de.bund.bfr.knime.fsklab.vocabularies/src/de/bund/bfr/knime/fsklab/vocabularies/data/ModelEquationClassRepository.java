@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import de.bund.bfr.knime.fsklab.vocabularies.domain.ModelEquationClass;
 
@@ -17,16 +18,15 @@ public class ModelEquationClassRepository implements BasicRepository<ModelEquati
     }
 
     @Override
-    public ModelEquationClass getById(int id) throws SQLException {
+    public Optional<ModelEquationClass> getById(int id) throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT * FROM model_equation_class WHERE id = " + id);
 
         if (resultSet.next()) {
             String name = resultSet.getString("name");
-
-            return new ModelEquationClass(id, name);
+            return Optional.of(new ModelEquationClass(id, name));
         } else {
-            return null;
+            return Optional.empty();
         }
     }
 

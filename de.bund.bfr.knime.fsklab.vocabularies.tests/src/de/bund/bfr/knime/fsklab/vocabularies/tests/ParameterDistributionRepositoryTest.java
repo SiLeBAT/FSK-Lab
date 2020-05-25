@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Optional;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -44,8 +45,11 @@ public class ParameterDistributionRepositoryTest {
 		
 		// Get mocked parameter distribution
 		ParameterDistributionRepository repository = new ParameterDistributionRepository(connection);
-		ParameterDistribution distribution = repository.getById(0);
 		
+		Optional<ParameterDistribution> optional = repository.getById(0);
+		assertTrue(optional.isPresent());
+		
+		ParameterDistribution distribution = optional.get();
 		assertEquals(0, distribution.getId());
 		assertEquals("name", distribution.getName());
 		assertEquals("comment", distribution.getComment());

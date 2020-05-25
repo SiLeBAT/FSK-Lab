@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import de.bund.bfr.knime.fsklab.vocabularies.domain.ParameterDistribution;
 
@@ -17,7 +18,7 @@ public class ParameterDistributionRepository implements BasicRepository<Paramete
     }
 
     @Override
-    public ParameterDistribution getById(int id) throws SQLException {
+    public Optional<ParameterDistribution> getById(int id) throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT * FROM parameter_distribution WHERE id = " + id);
 
@@ -25,9 +26,9 @@ public class ParameterDistributionRepository implements BasicRepository<Paramete
             String name = resultSet.getString("name");
             String comment = resultSet.getString("comment");
 
-            return new ParameterDistribution(id, name, comment);
+            return Optional.of(new ParameterDistribution(id, name, comment));
         } else {
-            return null;
+            return Optional.empty();
         }
     }
 

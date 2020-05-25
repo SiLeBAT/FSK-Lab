@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Optional;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -43,8 +44,11 @@ public class ProductMatrixRepositoryTest {
 	@Test
 	public void testGetById() throws Exception {
 		ProductMatrixRepository repository = new ProductMatrixRepository(connection);
-		ProductMatrix matrix = repository.getById(0);
 		
+		Optional<ProductMatrix> optional = repository.getById(0);
+		assertTrue(optional.isPresent());
+		
+		ProductMatrix matrix = optional.get();
 		assertEquals(0, matrix.getId());
 		assertEquals("ssd", matrix.getSsd());
 		assertEquals("name", matrix.getName());

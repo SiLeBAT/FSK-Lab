@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Optional;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -43,8 +44,11 @@ public class CountryRepositoryTest {
 		
 		// Get mocked country
 		CountryRepository repository = new CountryRepository(connection);
-		Country country = repository.getById(0);
 		
+		Optional<Country> optional = repository.getById(0);
+		assertTrue(optional.isPresent());
+		
+		Country country = optional.get();
 		assertEquals(0, country.getId());
 		assertEquals("name", country.getName());
 		assertEquals("ES", country.getIso());

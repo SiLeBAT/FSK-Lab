@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Optional;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -41,8 +42,11 @@ public class StatusRepositoryTest {
 	@Test
 	public void testGetById() throws SQLException {
 		StatusRepository repository = new StatusRepository(connection);
-		Status status = repository.getById(0);
 		
+		Optional<Status> optional = repository.getById(0);
+		assertTrue(optional.isPresent());
+
+		Status status = optional.get();
 		assertEquals(0, status.getId());
 		assertEquals("name", status.getName());
 		assertEquals("comment", status.getComment());

@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import de.bund.bfr.knime.fsklab.vocabularies.domain.ProductMatrix;
 
@@ -17,7 +18,7 @@ public class ProductMatrixRepository implements BasicRepository<ProductMatrix> {
     }
 
     @Override
-    public ProductMatrix getById(int id) throws SQLException {
+    public Optional<ProductMatrix> getById(int id) throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT * FROM product_matrix WHERE id = " + id);
 
@@ -26,9 +27,9 @@ public class ProductMatrixRepository implements BasicRepository<ProductMatrix> {
             String name = resultSet.getString("name");
             String comment = resultSet.getString("comment");
 
-            return new ProductMatrix(id, ssd, name, comment);
+            return Optional.of(new ProductMatrix(id, ssd, name, comment));
         } else {
-            return null;
+            return Optional.empty();
         }
     }
 

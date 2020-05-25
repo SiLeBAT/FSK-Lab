@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import de.bund.bfr.knime.fsklab.vocabularies.domain.Unit;
 import de.bund.bfr.knime.fsklab.vocabularies.domain.UnitCategory;
@@ -20,7 +21,7 @@ public class UnitRepository implements BasicRepository<Unit> {
     }
 
     @Override
-    public Unit getById(int id) throws SQLException {
+    public Optional<Unit> getById(int id) throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT * FROM unit WHERE id = " + id);
 
@@ -29,11 +30,15 @@ public class UnitRepository implements BasicRepository<Unit> {
             String ssd = resultSet.getString("ssd");
             String comment = resultSet.getString("comment");
             int categoryId = resultSet.getInt("category_id");
-            UnitCategory category = categoryRepository.getById(categoryId);
-
-            return new Unit(id, name, ssd, comment, category);
+            
+            Optional<UnitCategory> category = categoryRepository.getById(categoryId);
+            if (category.isPresent()) {
+            	return Optional.of(new Unit(id, name, ssd, comment, category.get()));
+            } else {
+            	return Optional.empty();
+            }
         } else {
-            return null;
+            return Optional.empty();
         }
     }
 
@@ -49,9 +54,11 @@ public class UnitRepository implements BasicRepository<Unit> {
             String ssd = resultSet.getString("ssd");
             String comment = resultSet.getString("comment");
             int categoryId = resultSet.getInt("category_id");
-            UnitCategory category = categoryRepository.getById(categoryId);
+            Optional<UnitCategory> category = categoryRepository.getById(categoryId);
+            if (!category.isPresent())
+            	continue;
 
-            units.add(new Unit(id, name, ssd, comment, category));
+            units.add(new Unit(id, name, ssd, comment, category.get()));
         }
 
         return units.toArray(new Unit[0]);

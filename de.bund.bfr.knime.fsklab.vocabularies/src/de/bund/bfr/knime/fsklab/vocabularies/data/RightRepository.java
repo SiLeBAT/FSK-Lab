@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import de.bund.bfr.knime.fsklab.vocabularies.domain.Right;
 
@@ -17,7 +18,7 @@ public class RightRepository implements BasicRepository<Right> {
     }
 
     @Override
-    public Right getById(int id) throws SQLException {
+    public Optional<Right> getById(int id) throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT * FROM rights WHERE id = '" + id + "'");
 
@@ -26,9 +27,9 @@ public class RightRepository implements BasicRepository<Right> {
             String fullname = resultSet.getString("fullname");
             String url = resultSet.getString("url");
 
-            return new Right(id, shortname, fullname, url);
+            return Optional.of(new Right(id, shortname, fullname, url));
         } else {
-            return null;
+            return Optional.empty();
         }
     }
 

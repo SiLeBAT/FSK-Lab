@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import de.bund.bfr.knime.fsklab.vocabularies.domain.Availability;
 
@@ -17,7 +18,7 @@ public class AvailabilityRepository implements BasicRepository<Availability> {
     }
 
     @Override
-    public Availability getById(int id) throws SQLException {
+    public Optional<Availability> getById(int id) throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT * FROM availability WHERE id = '" + id + "'");
 
@@ -25,9 +26,9 @@ public class AvailabilityRepository implements BasicRepository<Availability> {
             String name = resultSet.getString("name");
             String comment = resultSet.getString("comment");
 
-            return new Availability(id, name, comment);
+            return Optional.of(new Availability(id, name, comment));
         } else {
-            return null;
+            return Optional.empty();
         }
     }
 

@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Optional;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -42,8 +43,11 @@ public class SamplingMethodRepositoryTest {
 	@Test
 	public void testGetById() throws SQLException {
 		SamplingMethodRepository repository = new SamplingMethodRepository(connection);
-		SamplingMethod method = repository.getById(0);
 		
+		Optional<SamplingMethod> optional = repository.getById(0);
+		assertTrue(optional.isPresent());
+		
+		SamplingMethod method = optional.get();
 		assertEquals(0, method.getId());
 		assertEquals("name", method.getName());
 		assertEquals("12345", method.getSampmd());

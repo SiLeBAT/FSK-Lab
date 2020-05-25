@@ -1,11 +1,13 @@
 package de.bund.bfr.knime.fsklab.vocabularies.tests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Optional;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -43,8 +45,11 @@ public class FormatRepositoryTest {
 		
 		// Get mocked format
 		FormatRepository repository = new FormatRepository(connection);
-		Format format = repository.getById(0);
 		
+		Optional<Format> optional = repository.getById(0);
+		assertTrue(optional.isPresent());
+		
+		Format format = optional.get();
 		assertEquals(0, format.getId());
 		assertEquals("name", format.getName());
 		assertEquals("comment", format.getComment());

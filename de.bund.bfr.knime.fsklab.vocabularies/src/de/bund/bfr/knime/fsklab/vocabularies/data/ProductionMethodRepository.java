@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import de.bund.bfr.knime.fsklab.vocabularies.domain.ProductionMethod;
 
@@ -17,7 +18,7 @@ public class ProductionMethodRepository implements BasicRepository<ProductionMet
     }
 
     @Override
-    public ProductionMethod getById(int id) throws SQLException {
+    public Optional<ProductionMethod> getById(int id) throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT * FROM prodmeth WHERE id = " + id);
 
@@ -26,9 +27,9 @@ public class ProductionMethodRepository implements BasicRepository<ProductionMet
             String ssd = resultSet.getString("ssd");
             String comment = resultSet.getString("comment");
 
-            return new ProductionMethod(id, name, ssd, comment);
+            return Optional.of(new ProductionMethod(id, name, ssd, comment));
         } else {
-            return null;
+            return Optional.empty();
         }
     }
 

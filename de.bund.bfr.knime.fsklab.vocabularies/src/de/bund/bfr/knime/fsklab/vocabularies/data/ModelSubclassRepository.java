@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import de.bund.bfr.knime.fsklab.vocabularies.domain.ModelClass;
 import de.bund.bfr.knime.fsklab.vocabularies.domain.ModelSubclass;
@@ -20,18 +21,22 @@ public class ModelSubclassRepository implements BasicRepository<ModelSubclass> {
     }
 
     @Override
-    public ModelSubclass getById(int id) throws SQLException {
+    public Optional<ModelSubclass> getById(int id) throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT * FROM model_subclass WHERE id = " + id);
 
         if (resultSet.next()) {
             String name = resultSet.getString("name");
             int classId = resultSet.getInt("class_id");
-            ModelClass classCategory = modelClassRepository.getById(classId);
+            Optional<ModelClass> classCategory = modelClassRepository.getById(classId);
 
-            return new ModelSubclass(id, name, classCategory);
+            if (classCategory.isPresent()) {
+            	return Optional.of(new ModelSubclass(id, name, classCategory.get()));
+            } else {
+            	return Optional.empty();
+            }
         } else {
-            return null;
+            return Optional.empty();
         }
     }
 
@@ -45,9 +50,12 @@ public class ModelSubclassRepository implements BasicRepository<ModelSubclass> {
             int id = resultSet.getInt("id");
             String name = resultSet.getString("name");
             int classId = resultSet.getInt("class_id");
-            ModelClass classCategory = modelClassRepository.getById(classId);
+            
+            Optional<ModelClass> classCategory = modelClassRepository.getById(classId);
+            if (!classCategory.isPresent())
+            	continue;
 
-            subclasses.add(new ModelSubclass(id, name, classCategory));
+            subclasses.add(new ModelSubclass(id, name, classCategory.get()));
         }
 
         return subclasses.toArray(new ModelSubclass[0]);

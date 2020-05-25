@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Optional;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -51,8 +52,11 @@ public class UnitRepositoryTest {
 	@Test
 	public void testGetById() throws SQLException {
 		UnitRepository repository = new UnitRepository(connection);
-		Unit unit = repository.getById(0);
 		
+		Optional<Unit> optional = repository.getById(0);
+		assertTrue(optional.isPresent());
+		
+		Unit unit = optional.get();
 		assertEquals(0, unit.getId());
 		assertEquals("name", unit.getName());
 		assertEquals("ssd", unit.getSsd());

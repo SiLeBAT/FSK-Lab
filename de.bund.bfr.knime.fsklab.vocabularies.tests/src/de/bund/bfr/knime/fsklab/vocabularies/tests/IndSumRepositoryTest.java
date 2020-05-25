@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Optional;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -44,8 +45,11 @@ public class IndSumRepositoryTest {
 	
 		// Get mocked ind sum
 		IndSumRepository repository = new IndSumRepository(connection);
-		IndSum indSum = repository.getById(0);
 		
+		Optional<IndSum> optional = repository.getById(0);
+		assertTrue(optional.isPresent());
+		
+		IndSum indSum = optional.get();
 		assertEquals(0, indSum.getId());
 		assertEquals("name", indSum.getName());
 		assertEquals("ssd", indSum.getSsd());
