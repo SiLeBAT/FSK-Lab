@@ -20,4 +20,4 @@ Bundle-ClassPath: .,
 Automatic-Module-Name: de.bund.bfr.knime.fsklab.nodes.deprecated2
 Export-Package: de.bund.bfr.knime.pmm.fskx.creator
 Bundle-Vendor: German Federal Institute for Risk Assessment (BfR)
-Import-Package: org.w3c.dom.events;version="[3.0.0,4.0.0)";resolution:=optional
+Import-Package: org.w3c.dom.events;resolution:=optional
