@@ -40,7 +40,7 @@ public class CountryRepositoryTest {
 	}
 
 	@Test
-	public void testGetById() throws SQLException {
+	public void testGetById_ExistingId_ShouldReturnPresentOptional() throws SQLException {
 		
 		// Get mocked country
 		CountryRepository repository = new CountryRepository(connection);
@@ -52,6 +52,13 @@ public class CountryRepositoryTest {
 		assertEquals(0, country.getId());
 		assertEquals("name", country.getName());
 		assertEquals("ES", country.getIso());
+	}
+	
+	@Test
+	public void testGetById_MissingId_ShouldReturnEmptyOptional() throws Exception {
+		CountryRepository repository = new CountryRepository(connection);
+		Optional<Country> optional = repository.getById(-1);
+		assertFalse(optional.isPresent());
 	}
 	
 	@Test

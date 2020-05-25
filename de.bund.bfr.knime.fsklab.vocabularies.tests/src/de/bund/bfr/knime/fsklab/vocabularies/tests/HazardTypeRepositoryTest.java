@@ -39,7 +39,7 @@ public class HazardTypeRepositoryTest {
 	}
 	
 	@Test
-	public void testGetById() throws SQLException {
+	public void testGetById_ExistingId_ShouldReturnPresentOptional() throws SQLException {
 		
 		// Get mocked hazard type
 		HazardTypeRepository repository = new HazardTypeRepository(connection);
@@ -50,6 +50,13 @@ public class HazardTypeRepositoryTest {
 		HazardType hazardType = optional.get();
 		assertEquals(0, hazardType.getId());
 		assertEquals("name", hazardType.getName());
+	}
+	
+	@Test
+	public void testGetById_MissingId_ShouldReturnEmptyOptional() throws SQLException {
+		HazardTypeRepository repository = new HazardTypeRepository(connection);
+		Optional<HazardType> optional = repository.getById(-1);
+		assertFalse(optional.isPresent());
 	}
 	
 	@Test

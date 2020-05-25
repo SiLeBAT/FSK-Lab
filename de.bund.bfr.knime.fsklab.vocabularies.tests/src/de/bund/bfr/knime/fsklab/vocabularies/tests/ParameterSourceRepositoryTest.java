@@ -39,7 +39,7 @@ public class ParameterSourceRepositoryTest {
 	}
 
 	@Test
-	public void testGetById() throws SQLException {
+	public void testGetById_ExistingId_ShouldReturnPresentOptional() throws SQLException {
 		
 		// Get mocked source
 		ParameterSourceRepository repository = new ParameterSourceRepository(connection);
@@ -50,6 +50,13 @@ public class ParameterSourceRepositoryTest {
 		ParameterSource source = optional.get();
 		assertEquals(0, source.getId());
 		assertEquals("name", source.getName());
+	}
+	
+	@Test
+	public void testGetById_MissingId_ShouldReturnEmptyOptional() throws SQLException {
+		ParameterSourceRepository repository = new ParameterSourceRepository(connection);
+		Optional<ParameterSource> optional = repository.getById(-1);
+		assertFalse(optional.isPresent());
 	}
 	
 	@Test

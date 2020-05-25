@@ -1,7 +1,6 @@
 package de.bund.bfr.knime.fsklab.vocabularies.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -41,7 +40,7 @@ public class HazardRepositoryTest {
 	}
 	
 	@Test
-	public void testGetById() throws SQLException {
+	public void testGetById_ExistingId_ShouldReturnPresentOptional() throws SQLException {
 		
 		// Get mocked hazard
 		HazardRepository repository = new HazardRepository(connection);
@@ -53,6 +52,13 @@ public class HazardRepositoryTest {
 		assertEquals(0, hazard.getId());
 		assertEquals("name", hazard.getName());
 		assertEquals("ssd", hazard.getSsd());
+	}
+	
+	@Test
+	public void testGetById_MissingId_ShouldReturnMissingOptional() throws SQLException {
+		HazardRepository repository = new HazardRepository(connection);
+		Optional<Hazard> optional = repository.getById(-1);
+		assertFalse(optional.isPresent());
 	}
 
 	@Test

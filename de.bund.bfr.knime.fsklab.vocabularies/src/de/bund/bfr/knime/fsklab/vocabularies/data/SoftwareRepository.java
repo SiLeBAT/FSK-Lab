@@ -26,7 +26,7 @@ public class SoftwareRepository implements BasicRepository<Software> {
             String name = resultSet.getString("name");
             return Optional.of(new Software(id, name));
         } else {
-            return null;
+            return Optional.empty();
         }
     }
 

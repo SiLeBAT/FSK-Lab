@@ -1,7 +1,6 @@
 package de.bund.bfr.knime.fsklab.vocabularies.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -41,7 +40,7 @@ public class IndSumRepositoryTest {
 	}
 	
 	@Test
-	public void testGetById() throws SQLException {
+	public void testGetById_ExistingId_ShouldReturnPresentOptional() throws SQLException {
 	
 		// Get mocked ind sum
 		IndSumRepository repository = new IndSumRepository(connection);
@@ -53,6 +52,13 @@ public class IndSumRepositoryTest {
 		assertEquals(0, indSum.getId());
 		assertEquals("name", indSum.getName());
 		assertEquals("ssd", indSum.getSsd());
+	}
+	
+	@Test
+	public void testGetById_MissingId_ShouldReturnEmptyOptional() throws SQLException {
+		IndSumRepository repository = new IndSumRepository(connection);
+		Optional<IndSum> optional = repository.getById(-1);
+		assertFalse(optional.isPresent());
 	}
 	
 	@Test

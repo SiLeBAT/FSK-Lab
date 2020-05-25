@@ -1,7 +1,6 @@
 package de.bund.bfr.knime.fsklab.vocabularies.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -41,7 +40,7 @@ public class RegionRepositoryTest {
 	}
 	
 	@Test
-	public void testGetById() throws SQLException {
+	public void testGetById_ExistingId_ShouldReturnPresentOptional() throws SQLException {
 		RegionRepository repository = new RegionRepository(connection);
 		
 		Optional<Region> optional = repository.getById(0);
@@ -51,6 +50,13 @@ public class RegionRepositoryTest {
 		assertEquals(0, region.getId());
 		assertEquals("name", region.getName());
 		assertEquals("nuts", region.getSsd());
+	}
+	
+	@Test
+	public void testGetById_MissingId_ShouldReturnEmptyOptional() throws SQLException {
+		RegionRepository repository = new RegionRepository(connection);
+		Optional<Region> optional = repository.getById(-1);
+		assertFalse(optional.isPresent());
 	}
 	
 	@Test

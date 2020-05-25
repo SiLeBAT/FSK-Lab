@@ -1,6 +1,7 @@
 package de.bund.bfr.knime.fsklab.vocabularies.tests;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.sql.Connection;
@@ -39,7 +40,7 @@ public class CollectionToolRepositoryTest {
 	}
 
 	@Test
-	public void testGetById() throws SQLException {
+	public void testGetById_ExistingId_ShouldReturnPresentOptional() throws SQLException {
 		
 		// Get mocked collection tool
 		CollectionToolRepository repository = new CollectionToolRepository(connection);
@@ -50,6 +51,13 @@ public class CollectionToolRepositoryTest {
 		CollectionTool collectionTool = optional.get();
 		assertEquals(0, collectionTool.getId());
 		assertEquals("name", collectionTool.getName());
+	}
+	
+	@Test
+	public void testGetById_MissingId_ShouldReturnEmptyOptional() throws SQLException {
+		CollectionToolRepository repository = new CollectionToolRepository(connection);
+		Optional<CollectionTool> optional = repository.getById(-1);
+		assertFalse(optional.isPresent());
 	}
 	
 	@Test

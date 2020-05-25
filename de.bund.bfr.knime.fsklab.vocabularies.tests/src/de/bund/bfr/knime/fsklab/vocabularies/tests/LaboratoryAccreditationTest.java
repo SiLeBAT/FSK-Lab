@@ -1,7 +1,6 @@
 package de.bund.bfr.knime.fsklab.vocabularies.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -41,7 +40,7 @@ public class LaboratoryAccreditationTest {
 	}
 	
 	@Test
-	public void testGetById() throws SQLException {
+	public void testGetById_ExistingId_ShouldReturnPresentOptional() throws SQLException {
 		
 		// Get mocked laboratory accreditation
 		LaboratoryAccreditationRepository repository = new LaboratoryAccreditationRepository(connection);
@@ -53,6 +52,13 @@ public class LaboratoryAccreditationTest {
 		assertEquals(0, accreditation.getId());
 		assertEquals("name", accreditation.getName());
 		assertEquals("ssd", accreditation.getSsd());
+	}
+	
+	@Test
+	public void testGetById_MissingId_ShouldReturnEmptyOptional() throws Exception {
+		LaboratoryAccreditationRepository repository = new LaboratoryAccreditationRepository(connection);
+		Optional<LaboratoryAccreditation> optional = repository.getById(-1);
+		assertFalse(optional.isPresent());
 	}
 	
 	@Test

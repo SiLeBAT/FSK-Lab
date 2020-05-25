@@ -1,7 +1,6 @@
 package de.bund.bfr.knime.fsklab.vocabularies.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -42,7 +41,7 @@ public class ProductionMethodRepositoryTest {
 	}
 	
 	@Test
-	public void testGetById() throws Exception {
+	public void testGetById_ExistingId_ShouldReturnPresentOptional() throws Exception {
 		
 		ProductionMethodRepository repository = new ProductionMethodRepository(connection);
 		
@@ -54,6 +53,11 @@ public class ProductionMethodRepositoryTest {
 		assertEquals("name", method.getName());
 		assertEquals("ssd", method.getSsd());
 		assertEquals("comment", method.getComment());
+	}
+	
+	@Test
+	public void testGetById_() throws Exception {
+		
 	}
 	
 	@Test

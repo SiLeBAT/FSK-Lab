@@ -1,7 +1,6 @@
 package de.bund.bfr.knime.fsklab.vocabularies.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -40,7 +39,7 @@ public class LanguageWrittenInTest {
 	}
 	
 	@Test
-	public void testGetById() throws Exception {
+	public void testGetById_ExistingId_ShouldReturnPresentOptional() throws SQLException {
 		
 		// Get mocked language written in
 		LanguageWrittenInRepository repository = new LanguageWrittenInRepository(connection);
@@ -51,6 +50,13 @@ public class LanguageWrittenInTest {
 		LanguageWrittenIn language = optional.get();
 		assertEquals(0, language.getId());
 		assertEquals("name", language.getName());
+	}
+	
+	@Test
+	public void testGetById_MissingId_ShouldReturnEmptyOptional() throws SQLException {
+		LanguageWrittenInRepository repository = new LanguageWrittenInRepository(connection);
+		Optional<LanguageWrittenIn> optional = repository.getById(-1);
+		assertFalse(optional.isPresent());
 	}
 	
 	@Test

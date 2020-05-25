@@ -1,7 +1,6 @@
 package de.bund.bfr.knime.fsklab.vocabularies.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -41,7 +40,7 @@ public class SourceRepositoryTest {
 	}
 	
 	@Test
-	public void testGetById() throws Exception {
+	public void testGetById_ExistingId_ShouldReturnPresentOptional() throws Exception {
 		SourceRepository repository = new SourceRepository(connection);
 		
 		Optional<Source> optional = repository.getById(0);
@@ -51,6 +50,13 @@ public class SourceRepositoryTest {
 		assertEquals(0, source.getId());
 		assertEquals("name", source.getName());
 		assertEquals("comment", source.getComment());
+	}
+	
+	@Test
+	public void testGetById_MissingId_ShouldReturnEmptyOptional() throws SQLException {
+		SourceRepository repository = new SourceRepository(connection);
+		Optional<Source> optional = repository.getById(-1);
+		assertFalse(optional.isPresent());
 	}
 	
 	@Test

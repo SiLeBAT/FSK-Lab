@@ -1,7 +1,6 @@
 package de.bund.bfr.knime.fsklab.vocabularies.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -42,7 +41,7 @@ public class PackagingRepositoryTest {
 	}
 	
 	@Test
-	public void testGetById() throws Exception {
+	public void testGetById_ExistingId_ShouldReturnPresentOptional() throws SQLException {
 		
 		// Get mocked packaging
 		PackagingRepository repository = new PackagingRepository(connection);
@@ -55,6 +54,13 @@ public class PackagingRepositoryTest {
 		assertEquals("name", packaging.getName());
 		assertEquals("ssd", packaging.getSsd());
 		assertEquals("comment", packaging.getComment());
+	}
+	
+	@Test
+	public void testGetById_MissingId_ShouldReturnEmptyOptional() throws SQLException {
+		PackagingRepository repository = new PackagingRepository(connection);
+		Optional<Packaging> optional = repository.getById(-1);
+		assertFalse(optional.isPresent());
 	}
 	
 	@Test

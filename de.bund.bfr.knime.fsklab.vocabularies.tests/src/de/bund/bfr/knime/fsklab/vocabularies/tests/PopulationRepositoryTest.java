@@ -40,7 +40,7 @@ public class PopulationRepositoryTest {
 	}
 	
 	@Test
-	public void testGetById() throws SQLException {
+	public void testGetById_ExistingId_ShouldReturnPresentOptional() throws SQLException {
 		
 		// Get mocked population
 		PopulationRepository repository = new PopulationRepository(connection);
@@ -52,6 +52,13 @@ public class PopulationRepositoryTest {
 		assertEquals(0, population.getId());
 		assertEquals("name", population.getName());
 		assertEquals("foodon", population.getFoodon());
+	}
+	
+	@Test
+	public void testGetById_MissingId_ShouldReturnEmptyOptional() throws SQLException {
+		PopulationRepository repository = new PopulationRepository(connection);
+		Optional<Population> optional = repository.getById(-1);
+		assertFalse(optional.isPresent());
 	}
 	
 	@Test

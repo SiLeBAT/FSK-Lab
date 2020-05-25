@@ -40,7 +40,7 @@ public class StatusRepositoryTest {
 	}
 	
 	@Test
-	public void testGetById() throws SQLException {
+	public void testGetById_ExistingId_ShouldReturnPresentOptional() throws SQLException {
 		StatusRepository repository = new StatusRepository(connection);
 		
 		Optional<Status> optional = repository.getById(0);
@@ -50,6 +50,13 @@ public class StatusRepositoryTest {
 		assertEquals(0, status.getId());
 		assertEquals("name", status.getName());
 		assertEquals("comment", status.getComment());
+	}
+	
+	@Test
+	public void testGetById_MissingId_ShouldReturnEmptyOptional() throws SQLException {
+		StatusRepository repository = new StatusRepository(connection);
+		Optional<Status> optional = repository.getById(-1);
+		assertFalse(optional.isPresent());
 	}
 	
 	@Test

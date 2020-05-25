@@ -1,7 +1,6 @@
 package de.bund.bfr.knime.fsklab.vocabularies.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -41,7 +40,7 @@ public class FishAreaRepositoryTest {
 	}
 
 	@Test
-	public void testGetById() throws SQLException {
+	public void testGetById_ExistingId_ShouldReturnPresentOptional() throws SQLException {
 		
 		// Get mocked fish area
 		FishAreaRepository repository = new FishAreaRepository(connection);
@@ -53,6 +52,13 @@ public class FishAreaRepositoryTest {
 		assertEquals(0, fishArea.getId());
 		assertEquals("name", fishArea.getName());
 		assertEquals("ssd", fishArea.getSsd());
+	}
+	
+	@Test
+	public void testGetById_MissingId_ShouldReturnEmptyOptional() throws SQLException {
+		FishAreaRepository repository = new FishAreaRepository(connection);
+		Optional<FishArea> optional = repository.getById(-1);
+		assertFalse(optional.isPresent());
 	}
 	
 	@Test

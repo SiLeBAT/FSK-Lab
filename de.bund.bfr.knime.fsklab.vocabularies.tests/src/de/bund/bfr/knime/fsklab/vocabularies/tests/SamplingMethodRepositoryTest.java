@@ -41,7 +41,7 @@ public class SamplingMethodRepositoryTest {
 	}
 
 	@Test
-	public void testGetById() throws SQLException {
+	public void testGetById_ExistingId_ShouldReturnPresentOptional() throws SQLException {
 		SamplingMethodRepository repository = new SamplingMethodRepository(connection);
 		
 		Optional<SamplingMethod> optional = repository.getById(0);
@@ -52,6 +52,13 @@ public class SamplingMethodRepositoryTest {
 		assertEquals("name", method.getName());
 		assertEquals("12345", method.getSampmd());
 		assertEquals("comment", method.getComment());
+	}
+	
+	@Test
+	public void testGetById_MissingId_ShouldReturnEmptyOptional() throws SQLException {
+		SamplingMethodRepository repository = new SamplingMethodRepository(connection);
+		Optional<SamplingMethod> optional = repository.getById(-1);
+		assertFalse(optional.isPresent());
 	}
 	
 	@Test

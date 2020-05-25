@@ -1,7 +1,6 @@
 package de.bund.bfr.knime.fsklab.vocabularies.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -41,7 +40,7 @@ public class ParameterDistributionRepositoryTest {
 	}
 	
 	@Test
-	public void testGetById() throws Exception {
+	public void testGetById_ExistingId_ShouldReturnPresentOptional() throws SQLException {
 		
 		// Get mocked parameter distribution
 		ParameterDistributionRepository repository = new ParameterDistributionRepository(connection);
@@ -53,6 +52,13 @@ public class ParameterDistributionRepositoryTest {
 		assertEquals(0, distribution.getId());
 		assertEquals("name", distribution.getName());
 		assertEquals("comment", distribution.getComment());
+	}
+	
+	@Test
+	public void testGetById_MissingId_ShouldReturnMissingOptional() throws SQLException {
+		ParameterDistributionRepository repository = new ParameterDistributionRepository(connection);
+		Optional<ParameterDistribution> optional = repository.getById(-1);
+		assertFalse(optional.isPresent());
 	}
 	
 	@Test

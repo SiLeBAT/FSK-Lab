@@ -1,7 +1,6 @@
 package de.bund.bfr.knime.fsklab.vocabularies.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -41,7 +40,7 @@ public class FormatRepositoryTest {
 	}
 	
 	@Test
-	public void testGetById() throws Exception {
+	public void testGetById_ExistingId_ShouldReturnPresentOptional() throws SQLException {
 		
 		// Get mocked format
 		FormatRepository repository = new FormatRepository(connection);
@@ -53,6 +52,13 @@ public class FormatRepositoryTest {
 		assertEquals(0, format.getId());
 		assertEquals("name", format.getName());
 		assertEquals("comment", format.getComment());
+	}
+	
+	@Test
+	public void testGetById_MissingId_ShouldReturnEmptyOptional() throws SQLException {
+		FormatRepository repository = new FormatRepository(connection);
+		Optional<Format> optional = repository.getById(-1);
+		assertFalse(optional.isPresent());
 	}
 	
 	@Test

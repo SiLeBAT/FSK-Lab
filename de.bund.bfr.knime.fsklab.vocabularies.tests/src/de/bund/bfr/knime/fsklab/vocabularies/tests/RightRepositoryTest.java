@@ -1,7 +1,6 @@
 package de.bund.bfr.knime.fsklab.vocabularies.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -42,7 +41,7 @@ public class RightRepositoryTest {
 	}
 	
 	@Test
-	public void testGetById() throws SQLException {
+	public void testGetById_ExistingId_ShouldReturnPresentOptional() throws SQLException {
 		RightRepository repository = new RightRepository(connection);
 		
 		Optional<Right> optional = repository.getById(0);
@@ -53,6 +52,13 @@ public class RightRepositoryTest {
 		assertEquals("shortname", right.getShortname());
 		assertEquals("fullname", right.getFullname());
 		assertEquals("url", right.getUrl());
+	}
+	
+	@Test
+	public void testGetById_MissingId_ShouldReturnEmptyOptional() throws SQLException {
+		RightRepository repository = new RightRepository(connection);
+		Optional<Right> optional = repository.getById(-1);
+		assertFalse(optional.isPresent());
 	}
 	
 	@Test

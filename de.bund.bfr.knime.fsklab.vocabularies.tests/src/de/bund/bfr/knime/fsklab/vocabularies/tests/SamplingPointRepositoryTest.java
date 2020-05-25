@@ -40,7 +40,7 @@ public class SamplingPointRepositoryTest {
 	}
 	
 	@Test
-	public void testGetById() throws SQLException {
+	public void testGetById_ExistingId_ShouldReturnPresentOptional() throws SQLException {
 		SamplingPointRepository repository = new SamplingPointRepository(connection);
 		
 		Optional<SamplingPoint> optional = repository.getById(0);
@@ -50,6 +50,13 @@ public class SamplingPointRepositoryTest {
 		assertEquals(0, samplingPoint.getId());
 		assertEquals("name", samplingPoint.getName());
 		assertEquals("12345", samplingPoint.getSampnt());
+	}
+	
+	@Test
+	public void testGetById_ExistingId_ShouldReturnEmptyOptional() throws SQLException {
+		SamplingPointRepository repository = new SamplingPointRepository(connection);
+		Optional<SamplingPoint> optional = repository.getById(-1);
+		assertFalse(optional.isPresent());
 	}
 
 	@Test
