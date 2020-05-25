@@ -85,7 +85,7 @@ final class JoinerNodeModel
   private FskPortObject secondInputPort;
 
   public final static String SUFFIX = "_dup";
-  Map<String, String> originals = new LinkedHashMap<String, String>();
+  private Map<String, String> originals = new LinkedHashMap<String, String>();
 
   private final static ObjectMapper MAPPER = FskPlugin.getDefault().MAPPER104;
 
