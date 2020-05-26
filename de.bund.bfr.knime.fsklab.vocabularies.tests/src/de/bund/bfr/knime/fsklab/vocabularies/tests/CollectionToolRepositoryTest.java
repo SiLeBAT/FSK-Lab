@@ -1,8 +1,6 @@
 package de.bund.bfr.knime.fsklab.vocabularies.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -61,11 +59,24 @@ public class CollectionToolRepositoryTest {
 	}
 	
 	@Test
+	public void testGetById_ClosedConnection_ShouldReturnEmptyOptional() throws SQLException {
+		Connection closedConnection = TestUtils.mockClosedConnection();
+		CollectionToolRepository repository = new CollectionToolRepository(closedConnection);
+		Optional<CollectionTool> optional = repository.getById(0);
+		assertFalse(optional.isPresent());
+	}
+	
+	@Test
 	public void testGetAll() {
-		
 		// Get mocked collection tools
 		CollectionToolRepository repository = new CollectionToolRepository(connection);
 		assertTrue(repository.getAll().length > 0);
 	}
 
+	@Test
+	public void testGetAll_ClosedConnection_ShouldReturnEmptyArray() throws SQLException {
+		Connection closedConnection = TestUtils.mockClosedConnection();
+		CollectionToolRepository repository = new CollectionToolRepository(closedConnection);
+		assertEquals(0, repository.getAll().length);
+	}
 }

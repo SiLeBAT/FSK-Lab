@@ -25,12 +25,8 @@ public class ProductTreatmentRepositoryTest {
 		connection = DriverManager.getConnection("jdbc:h2:mem:ProductTreatmentRepositoryTest");
 
 		Statement statement = connection.createStatement();
-		statement.execute("CREATE TABLE prodTreat ("
-				+ "id INTEGER not NULL,"
-				+ "name VARCHAR(255) not NULL,"
-				+ "ssd CHAR(5) not NULL,"
-				+ "comment VARCHAR(255),"
-				+ "PRIMARY KEY(id))");
+		statement.execute("CREATE TABLE prodTreat (" + "id INTEGER not NULL," + "name VARCHAR(255) not NULL,"
+				+ "ssd CHAR(5) not NULL," + "comment VARCHAR(255)," + "PRIMARY KEY(id))");
 
 		statement.execute("INSERT INTO prodTreat VALUES(0, 'name', 'ssd', 'comment')");
 	}
@@ -39,31 +35,46 @@ public class ProductTreatmentRepositoryTest {
 	public static void tearDown() throws SQLException {
 		connection.close();
 	}
-	
+
 	@Test
 	public void testGetById_ExistingId_ShouldReturnPresentOptional() {
 		ProductTreatmentRepository repository = new ProductTreatmentRepository(connection);
-		
+
 		Optional<ProductTreatment> optional = repository.getById(0);
 		assertTrue(optional.isPresent());
-		
+
 		ProductTreatment treatment = optional.get();
 		assertEquals(0, treatment.getId());
 		assertEquals("name", treatment.getName());
 		assertEquals("ssd", treatment.getSsd());
 		assertEquals("comment", treatment.getComment());
 	}
-	
+
 	@Test
 	public void testGetById_MissingId_ShouldReturnEmptyOptional() {
 		ProductTreatmentRepository repository = new ProductTreatmentRepository(connection);
 		Optional<ProductTreatment> optional = repository.getById(-1);
 		assertFalse(optional.isPresent());
 	}
-	
+
+	@Test
+	public void testGetById_ClosedConnection_ShouldReturnEmptyOptional() throws SQLException {
+		Connection closedConnection = TestUtils.mockClosedConnection();
+		ProductTreatmentRepository repository = new ProductTreatmentRepository(closedConnection);
+		Optional<ProductTreatment> optional = repository.getById(0);
+		assertFalse(optional.isPresent());
+	}
+
 	@Test
 	public void testGetAll() {
 		ProductTreatmentRepository repository = new ProductTreatmentRepository(connection);
 		assertTrue(repository.getAll().length > 0);
+	}
+
+	@Test
+	public void testGetAll_ClosedConnection_ShouldReturnEmptyOptional() throws SQLException {
+		Connection closedConnection = TestUtils.mockClosedConnection();
+		ProductTreatmentRepository repository = new ProductTreatmentRepository(closedConnection);
+		assertEquals(0, repository.getAll().length);
 	}
 }

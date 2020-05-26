@@ -60,8 +60,23 @@ public class PublicationStatusRepositoryTest {
 	}
 	
 	@Test
+	public void testGetById_ClosedConnection_ShouldReturnEmptyOptional() throws SQLException {
+		Connection closedConnection = TestUtils.mockClosedConnection();
+		PublicationStatusRepository repository = new PublicationStatusRepository(closedConnection);
+		Optional<PublicationStatus> optional = repository.getById(0);
+		assertFalse(optional.isPresent());
+	}
+	
+	@Test
 	public void testGetAll() {
 		PublicationStatusRepository repository = new PublicationStatusRepository(connection);
 		assertTrue(repository.getAll().length > 0);
+	}
+	
+	@Test
+	public void testGetAll_ClosedConnection_ShouldReturnEmptyArray() throws SQLException {
+		Connection closedConnection = TestUtils.mockClosedConnection();
+		PublicationStatusRepository repository = new PublicationStatusRepository(closedConnection);
+		assertEquals(0, repository.getAll().length);
 	}
 }

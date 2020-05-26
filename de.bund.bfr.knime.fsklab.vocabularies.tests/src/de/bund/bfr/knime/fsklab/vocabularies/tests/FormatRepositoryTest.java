@@ -62,9 +62,24 @@ public class FormatRepositoryTest {
 	}
 	
 	@Test
+	public void testGetById_ClosedConnection_ShouldReturnEmptyOptional() throws SQLException {
+		Connection closedConnection = TestUtils.mockClosedConnection();
+		FormatRepository repository = new FormatRepository(closedConnection);
+		Optional<Format> optional = repository.getById(0);
+		assertFalse(optional.isPresent());
+	}
+	
+	@Test
 	public void testGetAll() {
 		// Get mocked formats
 		FormatRepository repository = new FormatRepository(connection);
 		assertTrue(repository.getAll().length > 0);
+	}
+	
+	@Test
+	public void testGetAll_ClosedConnection_ShouldReturnEmptyArray() throws SQLException {
+		Connection closedConnection = TestUtils.mockClosedConnection();
+		FormatRepository repository = new FormatRepository(closedConnection);
+		assertEquals(0, repository.getAll().length);
 	}
 }

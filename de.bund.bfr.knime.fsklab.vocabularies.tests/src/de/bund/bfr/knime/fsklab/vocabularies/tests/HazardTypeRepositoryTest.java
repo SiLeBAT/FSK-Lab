@@ -60,10 +60,24 @@ public class HazardTypeRepositoryTest {
 	}
 	
 	@Test
+	public void testGetById_ClosedConnection_ShouldReturnEmptyOptional() throws SQLException {
+		Connection closedConnection = TestUtils.mockClosedConnection();
+		HazardTypeRepository repository = new HazardTypeRepository(closedConnection);
+		Optional<HazardType> optional = repository.getById(0);
+		assertFalse(optional.isPresent());
+	}
+	
+	@Test
 	public void testGetAll() {
-		
 		// Get mocked hazard types
 		HazardTypeRepository repository = new HazardTypeRepository(connection);
 		assertTrue(repository.getAll().length > 0);
+	}
+	
+	@Test
+	public void testGetAll_ClosedConnection_ShouldReturnEmptyArray() throws SQLException {
+		Connection closedConnection = TestUtils.mockClosedConnection();
+		HazardTypeRepository repository = new HazardTypeRepository(closedConnection);
+		assertEquals(0, repository.getAll().length);
 	}
 }

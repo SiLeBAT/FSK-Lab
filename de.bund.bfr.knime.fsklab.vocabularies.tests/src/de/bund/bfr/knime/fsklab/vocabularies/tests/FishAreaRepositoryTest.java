@@ -58,12 +58,26 @@ public class FishAreaRepositoryTest {
 		Optional<FishArea> optional = repository.getById(-1);
 		assertFalse(optional.isPresent());
 	}
+	
+	@Test
+	public void testGetById_ClosedConnection_ShouldReturnEmptyOptional() throws SQLException {
+		Connection closedConnection = TestUtils.mockClosedConnection();
+		FishAreaRepository repository = new FishAreaRepository(closedConnection);
+		Optional<FishArea> optional = repository.getById(0);
+		assertFalse(optional.isPresent());
+	}
 
 	@Test
 	public void testGetAll() {
-
 		// Get mocked fish areas
 		FishAreaRepository repository = new FishAreaRepository(connection);
 		assertTrue(repository.getAll().length > 0);
+	}
+	
+	@Test
+	public void testGetAll_ClosedConnection_ShouldReturnEmptyArray() throws SQLException {
+		Connection closedConnection = TestUtils.mockClosedConnection();
+		FishAreaRepository repository = new FishAreaRepository(closedConnection);
+		assertEquals(0, repository.getAll().length);
 	}
 }

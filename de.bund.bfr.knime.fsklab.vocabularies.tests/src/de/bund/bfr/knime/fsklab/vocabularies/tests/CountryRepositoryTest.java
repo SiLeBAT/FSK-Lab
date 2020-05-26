@@ -1,6 +1,8 @@
 package de.bund.bfr.knime.fsklab.vocabularies.tests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -62,10 +64,25 @@ public class CountryRepositoryTest {
 	}
 	
 	@Test
+	public void testGetById_ClosedConnection_ShouldReturnEmptyOptional() throws SQLException {
+		Connection closedConnection = TestUtils.mockClosedConnection();
+		CountryRepository repository = new CountryRepository(closedConnection);
+		Optional<Country> optional = repository.getById(0);
+		assertFalse(optional.isPresent());
+	}
+	
+	@Test
 	public void testGetAll()  {
 		
 		// Get mocked countries
 		CountryRepository repository = new CountryRepository(connection);
 		assertTrue(repository.getAll().length > 0);
+	}
+	
+	@Test
+	public void testGetAll_ClosedConnection_ShouldReturnEmptyArray() throws SQLException {
+		Connection closedConnection = TestUtils.mockClosedConnection();
+		CountryRepository repository = new CountryRepository(closedConnection);
+		assertEquals(0, repository.getAll().length);
 	}
 }

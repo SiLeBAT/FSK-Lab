@@ -62,10 +62,24 @@ public class IndSumRepositoryTest {
 	}
 	
 	@Test
+	public void testGetById_ClosedConnection_ShouldReturnEmptyOptional() throws SQLException {
+		Connection closedConnection = TestUtils.mockClosedConnection();
+		IndSumRepository repository = new IndSumRepository(closedConnection);
+		Optional<IndSum> optional = repository.getById(-1);
+		assertFalse(optional.isPresent());
+	}
+	
+	@Test
 	public void testGetAll() {
-		
 		// Get mocked ind sums
 		IndSumRepository repository = new IndSumRepository(connection);
 		assertTrue(repository.getAll().length > 0);
+	}
+	
+	@Test
+	public void testGetAll_ClosedConnection_ShouldReturnEmptyArray() throws SQLException {
+		Connection closedConnection = TestUtils.mockClosedConnection();
+		IndSumRepository repository = new IndSumRepository(closedConnection);
+		assertEquals(0, repository.getAll().length);
 	}
 }

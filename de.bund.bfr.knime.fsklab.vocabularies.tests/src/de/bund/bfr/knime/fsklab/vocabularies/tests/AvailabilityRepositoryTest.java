@@ -62,9 +62,24 @@ public class AvailabilityRepositoryTest {
 	}
 	
 	@Test
+	public void testGetById_ClosedConnection_ShouldReturnEmptyOptional() throws SQLException {
+		Connection closedConnection = TestUtils.mockClosedConnection();
+		AvailabilityRepository repository = new AvailabilityRepository(closedConnection);
+		Optional<Availability> optional = repository.getById(0);
+		assertFalse(optional.isPresent());
+	}
+	
+	@Test
 	public void testGetAll() {
 		// Get mocked availabilities
 		AvailabilityRepository repository = new AvailabilityRepository(connection);
 		assertTrue(repository.getAll().length > 0);
+	}
+	
+	@Test
+	public void testGetAll_ClosedConnection_ShouldReturnEmptyArray() throws SQLException {
+		Connection closedConnection = TestUtils.mockClosedConnection();
+		AvailabilityRepository repository = new AvailabilityRepository(closedConnection);
+		assertEquals(0, repository.getAll().length);
 	}
 }

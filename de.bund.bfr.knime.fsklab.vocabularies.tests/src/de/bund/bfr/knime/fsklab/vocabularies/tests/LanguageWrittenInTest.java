@@ -60,10 +60,24 @@ public class LanguageWrittenInTest {
 	}
 	
 	@Test
+	public void testGetById_ClosedConnection_ShouldReturnEmptyOptional() throws SQLException {
+		Connection closedConnection = TestUtils.mockClosedConnection();
+		LanguageWrittenInRepository repository = new LanguageWrittenInRepository(closedConnection);
+		Optional<LanguageWrittenIn> optional = repository.getById(-1);
+		assertFalse(optional.isPresent());
+	}
+	
+	@Test
 	public void testGetAll() {
-		
 		// Get mocked languages
 		LanguageWrittenInRepository repository = new LanguageWrittenInRepository(connection);
 		assertTrue(repository.getAll().length > 0);
+	}
+
+	@Test
+	public void testGetAll_ClosedConnection_ShouldReturnEmptyArray() throws SQLException {
+		Connection closedConnection = TestUtils.mockClosedConnection();
+		LanguageWrittenInRepository repository = new LanguageWrittenInRepository(closedConnection);
+		assertEquals(0, repository.getAll().length);
 	}
 }

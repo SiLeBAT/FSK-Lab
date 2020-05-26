@@ -62,8 +62,23 @@ public class ParameterDistributionRepositoryTest {
 	}
 	
 	@Test
+	public void testGetById_ClosedConnection_ShouldReturnEmptyOptional() throws SQLException {
+		Connection closedConnection = TestUtils.mockClosedConnection();
+		ParameterDistributionRepository repository = new ParameterDistributionRepository(closedConnection);
+		Optional<ParameterDistribution> optional = repository.getById(0);
+		assertFalse(optional.isPresent());
+	}
+	
+	@Test
 	public void testGetAll() {
 		ParameterDistributionRepository repository = new ParameterDistributionRepository(connection);
 		assertTrue(repository.getAll().length > 0);
+	}
+	
+	@Test
+	public void testGetAll_ClosedConnection_ShouldReturnEmptyArray() throws SQLException {
+		Connection closedConnection = TestUtils.mockClosedConnection();
+		ParameterDistributionRepository repository = new ParameterDistributionRepository(closedConnection);
+		assertEquals(0, repository.getAll().length);
 	}
 }

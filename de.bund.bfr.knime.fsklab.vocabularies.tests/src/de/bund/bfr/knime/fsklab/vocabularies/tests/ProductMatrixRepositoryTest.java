@@ -55,9 +55,17 @@ public class ProductMatrixRepositoryTest {
 	}
 	
 	@Test
-	public void testGetById_MissingId_ShouldReturnMissingOptional() {
+	public void testGetById_MissingId_ShouldReturnEmptyOptional() {
 		ProductMatrixRepository repository = new ProductMatrixRepository(connection);
 		Optional<ProductMatrix> optional = repository.getById(-1);
+		assertFalse(optional.isPresent());
+	}
+	
+	@Test
+	public void testGetById_ClosedConnection_ShouldReturnEmptyOptional() throws SQLException {
+		Connection closedConnection = TestUtils.mockClosedConnection();
+		ProductMatrixRepository repository = new ProductMatrixRepository(closedConnection);
+		Optional<ProductMatrix> optional = repository.getById(0);
 		assertFalse(optional.isPresent());
 	}
 	
@@ -65,5 +73,12 @@ public class ProductMatrixRepositoryTest {
 	public void testGetAll() {
 		ProductMatrixRepository repository = new ProductMatrixRepository(connection);
 		assertTrue(repository.getAll().length > 0);
+	}
+	
+	@Test
+	public void testGetAll_ClosedConnection_ShouldReturnEmptyOptional() throws SQLException {
+		Connection closedConnection = TestUtils.mockClosedConnection();
+		ProductMatrixRepository repository = new ProductMatrixRepository(closedConnection);
+		assertEquals(0, repository.getAll().length);
 	}
 }

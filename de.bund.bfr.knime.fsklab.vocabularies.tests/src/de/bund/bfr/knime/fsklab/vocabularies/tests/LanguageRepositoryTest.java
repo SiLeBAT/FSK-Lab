@@ -63,10 +63,24 @@ public class LanguageRepositoryTest {
 	}
 	
 	@Test
+	public void testGetById_ClosedConnection_ShouldReturnEmptyOptional() throws SQLException {
+		Connection closedConnection = TestUtils.mockClosedConnection();
+		LanguageRepository repository = new LanguageRepository(closedConnection);
+		Optional<Language> optional = repository.getById(0);
+		assertFalse(optional.isPresent());
+	}
+	
+	@Test
 	public void testGetAll() {
-		
 		// Get mocked languages
 		LanguageRepository repository = new LanguageRepository(connection);
 		assertTrue(repository.getAll().length > 0);
+	}
+	
+	@Test
+	public void testGetAll_ClosedConnection_ShouldReturnEmptyArray() throws SQLException {
+		Connection closedConnection = TestUtils.mockClosedConnection();
+		LanguageRepository repository = new LanguageRepository(closedConnection);
+		assertEquals(0, repository.getAll().length);
 	}
 }

@@ -62,8 +62,23 @@ public class PopulationRepositoryTest {
 	}
 	
 	@Test
+	public void testGetById_ClosedConnection_ShouldReturnEmptyOptional() throws SQLException {
+		Connection closedConnection = TestUtils.mockClosedConnection();
+		PopulationRepository repository = new PopulationRepository(closedConnection);
+		Optional<Population> optional = repository.getById(0);
+		assertFalse(optional.isPresent());
+	}
+	
+	@Test
 	public void testGetAll() {
 		PopulationRepository repository = new PopulationRepository(connection);
 		assertTrue(repository.getAll().length > 0);
+	}
+	
+	@Test
+	public void testGetAll_ClosedConnection_ShouldReturnEmptyArray() throws SQLException {
+		Connection closedConnection = TestUtils.mockClosedConnection();
+		PopulationRepository repository = new PopulationRepository(closedConnection);
+		assertEquals(0, repository.getAll().length);
 	}
 }

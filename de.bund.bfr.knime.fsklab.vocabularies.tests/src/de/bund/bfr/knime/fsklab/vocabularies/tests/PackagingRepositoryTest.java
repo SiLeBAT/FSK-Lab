@@ -64,8 +64,23 @@ public class PackagingRepositoryTest {
 	}
 	
 	@Test
+	public void testGetById_ClosedConnection_ShouldReturnEmptyOptional() throws SQLException {
+		Connection closedConnection = TestUtils.mockClosedConnection();
+		PackagingRepository repository = new PackagingRepository(closedConnection);
+		Optional<Packaging> optional = repository.getById(0);
+		assertFalse(optional.isPresent());
+	}
+	
+	@Test
 	public void testGetAll() {
 		PackagingRepository repository = new PackagingRepository(connection);
 		assertTrue(repository.getAll().length > 0);
+	}
+	
+	@Test
+	public void testGetAll_ClosedConnection_ShouldReturnEmptyArray() throws SQLException {
+		Connection closedConnection = TestUtils.mockClosedConnection();
+		PackagingRepository repository = new PackagingRepository(closedConnection);
+		assertEquals(0, repository.getAll().length);
 	}
 }

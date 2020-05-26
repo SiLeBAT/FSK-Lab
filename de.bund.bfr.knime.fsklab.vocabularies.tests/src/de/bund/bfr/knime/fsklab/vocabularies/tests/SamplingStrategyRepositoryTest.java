@@ -60,8 +60,23 @@ public class SamplingStrategyRepositoryTest {
 	}
 	
 	@Test
+	public void testGetById_ClosedConnection_ShouldReturnEmptyOptional() throws SQLException {
+		Connection closedConnection = TestUtils.mockClosedConnection();
+		SamplingStrategyRepository repository = new SamplingStrategyRepository(closedConnection);
+		Optional<SamplingStrategy> optional = repository.getById(0);
+		assertFalse(optional.isPresent());
+	}
+	
+	@Test
 	public void testGetAll() {
 		SamplingStrategyRepository repository = new SamplingStrategyRepository(connection);
 		assertTrue(repository.getAll().length > 0);
+	}
+	
+	@Test
+	public void testGetById_ClosedConnection_ShouldReturnEmptyArray() throws SQLException {
+		Connection closedConnection = TestUtils.mockClosedConnection();
+		SamplingStrategyRepository repository = new SamplingStrategyRepository(closedConnection);
+		assertEquals(0, repository.getAll().length);
 	}
 }

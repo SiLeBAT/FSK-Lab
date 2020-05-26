@@ -60,8 +60,23 @@ public class SourceRepositoryTest {
 	}
 	
 	@Test
+	public void testGetById_ClosedConnection_ShouldReturnEmptyOptional() throws SQLException {
+		Connection closedConnection = TestUtils.mockClosedConnection();
+		SourceRepository repository = new SourceRepository(closedConnection);
+		Optional<Source> optional = repository.getById(0);
+		assertFalse(optional.isPresent());
+	}
+	
+	@Test
 	public void testGetAll() {
 		SourceRepository repository = new SourceRepository(connection);
 		assertTrue(repository.getAll().length > 0);
+	}
+	
+	@Test
+	public void testGetAll_ClosedConnection_ShouldReturnEmptyArray() throws SQLException {
+		Connection closedConnection = TestUtils.mockClosedConnection();
+		SourceRepository repository = new SourceRepository(closedConnection);
+		assertEquals(0, repository.getAll().length);
 	}
 }

@@ -60,8 +60,23 @@ public class RegionRepositoryTest {
 	}
 	
 	@Test
+	public void testGetById_ClosedConnection_ShouldReturnEmptyOptional() throws SQLException {
+		Connection closedConnection = TestUtils.mockClosedConnection();
+		RegionRepository repository = new RegionRepository(closedConnection);
+		Optional<Region> optional = repository.getById(0);
+		assertFalse(optional.isPresent());
+	}
+	
+	@Test
 	public void testGetAll() {
 		RegionRepository repository = new RegionRepository(connection);
 		assertTrue(repository.getAll().length > 0);
+	}
+	
+	@Test
+	public void testGetAll_ClosedConnection_ShouldReturnEmptyArray() throws SQLException {
+		Connection closedConnection = TestUtils.mockClosedConnection();
+		RegionRepository repository = new RegionRepository(closedConnection);
+		assertEquals(0, repository.getAll().length);
 	}
 }

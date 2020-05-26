@@ -60,8 +60,23 @@ public class ParameterSubjectRepositoryTest {
 	}
 	
 	@Test
+	public void testGetById_ClosedConnection_ShouldReturnEmptyOptional() throws SQLException {
+		Connection closedConnection = TestUtils.mockClosedConnection();
+		ParameterSubjectRepository repository = new ParameterSubjectRepository(closedConnection);
+		Optional<ParameterSubject> optional = repository.getById(0);
+		assertFalse(optional.isPresent());
+	}
+	
+	@Test
 	public void testGetAll() {
 		ParameterSubjectRepository repository = new ParameterSubjectRepository(connection);
 		assertTrue(repository.getAll().length > 0);
+	}
+	
+	@Test
+	public void testGetAll_ClosedConnection_ShouldReturnEmptyArray() throws SQLException {
+		Connection closedConnection = TestUtils.mockClosedConnection();
+		ParameterSubjectRepository repository = new ParameterSubjectRepository(closedConnection);
+		assertEquals(0, repository.getAll().length);
 	}
 }

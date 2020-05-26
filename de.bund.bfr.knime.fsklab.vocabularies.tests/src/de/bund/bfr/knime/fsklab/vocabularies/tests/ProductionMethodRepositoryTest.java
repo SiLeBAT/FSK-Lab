@@ -63,8 +63,23 @@ public class ProductionMethodRepositoryTest {
 	}
 	
 	@Test
+	public void testGetById_ClosedConnection_ShouldReturnEmptyOptional() throws SQLException {
+		Connection closedConnection = TestUtils.mockClosedConnection();
+		ProductionMethodRepository repository = new ProductionMethodRepository(closedConnection);
+		Optional<ProductionMethod> optional = repository.getById(0);
+		assertFalse(optional.isPresent());
+	}
+	
+	@Test
 	public void testGetAll() {
 		ProductionMethodRepository repository = new ProductionMethodRepository(connection);
 		assertTrue(repository.getAll().length > 0);
+	}
+	
+	@Test
+	public void testGetAll_ClosedConnection_ShouldReturnEmptyArray() throws SQLException {
+		Connection closedConnection = TestUtils.mockClosedConnection();
+		ProductionMethodRepository repository = new ProductionMethodRepository(closedConnection);
+		assertEquals(0, repository.getAll().length);
 	}
 }

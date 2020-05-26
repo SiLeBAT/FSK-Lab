@@ -69,10 +69,25 @@ public class UnitRepositoryTest {
 		Optional<Unit> optional = repository.getById(-1);
 		assertFalse(optional.isPresent());
 	}
+	
+	@Test
+	public void testGetById_ClosedConnection_ShouldReturnEmptyOptional() throws SQLException {
+		Connection closedConnection = TestUtils.mockClosedConnection();
+		UnitRepository repository = new UnitRepository(closedConnection);
+		Optional<Unit> optional = repository.getById(0);
+		assertFalse(optional.isPresent());
+	}
 
 	@Test
 	public void testGetAll() {
 		UnitRepository repository = new UnitRepository(connection);
 		assertTrue(repository.getAll().length > 0);
+	}
+	
+	@Test
+	public void testGetAll_ClosedConnection_ShouldReturnEmptyArray() throws SQLException {
+		Connection closedConnection = TestUtils.mockClosedConnection();
+		UnitRepository repository = new UnitRepository(closedConnection);
+		assertEquals(0, repository.getAll().length);
 	}
 }

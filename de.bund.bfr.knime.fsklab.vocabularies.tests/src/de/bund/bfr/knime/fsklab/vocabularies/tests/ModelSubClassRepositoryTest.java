@@ -71,10 +71,24 @@ public class ModelSubClassRepositoryTest {
 	}
 	
 	@Test
+	public void testGetById_ClosedConnection_ShouldReturnEmptyOptional() throws SQLException {
+		Connection closedConnection = TestUtils.mockClosedConnection();
+		ModelSubclassRepository repository = new ModelSubclassRepository(closedConnection);
+		Optional<ModelSubclass> optional = repository.getById(0);
+		assertFalse(optional.isPresent());
+	}
+	
+	@Test
 	public void testGetAll() {
-		
 		// Get mocked classes
 		ModelSubclassRepository repository = new ModelSubclassRepository(connection);
 		assertTrue(repository.getAll().length > 0);
+	}
+	
+	@Test
+	public void testGetAll_ClosedConnection_ShouldReturnEmptyArray() throws SQLException {
+		Connection closedConnection = TestUtils.mockClosedConnection();
+		ModelSubclassRepository repository = new ModelSubclassRepository(closedConnection);
+		assertEquals(0, repository.getAll().length);
 	}
 }

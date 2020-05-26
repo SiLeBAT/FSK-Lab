@@ -60,10 +60,24 @@ public class ModelEquationClassRepositoryTest {
 	}
 	
 	@Test
+	public void testGetById_ClosedConnection_ShouldReturnEmptyOptional() throws SQLException {
+		Connection closedConnection = TestUtils.mockClosedConnection();
+		ModelEquationClassRepository repository = new ModelEquationClassRepository(closedConnection);
+		Optional<ModelEquationClass> optional = repository.getById(0);
+		assertFalse(optional.isPresent());
+	}
+	
+	@Test
 	public void testGetAll() {
-		
 		// Get mocked class
 		ModelEquationClassRepository repository = new ModelEquationClassRepository(connection);
 		assertTrue(repository.getAll().length > 0);
+	}
+	
+	@Test
+	public void testGetAll_ClosedConnection_ShouldReturnEmptyArray() throws SQLException {
+		Connection closedConnection = TestUtils.mockClosedConnection();
+		ModelEquationClassRepository repository = new ModelEquationClassRepository(closedConnection);
+		assertEquals(0, repository.getAll().length);
 	}
 }
