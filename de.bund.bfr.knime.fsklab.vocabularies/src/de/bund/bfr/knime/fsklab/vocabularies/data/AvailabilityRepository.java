@@ -18,33 +18,44 @@ public class AvailabilityRepository implements BasicRepository<Availability> {
     }
 
     @Override
-    public Optional<Availability> getById(int id) throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM availability WHERE id = '" + id + "'");
+    public Optional<Availability> getById(int id) {
 
-        if (resultSet.next()) {
-            String name = resultSet.getString("name");
-            String comment = resultSet.getString("comment");
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM availability WHERE id = '" + id + "'");
+        	
+			if (resultSet.next()) {
+			    String name = resultSet.getString("name");
+			    String comment = resultSet.getString("comment");
 
-            return Optional.of(new Availability(id, name, comment));
-        } else {
-            return Optional.empty();
-        }
+			    return Optional.of(new Availability(id, name, comment));
+			}
+			
+			return Optional.empty();
+		} catch (SQLException e) {
+			return Optional.empty();
+		}
     }
 
     @Override
-    public Availability[] getAll() throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM availability");
-
+    public Availability[] getAll() {
+    	
         ArrayList<Availability> availabilityList = new ArrayList<>();
-        while (resultSet.next()) {
-            int id = resultSet.getInt("id");
-            String name = resultSet.getString("name");
-            String comment = resultSet.getString("comment");
+    	
+		try {
+			Statement statement = connection.createStatement();
+			
+	        ResultSet resultSet = statement.executeQuery("SELECT * FROM availability");
 
-            availabilityList.add(new Availability(id, name, comment));
-        }
+	        while (resultSet.next()) {
+	            int id = resultSet.getInt("id");
+	            String name = resultSet.getString("name");
+	            String comment = resultSet.getString("comment");
+
+	            availabilityList.add(new Availability(id, name, comment));
+	        }
+		} catch (SQLException e) {
+		}
 
         return availabilityList.toArray(new Availability[0]);
     }

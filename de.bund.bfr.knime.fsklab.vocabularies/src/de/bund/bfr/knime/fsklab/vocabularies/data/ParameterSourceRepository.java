@@ -11,38 +11,47 @@ import de.bund.bfr.knime.fsklab.vocabularies.domain.ParameterSource;
 
 public class ParameterSourceRepository implements BasicRepository<ParameterSource> {
 
-    private final Connection connection;
+	private final Connection connection;
 
-    public ParameterSourceRepository(Connection connection) {
-        this.connection = connection;
-    }
+	public ParameterSourceRepository(Connection connection) {
+		this.connection = connection;
+	}
 
-    @Override
-    public Optional<ParameterSource> getById(int id) throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM parameter_source WHERE id = " + id);
+	@Override
+	public Optional<ParameterSource> getById(int id) {
 
-        if (resultSet.next()) {
-            String name = resultSet.getString("name");
-            return Optional.of(new ParameterSource(id, name));
-        } else {
-            return Optional.empty();
-        }
-    }
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM parameter_source WHERE id = " + id);
 
-    @Override
-    public ParameterSource[] getAll() throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM parameter_source");
+			if (resultSet.next()) {
+				String name = resultSet.getString("name");
+				return Optional.of(new ParameterSource(id, name));
+			}
+			return Optional.empty();
+		} catch (SQLException err) {
+			return Optional.empty();
+		}
+	}
 
-        ArrayList<ParameterSource> subjectList = new ArrayList<>();
-        while (resultSet.next()) {
-            int id = resultSet.getInt("id");
-            String name = resultSet.getString("name");
+	@Override
+	public ParameterSource[] getAll() {
 
-            subjectList.add(new ParameterSource(id, name));
-        }
+		ArrayList<ParameterSource> subjectList = new ArrayList<>();
 
-        return subjectList.toArray(new ParameterSource[0]);
-    }
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM parameter_source");
+
+			while (resultSet.next()) {
+				int id = resultSet.getInt("id");
+				String name = resultSet.getString("name");
+
+				subjectList.add(new ParameterSource(id, name));
+			}
+		} catch (SQLException err) {
+		}
+
+		return subjectList.toArray(new ParameterSource[0]);
+	}
 }

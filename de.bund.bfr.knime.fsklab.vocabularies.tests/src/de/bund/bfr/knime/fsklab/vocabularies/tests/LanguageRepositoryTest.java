@@ -41,7 +41,7 @@ public class LanguageRepositoryTest {
 
 
 	@Test
-	public void testGetById_ExistingId_ShouldReturnPresentOptional() throws SQLException {
+	public void testGetById_ExistingId_ShouldReturnPresentOptional() {
 		
 		// Get mocked language
 		LanguageRepository repository = new LanguageRepository(connection);
@@ -56,14 +56,14 @@ public class LanguageRepositoryTest {
 	}
 	
 	@Test
-	public void testGetById_MissingId_ShouldReturnEmptyOptional() throws SQLException {
+	public void testGetById_MissingId_ShouldReturnEmptyOptional() {
 		LanguageRepository repository = new LanguageRepository(connection);
 		Optional<Language> optional = repository.getById(-1);
 		assertFalse(optional.isPresent());
 	}
 	
 	@Test
-	public void testGetAll() throws SQLException {
+	public void testGetAll() {
 		
 		// Get mocked languages
 		LanguageRepository repository = new LanguageRepository(connection);

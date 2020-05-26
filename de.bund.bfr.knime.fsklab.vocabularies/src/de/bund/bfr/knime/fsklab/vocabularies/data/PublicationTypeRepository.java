@@ -11,41 +11,50 @@ import de.bund.bfr.knime.fsklab.vocabularies.domain.PublicationType;
 
 public class PublicationTypeRepository implements BasicRepository<PublicationType> {
 
-    private final Connection connection;
+	private final Connection connection;
 
-    public PublicationTypeRepository(Connection connection) {
-        this.connection = connection;
-    }
+	public PublicationTypeRepository(Connection connection) {
+		this.connection = connection;
+	}
 
-    @Override
-    public Optional<PublicationType> getById(int id) throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM publication_type WHERE id = '" + id + "'");
+	@Override
+	public Optional<PublicationType> getById(int id) {
 
-        if (resultSet.next()) {
-            String shortName = resultSet.getString("shortName");
-            String fullName = resultSet.getString("fullName");
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM publication_type WHERE id = '" + id + "'");
 
-            return Optional.of(new PublicationType(id, shortName, fullName));
-        } else {
-            return Optional.empty();
-        }
-    }
+			if (resultSet.next()) {
+				String shortName = resultSet.getString("shortName");
+				String fullName = resultSet.getString("fullName");
 
-    @Override
-    public PublicationType[] getAll() throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM publication_type");
+				return Optional.of(new PublicationType(id, shortName, fullName));
+			}
+			return Optional.empty();
+		} catch (SQLException err) {
+			return Optional.empty();
+		}
+	}
 
-        ArrayList<PublicationType> typeList = new ArrayList<>();
-        while (resultSet.next()) {
-            int id = resultSet.getInt("id");
-            String shortName = resultSet.getString("shortName");
-            String fullName = resultSet.getString("fullName");
+	@Override
+	public PublicationType[] getAll() {
 
-            typeList.add(new PublicationType(id, shortName, fullName));
-        }
+		ArrayList<PublicationType> typeList = new ArrayList<>();
 
-        return typeList.toArray(new PublicationType[0]);
-    }
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM publication_type");
+
+			while (resultSet.next()) {
+				int id = resultSet.getInt("id");
+				String shortName = resultSet.getString("shortName");
+				String fullName = resultSet.getString("fullName");
+
+				typeList.add(new PublicationType(id, shortName, fullName));
+			}
+		} catch (SQLException err) {
+		}
+
+		return typeList.toArray(new PublicationType[0]);
+	}
 }

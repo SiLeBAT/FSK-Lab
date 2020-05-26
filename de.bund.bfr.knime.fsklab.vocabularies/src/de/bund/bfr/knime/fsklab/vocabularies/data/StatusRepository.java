@@ -11,41 +11,49 @@ import de.bund.bfr.knime.fsklab.vocabularies.domain.Status;
 
 public class StatusRepository implements BasicRepository<Status> {
 
-    private final Connection connection;
+	private final Connection connection;
 
-    public StatusRepository(Connection connection) {
-        this.connection = connection;
-    }
+	public StatusRepository(Connection connection) {
+		this.connection = connection;
+	}
 
-    @Override
-    public Optional<Status> getById(int id) throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM status WHERE id = " + id);
+	@Override
+	public Optional<Status> getById(int id) {
 
-        if (resultSet.next()) {
-            String name = resultSet.getString("name");
-            String comment = resultSet.getString("comment");
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM status WHERE id = " + id);
 
-            return Optional.of(new Status(id, name, comment));
-        } else {
-            return Optional.empty();
-        }
-    }
+			if (resultSet.next()) {
+				String name = resultSet.getString("name");
+				String comment = resultSet.getString("comment");
 
-    @Override
-    public Status[] getAll() throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM status");
+				return Optional.of(new Status(id, name, comment));
+			}
+			return Optional.empty();
+		} catch (SQLException err) {
+			return Optional.empty();
+		}
+	}
 
-        ArrayList<Status> statuses = new ArrayList<>();
-        while (resultSet.next()) {
-            int id = resultSet.getInt("id");
-            String name = resultSet.getString("name");
-            String comment = resultSet.getString("comment");
+	@Override
+	public Status[] getAll() {
+		ArrayList<Status> statuses = new ArrayList<>();
 
-            statuses.add(new Status(id, name, comment));
-        }
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM status");
 
-        return statuses.toArray(new Status[0]);
-    }
+			while (resultSet.next()) {
+				int id = resultSet.getInt("id");
+				String name = resultSet.getString("name");
+				String comment = resultSet.getString("comment");
+
+				statuses.add(new Status(id, name, comment));
+			}
+		} catch (SQLException err) {
+		}
+
+		return statuses.toArray(new Status[0]);
+	}
 }

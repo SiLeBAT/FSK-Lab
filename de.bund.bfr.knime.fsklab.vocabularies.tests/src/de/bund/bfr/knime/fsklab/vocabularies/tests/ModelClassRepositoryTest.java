@@ -39,7 +39,7 @@ public class ModelClassRepositoryTest {
 	}
 	
 	@Test
-	public void testGetById_ExistingId_ShouldReturnPresentOptional() throws Exception {
+	public void testGetById_ExistingId_ShouldReturnPresentOptional() {
 		
 		// Get mocked class
 		ModelClassRepository repository = new ModelClassRepository(connection);
@@ -53,15 +53,14 @@ public class ModelClassRepositoryTest {
 	}
 	
 	@Test
-	public void testGetById_MissingId_ShouldReturnEmptyOptional() throws Exception {
+	public void testGetById_MissingId_ShouldReturnEmptyOptional() {
 		ModelClassRepository repository = new ModelClassRepository(connection);
 		Optional<ModelClass> optional = repository.getById(-1);
 		assertFalse(optional.isPresent());
 	}
 	
 	@Test
-	public void testGetAll() throws Exception {
-		
+	public void testGetAll() {
 		// Get mocked class
 		ModelClassRepository repository = new ModelClassRepository(connection);
 		assertTrue(repository.getAll().length > 0);

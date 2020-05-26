@@ -41,7 +41,7 @@ public class ProductMatrixRepositoryTest {
 	}
 	
 	@Test
-	public void testGetById_ExistingId_ShouldReturnPresentOptional() throws SQLException {
+	public void testGetById_ExistingId_ShouldReturnPresentOptional() {
 		ProductMatrixRepository repository = new ProductMatrixRepository(connection);
 		
 		Optional<ProductMatrix> optional = repository.getById(0);
@@ -55,14 +55,14 @@ public class ProductMatrixRepositoryTest {
 	}
 	
 	@Test
-	public void testGetById_MissingId_ShouldReturnMissingOptional() throws SQLException {
+	public void testGetById_MissingId_ShouldReturnMissingOptional() {
 		ProductMatrixRepository repository = new ProductMatrixRepository(connection);
 		Optional<ProductMatrix> optional = repository.getById(-1);
 		assertFalse(optional.isPresent());
 	}
 	
 	@Test
-	public void testGetAll() throws Exception {
+	public void testGetAll() {
 		ProductMatrixRepository repository = new ProductMatrixRepository(connection);
 		assertTrue(repository.getAll().length > 0);
 	}

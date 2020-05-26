@@ -11,41 +11,51 @@ import de.bund.bfr.knime.fsklab.vocabularies.domain.PublicationStatus;
 
 public class PublicationStatusRepository implements BasicRepository<PublicationStatus> {
 
-    private final Connection connection;
+	private final Connection connection;
 
-    public PublicationStatusRepository(Connection connection) {
-        this.connection = connection;
-    }
+	public PublicationStatusRepository(Connection connection) {
+		this.connection = connection;
+	}
 
-    @Override
-    public Optional<PublicationStatus> getById(int id) throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM publication_status WHERE id = " + id);
+	@Override
+	public Optional<PublicationStatus> getById(int id) {
 
-        if (resultSet.next()) {
-            String name = resultSet.getString("name");
-            String comment = resultSet.getString("comment");
+		try {
 
-            return Optional.of(new PublicationStatus(id, name, comment));
-        } else {
-            return Optional.empty();
-        }
-    }
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM publication_status WHERE id = " + id);
 
-    @Override
-    public PublicationStatus[] getAll() throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM publication_status");
+			if (resultSet.next()) {
+				String name = resultSet.getString("name");
+				String comment = resultSet.getString("comment");
 
-        ArrayList<PublicationStatus> statusList = new ArrayList<>();
-        while (resultSet.next()) {
-            int id = resultSet.getInt("id");
-            String name = resultSet.getString("name");
-            String comment = resultSet.getString("comment");
+				return Optional.of(new PublicationStatus(id, name, comment));
+			}
+			return Optional.empty();
+		} catch (SQLException err) {
+			return Optional.empty();
+		}
+	}
 
-            statusList.add(new PublicationStatus(id, name, comment));
-        }
+	@Override
+	public PublicationStatus[] getAll() {
 
-        return statusList.toArray(new PublicationStatus[0]);
-    }
+		ArrayList<PublicationStatus> statusList = new ArrayList<>();
+
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM publication_status");
+
+			while (resultSet.next()) {
+				int id = resultSet.getInt("id");
+				String name = resultSet.getString("name");
+				String comment = resultSet.getString("comment");
+
+				statusList.add(new PublicationStatus(id, name, comment));
+			}
+		} catch (SQLException err) {
+		}
+
+		return statusList.toArray(new PublicationStatus[0]);
+	}
 }

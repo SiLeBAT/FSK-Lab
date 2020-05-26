@@ -11,38 +11,48 @@ import de.bund.bfr.knime.fsklab.vocabularies.domain.HazardType;
 
 public class HazardTypeRepository implements BasicRepository<HazardType> {
 
-    private final Connection connection;
+	private final Connection connection;
 
-    public HazardTypeRepository(Connection connection) {
-        this.connection = connection;
-    }
+	public HazardTypeRepository(Connection connection) {
+		this.connection = connection;
+	}
 
-    @Override
-    public Optional<HazardType> getById(int id) throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM hazard_type WHERE id = " + id);
+	@Override
+	public Optional<HazardType> getById(int id) {
 
-        if (resultSet.next()) {
-            String name = resultSet.getString("name");
-            return Optional.of(new HazardType(id, name));
-        } else {
-            return Optional.empty();
-        }
-    }
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM hazard_type WHERE id = " + id);
 
-    @Override
-    public HazardType[] getAll() throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM hazard_type");
+			if (resultSet.next()) {
+				String name = resultSet.getString("name");
+				return Optional.of(new HazardType(id, name));
+			}
 
-        ArrayList<HazardType> typeList = new ArrayList<>();
-        while (resultSet.next()) {
-            int id = resultSet.getInt("id");
-            String name = resultSet.getString("name");
+			return Optional.empty();
+		} catch (SQLException err) {
+			return Optional.empty();
+		}
+	}
 
-            typeList.add(new HazardType(id, name));
-        }
+	@Override
+	public HazardType[] getAll() {
 
-        return typeList.toArray(new HazardType[0]);
-    }
+		ArrayList<HazardType> typeList = new ArrayList<>();
+
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM hazard_type");
+
+			while (resultSet.next()) {
+				int id = resultSet.getInt("id");
+				String name = resultSet.getString("name");
+
+				typeList.add(new HazardType(id, name));
+			}
+		} catch (SQLException err) {
+		}
+
+		return typeList.toArray(new HazardType[0]);
+	}
 }

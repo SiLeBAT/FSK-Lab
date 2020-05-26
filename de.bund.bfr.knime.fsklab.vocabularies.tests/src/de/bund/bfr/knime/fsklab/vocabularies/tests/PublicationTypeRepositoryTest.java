@@ -40,7 +40,7 @@ public class PublicationTypeRepositoryTest {
 	}
 	
 	@Test
-	public void testGetById_ExistingId_ShouldReturnPresentOptional() throws SQLException {
+	public void testGetById_ExistingId_ShouldReturnPresentOptional() {
 		PublicationTypeRepository repository = new PublicationTypeRepository(connection);
 		
 		Optional<PublicationType> optional = repository.getById(0);
@@ -53,14 +53,14 @@ public class PublicationTypeRepositoryTest {
 	}
 	
 	@Test
-	public void testGetById_MissingId_ShouldReturnEmptyOptional() throws SQLException {
+	public void testGetById_MissingId_ShouldReturnEmptyOptional() {
 		PublicationTypeRepository repository = new PublicationTypeRepository(connection);
 		Optional<PublicationType> optional = repository.getById(-1);
 		assertFalse(optional.isPresent());
 	}
 	
 	@Test
-	public void testGetAll() throws SQLException {
+	public void testGetAll() {
 		PublicationTypeRepository repository = new PublicationTypeRepository(connection);
 		assertTrue(repository.getAll().length > 0);
 	}

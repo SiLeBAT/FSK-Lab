@@ -11,41 +11,52 @@ import de.bund.bfr.knime.fsklab.vocabularies.domain.IndSum;
 
 public class IndSumRepository implements BasicRepository<IndSum> {
 
-    private final Connection connection;
+	private final Connection connection;
 
-    public IndSumRepository(Connection connection) {
-        this.connection = connection;
-    }
+	public IndSumRepository(Connection connection) {
+		this.connection = connection;
+	}
 
-    @Override
-    public Optional<IndSum> getById(int id) throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM ind_sum WHERE id = " + id);
+	@Override
+	public Optional<IndSum> getById(int id) {
 
-        if (resultSet.next()) {
-            String name = resultSet.getString("name");
-            String ssd = resultSet.getString("ssd");
+		try {
 
-            return Optional.of(new IndSum(id, name, ssd));
-        } else {
-            return Optional.empty();
-        }
-    }
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM ind_sum WHERE id = " + id);
 
-    @Override
-    public IndSum[] getAll() throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM ind_sum");
+			if (resultSet.next()) {
+				String name = resultSet.getString("name");
+				String ssd = resultSet.getString("ssd");
 
-        ArrayList<IndSum> sums = new ArrayList<>();
-        while (resultSet.next()) {
-            int id = resultSet.getInt("id");
-            String name = resultSet.getString("name");
-            String ssd = resultSet.getString("ssd");
+				return Optional.of(new IndSum(id, name, ssd));
+			}
+			return Optional.empty();
 
-            sums.add(new IndSum(id, name, ssd));
-        }
+		} catch (SQLException err) {
+			return Optional.empty();
+		}
+	}
 
-        return sums.toArray(new IndSum[0]);
-    }
+	@Override
+	public IndSum[] getAll() {
+
+		ArrayList<IndSum> sums = new ArrayList<>();
+
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM ind_sum");
+
+			while (resultSet.next()) {
+				int id = resultSet.getInt("id");
+				String name = resultSet.getString("name");
+				String ssd = resultSet.getString("ssd");
+
+				sums.add(new IndSum(id, name, ssd));
+			}
+		} catch (SQLException err) {
+		}
+
+		return sums.toArray(new IndSum[0]);
+	}
 }

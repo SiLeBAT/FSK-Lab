@@ -11,37 +11,46 @@ import de.bund.bfr.knime.fsklab.vocabularies.domain.ModelClass;
 
 public class ModelClassRepository implements BasicRepository<ModelClass> {
 
-    private final Connection connection;
+	private final Connection connection;
 
-    public ModelClassRepository(Connection connection) {
-        this.connection = connection;
-    }
+	public ModelClassRepository(Connection connection) {
+		this.connection = connection;
+	}
 
-    @Override
-    public Optional<ModelClass> getById(int id) throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM model_class WHERE id = " + id);
+	@Override
+	public Optional<ModelClass> getById(int id) {
 
-        if (resultSet.next()) {
-            String name = resultSet.getString("name");
-            return Optional.of(new ModelClass(id, name));
-        } else {
-            return Optional.empty();
-        }
-    }
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM model_class WHERE id = " + id);
 
-    @Override
-    public ModelClass[] getAll() throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM model_class");
+			if (resultSet.next()) {
+				String name = resultSet.getString("name");
+				return Optional.of(new ModelClass(id, name));
+			}
+			return Optional.empty();
+		} catch (SQLException err) {
+			return Optional.empty();
+		}
+	}
 
-        ArrayList<ModelClass> classes = new ArrayList<>();
-        while (resultSet.next()) {
-            int id = resultSet.getInt("id");
-            String name = resultSet.getString("name");
+	@Override
+    public ModelClass[] getAll() {
+    	
+		ArrayList<ModelClass> classes = new ArrayList<>();
 
-            classes.add(new ModelClass(id, name));
-        }
+		try {
+	        Statement statement = connection.createStatement();
+	        ResultSet resultSet = statement.executeQuery("SELECT * FROM model_class");
+	        
+	        while (resultSet.next()) {
+	            int id = resultSet.getInt("id");
+	            String name = resultSet.getString("name");
+
+	            classes.add(new ModelClass(id, name));
+	        }
+    	} catch (SQLException err) {
+    	}
 
         return classes.toArray(new ModelClass[0]);
     }

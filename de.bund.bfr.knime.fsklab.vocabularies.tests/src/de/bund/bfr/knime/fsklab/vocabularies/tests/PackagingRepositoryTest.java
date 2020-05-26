@@ -41,7 +41,7 @@ public class PackagingRepositoryTest {
 	}
 	
 	@Test
-	public void testGetById_ExistingId_ShouldReturnPresentOptional() throws SQLException {
+	public void testGetById_ExistingId_ShouldReturnPresentOptional() {
 		
 		// Get mocked packaging
 		PackagingRepository repository = new PackagingRepository(connection);
@@ -57,14 +57,14 @@ public class PackagingRepositoryTest {
 	}
 	
 	@Test
-	public void testGetById_MissingId_ShouldReturnEmptyOptional() throws SQLException {
+	public void testGetById_MissingId_ShouldReturnEmptyOptional() {
 		PackagingRepository repository = new PackagingRepository(connection);
 		Optional<Packaging> optional = repository.getById(-1);
 		assertFalse(optional.isPresent());
 	}
 	
 	@Test
-	public void testGetAll() throws Exception {
+	public void testGetAll() {
 		PackagingRepository repository = new PackagingRepository(connection);
 		assertTrue(repository.getAll().length > 0);
 	}

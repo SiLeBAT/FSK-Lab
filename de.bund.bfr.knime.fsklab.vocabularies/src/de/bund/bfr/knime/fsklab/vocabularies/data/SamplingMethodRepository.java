@@ -11,43 +11,52 @@ import de.bund.bfr.knime.fsklab.vocabularies.domain.SamplingMethod;
 
 public class SamplingMethodRepository implements BasicRepository<SamplingMethod> {
 
-    private final Connection connection;
+	private final Connection connection;
 
-    public SamplingMethodRepository(Connection connection) {
-        this.connection = connection;
-    }
+	public SamplingMethodRepository(Connection connection) {
+		this.connection = connection;
+	}
 
-    @Override
-    public Optional<SamplingMethod> getById(int id) throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM sampling_method WHERE id = " + id);
+	@Override
+	public Optional<SamplingMethod> getById(int id) {
 
-        if (resultSet.next()) {
-            String name = resultSet.getString("name");
-            String sampmd = resultSet.getString("sampmd");
-            String comment = resultSet.getString("comment");
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM sampling_method WHERE id = " + id);
 
-            return Optional.of(new SamplingMethod(id, name, sampmd, comment));
-        } else {
-            return Optional.empty();
-        }
-    }
+			if (resultSet.next()) {
+				String name = resultSet.getString("name");
+				String sampmd = resultSet.getString("sampmd");
+				String comment = resultSet.getString("comment");
 
-    @Override
-    public SamplingMethod[] getAll() throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM sampling_method");
+				return Optional.of(new SamplingMethod(id, name, sampmd, comment));
+			}
+			return Optional.empty();
+		} catch (SQLException err) {
+			return Optional.empty();
+		}
+	}
 
-        ArrayList<SamplingMethod> methodList = new ArrayList<>();
-        while (resultSet.next()) {
-            int id = resultSet.getInt("id");
-            String name = resultSet.getString("name");
-            String sampmd = resultSet.getString("sampmd");
-            String comment = resultSet.getString("comment");
+	@Override
+	public SamplingMethod[] getAll() {
 
-            methodList.add(new SamplingMethod(id, name, sampmd, comment));
-        }
+		ArrayList<SamplingMethod> methodList = new ArrayList<>();
 
-        return methodList.toArray(new SamplingMethod[0]);
-    }
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM sampling_method");
+
+			while (resultSet.next()) {
+				int id = resultSet.getInt("id");
+				String name = resultSet.getString("name");
+				String sampmd = resultSet.getString("sampmd");
+				String comment = resultSet.getString("comment");
+
+				methodList.add(new SamplingMethod(id, name, sampmd, comment));
+			}
+		} catch (SQLException err) {
+		}
+
+		return methodList.toArray(new SamplingMethod[0]);
+	}
 }

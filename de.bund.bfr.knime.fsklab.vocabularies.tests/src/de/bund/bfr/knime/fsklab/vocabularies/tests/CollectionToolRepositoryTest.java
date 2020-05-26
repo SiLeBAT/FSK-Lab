@@ -40,7 +40,7 @@ public class CollectionToolRepositoryTest {
 	}
 
 	@Test
-	public void testGetById_ExistingId_ShouldReturnPresentOptional() throws SQLException {
+	public void testGetById_ExistingId_ShouldReturnPresentOptional() {
 		
 		// Get mocked collection tool
 		CollectionToolRepository repository = new CollectionToolRepository(connection);
@@ -54,14 +54,14 @@ public class CollectionToolRepositoryTest {
 	}
 	
 	@Test
-	public void testGetById_MissingId_ShouldReturnEmptyOptional() throws SQLException {
+	public void testGetById_MissingId_ShouldReturnEmptyOptional() {
 		CollectionToolRepository repository = new CollectionToolRepository(connection);
 		Optional<CollectionTool> optional = repository.getById(-1);
 		assertFalse(optional.isPresent());
 	}
 	
 	@Test
-	public void testGetAll() throws SQLException {
+	public void testGetAll() {
 		
 		// Get mocked collection tools
 		CollectionToolRepository repository = new CollectionToolRepository(connection);

@@ -11,40 +11,49 @@ import de.bund.bfr.knime.fsklab.vocabularies.domain.SamplingStrategy;
 
 public class SamplingStrategyRepository implements BasicRepository<SamplingStrategy> {
 
-    private final Connection connection;
+	private final Connection connection;
 
-    public SamplingStrategyRepository(Connection connection) {
-        this.connection = connection;
-    }
+	public SamplingStrategyRepository(Connection connection) {
+		this.connection = connection;
+	}
 
-    @Override
-    public Optional<SamplingStrategy> getById(int id) throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM sampling_strategy WHERE id = " + id);
+	@Override
+	public Optional<SamplingStrategy> getById(int id) {
 
-        if (resultSet.next()) {
-            String name = resultSet.getString("name");
-            String comment = resultSet.getString("comment");
-            return Optional.of(new SamplingStrategy(id, name, comment));
-        } else {
-            return Optional.empty();
-        }
-    }
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM sampling_strategy WHERE id = " + id);
 
-    @Override
-    public SamplingStrategy[] getAll() throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM sampling_strategy");
+			if (resultSet.next()) {
+				String name = resultSet.getString("name");
+				String comment = resultSet.getString("comment");
+				return Optional.of(new SamplingStrategy(id, name, comment));
+			}
+			return Optional.empty();
+		} catch (SQLException err) {
+			return Optional.empty();
+		}
+	}
 
-        ArrayList<SamplingStrategy> strategies = new ArrayList<>();
-        while (resultSet.next()) {
-            int id = resultSet.getInt("id");
-            String name = resultSet.getString("name");
-            String comment = resultSet.getString("comment");
+	@Override
+	public SamplingStrategy[] getAll() {
 
-            strategies.add(new SamplingStrategy(id, name, comment));
-        }
+		ArrayList<SamplingStrategy> strategies = new ArrayList<>();
 
-        return strategies.toArray(new SamplingStrategy[0]);
-    }
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM sampling_strategy");
+
+			while (resultSet.next()) {
+				int id = resultSet.getInt("id");
+				String name = resultSet.getString("name");
+				String comment = resultSet.getString("comment");
+
+				strategies.add(new SamplingStrategy(id, name, comment));
+			}
+		} catch (SQLException err) {
+		}
+
+		return strategies.toArray(new SamplingStrategy[0]);
+	}
 }

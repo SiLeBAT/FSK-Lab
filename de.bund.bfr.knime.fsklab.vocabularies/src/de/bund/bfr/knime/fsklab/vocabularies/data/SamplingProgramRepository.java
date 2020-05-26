@@ -11,40 +11,49 @@ import de.bund.bfr.knime.fsklab.vocabularies.domain.SamplingProgram;
 
 public class SamplingProgramRepository implements BasicRepository<SamplingProgram> {
 
-    private final Connection connection;
+	private final Connection connection;
 
-    public SamplingProgramRepository(Connection connection) {
-        this.connection = connection;
-    }
+	public SamplingProgramRepository(Connection connection) {
+		this.connection = connection;
+	}
 
-    @Override
-    public Optional<SamplingProgram> getById(int id) throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM sampling_program WHERE id = " + id);
+	@Override
+	public Optional<SamplingProgram> getById(int id) {
 
-        if (resultSet.next()) {
-            String name = resultSet.getString("name");
-            String progType = resultSet.getString("progType");
-            return Optional.of(new SamplingProgram(id, name, progType));
-        } else {
-            return Optional.empty();
-        }
-    }
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM sampling_program WHERE id = " + id);
 
-    @Override
-    public SamplingProgram[] getAll() throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM sampling_program");
+			if (resultSet.next()) {
+				String name = resultSet.getString("name");
+				String progType = resultSet.getString("progType");
+				return Optional.of(new SamplingProgram(id, name, progType));
+			}
+			return Optional.empty();
+		} catch (SQLException err) {
+			return Optional.empty();
+		}
+	}
 
-        ArrayList<SamplingProgram> programs = new ArrayList<>();
-        while (resultSet.next()) {
-            int id = resultSet.getInt("id");
-            String name = resultSet.getString("name");
-            String progType = resultSet.getString("progType");
+	@Override
+	public SamplingProgram[] getAll() {
 
-            programs.add(new SamplingProgram(id, name, progType));
-        }
+		ArrayList<SamplingProgram> programs = new ArrayList<>();
 
-        return programs.toArray(new SamplingProgram[0]);
-    }
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM sampling_program");
+
+			while (resultSet.next()) {
+				int id = resultSet.getInt("id");
+				String name = resultSet.getString("name");
+				String progType = resultSet.getString("progType");
+
+				programs.add(new SamplingProgram(id, name, progType));
+			}
+		} catch (SQLException err) {
+		}
+
+		return programs.toArray(new SamplingProgram[0]);
+	}
 }

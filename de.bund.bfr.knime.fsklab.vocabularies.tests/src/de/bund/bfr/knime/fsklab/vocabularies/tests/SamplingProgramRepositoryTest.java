@@ -40,7 +40,7 @@ public class SamplingProgramRepositoryTest {
 	}
 	
 	@Test
-	public void testGetById_ExistingId_ShouldReturnPresentOptional() throws SQLException {
+	public void testGetById_ExistingId_ShouldReturnPresentOptional() {
 		SamplingProgramRepository repository = new SamplingProgramRepository(connection);
 		
 		Optional<SamplingProgram> optional = repository.getById(0);
@@ -53,14 +53,14 @@ public class SamplingProgramRepositoryTest {
 	}
 	
 	@Test
-	public void testGetById_MissingId_ShouldReturnEmptyOptional() throws SQLException {
+	public void testGetById_MissingId_ShouldReturnEmptyOptional() {
 		SamplingProgramRepository repository = new SamplingProgramRepository(connection);
 		Optional<SamplingProgram> optional = repository.getById(-1);
 		assertFalse(optional.isPresent());
 	}
 
 	@Test
-	public void testGetAll() throws SQLException {
+	public void testGetAll() {
 		SamplingProgramRepository repository = new SamplingProgramRepository(connection);
 		assertTrue(repository.getAll().length > 0);	
 	}

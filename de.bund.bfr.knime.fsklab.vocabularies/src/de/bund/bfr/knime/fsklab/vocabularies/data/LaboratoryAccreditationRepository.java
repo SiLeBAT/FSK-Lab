@@ -11,41 +11,50 @@ import de.bund.bfr.knime.fsklab.vocabularies.domain.LaboratoryAccreditation;
 
 public class LaboratoryAccreditationRepository implements BasicRepository<LaboratoryAccreditation> {
 
-    private final Connection connection;
+	private final Connection connection;
 
-    public LaboratoryAccreditationRepository(Connection connection) {
-        this.connection = connection;
-    }
+	public LaboratoryAccreditationRepository(Connection connection) {
+		this.connection = connection;
+	}
 
-    @Override
-    public Optional<LaboratoryAccreditation> getById(int id) throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM laboratory_accreditation WHERE id = " + id);
+	@Override
+	public Optional<LaboratoryAccreditation> getById(int id) {
 
-        if (resultSet.next()) {
-            String name = resultSet.getString("name");
-            String ssd = resultSet.getString("ssd");
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM laboratory_accreditation WHERE id = " + id);
 
-            return Optional.of(new LaboratoryAccreditation(id, name, ssd));
-        } else {
-            return Optional.empty();
-        }
-    }
+			if (resultSet.next()) {
+				String name = resultSet.getString("name");
+				String ssd = resultSet.getString("ssd");
 
-    @Override
-    public LaboratoryAccreditation[] getAll() throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM laboratory_accreditation");
+				return Optional.of(new LaboratoryAccreditation(id, name, ssd));
+			}
+			return Optional.empty();
+		} catch (SQLException err) {
+			return Optional.empty();
+		}
+	}
 
-        ArrayList<LaboratoryAccreditation> accreditations = new ArrayList<>();
-        while (resultSet.next()) {
-            int id = resultSet.getInt("id");
-            String name = resultSet.getString("name");
-            String ssd = resultSet.getString("ssd");
+	@Override
+	public LaboratoryAccreditation[] getAll() {
+		ArrayList<LaboratoryAccreditation> accreditations = new ArrayList<>();
 
-            accreditations.add(new LaboratoryAccreditation(id, name, ssd));
-        }
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM laboratory_accreditation");
 
-        return accreditations.toArray(new LaboratoryAccreditation[0]);
-    }
+			while (resultSet.next()) {
+				int id = resultSet.getInt("id");
+				String name = resultSet.getString("name");
+				String ssd = resultSet.getString("ssd");
+
+				accreditations.add(new LaboratoryAccreditation(id, name, ssd));
+			}
+		} catch (SQLException err) {
+
+		}
+
+		return accreditations.toArray(new LaboratoryAccreditation[0]);
+	}
 }

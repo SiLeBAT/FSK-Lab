@@ -11,41 +11,50 @@ import de.bund.bfr.knime.fsklab.vocabularies.domain.Region;
 
 public class RegionRepository implements BasicRepository<Region> {
 
-    private final Connection connection;
+	private final Connection connection;
 
-    public RegionRepository(Connection connection) {
-        this.connection = connection;
-    }
+	public RegionRepository(Connection connection) {
+		this.connection = connection;
+	}
 
-    @Override
-    public Optional<Region> getById(int id) throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM region WHERE id = " + id);
+	@Override
+	public Optional<Region> getById(int id) {
 
-        if (resultSet.next()) {
-            String name = resultSet.getString("name");
-            String ssd = resultSet.getString("nuts");
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM region WHERE id = " + id);
 
-            return Optional.of(new Region(id, name, ssd));
-        } else {
-            return Optional.empty();
-        }
-    }
+			if (resultSet.next()) {
+				String name = resultSet.getString("name");
+				String ssd = resultSet.getString("nuts");
 
-    @Override
-    public Region[] getAll() throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM region");
+				return Optional.of(new Region(id, name, ssd));
+			}
+			return Optional.empty();
+		} catch (SQLException err) {
+			return Optional.empty();
+		}
+	}
 
-        ArrayList<Region> areaList = new ArrayList<>();
-        while (resultSet.next()) {
-            int id = resultSet.getInt("id");
-            String name = resultSet.getString("name");
-            String ssd = resultSet.getString("nuts");
+	@Override
+	public Region[] getAll() {
 
-            areaList.add(new Region(id, name, ssd));
-        }
+		ArrayList<Region> areaList = new ArrayList<>();
 
-        return areaList.toArray(new Region[0]);
-    }
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM region");
+
+			while (resultSet.next()) {
+				int id = resultSet.getInt("id");
+				String name = resultSet.getString("name");
+				String ssd = resultSet.getString("nuts");
+
+				areaList.add(new Region(id, name, ssd));
+			}
+		} catch (SQLException err) {
+		}
+
+		return areaList.toArray(new Region[0]);
+	}
 }

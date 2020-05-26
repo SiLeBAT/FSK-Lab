@@ -40,7 +40,7 @@ public class LaboratoryAccreditationTest {
 	}
 	
 	@Test
-	public void testGetById_ExistingId_ShouldReturnPresentOptional() throws SQLException {
+	public void testGetById_ExistingId_ShouldReturnPresentOptional() {
 		
 		// Get mocked laboratory accreditation
 		LaboratoryAccreditationRepository repository = new LaboratoryAccreditationRepository(connection);
@@ -55,15 +55,14 @@ public class LaboratoryAccreditationTest {
 	}
 	
 	@Test
-	public void testGetById_MissingId_ShouldReturnEmptyOptional() throws Exception {
+	public void testGetById_MissingId_ShouldReturnEmptyOptional() {
 		LaboratoryAccreditationRepository repository = new LaboratoryAccreditationRepository(connection);
 		Optional<LaboratoryAccreditation> optional = repository.getById(-1);
 		assertFalse(optional.isPresent());
 	}
 	
 	@Test
-	public void testGetAll() throws SQLException {
-		
+	public void testGetAll() {
 		// Get mocked accreditations
 		LaboratoryAccreditationRepository repository = new LaboratoryAccreditationRepository(connection);
 		assertTrue(repository.getAll().length > 0);

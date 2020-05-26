@@ -40,7 +40,7 @@ public class ParameterDistributionRepositoryTest {
 	}
 	
 	@Test
-	public void testGetById_ExistingId_ShouldReturnPresentOptional() throws SQLException {
+	public void testGetById_ExistingId_ShouldReturnPresentOptional() {
 		
 		// Get mocked parameter distribution
 		ParameterDistributionRepository repository = new ParameterDistributionRepository(connection);
@@ -55,14 +55,14 @@ public class ParameterDistributionRepositoryTest {
 	}
 	
 	@Test
-	public void testGetById_MissingId_ShouldReturnMissingOptional() throws SQLException {
+	public void testGetById_MissingId_ShouldReturnMissingOptional() {
 		ParameterDistributionRepository repository = new ParameterDistributionRepository(connection);
 		Optional<ParameterDistribution> optional = repository.getById(-1);
 		assertFalse(optional.isPresent());
 	}
 	
 	@Test
-	public void testGetAll() throws Exception {
+	public void testGetAll() {
 		ParameterDistributionRepository repository = new ParameterDistributionRepository(connection);
 		assertTrue(repository.getAll().length > 0);
 	}

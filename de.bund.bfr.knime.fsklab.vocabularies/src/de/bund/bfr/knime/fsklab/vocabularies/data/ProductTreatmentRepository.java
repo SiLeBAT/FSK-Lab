@@ -11,43 +11,52 @@ import de.bund.bfr.knime.fsklab.vocabularies.domain.ProductTreatment;
 
 public class ProductTreatmentRepository implements BasicRepository<ProductTreatment> {
 
-    private final Connection connection;
+	private final Connection connection;
 
-    public ProductTreatmentRepository(Connection connection) {
-        this.connection = connection;
-    }
+	public ProductTreatmentRepository(Connection connection) {
+		this.connection = connection;
+	}
 
-    @Override
-    public Optional<ProductTreatment> getById(int id) throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM prodTreat WHERE id = " + id);
+	@Override
+	public Optional<ProductTreatment> getById(int id) {
 
-        if (resultSet.next()) {
-            String name = resultSet.getString("name");
-            String ssd = resultSet.getString("ssd");
-            String comment = resultSet.getString("comment");
-            
-            return Optional.of(new ProductTreatment(id, name, ssd, comment));
-        } else {
-            return Optional.empty();
-        }
-    }
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM prodTreat WHERE id = " + id);
 
-    @Override
-    public ProductTreatment[] getAll() throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM prodTreat");
+			if (resultSet.next()) {
+				String name = resultSet.getString("name");
+				String ssd = resultSet.getString("ssd");
+				String comment = resultSet.getString("comment");
 
-        ArrayList<ProductTreatment> treatmentList = new ArrayList<>();
-        while (resultSet.next()) {
-            int id = resultSet.getInt("id");
-            String name = resultSet.getString("name");
-            String ssd = resultSet.getString("ssd");
-            String comment = resultSet.getString("comment");
+				return Optional.of(new ProductTreatment(id, name, ssd, comment));
+			}
+			return Optional.empty();
+		} catch (SQLException err) {
+			return Optional.empty();
+		}
+	}
 
-            treatmentList.add(new ProductTreatment(id, name, ssd, comment));
-        }
+	@Override
+	public ProductTreatment[] getAll() {
 
-        return treatmentList.toArray(new ProductTreatment[0]);
-    }
+		ArrayList<ProductTreatment> treatmentList = new ArrayList<>();
+
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM prodTreat");
+
+			while (resultSet.next()) {
+				int id = resultSet.getInt("id");
+				String name = resultSet.getString("name");
+				String ssd = resultSet.getString("ssd");
+				String comment = resultSet.getString("comment");
+
+				treatmentList.add(new ProductTreatment(id, name, ssd, comment));
+			}
+		} catch (SQLException err) {
+		}
+
+		return treatmentList.toArray(new ProductTreatment[0]);
+	}
 }

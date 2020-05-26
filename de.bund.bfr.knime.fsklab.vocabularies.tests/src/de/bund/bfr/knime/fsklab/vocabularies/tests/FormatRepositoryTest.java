@@ -40,7 +40,7 @@ public class FormatRepositoryTest {
 	}
 	
 	@Test
-	public void testGetById_ExistingId_ShouldReturnPresentOptional() throws SQLException {
+	public void testGetById_ExistingId_ShouldReturnPresentOptional() {
 		
 		// Get mocked format
 		FormatRepository repository = new FormatRepository(connection);
@@ -55,15 +55,14 @@ public class FormatRepositoryTest {
 	}
 	
 	@Test
-	public void testGetById_MissingId_ShouldReturnEmptyOptional() throws SQLException {
+	public void testGetById_MissingId_ShouldReturnEmptyOptional() {
 		FormatRepository repository = new FormatRepository(connection);
 		Optional<Format> optional = repository.getById(-1);
 		assertFalse(optional.isPresent());
 	}
 	
 	@Test
-	public void testGetAll() throws Exception {
-		
+	public void testGetAll() {
 		// Get mocked formats
 		FormatRepository repository = new FormatRepository(connection);
 		assertTrue(repository.getAll().length > 0);

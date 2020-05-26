@@ -11,41 +11,51 @@ import de.bund.bfr.knime.fsklab.vocabularies.domain.ParameterDistribution;
 
 public class ParameterDistributionRepository implements BasicRepository<ParameterDistribution> {
 
-    private final Connection connection;
+	private final Connection connection;
 
-    public ParameterDistributionRepository(Connection connection) {
-        this.connection = connection;
-    }
+	public ParameterDistributionRepository(Connection connection) {
+		this.connection = connection;
+	}
 
-    @Override
-    public Optional<ParameterDistribution> getById(int id) throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM parameter_distribution WHERE id = " + id);
+	@Override
+	public Optional<ParameterDistribution> getById(int id) {
 
-        if (resultSet.next()) {
-            String name = resultSet.getString("name");
-            String comment = resultSet.getString("comment");
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM parameter_distribution WHERE id = " + id);
 
-            return Optional.of(new ParameterDistribution(id, name, comment));
-        } else {
-            return Optional.empty();
-        }
-    }
+			if (resultSet.next()) {
+				String name = resultSet.getString("name");
+				String comment = resultSet.getString("comment");
 
-    @Override
-    public ParameterDistribution[] getAll() throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM parameter_distribution");
+				return Optional.of(new ParameterDistribution(id, name, comment));
+			}
 
-        ArrayList<ParameterDistribution> distributions = new ArrayList<>();
-        while (resultSet.next()) {
-            int id = resultSet.getInt("id");
-            String name = resultSet.getString("name");
-            String comment = resultSet.getString("comment");
+			return Optional.empty();
+		} catch (SQLException err) {
+			return Optional.empty();
+		}
+	}
 
-            distributions.add(new ParameterDistribution(id, name, comment));
-        }
+	@Override
+	public ParameterDistribution[] getAll() {
 
-        return distributions.toArray(new ParameterDistribution[0]);
-    }
+		ArrayList<ParameterDistribution> distributions = new ArrayList<>();
+
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM parameter_distribution");
+
+			while (resultSet.next()) {
+				int id = resultSet.getInt("id");
+				String name = resultSet.getString("name");
+				String comment = resultSet.getString("comment");
+
+				distributions.add(new ParameterDistribution(id, name, comment));
+			}
+		} catch (SQLException err) {
+		}
+
+		return distributions.toArray(new ParameterDistribution[0]);
+	}
 }

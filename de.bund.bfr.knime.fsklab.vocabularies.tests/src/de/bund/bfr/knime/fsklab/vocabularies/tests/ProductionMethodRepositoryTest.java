@@ -41,7 +41,7 @@ public class ProductionMethodRepositoryTest {
 	}
 	
 	@Test
-	public void testGetById_ExistingId_ShouldReturnPresentOptional() throws Exception {
+	public void testGetById_ExistingId_ShouldReturnPresentOptional() {
 		
 		ProductionMethodRepository repository = new ProductionMethodRepository(connection);
 		
@@ -56,14 +56,14 @@ public class ProductionMethodRepositoryTest {
 	}
 	
 	@Test
-	public void testGetById_MissingId_ShouldReturnEmptyOptional() throws Exception {
+	public void testGetById_MissingId_ShouldReturnEmptyOptional() {
 		ProductionMethodRepository repository = new ProductionMethodRepository(connection);
 		Optional<ProductionMethod> optional = repository.getById(-1);
 		assertFalse(optional.isPresent());
 	}
 	
 	@Test
-	public void testGetAll() throws Exception {
+	public void testGetAll() {
 		ProductionMethodRepository repository = new ProductionMethodRepository(connection);
 		assertTrue(repository.getAll().length > 0);
 	}

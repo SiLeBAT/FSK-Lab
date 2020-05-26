@@ -11,43 +11,52 @@ import de.bund.bfr.knime.fsklab.vocabularies.domain.Right;
 
 public class RightRepository implements BasicRepository<Right> {
 
-    private final Connection connection;
+	private final Connection connection;
 
-    public RightRepository(Connection connection) {
-        this.connection = connection;
-    }
+	public RightRepository(Connection connection) {
+		this.connection = connection;
+	}
 
-    @Override
-    public Optional<Right> getById(int id) throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM rights WHERE id = '" + id + "'");
+	@Override
+	public Optional<Right> getById(int id) {
 
-        if (resultSet.next()) {
-            String shortname = resultSet.getString("shortname");
-            String fullname = resultSet.getString("fullname");
-            String url = resultSet.getString("url");
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM rights WHERE id = '" + id + "'");
 
-            return Optional.of(new Right(id, shortname, fullname, url));
-        } else {
-            return Optional.empty();
-        }
-    }
+			if (resultSet.next()) {
+				String shortname = resultSet.getString("shortname");
+				String fullname = resultSet.getString("fullname");
+				String url = resultSet.getString("url");
 
-    @Override
-    public Right[] getAll() throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM rights");
+				return Optional.of(new Right(id, shortname, fullname, url));
+			}
+			return Optional.empty();
+		} catch (SQLException err) {
+			return Optional.empty();
+		}
+	}
 
-        ArrayList<Right> rightList = new ArrayList<>();
-        while (resultSet.next()) {
-            int id = resultSet.getInt("id");
-            String shortname = resultSet.getString("shortname");
-            String fullname = resultSet.getString("fullname");
-            String url = resultSet.getString("url");
+	@Override
+	public Right[] getAll() {
 
-            rightList.add(new Right(id, shortname, fullname, url));
-        }
+		ArrayList<Right> rightList = new ArrayList<>();
 
-        return rightList.toArray(new Right[0]);
-    }
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM rights");
+
+			while (resultSet.next()) {
+				int id = resultSet.getInt("id");
+				String shortname = resultSet.getString("shortname");
+				String fullname = resultSet.getString("fullname");
+				String url = resultSet.getString("url");
+
+				rightList.add(new Right(id, shortname, fullname, url));
+			}
+		} catch (SQLException err) {
+		}
+
+		return rightList.toArray(new Right[0]);
+	}
 }

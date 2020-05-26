@@ -39,7 +39,7 @@ public class ParameterSubjectRepositoryTest {
 	}
 
 	@Test
-	public void testGetById_ExistingId_ShouldReturnPresentOptional() throws SQLException {
+	public void testGetById_ExistingId_ShouldReturnPresentOptional() {
 		
 		// Get mocked subject
 		ParameterSubjectRepository repository = new ParameterSubjectRepository(connection);
@@ -53,14 +53,14 @@ public class ParameterSubjectRepositoryTest {
 	}
 	
 	@Test
-	public void testGetById_MissingId_ShouldReturnEmptyOptional() throws Exception {
+	public void testGetById_MissingId_ShouldReturnEmptyOptional() {
 		ParameterSubjectRepository repository = new ParameterSubjectRepository(connection);
 		Optional<ParameterSubject> optional = repository.getById(-1);
 		assertFalse(optional.isPresent());
 	}
 	
 	@Test
-	public void testGetAll() throws Exception {
+	public void testGetAll() {
 		ParameterSubjectRepository repository = new ParameterSubjectRepository(connection);
 		assertTrue(repository.getAll().length > 0);
 	}

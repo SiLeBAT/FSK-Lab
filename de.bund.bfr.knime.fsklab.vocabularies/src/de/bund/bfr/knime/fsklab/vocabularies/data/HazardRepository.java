@@ -18,33 +18,42 @@ public class HazardRepository implements BasicRepository<Hazard> {
     }
 
     @Override
-    public Optional<Hazard> getById(int id) throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM hazard WHERE id = " + id);
+    public Optional<Hazard> getById(int id) {
+    	
+    	try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM hazard WHERE id = " + id);
 
-        if (resultSet.next()) {
-            String name = resultSet.getString("name");
-            String ssd = resultSet.getString("ssd");
-
-            return Optional.of(new Hazard(id, name, ssd));
-        } else {
+            if (resultSet.next()) {
+                String name = resultSet.getString("name");
+                String ssd = resultSet.getString("ssd");
+                return Optional.of(new Hazard(id, name, ssd));
+            }
+            
             return Optional.empty();
-        }
+    	} catch (SQLException err) {
+    		return Optional.empty();
+    	}
     }
 
     @Override
-    public Hazard[] getAll() throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM hazard");
-
+    public Hazard[] getAll() {
+    	
         ArrayList<Hazard> hazardList = new ArrayList<>();
-        while (resultSet.next()) {
-            int id = resultSet.getInt("id");
-            String name = resultSet.getString("name");
-            String ssd = resultSet.getString("ssd");
 
-            hazardList.add(new Hazard(id, name, ssd));
-        }
+    	try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM hazard");
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String name = resultSet.getString("name");
+                String ssd = resultSet.getString("ssd");
+
+                hazardList.add(new Hazard(id, name, ssd));
+            }
+    	} catch (SQLException err) {
+    	}
 
         return hazardList.toArray(new Hazard[0]);
     }

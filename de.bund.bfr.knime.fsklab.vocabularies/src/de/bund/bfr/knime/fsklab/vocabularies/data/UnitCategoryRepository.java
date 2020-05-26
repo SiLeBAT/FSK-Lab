@@ -11,38 +11,47 @@ import de.bund.bfr.knime.fsklab.vocabularies.domain.UnitCategory;
 
 public class UnitCategoryRepository implements BasicRepository<UnitCategory> {
 
-    private final Connection connection;
+	private final Connection connection;
 
-    public UnitCategoryRepository(Connection connection) {
-        this.connection = connection;
-    }
+	public UnitCategoryRepository(Connection connection) {
+		this.connection = connection;
+	}
 
-    @Override
-    public Optional<UnitCategory> getById(int id) throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM unit_category WHERE id = " + id);
+	@Override
+	public Optional<UnitCategory> getById(int id) {
 
-        if (resultSet.next()) {
-            String name = resultSet.getString("name");
-            return Optional.of(new UnitCategory(id, name));
-        } else {
-            return Optional.empty();
-        }
-    }
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM unit_category WHERE id = " + id);
 
-    @Override
-    public UnitCategory[] getAll() throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM unit_category");
+			if (resultSet.next()) {
+				String name = resultSet.getString("name");
+				return Optional.of(new UnitCategory(id, name));
+			}
+			return Optional.empty();
+		} catch (SQLException err) {
+			return Optional.empty();
+		}
+	}
 
-        ArrayList<UnitCategory> categoryList = new ArrayList<>();
-        while (resultSet.next()) {
-            int id = resultSet.getInt("id");
-            String name = resultSet.getString("name");
+	@Override
+	public UnitCategory[] getAll() {
 
-            categoryList.add(new UnitCategory(id, name));
-        }
+		ArrayList<UnitCategory> categoryList = new ArrayList<>();
 
-        return categoryList.toArray(new UnitCategory[0]);
-    }
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM unit_category");
+
+			while (resultSet.next()) {
+				int id = resultSet.getInt("id");
+				String name = resultSet.getString("name");
+
+				categoryList.add(new UnitCategory(id, name));
+			}
+		} catch (SQLException err) {
+		}
+
+		return categoryList.toArray(new UnitCategory[0]);
+	}
 }

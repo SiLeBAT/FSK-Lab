@@ -41,7 +41,7 @@ public class RightRepositoryTest {
 	}
 	
 	@Test
-	public void testGetById_ExistingId_ShouldReturnPresentOptional() throws SQLException {
+	public void testGetById_ExistingId_ShouldReturnPresentOptional() {
 		RightRepository repository = new RightRepository(connection);
 		
 		Optional<Right> optional = repository.getById(0);
@@ -55,14 +55,14 @@ public class RightRepositoryTest {
 	}
 	
 	@Test
-	public void testGetById_MissingId_ShouldReturnEmptyOptional() throws SQLException {
+	public void testGetById_MissingId_ShouldReturnEmptyOptional() {
 		RightRepository repository = new RightRepository(connection);
 		Optional<Right> optional = repository.getById(-1);
 		assertFalse(optional.isPresent());
 	}
 	
 	@Test
-	public void testGetAll() throws SQLException {
+	public void testGetAll() {
 		RightRepository repository = new RightRepository(connection);
 		assertTrue(repository.getAll().length > 0);
 	}

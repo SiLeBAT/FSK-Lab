@@ -11,43 +11,51 @@ import de.bund.bfr.knime.fsklab.vocabularies.domain.Packaging;
 
 public class PackagingRepository implements BasicRepository<Packaging> {
 
-    private final Connection connection;
+	private final Connection connection;
 
-    public PackagingRepository(Connection connection) {
-        this.connection = connection;
-    }
+	public PackagingRepository(Connection connection) {
+		this.connection = connection;
+	}
 
-    @Override
-    public Optional<Packaging> getById(int id) throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM packaging WHERE id = " + id);
+	@Override
+	public Optional<Packaging> getById(int id) {
 
-        if (resultSet.next()) {
-            String name = resultSet.getString("name");
-            String ssd = resultSet.getString("ssd");
-            String comment = resultSet.getString("comment");
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM packaging WHERE id = " + id);
 
-            return Optional.of(new Packaging(id, name, ssd, comment));
-        } else {
-            return Optional.empty();
-        }
-    }
+			if (resultSet.next()) {
+				String name = resultSet.getString("name");
+				String ssd = resultSet.getString("ssd");
+				String comment = resultSet.getString("comment");
 
-    @Override
-    public Packaging[] getAll() throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM packaging");
+				return Optional.of(new Packaging(id, name, ssd, comment));
+			}
+			return Optional.empty();
+		} catch (SQLException err) {
+			return Optional.empty();
+		}
+	}
 
-        ArrayList<Packaging> packagingList = new ArrayList<>();
-        while (resultSet.next()) {
-            int id = resultSet.getInt("id");
-            String name = resultSet.getString("name");
-            String ssd = resultSet.getString("ssd");
-            String comment = resultSet.getString("comment");
+	@Override
+	public Packaging[] getAll() {
+		ArrayList<Packaging> packagingList = new ArrayList<>();
 
-            packagingList.add(new Packaging(id, name, ssd, comment));
-        }
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM packaging");
 
-        return packagingList.toArray(new Packaging[0]);
-    }
+			while (resultSet.next()) {
+				int id = resultSet.getInt("id");
+				String name = resultSet.getString("name");
+				String ssd = resultSet.getString("ssd");
+				String comment = resultSet.getString("comment");
+
+				packagingList.add(new Packaging(id, name, ssd, comment));
+			}
+		} catch (SQLException err) {
+		}
+
+		return packagingList.toArray(new Packaging[0]);
+	}
 }

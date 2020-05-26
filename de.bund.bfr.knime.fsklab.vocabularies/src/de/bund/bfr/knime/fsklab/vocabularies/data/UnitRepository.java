@@ -12,55 +12,62 @@ import de.bund.bfr.knime.fsklab.vocabularies.domain.UnitCategory;
 
 public class UnitRepository implements BasicRepository<Unit> {
 
-    private final Connection connection;
-    private final UnitCategoryRepository categoryRepository;
+	private final Connection connection;
+	private final UnitCategoryRepository categoryRepository;
 
-    public UnitRepository(Connection connection) {
-        this.connection = connection;
-        this.categoryRepository = new UnitCategoryRepository(connection);
-    }
+	public UnitRepository(Connection connection) {
+		this.connection = connection;
+		this.categoryRepository = new UnitCategoryRepository(connection);
+	}
 
-    @Override
-    public Optional<Unit> getById(int id) throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM unit WHERE id = " + id);
+	@Override
+	public Optional<Unit> getById(int id) {
 
-        if (resultSet.next()) {
-            String name = resultSet.getString("name");
-            String ssd = resultSet.getString("ssd");
-            String comment = resultSet.getString("comment");
-            int categoryId = resultSet.getInt("category_id");
-            
-            Optional<UnitCategory> category = categoryRepository.getById(categoryId);
-            if (category.isPresent()) {
-            	return Optional.of(new Unit(id, name, ssd, comment, category.get()));
-            } else {
-            	return Optional.empty();
-            }
-        } else {
-            return Optional.empty();
-        }
-    }
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM unit WHERE id = " + id);
 
-    @Override
-    public Unit[] getAll() throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM unit");
+			if (resultSet.next()) {
+				String name = resultSet.getString("name");
+				String ssd = resultSet.getString("ssd");
+				String comment = resultSet.getString("comment");
+				int categoryId = resultSet.getInt("category_id");
 
-        ArrayList<Unit> units = new ArrayList<>();
-        while (resultSet.next()) {
-            int id = resultSet.getInt("id");
-            String name = resultSet.getString("name");
-            String ssd = resultSet.getString("ssd");
-            String comment = resultSet.getString("comment");
-            int categoryId = resultSet.getInt("category_id");
-            Optional<UnitCategory> category = categoryRepository.getById(categoryId);
-            if (!category.isPresent())
-            	continue;
+				Optional<UnitCategory> category = categoryRepository.getById(categoryId);
+				if (category.isPresent()) {
+					return Optional.of(new Unit(id, name, ssd, comment, category.get()));
+				}
+			}
+			return Optional.empty();
 
-            units.add(new Unit(id, name, ssd, comment, category.get()));
-        }
+		} catch (SQLException err) {
+			return Optional.empty();
+		}
+	}
 
-        return units.toArray(new Unit[0]);
-    }
+	@Override
+	public Unit[] getAll() {
+		ArrayList<Unit> units = new ArrayList<>();
+
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM unit");
+
+			while (resultSet.next()) {
+				int id = resultSet.getInt("id");
+				String name = resultSet.getString("name");
+				String ssd = resultSet.getString("ssd");
+				String comment = resultSet.getString("comment");
+				int categoryId = resultSet.getInt("category_id");
+				Optional<UnitCategory> category = categoryRepository.getById(categoryId);
+				if (!category.isPresent())
+					continue;
+
+				units.add(new Unit(id, name, ssd, comment, category.get()));
+			}
+		} catch (SQLException err) {
+		}
+
+		return units.toArray(new Unit[0]);
+	}
 }
