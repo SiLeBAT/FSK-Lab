@@ -22,7 +22,7 @@ public class ProductTreatmentRepositoryTest {
 	@BeforeClass
 	public static void setUp() throws SQLException {
 		DriverManager.registerDriver(new org.h2.Driver());
-		connection = DriverManager.getConnection("jdbc:h2:mem:ProductTreatmentRepositoryTest");
+		connection = DriverManager.getConnection("jdbc:h2:mem:");
 
 		Statement statement = connection.createStatement();
 		statement.execute("CREATE TABLE prodTreat (" + "id INTEGER not NULL," + "name VARCHAR(255) not NULL,"

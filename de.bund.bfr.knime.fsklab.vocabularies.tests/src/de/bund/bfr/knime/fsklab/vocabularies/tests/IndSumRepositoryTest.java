@@ -22,7 +22,7 @@ public class IndSumRepositoryTest {
 	@BeforeClass
 	public static void setUp() throws SQLException {
 		DriverManager.registerDriver(new org.h2.Driver());
-		connection = DriverManager.getConnection("jdbc:h2:mem:IndSumRepositoryTest");
+		connection = DriverManager.getConnection("jdbc:h2:mem:");
 		
 		Statement statement = connection.createStatement();
 		statement.execute("CREATE TABLE ind_sum ("
