@@ -24,12 +24,12 @@ import org.knime.core.node.NodeView;
 import org.knime.core.node.wizard.WizardNodeFactoryExtension;
 
 
-public class FSKEditorJSNodeFactory extends NodeFactory<EditorNodeModel> implements
-    WizardNodeFactoryExtension<EditorNodeModel, EditorViewRepresentation, EditorViewValue> {
+public class FSKEditorJSNodeFactory extends NodeFactory<FSKEditorJSNodeModel> implements
+    WizardNodeFactoryExtension<FSKEditorJSNodeModel, FSKEditorJSViewRepresentation, FSKEditorJSViewValue> {
 
   @Override
-  public EditorNodeModel createNodeModel() {
-    return new EditorNodeModel();
+  public FSKEditorJSNodeModel createNodeModel() {
+    return new FSKEditorJSNodeModel();
   }
 
   @Override
@@ -38,8 +38,8 @@ public class FSKEditorJSNodeFactory extends NodeFactory<EditorNodeModel> impleme
   }
 
   @Override
-  public NodeView<EditorNodeModel> createNodeView(int viewIndex,
-      EditorNodeModel nodeModel) {
+  public NodeView<FSKEditorJSNodeModel> createNodeView(int viewIndex,
+      FSKEditorJSNodeModel nodeModel) {
     return null;
   }
 
