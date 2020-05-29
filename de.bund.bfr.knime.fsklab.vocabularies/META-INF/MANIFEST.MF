@@ -10,5 +10,6 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations;bundle-version="2
  org.h2;bundle-version="1.4.196"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Automatic-Module-Name: de.bund.bfr.knime.fsklab.vocabularies
-Export-Package: de.bund.bfr.knime.fsklab.vocabularies.data,
+Export-Package: de.bund.bfr.knime.fsklab.vocabularies,
+ de.bund.bfr.knime.fsklab.vocabularies.data,
  de.bund.bfr.knime.fsklab.vocabularies.domain
