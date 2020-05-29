@@ -66,8 +66,6 @@ public class LibRegistry {
 
 	private String type;
 
-	private final String rVersion;
-
 	private RWrapper rWrapper;
 
 	private final String MIRROR = "https://cran.rstudio.com";
@@ -81,9 +79,6 @@ public class LibRegistry {
 		} else {
 			type = "source";
 		}
-
-		// Uses R version 3.4 for Windows and 3.0 for Mac and Linux.
-		rVersion = Platform.isWindows() ? "3.4" : "3.0";
 
 		// Prepare rWrapper
 		rWrapper = new RWrapper();
@@ -314,7 +309,7 @@ public class LibRegistry {
 		 */
 		void addPackage(final List<String> pkgs, final Path path) throws RException {
 			String cmd = "addPackage(" + _pkgList(pkgs) + ", '" + _path2String(path) + "', repos = '" + MIRROR
-					+ "', type = '" + type + "', Rversion = '" + rVersion + "', deps = FALSE)";
+					+ "', type = '" + type + "', deps = FALSE)";
 			controller.eval(cmd, false);
 		}
 
@@ -332,8 +327,7 @@ public class LibRegistry {
 		 *      miniCRAN documentation</a>
 		 */
 		List<Path> checkVersions(final List<String> pkgs, final Path path) throws REXPMismatchException, RException {
-			String cmd = "checkVersions(" + _pkgList(pkgs) + ", '" + _path2String(path) + "', type = '" + type
-					+ "', Rversion = '" + rVersion + "')";
+			String cmd = "checkVersions(" + _pkgList(pkgs) + ", '" + _path2String(path) + "', type = '" + type + "')";
 
 			REXP rexp = controller.eval(cmd, true);
 
@@ -391,7 +385,7 @@ public class LibRegistry {
 		 *      miniCRAN documentation</a>
 		 */
 		List<String> pkgDep(final List<String> pkgs) throws RException, REXPMismatchException {
-			String cmd = "pkgDep(" + _pkgList(pkgs) + ", type = '" + type + "', Rversion = '" + rVersion + "', repos = '" + MIRROR +"')";
+			String cmd = "pkgDep(" + _pkgList(pkgs) + ", type = '" + type + "', repos = '" + MIRROR +"')";
 			REXP rexp = controller.eval(cmd, true);
 			return Arrays.asList(rexp.asStrings());
 		}
