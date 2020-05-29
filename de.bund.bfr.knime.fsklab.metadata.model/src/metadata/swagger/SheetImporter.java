@@ -56,4 +56,5 @@ public interface SheetImporter {
 	int AT = 45;
 	int AU = 46;
 	int AV = 47;
+	int AW = 48;
 }
