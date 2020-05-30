@@ -2,6 +2,7 @@ package metadata.swagger;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -88,6 +89,28 @@ public class ConsumptionModelSheetImporter implements SheetImporter {
 
 	private int MM_PARAMETER_ROW = 119;
 	private int MM_FITTING_PROCEDURE_ROW = 135;
+	
+	/** Columns for each of the properties of DietaryAssessmentMethod. */
+	private final HashMap<String, Integer> methodColumns;
+	
+	/** Columns for each of the properties of Laboratory. */
+	private final HashMap<String, Integer> laboratoryColumns;
+	
+	public ConsumptionModelSheetImporter() {
+		
+		methodColumns = new HashMap<>();
+		methodColumns.put("collectionTool", L);
+		methodColumns.put("numberOfNonConsecutiveOneDay", M);
+		methodColumns.put("softwareTool", N);
+		methodColumns.put("numberOfFoodItems", O);
+		methodColumns.put("recordTypes", P);
+		methodColumns.put("foodDescriptors", Q);
+		
+		laboratoryColumns = new HashMap<>();
+		laboratoryColumns.put("accreditation", L);
+		laboratoryColumns.put("name", M);
+		laboratoryColumns.put("country", N);
+	}
 
 	private PredictiveModelGeneralInformation retrieveGeneralInformation(Sheet sheet) {
 
@@ -112,6 +135,7 @@ public class ConsumptionModelSheetImporter implements SheetImporter {
 			Contact author = ImporterUtils.retrieveAuthor(sheet.getRow(GI_CREATOR_ROW));
 			information.addAuthorItem(author);
 		} catch (Exception exception) {
+			// Skip faulty author and continue
 		}
 
 		for (int numRow = GI_CREATOR_ROW; numRow < (GI_CREATOR_ROW + 4); numRow++) {
@@ -119,6 +143,7 @@ public class ConsumptionModelSheetImporter implements SheetImporter {
 				Contact contact = ImporterUtils.retrieveCreator(sheet.getRow(numRow));
 				information.addCreatorItem(contact);
 			} catch (Exception exception) {
+				// Skip faulty contact and continue
 			}
 		}
 
@@ -158,6 +183,7 @@ public class ConsumptionModelSheetImporter implements SheetImporter {
 				Reference reference = ImporterUtils.retrieveReference(sheet.getRow(numRow));
 				information.addReferenceItem(reference);
 			} catch (Exception exception) {
+				// Skip faulty reference and continue
 			}
 		}
 
@@ -181,6 +207,7 @@ public class ConsumptionModelSheetImporter implements SheetImporter {
 			ModelCategory category = retrieveModelCategory(sheet);
 			information.setModelCategory(category);
 		} catch (Exception exception) {
+			// Skip faulty category and continue
 		}
 
 		Cell statusCell = sheet.getRow(GENERAL_INFORMATION__STATUS).getCell(J);
@@ -273,6 +300,7 @@ public class ConsumptionModelSheetImporter implements SheetImporter {
 			final Study study = retrieveStudy(sheet);
 			background.setStudy(study);
 		} catch (final Exception exception) {
+			// Skip faulty study and continue
 		}
 
 		for (int numrow = BG_STUDY_SAMPLE_ROW; numrow < BG_STUDY_SAMPLE_ROW + 3; numrow++) {
@@ -280,22 +308,26 @@ public class ConsumptionModelSheetImporter implements SheetImporter {
 				final StudySample sample = ImporterUtils.retrieveStudySample(sheet.getRow(numrow));
 				background.addStudySampleItem(sample);
 			} catch (final Exception exception) {
+				// Skip faulty sample and continue
 			}
 		}
 
 		for (int numrow = BG_DIET_ASSESS_ROW; numrow < BG_DIET_ASSESS_ROW + 3; numrow++) {
 			try {
-				final DietaryAssessmentMethod method = ImporterUtils.retrieveDietaryAssessmentMethod(sheet.getRow(numrow));
+				final DietaryAssessmentMethod method = ImporterUtils.retrieveDietaryAssessmentMethod(sheet.getRow(numrow), methodColumns);
 				background.addDietaryAssessmentMethodItem(method);
 			} catch (final Exception exception) {
+				// Skip faulty method and continue
 			}
 		}
 
 		for (int numrow = BG_LABORATORY_ROW; numrow < BG_LABORATORY_ROW + 3; numrow++) {
 			try {
-				final Laboratory laboratory = ImporterUtils.retrieveLaboratory(sheet.getRow(numrow));
+				Row row = sheet.getRow(numrow);
+				final Laboratory laboratory = ImporterUtils.retrieveLaboratory(row, laboratoryColumns);
 				background.addLaboratoryItem(laboratory);
 			} catch (final Exception exception) {
+				// Skip faulty laboratory and continue
 			}
 		}
 

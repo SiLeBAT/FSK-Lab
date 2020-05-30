@@ -74,9 +74,6 @@ public class ImporterUtils {
 
 	public static Contact retrieveContact(Row row, Map<String, Integer> columns) {
 
-		String x = row.getCell(SheetImporter.L).getStringCellValue();
-		x = row.getCell(SheetImporter.AA).getStringCellValue();
-		x = row.getCell(SheetImporter.AE).getStringCellValue();
 		// Check mandatory properties and throw exception if missing
 		if (row.getCell(columns.get("mail")).getCellTypeEnum() == CellType.BLANK) {
 			throw new IllegalArgumentException("Missing mail");
@@ -480,38 +477,50 @@ public class ImporterUtils {
 
 		return sample;
 	}
-	
-	public static DietaryAssessmentMethod retrieveDietaryAssessmentMethod(Row row) {
+
+	/**
+	 * @param row     Spreadsheet row
+	 * @param columns Column numbers for the columns with keys:
+	 *                <ul>
+	 *                <li>collectionTool
+	 *                <li>numberOfNonConsecutiveOneDay
+	 *                <li>softwareTool
+	 *                <li>numberOfFoodItems
+	 *                <li>recordTypes
+	 *                <li>foodDescriptors
+	 *                </ul>
+	 */
+	public static DietaryAssessmentMethod retrieveDietaryAssessmentMethod(Row row, Map<String, Integer> columns) {
 
 		// Check first mandatory properties
-		if (row.getCell(SheetImporter.L).getCellTypeEnum() != CellType.STRING) {
+		if (row.getCell(columns.get("collectionTool")).getCellTypeEnum() != CellType.STRING) {
 			throw new IllegalArgumentException("Missing methodological tool to collect data");
 		}
-		if (row.getCell(SheetImporter.M).getCellTypeEnum() != CellType.NUMERIC) {
+		if (row.getCell(columns.get("numberOfNonConsecutiveOneDay")).getCellTypeEnum() != CellType.NUMERIC) {
 			throw new IllegalArgumentException("Missing number of non consecutive one day");
 		}
 
 		final DietaryAssessmentMethod method = new DietaryAssessmentMethod();
 
-		method.setCollectionTool(row.getCell(SheetImporter.L).getStringCellValue());
-		method.setNumberOfNonConsecutiveOneDay(Double.toString(row.getCell(SheetImporter.M).getNumericCellValue()));
+		method.setCollectionTool(row.getCell(columns.get("collectionTool")).getStringCellValue());
+		method.setNumberOfNonConsecutiveOneDay(Double.toString(row.getCell(columns.get("numberOfNonConsecutiveOneDay")).getNumericCellValue()));
 
-		final Cell softwareCell = row.getCell(SheetImporter.N);
+		final Cell softwareCell = row.getCell(columns.get("softwareTool"));
 		if (softwareCell.getCellTypeEnum() == CellType.STRING) {
 			method.setSoftwareTool(softwareCell.getStringCellValue());
 		}
 
-		final Cell foodItemsCell = row.getCell(SheetImporter.O);
+		final Cell foodItemsCell = row.getCell(columns.get("numberOfFoodItems"));
 		if (foodItemsCell.getCellTypeEnum() == CellType.STRING) {
 			method.addNumberOfFoodItemsItem(foodItemsCell.getStringCellValue());
 		}
 
-		final Cell recordTypesCell = row.getCell(SheetImporter.P);
+		final Cell recordTypesCell = row.getCell(columns.get("recordTypes"));
 		if (recordTypesCell.getCellTypeEnum() == CellType.STRING) {
 			method.addRecordTypesItem(recordTypesCell.getStringCellValue());
 		}
 
-		final Cell foodDescriptorsCell = row.getCell(SheetImporter.Q);
+		final Cell foodDescriptorsCell = row.getCell(columns.get("foodDescriptors"));
 		if (foodDescriptorsCell.getCellTypeEnum() == CellType.STRING) {
 			method.addFoodDescriptorsItem(foodDescriptorsCell.getStringCellValue());
 		}
@@ -519,24 +528,34 @@ public class ImporterUtils {
 		return method;
 	}
 
-	public static Laboratory retrieveLaboratory(Row row) {
+	/**
+	 * @param row     Spreadsheet row
+	 * @param columns Column numbers for the columns with keys:
+	 *                <ul>
+	 *                <li>accreditation
+	 *                <li>name
+	 *                <li>country
+	 *                </ul>
+	 */
+	public static Laboratory retrieveLaboratory(Row row, HashMap<String, Integer> columns) {
 
 		// Check first mandatory properties
-		if (row.getCell(SheetImporter.L).getCellTypeEnum() != CellType.STRING) {
+		if (row.getCell(columns.get("accreditation")).getCellTypeEnum() != CellType.STRING) {
 			throw new IllegalArgumentException("Missing laboratory accreditation");
 		}
 
 		Laboratory laboratory = new Laboratory();
-		Arrays.stream(row.getCell(SheetImporter.L).getStringCellValue().split(",")).forEach(laboratory::addAccreditationItem);
+		Arrays.stream(row.getCell(columns.get("accreditation")).getStringCellValue().split(","))
+				.forEach(laboratory::addAccreditationItem);
 
-		Cell nameCell = row.getCell(SheetImporter.M);
+		Cell nameCell = row.getCell(columns.get("name"));
 		if (nameCell.getCellTypeEnum() == CellType.STRING) {
-			laboratory.setName(row.getCell(SheetImporter.M).getStringCellValue());
+			laboratory.setName(nameCell.getStringCellValue());
 		}
 
-		Cell countryCell = row.getCell(SheetImporter.N);
+		Cell countryCell = row.getCell(columns.get("country"));
 		if (countryCell.getCellTypeEnum() == CellType.STRING) {
-			laboratory.setCountry(row.getCell(SheetImporter.N).getStringCellValue());
+			laboratory.setCountry(countryCell.getStringCellValue());
 		}
 
 		return laboratory;
@@ -620,7 +639,8 @@ public class ImporterUtils {
 		final Parameter param = new Parameter();
 		param.setId(row.getCell(SheetImporter.L).getStringCellValue());
 
-		final ParameterClassification pc = ParameterClassification.get(row.getCell(SheetImporter.M).getStringCellValue());
+		final ParameterClassification pc = ParameterClassification
+				.get(row.getCell(SheetImporter.M).getStringCellValue());
 		if (pc != null) {
 			param.setClassification(SwaggerUtil.CLASSIF.get(pc));
 		}

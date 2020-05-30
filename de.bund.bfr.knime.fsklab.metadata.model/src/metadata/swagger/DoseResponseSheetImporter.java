@@ -2,6 +2,7 @@ package metadata.swagger;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -86,6 +87,16 @@ public class DoseResponseSheetImporter implements SheetImporter {
 	private int BG_Model_EQ_ROW = 107;
 
 	private int MM_PARAMETER_ROW = 116;
+	
+	/** Columns for each of the properties of Laboratory. */
+	private final HashMap<String, Integer> laboratoryColumns;
+	
+	public DoseResponseSheetImporter() {
+		laboratoryColumns = new HashMap<>();
+		laboratoryColumns.put("accreditation", L);
+		laboratoryColumns.put("name", M);
+		laboratoryColumns.put("country", N);
+	}
 
 	private DoseResponseModelGeneralInformation retrieveGeneralInformation(Sheet sheet) {
 
@@ -217,7 +228,8 @@ public class DoseResponseSheetImporter implements SheetImporter {
 
 		for (int numrow = this.BG_LABORATORY_ROW; numrow < (this.BG_LABORATORY_ROW + 3); numrow++) {
 			try {
-				Laboratory laboratory = ImporterUtils.retrieveLaboratory(sheet.getRow(numrow));
+				Row row = sheet.getRow(numrow);
+				Laboratory laboratory = ImporterUtils.retrieveLaboratory(row, laboratoryColumns);
 				background.addLaboratoryItem(laboratory);
 			} catch (Exception exception) {
 			}

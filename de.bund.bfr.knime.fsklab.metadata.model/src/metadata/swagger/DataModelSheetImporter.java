@@ -1,6 +1,7 @@
 package metadata.swagger;
 
 import java.util.Date;
+import java.util.HashMap;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -81,6 +82,28 @@ public class DataModelSheetImporter implements SheetImporter {
 	private int BG_ASSAY_ROW = 107;
 
 	private int MM_PARAMETER_ROW = 115;
+
+	/** Columns for each of the properties of DietaryAssessmentMethod. */
+	private final HashMap<String, Integer> methodColumns;
+
+	/** Columns for each of the properties of Laboratory. */
+	private final HashMap<String, Integer> laboratoryColumns;
+
+	public DataModelSheetImporter() {
+
+		methodColumns = new HashMap<>();
+		methodColumns.put("collectionTool", L);
+		methodColumns.put("numberOfNonConsecutiveOneDay", M);
+		methodColumns.put("softwareTool", N);
+		methodColumns.put("numberOfFoodItems", O);
+		methodColumns.put("recordTypes", P);
+		methodColumns.put("foodDescriptors", Q);
+
+		laboratoryColumns = new HashMap<>();
+		laboratoryColumns.put("accreditation", L);
+		laboratoryColumns.put("name", M);
+		laboratoryColumns.put("country", N);
+	}
 
 	private DataModelGeneralInformation retrieveGeneralInformation(Sheet sheet) {
 
@@ -230,6 +253,7 @@ public class DataModelSheetImporter implements SheetImporter {
 			Study study = retrieveStudy(sheet);
 			background.setStudy(study);
 		} catch (Exception exception) {
+			// Skip faulty study and continue
 		}
 
 		for (int numrow = BG_STUDY_SAMPLE_ROW; numrow < (BG_STUDY_SAMPLE_ROW + 3); numrow++) {
@@ -237,22 +261,27 @@ public class DataModelSheetImporter implements SheetImporter {
 				StudySample sample = ImporterUtils.retrieveStudySample(sheet.getRow(numrow));
 				background.addStudySampleItem(sample);
 			} catch (Exception exception) {
+				// Skip faulty sample and continue
 			}
 		}
 
 		for (int numrow = BG_DIET_ASSESS_ROW; numrow < (BG_DIET_ASSESS_ROW + 3); numrow++) {
 			try {
-				DietaryAssessmentMethod method = ImporterUtils.retrieveDietaryAssessmentMethod(sheet.getRow(numrow));
+				DietaryAssessmentMethod method = ImporterUtils.retrieveDietaryAssessmentMethod(sheet.getRow(numrow),
+						methodColumns);
 				background.addDietaryAssessmentMethodItem(method);
 			} catch (Exception exception) {
+				// Skip faulty method and continue
 			}
 		}
 
 		for (int numrow = BG_LABORATORY_ROW; numrow < (BG_LABORATORY_ROW + 3); numrow++) {
 			try {
-				Laboratory laboratory = ImporterUtils.retrieveLaboratory(sheet.getRow(numrow));
+				Row row = sheet.getRow(numrow);
+				Laboratory laboratory = ImporterUtils.retrieveLaboratory(row, laboratoryColumns);
 				background.addLaboratoryItem(laboratory);
 			} catch (Exception exception) {
+				// Skip faulty laboratory and continue
 			}
 		}
 
