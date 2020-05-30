@@ -14,31 +14,32 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.junit.Test;
 import org.threeten.bp.LocalDate;
 
-import de.bund.bfr.metadata.swagger.DoseResponseModel;
-import de.bund.bfr.metadata.swagger.DoseResponseModelGeneralInformation;
-import de.bund.bfr.metadata.swagger.DoseResponseModelModelMath;
-import de.bund.bfr.metadata.swagger.DoseResponseModelScope;
-import de.bund.bfr.metadata.swagger.PredictiveModelDataBackground;
+import de.bund.bfr.metadata.swagger.ExposureModel;
+import de.bund.bfr.metadata.swagger.ExposureModelScope;
+import de.bund.bfr.metadata.swagger.GenericModelDataBackground;
+import de.bund.bfr.metadata.swagger.GenericModelModelMath;
+import de.bund.bfr.metadata.swagger.PredictiveModelGeneralInformation;
 
-public class DoseResponseSheetImporterTest {
+@SuppressWarnings("static-method")
+public class ExposureModelSheetImporterTest {
 
-	@SuppressWarnings("static-method")
 	@Test
 	public void test() throws Exception {
 		Sheet sheet;
 		try (InputStream stream = Files.newInputStream(Paths.get("files/annotation_v1.0.4.xlsx"));
 				Workbook workbook = WorkbookFactory.create(stream)) {
-			sheet = workbook.getSheet("Dose-Response Model");
+			sheet = workbook.getSheet("Exposure Model");
 		}
-		DoseResponseModel model = (DoseResponseModel) new DoseResponseSheetImporter().retrieveModel(sheet);
+		
+		ExposureModel model = (ExposureModel) new ExposureModelSheetImporter().retrieveModel(sheet);
 		test(model.getGeneralInformation());
 		test(model.getScope());
 		test(model.getDataBackground());
 		test(model.getModelMath());
 	}
 
-	private static void test(DoseResponseModelGeneralInformation information) throws Exception {
-		assertEquals("Listeria Monocytogenes (DR of gQMRA)", information.getModelName());
+	private void test(PredictiveModelGeneralInformation information) throws Exception {
+		assertEquals("Listeria Monocytogenes (DR of gQMRA)", information.getName());
 		assertEquals("PUBLISHED SCIENTIFIC STUDIES", information.getSource());
 		assertEquals("DR000001", information.getIdentifier());
 		assertEquals(1, information.getAuthor().size());
@@ -59,7 +60,8 @@ public class DoseResponseSheetImporterTest {
 		assertNull(information.getDescription()); // Not set
 	}
 
-	private static void test(DoseResponseModelScope scope) {
+	private void test(ExposureModelScope scope) {
+		assertEquals(12, scope.getProduct().size());
 		assertEquals(1, scope.getHazard().size());
 		assertEquals(1, scope.getPopulationGroup().size());
 		assertNull(scope.getGeneralComment());
@@ -67,14 +69,15 @@ public class DoseResponseSheetImporterTest {
 		// TODO: spatial information: String*
 	}
 
-	private static void test(PredictiveModelDataBackground background) {
+	private void test(GenericModelDataBackground background) {
 		assertNotNull(background.getStudy());
 		assertEquals(3, background.getStudySample().size());
+		assertEquals(3, background.getDietaryAssessmentMethod().size());
 		assertEquals(3, background.getLaboratory().size());
 		assertEquals(3, background.getAssay().size());
 	}
 
-	private static void test(DoseResponseModelModelMath math) {
+	private void test(GenericModelModelMath math) {
 		assertEquals(9, math.getParameter().size());
 		assertEquals(1, math.getQualityMeasures().size());
 		assertNull(math.getModelEquation());

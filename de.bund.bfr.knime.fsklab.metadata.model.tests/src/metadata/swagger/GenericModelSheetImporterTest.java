@@ -22,6 +22,7 @@ import de.bund.bfr.metadata.swagger.GenericModelScope;
 
 public class GenericModelSheetImporterTest {
 
+	@SuppressWarnings("static-method")
 	@Test
 	public void test() throws Exception {
 		Sheet sheet;
@@ -31,13 +32,13 @@ public class GenericModelSheetImporterTest {
 		}
 
 		GenericModel model = (GenericModel) new GenericModelSheetImporter().retrieveModel(sheet);
-		testGeneralInformation(model.getGeneralInformation());
-		testScope(model.getScope());
-		testDataBackground(model.getDataBackground());
-		testModelMath(model.getModelMath());
+		test(model.getGeneralInformation());
+		test(model.getScope());
+		test(model.getDataBackground());
+		test(model.getModelMath());
 	}
 
-	private void testGeneralInformation(GenericModelGeneralInformation information) throws Exception {
+	private static void test(GenericModelGeneralInformation information) throws Exception {
 		assertEquals("Listeria Monocytogenes (DR of gQMRA)", information.getName());
 		assertEquals("PUBLISHED SCIENTIFIC STUDIES", information.getSource());
 		assertEquals("DR000001", information.getIdentifier());
@@ -59,7 +60,7 @@ public class GenericModelSheetImporterTest {
 		assertNull(information.getDescription()); // Not set
 	}
 
-	private void testScope(GenericModelScope scope) {
+	private static void test(GenericModelScope scope) {
 		assertEquals(12, scope.getProduct().size());
 		assertEquals(1, scope.getHazard().size());
 		assertEquals(1, scope.getPopulationGroup().size());
@@ -68,7 +69,7 @@ public class GenericModelSheetImporterTest {
 		// TODO: spatial information: String*
 	}
 
-	private void testDataBackground(GenericModelDataBackground background) {
+	private static void test(GenericModelDataBackground background) {
 		assertNotNull(background.getStudy());
 		assertEquals(3, background.getStudySample().size());
 		assertEquals(3, background.getDietaryAssessmentMethod().size());
@@ -76,7 +77,7 @@ public class GenericModelSheetImporterTest {
 		assertEquals(3, background.getAssay().size());
 	}
 
-	private void testModelMath(GenericModelModelMath math) {
+	private static void test(GenericModelModelMath math) {
 		assertEquals(9, math.getParameter().size());
 		assertEquals(1, math.getQualityMeasures().size());
 		assertNull(math.getModelEquation());
