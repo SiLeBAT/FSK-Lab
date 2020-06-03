@@ -91,6 +91,9 @@ public class DataModelSheetImporter implements SheetImporter {
 	
 	/** Columns for each of the properties of Reference. */
 	private final HashMap<String, Integer> referenceColumns;
+	
+	/** Columns for each of the properties of Product. */
+	private final HashMap<String, Integer> productColumns;
 
 	public DataModelSheetImporter() {
 
@@ -119,6 +122,19 @@ public class DataModelSheetImporter implements SheetImporter {
 		referenceColumns.put("status", S);
 		referenceColumns.put("website", U);
 		referenceColumns.put("comment", V);
+		
+		productColumns = new HashMap<>();
+		productColumns.put("name", L);
+		productColumns.put("description", M);
+		productColumns.put("unit", N);
+		productColumns.put("productionMethod", O);
+		productColumns.put("packaging", P);
+		productColumns.put("treatment", Q);
+		productColumns.put("originCountry", R);
+		productColumns.put("originArea", S);
+		productColumns.put("fisheriesArea", T);
+		productColumns.put("productionDate", U);
+		productColumns.put("expiryDate", V);
 	}
 
 	private DataModelGeneralInformation retrieveGeneralInformation(Sheet sheet) {
@@ -228,7 +244,7 @@ public class DataModelSheetImporter implements SheetImporter {
 			Row row = sheet.getRow(numrow);
 
 			try {
-				scope.addProductItem(ImporterUtils.retrieveProduct(row));
+				scope.addProductItem(ImporterUtils.retrieveProduct(row, productColumns));
 			} catch (IllegalArgumentException exception) {
 				// ignore exception since products are optional (*)
 			}

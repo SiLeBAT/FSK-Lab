@@ -99,6 +99,9 @@ public class ExposureModelSheetImporter implements SheetImporter {
 	/** Columns for each of the properties of Reference. */
 	private final HashMap<String, Integer> referenceColumns;
 	
+	/** Columns for each of the properties of Product. */
+	private final HashMap<String, Integer> productColumns;
+	
 	public ExposureModelSheetImporter() {
 
 		methodColumns = new HashMap<>();
@@ -126,6 +129,19 @@ public class ExposureModelSheetImporter implements SheetImporter {
 		referenceColumns.put("status", S);
 		referenceColumns.put("website", U);
 		referenceColumns.put("comment", V);
+
+		productColumns = new HashMap<>();
+		productColumns.put("name", K);
+		productColumns.put("description", L);
+		productColumns.put("unit", M);
+		productColumns.put("productionMethod", N);
+		productColumns.put("packaging", O);
+		productColumns.put("treatment", P);
+		productColumns.put("originCountry", Q);
+		productColumns.put("originArea", R);
+		productColumns.put("fisheriesArea", S);
+		productColumns.put("productionDate", T);
+		productColumns.put("expiryDate", U);
 	}
 
 	private GenericModelDataBackground retrieveBackground(Sheet sheet) {
@@ -329,7 +345,7 @@ public class ExposureModelSheetImporter implements SheetImporter {
 			Row row = sheet.getRow(numrow);
 
 			try {
-				scope.addProductItem(ImporterUtils.retrieveProduct(row));
+				scope.addProductItem(ImporterUtils.retrieveProduct(row, productColumns));
 			} catch (IllegalArgumentException exception) {
 				// ignore exception since products are optional (*)
 			}
