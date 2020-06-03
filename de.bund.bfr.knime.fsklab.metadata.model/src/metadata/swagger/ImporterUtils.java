@@ -134,6 +134,10 @@ public class ImporterUtils {
 		return contact;
 	}
 
+
+	/**
+	 * @deprecated Use instead {@link ImporterUtils#retrieveProduct(Row, Map)}
+	 */
 	public static Product retrieveProduct(Row row) {
 
 		// Check first mandatory properties
@@ -190,6 +194,70 @@ public class ImporterUtils {
 		}
 
 		final Cell expiryDateCell = row.getCell(SheetImporter.U);
+		if (expiryDateCell.getCellTypeEnum() == CellType.NUMERIC) {
+			final Date date = expiryDateCell.getDateCellValue();
+			product.setExpiryDate(LocalDate.of(date.getYear() + 1900, date.getMonth(), date.getDate()));
+		}
+
+		return product;
+	}
+
+	public static Product retrieveProduct(Row row, Map<String, Integer> columns) {
+
+		// Check first mandatory properties
+		if (row.getCell(columns.get("name")).getCellTypeEnum() != CellType.STRING) {
+			throw new IllegalArgumentException("Missing product name");
+		}
+		if (row.getCell(columns.get("unit")).getCellTypeEnum() != CellType.STRING) {
+			throw new IllegalArgumentException("Missing product unit");
+		}
+
+		final Product product = new Product();
+		product.setName(row.getCell(columns.get("name")).getStringCellValue());
+		product.setUnit(row.getCell(columns.get("unit")).getStringCellValue());
+
+		final Cell descriptionCell = row.getCell(columns.get("description"));
+		if (descriptionCell.getCellTypeEnum() == CellType.STRING) {
+			product.setDescription(descriptionCell.getStringCellValue());
+		}
+
+		final Cell methodCell = row.getCell(columns.get("productionMethod"));
+		if (methodCell.getCellTypeEnum() == CellType.STRING) {
+			product.addMethodItem(methodCell.getStringCellValue());
+		}
+
+		final Cell packagingCell = row.getCell(columns.get("packaging"));
+		if (packagingCell.getCellTypeEnum() == CellType.STRING) {
+			product.addPackagingItem(packagingCell.getStringCellValue());
+		}
+
+		final Cell treatmentCell = row.getCell(columns.get("treatment"));
+		if (treatmentCell.getCellTypeEnum() == CellType.STRING) {
+			product.addTreatmentItem(treatmentCell.getStringCellValue());
+		}
+
+		final Cell originCountryCell = row.getCell(columns.get("originCountry"));
+		if (originCountryCell.getCellTypeEnum() == CellType.STRING) {
+			product.setOriginCountry(originCountryCell.getStringCellValue());
+		}
+
+		final Cell originAreaCell = row.getCell(columns.get("originArea"));
+		if (originAreaCell.getCellTypeEnum() == CellType.STRING) {
+			product.setOriginArea(originAreaCell.getStringCellValue());
+		}
+
+		final Cell fisheriesAreaCell = row.getCell(columns.get("fisheriesArea"));
+		if (fisheriesAreaCell.getCellTypeEnum() == CellType.STRING) {
+			product.setFisheriesArea(fisheriesAreaCell.getStringCellValue());
+		}
+
+		final Cell productionDateCell = row.getCell(columns.get("productionDate"));
+		if (productionDateCell.getCellTypeEnum() == CellType.NUMERIC) {
+			final Date date = productionDateCell.getDateCellValue();
+			product.setProductionDate(LocalDate.of(date.getYear() + 1900, date.getMonth(), date.getDate()));
+		}
+
+		final Cell expiryDateCell = row.getCell(columns.get("expiryDate"));
 		if (expiryDateCell.getCellTypeEnum() == CellType.NUMERIC) {
 			final Date date = expiryDateCell.getDateCellValue();
 			product.setExpiryDate(LocalDate.of(date.getYear() + 1900, date.getMonth(), date.getDate()));
@@ -352,6 +420,11 @@ public class ImporterUtils {
 		return group;
 	}
 
+	/**
+	 * @deprecated
+	 * Use {@link ImporterUtils#retrieveReference(Row, Map)} instead.
+	 */
+	@Deprecated
 	public static Reference retrieveReference(Row row) {
 
 		// Check mandatory properties and throw exception if missing
@@ -416,6 +489,95 @@ public class ImporterUtils {
 		}
 
 		final Cell commentCell = row.getCell(SheetImporter.V);
+		if (commentCell.getCellTypeEnum() == CellType.STRING) {
+			reference.setComment(commentCell.getStringCellValue());
+		}
+
+		return reference;
+	}
+
+	/**
+	 * @param row     Spreadsheet row
+	 * @param columns Column numbers for the columns with keys:
+	 *                <ul>
+	 *                <li>referenceDescription
+	 *                <li>type
+	 *                <li>date
+	 *                <li>year
+	 *                <li>pmid
+	 *                <li>doi
+	 *                <li>author
+	 *                <li>title
+	 *                <li>abstract
+	 *                <li>status
+	 *                <li>website
+	 *                <li>comment
+	 *                </ul>
+	 */
+	public static Reference retrieveReference(Row row, Map<String, Integer> columns) {
+
+		// Check mandatory properties and throw exception if missing
+		if (row.getCell(columns.get("referenceDescription")).getCellTypeEnum() != CellType.STRING) {
+			throw new IllegalArgumentException("Missing Is reference description?");
+		}
+		if (row.getCell(columns.get("doi")).getCellTypeEnum() != CellType.STRING) {
+			throw new IllegalArgumentException("Missing DOI");
+		}
+
+		final Reference reference = new Reference();
+		reference.setIsReferenceDescription(row.getCell(columns.get("referenceDescription")).getStringCellValue().equals("Yes"));
+		reference.setDoi(row.getCell(columns.get("doi")).getStringCellValue());
+
+		// publication type
+		final Cell typeCell = row.getCell(columns.get("type"));
+		if (typeCell.getCellTypeEnum() == CellType.STRING) {
+			final PublicationType type = PublicationType.get(typeCell.getStringCellValue());
+			if (type != null) {
+				reference.setPublicationType(SwaggerUtil.PUBLICATION_TYPE.get(type));
+			}
+		}
+
+		final Cell dateCell = row.getCell(columns.get("date"));
+		if (dateCell.getCellTypeEnum() == CellType.NUMERIC) {
+			final Date date = dateCell.getDateCellValue();
+			final LocalDate localDate = LocalDate.of(date.getYear() + 1900, date.getMonth() + 1, date.getDate());
+			reference.setDate(localDate);
+		}
+
+		final Cell pmidCell = row.getCell(columns.get("pmid"));
+		if (pmidCell.getCellTypeEnum() == CellType.STRING) {
+			reference.setPmid(pmidCell.getStringCellValue());
+		}
+
+		final Cell authorListCell = row.getCell(columns.get("author"));
+		if (authorListCell.getCellTypeEnum() == CellType.STRING) {
+			reference.setAuthorList(authorListCell.getStringCellValue());
+		}
+
+		final Cell titleCell = row.getCell(columns.get("title"));
+		if (titleCell.getCellTypeEnum() == CellType.STRING) {
+			reference.setTitle(titleCell.getStringCellValue());
+		}
+
+		final Cell abstractCell = row.getCell(columns.get("abstract"));
+		if (abstractCell.getCellTypeEnum() == CellType.STRING) {
+			reference.setAbstract(abstractCell.getStringCellValue());
+		}
+		// journal
+		// volume
+		// issue
+
+		final Cell statusCell = row.getCell(columns.get("status"));
+		if (statusCell.getCellTypeEnum() == CellType.STRING) {
+			reference.setStatus(statusCell.getStringCellValue());
+		}
+
+		final Cell websiteCell = row.getCell(columns.get("website"));
+		if (websiteCell.getCellTypeEnum() == CellType.STRING) {
+			reference.setWebsite(websiteCell.getStringCellValue());
+		}
+
+		final Cell commentCell = row.getCell(columns.get("comment"));
 		if (commentCell.getCellTypeEnum() == CellType.STRING) {
 			reference.setComment(commentCell.getStringCellValue());
 		}

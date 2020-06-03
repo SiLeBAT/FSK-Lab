@@ -56,25 +56,25 @@ public class ConsumptionModelSheetImporter implements SheetImporter {
 	private int QUALITY_MEASURES__AIC = 113;
 	private int QUALITY_MEASURES__BIC = 114;
 
-	private int SCOPE__GENERAL_COMMENT = 62;
-	private int SCOPE__TEMPORAL_INFORMATION = 63;
+	private int SCOPE__GENERAL_COMMENT = 59;
+	private int SCOPE__TEMPORAL_INFORMATION = 60;
 
-	private int STUDY__STUDY_IDENTIFIER = 66;
-	private int STUDY__STUDY_TITLE = 67;
-	private int STUDY__STUDY_DESCRIPTION = 68;
-	private int STUDY__STUDY_DESIGN_TYPE = 69;
-	private int STUDY__STUDY_ASSAY_MEASUREMENT_TYPE = 70;
-	private int STUDY__STUDY_ASSAY_TECHNOLOGY_TYPE = 71;
-	private int STUDY__STUDY_ASSAY_TECHNOLOGY_PLATFORM = 72;
-	private int STUDY__ACCREDITATION_PROCEDURE_FOR_THE_ASSAY_TECHNOLOGY = 73;
-	private int STUDY__STUDY_PROTOCOL_NAME = 74;
-	private int STUDY__STUDY_PROTOCOL_TYPE = 75;
-	private int STUDY__STUDY_PROTOCOL_DESCRIPTION = 76;
-	private int STUDY__STUDY_PROTOCOL_URI = 77;
-	private int STUDY__STUDY_PROTOCOL_VERSION = 78;
-	private int STUDY__STUDY_PROTOCOL_PARAMETERS_NAME = 79;
-	private int STUDY__STUDY_PROTOCOL_COMPONENTS_NAME = 80;
-	private int STUDY__STUDY_PROTOCOL_COMPONENTS_TYPE = 81;
+	private int STUDY__STUDY_IDENTIFIER = 63;
+	private int STUDY__STUDY_TITLE = 64;
+	private int STUDY__STUDY_DESCRIPTION = 65;
+	private int STUDY__STUDY_DESIGN_TYPE = 66;
+	private int STUDY__STUDY_ASSAY_MEASUREMENT_TYPE = 67;
+	private int STUDY__STUDY_ASSAY_TECHNOLOGY_TYPE = 68;
+	private int STUDY__STUDY_ASSAY_TECHNOLOGY_PLATFORM = 69;
+	private int STUDY__ACCREDITATION_PROCEDURE_FOR_THE_ASSAY_TECHNOLOGY = 70;
+	private int STUDY__STUDY_PROTOCOL_NAME = 71;
+	private int STUDY__STUDY_PROTOCOL_TYPE = 72;
+	private int STUDY__STUDY_PROTOCOL_DESCRIPTION = 73;
+	private int STUDY__STUDY_PROTOCOL_URI = 74;
+	private int STUDY__STUDY_PROTOCOL_VERSION = 75;
+	private int STUDY__STUDY_PROTOCOL_PARAMETERS_NAME = 76;
+	private int STUDY__STUDY_PROTOCOL_COMPONENTS_NAME = 77;
+	private int STUDY__STUDY_PROTOCOL_COMPONENTS_TYPE = 78;
 
 	private int GI_CREATOR_ROW = 3;
 	private int GI_REFERENCE_ROW = 14;
@@ -96,6 +96,15 @@ public class ConsumptionModelSheetImporter implements SheetImporter {
 	/** Columns for each of the properties of Laboratory. */
 	private final HashMap<String, Integer> laboratoryColumns;
 	
+	/** Columns for each of the properties of Creator. */
+	private final HashMap<String, Integer> creatorColumns;
+	
+	/** Columns for each of the properties of Reference. */
+	private final HashMap<String, Integer> referenceColumns;
+	
+	/** Columns for each of the properties of Product. */
+	private final HashMap<String, Integer> productColumns;
+	
 	public ConsumptionModelSheetImporter() {
 		
 		methodColumns = new HashMap<>();
@@ -110,6 +119,45 @@ public class ConsumptionModelSheetImporter implements SheetImporter {
 		laboratoryColumns.put("accreditation", L);
 		laboratoryColumns.put("name", M);
 		laboratoryColumns.put("country", N);
+		
+		creatorColumns = new HashMap<>();
+		creatorColumns.put("mail", S);
+		creatorColumns.put("title", L);
+		creatorColumns.put("familyName", P);
+		creatorColumns.put("givenName", N);
+		creatorColumns.put("telephone", R);
+		creatorColumns.put("streetAddress", X);
+		creatorColumns.put("country", T);
+		creatorColumns.put("city", U);
+		creatorColumns.put("zipCode", V);
+		creatorColumns.put("region", Z);
+		creatorColumns.put("organization", Q);
+		
+		referenceColumns = new HashMap<>();
+		referenceColumns.put("referenceDescription", L);
+		referenceColumns.put("type", M);
+		referenceColumns.put("date", N);
+		referenceColumns.put("pmid", O);
+		referenceColumns.put("doi", P);
+		referenceColumns.put("author", Q);
+		referenceColumns.put("title", R);
+		referenceColumns.put("abstract", S);
+		referenceColumns.put("status", U);
+		referenceColumns.put("website", V);
+		referenceColumns.put("comment", W);
+		
+		productColumns = new HashMap<>();
+		productColumns.put("name", L);
+		productColumns.put("description", M);
+		productColumns.put("unit", N);
+		productColumns.put("productionMethod", O);
+		productColumns.put("packaging", P);
+		productColumns.put("treatment", Q);
+		productColumns.put("originCountry", R);
+		productColumns.put("originArea", S);
+		productColumns.put("fisheriesArea", T);
+		productColumns.put("productionDate", U);
+		productColumns.put("expiryDate", V);
 	}
 
 	private PredictiveModelGeneralInformation retrieveGeneralInformation(Sheet sheet) {
@@ -140,7 +188,8 @@ public class ConsumptionModelSheetImporter implements SheetImporter {
 
 		for (int numRow = GI_CREATOR_ROW; numRow < (GI_CREATOR_ROW + 4); numRow++) {
 			try {
-				Contact contact = ImporterUtils.retrieveCreator(sheet.getRow(numRow));
+				Row row = sheet.getRow(numRow);
+				Contact contact = ImporterUtils.retrieveContact(row, creatorColumns);
 				information.addCreatorItem(contact);
 			} catch (Exception exception) {
 				// Skip faulty contact and continue
@@ -180,7 +229,7 @@ public class ConsumptionModelSheetImporter implements SheetImporter {
 		// reference (1..n)
 		for (int numRow = this.GI_REFERENCE_ROW; numRow < (this.GI_REFERENCE_ROW + 3); numRow++) {
 			try {
-				Reference reference = ImporterUtils.retrieveReference(sheet.getRow(numRow));
+				Reference reference = ImporterUtils.retrieveReference(sheet.getRow(numRow), referenceColumns);
 				information.addReferenceItem(reference);
 			} catch (Exception exception) {
 				// Skip faulty reference and continue
@@ -237,7 +286,7 @@ public class ConsumptionModelSheetImporter implements SheetImporter {
 			Row row = sheet.getRow(numrow);
 
 			try {
-				scope.addProductItem(ImporterUtils.retrieveProduct(row));
+				scope.addProductItem(ImporterUtils.retrieveProduct(row, productColumns));
 			} catch (IllegalArgumentException exception) {
 				// ignore exception since products are optional (*)
 			}
