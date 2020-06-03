@@ -91,11 +91,28 @@ public class DoseResponseSheetImporter implements SheetImporter {
 	/** Columns for each of the properties of Laboratory. */
 	private final HashMap<String, Integer> laboratoryColumns;
 	
+	/** Columns for each of the properties of Reference. */
+	private final HashMap<String, Integer> referenceColumns;
+	
 	public DoseResponseSheetImporter() {
+
 		laboratoryColumns = new HashMap<>();
 		laboratoryColumns.put("accreditation", L);
 		laboratoryColumns.put("name", M);
 		laboratoryColumns.put("country", N);
+		
+		referenceColumns = new HashMap<>();
+		referenceColumns.put("referenceDescription", K);
+		referenceColumns.put("type", L);
+		referenceColumns.put("date", M);
+		referenceColumns.put("pmid", N);
+		referenceColumns.put("doi", O);
+		referenceColumns.put("author", P);
+		referenceColumns.put("title", Q);
+		referenceColumns.put("abstract", R);
+		referenceColumns.put("status", S);
+		referenceColumns.put("website", U);
+		referenceColumns.put("comment", V);
 	}
 
 	private DoseResponseModelGeneralInformation retrieveGeneralInformation(Sheet sheet) {
@@ -164,7 +181,8 @@ public class DoseResponseSheetImporter implements SheetImporter {
 		// reference (1..n)
 		for (int numRow = GI_REFERENCE_ROW; numRow < (GI_REFERENCE_ROW + 3); numRow++) {
 			try {
-				Reference reference = ImporterUtils.retrieveReference(sheet.getRow(numRow));
+				Row row = sheet.getRow(numRow);
+				Reference reference = ImporterUtils.retrieveReference(row, referenceColumns);
 				information.addReferenceItem(reference);
 			} catch (Exception exception) {
 			}
