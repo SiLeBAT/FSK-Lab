@@ -1,7 +1,6 @@
 package metadata.swagger;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.HashMap;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -81,11 +80,8 @@ public class ConsumptionModelSheetImporter implements SheetImporter {
 	private int SCOPE_PRODHAZPOP_ROW = 38;
 	private int BG_STUDY_SAMPLE_ROW = 82;
 	private int BG_DIET_ASSESS_ROW = 88;
-	private int BG_EVENT_ROW = 94;
 	private int BG_LABORATORY_ROW = 95;
 	private int BG_ASSAY_ROW = 101;
-	private int BG_QUALITY_MEAS_ROW = 109;
-	private int BG_Model_EQ_ROW = 109;
 
 	private int MM_PARAMETER_ROW = 119;
 	private int MM_FITTING_PROCEDURE_ROW = 135;
@@ -198,9 +194,7 @@ public class ConsumptionModelSheetImporter implements SheetImporter {
 
 		Cell creationDateCell = sheet.getRow(GENERAL_INFORMATION_CREATION_DATE).getCell(J);
 		if (creationDateCell.getCellTypeEnum() == CellType.NUMERIC) {
-			Date creationDate = creationDateCell.getDateCellValue();
-			LocalDate localDate = LocalDate.of(creationDate.getYear() + 1900, creationDate.getMonth() + 1,
-					creationDate.getDate());
+			LocalDate localDate = ImporterUtils.retrieveDate(creationDateCell);
 			information.setCreationDate(localDate);
 		}
 

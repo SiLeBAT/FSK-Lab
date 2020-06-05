@@ -2,7 +2,6 @@ package metadata.swagger;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -82,11 +81,8 @@ public class ExposureModelSheetImporter implements SheetImporter {
 	private int SCOPE_PRODHAZPOP_ROW = 38;
 	private int BG_STUDY_SAMPLE_ROW = 96;
 	private int BG_DIET_ASSESS_ROW = 102;
-	private int BG_EVENT_ROW = 108;
 	private int BG_LABORATORY_ROW = 109;
 	private int BG_ASSAY_ROW = 115;
-	private int BG_QUALITY_MEAS_ROW = 124;
-	private int BG_Model_EQ_ROW = 124;
 
 	private int MM_PARAMETER_ROW = 133;
 	
@@ -256,9 +252,7 @@ public class ExposureModelSheetImporter implements SheetImporter {
 
 		Cell creationDateCell = sheet.getRow(GENERAL_INFORMATION_CREATION_DATE).getCell(I);
 		if (creationDateCell.getCellTypeEnum() == CellType.NUMERIC) {
-			Date creationDate = creationDateCell.getDateCellValue();
-			LocalDate localDate = LocalDate.of(creationDate.getYear() + 1900, creationDate.getMonth() + 1,
-					creationDate.getDate());
+			LocalDate localDate = ImporterUtils.retrieveDate(creationDateCell);
 			information.setCreationDate(localDate);
 		}
 

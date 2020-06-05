@@ -185,14 +185,12 @@ public class ImporterUtils {
 
 		final Cell productionDateCell = row.getCell(columns.get("productionDate"));
 		if (productionDateCell.getCellTypeEnum() == CellType.NUMERIC) {
-			final Date date = productionDateCell.getDateCellValue();
-			product.setProductionDate(LocalDate.of(date.getYear() + 1900, date.getMonth(), date.getDate()));
+			product.setProductionDate(retrieveDate(productionDateCell));
 		}
 
 		final Cell expiryDateCell = row.getCell(columns.get("expiryDate"));
 		if (expiryDateCell.getCellTypeEnum() == CellType.NUMERIC) {
-			final Date date = expiryDateCell.getDateCellValue();
-			product.setExpiryDate(LocalDate.of(date.getYear() + 1900, date.getMonth(), date.getDate()));
+			product.setExpiryDate(retrieveDate(expiryDateCell));
 		}
 
 		return product;
@@ -381,7 +379,8 @@ public class ImporterUtils {
 		}
 
 		final Reference reference = new Reference();
-		reference.setIsReferenceDescription(row.getCell(columns.get("referenceDescription")).getStringCellValue().equals("Yes"));
+		reference.setIsReferenceDescription(
+				row.getCell(columns.get("referenceDescription")).getStringCellValue().equals("Yes"));
 		reference.setDoi(row.getCell(columns.get("doi")).getStringCellValue());
 
 		// publication type
@@ -395,8 +394,7 @@ public class ImporterUtils {
 
 		final Cell dateCell = row.getCell(columns.get("date"));
 		if (dateCell.getCellTypeEnum() == CellType.NUMERIC) {
-			final Date date = dateCell.getDateCellValue();
-			final LocalDate localDate = LocalDate.of(date.getYear() + 1900, date.getMonth() + 1, date.getDate());
+			final LocalDate localDate = retrieveDate(dateCell);
 			reference.setDate(localDate);
 		}
 
@@ -521,7 +519,8 @@ public class ImporterUtils {
 		final DietaryAssessmentMethod method = new DietaryAssessmentMethod();
 
 		method.setCollectionTool(row.getCell(columns.get("collectionTool")).getStringCellValue());
-		method.setNumberOfNonConsecutiveOneDay(Double.toString(row.getCell(columns.get("numberOfNonConsecutiveOneDay")).getNumericCellValue()));
+		method.setNumberOfNonConsecutiveOneDay(
+				Double.toString(row.getCell(columns.get("numberOfNonConsecutiveOneDay")).getNumericCellValue()));
 
 		final Cell softwareCell = row.getCell(columns.get("softwareTool"));
 		if (softwareCell.getCellTypeEnum() == CellType.STRING) {
@@ -748,5 +747,11 @@ public class ImporterUtils {
 		}
 
 		return param;
+	}
+
+	@SuppressWarnings("deprecation")
+	public static LocalDate retrieveDate(Cell dateCell) {
+		Date date = dateCell.getDateCellValue();
+		return LocalDate.of(date.getYear() + 1900, date.getMonth() + 1, date.getDate());
 	}
 }

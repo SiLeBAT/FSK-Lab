@@ -1,7 +1,6 @@
 package metadata.swagger;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.HashMap;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -184,9 +183,7 @@ public class HealthModelSheetImporter implements SheetImporter {
 
 		Cell creationDateCell = sheet.getRow(GENERAL_INFORMATION_CREATION_DATE).getCell(J);
 		if (creationDateCell.getCellTypeEnum() == CellType.NUMERIC) {
-			Date creationDate = creationDateCell.getDateCellValue();
-			LocalDate localDate = LocalDate.of(creationDate.getYear() + 1900, creationDate.getMonth() + 1,
-					creationDate.getDate());
+			LocalDate localDate = ImporterUtils.retrieveDate(creationDateCell);
 			information.setCreationDate(localDate);
 		}
 
