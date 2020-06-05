@@ -35,23 +35,9 @@ public class DataModelSheetImporter implements SheetImporter {
 	private int GENERAL_INFORMATION__URL = 10;
 	private int GENERAL_INFORMATION__FORMAT = 11;
 	private int GENERAL_INFORMATION__LANGUAGE = 24;
-	private int GENERAL_INFORMATION__SOFTWARE = 25;
-	private int GENERAL_INFORMATION__LANGUAGE_WRITTEN_IN = 26;
 	private int GENERAL_INFORMATION__STATUS = 32;
-	private int GENERAL_INFORMATION__OBJECTIVE = 33;
-	private int GENERAL_INFORMATION__DESCRIPTION = 34;
-
-	private int MODEL_CATEGORY__MODEL_CLASS = 27;
-	private int MODEL_CATEGORY__MODEL_SUB_CLASS = 28;
-	private int MODEL_CATEGORY__CLASS_COMMENT = 29;
-	private int MODEL_CATEGORY__BASIC_PROCESS = 30;
-
-	private int QUALITY_MEASURES__SSE = 104;
-	private int QUALITY_MEASURES__MSE = 105;
-	private int QUALITY_MEASURES__RMSE = 106;
-	private int QUALITY_MEASURES__RSQUARE = 107;
-	private int QUALITY_MEASURES__AIC = 108;
-	private int QUALITY_MEASURES__BIC = 109;
+	private int GENERAL_INFORMATION__OBJECTIVE = 25;
+	private int GENERAL_INFORMATION__DESCRIPTION = 26;
 
 	private int SCOPE__GENERAL_COMMENT = 65;
 	private int SCOPE__TEMPORAL_INFORMATION = 66;
@@ -94,6 +80,12 @@ public class DataModelSheetImporter implements SheetImporter {
 	
 	/** Columns for each of the properties of Product. */
 	private final HashMap<String, Integer> productColumns;
+	
+	/** Columns for each of the properties of Creator. */
+	private final HashMap<String, Integer> creatorColumns;
+	
+	/** Columns for each of the properties of Creator. */
+	private final HashMap<String, Integer> authorColumns;
 
 	public DataModelSheetImporter() {
 
@@ -110,18 +102,48 @@ public class DataModelSheetImporter implements SheetImporter {
 		laboratoryColumns.put("name", M);
 		laboratoryColumns.put("country", N);
 		
+		creatorColumns = new HashMap<>();
+		creatorColumns.put("mail", S);
+		creatorColumns.put("title", L);
+		creatorColumns.put("familyName", P);
+		creatorColumns.put("givenName", N);
+		creatorColumns.put("telephone", R);
+		creatorColumns.put("streetAddress", X);
+		creatorColumns.put("country", T);
+		creatorColumns.put("city", U);
+		creatorColumns.put("zipCode", V);
+		creatorColumns.put("region", Z);
+		creatorColumns.put("organization", Q);
+		
+		authorColumns = new HashMap<>();
+		authorColumns.put("title", AB);
+		authorColumns.put("name", AC);
+		authorColumns.put("givenName", AD);
+		authorColumns.put("additionalName", AE);
+		authorColumns.put("familyName", AF);
+		authorColumns.put("organization", AG);
+		authorColumns.put("telephone", AH);
+		authorColumns.put("mail", AI);
+		authorColumns.put("country", AJ);
+		authorColumns.put("city", AK);
+		authorColumns.put("zipCode", AL);
+		authorColumns.put("postOfficeBox", AM);
+		authorColumns.put("streetAddress", AN);
+		authorColumns.put("extendedAddress", AO);
+		authorColumns.put("region", AP);
+		
 		referenceColumns = new HashMap<>();
-		referenceColumns.put("referenceDescription", K);
-		referenceColumns.put("type", L);
-		referenceColumns.put("date", M);
-		referenceColumns.put("pmid", N);
-		referenceColumns.put("doi", O);
-		referenceColumns.put("author", P);
-		referenceColumns.put("title", Q);
-		referenceColumns.put("abstract", R);
-		referenceColumns.put("status", S);
-		referenceColumns.put("website", U);
-		referenceColumns.put("comment", V);
+		referenceColumns.put("referenceDescription", L);
+		referenceColumns.put("type", M);
+		referenceColumns.put("date", N);
+		referenceColumns.put("pmid", O);
+		referenceColumns.put("doi", P);
+		referenceColumns.put("author", Q);
+		referenceColumns.put("title", R);
+		referenceColumns.put("abstract", S);
+		referenceColumns.put("status", U);
+		referenceColumns.put("website", V);
+		referenceColumns.put("comment", W);
 		
 		productColumns = new HashMap<>();
 		productColumns.put("name", L);
@@ -156,16 +178,18 @@ public class DataModelSheetImporter implements SheetImporter {
 			information.setIdentifier(identifierCell.getStringCellValue());
 		}
 
-		try {
-			Contact author = ImporterUtils.retrieveAuthor(sheet.getRow(GI_CREATOR_ROW));
-			information.addAuthorItem(author);
-		} catch (Exception exception) {
-		}
-
 		for (int numRow = GI_CREATOR_ROW; numRow < (GI_CREATOR_ROW + 5); numRow++) {
+			Row row = sheet.getRow(numRow);
+			
 			try {
-				Contact contact = ImporterUtils.retrieveCreator(sheet.getRow(numRow));
+				Contact contact = ImporterUtils.retrieveContact(row, creatorColumns);
 				information.addCreatorItem(contact);
+			} catch (Exception exception) {
+			}
+			
+			try {
+				Contact author = ImporterUtils.retrieveContact(row, authorColumns);
+				information.addAuthorItem(author);
 			} catch (Exception exception) {
 			}
 		}
