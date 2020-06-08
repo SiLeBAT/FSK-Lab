@@ -98,6 +98,9 @@ public class ExposureModelSheetImporter implements SheetImporter {
 	/** Columns for each of the properties of Product. */
 	private final HashMap<String, Integer> productColumns;
 	
+	/** Columns for each of the properties of Parameter. */
+	private final HashMap<String, Integer> parameterColumns;
+	
 	public ExposureModelSheetImporter() {
 
 		methodColumns = new HashMap<>();
@@ -138,6 +141,24 @@ public class ExposureModelSheetImporter implements SheetImporter {
 		productColumns.put("fisheriesArea", S);
 		productColumns.put("productionDate", T);
 		productColumns.put("expiryDate", U);
+		
+		parameterColumns = new HashMap<>();
+		parameterColumns.put("id", K);
+		parameterColumns.put("classification", L);
+		parameterColumns.put("name", M);
+		parameterColumns.put("description", N);
+		parameterColumns.put("unit", O);
+		parameterColumns.put("unitCategory", P);
+		parameterColumns.put("dataType", Q);
+		parameterColumns.put("source", R);
+		parameterColumns.put("subject", S);
+		parameterColumns.put("distribution", T);
+		parameterColumns.put("value", U);
+		parameterColumns.put("reference", V);
+		parameterColumns.put("variability", W);
+		parameterColumns.put("max", X);
+		parameterColumns.put("min", Y);
+		parameterColumns.put("error", Z);
 	}
 
 	private GenericModelDataBackground retrieveBackground(Sheet sheet) {
@@ -198,7 +219,7 @@ public class ExposureModelSheetImporter implements SheetImporter {
 		for (int rownum = MM_PARAMETER_ROW; rownum < sheet.getLastRowNum(); rownum++) {
 			try {
 				Row row = sheet.getRow(rownum);
-				Parameter param = ImporterUtils.retrieveParameter(row);
+				Parameter param = ImporterUtils.retrieveParameter(row, parameterColumns);
 				math.addParameterItem(param);
 			} catch (Exception exception) {
 				// ...

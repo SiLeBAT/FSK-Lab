@@ -85,6 +85,9 @@ public class DataModelSheetImporter implements SheetImporter {
 	
 	/** Columns for each of the properties of Creator. */
 	private final HashMap<String, Integer> authorColumns;
+	
+	/** Columns for each of the properties of Parameter. */
+	private final HashMap<String, Integer> parameterColumns;
 
 	public DataModelSheetImporter() {
 
@@ -156,6 +159,24 @@ public class DataModelSheetImporter implements SheetImporter {
 		productColumns.put("fisheriesArea", T);
 		productColumns.put("productionDate", U);
 		productColumns.put("expiryDate", V);
+		
+		parameterColumns = new HashMap<>();
+		parameterColumns.put("id", L);
+		parameterColumns.put("classification", M);
+		parameterColumns.put("name", N);
+		parameterColumns.put("description", O);
+		parameterColumns.put("unit", P);
+		parameterColumns.put("unitCategory", Q);
+		parameterColumns.put("dataType", R);
+		parameterColumns.put("source", S);
+		parameterColumns.put("subject", T);
+		parameterColumns.put("distribution", U);
+		parameterColumns.put("value", V);
+		parameterColumns.put("reference", W);
+		parameterColumns.put("variability", X);
+		parameterColumns.put("max", Y);
+		parameterColumns.put("min", Z);
+		parameterColumns.put("error", AA);
 	}
 
 	private DataModelGeneralInformation retrieveGeneralInformation(Sheet sheet) {
@@ -359,7 +380,7 @@ public class DataModelSheetImporter implements SheetImporter {
 		for (int rownum = MM_PARAMETER_ROW; rownum < sheet.getLastRowNum(); rownum++) {
 			try {
 				Row row = sheet.getRow(rownum);
-				Parameter param = ImporterUtils.retrieveParameter(row);
+				Parameter param = ImporterUtils.retrieveParameter(row, parameterColumns);
 				math.addParameterItem(param);
 			} catch (Exception exception) {
 				// ...

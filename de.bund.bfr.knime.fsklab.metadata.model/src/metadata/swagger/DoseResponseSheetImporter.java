@@ -90,6 +90,9 @@ public class DoseResponseSheetImporter implements SheetImporter {
 	/** Columns for each of the properties of Reference. */
 	private final HashMap<String, Integer> referenceColumns;
 	
+	/** Columns for each of the properties of Parameter. */
+	private final HashMap<String, Integer> parameterColumns;
+	
 	public DoseResponseSheetImporter() {
 
 		laboratoryColumns = new HashMap<>();
@@ -109,6 +112,24 @@ public class DoseResponseSheetImporter implements SheetImporter {
 		referenceColumns.put("status", S);
 		referenceColumns.put("website", U);
 		referenceColumns.put("comment", V);
+		
+		parameterColumns = new HashMap<>();
+		parameterColumns.put("id", K);
+		parameterColumns.put("classification", L);
+		parameterColumns.put("name", M);
+		parameterColumns.put("description", N);
+		parameterColumns.put("unit", O);
+		parameterColumns.put("unitCategory", P);
+		parameterColumns.put("dataType", Q);
+		parameterColumns.put("source", R);
+		parameterColumns.put("subject", S);
+		parameterColumns.put("distribution", T);
+		parameterColumns.put("value", U);
+		parameterColumns.put("reference", V);
+		parameterColumns.put("variability", W);
+		parameterColumns.put("max", X);
+		parameterColumns.put("min", Y);
+		parameterColumns.put("error", Z);
 	}
 
 	private DoseResponseModelGeneralInformation retrieveGeneralInformation(Sheet sheet) {
@@ -303,7 +324,7 @@ public class DoseResponseSheetImporter implements SheetImporter {
 		for (int rownum = MM_PARAMETER_ROW; rownum < sheet.getLastRowNum(); rownum++) {
 			try {
 				Row row = sheet.getRow(rownum);
-				Parameter param = ImporterUtils.retrieveParameter(row);
+				Parameter param = ImporterUtils.retrieveParameter(row, parameterColumns);
 				math.addParameterItem(param);
 			} catch (Exception exception) {
 				// ...

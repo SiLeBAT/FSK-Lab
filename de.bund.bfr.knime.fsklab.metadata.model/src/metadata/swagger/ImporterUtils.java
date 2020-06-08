@@ -631,128 +631,6 @@ public class ImporterUtils {
 	}
 
 	/**
-	 * @deprecated Use {@link ImporterUtils#retrieveParameter(Row, Map)} instead.
-	 */
-	public static Parameter retrieveParameter(Row row) {
-
-		// Check first mandatory properties
-		if (row.getCell(SheetImporter.L).getCellTypeEnum() == CellType.BLANK) {
-			throw new IllegalArgumentException("Missing parameter id");
-		}
-
-		if (row.getCell(SheetImporter.M).getCellTypeEnum() == CellType.BLANK) {
-			throw new IllegalArgumentException("Missing parameter classification");
-		}
-
-		if (row.getCell(SheetImporter.N).getCellTypeEnum() == CellType.BLANK) {
-			throw new IllegalArgumentException("Missing parameter name");
-		}
-
-		if (row.getCell(SheetImporter.P).getCellTypeEnum() == CellType.BLANK) {
-			throw new IllegalArgumentException("Missing parameter unit");
-		}
-
-		if (row.getCell(SheetImporter.R).getCellTypeEnum() == CellType.BLANK) {
-			throw new IllegalArgumentException("Missing data type");
-		}
-
-		final Parameter param = new Parameter();
-		param.setId(row.getCell(SheetImporter.L).getStringCellValue());
-
-		final ParameterClassification pc = ParameterClassification
-				.get(row.getCell(SheetImporter.M).getStringCellValue());
-		if (pc != null) {
-			param.setClassification(SwaggerUtil.CLASSIF.get(pc));
-		}
-
-		param.setName(row.getCell(SheetImporter.N).getStringCellValue());
-
-		final Cell descriptionCell = row.getCell(SheetImporter.O);
-		if (descriptionCell.getCellTypeEnum() != CellType.BLANK) {
-			param.setDescription(descriptionCell.getStringCellValue());
-		}
-
-		param.setUnit(row.getCell(SheetImporter.P).getStringCellValue());
-
-		final Cell unitCategoryCell = row.getCell(SheetImporter.Q);
-		if (unitCategoryCell.getCellTypeEnum() != CellType.BLANK) {
-			param.setUnitCategory(unitCategoryCell.getStringCellValue());
-		}
-
-		final ParameterType parameterType = ParameterType.get(row.getCell(SheetImporter.R).getStringCellValue());
-		if (parameterType != null) {
-			param.setDataType(SwaggerUtil.TYPES.get(parameterType));
-		}
-
-		final Cell sourceCell = row.getCell(SheetImporter.S);
-		if (sourceCell.getCellTypeEnum() != CellType.BLANK) {
-			param.setSource(sourceCell.getStringCellValue());
-		}
-
-		final Cell subjectCell = row.getCell(SheetImporter.T);
-		if (subjectCell.getCellTypeEnum() != CellType.BLANK) {
-			param.setSubject(subjectCell.getStringCellValue());
-		}
-
-		final Cell distributionCell = row.getCell(SheetImporter.U);
-		if (distributionCell.getCellTypeEnum() != CellType.BLANK) {
-			param.setDistribution(distributionCell.getStringCellValue());
-		}
-
-		final Cell valueCell = row.getCell(SheetImporter.V);
-		if (valueCell.getCellTypeEnum() != CellType.BLANK) {
-
-			if (valueCell.getCellTypeEnum() == CellType.NUMERIC) {
-				final Double doubleValue = valueCell.getNumericCellValue();
-				if (parameterType == ParameterType.INTEGER) {
-					param.setValue(Integer.toString(doubleValue.intValue()));
-				} else if (parameterType == ParameterType.DOUBLE || parameterType == ParameterType.NUMBER) {
-					param.setValue(Double.toString(doubleValue));
-				}
-			} else {
-				param.setValue(valueCell.getStringCellValue());
-			}
-		}
-
-		// TODO: reference
-
-		final Cell variabilitySubjectCell = row.getCell(SheetImporter.X);
-		if (variabilitySubjectCell.getCellTypeEnum() != CellType.BLANK) {
-			param.setVariabilitySubject(variabilitySubjectCell.getStringCellValue());
-		}
-
-		final Cell maxCell = row.getCell(SheetImporter.Y);
-		if (maxCell.getCellTypeEnum() != CellType.BLANK) {
-			if (maxCell.getCellTypeEnum() != CellType.STRING) {
-				param.setMaxValue(String.valueOf(maxCell.getNumericCellValue()));
-			} else {
-				param.setMaxValue(maxCell.getStringCellValue());
-			}
-
-		}
-
-		final Cell minCell = row.getCell(SheetImporter.Z);
-		if (minCell.getCellTypeEnum() != CellType.BLANK) {
-			if (minCell.getCellTypeEnum() != CellType.STRING) {
-				param.setMinValue(String.valueOf(minCell.getNumericCellValue()));
-			} else {
-				param.setMinValue(minCell.getStringCellValue());
-			}
-		}
-
-		final Cell errorCell = row.getCell(SheetImporter.AA);
-		if (errorCell.getCellTypeEnum() != CellType.BLANK) {
-			if (errorCell.getCellTypeEnum() != CellType.STRING) {
-				param.setError(String.valueOf(errorCell.getNumericCellValue()));
-			} else {
-				param.setError(errorCell.getStringCellValue());
-			}
-		}
-
-		return param;
-	}
-
-	/**
 	 * @param row     Spreadsheet row
 	 * @param columns Column numbers for the columns with keys:
 	 *                <ul>
@@ -777,27 +655,27 @@ public class ImporterUtils {
 
 		// Check first mandatory properties
 		final Cell idCell = row.getCell(columns.get("id"));
-		if (idCell.getCellTypeEnum() == CellType.BLANK) {
+		if (idCell == null || idCell.getCellTypeEnum() == CellType.BLANK) {
 			throw new IllegalArgumentException("Missing parameter id");
 		}
 
 		final Cell classificationCell = row.getCell(columns.get("classification"));
-		if (classificationCell.getCellTypeEnum() == CellType.BLANK) {
+		if (classificationCell == null || classificationCell.getCellTypeEnum() == CellType.BLANK) {
 			throw new IllegalArgumentException("Missing parameter classification");
 		}
 
 		final Cell nameCell = row.getCell(columns.get("name"));
-		if (nameCell.getCellTypeEnum() == CellType.BLANK) {
+		if (nameCell == null || nameCell.getCellTypeEnum() == CellType.BLANK) {
 			throw new IllegalArgumentException("Missing parameter name");
 		}
 
 		final Cell unitCell = row.getCell(columns.get("unit"));
-		if (unitCell.getCellTypeEnum() == CellType.BLANK) {
+		if (unitCell == null || unitCell.getCellTypeEnum() == CellType.BLANK) {
 			throw new IllegalArgumentException("Missing parameter unit");
 		}
 
 		final Cell dataTypeCell = row.getCell(columns.get("dataType"));
-		if (dataTypeCell.getCellTypeEnum() == CellType.BLANK) {
+		if (dataTypeCell == null || dataTypeCell.getCellTypeEnum() == CellType.BLANK) {
 			throw new IllegalArgumentException("Missing data type");
 		}
 
@@ -812,12 +690,12 @@ public class ImporterUtils {
 		}
 
 		final Cell descriptionCell = row.getCell(columns.get("description"));
-		if (descriptionCell.getCellTypeEnum() != CellType.BLANK) {
+		if (descriptionCell != null && descriptionCell.getCellTypeEnum() != CellType.BLANK) {
 			param.setDescription(descriptionCell.getStringCellValue());
 		}
 
 		final Cell unitCategoryCell = row.getCell(columns.get("unitCategory"));
-		if (unitCategoryCell.getCellTypeEnum() != CellType.BLANK) {
+		if (unitCategoryCell != null && unitCategoryCell.getCellTypeEnum() != CellType.BLANK) {
 			param.setUnitCategory(unitCategoryCell.getStringCellValue());
 		}
 
@@ -827,22 +705,22 @@ public class ImporterUtils {
 		}
 
 		final Cell sourceCell = row.getCell(columns.get("source"));
-		if (sourceCell.getCellTypeEnum() != CellType.BLANK) {
+		if (sourceCell != null && sourceCell.getCellTypeEnum() != CellType.BLANK) {
 			param.setSource(sourceCell.getStringCellValue());
 		}
 
 		final Cell subjectCell = row.getCell(columns.get("subject"));
-		if (subjectCell.getCellTypeEnum() != CellType.BLANK) {
+		if (subjectCell != null && subjectCell.getCellTypeEnum() != CellType.BLANK) {
 			param.setSubject(subjectCell.getStringCellValue());
 		}
 
 		final Cell distributionCell = row.getCell(columns.get("distribution"));
-		if (distributionCell.getCellTypeEnum() != CellType.BLANK) {
+		if (distributionCell != null && distributionCell.getCellTypeEnum() != CellType.BLANK) {
 			param.setDistribution(distributionCell.getStringCellValue());
 		}
 
 		final Cell valueCell = row.getCell(columns.get("value"));
-		if (valueCell.getCellTypeEnum() != CellType.BLANK) {
+		if (valueCell != null && valueCell.getCellTypeEnum() != CellType.BLANK) {
 
 			if (valueCell.getCellTypeEnum() == CellType.NUMERIC) {
 				final Double doubleValue = valueCell.getNumericCellValue();
@@ -859,12 +737,12 @@ public class ImporterUtils {
 		// TODO: reference
 
 		final Cell variabilitySubjectCell = row.getCell(columns.get("variability"));
-		if (variabilitySubjectCell.getCellTypeEnum() != CellType.BLANK) {
+		if (variabilitySubjectCell != null && variabilitySubjectCell.getCellTypeEnum() != CellType.BLANK) {
 			param.setVariabilitySubject(variabilitySubjectCell.getStringCellValue());
 		}
 
 		final Cell maxCell = row.getCell(columns.get("max"));
-		if (maxCell.getCellTypeEnum() != CellType.BLANK) {
+		if (maxCell != null && maxCell.getCellTypeEnum() != CellType.BLANK) {
 			if (maxCell.getCellTypeEnum() != CellType.STRING) {
 				param.setMaxValue(String.valueOf(maxCell.getNumericCellValue()));
 			} else {
@@ -874,7 +752,7 @@ public class ImporterUtils {
 		}
 
 		final Cell minCell = row.getCell(columns.get("min"));
-		if (minCell.getCellTypeEnum() != CellType.BLANK) {
+		if (minCell != null && minCell.getCellTypeEnum() != CellType.BLANK) {
 			if (minCell.getCellTypeEnum() != CellType.STRING) {
 				param.setMinValue(String.valueOf(minCell.getNumericCellValue()));
 			} else {
@@ -883,7 +761,7 @@ public class ImporterUtils {
 		}
 
 		final Cell errorCell = row.getCell(columns.get("error"));
-		if (errorCell.getCellTypeEnum() != CellType.BLANK) {
+		if (errorCell != null && errorCell.getCellTypeEnum() != CellType.BLANK) {
 			if (errorCell.getCellTypeEnum() != CellType.STRING) {
 				param.setError(String.valueOf(errorCell.getNumericCellValue()));
 			} else {

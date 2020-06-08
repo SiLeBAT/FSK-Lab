@@ -97,6 +97,9 @@ public class GenericModelSheetImporter implements SheetImporter {
 	/** Columns for each of the properties of Product. */
 	private final HashMap<String, Integer> productColumns;
 	
+	/** Columns for each of the properties of Parameter. */
+	private final HashMap<String, Integer> parameterColumns;
+	
 	public GenericModelSheetImporter() {
 		
 		methodColumns = new HashMap<>();
@@ -137,6 +140,24 @@ public class GenericModelSheetImporter implements SheetImporter {
 		productColumns.put("fisheriesArea", S);
 		productColumns.put("productionDate", T);
 		productColumns.put("expiryDate", U);
+		
+		parameterColumns = new HashMap<>();
+		parameterColumns.put("id", L);
+		parameterColumns.put("classification", M);
+		parameterColumns.put("name", N);
+		parameterColumns.put("description", O);
+		parameterColumns.put("unit", P);
+		parameterColumns.put("unitCategory", Q);
+		parameterColumns.put("dataType", R);
+		parameterColumns.put("source", S);
+		parameterColumns.put("subject", T);
+		parameterColumns.put("distribution", U);
+		parameterColumns.put("value", V);
+		parameterColumns.put("reference", W);
+		parameterColumns.put("variability", X);
+		parameterColumns.put("max", Y);
+		parameterColumns.put("min", Z);
+		parameterColumns.put("error", AA);
 	}
 
 	private GenericModelGeneralInformation retrieveGeneralInformation(Sheet sheet) {
@@ -261,9 +282,9 @@ public class GenericModelSheetImporter implements SheetImporter {
 		for (int rownum = MM_PARAMETER_ROW; rownum < sheet.getLastRowNum(); rownum++) {
 			try {
 				final Row row = sheet.getRow(rownum);
-				final Parameter param = ImporterUtils.retrieveParameter(row);
+				final Parameter param = ImporterUtils.retrieveParameter(row, parameterColumns);
 				math.addParameterItem(param);
-			} catch (final Exception exception) {
+			} catch (final IllegalArgumentException exception) {
 				// ...
 			}
 		}

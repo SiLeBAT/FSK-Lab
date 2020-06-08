@@ -105,6 +105,9 @@ public class RiskModelSheetImporter implements SheetImporter {
 	
 	/** Columns for each of the properties of Laboratory. */
 	private final HashMap<String, Integer> laboratoryColumns;
+	
+	/** Columns for each of the properties of Parameter. */
+	private final HashMap<String, Integer> parameterColumns;
 
 	public RiskModelSheetImporter() {
 
@@ -172,6 +175,24 @@ public class RiskModelSheetImporter implements SheetImporter {
 		laboratoryColumns.put("accreditation", L);
 		laboratoryColumns.put("name", M);
 		laboratoryColumns.put("country", N);
+		
+		parameterColumns = new HashMap<>();
+		parameterColumns.put("id", L);
+		parameterColumns.put("classification", M);
+		parameterColumns.put("name", N);
+		parameterColumns.put("description", O);
+		parameterColumns.put("unit", P);
+		parameterColumns.put("unitCategory", Q);
+		parameterColumns.put("dataType", R);
+		parameterColumns.put("source", S);
+		parameterColumns.put("subject", T);
+		parameterColumns.put("distribution", U);
+		parameterColumns.put("value", V);
+		parameterColumns.put("reference", W);
+		parameterColumns.put("variability", X);
+		parameterColumns.put("max", Y);
+		parameterColumns.put("min", Z);
+		parameterColumns.put("error", AA);
 	}
 
 	private GenericModelDataBackground retrieveBackground(Sheet sheet) {
@@ -230,7 +251,7 @@ public class RiskModelSheetImporter implements SheetImporter {
 		for (int rownum = MM_PARAMETER_ROW; rownum < sheet.getLastRowNum(); rownum++) {
 			try {
 				final Row row = sheet.getRow(rownum);
-				final Parameter param = ImporterUtils.retrieveParameter(row);
+				final Parameter param = ImporterUtils.retrieveParameter(row, parameterColumns);
 				math.addParameterItem(param);
 			} catch (final Exception exception) {
 				// ...
