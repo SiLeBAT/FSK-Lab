@@ -78,6 +78,22 @@ public class ImporterUtils {
 		return retrieveContact(row, columns);
 	}
 
+	/**
+	 * @param row     Spreadsheet row
+	 * @param columns Column numbers for the columns with keys:
+	 *                <ul>
+	 *                <li>mail
+	 *                <li>title
+	 *                <li>familyName
+	 *                <li>givenName
+	 *                <li>telephone
+	 *                <li>streetAddress
+	 *                <li>country
+	 *                <li>zipCode
+	 *                <li>region
+	 *                <li>organization
+	 *                </ul>
+	 */
 	public static Contact retrieveContact(Row row, Map<String, Integer> columns) {
 
 		// Check mandatory properties and throw exception if missing
