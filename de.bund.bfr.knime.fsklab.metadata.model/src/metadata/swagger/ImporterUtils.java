@@ -630,6 +630,9 @@ public class ImporterUtils {
 		return assay;
 	}
 
+	/**
+	 * @deprecated Use {@link ImporterUtils#retrieveParameter(Row, Map)} instead.
+	 */
 	public static Parameter retrieveParameter(Row row) {
 
 		// Check first mandatory properties
@@ -738,6 +741,148 @@ public class ImporterUtils {
 		}
 
 		final Cell errorCell = row.getCell(SheetImporter.AA);
+		if (errorCell.getCellTypeEnum() != CellType.BLANK) {
+			if (errorCell.getCellTypeEnum() != CellType.STRING) {
+				param.setError(String.valueOf(errorCell.getNumericCellValue()));
+			} else {
+				param.setError(errorCell.getStringCellValue());
+			}
+		}
+
+		return param;
+	}
+
+	/**
+	 * @param row     Spreadsheet row
+	 * @param columns Column numbers for the columns with keys:
+	 *                <ul>
+	 *                <li>id
+	 *                <li>classification
+	 *                <li>name
+	 *                <li>description
+	 *                <li>unit
+	 *                <li>unitCategory
+	 *                <li>dataType
+	 *                <li>source
+	 *                <li>subject
+	 *                <li>distribution
+	 *                <li>reference
+	 *                <li>variability
+	 *                <li>max
+	 *                <li>min
+	 *                <li>error
+	 *                </ul>
+	 */
+	public static Parameter retrieveParameter(Row row, Map<String, Integer> columns) {
+
+		// Check first mandatory properties
+		final Cell idCell = row.getCell(columns.get("id"));
+		if (idCell.getCellTypeEnum() == CellType.BLANK) {
+			throw new IllegalArgumentException("Missing parameter id");
+		}
+
+		final Cell classificationCell = row.getCell(columns.get("classification"));
+		if (classificationCell.getCellTypeEnum() == CellType.BLANK) {
+			throw new IllegalArgumentException("Missing parameter classification");
+		}
+
+		final Cell nameCell = row.getCell(columns.get("name"));
+		if (nameCell.getCellTypeEnum() == CellType.BLANK) {
+			throw new IllegalArgumentException("Missing parameter name");
+		}
+
+		final Cell unitCell = row.getCell(columns.get("unit"));
+		if (unitCell.getCellTypeEnum() == CellType.BLANK) {
+			throw new IllegalArgumentException("Missing parameter unit");
+		}
+
+		final Cell dataTypeCell = row.getCell(columns.get("dataType"));
+		if (dataTypeCell.getCellTypeEnum() == CellType.BLANK) {
+			throw new IllegalArgumentException("Missing data type");
+		}
+
+		final Parameter param = new Parameter();
+		param.setId(idCell.getStringCellValue());
+		param.setName(nameCell.getStringCellValue());
+		param.setUnit(unitCell.getStringCellValue());
+
+		final ParameterClassification pc = ParameterClassification.get(classificationCell.getStringCellValue());
+		if (pc != null) {
+			param.setClassification(SwaggerUtil.CLASSIF.get(pc));
+		}
+
+		final Cell descriptionCell = row.getCell(columns.get("description"));
+		if (descriptionCell.getCellTypeEnum() != CellType.BLANK) {
+			param.setDescription(descriptionCell.getStringCellValue());
+		}
+
+		final Cell unitCategoryCell = row.getCell(columns.get("unitCategory"));
+		if (unitCategoryCell.getCellTypeEnum() != CellType.BLANK) {
+			param.setUnitCategory(unitCategoryCell.getStringCellValue());
+		}
+
+		final ParameterType parameterType = ParameterType.get(dataTypeCell.getStringCellValue());
+		if (parameterType != null) {
+			param.setDataType(SwaggerUtil.TYPES.get(parameterType));
+		}
+
+		final Cell sourceCell = row.getCell(columns.get("source"));
+		if (sourceCell.getCellTypeEnum() != CellType.BLANK) {
+			param.setSource(sourceCell.getStringCellValue());
+		}
+
+		final Cell subjectCell = row.getCell(columns.get("subject"));
+		if (subjectCell.getCellTypeEnum() != CellType.BLANK) {
+			param.setSubject(subjectCell.getStringCellValue());
+		}
+
+		final Cell distributionCell = row.getCell(columns.get("distribution"));
+		if (distributionCell.getCellTypeEnum() != CellType.BLANK) {
+			param.setDistribution(distributionCell.getStringCellValue());
+		}
+
+		final Cell valueCell = row.getCell(columns.get("value"));
+		if (valueCell.getCellTypeEnum() != CellType.BLANK) {
+
+			if (valueCell.getCellTypeEnum() == CellType.NUMERIC) {
+				final Double doubleValue = valueCell.getNumericCellValue();
+				if (parameterType == ParameterType.INTEGER) {
+					param.setValue(Integer.toString(doubleValue.intValue()));
+				} else if (parameterType == ParameterType.DOUBLE || parameterType == ParameterType.NUMBER) {
+					param.setValue(Double.toString(doubleValue));
+				}
+			} else {
+				param.setValue(valueCell.getStringCellValue());
+			}
+		}
+
+		// TODO: reference
+
+		final Cell variabilitySubjectCell = row.getCell(columns.get("variability"));
+		if (variabilitySubjectCell.getCellTypeEnum() != CellType.BLANK) {
+			param.setVariabilitySubject(variabilitySubjectCell.getStringCellValue());
+		}
+
+		final Cell maxCell = row.getCell(columns.get("max"));
+		if (maxCell.getCellTypeEnum() != CellType.BLANK) {
+			if (maxCell.getCellTypeEnum() != CellType.STRING) {
+				param.setMaxValue(String.valueOf(maxCell.getNumericCellValue()));
+			} else {
+				param.setMaxValue(maxCell.getStringCellValue());
+			}
+
+		}
+
+		final Cell minCell = row.getCell(columns.get("min"));
+		if (minCell.getCellTypeEnum() != CellType.BLANK) {
+			if (minCell.getCellTypeEnum() != CellType.STRING) {
+				param.setMinValue(String.valueOf(minCell.getNumericCellValue()));
+			} else {
+				param.setMinValue(minCell.getStringCellValue());
+			}
+		}
+
+		final Cell errorCell = row.getCell(columns.get("error"));
 		if (errorCell.getCellTypeEnum() != CellType.BLANK) {
 			if (errorCell.getCellTypeEnum() != CellType.STRING) {
 				param.setError(String.valueOf(errorCell.getNumericCellValue()));
