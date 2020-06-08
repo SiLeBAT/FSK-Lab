@@ -31,6 +31,9 @@ public class ImporterUtils {
 	private ImporterUtils() {
 	}
 
+	/**
+	 * @deprecated Use {@link ImporterUtils#retrieveContact(Row, Map)} instead.
+	 */
 	public static Contact retrieveCreator(Row row) {
 		@SuppressWarnings("serial")
 		final HashMap<String, Integer> columns = new HashMap<String, Integer>() {
@@ -51,6 +54,9 @@ public class ImporterUtils {
 		return retrieveContact(row, columns);
 	}
 
+	/**
+	 * @deprecated Use {@link ImporterUtils#retrieveContact(Row, Map)} instead.
+	 */
 	public static Contact retrieveAuthor(Row row) {
 
 		@SuppressWarnings("serial")
