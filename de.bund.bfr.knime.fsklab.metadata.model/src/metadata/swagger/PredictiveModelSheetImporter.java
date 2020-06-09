@@ -2,7 +2,6 @@ package metadata.swagger;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -164,7 +163,7 @@ public class PredictiveModelSheetImporter implements SheetImporter {
 			information.setIdentifier(identifierCell.getStringCellValue());
 		}
 
-		for (int numRow = GI_CREATOR_ROW; numRow < (GI_CREATOR_ROW + 4); numRow++) {
+		for (int numRow = GI_CREATOR_ROW; numRow < GI_CREATOR_ROW + 6; numRow++) {
 			Row row = sheet.getRow(numRow);
 			try {
 				Contact contact = ImporterUtils.retrieveContact(row, creatorColumns);
@@ -410,14 +409,14 @@ public class PredictiveModelSheetImporter implements SheetImporter {
 
 		Cell productionDateCell = row.getCell(U);
 		if (productionDateCell.getCellTypeEnum() == CellType.NUMERIC) {
-			Date date = productionDateCell.getDateCellValue();
-			product.setProductionDate(LocalDate.of(date.getYear() + 1900, date.getMonth(), date.getDate()));
+			LocalDate date = ImporterUtils.retrieveDate(productionDateCell);
+			product.setProductionDate(date);
 		}
 
 		Cell expiryDateCell = row.getCell(V);
 		if (expiryDateCell.getCellTypeEnum() == CellType.NUMERIC) {
-			Date date = expiryDateCell.getDateCellValue();
-			product.setExpiryDate(LocalDate.of(date.getYear() + 1900, date.getMonth(), date.getDate()));
+			LocalDate date = ImporterUtils.retrieveDate(expiryDateCell);
+			product.setExpiryDate(date);
 		}
 
 		return product;

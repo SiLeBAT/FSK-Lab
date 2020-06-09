@@ -186,7 +186,7 @@ public class OtherModelSheetImporter implements SheetImporter {
 			information.setIdentifier(identifierCell.getStringCellValue());
 		}
 
-		for (int numRow = GI_CREATOR_ROW; numRow < (GI_CREATOR_ROW + 4); numRow++) {
+		for (int numRow = GI_CREATOR_ROW; numRow < GI_CREATOR_ROW + 6; numRow++) {
 
 			Row row = sheet.getRow(numRow);
 

@@ -84,6 +84,12 @@ public class DoseResponseSheetImporter implements SheetImporter {
 
 	private int MM_PARAMETER_ROW = 116;
 	
+	/** Columns for each of the properties of Creator. */
+	private final HashMap<String, Integer> creatorColumns;
+
+	/** Columns for each of the properties of Author. */
+	private final HashMap<String, Integer> authorColumns;
+	
 	/** Columns for each of the properties of Laboratory. */
 	private final HashMap<String, Integer> laboratoryColumns;
 	
@@ -130,6 +136,32 @@ public class DoseResponseSheetImporter implements SheetImporter {
 		parameterColumns.put("max", X);
 		parameterColumns.put("min", Y);
 		parameterColumns.put("error", Z);
+		
+		creatorColumns = new HashMap<>();
+		creatorColumns.put("mail", R);
+		creatorColumns.put("title", K);
+		creatorColumns.put("familyName", O);
+		creatorColumns.put("givenName", M);
+		creatorColumns.put("telephone", Q);
+		creatorColumns.put("streetAddress", W);
+		creatorColumns.put("country", S);
+		creatorColumns.put("city", T);
+		creatorColumns.put("zipCode", U);
+		creatorColumns.put("region", Y);
+		creatorColumns.put("organization", P);
+
+		authorColumns = new HashMap<>();
+		authorColumns.put("mail", AH);
+		authorColumns.put("title", AA);
+		authorColumns.put("familyName", AE);
+		authorColumns.put("givenName", AC);
+		authorColumns.put("telephone", AG);
+		authorColumns.put("streetAddress", AM);
+		authorColumns.put("country", AI);
+		authorColumns.put("city", AJ);
+		authorColumns.put("zipCode", AK);
+		authorColumns.put("region", AO);
+		authorColumns.put("organization", AF);
 	}
 
 	private DoseResponseModelGeneralInformation retrieveGeneralInformation(Sheet sheet) {
@@ -151,16 +183,19 @@ public class DoseResponseSheetImporter implements SheetImporter {
 			information.setIdentifier(identifierCell.getStringCellValue());
 		}
 
-		try {
-			Contact author = ImporterUtils.retrieveAuthor(sheet.getRow(GI_CREATOR_ROW));
-			information.addAuthorItem(author);
-		} catch (Exception exception) {
-		}
-
-		for (int numRow = GI_CREATOR_ROW; numRow < (GI_CREATOR_ROW + 4); numRow++) {
+		for (int numRow = GI_CREATOR_ROW; numRow < GI_CREATOR_ROW + 6; numRow++) {
+			
+			Row row = sheet.getRow(numRow);
+			
 			try {
-				Contact contact = ImporterUtils.retrieveCreator(sheet.getRow(numRow));
+				Contact contact = ImporterUtils.retrieveContact(row, creatorColumns);
 				information.addCreatorItem(contact);
+			} catch (Exception exception) {
+			}
+			
+			try {
+				Contact author = ImporterUtils.retrieveContact(row, authorColumns);
+				information.addAuthorItem(author);
 			} catch (Exception exception) {
 			}
 		}

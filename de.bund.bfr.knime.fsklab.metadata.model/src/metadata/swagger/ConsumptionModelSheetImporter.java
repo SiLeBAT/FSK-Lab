@@ -95,6 +95,9 @@ public class ConsumptionModelSheetImporter implements SheetImporter {
 	/** Columns for each of the properties of Creator. */
 	private final HashMap<String, Integer> creatorColumns;
 	
+	/** Columns for each of the properties of Creator. */
+	private final HashMap<String, Integer> authorColumns;
+	
 	/** Columns for each of the properties of Reference. */
 	private final HashMap<String, Integer> referenceColumns;
 	
@@ -131,6 +134,23 @@ public class ConsumptionModelSheetImporter implements SheetImporter {
 		creatorColumns.put("zipCode", V);
 		creatorColumns.put("region", Z);
 		creatorColumns.put("organization", Q);
+		
+		authorColumns = new HashMap<>();
+		authorColumns.put("title", AB);
+		authorColumns.put("name", AC);
+		authorColumns.put("givenName", AD);
+		authorColumns.put("additionalName", AE);
+		authorColumns.put("familyName", AF);
+		authorColumns.put("organization", AG);
+		authorColumns.put("telephone", AH);
+		authorColumns.put("mail", AI);
+		authorColumns.put("country", AJ);
+		authorColumns.put("city", AK);
+		authorColumns.put("zipCode", AL);
+		authorColumns.put("postOfficeBox", AM);
+		authorColumns.put("streetAddress", AN);
+		authorColumns.put("extendedAddress", AO);
+		authorColumns.put("region", AP);
 		
 		referenceColumns = new HashMap<>();
 		referenceColumns.put("referenceDescription", L);
@@ -196,20 +216,21 @@ public class ConsumptionModelSheetImporter implements SheetImporter {
 			information.setIdentifier(identifierCell.getStringCellValue());
 		}
 
-		try {
-			Contact author = ImporterUtils.retrieveAuthor(sheet.getRow(GI_CREATOR_ROW));
-			information.addAuthorItem(author);
-		} catch (Exception exception) {
-			// Skip faulty author and continue
-		}
-
-		for (int numRow = GI_CREATOR_ROW; numRow < (GI_CREATOR_ROW + 4); numRow++) {
+		for (int numRow = GI_CREATOR_ROW; numRow < GI_CREATOR_ROW + 6; numRow++) {
+			Row row = sheet.getRow(numRow);
+			
 			try {
-				Row row = sheet.getRow(numRow);
 				Contact contact = ImporterUtils.retrieveContact(row, creatorColumns);
 				information.addCreatorItem(contact);
 			} catch (Exception exception) {
 				// Skip faulty contact and continue
+			}
+			
+			try {
+				Contact author = ImporterUtils.retrieveContact(row, authorColumns);
+				information.addAuthorItem(author);
+			} catch (Exception exception) {
+				// Skip faulty author and continue
 			}
 		}
 

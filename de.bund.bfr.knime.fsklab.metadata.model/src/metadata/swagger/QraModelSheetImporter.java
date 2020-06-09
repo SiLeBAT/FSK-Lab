@@ -2,7 +2,6 @@ package metadata.swagger;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -93,6 +92,12 @@ public class QraModelSheetImporter implements SheetImporter {
 	protected int MM_PARAMETER_ROW = 133;
 	protected int MM_FITTING_PROCEDURE_ROW = 149;
 	
+	/** Columns for each of the properties of Creator. */
+	private final HashMap<String, Integer> creatorColumns;
+
+	/** Columns for each of the properties of Creator. */
+	private final HashMap<String, Integer> authorColumns;
+	
 	/** Columns for each of the properties of DietaryAssessmentMethod. */
 	private final HashMap<String, Integer> methodColumns;
 	
@@ -129,6 +134,36 @@ public class QraModelSheetImporter implements SheetImporter {
 		productColumns.put("fisheriesArea", T);
 		productColumns.put("productionDate", U);
 		productColumns.put("expiryDate", V);
+		
+		creatorColumns = new HashMap<>();
+		creatorColumns.put("mail", S);
+		creatorColumns.put("title", L);
+		creatorColumns.put("familyName", P);
+		creatorColumns.put("givenName", N);
+		creatorColumns.put("telephone", R);
+		creatorColumns.put("streetAddress", X);
+		creatorColumns.put("country", T);
+		creatorColumns.put("city", U);
+		creatorColumns.put("zipCode", V);
+		creatorColumns.put("region", Z);
+		creatorColumns.put("organization", Q);
+
+		authorColumns = new HashMap<>();
+		authorColumns.put("title", AB);
+		authorColumns.put("name", AC);
+		authorColumns.put("givenName", AD);
+		authorColumns.put("additionalName", AE);
+		authorColumns.put("familyName", AF);
+		authorColumns.put("organization", AG);
+		authorColumns.put("telephone", AH);
+		authorColumns.put("mail", AI);
+		authorColumns.put("country", AJ);
+		authorColumns.put("city", AK);
+		authorColumns.put("zipCode", AL);
+		authorColumns.put("postOfficeBox", AM);
+		authorColumns.put("streetAddress", AN);
+		authorColumns.put("extendedAddress", AO);
+		authorColumns.put("region", AP);
 	}
 
 	private GenericModelDataBackground retrieveBackground(Sheet sheet) {
@@ -227,16 +262,19 @@ public class QraModelSheetImporter implements SheetImporter {
 			information.setIdentifier(identifierCell.getStringCellValue());
 		}
 
-		try {
-			Contact author = retrieveAuthor(sheet.getRow(GI_CREATOR_ROW));
-			information.addAuthorItem(author);
-		} catch (Exception exception) {
-		}
+		for (int numRow = GI_CREATOR_ROW; numRow < GI_CREATOR_ROW + 6; numRow++) {
 
-		for (int numRow = GI_CREATOR_ROW; numRow < (GI_CREATOR_ROW + 4); numRow++) {
+			Row row = sheet.getRow(numRow);
+
 			try {
-				Contact contact = retrieveCreator(sheet.getRow(numRow));
-				information.addCreatorItem(contact);
+				Contact author = ImporterUtils.retrieveContact(row, authorColumns);
+				information.addAuthorItem(author);
+			} catch (Exception exception) {
+			}
+
+			try {
+				Contact creator = ImporterUtils.retrieveContact(row, creatorColumns);
+				information.addCreatorItem(creator);
 			} catch (Exception exception) {
 			}
 		}
@@ -359,109 +397,6 @@ public class QraModelSheetImporter implements SheetImporter {
 		// TODO: Spatial information
 
 		return scope;
-	}
-
-	private Contact retrieveCreator(Row row) {
-		@SuppressWarnings("serial")
-		HashMap<String, Integer> columns = new HashMap<String, Integer>() {
-			{
-				put("mail", S);
-				put("title", L);
-				put("familyName", P);
-				put("givenName", N);
-				put("telephone", R);
-				put("streetAddress", X);
-				put("country", T);
-				put("city", U);
-				put("zipCode", V);
-				put("region", Z);
-				put("organization", Q);
-			}
-		};
-		return retrieveContact(row, columns);
-	}
-
-	private Contact retrieveAuthor(Row row) {
-
-		@SuppressWarnings("serial")
-		HashMap<String, Integer> columns = new HashMap<String, Integer>() {
-			{
-				put("mail", AI);
-				put("title", AB);
-				put("familyName", AF);
-				put("givenName", AD);
-				put("telephone", AH);
-				put("streetAddress", AN);
-				put("country", AJ);
-				put("city", AK);
-				put("zipCode", AL);
-				put("region", AP);
-				put("organization", AG);
-			}
-		};
-		return retrieveContact(row, columns);
-	}
-
-	private Contact retrieveContact(Row row, Map<String, Integer> columns) {
-
-		// Check mandatory properties and throw exception if missing
-		if (row.getCell(columns.get("mail")).getCellTypeEnum() == CellType.BLANK) {
-			throw new IllegalArgumentException("Missing mail");
-		}
-
-		Contact contact = new Contact();
-		contact.setEmail(row.getCell(columns.get("mail")).getStringCellValue());
-
-		Cell titleCell = row.getCell(columns.get("title"));
-		if (titleCell.getCellTypeEnum() == CellType.STRING) {
-			contact.setTitle(titleCell.getStringCellValue());
-		}
-
-		Cell familyNameCell = row.getCell(columns.get("familyName"));
-		if (familyNameCell.getCellTypeEnum() == CellType.STRING) {
-			contact.setFamilyName(familyNameCell.getStringCellValue());
-		}
-
-		Cell givenNameCell = row.getCell(columns.get("givenName"));
-		if (givenNameCell.getCellTypeEnum() == CellType.STRING) {
-			contact.setGivenName(givenNameCell.getStringCellValue());
-		}
-
-		Cell telephoneCell = row.getCell(columns.get("telephone"));
-		if (telephoneCell.getCellTypeEnum() == CellType.STRING) {
-			contact.setTelephone(telephoneCell.getStringCellValue());
-		}
-
-		Cell streetAddressCell = row.getCell(columns.get("streetAddress"));
-		if (streetAddressCell.getCellTypeEnum() == CellType.STRING) {
-			contact.setStreetAddress(streetAddressCell.getStringCellValue());
-		}
-
-		Cell countryCell = row.getCell(columns.get("country"));
-		if (countryCell.getCellTypeEnum() == CellType.STRING) {
-			contact.setCountry(countryCell.getStringCellValue());
-		}
-
-		Cell zipCodeCell = row.getCell(columns.get("zipCode"));
-		if (zipCodeCell.getCellTypeEnum() == CellType.STRING) {
-			contact.setZipCode(zipCodeCell.getStringCellValue());
-		}
-
-		Cell regionCell = row.getCell(columns.get("region"));
-		if (regionCell.getCellTypeEnum() == CellType.STRING) {
-			contact.setRegion(regionCell.getStringCellValue());
-		}
-
-		// Time zone not included in spreadsheet
-		// gender not included in spreadsheet
-		// note not included in spreadsheet
-
-		Cell organizationCell = row.getCell(columns.get("organization"));
-		if (organizationCell.getCellTypeEnum() == CellType.STRING) {
-			contact.setOrganization(organizationCell.getStringCellValue());
-		}
-
-		return contact;
 	}
 
 	private Reference retrieveReference(Row row) {

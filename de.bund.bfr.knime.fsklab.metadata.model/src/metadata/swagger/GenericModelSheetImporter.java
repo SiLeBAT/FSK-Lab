@@ -85,6 +85,12 @@ public class GenericModelSheetImporter implements SheetImporter {
 	private int MM_PARAMETER_ROW = 132;
 	private int MM_FITTING_PROCEDURE_ROW = 149;
 	
+	/** Columns for each of the properties of Creator. */
+	private final HashMap<String, Integer> creatorColumns;
+
+	/** Columns for each of the properties of Author. */
+	private final HashMap<String, Integer> authorColumns;
+	
 	/** Columns for each of the properties of DietaryAssessmentMethod. */
 	private final HashMap<String, Integer> methodColumns;
 	
@@ -158,6 +164,32 @@ public class GenericModelSheetImporter implements SheetImporter {
 		parameterColumns.put("max", Y);
 		parameterColumns.put("min", Z);
 		parameterColumns.put("error", AA);
+		
+		creatorColumns = new HashMap<>();
+		creatorColumns.put("mail", R);
+		creatorColumns.put("title", K);
+		creatorColumns.put("familyName", O);
+		creatorColumns.put("givenName", M);
+		creatorColumns.put("telephone", Q);
+		creatorColumns.put("streetAddress", W);
+		creatorColumns.put("country", S);
+		creatorColumns.put("city", T);
+		creatorColumns.put("zipCode", U);
+		creatorColumns.put("region", Y);
+		creatorColumns.put("organization", P);
+
+		authorColumns = new HashMap<>();
+		authorColumns.put("mail", AH);
+		authorColumns.put("title", AA);
+		authorColumns.put("familyName", AE);
+		authorColumns.put("givenName", AC);
+		authorColumns.put("telephone", AG);
+		authorColumns.put("streetAddress", AM);
+		authorColumns.put("country", AI);
+		authorColumns.put("city", AJ);
+		authorColumns.put("zipCode", AK);
+		authorColumns.put("region", AO);
+		authorColumns.put("organization", AF);
 	}
 
 	private GenericModelGeneralInformation retrieveGeneralInformation(Sheet sheet) {
@@ -179,19 +211,20 @@ public class GenericModelSheetImporter implements SheetImporter {
 			information.setIdentifier(identifierCell.getStringCellValue());
 		}
 
-		try {
-			final Contact author = ImporterUtils.retrieveAuthor(sheet.getRow(3));
-			information.addAuthorItem(author);
-		} catch (final Exception exception) {
-			// Skip faulty author and continue
-		}
-
-		for (int numRow = GI_CREATOR_ROW; numRow < GI_CREATOR_ROW + 5; numRow++) {
+		for (int numRow = GI_CREATOR_ROW; numRow < GI_CREATOR_ROW + 6; numRow++) {
+			
+			Row row = sheet.getRow(numRow);
+			
 			try {
-				final Contact contact = ImporterUtils.retrieveCreator(sheet.getRow(numRow));
+				Contact contact = ImporterUtils.retrieveContact(row, creatorColumns);
 				information.addCreatorItem(contact);
-			} catch (final Exception exception) {
-				// Skip faulty contact and continue
+			} catch (Exception exception) {
+			}
+			
+			try {
+				Contact author = ImporterUtils.retrieveContact(row, authorColumns);
+				information.addAuthorItem(author);
+			} catch (Exception exception) {
 			}
 		}
 

@@ -42,8 +42,8 @@ public class DoseResponseSheetImporterTest {
 		assertEquals("Listeria Monocytogenes (DR of gQMRA)", information.getModelName());
 		assertEquals("PUBLISHED SCIENTIFIC STUDIES", information.getSource());
 		assertEquals("DR000001", information.getIdentifier());
-		assertEquals(1, information.getAuthor().size());
-		assertEquals(1, information.getCreator().size());
+		assertEquals(6, information.getAuthor().size());
+		assertEquals(6, information.getCreator().size());
 		assertEquals(LocalDate.of(2018, 3, 30), information.getCreationDate());
 		assertNull(information.getModificationDate()); // Not set
 		assertEquals("CC0", information.getRights());

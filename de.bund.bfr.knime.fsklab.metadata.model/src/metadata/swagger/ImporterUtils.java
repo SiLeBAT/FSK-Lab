@@ -32,53 +32,6 @@ public class ImporterUtils {
 	}
 
 	/**
-	 * @deprecated Use {@link ImporterUtils#retrieveContact(Row, Map)} instead.
-	 */
-	public static Contact retrieveCreator(Row row) {
-		@SuppressWarnings("serial")
-		final HashMap<String, Integer> columns = new HashMap<String, Integer>() {
-			{
-				put("mail", SheetImporter.R);
-				put("title", SheetImporter.K);
-				put("familyName", SheetImporter.O);
-				put("givenName", SheetImporter.M);
-				put("telephone", SheetImporter.Q);
-				put("streetAddress", SheetImporter.W);
-				put("country", SheetImporter.S);
-				put("city", SheetImporter.T);
-				put("zipCode", SheetImporter.U);
-				put("region", SheetImporter.Y);
-				put("organization", SheetImporter.P);
-			}
-		};
-		return retrieveContact(row, columns);
-	}
-
-	/**
-	 * @deprecated Use {@link ImporterUtils#retrieveContact(Row, Map)} instead.
-	 */
-	public static Contact retrieveAuthor(Row row) {
-
-		@SuppressWarnings("serial")
-		final HashMap<String, Integer> columns = new HashMap<String, Integer>() {
-			{
-				put("mail", SheetImporter.AH);
-				put("title", SheetImporter.AA);
-				put("familyName", SheetImporter.AE);
-				put("givenName", SheetImporter.AC);
-				put("telephone", SheetImporter.AG);
-				put("streetAddress", SheetImporter.AM);
-				put("country", SheetImporter.AI);
-				put("city", SheetImporter.AJ);
-				put("zipCode", SheetImporter.AK);
-				put("region", SheetImporter.AO);
-				put("organization", SheetImporter.AF);
-			}
-		};
-		return retrieveContact(row, columns);
-	}
-
-	/**
 	 * @param row     Spreadsheet row
 	 * @param columns Column numbers for the columns with keys:
 	 *                <ul>
@@ -135,7 +88,10 @@ public class ImporterUtils {
 		}
 
 		final Cell zipCodeCell = row.getCell(columns.get("zipCode"));
-		if (zipCodeCell.getCellTypeEnum() == CellType.STRING) {
+		if (zipCodeCell.getCellTypeEnum() == CellType.NUMERIC) {
+			double zipCodeAsDouble = zipCodeCell.getNumericCellValue();
+			contact.setZipCode(Integer.toString((int) zipCodeAsDouble));
+		} else if (zipCodeCell.getCellTypeEnum() == CellType.STRING) {
 			contact.setZipCode(zipCodeCell.getStringCellValue());
 		}
 

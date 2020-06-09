@@ -2,7 +2,6 @@ package metadata.swagger;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -13,7 +12,6 @@ import org.threeten.bp.LocalDate;
 
 import de.bund.bfr.metadata.swagger.Assay;
 import de.bund.bfr.metadata.swagger.Contact;
-import de.bund.bfr.metadata.swagger.DietaryAssessmentMethod;
 import de.bund.bfr.metadata.swagger.GenericModelModelMath;
 import de.bund.bfr.metadata.swagger.Hazard;
 import de.bund.bfr.metadata.swagger.Laboratory;
@@ -31,7 +29,6 @@ import de.bund.bfr.metadata.swagger.ToxicologicalModel;
 import de.bund.bfr.metadata.swagger.ToxicologicalModelScope;
 import metadata.ParameterClassification;
 import metadata.ParameterType;
-import metadata.PublicationType;
 import metadata.SwaggerUtil;
 
 public class ToxicologicalModelSheetImporter implements SheetImporter {
@@ -232,7 +229,7 @@ public class ToxicologicalModelSheetImporter implements SheetImporter {
 			information.setIdentifier(identifierCell.getStringCellValue());
 		}
 
-		for (int numRow = GI_CREATOR_ROW; numRow < (GI_CREATOR_ROW + 4); numRow++) {
+		for (int numRow = GI_CREATOR_ROW; numRow < GI_CREATOR_ROW + 6; numRow++) {
 
 			Row row = sheet.getRow(numRow);
 
@@ -835,44 +832,6 @@ public class ToxicologicalModelSheetImporter implements SheetImporter {
 		}
 
 		return measures;
-	}
-
-	private DietaryAssessmentMethod retrieveDietaryAssessmentMethod(Row row) {
-
-		// Check first mandatory properties
-		if (row.getCell(L).getCellTypeEnum() != CellType.STRING) {
-			throw new IllegalArgumentException("Missing methodological tool to collect data");
-		}
-		if (row.getCell(M).getCellTypeEnum() != CellType.NUMERIC) {
-			throw new IllegalArgumentException("Missing number of non consecutive one day");
-		}
-
-		DietaryAssessmentMethod method = new DietaryAssessmentMethod();
-
-		method.setCollectionTool(row.getCell(L).getStringCellValue());
-		method.setNumberOfNonConsecutiveOneDay(Double.toString(row.getCell(M).getNumericCellValue()));
-
-		Cell softwareCell = row.getCell(N);
-		if (softwareCell.getCellTypeEnum() == CellType.STRING) {
-			method.setSoftwareTool(softwareCell.getStringCellValue());
-		}
-
-		Cell foodItemsCell = row.getCell(O);
-		if (foodItemsCell.getCellTypeEnum() == CellType.STRING) {
-			method.addNumberOfFoodItemsItem(foodItemsCell.getStringCellValue());
-		}
-
-		Cell recordTypesCell = row.getCell(P);
-		if (recordTypesCell.getCellTypeEnum() == CellType.STRING) {
-			method.addRecordTypesItem(recordTypesCell.getStringCellValue());
-		}
-
-		Cell foodDescriptorsCell = row.getCell(Q);
-		if (foodDescriptorsCell.getCellTypeEnum() == CellType.STRING) {
-			method.addFoodDescriptorsItem(foodDescriptorsCell.getStringCellValue());
-		}
-
-		return method;
 	}
 
 	private PopulationGroup retrievePopulationGroup(Row row) {
