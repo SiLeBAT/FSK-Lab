@@ -17,7 +17,6 @@ import org.threeten.bp.LocalDate;
 import de.bund.bfr.metadata.swagger.ConsumptionModel;
 import de.bund.bfr.metadata.swagger.ConsumptionModelScope;
 import de.bund.bfr.metadata.swagger.GenericModelDataBackground;
-import de.bund.bfr.metadata.swagger.Parameter;
 import de.bund.bfr.metadata.swagger.PredictiveModelGeneralInformation;
 import de.bund.bfr.metadata.swagger.PredictiveModelModelMath;
 
@@ -87,23 +86,6 @@ public class ConsumptionModelSheetImporterTest {
 		assertNull(math.getFittingProcedure());
 		assertNull(math.getEvent());
 		
-		// Check first parameter
-		Parameter firstParameter = math.getParameter().get(0);
-
-		assertEquals("DR_Inputs3", firstParameter.getId());
-		assertEquals(Parameter.ClassificationEnum.INPUT, firstParameter.getClassification());
-		assertEquals("DR_Inputs3.csv", firstParameter.getName());
-		assertEquals("[]", firstParameter.getUnit());
-		assertEquals("Dimensionless Quantity", firstParameter.getUnitCategory());
-		assertEquals(Parameter.DataTypeEnum.FILE, firstParameter.getDataType());
-		assertEquals("Boolean", firstParameter.getSource());
-		assertEquals("Boolean", firstParameter.getSubject());
-		assertEquals("Boolean", firstParameter.getDistribution());
-		assertEquals("\"DR_inputs3.csv\"", firstParameter.getValue());
-		assertNull(firstParameter.getReference()); // reference is not implemented yet
-		assertEquals("a", firstParameter.getVariabilitySubject());
-		assertEquals("max0", firstParameter.getMaxValue());
-		assertEquals("min0", firstParameter.getMinValue());
-		assertEquals("error0", firstParameter.getError());
+		TestUtils.testFirstParameter(math.getParameter().get(0));
 	}
 }
