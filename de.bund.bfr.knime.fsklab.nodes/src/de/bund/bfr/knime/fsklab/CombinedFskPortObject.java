@@ -524,6 +524,7 @@ public class CombinedFskPortObject extends FskPortObject {
             visualizationScript = IOUtils.toString(in, "UTF-8");
           }
 
+          
           // read first FSKObject
           FskPortObject firstFSKObject = loadFSKPortObject(in, spec, exec);
           // read second FSKObject
@@ -544,6 +545,9 @@ public class CombinedFskPortObject extends FskPortObject {
             portObj.simulations.addAll(simulations);
           }
 
+          // Simulation Index is the same for all partial modules
+          selectedSimulationIndex = firstFSKObject.selectedSimulationIndex;
+          portObj.selectedSimulationIndex = selectedSimulationIndex;
           return portObj;
 
         } else {

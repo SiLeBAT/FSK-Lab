@@ -191,6 +191,8 @@ class JSSimulatorNodeModel
 
     if (inObj instanceof CombinedFskPortObject) {
       final List<Parameter> inputParams = getViewRepresentation().parameters;
+      createSimulation(((CombinedFskPortObject) inObj).getFirstFskPortObject(), val);
+      createSimulation(((CombinedFskPortObject) inObj).getSecondFskPortObject(), val);
       inObj.simulations.clear();
       for (final JSSimulation jsSimulation : val.simulations) {
         final FskSimulation fskSimulation = new FskSimulation(jsSimulation.name);
@@ -307,7 +309,7 @@ class JSSimulatorNodeModel
     final String containerName = buildContainerName();
 
     final File settingFolder = new File(directory, containerName);
-
+   
     // Read configuration strings
     final String simulationString = NodeUtils.readConfigString(settingFolder, "simulations.json");
 

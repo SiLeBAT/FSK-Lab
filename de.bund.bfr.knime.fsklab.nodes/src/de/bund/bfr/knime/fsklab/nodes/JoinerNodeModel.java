@@ -69,6 +69,7 @@ import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskSimulation;
 import de.bund.bfr.knime.fsklab.JoinRelation;
+import de.bund.bfr.knime.fsklab.nodes.JSSimulatorViewValue.JSSimulation;
 import de.bund.bfr.metadata.swagger.Parameter;
 import metadata.SwaggerUtil;
 
@@ -85,8 +86,8 @@ final class JoinerNodeModel
   private FskPortObject secondInputPort;
 
   public final static String SUFFIX = "_dup";
-  private Map<String, String> originals = new LinkedHashMap<String, String>();
-
+  Map<String,String> originals = new LinkedHashMap<String,String>();
+  
   private final static ObjectMapper MAPPER = FskPlugin.getDefault().MAPPER104;
 
   // Input and output port types
@@ -527,8 +528,9 @@ final class JoinerNodeModel
         Iterator<Parameter> iter = SwaggerUtil.getParameter(outfskPort.modelMetadata).iterator();
         while (iter.hasNext()) {
           Parameter p = iter.next();
-          // remove output from first model
-          // Boolean b1 = p.getParameterID().equals(relation.getSourceParam().getParameterID());
+                    
+          //For now don't remove output from first model
+          //Boolean b1 = p.getId().equals(relation.getSourceParam());
 
           // remove input from second model
           Boolean b2 = p.getId().equals(relation.getTargetParam());
@@ -587,6 +589,37 @@ final class JoinerNodeModel
       }
     }
   }
+  private void createSimulations(FskPortObject inObj, List<FskSimulation> simulations) {
+
+    inObj.simulations.clear();
+
+    final List<String> modelMathParameter = SwaggerUtil.getParameter(inObj.modelMetadata).stream()
+        .map(Parameter::getId).collect(Collectors.toList());
+    
+    for (final FskSimulation combSimulation : simulations) {
+      final FskSimulation fskSimulation = new FskSimulation(combSimulation.getName());
+
+      //      final List<Parameter> inputParams = new ArrayList<Parameter>();
+      for (Map.Entry<String, String> entry : combSimulation.getParameters().entrySet()) {
+        
+
+        final String paramWithSuffix = entry.getKey();// key = id of Parameter
+        final String paramWithoutSuffix = paramWithSuffix.replaceAll(JoinerNodeModel.SUFFIX, "");
+        if (modelMathParameter.contains(paramWithoutSuffix)
+            || modelMathParameter.contains(paramWithSuffix)) {
+          fskSimulation.getParameters().put(paramWithoutSuffix, entry.getValue());
+        }
+      }
+
+
+    inObj.simulations.add(fskSimulation);
+    }
+
+    inObj.selectedSimulationIndex = 0;
+
+
+    
+  }
 
   @Override
   protected PortObject[] performExecuteCreatePortObjects(PortObject svgImageFromView,
@@ -644,9 +677,48 @@ final class JoinerNodeModel
             originals, combinedModelParameters);
 
         FskSimulation defaultSimulation = NodeUtils.createDefaultSimulation(combinedModelParameters);
+        
         outObj.simulations.add(defaultSimulation);
         outObj.selectedSimulationIndex = 0;
       }
+      
+      // add all possible simulations to combined object
+      int indexFirst = 0;
+      int indexSecond = 0;
+      for(FskSimulation simFirst : firstInputPort.simulations) {
+        
+        for(FskSimulation simSecond : secondInputPort.simulations) {
+          
+          
+          if(indexFirst == firstInputPort.selectedSimulationIndex && indexSecond == secondInputPort.selectedSimulationIndex) {
+            indexSecond++;
+            continue;
+          }
+          
+          // resolve duplicate parameters, otherwise duplicate parameters don't get added to the simulation
+          List<Parameter> combinedModelParameters = SwaggerUtil.getParameter(outObj.modelMetadata);
+          JoinerNodeUtil.resolveSimulationParameters(simFirst.getParameters(), simSecond.getParameters(),
+              originals, combinedModelParameters);
+
+          FskSimulation simComb = new FskSimulation(simFirst.getName() + "_" + simSecond.getName());
+          
+//          simComb.getParameters().putAll(simFirst.getParameters());
+//          simComb.getParameters().putAll(simSecond.getParameters());
+            for(Parameter p : combinedModelParameters) {
+              if(p.getClassification().equals(Parameter.ClassificationEnum.OUTPUT))
+                continue;
+              simComb.getParameters().put(p.getId(), p.getValue());
+            }
+            
+          outObj.simulations.add(simComb);
+          indexSecond++;
+        }
+        indexSecond = 0;
+        indexFirst++;
+        
+      }
+      createSimulations(outObj.getFirstFskPortObject(),outObj.simulations);
+      createSimulations(outObj.getSecondFskPortObject(),outObj.simulations);
     }
 
     return new PortObject[] {outObj, svgImageFromView};
