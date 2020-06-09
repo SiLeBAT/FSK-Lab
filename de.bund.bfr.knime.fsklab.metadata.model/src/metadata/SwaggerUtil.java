@@ -143,7 +143,6 @@ public class SwaggerUtil {
 		TYPES.put(metadata.ParameterType.STRING, de.bund.bfr.metadata.swagger.Parameter.DataTypeEnum.STRING);
 	}
 
-	@SuppressWarnings("deprecation")
 	public static LocalDate toLocalDate(Date date) {
 		
 		ZoneId defaultZoneId = ZoneId.systemDefault();
