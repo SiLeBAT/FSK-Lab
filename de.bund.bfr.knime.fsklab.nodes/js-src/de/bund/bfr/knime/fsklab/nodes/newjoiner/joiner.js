@@ -463,14 +463,14 @@ joiner = function () {
         _secondModelParameterMap[sourcePort] : _firstModelParameterMap[sourcePort];
 
       if (targetParameter != undefined) {
-        $.each(_viewValue.joinRelations, function (index, value) {
+        $.each(_value.joinRelations, function (index, value) {
 
           if (value != undefined && value.sourceParam.parameterID == sourceParameter.parameterID
             && value.targetParam.parameterID == targetParameter.parameterID) {
-            _viewValue.joinRelations.splice(index, 1);
+            _value.joinRelations.splice(index, 1);
           }
         });
-        _viewValue.jsonRepresentation = JSON.stringify(_graph.toJSON());
+        _value.jsonRepresentation = JSON.stringify(_graph.toJSON());
       }
     });
 

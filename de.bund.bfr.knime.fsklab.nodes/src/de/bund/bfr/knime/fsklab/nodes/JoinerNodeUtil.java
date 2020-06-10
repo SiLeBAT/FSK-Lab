@@ -16,20 +16,40 @@ public class JoinerNodeUtil {
       List<Parameter> firstModelParameters, List<Parameter> secondModelParameters) {
 
     HashMap<String, String> newParameterIds = new HashMap<>();
+    Boolean change_happened;
 
     for (Parameter firstParam : firstModelParameters) {
       for (Parameter secondParam : secondModelParameters) {
         if (secondParam.getId().equals(firstParam.getId())) {
           String oldId = firstParam.getId();
+          //          String newId = firstParam.getId() + JoinerNodeModel.SUFFIX;
           String newId = firstParam.getId() + JoinerNodeModel.SUFFIX;
 
           newParameterIds.put(oldId, newId);
           firstParam.setId(newId);
           firstParam.setName(newId);
-        }
-      }
-    }
+          // now check if that causes duplicate parameters in the first model
+          do {
+            change_happened = false;
+            for (Parameter firstP : firstModelParameters) {
+              //skip current parameter so we don't change it twice
+              if(firstP == firstParam)
+                continue;
+              if(firstP.getId().equals(newId)) {
+                String update = firstP.getId() + JoinerNodeModel.SUFFIX;
+                newParameterIds.put(firstP.getId(), update);
+                firstP.setId(update);
+                firstP.setName(update);
+                change_happened = true;
+              }
+            }
 
+          }while(change_happened);
+
+        }//if equals
+      }// for secondModelParameters
+    }// for firstModelParameters
+    
     return newParameterIds;
   }
 

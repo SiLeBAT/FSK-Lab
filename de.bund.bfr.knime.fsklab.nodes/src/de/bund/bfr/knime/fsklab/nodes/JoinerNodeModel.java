@@ -651,6 +651,9 @@ final class JoinerNodeModel
       }
 
 
+      // give the new combined model a name:
+      // suggestion: model1.name + model2.name
+      
       if (StringUtils.isNotEmpty(value.modelScriptTree)) {
         JsonArray scriptTree = getScriptArray(value.modelScriptTree);
         setScriptBack(firstInputPort, secondInputPort, scriptTree);
@@ -717,6 +720,7 @@ final class JoinerNodeModel
         indexFirst++;
         
       }
+      // add simulations to the child models based on their metadata parameters
       createSimulations(outObj.getFirstFskPortObject(),outObj.simulations);
       createSimulations(outObj.getSecondFskPortObject(),outObj.simulations);
     }
