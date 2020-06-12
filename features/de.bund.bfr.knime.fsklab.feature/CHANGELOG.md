@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed encoding of some tooltips in editor node https://github.com/SiLeBAT/FSK-Lab/issues/409
 - Missing tooltips of quality measures https://github.com/SiLeBAT/FSK-Lab/issues/410
 - Is reference component property of reference in editor is broken https://github.com/SiLeBAT/FSK-Lab/issues/404
+- Broken JSON metadata in editor node
 
 ### Changed
 - Color of inputs and outputs in joiner node https://github.com/SiLeBAT/FSK-Lab/issues/401

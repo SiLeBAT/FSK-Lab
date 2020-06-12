@@ -20,6 +20,7 @@ fskeditorjs = function () {
   let handler;
 
   view.init = function (representation, value) {
+    alert(value.modelMetaData);
 
     fskutil = new fskutil();
 
@@ -44,9 +45,10 @@ fskeditorjs = function () {
       _metadata.scope = metaData.scope ? metaData.scope : {};
       _metadata.dataBackground = metaData.dataBackground ? metaData.dataBackground : {};
       _metadata.modelMath = metaData.modelMath ? metaData.modelMath : {};
+      _metadata.modelType = metaData.modelType;
     }
 
-    switch (value.modelMetaData.modelType) {
+    switch (_metadata.modelType) {
       case "genericModel": handler = new fskutil.GenericModel(_metadata); break;
       case "dataModel": handler = new fskutil.DataModel(_metadata); break;
       case "predictiveModel": handler = new fskutil.PredictiveModel(_metadata); break;
@@ -73,7 +75,6 @@ fskeditorjs = function () {
     // If the code mirrors are not created yet, use the original scripts.
     let viewValue = {
       modelMetaData: metaDataString,
-      modelType: _metadata.modelType,
       modelScript: _modelCodeMirror ? _modelCodeMirror.getValue() : _val.modelScript,
       visualizationScript: _visualizationCodeMirror ? _visualizationCodeMirror.getValue() : _val.visualizationScript,
       readme: _readmeCodeMirror ? _readmeCodeMirror.getValue() : _metadata.readme,
