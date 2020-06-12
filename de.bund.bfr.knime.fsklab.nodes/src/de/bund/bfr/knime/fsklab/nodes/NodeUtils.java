@@ -13,7 +13,21 @@ import org.knime.core.node.workflow.NodeContext;
 import com.sun.jna.Platform;
 import de.bund.bfr.fskml.FSKML;
 import de.bund.bfr.knime.fsklab.FskSimulation;
+import de.bund.bfr.knime.fsklab.nodes.FSKEditorJSNodeDialog.ModelType;
+import de.bund.bfr.metadata.swagger.ConsumptionModel;
+import de.bund.bfr.metadata.swagger.DataModel;
+import de.bund.bfr.metadata.swagger.DoseResponseModel;
+import de.bund.bfr.metadata.swagger.ExposureModel;
+import de.bund.bfr.metadata.swagger.GenericModel;
+import de.bund.bfr.metadata.swagger.HealthModel;
+import de.bund.bfr.metadata.swagger.Model;
+import de.bund.bfr.metadata.swagger.OtherModel;
 import de.bund.bfr.metadata.swagger.Parameter;
+import de.bund.bfr.metadata.swagger.PredictiveModel;
+import de.bund.bfr.metadata.swagger.ProcessModel;
+import de.bund.bfr.metadata.swagger.QraModel;
+import de.bund.bfr.metadata.swagger.RiskModel;
+import de.bund.bfr.metadata.swagger.ToxicologicalModel;
 import de.bund.bfr.metadata.swagger.Parameter.ClassificationEnum;
 
 public class NodeUtils {
@@ -37,7 +51,7 @@ public class NodeUtils {
     throw new InvalidSettingsException("Unsupported platform");
   }
 
-    public static FskSimulation createDefaultSimulation(List<Parameter> parameters) {
+  public static FskSimulation createDefaultSimulation(List<Parameter> parameters) {
 
     final FskSimulation simulation = new FskSimulation(DEFAULT_SIMULATION);
 
@@ -92,6 +106,42 @@ public class NodeUtils {
     if (configString != null) {
       final File configFile = new File(settingsFolder, filename);
       FileUtils.writeStringToFile(configFile, configString, StandardCharsets.UTF_8);
+    }
+  }
+
+  /** Initialize and return a model for the passed type. */
+  public static Model initializeModel(ModelType modelType) {
+
+    if (modelType == null)
+      return new GenericModel().modelType("genericModel");
+
+    switch (modelType) {
+      case genericModel:
+        return new GenericModel().modelType("genericModel");
+      case dataModel:
+        return new DataModel().modelType("dataModel");
+      case consumptionModel:
+        return new ConsumptionModel().modelType("consumptionModel");
+      case doseResponseModel:
+        return new DoseResponseModel().modelType("doseResponseModel");
+      case exposureModel:
+        return new ExposureModel().modelType("exposureModel");
+      case healthModel:
+        return new HealthModel().modelType("healthModel");
+      case otherModel:
+        return new OtherModel().modelType("otherModel");
+      case predictiveModel:
+        return new PredictiveModel().modelType("predictiveModel");
+      case processModel:
+        return new ProcessModel().modelType("processModel");
+      case qraModel:
+        return new QraModel().modelType("qraModel");
+      case riskModel:
+        return new RiskModel().modelType("riskModel");
+      case toxicologicalModel:
+        return new ToxicologicalModel().modelType("toxicologicalModel");
+      default:
+        return new GenericModel().modelType("genericModel");
     }
   }
 }

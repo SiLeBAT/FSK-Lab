@@ -18,82 +18,75 @@
  */
 package de.bund.bfr.knime.fsklab.nodes;
 
-import java.util.Random;
+import java.util.Arrays;
+import java.util.Objects;
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.knime.core.node.InvalidSettingsException;
-import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.js.core.JSONViewContent;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import de.bund.bfr.knime.fsklab.FskPlugin;
 
 class FSKEditorJSViewValue extends JSONViewContent {
 
-  private static final NodeLogger LOGGER = NodeLogger.getLogger(FSKEditorJSViewValue.class);
+  private static final String CFG_MODEL_METADATA = "ModelMetaData";
   private static final String CFG_ORIGINAL_MODEL_SCRIPT = "originalModelScript";
   private static final String CFG_ORIGINAL_VISUALIZATION_SCRIPT = "originalVisualizationScript";
   private static final String CFG_ORIGINAL_README = "README";
-  private static final String CFG_MODEL_METADATA = "ModelMetaData";
-
-  public final int pseudoIdentifier = (new Random()).nextInt();
+  private static final String CFG_RESOURCES_FILES = "resourcesFiles";
+  private static final String CFG_SERVER_NAME = "serverName";
+  private static final String CFG_COMPLETED = "completed";
+  private static final String CFG_VALIDATION_ERRORS = "validationErrors";
 
   private String modelMetaData;
+  private String modelScript;
+  private String visualizationScript;
+  private String readme;
+  private String[] resourcesFiles;
+  private String serverName;
+  private boolean isCompleted;
+  private String[] validationErrors;
 
-  public String firstModelScript;
-  public String firstModelViz;
-  public String readme;
-
-  public String[] resourcesFiles;
-  public String serverName;
-  public boolean notCompleted;
-  public String[] validationErrors;
-  public String modelType ;
+  public FSKEditorJSViewValue() {
+    modelScript = "";
+    visualizationScript = "";
+    readme = "";
+    resourcesFiles = new String[0];
+    serverName = "";
+    isCompleted = false;
+    validationErrors = new String[0];
+  }
 
   @Override
   public void saveToNodeSettings(NodeSettingsWO settings) {
-    settings.addString(CFG_ORIGINAL_MODEL_SCRIPT, firstModelScript);
-    settings.addString(CFG_ORIGINAL_VISUALIZATION_SCRIPT, firstModelViz);
+    settings.addString(CFG_MODEL_METADATA, modelMetaData);
+    settings.addString(CFG_ORIGINAL_MODEL_SCRIPT, modelScript);
+    settings.addString(CFG_ORIGINAL_VISUALIZATION_SCRIPT, visualizationScript);
     settings.addString(CFG_ORIGINAL_README, readme);
-
-    saveSettings(settings, CFG_MODEL_METADATA, getModelMetaData());
+    settings.addStringArray(CFG_RESOURCES_FILES, resourcesFiles);
+    settings.addString(CFG_SERVER_NAME, serverName);
+    settings.addBoolean(CFG_COMPLETED, isCompleted);
+    settings.addStringArray(CFG_VALIDATION_ERRORS, validationErrors);
   }
 
   @Override
   public void loadFromNodeSettings(NodeSettingsRO settings) throws InvalidSettingsException {
-    firstModelScript = settings.getString(CFG_ORIGINAL_MODEL_SCRIPT);
-    firstModelViz = settings.getString(CFG_ORIGINAL_VISUALIZATION_SCRIPT);
-    readme = settings.getString(CFG_ORIGINAL_README);
 
-    // load meta data
-    setModelMetaData(getEObject(settings, CFG_MODEL_METADATA));
-  }
-
-  private static void saveSettings(final NodeSettingsWO settings, final String key,
-      final String eObject) {
-
-    if (eObject != null) {
-      try {
-        ObjectMapper objectMapper = FskPlugin.getDefault().OBJECT_MAPPER;
-        String jsonStr = objectMapper.writeValueAsString(eObject);
-        settings.addString(key, jsonStr);
-      } catch (JsonProcessingException exception) {
-        LOGGER.warn("Error saving " + key);
-      }
+    modelMetaData = settings.getString(CFG_MODEL_METADATA);
+    // fix for old broken strings. Previously some strings were escaped and wrapped with
+    // extra quotes at the beginning and end.
+    if (modelMetaData.startsWith("\"") && modelMetaData.endsWith("\"")) {
+      modelMetaData = StringEscapeUtils.unescapeJson(modelMetaData);
+      modelMetaData = modelMetaData.substring(1, modelMetaData.length() - 1);
     }
-  }
-
-  private static String getEObject(NodeSettingsRO settings, String key)
-      throws InvalidSettingsException {
     
-    // If entry is missing return null.
-    String jsonStr = settings.getString(key, null);
-    if (jsonStr != null) {
-      jsonStr = StringEscapeUtils.unescapeJson(jsonStr);
-      jsonStr = jsonStr.substring(1, jsonStr.length() - 1);
-    }
-    return jsonStr;
+    modelScript = settings.getString(CFG_ORIGINAL_MODEL_SCRIPT);
+    visualizationScript = settings.getString(CFG_ORIGINAL_VISUALIZATION_SCRIPT);
+    readme = settings.getString(CFG_ORIGINAL_README);
+    resourcesFiles = settings.getStringArray(CFG_RESOURCES_FILES);
+    serverName = settings.getString(CFG_SERVER_NAME);
+    isCompleted = settings.getBoolean(CFG_COMPLETED);
+    validationErrors = settings.getStringArray(CFG_VALIDATION_ERRORS);
   }
 
   @Override
@@ -104,12 +97,23 @@ class FSKEditorJSViewValue extends JSONViewContent {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    return false;
+
+    FSKEditorJSViewValue other = (FSKEditorJSViewValue) obj;
+
+    return Objects.equals(modelMetaData, other.modelMetaData)
+        && Objects.equals(modelScript, other.modelScript)
+        && Objects.equals(visualizationScript, other.visualizationScript)
+        && Arrays.equals(resourcesFiles, other.resourcesFiles)
+        && Objects.equals(serverName, other.serverName)
+        && Objects.equals(isCompleted, other.isCompleted)
+        && Arrays.equals(validationErrors, other.validationErrors);
+//        && Objects.equals(modelType, other.modelType);
   }
 
   @Override
   public int hashCode() {
-    return pseudoIdentifier;
+    return Objects.hash(modelMetaData, modelScript, visualizationScript, readme, resourcesFiles,
+        serverName, isCompleted, validationErrors); 
   }
 
   public String getModelMetaData() {
@@ -118,5 +122,70 @@ class FSKEditorJSViewValue extends JSONViewContent {
 
   public void setModelMetaData(String modelMetaData) {
     this.modelMetaData = modelMetaData;
+  }
+
+  public String getModelScript() {
+    return modelScript;
+  }
+
+  public void setModelScript(String modelScript) {
+    this.modelScript = modelScript;
+  }
+
+  public String getVisualizationScript() {
+    return visualizationScript;
+  }
+
+  public void setVisualizationScript(String visualizationScript) {
+    this.visualizationScript = visualizationScript;
+  }
+
+  public String getReadme() {
+    return readme;
+  }
+
+  public void setReadme(String readme) {
+    this.readme = readme;
+  }
+
+  public String[] getResourcesFiles() {
+    return resourcesFiles;
+  }
+
+  public void setResourcesFiles(String[] resourcesFiles) {
+    this.resourcesFiles = resourcesFiles;
+  }
+
+  public String getServerName() {
+    return serverName;
+  }
+
+  public void setServerName(String serverName) {
+    this.serverName = serverName;
+  }
+
+  public boolean isCompleted() {
+    return isCompleted;
+  }
+
+  public void setCompleted(boolean isCompleted) {
+    this.isCompleted = isCompleted;
+  }
+
+  public String[] getValidationErrors() {
+    return validationErrors;
+  }
+
+  public void setValidationErrors(String[] validationErrors) {
+    this.validationErrors = validationErrors;
+  }
+
+  /**
+   * Utility check for checking quickly if this view value is empty. A view value with all its
+   * mandatory properties not set is considered empty.
+   */
+  public boolean isEmpty() {
+    return StringUtils.isEmpty(modelMetaData) && StringUtils.isEmpty(modelScript) &&
+        StringUtils.isEmpty(visualizationScript);
   }
 }

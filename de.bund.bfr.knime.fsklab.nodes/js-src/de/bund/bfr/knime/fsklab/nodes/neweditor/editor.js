@@ -46,32 +46,20 @@ fskeditorjs = function () {
       _metadata.modelMath = metaData.modelMath ? metaData.modelMath : {};
     }
 
-    if (value.modelType === "genericModel") {
-      handler = new fskutil.GenericModel(_metadata);
-    } else if (value.modelType === "dataModel") {
-      handler = new fskutil.DataModel(_metadata);
-    } else if (value.modelType === "predictiveModel") {
-      handler = new fskutil.PredictiveModel(_metadata);
-    } else if (value.modelType === "otherModel") {
-      handler = new fskutil.OtherModel(_metadata);
-    } else if (value.modelType === "toxicologicalModel") {
-      handler = new fskutil.ToxicologicalModel(_metadata);
-    } else if (value.modelType === "doseResponseModel") {
-      handler = new fskutil.DoseResponseModel(_metadata);
-    } else if (value.modelType === "exposureModel") {
-      handler = new fskutil.ExposureModel(_metadata);
-    } else if (value.modelType === "processModel") {
-      handler = new fskutil.ProcessModel(_metadata);
-    } else if (value.modelType === "consumptionModel") {
-      handler = new fskutil.ConsumptionModel(_metadata);
-    } else if (value.modelType === "healthModel") {
-      handler = new fskutil.HealthModel(_metadata);
-    } else if (value.modelType === "riskModel") {
-      handler = new fskutil.RiskModel(_metadata);
-    } else if (value.modelType === "qraModel") {
-      handler = new fskutil.QraModel(_metadata);
-    } else {
-      handler = new fskutil.GenericModel(_metadata);
+    switch (value.modelMetaData.modelType) {
+      case "genericModel": handler = new fskutil.GenericModel(_metadata); break;
+      case "dataModel": handler = new fskutil.DataModel(_metadata); break;
+      case "predictiveModel": handler = new fskutil.PredictiveModel(_metadata); break;
+      case "otherModel": handler = new fskutil.OtherModel(_metadata); break;
+      case "toxicologicalModel": handler = new fskutil.ToxicologicalModel(_metadata); break;
+      case "doseResponseModel": handler = new fskutil.DoseResponseModel(_metadata); break;
+      case "exposureModel": handler = new fskutil.ExposureModel(_metadata); break;
+      case "processModel": handler = new fskutil.ProcessModel(_metadata); break;
+      case "consumptionModel": handler = new fskutil.ConsumptionModel(_metadata); break;
+      case "healthModel": handler = new fskutil.HealthModel(_metadata); break;
+      case "riskModel": handler = new fskutil.RiskModel(_metadata); break;
+      case "qraModel": handler = new fskutil.QraModel(_metadata); break;
+      default: handler = new fskutil.GenericModel(_metadata); break;
     }
 
     createUI();
@@ -85,11 +73,14 @@ fskeditorjs = function () {
     // If the code mirrors are not created yet, use the original scripts.
     let viewValue = {
       modelMetaData: metaDataString,
-      firstModelScript: _modelCodeMirror ? _modelCodeMirror.getValue() : _metadata.firstModelScript,
-      firstModelViz: _visualizationCodeMirror ? _visualizationCodeMirror.getValue() : _metadata.firstModelViz,
+      modelType: _metadata.modelType,
+      modelScript: _modelCodeMirror ? _modelCodeMirror.getValue() : _val.modelScript,
+      visualizationScript: _visualizationCodeMirror ? _visualizationCodeMirror.getValue() : _val.visualizationScript,
       readme: _readmeCodeMirror ? _readmeCodeMirror.getValue() : _metadata.readme,
       resourceFiles: _val.resourceFiles, // TODO: get actual resource files from editor
-      serverName: _val.serverName // TODO: get actual serverName from editor?
+      serverName: _val.serverName, // TODO: get actual serverName from editor?
+      isCompleted: true,
+      validationErrors: []
     };
 
     return viewValue;
@@ -106,8 +97,8 @@ fskeditorjs = function () {
   function createUI() {
 
     let panelsById = [
-      { id: "modelScript", panel: `<textarea id="modelScriptArea">${_val.firstModelScript}</textarea>` },
-      { id: "visualizationScript", panel: `<textarea id="visualizationScriptArea">${_val.firstModelViz}</textarea>` },
+      { id: "modelScript", panel: `<textarea id="modelScriptArea">${_val.modelScript}</textarea>` },
+      { id: "visualizationScript", panel: `<textarea id="visualizationScriptArea">${_val.visualizationScript}</textarea>` },
       { id: "readme", panel: `<textarea id="readmeArea" name="readmeArea">${_val.readme}</textarea>` }
     ];
 

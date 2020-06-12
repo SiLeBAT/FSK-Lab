@@ -192,9 +192,12 @@ class JSSimulatorNodeModel
     if (inObj instanceof CombinedFskPortObject) {
       final List<Parameter> inputParams = getViewRepresentation().parameters;
       inObj.simulations.clear();
+      
+      // For every simulation in the view value (val.simulations)
       for (final JSSimulation jsSimulation : val.simulations) {
         final FskSimulation fskSimulation = new FskSimulation(jsSimulation.name);
         for (int i = 0; i < inputParams.size(); i++) {
+          // Map param id from metadata to its value from the view value simulation (jsSimulation)
           final String paramName = inputParams.get(i).getId();
           final String paramValue = jsSimulation.values.get(i);
           fskSimulation.getParameters().put(paramName, paramValue);

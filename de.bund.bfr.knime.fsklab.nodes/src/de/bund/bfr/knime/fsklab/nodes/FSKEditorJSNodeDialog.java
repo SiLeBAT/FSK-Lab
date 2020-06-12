@@ -24,17 +24,12 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -71,9 +66,7 @@ import de.bund.bfr.knime.fsklab.nodes.common.ui.FBrowseButton;
 
 class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
 
-  private FSKEditorJSNodeSettings settings;
-
-  private final DefaultComboBoxModel<String> modeltype;
+  private final DefaultComboBoxModel<ModelType> modelTypeComboBoxModel;
 
   private final FilesHistoryPanel m_readmePanel;
 
@@ -87,14 +80,36 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
 
   private WorkingDirectoryChangeListener changeListener = new WorkingDirectoryChangeListener();
 
-  private static final String[] MODEL_TYPES = {"GenericModel", "DataModel", "PredictiveModel",
-      "ExposureModel", "ToxicologicalModel", "DoseResponseModel", "ProcessModel",
-      "ConsumptionModel", "HealthModel", "RiskModel", "QraModel", "OtherModel"};
+  enum ModelType {
+
+    genericModel("Generic model"),
+    dataModel("Data model"),
+    consumptionModel("Consumption model"),
+    doseResponseModel("Dose-response model"),
+    exposureModel("Exposure model"),
+    healthModel("Health metrics model"),
+    otherModel("Other Empirical models"),
+    predictiveModel("Predictive model"),
+    processModel("Process model"),
+    qraModel("QRA model"),
+    riskModel("Risk characterization model"),
+    toxicologicalModel("Toxicological reference value model");
+
+    private final String displayString;
+
+    private ModelType(String displayString) {
+      this.displayString = displayString;
+    }
+
+    @Override
+    public String toString() {
+      return displayString;
+    }
+  }
 
   public FSKEditorJSNodeDialog() {
-    settings = new FSKEditorJSNodeSettings();
 
-    modeltype = new DefaultComboBoxModel<>(MODEL_TYPES);
+    modelTypeComboBoxModel = new DefaultComboBoxModel<>(ModelType.values());
 
     FlowVariableModel readmeVariable = createFlowVariableModel("readme", FlowVariable.Type.STRING);
     m_readmePanel =
@@ -109,39 +124,56 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
     createUI();
   }
 
-  /** Loads settings from saved settings. */
+  /**
+   * Update the dialog with the passed data.
+   * 
+   * @param modelType Non null model type.
+   * @param readmeFile Empty string if not set.
+   * @param workingDirectory Empty string if not set.
+   */
+  private void updateDialog(ModelType modelType, String readmeFile, String workingDirectory) {
 
+    modelTypeComboBoxModel.setSelectedItem(modelType);
+
+    m_readmePanel.setSelectedFile(!readmeFile.isEmpty() ? readmeFile : "");
+
+    if (!workingDirectory.isEmpty()) {
+
+      try {
+        m_workingDirectoryPanel.setSelectedFile(workingDirectory);
+
+        // Populate resources table with all the files in the working directory
+        URL url = FileUtil.toURL(m_workingDirectoryPanel.getSelectedFile());
+        Path localPath = FileUtil.resolveToPath(url);
+
+        if (localPath != null) {
+          // Clear and local file names from directory localPath
+          fileModel.filenames = Files.walk(localPath).filter(Files::isRegularFile)
+              .map(Path::toString).toArray(String[]::new);
+          fileTable.revalidate();
+          currentWorkingDirectory = new File(workingDirectory);
+        }
+      } catch (Exception err) {
+        m_workingDirectoryPanel.setSelectedFile("");
+        fileModel.filenames = new String[0];
+        currentWorkingDirectory = null;
+      }
+    } else {
+      m_workingDirectoryPanel.setSelectedFile("");
+    }
+  }
+
+  /** Loads settings from saved settings. */
   @Override
   protected void loadSettingsFrom(NodeSettingsRO settings, PortObjectSpec[] specs)
       throws NotConfigurableException {
-    try {
-      this.settings.load(settings);
-      modeltype.setSelectedItem(this.settings.modelType);
-      m_readmePanel.setSelectedFile(this.settings.getReadme());
-      m_workingDirectoryPanel.setSelectedFile(this.settings.getWorkingDirectory());
 
-      if (!m_workingDirectoryPanel.getSelectedFile().isEmpty()) {
-        try {
-          URL url = FileUtil.toURL(m_workingDirectoryPanel.getSelectedFile());
-          Path localPath = FileUtil.resolveToPath(url);
-          if (localPath != null) {
+    FSKEditorJSNodeSettings settingsHelper = new FSKEditorJSNodeSettings();
+    settingsHelper.load(settings);
 
-            // Clear and load file names from directory localPath
-            fileModel.filenames.clear();
-            Files.walk(localPath).filter(Files::isRegularFile).map(Path::toString)
-                .forEach(fileModel.filenames::add);
-
-            fileTable.revalidate();
-            currentWorkingDirectory = new File(this.settings.getWorkingDirectory());
-          }
-
-        } catch (IOException | URISyntaxException e) {
-          e.printStackTrace();
-        }
-      }
-    } catch (InvalidSettingsException exception) {
-      throw new NotConfigurableException(exception.getMessage(), exception);
-    }
+    // Update dialog
+    updateDialog(settingsHelper.getModelType(), settingsHelper.getReadmeFile(),
+        settingsHelper.getWorkingDirectory());
   }
 
   /** Loads settings from input port. */
@@ -149,68 +181,50 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
   protected void loadSettingsFrom(NodeSettingsRO settings, PortObject[] input)
       throws NotConfigurableException {
 
-    final FSKEditorJSNodeSettings editorSettings = new FSKEditorJSNodeSettings();
-    try {
+    FSKEditorJSViewRepresentation repr = new FSKEditorJSNodeModel().getViewRepresentation();
+    FskPortObject inputPort = (FskPortObject) input[0];
+
+    // If the node id stored in representation is the same as the one from the input port, then
+    // the settings described the same model connected to this editor
+    if (inputPort.id == repr.getConnectedNodeId()) {
+      // Keep settings
+      FSKEditorJSNodeSettings editorSettings = new FSKEditorJSNodeSettings();
       editorSettings.load(settings);
-    } catch (InvalidSettingsException exception) {
-      throw new NotConfigurableException("InvalidSettingsException", exception);
+
+      // Fill dialog with settings
+      updateDialog(editorSettings.getModelType(), editorSettings.getReadmeFile(),
+          editorSettings.getWorkingDirectory());
     }
 
-    final FskPortObject inObj = (FskPortObject) input[0];
+    // Editor has been connected to another model.
+    else {
+      ModelType modelType = ModelType.valueOf(inputPort.modelMetadata.getModelType());
 
-    /*
-     * If input model has not changed (the original scripts stored in settings match the input
-     * model).
-     */
-    if (Objects.equals(editorSettings.getWorkingDirectory(), inObj.getWorkingDirectory())) {
-      // Updates settings
-      this.settings = editorSettings;
-    } else {
-      // Discard settings and replace them with input model
-      this.settings.setReadme(inObj.getReadme());
-      this.settings.setWorkingDirectory(inObj.getWorkingDirectory());
+      // Readme cannot be assigned for now as the dialog uses a file (readme file)
+      // and the port object has a string (raw readme). In this case, an empty string is assigned
+      // and the full readme from the port object will be read in the node model.
+      String readme = "";
+
+      String workingDirectory = inputPort.getWorkingDirectory();
+      updateDialog(modelType, readme, workingDirectory);
+
+      // And update the connected node id in the representation
+      repr.setConnectedNodeId(inputPort.id);
     }
-
-    if (!inObj.getReadme().isEmpty()) {
-      m_readmePanel.getParent().setVisible(false);
-    }
-
-    m_readmePanel.updateHistory();
-    m_readmePanel.setSelectedFile(this.settings.getReadme());
-    m_workingDirectoryPanel.removeChangeListener(changeListener);
-    m_workingDirectoryPanel.updateHistory();
-    m_workingDirectoryPanel.setSelectedFile(this.settings.getWorkingDirectory());
-    m_workingDirectoryPanel.addChangeListener(changeListener);
-
-    try {
-      URL url = FileUtil.toURL(m_workingDirectoryPanel.getSelectedFile());
-      Path localPath = FileUtil.resolveToPath(url);
-
-      // Clear and load file names from directory localPath
-      fileModel.filenames.clear();
-      Files.walk(localPath).filter(Files::isRegularFile).map(Path::toString)
-          .forEach(fileModel.filenames::add);
-
-      fileTable.revalidate();
-      currentWorkingDirectory = new File(this.settings.getWorkingDirectory());
-    } catch (IOException | URISyntaxException e) {
-      e.printStackTrace();
-    }
-    this.settings.modelType = (String) modeltype.getSelectedItem();
-    this.settings = editorSettings;
   }
 
   @Override
   protected void saveSettingsTo(NodeSettingsWO settings) throws InvalidSettingsException {
-    this.settings.setReadme(m_readmePanel.getSelectedFile().trim());
-    m_readmePanel.addToHistory();
 
-    this.settings.setWorkingDirectory(m_workingDirectoryPanel.getSelectedFile().trim());
+    m_readmePanel.addToHistory();
     m_workingDirectoryPanel.addToHistory();
 
-    this.settings.setResources(String.join(";", fileModel.filenames));
-
-    this.settings.save(settings);
+    FSKEditorJSNodeSettings settingsHelper = new FSKEditorJSNodeSettings();
+    settingsHelper.setReadme(m_readmePanel.getSelectedFile().trim());
+    settingsHelper.setWorkingDirectory(m_workingDirectoryPanel.getSelectedFile().trim());
+    settingsHelper.setResources(fileModel.filenames);
+    settingsHelper.setModelType((ModelType) modelTypeComboBoxModel.getSelectedItem());
+    settingsHelper.save(settings);
   }
 
   private void createUI() {
@@ -223,8 +237,7 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
     modelTypePanel.setBorder(
         BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Model Type:"));
 
-    JComboBox<String> combo = new JComboBox<>(modeltype);
-    combo.addItemListener(event -> settings.modelType = (String) event.getItem());
+    JComboBox<ModelType> combo = new JComboBox<>(modelTypeComboBoxModel);
     modelTypePanel.add(combo, BorderLayout.NORTH);
 
     modelTypePanel.add(Box.createHorizontalGlue());
@@ -297,9 +310,8 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
 
           }.execute();
 
-          fileModel.filenames.addAll(
-              Arrays.stream(files).map(p -> p.toPath().toString()).collect(Collectors.toList()));
-
+          fileModel.filenames =
+              Arrays.stream(files).map(p -> p.toPath().toString()).toArray(String[]::new);
           fileTable.revalidate();
         }
       }
@@ -327,18 +339,18 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
     addTab("Options", container);
   }
 
-  class FileTableModel extends AbstractTableModel {
+  private class FileTableModel extends AbstractTableModel {
 
     private static final long serialVersionUID = 7828275630230509962L;
 
-    protected List<String> filenames;
+    private String[] filenames;
 
     private final String[] columnNames =
         {"Name", "Size", "Last modified", "Readable?", "Writable?"};
 
     // This table model works for any one given directory
     public FileTableModel() {
-      filenames = new ArrayList<>();
+      filenames = new String[0];
     }
 
     @Override
@@ -348,7 +360,7 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
 
     @Override
     public int getRowCount() {
-      return filenames.size();
+      return filenames.length;
     } // # of files in dir
 
     @Override
@@ -359,7 +371,7 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
     // The method that must actually return the value of each cell.
     @Override
     public Object getValueAt(int row, int col) {
-      File f = new File(filenames.get(row));
+      File f = new File(filenames[row]);
       switch (col) {
         case 0:
           return f.getName();
@@ -406,13 +418,11 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
               FileUtils.copyDirectory(currentWorkingDirectory, newDirectory);
             }
           }
-          
+
           // Update fileModel.filenames with the files in newDirectory
-          fileModel.filenames.clear();
-          for (File file : newDirectory.listFiles()) {
-            fileModel.filenames.add(file.getAbsolutePath());
-          }
-          
+          fileModel.filenames = Arrays.stream(newDirectory.listFiles()).map(File::getAbsolutePath)
+              .toArray(String[]::new);
+
           // Update currentWorkingDirectory
           currentWorkingDirectory = newDirectory;
 
