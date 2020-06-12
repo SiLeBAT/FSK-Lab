@@ -20,7 +20,6 @@ fskeditorjs = function () {
   let handler;
 
   view.init = function (representation, value) {
-    alert(value.modelMetaData);
 
     fskutil = new fskutil();
 
