@@ -77,6 +77,8 @@ public class ConsumptionModelSheetImporterTest {
 		assertEquals(3, background.getDietaryAssessmentMethod().size());
 		assertEquals(3, background.getLaboratory().size());
 		assertEquals(3, background.getAssay().size());
+		
+		TestUtils.testFirstStudySample(background.getStudySample().get(0));
 	}
 
 	private static void test(PredictiveModelModelMath math) {

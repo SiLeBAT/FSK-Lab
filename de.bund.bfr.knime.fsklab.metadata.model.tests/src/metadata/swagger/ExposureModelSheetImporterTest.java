@@ -78,6 +78,8 @@ public class ExposureModelSheetImporterTest {
 		assertEquals(3, background.getDietaryAssessmentMethod().size());
 		assertEquals(3, background.getLaboratory().size());
 		assertEquals(3, background.getAssay().size());
+		
+		TestUtils.testFirstStudySample(background.getStudySample().get(0));
 	}
 
 	private void test(GenericModelModelMath math) {

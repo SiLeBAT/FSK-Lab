@@ -417,56 +417,81 @@ public class ImporterUtils {
 		return reference;
 	}
 
-	public static StudySample retrieveStudySample(Row row) {
+	/**
+	 * @param row     Spreadsheet row
+	 * @param columns Column numbers for the columns with keys:
+	 *                <ul>
+	 *                <li>sample
+	 *                <li>protocolOfSampleCollection
+	 *                <li>samplingStrategy
+	 *                <li>samplingProgramType
+	 *                <li>samplingMethod
+	 *                <li>samplingPlan
+	 *                <li>samplingWeight
+	 *                <li>samplingSize
+	 *                <li>lotSizeUnit
+	 *                <li>samplingPoint
+	 *                </ul>
+	 */
+	public static StudySample retrieveStudySample(Row row, Map<String, Integer> columns) {
 
 		// Check mandatory properties
-		if (row.getCell(SheetImporter.L).getCellTypeEnum() == CellType.BLANK) {
+		final Cell sampleNameCell = row.getCell(columns.get("sample"));
+		if (sampleNameCell.getCellTypeEnum() == CellType.BLANK) {
 			throw new IllegalArgumentException("Missing sample name");
 		}
-		if (row.getCell(SheetImporter.M).getCellTypeEnum() == CellType.BLANK) {
+		
+		final Cell protocolCell = row.getCell(columns.get("protocolOfSampleCollection"));
+		if (protocolCell.getCellTypeEnum() == CellType.BLANK) {
 			throw new IllegalArgumentException("Missing protocol of sample collection");
 		}
-		if (row.getCell(SheetImporter.Q).getCellTypeEnum() == CellType.BLANK) {
+		
+		final Cell methodCell = row.getCell(columns.get("samplingMethod"));
+		if (methodCell.getCellTypeEnum() == CellType.BLANK) {
 			throw new IllegalArgumentException("Missing sampling method");
 		}
-		if (row.getCell(SheetImporter.R).getCellTypeEnum() == CellType.BLANK) {
+		
+		final Cell weightCell = row.getCell(columns.get("samplingWeight"));
+		if (weightCell.getCellTypeEnum() == CellType.BLANK) {
 			throw new IllegalArgumentException("Missing sampling weight");
 		}
-		if (row.getCell(SheetImporter.S).getCellTypeEnum() == CellType.BLANK) {
+		
+		final Cell sizeCell = row.getCell(columns.get("samplingSize"));
+		if (sizeCell.getCellTypeEnum() == CellType.BLANK) {
 			throw new IllegalArgumentException("Missing sampling size");
 		}
 
 		final StudySample sample = new StudySample();
-		sample.setSampleName(row.getCell(SheetImporter.L).getStringCellValue());
-		sample.setProtocolOfSampleCollection(row.getCell(SheetImporter.M).getStringCellValue());
+		sample.setSampleName(sampleNameCell.getStringCellValue());
+		sample.setProtocolOfSampleCollection(protocolCell.getStringCellValue());
 
-		final Cell strategyCell = row.getCell(SheetImporter.N);
+		final Cell strategyCell = row.getCell(columns.get("samplingStrategy"));
 		if (strategyCell.getCellTypeEnum() == CellType.STRING) {
 			sample.setSamplingStrategy(strategyCell.getStringCellValue());
 		}
 
-		final Cell samplingProgramCell = row.getCell(SheetImporter.O);
+		final Cell samplingProgramCell = row.getCell(columns.get("samplingProgramType"));
 		if (samplingProgramCell.getCellTypeEnum() == CellType.STRING) {
 			sample.setTypeOfSamplingProgram(samplingProgramCell.getStringCellValue());
 		}
 
-		final Cell samplingMethodCell = row.getCell(SheetImporter.P);
+		final Cell samplingMethodCell = row.getCell(columns.get("samplingMethod"));
 		if (samplingMethodCell.getCellTypeEnum() == CellType.STRING) {
 			sample.setSamplingMethod(samplingMethodCell.getStringCellValue());
 		}
 
-		sample.setSamplingPlan(row.getCell(SheetImporter.Q).getStringCellValue());
-		sample.setSamplingWeight(row.getCell(SheetImporter.R).getStringCellValue());
-		sample.setSamplingSize(row.getCell(SheetImporter.S).getStringCellValue());
+		sample.setSamplingPlan(row.getCell(columns.get("samplingPlan")).getStringCellValue());
+		sample.setSamplingWeight(row.getCell(columns.get("samplingWeight")).getStringCellValue());
+		sample.setSamplingSize(row.getCell(columns.get("samplingSize")).getStringCellValue());
 
-		final Cell unitCell = row.getCell(SheetImporter.T);
+		final Cell unitCell = row.getCell(columns.get("lotSizeUnit"));
 		if (unitCell.getCellTypeEnum() == CellType.STRING) {
-			sample.setLotSizeUnit(row.getCell(SheetImporter.T).getStringCellValue());
+			sample.setLotSizeUnit(unitCell.getStringCellValue());
 		}
 
-		final Cell pointCell = row.getCell(SheetImporter.U);
+		final Cell pointCell = row.getCell(columns.get("samplingPoint"));
 		if (pointCell.getCellTypeEnum() == CellType.STRING) {
-			sample.setSamplingPoint(row.getCell(SheetImporter.U).getStringCellValue());
+			sample.setSamplingPoint((pointCell).getStringCellValue());
 		}
 
 		return sample;

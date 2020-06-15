@@ -107,6 +107,9 @@ public class QraModelSheetImporter implements SheetImporter {
 
 	/** Columns for each of the properties of Parameter. */
 	private final HashMap<String, Integer> parameterColumns;
+	
+	/** Columns for each of the properties of StudySample. */
+	private final HashMap<String, Integer> sampleColumns;
 
 	public QraModelSheetImporter() {
 
@@ -183,6 +186,18 @@ public class QraModelSheetImporter implements SheetImporter {
 		parameterColumns.put("max", Y);
 		parameterColumns.put("min", Z);
 		parameterColumns.put("error", AA);
+		
+		sampleColumns = new HashMap<>();
+		sampleColumns.put("sample", L);
+		sampleColumns.put("protocolOfSampleCollection", M);
+		sampleColumns.put("samplingStrategy", N);
+		sampleColumns.put("samplingProgramType", O);
+		sampleColumns.put("samplingMethod", P);
+		sampleColumns.put("samplingPlan", Q);
+		sampleColumns.put("samplingWeight", R);
+		sampleColumns.put("samplingSize", S);
+		sampleColumns.put("lotSizeUnit", T);
+		sampleColumns.put("samplingPoint", U);
 	}
 
 	private GenericModelDataBackground retrieveBackground(Sheet sheet) {
@@ -196,7 +211,8 @@ public class QraModelSheetImporter implements SheetImporter {
 
 		for (int numrow = BG_STUDY_SAMPLE_ROW; numrow < (BG_STUDY_SAMPLE_ROW + 3); numrow++) {
 			try {
-				StudySample sample = ImporterUtils.retrieveStudySample(sheet.getRow(numrow));
+				Row row = sheet.getRow(numrow);
+				StudySample sample = ImporterUtils.retrieveStudySample(row, sampleColumns);
 				background.addStudySampleItem(sample);
 			} catch (Exception exception) {
 			}

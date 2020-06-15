@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNull;
 
 import de.bund.bfr.metadata.swagger.Contact;
 import de.bund.bfr.metadata.swagger.Parameter;
+import de.bund.bfr.metadata.swagger.StudySample;
 
 class TestUtils {
 
@@ -49,5 +50,17 @@ class TestUtils {
 		assertEquals("max0", firstParameter.getMaxValue());
 		assertEquals("min0", firstParameter.getMinValue());
 		assertEquals("error0", firstParameter.getError());
+	}
+	
+	static void testFirstStudySample(StudySample sample) {
+		assertEquals("name", sample.getSampleName());
+		assertEquals("collection", sample.getProtocolOfSampleCollection());
+		assertEquals("Census", sample.getSamplingStrategy());
+		assertEquals("According to 97/747/EC", sample.getSamplingMethod());
+		assertEquals("plan", sample.getSamplingPlan());
+		assertEquals("a", sample.getSamplingWeight());
+		assertEquals("b", sample.getSamplingSize());
+		assertEquals("[aw]", sample.getLotSizeUnit());
+		assertEquals("Air transport", sample.getSamplingPoint());
 	}
 }

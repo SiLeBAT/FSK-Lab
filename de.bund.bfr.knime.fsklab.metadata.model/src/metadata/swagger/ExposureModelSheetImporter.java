@@ -107,6 +107,9 @@ public class ExposureModelSheetImporter implements SheetImporter {
 	/** Columns for each of the properties of Parameter. */
 	private final HashMap<String, Integer> parameterColumns;
 	
+	/** Columns for each of the properties of StudySample. */
+	private final HashMap<String, Integer> sampleColumns;
+	
 	public ExposureModelSheetImporter() {
 
 		methodColumns = new HashMap<>();
@@ -191,6 +194,18 @@ public class ExposureModelSheetImporter implements SheetImporter {
 		parameterColumns.put("max", X);
 		parameterColumns.put("min", Y);
 		parameterColumns.put("error", Z);
+		
+		sampleColumns = new HashMap<>();
+		sampleColumns.put("sample", K);
+		sampleColumns.put("protocolOfSampleCollection", L);
+		sampleColumns.put("samplingStrategy", M);
+		sampleColumns.put("samplingProgramType", N);
+		sampleColumns.put("samplingMethod", O);
+		sampleColumns.put("samplingPlan", P);
+		sampleColumns.put("samplingWeight", Q);
+		sampleColumns.put("samplingSize", R);
+		sampleColumns.put("lotSizeUnit", S);
+		sampleColumns.put("samplingPoint", T);
 	}
 
 	private GenericModelDataBackground retrieveBackground(Sheet sheet) {
@@ -206,7 +221,8 @@ public class ExposureModelSheetImporter implements SheetImporter {
 
 		for (int numrow = BG_STUDY_SAMPLE_ROW; numrow < (BG_STUDY_SAMPLE_ROW + 3); numrow++) {
 			try {
-				StudySample sample = ImporterUtils.retrieveStudySample(sheet.getRow(numrow));
+				Row row = sheet.getRow(numrow);
+				StudySample sample = ImporterUtils.retrieveStudySample(row, sampleColumns);
 				background.addStudySampleItem(sample);
 			} catch (Exception exception) {
 				// Skip faulty sample and continue

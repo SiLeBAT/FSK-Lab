@@ -85,30 +85,33 @@ public class ConsumptionModelSheetImporter implements SheetImporter {
 
 	private int MM_PARAMETER_ROW = 119;
 	private int MM_FITTING_PROCEDURE_ROW = 135;
-	
+
 	/** Columns for each of the properties of DietaryAssessmentMethod. */
 	private final HashMap<String, Integer> methodColumns;
-	
+
 	/** Columns for each of the properties of Laboratory. */
 	private final HashMap<String, Integer> laboratoryColumns;
-	
+
 	/** Columns for each of the properties of Creator. */
 	private final HashMap<String, Integer> creatorColumns;
-	
+
 	/** Columns for each of the properties of Creator. */
 	private final HashMap<String, Integer> authorColumns;
-	
+
 	/** Columns for each of the properties of Reference. */
 	private final HashMap<String, Integer> referenceColumns;
-	
+
 	/** Columns for each of the properties of Product. */
 	private final HashMap<String, Integer> productColumns;
-	
+
 	/** Columns for each of the properties of Parameter. */
 	private final HashMap<String, Integer> parameterColumns;
-	
+
+	/** Columsn for each of the properties of StudySample. */
+	private final HashMap<String, Integer> sampleColumns;
+
 	public ConsumptionModelSheetImporter() {
-		
+
 		methodColumns = new HashMap<>();
 		methodColumns.put("collectionTool", L);
 		methodColumns.put("numberOfNonConsecutiveOneDay", M);
@@ -116,12 +119,12 @@ public class ConsumptionModelSheetImporter implements SheetImporter {
 		methodColumns.put("numberOfFoodItems", O);
 		methodColumns.put("recordTypes", P);
 		methodColumns.put("foodDescriptors", Q);
-		
+
 		laboratoryColumns = new HashMap<>();
 		laboratoryColumns.put("accreditation", L);
 		laboratoryColumns.put("name", M);
 		laboratoryColumns.put("country", N);
-		
+
 		creatorColumns = new HashMap<>();
 		creatorColumns.put("mail", S);
 		creatorColumns.put("title", L);
@@ -134,7 +137,7 @@ public class ConsumptionModelSheetImporter implements SheetImporter {
 		creatorColumns.put("zipCode", V);
 		creatorColumns.put("region", Z);
 		creatorColumns.put("organization", Q);
-		
+
 		authorColumns = new HashMap<>();
 		authorColumns.put("title", AB);
 		authorColumns.put("name", AC);
@@ -151,7 +154,7 @@ public class ConsumptionModelSheetImporter implements SheetImporter {
 		authorColumns.put("streetAddress", AN);
 		authorColumns.put("extendedAddress", AO);
 		authorColumns.put("region", AP);
-		
+
 		referenceColumns = new HashMap<>();
 		referenceColumns.put("referenceDescription", L);
 		referenceColumns.put("type", M);
@@ -164,7 +167,7 @@ public class ConsumptionModelSheetImporter implements SheetImporter {
 		referenceColumns.put("status", U);
 		referenceColumns.put("website", V);
 		referenceColumns.put("comment", W);
-		
+
 		productColumns = new HashMap<>();
 		productColumns.put("name", L);
 		productColumns.put("description", M);
@@ -177,7 +180,7 @@ public class ConsumptionModelSheetImporter implements SheetImporter {
 		productColumns.put("fisheriesArea", T);
 		productColumns.put("productionDate", U);
 		productColumns.put("expiryDate", V);
-		
+
 		parameterColumns = new HashMap<>();
 		parameterColumns.put("id", L);
 		parameterColumns.put("classification", M);
@@ -195,6 +198,18 @@ public class ConsumptionModelSheetImporter implements SheetImporter {
 		parameterColumns.put("max", Y);
 		parameterColumns.put("min", Z);
 		parameterColumns.put("error", AA);
+
+		sampleColumns = new HashMap<>();
+		sampleColumns.put("sample", L);
+		sampleColumns.put("protocolOfSampleCollection", M);
+		sampleColumns.put("samplingStrategy", N);
+		sampleColumns.put("samplingProgramType", O);
+		sampleColumns.put("samplingMethod", P);
+		sampleColumns.put("samplingPlan", Q);
+		sampleColumns.put("samplingWeight", R);
+		sampleColumns.put("samplingSize", S);
+		sampleColumns.put("lotSizeUnit", T);
+		sampleColumns.put("samplingPoint", U);
 	}
 
 	private PredictiveModelGeneralInformation retrieveGeneralInformation(Sheet sheet) {
@@ -218,14 +233,14 @@ public class ConsumptionModelSheetImporter implements SheetImporter {
 
 		for (int numRow = GI_CREATOR_ROW; numRow < GI_CREATOR_ROW + 6; numRow++) {
 			Row row = sheet.getRow(numRow);
-			
+
 			try {
 				Contact contact = ImporterUtils.retrieveContact(row, creatorColumns);
 				information.addCreatorItem(contact);
 			} catch (Exception exception) {
 				// Skip faulty contact and continue
 			}
-			
+
 			try {
 				Contact author = ImporterUtils.retrieveContact(row, authorColumns);
 				information.addAuthorItem(author);
@@ -390,7 +405,8 @@ public class ConsumptionModelSheetImporter implements SheetImporter {
 
 		for (int numrow = BG_STUDY_SAMPLE_ROW; numrow < BG_STUDY_SAMPLE_ROW + 3; numrow++) {
 			try {
-				final StudySample sample = ImporterUtils.retrieveStudySample(sheet.getRow(numrow));
+				Row row = sheet.getRow(numrow);
+				final StudySample sample = ImporterUtils.retrieveStudySample(row, sampleColumns);
 				background.addStudySampleItem(sample);
 			} catch (final Exception exception) {
 				// Skip faulty sample and continue
@@ -399,7 +415,8 @@ public class ConsumptionModelSheetImporter implements SheetImporter {
 
 		for (int numrow = BG_DIET_ASSESS_ROW; numrow < BG_DIET_ASSESS_ROW + 3; numrow++) {
 			try {
-				final DietaryAssessmentMethod method = ImporterUtils.retrieveDietaryAssessmentMethod(sheet.getRow(numrow), methodColumns);
+				final DietaryAssessmentMethod method = ImporterUtils
+						.retrieveDietaryAssessmentMethod(sheet.getRow(numrow), methodColumns);
 				background.addDietaryAssessmentMethodItem(method);
 			} catch (final Exception exception) {
 				// Skip faulty method and continue
@@ -590,7 +607,7 @@ public class ConsumptionModelSheetImporter implements SheetImporter {
 		model.setScope(retrieveScope(sheet));
 		model.setDataBackground(retrieveBackground(sheet));
 		model.setModelMath(retrieveModelMath(sheet));
-		
+
 		return model;
 	}
 }

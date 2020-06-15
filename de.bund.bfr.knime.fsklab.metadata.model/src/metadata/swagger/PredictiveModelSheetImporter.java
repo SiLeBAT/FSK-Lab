@@ -101,6 +101,9 @@ public class PredictiveModelSheetImporter implements SheetImporter {
 	
 	/** Columns for each of the properties of Parameter. */
 	private final HashMap<String, Integer> parameterColumns;
+	
+	/** Columns for each of the properties of StudySample. */
+	private final HashMap<String, Integer> sampleColumns;
 
 	public PredictiveModelSheetImporter() {
 
@@ -160,6 +163,18 @@ public class PredictiveModelSheetImporter implements SheetImporter {
 		parameterColumns.put("max", Y);
 		parameterColumns.put("min", Z);
 		parameterColumns.put("error", AA);
+		
+		sampleColumns = new HashMap<>();
+		sampleColumns.put("sample", L);
+		sampleColumns.put("protocolOfSampleCollection", M);
+		sampleColumns.put("samplingStrategy", N);
+		sampleColumns.put("samplingProgramType", O);
+		sampleColumns.put("samplingMethod", P);
+		sampleColumns.put("samplingPlan", Q);
+		sampleColumns.put("samplingWeight", R);
+		sampleColumns.put("samplingSize", S);
+		sampleColumns.put("lotSizeUnit", T);
+		sampleColumns.put("samplingPoint", U);
 	}
 
 	private PredictiveModelGeneralInformation retrieveGeneralInformation(Sheet sheet) {
@@ -313,7 +328,8 @@ public class PredictiveModelSheetImporter implements SheetImporter {
 
 		for (int numrow = this.BG_STUDY_SAMPLE_ROW; numrow < (this.BG_STUDY_SAMPLE_ROW + 3); numrow++) {
 			try {
-				StudySample sample = retrieveStudySample(sheet.getRow(numrow));
+				Row row = sheet.getRow(numrow);
+				StudySample sample = ImporterUtils.retrieveStudySample(row, sampleColumns);
 				background.addStudySampleItem(sample);
 			} catch (Exception exception) {
 			}
@@ -633,61 +649,6 @@ public class PredictiveModelSheetImporter implements SheetImporter {
 		}
 
 		return study;
-	}
-
-	private StudySample retrieveStudySample(Row row) {
-
-		// Check mandatory properties
-		if (row.getCell(L).getCellTypeEnum() == CellType.BLANK) {
-			throw new IllegalArgumentException("Missing sample name");
-		}
-		if (row.getCell(M).getCellTypeEnum() == CellType.BLANK) {
-			throw new IllegalArgumentException("Missing protocol of sample collection");
-		}
-		if (row.getCell(Q).getCellTypeEnum() == CellType.BLANK) {
-			throw new IllegalArgumentException("Missing sampling method");
-		}
-		if (row.getCell(R).getCellTypeEnum() == CellType.BLANK) {
-			throw new IllegalArgumentException("Missing sampling weight");
-		}
-		if (row.getCell(S).getCellTypeEnum() == CellType.BLANK) {
-			throw new IllegalArgumentException("Missing sampling size");
-		}
-
-		StudySample sample = new StudySample();
-		sample.setSampleName(row.getCell(L).getStringCellValue());
-		sample.setProtocolOfSampleCollection(row.getCell(M).getStringCellValue());
-
-		Cell strategyCell = row.getCell(N);
-		if (strategyCell.getCellTypeEnum() == CellType.STRING) {
-			sample.setSamplingStrategy(strategyCell.getStringCellValue());
-		}
-
-		Cell samplingProgramCell = row.getCell(O);
-		if (samplingProgramCell.getCellTypeEnum() == CellType.STRING) {
-			sample.setTypeOfSamplingProgram(samplingProgramCell.getStringCellValue());
-		}
-
-		Cell samplingMethodCell = row.getCell(P);
-		if (samplingMethodCell.getCellTypeEnum() == CellType.STRING) {
-			sample.setSamplingMethod(samplingMethodCell.getStringCellValue());
-		}
-
-		sample.setSamplingPlan(row.getCell(Q).getStringCellValue());
-		sample.setSamplingWeight(row.getCell(R).getStringCellValue());
-		sample.setSamplingSize(row.getCell(S).getStringCellValue());
-
-		Cell unitCell = row.getCell(T);
-		if (unitCell.getCellTypeEnum() == CellType.STRING) {
-			sample.setLotSizeUnit(row.getCell(T).getStringCellValue());
-		}
-
-		Cell pointCell = row.getCell(U);
-		if (pointCell.getCellTypeEnum() == CellType.STRING) {
-			sample.setSamplingPoint(row.getCell(U).getStringCellValue());
-		}
-
-		return sample;
 	}
 
 	private Laboratory retrieveLaboratory(Row row) {

@@ -106,6 +106,9 @@ public class GenericModelSheetImporter implements SheetImporter {
 	/** Columns for each of the properties of Parameter. */
 	private final HashMap<String, Integer> parameterColumns;
 	
+	/** Columns for each of the properties of StudySample. */
+	private final HashMap<String, Integer> sampleColumns;
+	
 	public GenericModelSheetImporter() {
 		
 		methodColumns = new HashMap<>();
@@ -190,6 +193,18 @@ public class GenericModelSheetImporter implements SheetImporter {
 		authorColumns.put("zipCode", AK);
 		authorColumns.put("region", AO);
 		authorColumns.put("organization", AF);
+		
+		sampleColumns = new HashMap<>();
+		sampleColumns.put("sample", L);
+		sampleColumns.put("protocolOfSampleCollection", M);
+		sampleColumns.put("samplingStrategy", N);
+		sampleColumns.put("samplingProgramType", O);
+		sampleColumns.put("samplingMethod", P);
+		sampleColumns.put("samplingPlan", Q);
+		sampleColumns.put("samplingWeight", R);
+		sampleColumns.put("samplingSize", S);
+		sampleColumns.put("lotSizeUnit", T);
+		sampleColumns.put("samplingPoint", U);
 	}
 
 	private GenericModelGeneralInformation retrieveGeneralInformation(Sheet sheet) {
@@ -350,7 +365,8 @@ public class GenericModelSheetImporter implements SheetImporter {
 
 		for (int numrow = BG_STUDY_SAMPLE_ROW; numrow < BG_STUDY_SAMPLE_ROW + 3; numrow++) {
 			try {
-				final StudySample sample = ImporterUtils.retrieveStudySample(sheet.getRow(numrow));
+				Row row = sheet.getRow(numrow);
+				final StudySample sample = ImporterUtils.retrieveStudySample(row, sampleColumns);
 				background.addStudySampleItem(sample);
 			} catch (final Exception exception) {
 				// Skip faulty sample and continue
