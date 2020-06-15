@@ -27,9 +27,6 @@ import de.bund.bfr.metadata.swagger.Study;
 import de.bund.bfr.metadata.swagger.StudySample;
 import de.bund.bfr.metadata.swagger.ToxicologicalModel;
 import de.bund.bfr.metadata.swagger.ToxicologicalModelScope;
-import metadata.ParameterClassification;
-import metadata.ParameterType;
-import metadata.SwaggerUtil;
 
 public class ToxicologicalModelSheetImporter implements SheetImporter {
 
@@ -101,6 +98,9 @@ public class ToxicologicalModelSheetImporter implements SheetImporter {
 
 	/** Columns for each of the properties of Reference. */
 	private final HashMap<String, Integer> referenceColumns;
+	
+	/** Columns for each of the properties of Parameter. */
+	private final HashMap<String, Integer> parameterColumns;
 
 	public ToxicologicalModelSheetImporter() {
 
@@ -142,6 +142,24 @@ public class ToxicologicalModelSheetImporter implements SheetImporter {
 		referenceColumns.put("status", U);
 		referenceColumns.put("website", V);
 		referenceColumns.put("comment", W);
+		
+		parameterColumns = new HashMap<>();
+		parameterColumns.put("id", L);
+		parameterColumns.put("classification", M);
+		parameterColumns.put("name", N);
+		parameterColumns.put("description", O);
+		parameterColumns.put("unit", P);
+		parameterColumns.put("unitCategory", Q);
+		parameterColumns.put("dataType", R);
+		parameterColumns.put("source", S);
+		parameterColumns.put("subject", T);
+		parameterColumns.put("distribution", U);
+		parameterColumns.put("value", V);
+		parameterColumns.put("reference", W);
+		parameterColumns.put("variability", X);
+		parameterColumns.put("max", Y);
+		parameterColumns.put("min", Z);
+		parameterColumns.put("error", AA);
 	}
 
 	private PredictiveModelDataBackground retrieveBackground(Sheet sheet) {
@@ -187,7 +205,7 @@ public class ToxicologicalModelSheetImporter implements SheetImporter {
 		for (int rownum = MM_PARAMETER_ROW; rownum < sheet.getLastRowNum(); rownum++) {
 			try {
 				final Row row = sheet.getRow(rownum);
-				final Parameter param = retrieveParameter(row);
+				final Parameter param = ImporterUtils.retrieveParameter(row, parameterColumns);
 				math.addParameterItem(param);
 			} catch (final Exception exception) {
 				// ...
@@ -682,120 +700,6 @@ public class ToxicologicalModelSheetImporter implements SheetImporter {
 		}
 
 		return assay;
-	}
-
-	private Parameter retrieveParameter(Row row) {
-
-		// Check first mandatory properties
-		if (row.getCell(L).getCellTypeEnum() == CellType.BLANK) {
-			throw new IllegalArgumentException("Missing parameter id");
-		}
-
-		if (row.getCell(M).getCellTypeEnum() == CellType.BLANK) {
-			throw new IllegalArgumentException("Missing parameter classification");
-		}
-
-		if (row.getCell(N).getCellTypeEnum() == CellType.BLANK) {
-			throw new IllegalArgumentException("Missing parameter name");
-		}
-
-		if (row.getCell(P).getCellTypeEnum() == CellType.BLANK) {
-			throw new IllegalArgumentException("Missing parameter unit");
-		}
-
-		if (row.getCell(R).getCellTypeEnum() == CellType.BLANK) {
-			throw new IllegalArgumentException("Missing data type");
-		}
-
-		Parameter param = new Parameter();
-		param.setId(row.getCell(L).getStringCellValue());
-
-		ParameterClassification pc = ParameterClassification.get(row.getCell(M).getStringCellValue());
-		if (pc != null) {
-			param.setClassification(SwaggerUtil.CLASSIF.get(pc));
-		}
-
-		param.setName(row.getCell(N).getStringCellValue());
-
-		Cell descriptionCell = row.getCell(O);
-		if (descriptionCell.getCellTypeEnum() != CellType.BLANK) {
-			param.setDescription(descriptionCell.getStringCellValue());
-		}
-
-		param.setUnit(row.getCell(P).getStringCellValue());
-
-		Cell unitCategoryCell = row.getCell(Q);
-		if (unitCategoryCell.getCellTypeEnum() != CellType.BLANK) {
-			param.setUnitCategory(unitCategoryCell.getStringCellValue());
-		}
-
-		ParameterType parameterType = ParameterType.get(row.getCell(R).getStringCellValue());
-		if (parameterType != null) {
-			param.setDataType(SwaggerUtil.TYPES.get(parameterType));
-		}
-
-		Cell sourceCell = row.getCell(S);
-		if (sourceCell.getCellTypeEnum() != CellType.BLANK) {
-			param.setSource(sourceCell.getStringCellValue());
-		}
-
-		Cell subjectCell = row.getCell(T);
-		if (subjectCell.getCellTypeEnum() != CellType.BLANK) {
-			param.setSubject(subjectCell.getStringCellValue());
-		}
-
-		Cell distributionCell = row.getCell(U);
-		if (distributionCell.getCellTypeEnum() != CellType.BLANK) {
-			param.setDistribution(distributionCell.getStringCellValue());
-		}
-
-		Cell valueCell = row.getCell(V);
-		if (valueCell.getCellTypeEnum() != CellType.BLANK) {
-
-			if (valueCell.getCellTypeEnum() == CellType.NUMERIC) {
-				Double doubleValue = valueCell.getNumericCellValue();
-				if (parameterType == ParameterType.INTEGER) {
-					param.setValue(Integer.toString(doubleValue.intValue()));
-				} else if (parameterType == ParameterType.DOUBLE || parameterType == ParameterType.NUMBER) {
-					param.setValue(Double.toString(doubleValue));
-				}
-			} else {
-				param.setValue(valueCell.getStringCellValue());
-			}
-		}
-
-		// TODO: reference
-
-		Cell variabilitySubjectCell = row.getCell(X);
-		if (variabilitySubjectCell.getCellTypeEnum() != CellType.BLANK) {
-			param.setVariabilitySubject(variabilitySubjectCell.getStringCellValue());
-		}
-
-		Cell maxCell = row.getCell(Y);
-		if (maxCell.getCellTypeEnum() != CellType.BLANK) {
-			if (maxCell.getCellTypeEnum() != CellType.STRING)
-				param.setMaxValue(String.valueOf(maxCell.getNumericCellValue()));
-			else
-				param.setMaxValue(maxCell.getStringCellValue());
-
-		}
-
-		Cell minCell = row.getCell(Z);
-		if (minCell.getCellTypeEnum() != CellType.BLANK) {
-			if (minCell.getCellTypeEnum() != CellType.STRING)
-				param.setMinValue(String.valueOf(minCell.getNumericCellValue()));
-			else
-				param.setMinValue(minCell.getStringCellValue());
-		}
-
-		Cell errorCell = row.getCell(AA);
-		if (errorCell.getCellTypeEnum() != CellType.BLANK) {
-			if (errorCell.getCellTypeEnum() != CellType.STRING)
-				param.setError(String.valueOf(errorCell.getNumericCellValue()));
-			else
-				param.setError(errorCell.getStringCellValue());
-		}
-		return param;
 	}
 
 	private QualityMeasures retrieveQualityMeasures(Sheet sheet) {
