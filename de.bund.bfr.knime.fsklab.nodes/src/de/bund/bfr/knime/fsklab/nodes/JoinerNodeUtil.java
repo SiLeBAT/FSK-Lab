@@ -1,6 +1,7 @@
 package de.bund.bfr.knime.fsklab.nodes;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -28,7 +29,21 @@ public class JoinerNodeUtil {
     
   }
   
-  
+  public static LinkedHashMap<String,String> getOriginalParameterNames(LinkedHashMap<String, String> originalOutputParameters, String suffix){
+   
+    
+    LinkedHashMap<String,String> originalNamesMap = new LinkedHashMap<String,String>();
+
+    // create a mapping for the output parameters so that the true (original) parameter name is preserved but links
+    // to the current parameter (from the script)
+    for(Map.Entry<String,String> pair : originalOutputParameters.entrySet()) {
+      if(pair.getValue().endsWith(suffix)) {
+        originalNamesMap.put(pair.getKey(), pair.getValue().substring(0, pair.getValue().length() - 1));
+      }
+    }
+    
+    return originalNamesMap;
+  }
   public static FskSimulation makeIndividualSimulation(FskSimulation combinedSim, String suffix) {
     FskSimulation fskSimulation = new FskSimulation(combinedSim.getName());
 
