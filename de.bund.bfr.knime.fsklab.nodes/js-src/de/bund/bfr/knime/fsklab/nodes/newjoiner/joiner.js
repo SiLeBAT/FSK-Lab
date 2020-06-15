@@ -412,7 +412,7 @@ joiner = function () {
       document.getElementById("target").value = targetPort;
 
       let command = document.getElementById("Command");
-      command.value = sourcePort;
+      command.value = "[" + sourcePort +"]";
       command.onkeyup = () => window.sJoinRealtion.command = command.value;
 
       command.onblur = () => {
