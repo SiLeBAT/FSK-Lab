@@ -104,6 +104,9 @@ public class HealthModelSheetImporter implements SheetImporter {
 	
 	/** Columns for each of the properties of StudySample. */
 	private final HashMap<String, Integer> sampleColumns;
+	
+	/** Columns for each of the properties of Hazard. */
+	private final HashMap<String, Integer> hazardColumns;
 
 	public HealthModelSheetImporter() {
 
@@ -180,6 +183,22 @@ public class HealthModelSheetImporter implements SheetImporter {
 		sampleColumns.put("samplingSize", S);
 		sampleColumns.put("lotSizeUnit", T);
 		sampleColumns.put("samplingPoint", U);
+		
+		hazardColumns = new HashMap<>();
+		hazardColumns.put("type", L);
+		hazardColumns.put("name", M);
+		hazardColumns.put("description", N);
+		hazardColumns.put("unit", O);
+		hazardColumns.put("adverseEffect", P);
+		hazardColumns.put("sourceOfContamination", Q);
+		hazardColumns.put("benchmarkDose", R);
+		hazardColumns.put("maximumResidueLimit", S);
+		hazardColumns.put("noObservedAdverseAffectLevel", T);
+		hazardColumns.put("lowestObservedAdverseAffectLevel", U);
+		hazardColumns.put("acceptableOperatorsExposureLevel", V);
+		hazardColumns.put("acuteReferenceDose", W);
+		hazardColumns.put("acceptableDailyIntake", X);
+		hazardColumns.put("indSum", Y);
 	}
 
 	private PredictiveModelGeneralInformation retrieveGeneralInformation(Sheet sheet) {
@@ -372,7 +391,7 @@ public class HealthModelSheetImporter implements SheetImporter {
 			Row row = sheet.getRow(numrow);
 
 			try {
-				scope.addHazardItem(ImporterUtils.retrieveHazard(row));
+				scope.addHazardItem(ImporterUtils.retrieveHazard(row, hazardColumns));
 			} catch (IllegalArgumentException exception) {
 				// ignore exception since products are optional (*)
 			}

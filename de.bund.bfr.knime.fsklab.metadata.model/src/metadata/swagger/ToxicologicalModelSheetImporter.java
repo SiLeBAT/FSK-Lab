@@ -13,7 +13,6 @@ import org.threeten.bp.LocalDate;
 import de.bund.bfr.metadata.swagger.Assay;
 import de.bund.bfr.metadata.swagger.Contact;
 import de.bund.bfr.metadata.swagger.GenericModelModelMath;
-import de.bund.bfr.metadata.swagger.Hazard;
 import de.bund.bfr.metadata.swagger.Laboratory;
 import de.bund.bfr.metadata.swagger.Model;
 import de.bund.bfr.metadata.swagger.ModelCategory;
@@ -105,6 +104,9 @@ public class ToxicologicalModelSheetImporter implements SheetImporter {
 	/** Columns for each of the properties of StudySample. */
 	private final HashMap<String, Integer> sampleColumns;
 	
+	/** Columns for each of the properties of Hazard. */
+	private final HashMap<String, Integer> hazardColumns;
+	
 	public ToxicologicalModelSheetImporter() {
 
 		creatorColumns = new HashMap<>();
@@ -175,6 +177,22 @@ public class ToxicologicalModelSheetImporter implements SheetImporter {
 		sampleColumns.put("samplingSize", S);
 		sampleColumns.put("lotSizeUnit", T);
 		sampleColumns.put("samplingPoint", U);
+		
+		hazardColumns = new HashMap<>();
+		hazardColumns.put("type", L);
+		hazardColumns.put("name", M);
+		hazardColumns.put("description", N);
+		hazardColumns.put("unit", O);
+		hazardColumns.put("adverseEffect", P);
+		hazardColumns.put("sourceOfContamination", Q);
+		hazardColumns.put("benchmarkDose", R);
+		hazardColumns.put("maximumResidueLimit", S);
+		hazardColumns.put("noObservedAdverseAffectLevel", T);
+		hazardColumns.put("lowestObservedAdverseAffectLevel", U);
+		hazardColumns.put("acceptableOperatorsExposureLevel", V);
+		hazardColumns.put("acuteReferenceDose", W);
+		hazardColumns.put("acceptableDailyIntake", X);
+		hazardColumns.put("indSum", Y);
 	}
 
 	private PredictiveModelDataBackground retrieveBackground(Sheet sheet) {
@@ -365,7 +383,7 @@ public class ToxicologicalModelSheetImporter implements SheetImporter {
 			Row row = sheet.getRow(numrow);
 
 			try {
-				scope.addHazardItem(retrieveHazard(row));
+				scope.addHazardItem(ImporterUtils.retrieveHazard(row, hazardColumns));
 			} catch (IllegalArgumentException exception) {
 				// ignore exception since products are optional (*)
 			}
@@ -419,83 +437,6 @@ public class ToxicologicalModelSheetImporter implements SheetImporter {
 		}
 
 		return category;
-	}
-
-	private Hazard retrieveHazard(Row row) {
-		// Check mandatory properties
-		if (row.getCell(M).getCellTypeEnum() != CellType.STRING) {
-			throw new IllegalArgumentException("Hazard name is missing");
-		}
-
-		Hazard hazard = new Hazard();
-		hazard.setName(row.getCell(M).getStringCellValue());
-
-		Cell typeCell = row.getCell(L);
-		if (typeCell.getCellTypeEnum() == CellType.STRING) {
-			hazard.setType(typeCell.getStringCellValue());
-		}
-
-		Cell hazardDescriptionCell = row.getCell(N);
-		if (hazardDescriptionCell.getCellTypeEnum() == CellType.STRING) {
-			hazard.setDescription(hazardDescriptionCell.getStringCellValue());
-		}
-
-		Cell hazardUnitCell = row.getCell(Z);
-		if (hazardUnitCell.getCellTypeEnum() == CellType.STRING) {
-			hazard.setUnit(hazardUnitCell.getStringCellValue());
-		}
-
-		Cell adverseEffect = row.getCell(AA);
-		if (adverseEffect.getCellTypeEnum() == CellType.STRING) {
-			hazard.setAdverseEffect(adverseEffect.getStringCellValue());
-		}
-
-		Cell sourceOfContaminationCell = row.getCell(AB);
-		if (sourceOfContaminationCell.getCellTypeEnum() == CellType.STRING) {
-			hazard.setSourceOfContamination(sourceOfContaminationCell.getStringCellValue());
-		}
-
-		Cell bmdCell = row.getCell(AC);
-		if (bmdCell.getCellTypeEnum() == CellType.STRING) {
-			hazard.setBenchmarkDose(bmdCell.getStringCellValue());
-		}
-
-		Cell maximumResidueLimitCell = row.getCell(AD);
-		if (maximumResidueLimitCell.getCellTypeEnum() == CellType.STRING) {
-			hazard.setMaximumResidueLimit(maximumResidueLimitCell.getStringCellValue());
-		}
-
-		Cell noaelCell = row.getCell(AE);
-		if (noaelCell.getCellTypeEnum() == CellType.STRING) {
-			hazard.setNoObservedAdverseAffectLevel(noaelCell.getStringCellValue());
-		}
-
-		Cell loaelCell = row.getCell(AF);
-		if (loaelCell.getCellTypeEnum() == CellType.STRING) {
-			hazard.setLowestObservedAdverseAffectLevel(loaelCell.getStringCellValue());
-		}
-
-		Cell aoelCell = row.getCell(AG);
-		if (aoelCell.getCellTypeEnum() == CellType.STRING) {
-			hazard.setAcceptableOperatorsExposureLevel(aoelCell.getStringCellValue());
-		}
-
-		Cell arfdCell = row.getCell(AH);
-		if (arfdCell.getCellTypeEnum() == CellType.STRING) {
-			hazard.setAcuteReferenceDose(arfdCell.getStringCellValue());
-		}
-
-		Cell adiCell = row.getCell(AI);
-		if (adiCell.getCellTypeEnum() == CellType.STRING) {
-			hazard.setAcceptableDailyIntake(adiCell.getStringCellValue());
-		}
-
-		Cell indSumCell = row.getCell(AJ);
-		if (indSumCell.getCellTypeEnum() == CellType.STRING) {
-			hazard.setIndSum(indSumCell.getStringCellValue());
-		}
-
-		return hazard;
 	}
 
 	private Study retrieveStudy(Sheet sheet) {

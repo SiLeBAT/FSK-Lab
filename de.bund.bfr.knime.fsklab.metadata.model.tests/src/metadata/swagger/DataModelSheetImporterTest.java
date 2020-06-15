@@ -67,6 +67,8 @@ public class DataModelSheetImporterTest {
 		assertEquals("General comment", scope.getGeneralComment());
 		assertEquals("Temporal information", scope.getTemporalInformation());
 		// TODO: spatial information: String*
+		
+		TestUtils.testFirstHazard(scope.getHazard().get(0));
 	}
 
 	private static void test(GenericModelDataBackground background) {

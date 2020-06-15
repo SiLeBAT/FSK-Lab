@@ -174,76 +174,98 @@ public class ImporterUtils {
 		return product;
 	}
 
-	public static Hazard retrieveHazard(Row row) {
+	/**
+	 * @param row     Spreadsheet row
+	 * @param columns Column numbers for the columns with keys:
+	 *                <ul>
+	 *                <li>type
+	 *                <li>name
+	 *                <li>description
+	 *                <li>unit
+	 *                <li>adverseEffect
+	 *                <li>sourceOfContamination
+	 *                <li>benchmarkDose
+	 *                <li>maximumResidueLimit
+	 *                <li>noObservedAdverseAffectLevel
+	 *                <li>lowestObservedAdverseAffectLevel
+	 *                <li>acceptableOperatorsExposureLevel
+	 *                <li>acuteReferenceDose
+	 *                <li>acceptableDailyIntake
+	 *                <li>indSum
+	 *                </ul>
+	 */
+	public static Hazard retrieveHazard(Row row, Map<String, Integer> columns) {
+		
 		// Check mandatory properties
-		if (row.getCell(SheetImporter.W).getCellTypeEnum() != CellType.STRING) {
+		final Cell nameCell = row.getCell(columns.get("name"));
+		if (nameCell.getCellTypeEnum() != CellType.STRING) {
 			throw new IllegalArgumentException("Hazard name is missing");
 		}
 
 		final Hazard hazard = new Hazard();
-		hazard.setName(row.getCell(SheetImporter.W).getStringCellValue());
+		hazard.setName(nameCell.getStringCellValue());
 
-		final Cell typeCell = row.getCell(SheetImporter.V);
+		final Cell typeCell = row.getCell(columns.get("type"));
 		if (typeCell.getCellTypeEnum() == CellType.STRING) {
 			hazard.setType(typeCell.getStringCellValue());
 		}
 
-		final Cell hazardDescriptionCell = row.getCell(SheetImporter.X);
+		final Cell hazardDescriptionCell = row.getCell(columns.get("description"));
 		if (hazardDescriptionCell.getCellTypeEnum() == CellType.STRING) {
 			hazard.setDescription(hazardDescriptionCell.getStringCellValue());
 		}
 
-		final Cell hazardUnitCell = row.getCell(SheetImporter.Y);
+		final Cell hazardUnitCell = row.getCell(columns.get("unit"));
 		if (hazardUnitCell.getCellTypeEnum() == CellType.STRING) {
 			hazard.setUnit(hazardUnitCell.getStringCellValue());
 		}
 
-		final Cell adverseEffect = row.getCell(SheetImporter.Z);
+		final Cell adverseEffect = row.getCell(columns.get("adverseEffect"));
 		if (adverseEffect.getCellTypeEnum() == CellType.STRING) {
 			hazard.setAdverseEffect(adverseEffect.getStringCellValue());
 		}
 
-		final Cell sourceOfContaminationCell = row.getCell(SheetImporter.AA);
+		final Cell sourceOfContaminationCell = row.getCell(columns.get("sourceOfContamination"));
 		if (sourceOfContaminationCell.getCellTypeEnum() == CellType.STRING) {
 			hazard.setSourceOfContamination(sourceOfContaminationCell.getStringCellValue());
 		}
 
-		final Cell bmdCell = row.getCell(SheetImporter.AB);
+		final Cell bmdCell = row.getCell(columns.get("benchmarkDose"));
 		if (bmdCell.getCellTypeEnum() == CellType.STRING) {
 			hazard.setBenchmarkDose(bmdCell.getStringCellValue());
 		}
 
-		final Cell maximumResidueLimitCell = row.getCell(SheetImporter.AC);
+		final Cell maximumResidueLimitCell = row.getCell(columns.get("maximumResidueLimit"));
 		if (maximumResidueLimitCell.getCellTypeEnum() == CellType.STRING) {
 			hazard.setMaximumResidueLimit(maximumResidueLimitCell.getStringCellValue());
 		}
 
-		final Cell noaelCell = row.getCell(SheetImporter.AD);
+		final Cell noaelCell = row.getCell(columns.get("noObservedAdverseAffectLevel"));
 		if (noaelCell.getCellTypeEnum() == CellType.STRING) {
 			hazard.setNoObservedAdverseAffectLevel(noaelCell.getStringCellValue());
 		}
 
-		final Cell loaelCell = row.getCell(SheetImporter.AE);
+		final Cell loaelCell = row.getCell(columns.get("lowestObservedAdverseAffectLevel"));
 		if (loaelCell.getCellTypeEnum() == CellType.STRING) {
 			hazard.setLowestObservedAdverseAffectLevel(loaelCell.getStringCellValue());
 		}
 
-		final Cell aoelCell = row.getCell(SheetImporter.AF);
+		final Cell aoelCell = row.getCell(columns.get("acceptableOperatorsExposureLevel"));
 		if (aoelCell.getCellTypeEnum() == CellType.STRING) {
 			hazard.setAcceptableOperatorsExposureLevel(aoelCell.getStringCellValue());
 		}
 
-		final Cell arfdCell = row.getCell(SheetImporter.AG);
+		final Cell arfdCell = row.getCell(columns.get("acuteReferenceDose"));
 		if (arfdCell.getCellTypeEnum() == CellType.STRING) {
 			hazard.setAcuteReferenceDose(arfdCell.getStringCellValue());
 		}
 
-		final Cell adiCell = row.getCell(SheetImporter.AH);
+		final Cell adiCell = row.getCell(columns.get("acceptableDailyIntake"));
 		if (adiCell.getCellTypeEnum() == CellType.STRING) {
 			hazard.setAcceptableDailyIntake(adiCell.getStringCellValue());
 		}
 
-		final Cell indSumCell = row.getCell(SheetImporter.AI);
+		final Cell indSumCell = row.getCell(columns.get("indSum"));
 		if (indSumCell.getCellTypeEnum() == CellType.STRING) {
 			hazard.setIndSum(indSumCell.getStringCellValue());
 		}

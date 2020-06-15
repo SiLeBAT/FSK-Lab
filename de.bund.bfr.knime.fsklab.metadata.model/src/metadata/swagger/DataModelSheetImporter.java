@@ -73,24 +73,27 @@ public class DataModelSheetImporter implements SheetImporter {
 
 	/** Columns for each of the properties of Laboratory. */
 	private final HashMap<String, Integer> laboratoryColumns;
-	
+
 	/** Columns for each of the properties of Reference. */
 	private final HashMap<String, Integer> referenceColumns;
-	
+
 	/** Columns for each of the properties of Product. */
 	private final HashMap<String, Integer> productColumns;
-	
+
 	/** Columns for each of the properties of Creator. */
 	private final HashMap<String, Integer> creatorColumns;
-	
+
 	/** Columns for each of the properties of Creator. */
 	private final HashMap<String, Integer> authorColumns;
-	
+
 	/** Columns for each of the properties of Parameter. */
 	private final HashMap<String, Integer> parameterColumns;
-	
+
 	/** Columns for each of the properties of StudySample. */
 	private final HashMap<String, Integer> sampleColumns;
+
+	/** Columns for each of the properties of Hazard. */
+	private final HashMap<String, Integer> hazardColumns;
 
 	public DataModelSheetImporter() {
 
@@ -106,7 +109,7 @@ public class DataModelSheetImporter implements SheetImporter {
 		laboratoryColumns.put("accreditation", L);
 		laboratoryColumns.put("name", M);
 		laboratoryColumns.put("country", N);
-		
+
 		creatorColumns = new HashMap<>();
 		creatorColumns.put("mail", S);
 		creatorColumns.put("title", L);
@@ -119,7 +122,7 @@ public class DataModelSheetImporter implements SheetImporter {
 		creatorColumns.put("zipCode", V);
 		creatorColumns.put("region", Z);
 		creatorColumns.put("organization", Q);
-		
+
 		authorColumns = new HashMap<>();
 		authorColumns.put("title", AB);
 		authorColumns.put("name", AC);
@@ -136,7 +139,7 @@ public class DataModelSheetImporter implements SheetImporter {
 		authorColumns.put("streetAddress", AN);
 		authorColumns.put("extendedAddress", AO);
 		authorColumns.put("region", AP);
-		
+
 		referenceColumns = new HashMap<>();
 		referenceColumns.put("referenceDescription", L);
 		referenceColumns.put("type", M);
@@ -149,7 +152,7 @@ public class DataModelSheetImporter implements SheetImporter {
 		referenceColumns.put("status", U);
 		referenceColumns.put("website", V);
 		referenceColumns.put("comment", W);
-		
+
 		productColumns = new HashMap<>();
 		productColumns.put("name", L);
 		productColumns.put("description", M);
@@ -162,7 +165,7 @@ public class DataModelSheetImporter implements SheetImporter {
 		productColumns.put("fisheriesArea", T);
 		productColumns.put("productionDate", U);
 		productColumns.put("expiryDate", V);
-		
+
 		parameterColumns = new HashMap<>();
 		parameterColumns.put("id", L);
 		parameterColumns.put("classification", M);
@@ -180,7 +183,7 @@ public class DataModelSheetImporter implements SheetImporter {
 		parameterColumns.put("max", Y);
 		parameterColumns.put("min", Z);
 		parameterColumns.put("error", AA);
-		
+
 		sampleColumns = new HashMap<>();
 		sampleColumns.put("sample", L);
 		sampleColumns.put("protocolOfSampleCollection", M);
@@ -192,6 +195,22 @@ public class DataModelSheetImporter implements SheetImporter {
 		sampleColumns.put("samplingSize", S);
 		sampleColumns.put("lotSizeUnit", T);
 		sampleColumns.put("samplingPoint", U);
+
+		hazardColumns = new HashMap<>();
+		hazardColumns.put("type", W);
+		hazardColumns.put("name", X);
+		hazardColumns.put("description", Y);
+		hazardColumns.put("unit", Z);
+		hazardColumns.put("adverseEffect", AA);
+		hazardColumns.put("sourceOfContamination", AB);
+		hazardColumns.put("benchmarkDose", AC);
+		hazardColumns.put("maximumResidueLimit", AD);
+		hazardColumns.put("noObservedAdverseAffectLevel", AE);
+		hazardColumns.put("lowestObservedAdverseAffectLevel", AF);
+		hazardColumns.put("acceptableOperatorsExposureLevel", AG);
+		hazardColumns.put("acuteReferenceDose", AH);
+		hazardColumns.put("acceptableDailyIntake", AI);
+		hazardColumns.put("indSum", AJ);
 	}
 
 	private DataModelGeneralInformation retrieveGeneralInformation(Sheet sheet) {
@@ -215,13 +234,13 @@ public class DataModelSheetImporter implements SheetImporter {
 
 		for (int numRow = GI_CREATOR_ROW; numRow < GI_CREATOR_ROW + 6; numRow++) {
 			Row row = sheet.getRow(numRow);
-			
+
 			try {
 				Contact contact = ImporterUtils.retrieveContact(row, creatorColumns);
 				information.addCreatorItem(contact);
 			} catch (Exception exception) {
 			}
-			
+
 			try {
 				Contact author = ImporterUtils.retrieveContact(row, authorColumns);
 				information.addAuthorItem(author);
@@ -307,7 +326,7 @@ public class DataModelSheetImporter implements SheetImporter {
 			}
 
 			try {
-				scope.addHazardItem(ImporterUtils.retrieveHazard(row));
+				scope.addHazardItem(ImporterUtils.retrieveHazard(row, hazardColumns));
 			} catch (IllegalArgumentException exception) {
 				// ignore exception since products are optional (*)
 			}

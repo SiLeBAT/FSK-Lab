@@ -110,6 +110,9 @@ public class ExposureModelSheetImporter implements SheetImporter {
 	/** Columns for each of the properties of StudySample. */
 	private final HashMap<String, Integer> sampleColumns;
 	
+	/** Columns for each of the properties of Hazard. */
+	private final HashMap<String, Integer> hazardColumns;
+	
 	public ExposureModelSheetImporter() {
 
 		methodColumns = new HashMap<>();
@@ -206,6 +209,22 @@ public class ExposureModelSheetImporter implements SheetImporter {
 		sampleColumns.put("samplingSize", R);
 		sampleColumns.put("lotSizeUnit", S);
 		sampleColumns.put("samplingPoint", T);
+		
+		hazardColumns = new HashMap<>();
+		hazardColumns.put("type", V);
+		hazardColumns.put("name", W);
+		hazardColumns.put("description", X);
+		hazardColumns.put("unit", Y);
+		hazardColumns.put("adverseEffect", Z);
+		hazardColumns.put("sourceOfContamination", AA);
+		hazardColumns.put("benchmarkDose", AB);
+		hazardColumns.put("maximumResidueLimit", AC);
+		hazardColumns.put("noObservedAdverseAffectLevel", AD);
+		hazardColumns.put("lowestObservedAdverseAffectLevel", AE);
+		hazardColumns.put("acceptableOperatorsExposureLevel", AF);
+		hazardColumns.put("acuteReferenceDose", AG);
+		hazardColumns.put("acceptableDailyIntake", AH);
+		hazardColumns.put("indSum", AI);
 	}
 
 	private GenericModelDataBackground retrieveBackground(Sheet sheet) {
@@ -416,7 +435,7 @@ public class ExposureModelSheetImporter implements SheetImporter {
 			}
 
 			try {
-				scope.addHazardItem(ImporterUtils.retrieveHazard(row));
+				scope.addHazardItem(ImporterUtils.retrieveHazard(row, hazardColumns));
 			} catch (IllegalArgumentException exception) {
 				// ignore exception since products are optional (*)
 			}

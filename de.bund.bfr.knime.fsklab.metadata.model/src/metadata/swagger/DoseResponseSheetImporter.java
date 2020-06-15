@@ -102,6 +102,9 @@ public class DoseResponseSheetImporter implements SheetImporter {
 	/** Columns for each of the properties of StudySample. */
 	private final HashMap<String, Integer> sampleColumns;
 	
+	/** Columns for each of the properties of Hazard. */
+	private final HashMap<String, Integer> hazardColumns;
+	
 	public DoseResponseSheetImporter() {
 
 		laboratoryColumns = new HashMap<>();
@@ -177,6 +180,22 @@ public class DoseResponseSheetImporter implements SheetImporter {
 		sampleColumns.put("samplingSize", R);
 		sampleColumns.put("lotSizeUnit", S);
 		sampleColumns.put("samplingPoint", T);
+		
+		hazardColumns = new HashMap<>();
+		hazardColumns.put("type", K);
+		hazardColumns.put("name", L);
+		hazardColumns.put("description", M);
+		hazardColumns.put("unit", N);
+		hazardColumns.put("adverseEffect", O);
+		hazardColumns.put("sourceOfContamination", P);
+		hazardColumns.put("benchmarkDose", Q);
+		hazardColumns.put("maximumResidueLimit", R);
+		hazardColumns.put("noObservedAdverseAffectLevel", S);
+		hazardColumns.put("lowestObservedAdverseAffectLevel", T);
+		hazardColumns.put("acceptableOperatorsExposureLevel", U);
+		hazardColumns.put("acuteReferenceDose", V);
+		hazardColumns.put("acceptableDailyIntake", W);
+		hazardColumns.put("indSum", X);
 	}
 
 	private DoseResponseModelGeneralInformation retrieveGeneralInformation(Sheet sheet) {
@@ -341,7 +360,7 @@ public class DoseResponseSheetImporter implements SheetImporter {
 			Row row = sheet.getRow(numrow);
 
 			try {
-				scope.addHazardItem(ImporterUtils.retrieveHazard(row));
+				scope.addHazardItem(ImporterUtils.retrieveHazard(row, hazardColumns));
 			} catch (IllegalArgumentException exception) {
 				// ignore exception since products are optional (*)
 			}

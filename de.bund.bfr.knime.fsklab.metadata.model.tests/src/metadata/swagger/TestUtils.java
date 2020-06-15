@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 import de.bund.bfr.metadata.swagger.Contact;
+import de.bund.bfr.metadata.swagger.Hazard;
 import de.bund.bfr.metadata.swagger.Parameter;
 import de.bund.bfr.metadata.swagger.StudySample;
 
@@ -62,5 +63,22 @@ class TestUtils {
 		assertEquals("b", sample.getSamplingSize());
 		assertEquals("[aw]", sample.getLotSizeUnit());
 		assertEquals("Air transport", sample.getSamplingPoint());
+	}
+	
+	static void testFirstHazard(Hazard hazard) {
+		assertEquals("Biogenic amines", hazard.getType());
+		assertEquals("'Prohexadione (prohexadione (acid) and its salts expressed as prohexadione-calcium)", hazard.getName());
+		assertNull(hazard.getDescription());
+		assertEquals("[]", hazard.getUnit());
+		assertEquals("effect", hazard.getAdverseEffect());
+		assertEquals("source", hazard.getSourceOfContamination());
+		assertEquals("BMD", hazard.getBenchmarkDose());
+		assertEquals("MRL", hazard.getMaximumResidueLimit());
+		assertEquals("NOAEL", hazard.getNoObservedAdverseAffectLevel());
+		assertEquals("LOAEL", hazard.getLowestObservedAdverseAffectLevel());
+		assertEquals("AOEL", hazard.getAcceptableOperatorsExposureLevel());
+		assertEquals("ARfD", hazard.getAcuteReferenceDose());
+		assertEquals("ADI", hazard.getAcceptableDailyIntake());
+		assertNull(hazard.getIndSum());
 	}
 }
