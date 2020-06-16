@@ -56,11 +56,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.JTextPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.Border;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.emfjson.jackson.module.EMFModule;
 import org.knime.core.node.CanceledExecutionException;
@@ -76,11 +74,11 @@ import org.knime.core.util.FileUtil;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.FLabel;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.FPanel;
+import de.bund.bfr.knime.fsklab.nodes.common.ui.JsonPanel;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.ScriptPanel;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.UIUtils;
 import de.bund.bfr.knime.fsklab.rakip.RakipModule;
@@ -523,18 +521,15 @@ public class FskPortObject implements PortObject {
   public JComponent[] getViews() {
     final JPanel modelScriptPanel = new ScriptPanel("Model script", model, false, false);
     final JPanel vizScriptPanel = new ScriptPanel("Visualization script", viz, false, false);
-    final Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
-    final String jsonInString = gson.toJson(modelMetadata);
-    final String modelMetadataAsJSON = "<html><pre id='json'>"
-        + StringEscapeUtils.unescapeJson(StringEscapeUtils.unescapeJson(gson.toJson(jsonInString)))
-        + "</pre></html>";
 
-    final JTextPane tree = new JTextPane();
-
-    tree.setContentType("text/html");
-    tree.setText(modelMetadataAsJSON);
-
-    final JScrollPane metaDataPane = new JScrollPane(tree);
+    String metadataJson;
+    try {
+      metadataJson = FskPlugin.getDefault().MAPPER104.writerWithDefaultPrettyPrinter()
+          .writeValueAsString(modelMetadata);
+    } catch (JsonProcessingException e) {
+      metadataJson = "";
+    }
+    final JsonPanel metaDataPane = new JsonPanel("Meta data", metadataJson);
     metaDataPane.setName("Meta data");
 
     final JPanel librariesPanel = UIUtils.createLibrariesPanel(packages);
@@ -593,7 +588,7 @@ public class FskPortObject implements PortObject {
         parametersPane.setBorder(null);
 
         simulationPanel.add(parametersPane, BorderLayout.WEST);
-        
+
         // Panel to show preview of generated script out of parameters
         final String previewScript = buildParameterScript(simulations.get(selectedSimulationIndex));
         final ScriptPanel scriptPanel = new ScriptPanel("Preview", previewScript, false, true);
@@ -628,7 +623,7 @@ public class FskPortObject implements PortObject {
 
         final JPanel simulationSelection = UIUtils.createCenterPanel(
             UIUtils.createHorizontalPanel(new JLabel("Simulation:"), selectionPanel));
-        
+
         add(simulationSelection, BorderLayout.NORTH);
         add(simulationPanel, BorderLayout.CENTER);
       }

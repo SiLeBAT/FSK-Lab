@@ -56,7 +56,6 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.border.Border;
@@ -77,11 +76,11 @@ import org.knime.core.util.FileUtil;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.FLabel;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.FPanel;
+import de.bund.bfr.knime.fsklab.nodes.common.ui.JsonPanel;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.ScriptPanel;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.UIUtils;
 import de.bund.bfr.knime.fsklab.rakip.RakipModule;
@@ -649,10 +648,14 @@ public class CombinedFskPortObject extends FskPortObject {
   @Override
   public JComponent[] getViews() {
 
-    Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    String jsonString = gson.toJson(modelMetadata);
-
-    final JScrollPane metaDataPane = new JScrollPane(new JTextArea(jsonString));
+    String metadataJson;
+    try {
+      metadataJson = FskPlugin.getDefault().MAPPER104.writerWithDefaultPrettyPrinter()
+          .writeValueAsString(modelMetadata);
+    } catch (JsonProcessingException e) {
+      metadataJson = "";
+    }
+    final JsonPanel metaDataPane = new JsonPanel("Meta data", metadataJson);
     metaDataPane.setName("Meta data");
 
     final JPanel librariesPanel = UIUtils.createLibrariesPanel(packages);
