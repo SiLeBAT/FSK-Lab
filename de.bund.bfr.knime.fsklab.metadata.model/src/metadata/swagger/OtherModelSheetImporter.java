@@ -22,7 +22,6 @@ import de.bund.bfr.metadata.swagger.OtherModelModelMath;
 import de.bund.bfr.metadata.swagger.OtherModelScope;
 import de.bund.bfr.metadata.swagger.Parameter;
 import de.bund.bfr.metadata.swagger.PopulationGroup;
-import de.bund.bfr.metadata.swagger.Product;
 import de.bund.bfr.metadata.swagger.QualityMeasures;
 import de.bund.bfr.metadata.swagger.Reference;
 import de.bund.bfr.metadata.swagger.Study;
@@ -105,6 +104,9 @@ public class OtherModelSheetImporter implements SheetImporter {
 	/** Columns for each of the properties of StudySample. */
 	private final HashMap<String, Integer> sampleColumns;
 	
+	/** Columns for each of the properties of Product. */
+	private final HashMap<String, Integer> productColumns;
+	
 	/** Columns for each of the properties of Hazard. */
 	private final HashMap<String, Integer> hazardColumns;
 	
@@ -182,6 +184,19 @@ public class OtherModelSheetImporter implements SheetImporter {
 		sampleColumns.put("samplingSize", S);
 		sampleColumns.put("lotSizeUnit", T);
 		sampleColumns.put("samplingPoint", U);
+		
+		productColumns = new HashMap<>();
+		productColumns.put("name", L);
+		productColumns.put("description", M);
+		productColumns.put("unit", N);
+		productColumns.put("productionMethod", O);
+		productColumns.put("packaging", P);
+		productColumns.put("treatment", Q);
+		productColumns.put("originCountry", R);
+		productColumns.put("originArea", S);
+		productColumns.put("fisheriesArea", T);
+		productColumns.put("productionDate", U);
+		productColumns.put("expiryDate", V);
 		
 		hazardColumns = new HashMap<>();
 		hazardColumns.put("type", W);
@@ -391,7 +406,7 @@ public class OtherModelSheetImporter implements SheetImporter {
 			Row row = sheet.getRow(numrow);
 
 			try {
-				scope.addProductItem(retrieveProduct(row));
+				scope.addProductItem(ImporterUtils.retrieveProduct(row, productColumns));
 			} catch (IllegalArgumentException exception) {
 				// ignore exception since products are optional (*)
 			}
@@ -422,70 +437,6 @@ public class OtherModelSheetImporter implements SheetImporter {
 		// TODO: Spatial information
 
 		return scope;
-	}
-
-	private Product retrieveProduct(Row row) {
-
-		// Check first mandatory properties
-		if (row.getCell(L).getCellTypeEnum() != CellType.STRING) {
-			throw new IllegalArgumentException("Missing product name");
-		}
-		if (row.getCell(N).getCellTypeEnum() != CellType.STRING) {
-			throw new IllegalArgumentException("Missing product unit");
-		}
-
-		Product product = new Product();
-		product.setName(row.getCell(L).getStringCellValue());
-		product.setUnit(row.getCell(N).getStringCellValue());
-
-		Cell descriptionCell = row.getCell(M);
-		if (descriptionCell.getCellTypeEnum() == CellType.STRING) {
-			product.setDescription(descriptionCell.getStringCellValue());
-		}
-
-		Cell methodCell = row.getCell(O);
-		if (methodCell.getCellTypeEnum() == CellType.STRING) {
-			product.addMethodItem(methodCell.getStringCellValue());
-		}
-
-		Cell packagingCell = row.getCell(P);
-		if (packagingCell.getCellTypeEnum() == CellType.STRING) {
-			product.addPackagingItem(packagingCell.getStringCellValue());
-		}
-
-		Cell treatmentCell = row.getCell(P);
-		if (treatmentCell.getCellTypeEnum() == CellType.STRING) {
-			product.addTreatmentItem(treatmentCell.getStringCellValue());
-		}
-
-		Cell originCountryCell = row.getCell(R);
-		if (originCountryCell.getCellTypeEnum() == CellType.STRING) {
-			product.setOriginCountry(originCountryCell.getStringCellValue());
-		}
-
-		Cell originAreaCell = row.getCell(S);
-		if (originAreaCell.getCellTypeEnum() == CellType.STRING) {
-			product.setOriginArea(originAreaCell.getStringCellValue());
-		}
-
-		Cell fisheriesAreaCell = row.getCell(T);
-		if (fisheriesAreaCell.getCellTypeEnum() == CellType.STRING) {
-			product.setFisheriesArea(fisheriesAreaCell.getStringCellValue());
-		}
-
-		Cell productionDateCell = row.getCell(U);
-		if (productionDateCell.getCellTypeEnum() == CellType.NUMERIC) {
-			LocalDate date = ImporterUtils.retrieveDate(productionDateCell);
-			product.setProductionDate(date);
-		}
-
-		Cell expiryDateCell = row.getCell(V);
-		if (expiryDateCell.getCellTypeEnum() == CellType.NUMERIC) {
-			LocalDate date = ImporterUtils.retrieveDate(expiryDateCell);
-			product.setExpiryDate(date);
-		}
-
-		return product;
 	}
 
 	private ModelCategory retrieveModelCategory(Sheet sheet) {

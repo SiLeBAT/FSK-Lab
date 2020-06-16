@@ -69,6 +69,8 @@ public class ConsumptionModelSheetImporterTest {
 		assertNull(scope.getGeneralComment());
 		assertNull(scope.getTemporalInformation());
 		// TODO: spatial information: String*
+		
+		TestUtils.testFirstProduct(scope.getProduct().get(0));
 	}
 
 	private static void test(GenericModelDataBackground background) {

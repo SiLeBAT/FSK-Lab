@@ -19,6 +19,7 @@ import de.bund.bfr.metadata.swagger.PredictiveModelDataBackground;
 import de.bund.bfr.metadata.swagger.PredictiveModelGeneralInformation;
 import de.bund.bfr.metadata.swagger.PredictiveModelModelMath;
 import de.bund.bfr.metadata.swagger.PredictiveModelScope;
+import de.bund.bfr.metadata.swagger.PredictiveModelScopeProduct;
 
 public class PredictiveModelSheetImporterTest {
 
@@ -70,6 +71,8 @@ public class PredictiveModelSheetImporterTest {
 		assertNull(scope.getTemporalInformation());
 		// TODO: spatial information: String*
 		
+		// product in PredictiveModelScope is different and needs to tested separately
+		testFirstProduct(scope.getProduct().get(0));
 		TestUtils.testFirstHazard(scope.getHazard().get(0));
 	}
 
@@ -88,5 +91,19 @@ public class PredictiveModelSheetImporterTest {
 		assertNull(math.getEvent());
 		
 		TestUtils.testFirstParameter(math.getParameter().get(0));
+	}
+	
+	private static void testFirstProduct(PredictiveModelScopeProduct product) {
+		assertEquals("Allspice", product.getName());
+		assertEquals("description", product.getDescription());
+		assertEquals("[]", product.getUnit());
+		assertNull(product.getMethod());
+		assertEquals("Aluminium foil - aluminium sheet", product.getPackaging().get(0));
+		assertEquals("Canning", product.getTreatment().get(0));
+		assertEquals("Afghanistan", product.getOriginCountry());
+		assertEquals("A Coruña", product.getOriginArea());
+		assertEquals("Adriatic", product.getFisheriesArea());
+		assertEquals(LocalDate.of(2017, 11, 30), product.getProductionDate());
+		assertEquals(LocalDate.of(2018,  11, 30), product.getExpiryDate());
 	}
 }

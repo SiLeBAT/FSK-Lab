@@ -71,6 +71,7 @@ public class OtherModelSheetImporterTest {
 		assertNull(scope.getTemporalInformation());
 		// TODO: spatial information: String*
 		
+		TestUtils.testFirstProduct(scope.getProduct().get(0));
 		TestUtils.testFirstHazard(scope.getHazard().get(0));
 	}
 

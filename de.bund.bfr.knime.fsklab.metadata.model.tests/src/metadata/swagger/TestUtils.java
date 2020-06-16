@@ -3,9 +3,12 @@ package metadata.swagger;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
+import org.threeten.bp.LocalDate;
+
 import de.bund.bfr.metadata.swagger.Contact;
 import de.bund.bfr.metadata.swagger.Hazard;
 import de.bund.bfr.metadata.swagger.Parameter;
+import de.bund.bfr.metadata.swagger.Product;
 import de.bund.bfr.metadata.swagger.StudySample;
 
 class TestUtils {
@@ -80,5 +83,19 @@ class TestUtils {
 		assertEquals("ARfD", hazard.getAcuteReferenceDose());
 		assertEquals("ADI", hazard.getAcceptableDailyIntake());
 		assertNull(hazard.getIndSum());
+	}
+	
+	static void testFirstProduct(Product product) {
+		assertEquals("Allspice", product.getName());
+		assertEquals("description", product.getDescription());
+		assertEquals("[]", product.getUnit());
+		assertNull(product.getMethod());
+		assertEquals("Aluminium foil - aluminium sheet", product.getPackaging().get(0));
+		assertEquals("Canning", product.getTreatment().get(0));
+		assertEquals("Afghanistan", product.getOriginCountry());
+		assertEquals("A Coruña", product.getOriginArea());
+		assertEquals("Adriatic", product.getFisheriesArea());
+		assertEquals(LocalDate.of(2017, 11, 30), product.getProductionDate());
+		assertEquals(LocalDate.of(2018,  11, 30), product.getExpiryDate());
 	}
 }
