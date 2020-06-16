@@ -83,35 +83,38 @@ public class DoseResponseSheetImporter implements SheetImporter {
 	private int BG_ASSAY_ROW = 99;
 
 	private int MM_PARAMETER_ROW = 116;
-	
+
 	/** Columns for each of the properties of Creator. */
 	private final HashMap<String, Integer> creatorColumns;
 
 	/** Columns for each of the properties of Author. */
 	private final HashMap<String, Integer> authorColumns;
-	
+
 	/** Columns for each of the properties of Laboratory. */
 	private final HashMap<String, Integer> laboratoryColumns;
-	
+
 	/** Columns for each of the properties of Reference. */
 	private final HashMap<String, Integer> referenceColumns;
-	
+
 	/** Columns for each of the properties of Parameter. */
 	private final HashMap<String, Integer> parameterColumns;
-	
+
 	/** Columns for each of the properties of StudySample. */
 	private final HashMap<String, Integer> sampleColumns;
-	
+
 	/** Columns for each of the properties of Hazard. */
 	private final HashMap<String, Integer> hazardColumns;
-	
+
+	/** Columns for each of the properties of Assay. */
+	private final HashMap<String, Integer> assayColumns;
+
 	public DoseResponseSheetImporter() {
 
 		laboratoryColumns = new HashMap<>();
 		laboratoryColumns.put("accreditation", L);
 		laboratoryColumns.put("name", M);
 		laboratoryColumns.put("country", N);
-		
+
 		referenceColumns = new HashMap<>();
 		referenceColumns.put("referenceDescription", K);
 		referenceColumns.put("type", L);
@@ -124,7 +127,7 @@ public class DoseResponseSheetImporter implements SheetImporter {
 		referenceColumns.put("status", S);
 		referenceColumns.put("website", U);
 		referenceColumns.put("comment", V);
-		
+
 		parameterColumns = new HashMap<>();
 		parameterColumns.put("id", K);
 		parameterColumns.put("classification", L);
@@ -142,7 +145,7 @@ public class DoseResponseSheetImporter implements SheetImporter {
 		parameterColumns.put("max", X);
 		parameterColumns.put("min", Y);
 		parameterColumns.put("error", Z);
-		
+
 		creatorColumns = new HashMap<>();
 		creatorColumns.put("mail", R);
 		creatorColumns.put("title", K);
@@ -168,7 +171,7 @@ public class DoseResponseSheetImporter implements SheetImporter {
 		authorColumns.put("zipCode", AK);
 		authorColumns.put("region", AO);
 		authorColumns.put("organization", AF);
-		
+
 		sampleColumns = new HashMap<>();
 		sampleColumns.put("sample", K);
 		sampleColumns.put("protocolOfSampleCollection", L);
@@ -180,7 +183,7 @@ public class DoseResponseSheetImporter implements SheetImporter {
 		sampleColumns.put("samplingSize", R);
 		sampleColumns.put("lotSizeUnit", S);
 		sampleColumns.put("samplingPoint", T);
-		
+
 		hazardColumns = new HashMap<>();
 		hazardColumns.put("type", K);
 		hazardColumns.put("name", L);
@@ -196,6 +199,17 @@ public class DoseResponseSheetImporter implements SheetImporter {
 		hazardColumns.put("acuteReferenceDose", V);
 		hazardColumns.put("acceptableDailyIntake", W);
 		hazardColumns.put("indSum", X);
+
+		assayColumns = new HashMap<>();
+		assayColumns.put("name", K);
+		assayColumns.put("description", L);
+		assayColumns.put("moisturePercentage", M);
+		assayColumns.put("fatPercentage", N);
+		assayColumns.put("detectionLimit", O);
+		assayColumns.put("quantificationLimit", P);
+		assayColumns.put("leftCensoredData", Q);
+		assayColumns.put("contaminationRange", R);
+		assayColumns.put("uncertaintyValue", S);
 	}
 
 	private DoseResponseModelGeneralInformation retrieveGeneralInformation(Sheet sheet) {
@@ -218,15 +232,15 @@ public class DoseResponseSheetImporter implements SheetImporter {
 		}
 
 		for (int numRow = GI_CREATOR_ROW; numRow < GI_CREATOR_ROW + 6; numRow++) {
-			
+
 			Row row = sheet.getRow(numRow);
-			
+
 			try {
 				Contact contact = ImporterUtils.retrieveContact(row, creatorColumns);
 				information.addCreatorItem(contact);
 			} catch (Exception exception) {
 			}
-			
+
 			try {
 				Contact author = ImporterUtils.retrieveContact(row, authorColumns);
 				information.addAuthorItem(author);
@@ -340,7 +354,8 @@ public class DoseResponseSheetImporter implements SheetImporter {
 
 		for (int numrow = this.BG_ASSAY_ROW; numrow < (this.BG_ASSAY_ROW + 3); numrow++) {
 			try {
-				Assay assay = ImporterUtils.retrieveAssay(sheet.getRow(numrow));
+				Row row = sheet.getRow(numrow);
+				Assay assay = ImporterUtils.retrieveAssay(row, assayColumns);
 				background.addAssayItem(assay);
 			} catch (Exception exception) {
 				// ignore errors since Assay is optional

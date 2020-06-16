@@ -96,21 +96,24 @@ public class ProcessModelSheetImporter implements SheetImporter {
 
 	/** Columns for each of the properties of Reference. */
 	private final HashMap<String, Integer> referenceColumns;
-	
+
 	/** Columns for each of the properties of Product. */
 	private final HashMap<String, Integer> productColumns;
-	
+
 	/** Columns for each of the properties of Laboratory. */
 	private final HashMap<String, Integer> laboratoryColumns;
-	
+
 	/** Columns for each of the properties of Parameter. */
 	private final HashMap<String, Integer> parameterColumns;
-	
+
 	/** Columns for each of the properties of StudySample. */
 	private final HashMap<String, Integer> sampleColumns;
-	
+
 	/** Columns for each of the properties of Hazard. */
 	private final HashMap<String, Integer> hazardColumns;
+
+	/** Columns for each of the properties of Assay. */
+	private final HashMap<String, Integer> assayColumns;
 
 	public ProcessModelSheetImporter() {
 
@@ -152,7 +155,7 @@ public class ProcessModelSheetImporter implements SheetImporter {
 		authorColumns.put("zipCode", AK);
 		authorColumns.put("region", AO);
 		authorColumns.put("organization", AF);
-		
+
 		productColumns = new HashMap<>();
 		productColumns.put("name", K);
 		productColumns.put("description", L);
@@ -165,12 +168,12 @@ public class ProcessModelSheetImporter implements SheetImporter {
 		productColumns.put("fisheriesArea", S);
 		productColumns.put("productionDate", T);
 		productColumns.put("expiryDate", U);
-		
+
 		laboratoryColumns = new HashMap<>();
 		laboratoryColumns.put("accreditation", L);
 		laboratoryColumns.put("name", M);
 		laboratoryColumns.put("country", N);
-		
+
 		parameterColumns = new HashMap<>();
 		parameterColumns.put("id", K);
 		parameterColumns.put("classification", L);
@@ -188,7 +191,7 @@ public class ProcessModelSheetImporter implements SheetImporter {
 		parameterColumns.put("max", X);
 		parameterColumns.put("min", Y);
 		parameterColumns.put("error", Z);
-		
+
 		sampleColumns = new HashMap<>();
 		sampleColumns.put("sample", K);
 		sampleColumns.put("protocolOfSampleCollection", L);
@@ -200,7 +203,7 @@ public class ProcessModelSheetImporter implements SheetImporter {
 		sampleColumns.put("samplingSize", R);
 		sampleColumns.put("lotSizeUnit", S);
 		sampleColumns.put("samplingPoint", T);
-		
+
 		hazardColumns = new HashMap<>();
 		hazardColumns.put("type", V);
 		hazardColumns.put("name", W);
@@ -216,6 +219,17 @@ public class ProcessModelSheetImporter implements SheetImporter {
 		hazardColumns.put("acuteReferenceDose", AG);
 		hazardColumns.put("acceptableDailyIntake", AH);
 		hazardColumns.put("indSum", AI);
+
+		assayColumns = new HashMap<>();
+		assayColumns.put("name", K);
+		assayColumns.put("description", L);
+		assayColumns.put("moisturePercentage", M);
+		assayColumns.put("fatPercentage", N);
+		assayColumns.put("detectionLimit", O);
+		assayColumns.put("quantificationLimit", P);
+		assayColumns.put("leftCensoredData", Q);
+		assayColumns.put("contaminationRange", R);
+		assayColumns.put("uncertaintyValue", S);
 	}
 
 	private PredictiveModelGeneralInformation retrieveGeneralInformation(Sheet sheet) {
@@ -391,7 +405,7 @@ public class ProcessModelSheetImporter implements SheetImporter {
 		for (int numrow = BG_ASSAY_ROW; numrow < (BG_ASSAY_ROW + 3); numrow++) {
 			Row row = sheet.getRow(numrow);
 			try {
-				Assay assay = ImporterUtils.retrieveAssay(row);
+				Assay assay = ImporterUtils.retrieveAssay(row, assayColumns);
 				background.addAssayItem(assay);
 			} catch (Exception exception) {
 				// ignore errors since Assay is optional

@@ -112,6 +112,9 @@ public class GenericModelSheetImporter implements SheetImporter {
 	/** Columns for each of the properties of Hazard. */
 	private final HashMap<String, Integer> hazardColumns;
 	
+	/** Columns for each of the properties of Assay. */
+	private final HashMap<String, Integer> assayColumns;
+	
 	public GenericModelSheetImporter() {
 		
 		methodColumns = new HashMap<>();
@@ -224,6 +227,17 @@ public class GenericModelSheetImporter implements SheetImporter {
 		hazardColumns.put("acuteReferenceDose", AG);
 		hazardColumns.put("acceptableDailyIntake", AH);
 		hazardColumns.put("indSum", AI);
+		
+		assayColumns = new HashMap<>();
+		assayColumns.put("name", L);
+		assayColumns.put("description", M);
+		assayColumns.put("moisturePercentage", N);
+		assayColumns.put("fatPercentage", O);
+		assayColumns.put("detectionLimit", P);
+		assayColumns.put("quantificationLimit", Q);
+		assayColumns.put("leftCensoredData", R);
+		assayColumns.put("contaminationRange", S);
+		assayColumns.put("uncertaintyValue", T);
 	}
 
 	private GenericModelGeneralInformation retrieveGeneralInformation(Sheet sheet) {
@@ -413,7 +427,8 @@ public class GenericModelSheetImporter implements SheetImporter {
 
 		for (int numrow = BG_ASSAY_ROW; numrow < BG_ASSAY_ROW + 3; numrow++) {
 			try {
-				final Assay assay = ImporterUtils.retrieveAssay(sheet.getRow(numrow));
+				Row row = sheet.getRow(numrow);
+				final Assay assay = ImporterUtils.retrieveAssay(row, assayColumns);
 				background.addAssayItem(assay);
 			} catch (final Exception exception) {
 				// ignore errors since Assay is optional

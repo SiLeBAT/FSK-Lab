@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNull;
 
 import org.threeten.bp.LocalDate;
 
+import de.bund.bfr.metadata.swagger.Assay;
 import de.bund.bfr.metadata.swagger.Contact;
 import de.bund.bfr.metadata.swagger.Hazard;
 import de.bund.bfr.metadata.swagger.Parameter;
@@ -97,5 +98,17 @@ class TestUtils {
 		assertEquals("Adriatic", product.getFisheriesArea());
 		assertEquals(LocalDate.of(2017, 11, 30), product.getProductionDate());
 		assertEquals(LocalDate.of(2018,  11, 30), product.getExpiryDate());
+	}
+	
+	static void testFirstAssay(Assay assay) {
+		assertEquals("name0", assay.getName());
+		assertEquals("descr0", assay.getDescription());
+		assertEquals("moist0", assay.getMoisturePercentage());
+		assertEquals("fat0", assay.getFatPercentage());
+		assertEquals("detect0", assay.getDetectionLimit());
+		assertEquals("quant0", assay.getQuantificationLimit());
+		assertEquals("left0", assay.getLeftCensoredData());
+		assertEquals("range0", assay.getContaminationRange());
+		assertEquals("uncert0", assay.getUncertaintyValue());
 	}
 }

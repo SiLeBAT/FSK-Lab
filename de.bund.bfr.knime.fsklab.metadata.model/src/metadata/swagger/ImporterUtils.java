@@ -602,52 +602,69 @@ public class ImporterUtils {
 
 		return laboratory;
 	}
+	
+	/**
+	 * @param row     Spreadsheet row
+	 * @param columns Column numbers for the columns with keys:
+	 *                <ul>
+	 *                <li>name
+	 *                <li>description
+	 *                <li>moisturePercentage
+	 *                <li>fatPercentage
+	 *                <li>detectionLimit
+	 *                <li>quantificationLimit
+	 *                <li>leftCensoredData
+	 *                <li>contaminationRange
+	 *                <li>uncertaintyValue
+	 *                </ul>
+	 */
+	public static Assay retrieveAssay(Row row, Map<String, Integer> columns) {
 
-	public static Assay retrieveAssay(Row row) {
 		// Check first mandatory properties
-		if (row.getCell(SheetImporter.L).getCellTypeEnum() != CellType.STRING) {
+		final Cell nameCell = row.getCell(columns.get("name"));
+		if (nameCell.getCellTypeEnum() != CellType.STRING) {
 			throw new IllegalArgumentException("Missing assay name");
 		}
 
 		final Assay assay = new Assay();
-		assay.setName(row.getCell(SheetImporter.L).getStringCellValue());
+		assay.setName(nameCell.getStringCellValue());
 
-		final Cell descriptionCell = row.getCell(SheetImporter.M);
+		final Cell descriptionCell = row.getCell(columns.get("description"));
 		if (descriptionCell.getCellTypeEnum() == CellType.STRING) {
 			assay.setDescription(descriptionCell.getStringCellValue());
 		}
 
-		final Cell moistureCell = row.getCell(SheetImporter.N);
+		final Cell moistureCell = row.getCell(columns.get("moisturePercentage"));
 		if (moistureCell.getCellTypeEnum() == CellType.STRING) {
 			assay.setMoisturePercentage(moistureCell.getStringCellValue());
 		}
 
-		final Cell fatCell = row.getCell(SheetImporter.O);
+		final Cell fatCell = row.getCell(columns.get("fatPercentage"));
 		if (fatCell.getCellTypeEnum() == CellType.STRING) {
 			assay.setFatPercentage(fatCell.getStringCellValue());
 		}
 
-		final Cell detectionCell = row.getCell(SheetImporter.P);
+		final Cell detectionCell = row.getCell(columns.get("detectionLimit"));
 		if (detectionCell.getCellTypeEnum() == CellType.STRING) {
 			assay.setDetectionLimit(detectionCell.getStringCellValue());
 		}
 
-		final Cell quantificationCell = row.getCell(SheetImporter.Q);
+		final Cell quantificationCell = row.getCell(columns.get("quantificationLimit"));
 		if (quantificationCell.getCellTypeEnum() == CellType.STRING) {
 			assay.setQuantificationLimit(quantificationCell.getStringCellValue());
 		}
 
-		final Cell dataCell = row.getCell(SheetImporter.R);
+		final Cell dataCell = row.getCell(columns.get("leftCensoredData"));
 		if (dataCell.getCellTypeEnum() == CellType.STRING) {
 			assay.setLeftCensoredData(dataCell.getStringCellValue());
 		}
 
-		final Cell contaminationCell = row.getCell(SheetImporter.S);
+		final Cell contaminationCell = row.getCell(columns.get("contaminationRange"));
 		if (contaminationCell.getCellTypeEnum() == CellType.STRING) {
 			assay.setContaminationRange(contaminationCell.getStringCellValue());
 		}
 
-		final Cell uncertaintyCell = row.getCell(SheetImporter.T);
+		final Cell uncertaintyCell = row.getCell(columns.get("uncertaintyValue"));
 		if (uncertaintyCell.getCellTypeEnum() == CellType.STRING) {
 			assay.setUncertaintyValue(uncertaintyCell.getStringCellValue());
 		}

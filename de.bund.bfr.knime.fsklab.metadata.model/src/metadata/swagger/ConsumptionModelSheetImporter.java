@@ -109,6 +109,9 @@ public class ConsumptionModelSheetImporter implements SheetImporter {
 
 	/** Columsn for each of the properties of StudySample. */
 	private final HashMap<String, Integer> sampleColumns;
+	
+	/** Columns for each of the properties of Assay. */
+	private final HashMap<String, Integer> assayColumns;
 
 	public ConsumptionModelSheetImporter() {
 
@@ -210,6 +213,17 @@ public class ConsumptionModelSheetImporter implements SheetImporter {
 		sampleColumns.put("samplingSize", S);
 		sampleColumns.put("lotSizeUnit", T);
 		sampleColumns.put("samplingPoint", U);
+		
+		assayColumns = new HashMap<>();
+		assayColumns.put("name", L);
+		assayColumns.put("description", M);
+		assayColumns.put("moisturePercentage", N);
+		assayColumns.put("fatPercentage", O);
+		assayColumns.put("detectionLimit", P);
+		assayColumns.put("quantificationLimit", Q);
+		assayColumns.put("leftCensoredData", R);
+		assayColumns.put("contaminationRange", S);
+		assayColumns.put("uncertaintyValue", T);
 	}
 
 	private PredictiveModelGeneralInformation retrieveGeneralInformation(Sheet sheet) {
@@ -435,7 +449,8 @@ public class ConsumptionModelSheetImporter implements SheetImporter {
 
 		for (int numrow = BG_ASSAY_ROW; numrow < BG_ASSAY_ROW + 3; numrow++) {
 			try {
-				final Assay assay = ImporterUtils.retrieveAssay(sheet.getRow(numrow));
+				Row row = sheet.getRow(numrow);
+				final Assay assay = ImporterUtils.retrieveAssay(row, assayColumns);
 				background.addAssayItem(assay);
 			} catch (final Exception exception) {
 				// ignore errors since Assay is optional

@@ -81,6 +81,8 @@ public class PredictiveModelSheetImporterTest {
 		assertEquals(3, background.getStudySample().size());
 		assertEquals(3, background.getLaboratory().size());
 		assertEquals(3, background.getAssay().size());
+
+		TestUtils.testFirstAssay(background.getAssay().get(0));
 	}
 
 	private static void test(PredictiveModelModelMath math) {

@@ -107,6 +107,9 @@ public class PredictiveModelSheetImporter implements SheetImporter {
 	/** Columns for each of the properties of Hazard. */
 	private final HashMap<String, Integer> hazardColumns;
 
+	/** Columns for each of the properties of Assay. */
+	private final HashMap<String, Integer> assayColumns;
+
 	public PredictiveModelSheetImporter() {
 
 		creatorColumns = new HashMap<>();
@@ -193,6 +196,17 @@ public class PredictiveModelSheetImporter implements SheetImporter {
 		hazardColumns.put("acuteReferenceDose", AH);
 		hazardColumns.put("acceptableDailyIntake", AI);
 		hazardColumns.put("indSum", AJ);
+		
+		assayColumns = new HashMap<>();
+		assayColumns.put("name", L);
+		assayColumns.put("description", M);
+		assayColumns.put("moisturePercentage", N);
+		assayColumns.put("fatPercentage", O);
+		assayColumns.put("detectionLimit", P);
+		assayColumns.put("quantificationLimit", Q);
+		assayColumns.put("leftCensoredData", R);
+		assayColumns.put("contaminationRange", S);
+		assayColumns.put("uncertaintyValue", T);
 	}
 
 	private PredictiveModelGeneralInformation retrieveGeneralInformation(Sheet sheet) {
@@ -363,7 +377,8 @@ public class PredictiveModelSheetImporter implements SheetImporter {
 
 		for (int numrow = BG_ASSAY_ROW; numrow < (BG_ASSAY_ROW + 3); numrow++) {
 			try {
-				Assay assay = retrieveAssay(sheet.getRow(numrow));
+				Row row = sheet.getRow(numrow);
+				Assay assay = ImporterUtils.retrieveAssay(row, assayColumns);
 				background.addAssayItem(assay);
 			} catch (Exception exception) {
 				// ignore errors since Assay is optional
@@ -613,58 +628,6 @@ public class PredictiveModelSheetImporter implements SheetImporter {
 		}
 
 		return laboratory;
-	}
-
-	private Assay retrieveAssay(Row row) {
-		// Check first mandatory properties
-		if (row.getCell(L).getCellTypeEnum() != CellType.STRING) {
-			throw new IllegalArgumentException("Missing assay name");
-		}
-
-		Assay assay = new Assay();
-		assay.setName(row.getCell(L).getStringCellValue());
-
-		Cell descriptionCell = row.getCell(M);
-		if (descriptionCell.getCellTypeEnum() == CellType.STRING) {
-			assay.setDescription(descriptionCell.getStringCellValue());
-		}
-
-		Cell moistureCell = row.getCell(N);
-		if (moistureCell.getCellTypeEnum() == CellType.STRING) {
-			assay.setMoisturePercentage(moistureCell.getStringCellValue());
-		}
-
-		Cell fatCell = row.getCell(O);
-		if (fatCell.getCellTypeEnum() == CellType.STRING) {
-			assay.setFatPercentage(fatCell.getStringCellValue());
-		}
-
-		Cell detectionCell = row.getCell(P);
-		if (detectionCell.getCellTypeEnum() == CellType.STRING) {
-			assay.setDetectionLimit(detectionCell.getStringCellValue());
-		}
-
-		Cell quantificationCell = row.getCell(Q);
-		if (quantificationCell.getCellTypeEnum() == CellType.STRING) {
-			assay.setQuantificationLimit(quantificationCell.getStringCellValue());
-		}
-
-		Cell dataCell = row.getCell(R);
-		if (dataCell.getCellTypeEnum() == CellType.STRING) {
-			assay.setLeftCensoredData(dataCell.getStringCellValue());
-		}
-
-		Cell contaminationCell = row.getCell(S);
-		if (contaminationCell.getCellTypeEnum() == CellType.STRING) {
-			assay.setContaminationRange(contaminationCell.getStringCellValue());
-		}
-
-		Cell uncertaintyCell = row.getCell(T);
-		if (uncertaintyCell.getCellTypeEnum() == CellType.STRING) {
-			assay.setUncertaintyValue(uncertaintyCell.getStringCellValue());
-		}
-
-		return assay;
 	}
 
 	private QualityMeasures retrieveQualityMeasures(Sheet sheet) {

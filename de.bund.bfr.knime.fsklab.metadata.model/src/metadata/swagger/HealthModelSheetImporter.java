@@ -107,6 +107,9 @@ public class HealthModelSheetImporter implements SheetImporter {
 	
 	/** Columns for each of the properties of Hazard. */
 	private final HashMap<String, Integer> hazardColumns;
+	
+	/** Columns for each of the properties of Assay. */
+	private final HashMap<String, Integer> assayColumns;
 
 	public HealthModelSheetImporter() {
 
@@ -199,6 +202,17 @@ public class HealthModelSheetImporter implements SheetImporter {
 		hazardColumns.put("acuteReferenceDose", W);
 		hazardColumns.put("acceptableDailyIntake", X);
 		hazardColumns.put("indSum", Y);
+		
+		assayColumns = new HashMap<>();
+		assayColumns.put("name", L);
+		assayColumns.put("description", M);
+		assayColumns.put("moisturePercentage", N);
+		assayColumns.put("fatPercentage", O);
+		assayColumns.put("detectionLimit", P);
+		assayColumns.put("quantificationLimit", Q);
+		assayColumns.put("leftCensoredData", R);
+		assayColumns.put("contaminationRange", S);
+		assayColumns.put("uncertaintyValue", T);
 	}
 
 	private PredictiveModelGeneralInformation retrieveGeneralInformation(Sheet sheet) {
@@ -344,7 +358,7 @@ public class HealthModelSheetImporter implements SheetImporter {
 		for (int numrow = BG_ASSAY_ROW; numrow < (BG_ASSAY_ROW + 3); numrow++) {
 			Row row = sheet.getRow(numrow);
 			try {
-				Assay assay = ImporterUtils.retrieveAssay(row);
+				Assay assay = ImporterUtils.retrieveAssay(row, assayColumns);
 				background.addAssayItem(assay);
 			} catch (Exception exception) {
 				// ignore errors since Assay is optional

@@ -113,6 +113,9 @@ public class ExposureModelSheetImporter implements SheetImporter {
 	/** Columns for each of the properties of Hazard. */
 	private final HashMap<String, Integer> hazardColumns;
 	
+	/** Columns for each of the properties of Assay. */
+	private final HashMap<String, Integer> assayColumns;
+	
 	public ExposureModelSheetImporter() {
 
 		methodColumns = new HashMap<>();
@@ -225,6 +228,17 @@ public class ExposureModelSheetImporter implements SheetImporter {
 		hazardColumns.put("acuteReferenceDose", AG);
 		hazardColumns.put("acceptableDailyIntake", AH);
 		hazardColumns.put("indSum", AI);
+		
+		assayColumns = new HashMap<>();
+		assayColumns.put("name", K);
+		assayColumns.put("description", L);
+		assayColumns.put("moisturePercentage", M);
+		assayColumns.put("fatPercentage", N);
+		assayColumns.put("detectionLimit", O);
+		assayColumns.put("quantificationLimit", P);
+		assayColumns.put("leftCensoredData", Q);
+		assayColumns.put("contaminationRange", R);
+		assayColumns.put("uncertaintyValue", S);
 	}
 
 	private GenericModelDataBackground retrieveBackground(Sheet sheet) {
@@ -269,7 +283,8 @@ public class ExposureModelSheetImporter implements SheetImporter {
 
 		for (int numrow = BG_ASSAY_ROW; numrow < (BG_ASSAY_ROW + 3); numrow++) {
 			try {
-				Assay assay = ImporterUtils.retrieveAssay(sheet.getRow(numrow));
+				Row row = sheet.getRow(numrow);
+				Assay assay = ImporterUtils.retrieveAssay(row, assayColumns);
 				background.addAssayItem(assay);
 			} catch (Exception exception) {
 				// Skip faulty assay and continue
