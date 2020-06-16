@@ -73,6 +73,7 @@ public class ExposureModelSheetImporterTest {
 		
 		TestUtils.testFirstProduct(scope.getProduct().get(0));
 		TestUtils.testFirstHazard(scope.getHazard().get(0));
+		TestUtils.testFirstPopulationGroup(scope.getPopulationGroup().get(0));
 	}
 
 	private void test(GenericModelDataBackground background) {

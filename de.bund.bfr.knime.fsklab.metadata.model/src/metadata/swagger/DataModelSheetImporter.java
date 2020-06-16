@@ -95,6 +95,9 @@ public class DataModelSheetImporter implements SheetImporter {
 	/** Columns for each of the properties of Hazard. */
 	private final HashMap<String, Integer> hazardColumns;
 	
+	/** Columns for each of the properties of PopulationGroup. */
+	private final HashMap<String, Integer> populationColumns;
+	
 	/** Columns for each of the properties of Assay. */
 	private final HashMap<String, Integer> assayColumns;
 
@@ -225,6 +228,21 @@ public class DataModelSheetImporter implements SheetImporter {
 		assayColumns.put("leftCensoredData", R);
 		assayColumns.put("contaminationRange", S);
 		assayColumns.put("uncertaintyValue", T);
+		
+		populationColumns = new HashMap<>();
+		populationColumns.put("name", AK);
+		populationColumns.put("targetPopulation", AL);
+		populationColumns.put("span", AM);
+		populationColumns.put("description", AN);
+		populationColumns.put("age", AO);
+		populationColumns.put("gender", AP);
+		populationColumns.put("bmi", AQ);
+		populationColumns.put("diet", AR);
+		populationColumns.put("consumption", AS);
+		populationColumns.put("region", AT);
+		populationColumns.put("country", AU);
+		populationColumns.put("risk", AV);
+		populationColumns.put("season", AW);
 	}
 
 	private DataModelGeneralInformation retrieveGeneralInformation(Sheet sheet) {
@@ -346,7 +364,7 @@ public class DataModelSheetImporter implements SheetImporter {
 			}
 
 			try {
-				scope.addPopulationGroupItem(ImporterUtils.retrievePopulationGroup(row));
+				scope.addPopulationGroupItem(ImporterUtils.retrievePopulationGroup(row, populationColumns));
 			} catch (IllegalArgumentException exception) {
 				// ignore exception since population groups are optional (*)
 			}

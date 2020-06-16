@@ -9,6 +9,7 @@ import de.bund.bfr.metadata.swagger.Assay;
 import de.bund.bfr.metadata.swagger.Contact;
 import de.bund.bfr.metadata.swagger.Hazard;
 import de.bund.bfr.metadata.swagger.Parameter;
+import de.bund.bfr.metadata.swagger.PopulationGroup;
 import de.bund.bfr.metadata.swagger.Product;
 import de.bund.bfr.metadata.swagger.StudySample;
 
@@ -110,5 +111,19 @@ class TestUtils {
 		assertEquals("left0", assay.getLeftCensoredData());
 		assertEquals("range0", assay.getContaminationRange());
 		assertEquals("uncert0", assay.getUncertaintyValue());
+	}
+	
+	static void testFirstPopulationGroup(PopulationGroup group) {
+		assertEquals("infant food", group.getName());
+		assertEquals("target", group.getTargetPopulation());
+		assertEquals("span", group.getPopulationSpan().get(0));
+		assertEquals("description", group.getPopulationDescription().get(0));
+		assertEquals("age", group.getPopulationAge().get(0));
+		assertEquals("gender", group.getPopulationGender());
+		assertEquals("bmi", group.getBmi().get(0));
+		assertEquals("consumption", group.getPatternConsumption().get(0));
+		assertEquals("A Coruña", group.getRegion().get(0));
+		assertEquals("factors", group.getPopulationRiskFactor().get(0));
+		assertEquals("Season", group.getSeason().get(0));
 	}
 }

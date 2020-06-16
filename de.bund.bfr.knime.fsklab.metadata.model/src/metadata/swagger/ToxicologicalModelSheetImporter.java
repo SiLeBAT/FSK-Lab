@@ -17,7 +17,6 @@ import de.bund.bfr.metadata.swagger.Laboratory;
 import de.bund.bfr.metadata.swagger.Model;
 import de.bund.bfr.metadata.swagger.ModelCategory;
 import de.bund.bfr.metadata.swagger.Parameter;
-import de.bund.bfr.metadata.swagger.PopulationGroup;
 import de.bund.bfr.metadata.swagger.PredictiveModelDataBackground;
 import de.bund.bfr.metadata.swagger.PredictiveModelGeneralInformation;
 import de.bund.bfr.metadata.swagger.QualityMeasures;
@@ -106,6 +105,9 @@ public class ToxicologicalModelSheetImporter implements SheetImporter {
 	
 	/** Columns for each of the properties of Hazard. */
 	private final HashMap<String, Integer> hazardColumns;
+	
+	/** Columns for each of the properties of PopulationGroup. */
+	private final HashMap<String, Integer> populationColumns;
 	
 	/** Columns for each of the properties of Assay. */
 	private final HashMap<String, Integer> assayColumns;
@@ -207,6 +209,21 @@ public class ToxicologicalModelSheetImporter implements SheetImporter {
 		assayColumns.put("leftCensoredData", R);
 		assayColumns.put("contaminationRange", S);
 		assayColumns.put("uncertaintyValue", T);
+		
+		populationColumns = new HashMap<>();
+		populationColumns.put("name", Z);
+		populationColumns.put("targetPopulation", AA);
+		populationColumns.put("span", AB);
+		populationColumns.put("description", AC);
+		populationColumns.put("age", AD);
+		populationColumns.put("gender", AE);
+		populationColumns.put("bmi", AF);
+		populationColumns.put("diet", AG);
+		populationColumns.put("consumption", AH);
+		populationColumns.put("region", AI);
+		populationColumns.put("country", AJ);
+		populationColumns.put("risk", AK);
+		populationColumns.put("season", AL);
 	}
 
 	private PredictiveModelDataBackground retrieveBackground(Sheet sheet) {
@@ -404,7 +421,7 @@ public class ToxicologicalModelSheetImporter implements SheetImporter {
 			}
 
 			try {
-				scope.addPopulationGroupItem(retrievePopulationGroup(row));
+				scope.addPopulationGroupItem(ImporterUtils.retrievePopulationGroup(row, populationColumns));
 			} catch (IllegalArgumentException exception) {
 				// ignore exception since population groups are optional (*)
 			}
@@ -601,83 +618,6 @@ public class ToxicologicalModelSheetImporter implements SheetImporter {
 		}
 
 		return measures;
-	}
-
-	private PopulationGroup retrievePopulationGroup(Row row) {
-
-		// Check mandatory properties
-		if (row.getCell(Z).getCellTypeEnum() != CellType.STRING) {
-			throw new IllegalArgumentException("Missing population name");
-		}
-
-		PopulationGroup group = new PopulationGroup();
-
-		Cell nameCell = row.getCell(Z);
-		if (nameCell.getCellTypeEnum() == CellType.STRING) {
-			group.setName(nameCell.getStringCellValue());
-		}
-
-		Cell targetPopulationCell = row.getCell(AA);
-		if (targetPopulationCell.getCellTypeEnum() == CellType.STRING) {
-			group.setTargetPopulation(targetPopulationCell.getStringCellValue());
-		}
-
-		Cell spanCell = row.getCell(AB);
-		if (spanCell.getCellTypeEnum() == CellType.STRING) {
-			Arrays.stream(spanCell.getStringCellValue().split(",")).forEach(group::addPopulationSpanItem);
-		}
-
-		Cell descriptionCell = row.getCell(AC);
-		if (descriptionCell.getCellTypeEnum() == CellType.STRING) {
-			Arrays.stream(descriptionCell.getStringCellValue().split(",")).forEach(group::addPopulationDescriptionItem);
-		}
-
-		Cell ageCell = row.getCell(AD);
-		if (ageCell.getCellTypeEnum() == CellType.STRING) {
-			Arrays.stream(ageCell.getStringCellValue().split(",")).forEach(group::addPopulationAgeItem);
-		}
-
-		Cell genderCell = row.getCell(AE);
-		if (genderCell.getCellTypeEnum() == CellType.STRING) {
-			group.setPopulationGender(genderCell.getStringCellValue());
-		}
-
-		Cell bmiCell = row.getCell(AF);
-		if (bmiCell.getCellTypeEnum() == CellType.STRING) {
-			Arrays.stream(bmiCell.getStringCellValue().split(",")).forEach(group::addBmiItem);
-		}
-
-		Cell dietCell = row.getCell(AG);
-		if (dietCell.getCellTypeEnum() == CellType.STRING) {
-			Arrays.stream(dietCell.getStringCellValue().split(",")).forEach(group::addSpecialDietGroupsItem);
-		}
-
-		Cell consumptionCell = row.getCell(AH);
-		if (consumptionCell.getCellTypeEnum() == CellType.STRING) {
-			Arrays.stream(consumptionCell.getStringCellValue().split(",")).forEach(group::addPatternConsumptionItem);
-		}
-
-		Cell regionCell = row.getCell(AI);
-		if (regionCell.getCellTypeEnum() == CellType.STRING) {
-			Arrays.stream(regionCell.getStringCellValue().split(",")).forEach(group::addRegionItem);
-		}
-
-		Cell countryCell = row.getCell(AJ);
-		if (countryCell.getCellTypeEnum() == CellType.STRING) {
-			Arrays.stream(countryCell.getStringCellValue().split(",")).forEach(group::addCountryItem);
-		}
-
-		Cell factorsCell = row.getCell(AK);
-		if (factorsCell.getCellTypeEnum() == CellType.STRING) {
-			Arrays.stream(factorsCell.getStringCellValue().split(",")).forEach(group::addPopulationRiskFactorItem);
-		}
-
-		Cell seasonCell = row.getCell(AL);
-		if (seasonCell.getCellTypeEnum() == CellType.STRING) {
-			Arrays.stream(seasonCell.getStringCellValue().split(",")).forEach(group::addSeasonItem);
-		}
-
-		return group;
 	}
 
 	@Override

@@ -71,6 +71,7 @@ public class ToxicologicalModelSheetImporterTest {
 		// TODO: spatial information: String*
 		
 		TestUtils.testFirstHazard(scope.getHazard().get(0));
+		TestUtils.testFirstPopulationGroup(scope.getPopulationGroup().get(0));
 	}
 
 	private static void test(PredictiveModelDataBackground background) {

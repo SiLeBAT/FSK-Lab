@@ -273,76 +273,92 @@ public class ImporterUtils {
 		return hazard;
 	}
 
-	public static PopulationGroup retrievePopulationGroup(Row row) {
+	/**
+	 * @param row     Spreadsheet row
+	 * @param columns Column numbers for the columns with keys:
+	 *                <ul>
+	 *                <li>name
+	 *                <li>targetPopulation
+	 *                <li>span
+	 *                <li>description
+	 *                <li>age
+	 *                <li>gender
+	 *                <li>bmi
+	 *                <li>diet
+	 *                <li>consumption
+	 *                <li>region
+	 *                <li>country
+	 *                <li>risk
+	 *                <li>season
+	 *                </ul>
+	 */
+	public static PopulationGroup retrievePopulationGroup(Row row, Map<String, Integer> columns) {
 
 		// Check mandatory properties
-		if (row.getCell(SheetImporter.W).getCellTypeEnum() != CellType.STRING) {
+		Cell nameCell = row.getCell(columns.get("name"));
+		if (nameCell.getCellTypeEnum() != CellType.STRING) {
 			throw new IllegalArgumentException("Missing population name");
 		}
 
 		PopulationGroup group = new PopulationGroup();
+		group.setName(nameCell.getStringCellValue());
 
-		Cell nameCell = row.getCell(SheetImporter.W);
-		if (nameCell.getCellTypeEnum() == CellType.STRING) {
-			group.setName(nameCell.getStringCellValue());
-		}
-
-		Cell targetPopulationCell = row.getCell(SheetImporter.X);
+		Cell targetPopulationCell = row.getCell(columns.get("targetPopulation"));
 		if (targetPopulationCell.getCellTypeEnum() == CellType.STRING) {
 			group.setTargetPopulation(targetPopulationCell.getStringCellValue());
 		}
 
-		Cell spanCell = row.getCell(SheetImporter.Y);
+		Cell spanCell = row.getCell(columns.get("span"));
 		if (spanCell.getCellTypeEnum() == CellType.STRING) {
 			Arrays.stream(spanCell.getStringCellValue().split(",")).forEach(group::addPopulationSpanItem);
 		}
 
-		Cell descriptionCell = row.getCell(SheetImporter.Z);
+		Cell descriptionCell = row.getCell(columns.get("description"));
 		if (descriptionCell.getCellTypeEnum() == CellType.STRING) {
 			Arrays.stream(descriptionCell.getStringCellValue().split(",")).forEach(group::addPopulationDescriptionItem);
 		}
 
-		Cell ageCell = row.getCell(SheetImporter.AA);
+		Cell ageCell = row.getCell(columns.get("age"));
 		if (ageCell.getCellTypeEnum() == CellType.STRING) {
 			Arrays.stream(ageCell.getStringCellValue().split(",")).forEach(group::addPopulationAgeItem);
 		}
 
-		Cell genderCell = row.getCell(SheetImporter.AB);
+		Cell genderCell = row.getCell(columns.get("gender"));
 		if (genderCell.getCellTypeEnum() == CellType.STRING) {
 			group.setPopulationGender(genderCell.getStringCellValue());
 		}
 
-		Cell bmiCell = row.getCell(SheetImporter.AC);
+		Cell bmiCell = row.getCell(columns.get("bmi"));
 		if (bmiCell.getCellTypeEnum() == CellType.STRING) {
 			Arrays.stream(bmiCell.getStringCellValue().split(",")).forEach(group::addBmiItem);
 		}
 
-		Cell dietCell = row.getCell(SheetImporter.AD);
+		Cell dietCell = row.getCell(columns.get("diet"));
 		if (dietCell.getCellTypeEnum() == CellType.STRING) {
 			Arrays.stream(dietCell.getStringCellValue().split(",")).forEach(group::addSpecialDietGroupsItem);
 		}
 
-		Cell consumptionCell = row.getCell(SheetImporter.AE);
+		Cell consumptionCell = row.getCell(columns.get("consumption"));
 		if (consumptionCell.getCellTypeEnum() == CellType.STRING) {
 			Arrays.stream(consumptionCell.getStringCellValue().split(",")).forEach(group::addPatternConsumptionItem);
 		}
 
-		Cell regionCell = row.getCell(SheetImporter.AF);
+		Cell regionCell = row.getCell(columns.get("region"));
 		if (regionCell.getCellTypeEnum() == CellType.STRING) {
 			Arrays.stream(regionCell.getStringCellValue().split(",")).forEach(group::addRegionItem);
 		}
 
-		Cell countryCell = row.getCell(SheetImporter.AG);
+		Cell countryCell = row.getCell(columns.get("country"));
 		if (countryCell.getCellTypeEnum() == CellType.STRING) {
 			Arrays.stream(countryCell.getStringCellValue().split(",")).forEach(group::addCountryItem);
 		}
 
-		Cell factorsCell = row.getCell(SheetImporter.AH);
+		Cell factorsCell = row.getCell(columns.get("risk"));
 		if (factorsCell.getCellTypeEnum() == CellType.STRING) {
 			Arrays.stream(factorsCell.getStringCellValue().split(",")).forEach(group::addPopulationRiskFactorItem);
 		}
 
-		Cell seasonCell = row.getCell(SheetImporter.AI);
+		Cell seasonCell = row.getCell(columns.get("season"));
 		if (seasonCell.getCellTypeEnum() == CellType.STRING) {
 			Arrays.stream(seasonCell.getStringCellValue().split(",")).forEach(group::addSeasonItem);
 		}

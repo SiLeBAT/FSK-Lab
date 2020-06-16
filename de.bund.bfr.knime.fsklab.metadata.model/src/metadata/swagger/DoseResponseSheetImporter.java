@@ -104,6 +104,9 @@ public class DoseResponseSheetImporter implements SheetImporter {
 
 	/** Columns for each of the properties of Hazard. */
 	private final HashMap<String, Integer> hazardColumns;
+	
+	/** Columns for each of the properties of PopulationGroup. */
+	private final HashMap<String, Integer> populationColumns;
 
 	/** Columns for each of the properties of Assay. */
 	private final HashMap<String, Integer> assayColumns;
@@ -210,6 +213,21 @@ public class DoseResponseSheetImporter implements SheetImporter {
 		assayColumns.put("leftCensoredData", Q);
 		assayColumns.put("contaminationRange", R);
 		assayColumns.put("uncertaintyValue", S);
+		
+		populationColumns = new HashMap<>();
+		populationColumns.put("name", Y);
+		populationColumns.put("targetPopulation", Z);
+		populationColumns.put("span", AA);
+		populationColumns.put("description", AB);
+		populationColumns.put("age", AC);
+		populationColumns.put("gender", AD);
+		populationColumns.put("bmi", AE);
+		populationColumns.put("diet", AF);
+		populationColumns.put("consumption", AG);
+		populationColumns.put("region", AH);
+		populationColumns.put("country", AI);
+		populationColumns.put("risk", AJ);
+		populationColumns.put("season", AK);
 	}
 
 	private DoseResponseModelGeneralInformation retrieveGeneralInformation(Sheet sheet) {
@@ -381,7 +399,7 @@ public class DoseResponseSheetImporter implements SheetImporter {
 			}
 
 			try {
-				scope.addPopulationGroupItem(ImporterUtils.retrievePopulationGroup(row));
+				scope.addPopulationGroupItem(ImporterUtils.retrievePopulationGroup(row, populationColumns));
 			} catch (IllegalArgumentException exception) {
 				// ignore exception since population groups are optional (*)
 			}

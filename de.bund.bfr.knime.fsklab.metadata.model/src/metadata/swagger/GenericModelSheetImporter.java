@@ -84,39 +84,42 @@ public class GenericModelSheetImporter implements SheetImporter {
 	private int BG_ASSAY_ROW = 117;
 	private int MM_PARAMETER_ROW = 132;
 	private int MM_FITTING_PROCEDURE_ROW = 149;
-	
+
 	/** Columns for each of the properties of Creator. */
 	private final HashMap<String, Integer> creatorColumns;
 
 	/** Columns for each of the properties of Author. */
 	private final HashMap<String, Integer> authorColumns;
-	
+
 	/** Columns for each of the properties of DietaryAssessmentMethod. */
 	private final HashMap<String, Integer> methodColumns;
-	
+
 	/** Columns for each of the properties of Laboratory. */
 	private final HashMap<String, Integer> laboratoryColumns;
-	
+
 	/** Columns for each of the properties of Reference. */
 	private final HashMap<String, Integer> referenceColumns;
-	
+
 	/** Columns for each of the properties of Product. */
 	private final HashMap<String, Integer> productColumns;
-	
+
 	/** Columns for each of the properties of Parameter. */
 	private final HashMap<String, Integer> parameterColumns;
-	
+
 	/** Columns for each of the properties of StudySample. */
 	private final HashMap<String, Integer> sampleColumns;
-	
+
 	/** Columns for each of the properties of Hazard. */
 	private final HashMap<String, Integer> hazardColumns;
-	
+
+	/** Columns for each of the properties of PopulationGroup. */
+	private final HashMap<String, Integer> populationColumns;
+
 	/** Columns for each of the properties of Assay. */
 	private final HashMap<String, Integer> assayColumns;
-	
+
 	public GenericModelSheetImporter() {
-		
+
 		methodColumns = new HashMap<>();
 		methodColumns.put("collectionTool", L);
 		methodColumns.put("numberOfNonConsecutiveOneDay", M);
@@ -124,12 +127,12 @@ public class GenericModelSheetImporter implements SheetImporter {
 		methodColumns.put("numberOfFoodItems", O);
 		methodColumns.put("recordTypes", P);
 		methodColumns.put("foodDescriptors", Q);
-		
+
 		laboratoryColumns = new HashMap<>();
 		laboratoryColumns.put("accreditation", L);
 		laboratoryColumns.put("name", M);
 		laboratoryColumns.put("country", N);
-		
+
 		referenceColumns = new HashMap<>();
 		referenceColumns.put("referenceDescription", K);
 		referenceColumns.put("type", L);
@@ -142,7 +145,7 @@ public class GenericModelSheetImporter implements SheetImporter {
 		referenceColumns.put("status", S);
 		referenceColumns.put("website", U);
 		referenceColumns.put("comment", V);
-		
+
 		productColumns = new HashMap<>();
 		productColumns.put("name", K);
 		productColumns.put("description", L);
@@ -155,7 +158,7 @@ public class GenericModelSheetImporter implements SheetImporter {
 		productColumns.put("fisheriesArea", S);
 		productColumns.put("productionDate", T);
 		productColumns.put("expiryDate", U);
-		
+
 		parameterColumns = new HashMap<>();
 		parameterColumns.put("id", L);
 		parameterColumns.put("classification", M);
@@ -173,7 +176,7 @@ public class GenericModelSheetImporter implements SheetImporter {
 		parameterColumns.put("max", Y);
 		parameterColumns.put("min", Z);
 		parameterColumns.put("error", AA);
-		
+
 		creatorColumns = new HashMap<>();
 		creatorColumns.put("mail", R);
 		creatorColumns.put("title", K);
@@ -199,7 +202,7 @@ public class GenericModelSheetImporter implements SheetImporter {
 		authorColumns.put("zipCode", AK);
 		authorColumns.put("region", AO);
 		authorColumns.put("organization", AF);
-		
+
 		sampleColumns = new HashMap<>();
 		sampleColumns.put("sample", L);
 		sampleColumns.put("protocolOfSampleCollection", M);
@@ -211,7 +214,7 @@ public class GenericModelSheetImporter implements SheetImporter {
 		sampleColumns.put("samplingSize", S);
 		sampleColumns.put("lotSizeUnit", T);
 		sampleColumns.put("samplingPoint", U);
-		
+
 		hazardColumns = new HashMap<>();
 		hazardColumns.put("type", V);
 		hazardColumns.put("name", W);
@@ -227,7 +230,7 @@ public class GenericModelSheetImporter implements SheetImporter {
 		hazardColumns.put("acuteReferenceDose", AG);
 		hazardColumns.put("acceptableDailyIntake", AH);
 		hazardColumns.put("indSum", AI);
-		
+
 		assayColumns = new HashMap<>();
 		assayColumns.put("name", L);
 		assayColumns.put("description", M);
@@ -238,6 +241,21 @@ public class GenericModelSheetImporter implements SheetImporter {
 		assayColumns.put("leftCensoredData", R);
 		assayColumns.put("contaminationRange", S);
 		assayColumns.put("uncertaintyValue", T);
+
+		populationColumns = new HashMap<>();
+		populationColumns.put("name", AJ);
+		populationColumns.put("targetPopulation", AK);
+		populationColumns.put("span", AL);
+		populationColumns.put("description", AM);
+		populationColumns.put("age", AN);
+		populationColumns.put("gender", AO);
+		populationColumns.put("bmi", AP);
+		populationColumns.put("diet", AQ);
+		populationColumns.put("consumption", AR);
+		populationColumns.put("region", AS);
+		populationColumns.put("country", AT);
+		populationColumns.put("risk", AU);
+		populationColumns.put("season", AV);
 	}
 
 	private GenericModelGeneralInformation retrieveGeneralInformation(Sheet sheet) {
@@ -260,15 +278,15 @@ public class GenericModelSheetImporter implements SheetImporter {
 		}
 
 		for (int numRow = GI_CREATOR_ROW; numRow < GI_CREATOR_ROW + 6; numRow++) {
-			
+
 			Row row = sheet.getRow(numRow);
-			
+
 			try {
 				Contact contact = ImporterUtils.retrieveContact(row, creatorColumns);
 				information.addCreatorItem(contact);
 			} catch (Exception exception) {
 			}
-			
+
 			try {
 				Contact author = ImporterUtils.retrieveContact(row, authorColumns);
 				information.addAuthorItem(author);
@@ -408,7 +426,8 @@ public class GenericModelSheetImporter implements SheetImporter {
 
 		for (int numrow = BG_DIET_ASSESS_ROW; numrow < BG_DIET_ASSESS_ROW + 3; numrow++) {
 			try {
-				final DietaryAssessmentMethod method = ImporterUtils.retrieveDietaryAssessmentMethod(sheet.getRow(numrow), methodColumns);
+				final DietaryAssessmentMethod method = ImporterUtils
+						.retrieveDietaryAssessmentMethod(sheet.getRow(numrow), methodColumns);
 				background.addDietaryAssessmentMethodItem(method);
 			} catch (final Exception exception) {
 				// Skip faulty method and continue
@@ -459,7 +478,7 @@ public class GenericModelSheetImporter implements SheetImporter {
 			}
 
 			try {
-				scope.addPopulationGroupItem(ImporterUtils.retrievePopulationGroup(row));
+				scope.addPopulationGroupItem(ImporterUtils.retrievePopulationGroup(row, populationColumns));
 			} catch (final IllegalArgumentException exception) {
 				// ignore exception since population groups are optional (*)
 			}
@@ -642,7 +661,7 @@ public class GenericModelSheetImporter implements SheetImporter {
 		gm.setScope(retrieveScope(sheet));
 		gm.setDataBackground(retrieveBackground(sheet));
 		gm.setModelMath(retrieveModelMath(sheet));
-		
+
 		return gm;
 	}
 }
