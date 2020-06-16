@@ -49,7 +49,7 @@ public class DoseResponseSheetImporterTest {
 		assertEquals("Open access", information.getAvailability());
 		assertEquals("http://onlinelibrary.wiley.com/doi/10.2903/sp.efsa.2017.EN-1252/abstract", information.getUrl());
 		assertEquals(".fskx", information.getFormat());
-		assertEquals(1, information.getReference().size());
+		assertEquals(3, information.getReference().size());
 		assertEquals("English", information.getLanguage());
 		assertEquals("FSK-Lab", information.getSoftware());
 		assertEquals("R 3", information.getLanguageWrittenIn());
@@ -57,6 +57,8 @@ public class DoseResponseSheetImporterTest {
 		assertEquals("Uncurated", information.getStatus());
 		assertNull(information.getObjective()); // Not set
 		assertNull(information.getDescription()); // Not set
+		
+		TestUtils.testFirstReference(information.getReference().get(0));
 	}
 
 	private static void test(DoseResponseModelScope scope) {

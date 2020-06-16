@@ -2,6 +2,7 @@ package metadata.swagger;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import org.threeten.bp.LocalDate;
 
@@ -11,6 +12,7 @@ import de.bund.bfr.metadata.swagger.Hazard;
 import de.bund.bfr.metadata.swagger.Parameter;
 import de.bund.bfr.metadata.swagger.PopulationGroup;
 import de.bund.bfr.metadata.swagger.Product;
+import de.bund.bfr.metadata.swagger.Reference;
 import de.bund.bfr.metadata.swagger.StudySample;
 
 class TestUtils {
@@ -125,5 +127,19 @@ class TestUtils {
 		assertEquals("A Coruña", group.getRegion().get(0));
 		assertEquals("factors", group.getPopulationRiskFactor().get(0));
 		assertEquals("Season", group.getSeason().get(0));
+	}
+	
+	static void testFirstReference(Reference reference) {
+		assertTrue(reference.isIsReferenceDescription());
+		assertNull(reference.getPublicationType());
+		assertEquals(2002, reference.getDate().getYear());
+		assertNull(reference.getPmid());
+		assertEquals("10.1136/bmj.324.7334.429/g", reference.getDoi());
+		assertEquals("authors", reference.getAuthorList());
+		assertEquals("Norman Douglas Wayne", reference.getTitle());
+		assertEquals("abstract", reference.getAbstract());
+		assertEquals("Published", reference.getStatus());
+		assertEquals("www.efsa.europa.eu/efsajournal", reference.getWebsite());
+		assertEquals("comment", reference.getComment());
 	}
 }

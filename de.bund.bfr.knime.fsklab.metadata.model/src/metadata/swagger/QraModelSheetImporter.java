@@ -25,8 +25,6 @@ import de.bund.bfr.metadata.swagger.QualityMeasures;
 import de.bund.bfr.metadata.swagger.Reference;
 import de.bund.bfr.metadata.swagger.Study;
 import de.bund.bfr.metadata.swagger.StudySample;
-import metadata.PublicationType;
-import metadata.SwaggerUtil;
 
 public class QraModelSheetImporter implements SheetImporter {
 
@@ -119,6 +117,9 @@ public class QraModelSheetImporter implements SheetImporter {
 	
 	/** Columns for each of the properties of PopulationGroup. */
 	private final HashMap<String, Integer> populationColumns;
+	
+	/** Columns for each of the properties of Reference. */
+	private final HashMap<String, Integer> referenceColumns;
 
 	public QraModelSheetImporter() {
 
@@ -249,6 +250,19 @@ public class QraModelSheetImporter implements SheetImporter {
 		populationColumns.put("country", AU);
 		populationColumns.put("risk", AV);
 		populationColumns.put("season", AW);
+		
+		referenceColumns = new HashMap<>();
+		referenceColumns.put("referenceDescription", L);
+		referenceColumns.put("type", M);
+		referenceColumns.put("date", N);
+		referenceColumns.put("pmid", O);
+		referenceColumns.put("doi", P);
+		referenceColumns.put("author", Q);
+		referenceColumns.put("title", R);
+		referenceColumns.put("abstract", S);
+		referenceColumns.put("status", U);
+		referenceColumns.put("website", V);
+		referenceColumns.put("comment", W);
 	}
 
 	private GenericModelDataBackground retrieveBackground(Sheet sheet) {
@@ -397,7 +411,8 @@ public class QraModelSheetImporter implements SheetImporter {
 		// reference (1..n)
 		for (int numRow = this.GI_REFERENCE_ROW; numRow < (this.GI_REFERENCE_ROW + 3); numRow++) {
 			try {
-				Reference reference = retrieveReference(sheet.getRow(numRow));
+				Row row = sheet.getRow(numRow);
+				Reference reference = ImporterUtils.retrieveReference(row, referenceColumns);
 				information.addReferenceItem(reference);
 			} catch (Exception exception) {
 			}
@@ -484,76 +499,6 @@ public class QraModelSheetImporter implements SheetImporter {
 		// TODO: Spatial information
 
 		return scope;
-	}
-
-	private Reference retrieveReference(Row row) {
-
-		// Check mandatory properties and throw exception if missing
-		if (row.getCell(L).getCellTypeEnum() != CellType.STRING) {
-			throw new IllegalArgumentException("Missing Is reference description?");
-		}
-		if (row.getCell(P).getCellTypeEnum() != CellType.STRING) {
-			throw new IllegalArgumentException("Missing DOI");
-		}
-
-		Reference reference = new Reference();
-		reference.setIsReferenceDescription(row.getCell(L).getStringCellValue().equals("Yes"));
-		reference.setDoi(row.getCell(P).getStringCellValue());
-
-		// publication type
-		Cell typeCell = row.getCell(M);
-		if (typeCell.getCellTypeEnum() == CellType.STRING) {
-			PublicationType type = PublicationType.get(typeCell.getStringCellValue());
-			if (type != null) {
-				reference.setPublicationType(SwaggerUtil.PUBLICATION_TYPE.get(type));
-			}
-		}
-
-		Cell dateCell = row.getCell(N);
-		if (dateCell.getCellTypeEnum() == CellType.NUMERIC) {
-			LocalDate localDate = ImporterUtils.retrieveDate(dateCell);
-			reference.setDate(localDate);
-		}
-
-		Cell pmidCell = row.getCell(O);
-		if (pmidCell.getCellTypeEnum() == CellType.STRING) {
-			reference.setPmid(pmidCell.getStringCellValue());
-		}
-
-		Cell authorListCell = row.getCell(Q);
-		if (authorListCell.getCellTypeEnum() == CellType.STRING) {
-			reference.setAuthorList(authorListCell.getStringCellValue());
-		}
-
-		Cell titleCell = row.getCell(R);
-		if (titleCell.getCellTypeEnum() == CellType.STRING) {
-			reference.setTitle(titleCell.getStringCellValue());
-		}
-
-		Cell abstractCell = row.getCell(S);
-		if (abstractCell.getCellTypeEnum() == CellType.STRING) {
-			reference.setAbstract(abstractCell.getStringCellValue());
-		}
-		// journal
-		// volume
-		// issue
-
-		Cell statusCell = row.getCell(U);
-		if (statusCell.getCellTypeEnum() == CellType.STRING) {
-			reference.setStatus(statusCell.getStringCellValue());
-		}
-
-		Cell websiteCell = row.getCell(V);
-		if (websiteCell.getCellTypeEnum() == CellType.STRING) {
-			reference.setWebsite(websiteCell.getStringCellValue());
-		}
-
-		Cell commentCell = row.getCell(W);
-		if (commentCell.getCellTypeEnum() == CellType.STRING) {
-			reference.setComment(commentCell.getStringCellValue());
-		}
-
-		return reference;
 	}
 
 	private ModelCategory retrieveModelCategory(Sheet sheet) {

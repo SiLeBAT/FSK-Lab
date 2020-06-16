@@ -50,7 +50,7 @@ public class HealthModelSheetImporterTest {
 		assertEquals("Open access", information.getAvailability());
 		assertEquals("http://onlinelibrary.wiley.com/doi/10.2903/sp.efsa.2017.EN-1252/abstract", information.getUrl());
 		assertEquals(".fskx", information.getFormat());
-		assertEquals(1, information.getReference().size());
+		assertEquals(3, information.getReference().size());
 		assertEquals("English", information.getLanguage());
 		assertEquals("FSK-Lab", information.getSoftware());
 		assertEquals("R 3", information.getLanguageWrittenIn());
@@ -61,6 +61,7 @@ public class HealthModelSheetImporterTest {
 		
 		TestUtils.testFirstCreator(information.getCreator().get(0));
 		TestUtils.testFirstAuthor(information.getAuthor().get(0));
+		TestUtils.testFirstReference(information.getReference().get(0));
 	}
 
 	private static void test(HealthModelScope scope) {

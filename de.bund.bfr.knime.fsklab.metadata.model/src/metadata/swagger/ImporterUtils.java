@@ -22,7 +22,6 @@ import de.bund.bfr.metadata.swagger.Reference;
 import de.bund.bfr.metadata.swagger.StudySample;
 import metadata.ParameterClassification;
 import metadata.ParameterType;
-import metadata.PublicationType;
 import metadata.SwaggerUtil;
 
 /** Utility methods for importers. */
@@ -399,14 +398,8 @@ public class ImporterUtils {
 				row.getCell(columns.get("referenceDescription")).getStringCellValue().equals("Yes"));
 		reference.setDoi(row.getCell(columns.get("doi")).getStringCellValue());
 
-		// publication type
-		final Cell typeCell = row.getCell(columns.get("type"));
-		if (typeCell.getCellTypeEnum() == CellType.STRING) {
-			final PublicationType type = PublicationType.get(typeCell.getStringCellValue());
-			if (type != null) {
-				reference.setPublicationType(SwaggerUtil.PUBLICATION_TYPE.get(type));
-			}
-		}
+		// TODO: the types in the spreadsheet are not compatible with the RIS types.
+		// The annotation template must be updated or the values must be mapped here.
 
 		final Cell dateCell = row.getCell(columns.get("date"));
 		if (dateCell.getCellTypeEnum() == CellType.NUMERIC) {

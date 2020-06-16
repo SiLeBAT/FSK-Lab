@@ -143,7 +143,7 @@ public class ExposureModelSheetImporter implements SheetImporter {
 		referenceColumns.put("author", P);
 		referenceColumns.put("title", Q);
 		referenceColumns.put("abstract", R);
-		referenceColumns.put("status", S);
+		referenceColumns.put("status", T);
 		referenceColumns.put("website", U);
 		referenceColumns.put("comment", V);
 

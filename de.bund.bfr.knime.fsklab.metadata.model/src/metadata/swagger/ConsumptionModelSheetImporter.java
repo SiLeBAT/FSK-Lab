@@ -312,7 +312,8 @@ public class ConsumptionModelSheetImporter implements SheetImporter {
 		// reference (1..n)
 		for (int numRow = this.GI_REFERENCE_ROW; numRow < (this.GI_REFERENCE_ROW + 3); numRow++) {
 			try {
-				Reference reference = ImporterUtils.retrieveReference(sheet.getRow(numRow), referenceColumns);
+				Row row = sheet.getRow(numRow);
+				Reference reference = ImporterUtils.retrieveReference(row, referenceColumns);
 				information.addReferenceItem(reference);
 			} catch (Exception exception) {
 				// Skip faulty reference and continue

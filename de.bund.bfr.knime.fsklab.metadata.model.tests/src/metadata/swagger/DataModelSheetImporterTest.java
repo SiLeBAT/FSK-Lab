@@ -50,7 +50,7 @@ public class DataModelSheetImporterTest {
 		assertEquals("Open access", information.getAvailability());
 		assertEquals("http://onlinelibrary.wiley.com/doi/10.2903/sp.efsa.2017.EN-1252/abstract", information.getUrl());
 		assertEquals(".fskx", information.getFormat());
-		assertEquals(1, information.getReference().size());
+		assertEquals(3, information.getReference().size());
 		assertEquals("English", information.getLanguage());
 		assertNull(information.getStatus());
 		assertEquals("Objective", information.getObjective());
@@ -58,6 +58,7 @@ public class DataModelSheetImporterTest {
 		
 		TestUtils.testFirstCreator(information.getCreator().get(0));
 		TestUtils.testFirstAuthor(information.getAuthor().get(0));
+		TestUtils.testFirstReference(information.getReference().get(0));
 	}
 
 	private static void test(GenericModelScope scope) {
