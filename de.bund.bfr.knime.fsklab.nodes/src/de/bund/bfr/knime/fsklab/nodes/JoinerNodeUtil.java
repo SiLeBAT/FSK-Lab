@@ -1,68 +1,79 @@
 package de.bund.bfr.knime.fsklab.nodes;
 
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.knime.core.node.ExecutionContext;
 import de.bund.bfr.knime.fsklab.CombinedFskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskSimulation;
-import de.bund.bfr.metadata.swagger.Model;
+import de.bund.bfr.knime.fsklab.JoinRelation;
 import de.bund.bfr.metadata.swagger.Parameter;
-import de.bund.bfr.metadata.swagger.Parameter.ClassificationEnum;
 import metadata.SwaggerUtil;
 
 public class JoinerNodeUtil {
 
-  /**
-   * Change parameter ids for those parameters appearing in two models.
-   * 
-   * @return map with original ids as keys and new ids as values
-   */
-  public static void addSuffixToParameters(
-      List<Parameter> modelParameters, String suffix) {
-    
-    modelParameters.forEach(it -> it.setId(it.getId() + suffix));
-    
-  }
-  
-  public static LinkedHashMap<String,String> getOriginalParameterNames(LinkedHashMap<String, String> originalOutputParameters, String suffix){
-   
-    
-    LinkedHashMap<String,String> originalNamesMap = new LinkedHashMap<String,String>();
 
-    // create a mapping for the output parameters so that the true (original) parameter name is preserved but links
-    // to the current parameter (from the script)
-    for(Map.Entry<String,String> pair : originalOutputParameters.entrySet()) {
+
+  /**
+   * 
+   * @param originalOutputParameters map that contains the globally unique parameter names
+   * and links them to the local names of the parameters in the actual scripts (e.g. var12 = var)
+   * @param suffix Can be JoinerNodeModel.SUFFIX_FIRST ("1") or SUFFIX_SECOND ("2") 
+   * @return mapping of original parameter names for one of the two models in a combined FSK object
+   */
+  public static LinkedHashMap<String, String> getOriginalParameterNames(LinkedHashMap<String, String> originalOutputParameters, String suffix){
+
+    LinkedHashMap<String, String> originalNamesMap = new LinkedHashMap<String, String>();
+
+    // create a mapping for the output parameters so that the true (original) parameter name is preserved 
+    // original parameter name maps to the current (local) parameter (from the script)
+    for(Map.Entry<String, String> pair : originalOutputParameters.entrySet()) {
       if(pair.getValue().endsWith(suffix)) {
         originalNamesMap.put(pair.getKey(), pair.getValue().substring(0, pair.getValue().length() - 1));
       }
     }
-    
+
     return originalNamesMap;
   }
+
+  /**
+   * 
+   * Create a simulation only for one model (first or second) in a combined object
+   * 
+   * 
+   * @param combinedSim Simulation containing parameters from the first AND the second model.
+   * @param suffix Can be JoinerNodeModel.SUFFIX_FIRST ("1") or SUFFIX_SECOND ("2")
+   * @return simulation containing only parameters from the first or second model in a combined FSK object
+   */
   public static FskSimulation makeIndividualSimulation(FskSimulation combinedSim, String suffix) {
     FskSimulation fskSimulation = new FskSimulation(combinedSim.getName());
 
-
     combinedSim.getParameters().forEach((pId,pValue) -> {
       if(pId.endsWith(suffix) )
-          fskSimulation.getParameters().put(pId.substring(0, pId.length() - 1), pValue); 
+        fskSimulation.getParameters().put(pId.substring(0, pId.length() - 1), pValue); 
     });
-          
+
     return fskSimulation;
   }
-  
-  
+
+  /**
+   * This method saves the output a model script using its globally unique parameter name so 
+   * they can't be overwritten by other models in the same session
+   * 
+   * @param originalOutputParameters map that contains the globally unique parameter names
+   * and links them to the local names of the parameters in the actual scripts (e.g. var12 = var)
+   * @param handler takes care of script execution
+   * @param exec KNIME execution context
+   */
   public static void saveOutputVariable(Map<String,String> originalOutputParameters,
       ScriptHandler handler,
       ExecutionContext exec) {
-    
-    
-    
+
+
     // save output to the official name (with all the suffixes) so it doesn't get overwritten by subsequent model executions
     // saving is done on R evaluation level
     for(Map.Entry<String, String> pair : originalOutputParameters.entrySet() )
@@ -70,140 +81,176 @@ public class JoinerNodeUtil {
       // key: output with all suffixes (globally unique name)
       // value: output name without all suffixes
       try {
-        
+
         handler.runScript(pair.getKey() + "<-" + pair.getValue(), exec, false);
-  
+
       } catch(Exception e) { }
-      
     }
-    // save output from simulation by using current output name (with suffixes)
-//    List<Parameter> firstOutParams = SwaggerUtil.getParameter(
-//        fskObj.modelMetadata).stream().filter(
-//            it -> it.getClassification().equals(ClassificationEnum.OUTPUT)).collect(Collectors.toList());
-//    List<Parameter> comOutParams = SwaggerUtil.getParameter(
-//        comFskObj.modelMetadata).stream().filter(
-//            it -> it.getClassification().equals(ClassificationEnum.OUTPUT)).collect(Collectors.toList());
-    
-    
-//    comOutParams.forEach((p) -> firstOutParams.forEach((f)-> {
-//      if(p.getId().equals(f.getId() + suffix)) {
-//        
-//        try {
-//                    
-//          handler.runScript(p.getId() + "<-" + f.getId(), exec, false);
-//          
-//        }catch(Exception e) {}
-//      }
-//    }));
- 
   }
-  
-  
+
+  /**
+   * Methods adds an identifier suffix to each parameter so it can be identified after the joining.
+   * The suffix is currently a string in {"1","2"}, "1" meaning the parameter is from the first model,
+   * "2" meaning it is from the second model 
+   *  
+   * 
+   * @param firstModelParameters List of parameters from the first model to be joined. It gets the JoinerNodeModel.SUFFIX_FIRST suffix. 
+   * @param secondModelParameters List of parameters from the second model to be joined. It gets the JoinerNodeModel.SUFFIX_SECOND suffix.
+   */
   public static void addIdentifierToParameters( 
       List<Parameter> firstModelParameters, List<Parameter> secondModelParameters) {
-    
-      addSuffixToParameters(firstModelParameters, JoinerNodeModel.SUFFIX_FIRST );
 
-      addSuffixToParameters(secondModelParameters, JoinerNodeModel.SUFFIX_SECOND );
+    firstModelParameters.forEach(it -> it.setId(it.getId() + JoinerNodeModel.SUFFIX_FIRST));
+    secondModelParameters.forEach(it -> it.setId(it.getId() + JoinerNodeModel.SUFFIX_SECOND));
+
+
   }
-  /**
-   * Change parameter ids for those parameters appearing in two models.
-   * 
-   * @return map with original ids as keys and new ids as values
-   */
-//  public static Map<String, String> resolveParameterNamesConflict(
-//      List<Parameter> firstModelParameters, List<Parameter> secondModelParameters) {
-//
-//    HashMap<String, String> newParameterIds = new HashMap<>();
-//    Boolean change_happened;
-//
-//    for (Parameter firstParam : firstModelParameters) {
-//      for (Parameter secondParam : secondModelParameters) {
-//        if (secondParam.getId().equals(firstParam.getId())) {
-//          String oldId = firstParam.getId();
-//          //          String newId = firstParam.getId() + JoinerNodeModel.SUFFIX;
-//          String newId = firstParam.getId() + JoinerNodeModel.SUFFIX;
-//
-//          newParameterIds.put(oldId, newId);
-//          firstParam.setId(newId);
-//          firstParam.setName(newId);
-//          // now check if that causes duplicate parameters in the first model
-//          do {
-//            change_happened = false;
-//            for (Parameter firstP : firstModelParameters) {
-//              //skip current parameter so we don't change it twice
-//              if(firstP == firstParam)
-//                continue;
-//              if(firstP.getId().equals(newId)) {
-//                String update = firstP.getId() + JoinerNodeModel.SUFFIX;
-//                newParameterIds.put(firstP.getId(), update);
-//                firstP.setId(update);
-//                firstP.setName(update);
-//                change_happened = true;
-//              }
-//            }
-//
-//          }while(change_happened);
-//
-//        }//if equals
-//      }// for secondModelParameters
-//    }// for firstModelParameters
-//
-//    return newParameterIds;
-//  }
 
-  public static void createDefaultParameterValues(FskSimulation first,FskSimulation second, List<Parameter> parameters ) {
-    
-   
-    
+  /**
+   * This method sets the default values of a combined model. The values are taken from the simulation settings 
+   * of the individual models.
+   * 
+   * 
+   * @param first Simulation parameters from the first model to be joined.
+   * @param second Simulation parameters from the second model to be joined.
+   * @param parameters Simulation parameters with changed values based on the first and second simulations.
+   */
+  public static void createDefaultParameterValues(FskSimulation first, FskSimulation second, List<Parameter> parameters ) {
+
     for (Parameter p : parameters) {
-     
+
       String p_id = p.getId();  // parameter id with suffix "1" or "2"
       String p_id_trim = p_id.substring(0, p_id.length() - 1);
-      
+
       if(p_id.endsWith("1") && first.getParameters().containsKey(p_id_trim)) {
         p.setValue(first.getParameters().get(p_id_trim));
       }
-      
+
       if(p_id.endsWith("2") && second.getParameters().containsKey(p_id_trim)) {
         p.setValue(second.getParameters().get(p_id_trim));
       }
     }
+  }
+  
+  /**
+   * This method creates a cross product of all simulations from the first and second models and
+   * combines them to create simulations for the joined model.  
+   * 
+   * @param firstFskObj First FSK object with simulations 
+   * @param secondFskObj Second FSK object with simulations
+   * @param outObj Combined FSK object with new list of simulations from both models
+   */
+  public static void createAllPossibleSimulations(
+      FskPortObject firstFskObj,
+      FskPortObject secondFskObj, 
+      CombinedFskPortObject outObj ) {
     
-    
+    int indexFirst = 0;
+    int indexSecond = 0;
+    for(FskSimulation simFirst : firstFskObj.simulations) {
+      
+      for(FskSimulation simSecond : secondFskObj.simulations) {
+        
+        // these simulations are already used for the default simulation of the combined model. So skip it.
+        if(indexFirst == firstFskObj.selectedSimulationIndex && indexSecond == secondFskObj.selectedSimulationIndex) {
+          indexSecond++;
+          continue;
+        }
+        
+        
+        List<Parameter> combinedModelParameters = SwaggerUtil.getParameter(outObj.modelMetadata);
+
+        FskSimulation simComb = new FskSimulation(simFirst.getName() + "_" + simSecond.getName());
+        
+        // unless the parameter is output, add it to new simulation
+        for(Parameter p : combinedModelParameters) {
+            if(p.getClassification().equals(Parameter.ClassificationEnum.OUTPUT))
+              continue;
+            
+            
+            String p_id = p.getId();
+            // for convenience remove last suffix from the parameter to make comparison easier
+            String p_trim = p.getId().substring(0, p.getId().length() - 1);
+            // if simulation-parameter belongs to first model, get its value and add it to the combined simulation
+            if(p_id.endsWith(JoinerNodeModel.SUFFIX_FIRST) ) {
+              simComb.getParameters().put(p_id, simFirst.getParameters().get(p_trim));
+            }
+            if(p_id.endsWith(JoinerNodeModel.SUFFIX_SECOND) ) {
+              simComb.getParameters().put(p_id, simSecond.getParameters().get(p_trim));
+            }
+          }
+          
+        // add new simulation to combined model
+        outObj.simulations.add(simComb);
+        indexSecond++;
+      }
+      indexSecond = 0;
+      indexFirst++;
+      
+    }
     
   }
   
   
+  
+  
   /**
-   * Update parameters with values from the selected simulation.
-   * 
-   * @param firstModelParameterValues Parameters of the first model with ids as keys and values
-   * @param secondModelParameterValues Parameters of the second model with ids as keys and values
-   * @param newParameterIds Map with original ids (keys) and new ids (values)
-   * @param combinedModelParameters Metadata of the parameters of the combined model. The values of these parameters is updated.
+   * Create a default simulation for an FSKPortObject
+   * @param fskObj The FSK Port Object 
    */
-//  public static void resolveSimulationParameters(Map<String, String> firstModelParameterValues,
-//      Map<String, String> secondModelParameterValues, Map<String, String> newParameterIds,
-//      List<Parameter> combinedModelParameters) {
-//
-//    // find the parameters that have been renamed with a Suffix and put the new id into the first
-//    // simulation map
-//    newParameterIds.forEach((old_id, new_id) -> {
-//      if (firstModelParameterValues.containsKey(old_id)) {
-//        String temp_value = firstModelParameterValues.get(old_id);
-//        firstModelParameterValues.remove(old_id);
-//        firstModelParameterValues.put(new_id, temp_value);
-//      }
-//    });
-//
-//    // set the values of the new parameters to that of the simulations
-//    for (Parameter p : combinedModelParameters) {
-//      if (firstModelParameterValues.containsKey(p.getId()))
-//        p.setValue(firstModelParameterValues.get(p.getId()));
-//      if (secondModelParameterValues.containsKey(p.getId()))
-//        p.setValue(secondModelParameterValues.get(p.getId()));
-//    }
-//  }
+  public static void createDefaultSimulation(FskPortObject fskObj) {
 
-}
+    if (SwaggerUtil.getModelMath(fskObj.modelMetadata) != null) {
+
+      List<Parameter> combinedModelParameters = SwaggerUtil.getParameter(fskObj.modelMetadata);
+
+      FskSimulation defaultSimulation = NodeUtils.createDefaultSimulation(combinedModelParameters);
+
+      fskObj.simulations.add(defaultSimulation);
+      fskObj.selectedSimulationIndex = 0;
+    }    
+  }
+
+  /**
+   * This method removes INPUT parameters that are the target for a join command. 
+   * 
+   * @param relations The join relation between a source parameter (output of model 1) and target (input of model 2)
+   * @param outfskPort The combined FSK PortObject with its List of parameters from the metadata
+   */
+  public static void removeJoinedParameters(JoinRelation[] relations, FskPortObject outfskPort) {
+
+    if (relations != null)
+      for (JoinRelation relation : relations) {
+
+        Iterator<Parameter> iter = SwaggerUtil.getParameter(outfskPort.modelMetadata).iterator();
+        while (iter.hasNext()) {
+          Parameter p = iter.next();
+                    
+          // remove input from second model
+          Boolean b2 = p.getId().equals(relation.getTargetParam());
+          if (b2)
+            iter.remove();
+          
+        } // while
+      } // for
+  }// resolveParameters
+  
+  /**
+   * 
+   * @param firstParameterList List of parameters from model 1
+   * @param secondParameterList List of parameters from model 2
+   * @return List of parameters from both models
+   */
+  public static List<Parameter> combineParameters(List<Parameter> firstParameterList,
+      List<Parameter> secondParameterList) {
+
+    // parameters
+    List<Parameter> combinedList = Stream.of(firstParameterList, secondParameterList)
+        .flatMap(x -> x.stream()).collect(Collectors.toList());
+
+    return combinedList;
+  }
+  
+  
+  
+}//JoinerNodeUtil

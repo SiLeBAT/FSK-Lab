@@ -396,7 +396,7 @@ joiner = function () {
     });
 
     // Update form when a link is selected (clicked)
-    _paper.on("link:pointerclick", updateForm);
+    //_paper.on("link:pointerclick", updateForm);
 
     _paper.on('link:connect', function(linkView, evt, elementViewDisconnected, magnet, arrowhead) {
       sourcePort = linkView.model.attributes.source.port;
@@ -427,14 +427,19 @@ joiner = function () {
         window.sJoinRealtion = {
           sourceParam: sourcePort,
           targetParam: targetPort,
-          command: sourcePort
+          command: command.value//sourcePort
         };
 
-        if (_metadata.generalInformation.languageWrittenIn) {
-          window.sJoinRealtion.language_written_in = _metadata.generalInformation.languageWrittenIn;
-          $('#commandLanguage').val(_metadata.generalInformation.languageWrittenIn);
-        }
+        if(_metadata.generalInformation.languageWrittenIn){
+          if (_metadata.generalInformation.languageWrittenIn.length > 0) {
+            window.sJoinRealtion.language_written_in = _metadata.generalInformation.languageWrittenIn;
+            $('#commandLanguage').val(_metadata.generalInformation.languageWrittenIn);
+          }else{
+            window.sJoinRealtion.language_written_in = "R";
+            $('#commandLanguage').val(_metadata.generalInformation.languageWrittenIn);
 
+          }
+        }
         if (!_value.joinRelations) {
           _value.joinRelations = []
         }
@@ -542,7 +547,7 @@ joiner = function () {
 
     let commandTextArea = document.getElementById("Command");
     commandTextArea.value = window.sJoinRealtion.command;
-    commandTextArea.onkeyup = () => window.sJoinRealtion.command = commandTextArea.val()
+    commandTextArea.onkeyup = () => window.sJoinRealtion.command = commandTextArea.value;
   }
 
   /** Create model to join.

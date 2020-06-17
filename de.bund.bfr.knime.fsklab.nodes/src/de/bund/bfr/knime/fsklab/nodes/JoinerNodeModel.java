@@ -26,14 +26,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
@@ -67,9 +64,7 @@ import de.bund.bfr.knime.fsklab.CombinedFskPortObject;
 import de.bund.bfr.knime.fsklab.CombinedFskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.FskPortObject;
-import de.bund.bfr.knime.fsklab.FskSimulation;
 import de.bund.bfr.knime.fsklab.JoinRelation;
-import de.bund.bfr.knime.fsklab.nodes.JSSimulatorViewValue.JSSimulation;
 import de.bund.bfr.metadata.swagger.Parameter;
 import metadata.SwaggerUtil;
 
@@ -226,7 +221,7 @@ final class JoinerNodeModel
   private void loadFromPorts(JoinerViewValue joinerProxyValue) throws JsonProcessingException {
 
     SwaggerUtil.setParameter(secondInputPort.modelMetadata,
-        combineParameters(SwaggerUtil.getParameter(firstInputPort.modelMetadata),
+        JoinerNodeUtil.combineParameters(SwaggerUtil.getParameter(firstInputPort.modelMetadata),
             SwaggerUtil.getParameter(secondInputPort.modelMetadata)));
 
     joinerProxyValue.modelMetaData = MAPPER.writeValueAsString(secondInputPort.modelMetadata);
@@ -525,40 +520,7 @@ final class JoinerNodeModel
   public void setHideInWizard(boolean hide) {
   }
 
-  private static void removeJoinedParameters(JoinRelation[] relations, FskPortObject outfskPort) {
-
-    if (relations != null)
-      for (JoinRelation relation : relations) {
-
-        Iterator<Parameter> iter = SwaggerUtil.getParameter(outfskPort.modelMetadata).iterator();
-        while (iter.hasNext()) {
-          Parameter p = iter.next();
-                    
-          //For now don't remove output from first model
-          //Boolean b1 = p.getId().equals(relation.getSourceParam());
-
-          // remove input from second model
-          Boolean b2 = p.getId().equals(relation.getTargetParam());
-
-
-          if (b2) {
-            iter.remove();
-          }
-        } // while
-      } // for
-  }// resolveParameters
-
-  // TODO: finalize joining meta data after 1.04
-  private static List<Parameter> combineParameters(List<Parameter> firstParameterList,
-      List<Parameter> secondParameterList) {
-
-    // parameters
-    List<Parameter> combinedList = Stream.of(firstParameterList, secondParameterList)
-        .flatMap(x -> x.stream()).collect(Collectors.toList());
-
-    return combinedList;
-  }
-
+  
   /** @return string with node name and id with format "{name} (#{id}) setting". */
   private static String buildContainerName() {
     final NodeContainer nodeContainer = NodeContext.getContext().getNodeContainer();
@@ -577,9 +539,6 @@ final class JoinerNodeModel
     JoinerNodeUtil.addIdentifierToParameters(
         SwaggerUtil.getParameter(firstInputPort.modelMetadata),
         SwaggerUtil.getParameter(secondInputPort.modelMetadata));
-//    originals = JoinerNodeUtil.resolveParameterNamesConflict(
-//        SwaggerUtil.getParameter(firstInputPort.modelMetadata),
-//        SwaggerUtil.getParameter(secondInputPort.modelMetadata));
 
     synchronized (getLock()) {
 
@@ -597,45 +556,7 @@ final class JoinerNodeModel
     }
   }
   
-  /*
-   * 
-   * 
-   * 
-   */
-//  private void createSimulations(FskPortObject inObj, List<FskSimulation> simulations) {
-//
-//    inObj.simulations.clear();
-//
-//    final List<String> modelMathParameter = SwaggerUtil.getParameter(inObj.modelMetadata).stream()
-//        .map(Parameter::getId).collect(Collectors.toList());
-//    
-//    for (final FskSimulation combSimulation : simulations) {
-//      final FskSimulation fskSimulation = new FskSimulation(combSimulation.getName());
-//
-//      //      final List<Parameter> inputParams = new ArrayList<Parameter>();
-//      for (Map.Entry<String, String> entry : combSimulation.getParameters().entrySet()) {
-//        
-//
-//        final String paramWithSuffix = entry.getKey();// key = id of Parameter
-//        final String paramWithoutSuffix = paramWithSuffix.replaceFirst(JoinerNodeModel.SUFFIX, "");
-//        if (modelMathParameter.contains(paramWithoutSuffix)
-//            || modelMathParameter.contains(paramWithSuffix)) {
-//          fskSimulation.getParameters().put(paramWithoutSuffix, entry.getValue());
-//        }
-//      }
-//
-//
-//    inObj.simulations.add(fskSimulation);
-//    }
-//
-//    inObj.selectedSimulationIndex = 0;
-//
-//    if(inObj instanceof CombinedFskPortObject) {
-//      createSimulations(((CombinedFskPortObject)inObj).getFirstFskPortObject(),inObj.simulations);
-//      createSimulations(((CombinedFskPortObject)inObj).getSecondFskPortObject(),inObj.simulations);
-//    }
-//    
-//  }
+ 
 
   @Override
   protected PortObject[] performExecuteCreatePortObjects(PortObject svgImageFromView,
@@ -691,15 +612,15 @@ final class JoinerNodeModel
       packageSet.addAll(secondInputPort.packages);
       outObj.packages.addAll(packageSet);
      
-      removeJoinedParameters(connections, outObj);
+      JoinerNodeUtil.removeJoinedParameters(connections, outObj);
       
 
       // Create default simulation out of parameters metadata
-      createDefaultSimulation(outObj);
+      JoinerNodeUtil.createDefaultSimulation(outObj);
 
       
       // add all possible simulations to combined object
-      createAllPossibleSimulations(outObj);
+      JoinerNodeUtil.createAllPossibleSimulations(firstInputPort, secondInputPort, outObj);
      
       
       
@@ -714,72 +635,9 @@ final class JoinerNodeModel
     return new PortObject[] {outObj, svgImageFromView};
   }
 
-  private void createAllPossibleSimulations(CombinedFskPortObject outObj) {
-    int indexFirst = 0;
-    int indexSecond = 0;
-    for(FskSimulation simFirst : firstInputPort.simulations) {
-      
-      for(FskSimulation simSecond : secondInputPort.simulations) {
-        
-        //skip the selected simulations since they are already in the new default sim
-        if(indexFirst == firstInputPort.selectedSimulationIndex && indexSecond == secondInputPort.selectedSimulationIndex) {
-          indexSecond++;
-          continue;
-        }
-        
-        // resolve duplicate parameters, otherwise duplicate parameters don't get added to the simulation
-        List<Parameter> combinedModelParameters = SwaggerUtil.getParameter(outObj.modelMetadata);
-//        JoinerNodeUtil.resolveSimulationParameters(simFirst.getParameters(), simSecond.getParameters(),
-//            originals, combinedModelParameters);
+ 
 
-        FskSimulation simComb = new FskSimulation(simFirst.getName() + "_" + simSecond.getName());
-        
-        // unless the parameter is output, add it to new simulation
-        for(Parameter p : combinedModelParameters) {
-            if(p.getClassification().equals(Parameter.ClassificationEnum.OUTPUT))
-              continue;
-            
-            
-            String p_id = p.getId();
-            // for convenience remove last suffix from the parameter to make comparison easier
-            String p_trim = p.getId().substring(0, p.getId().length() - 1);
-            // if simulation-parameter belongs to first model, get its value and add it to the combined simulation
-            if(p_id.endsWith(JoinerNodeModel.SUFFIX_FIRST) ) {
-              simComb.getParameters().put(p_id, simFirst.getParameters().get(p_trim));
-            }
-            if(p_id.endsWith(JoinerNodeModel.SUFFIX_SECOND) ) {
-              simComb.getParameters().put(p_id, simSecond.getParameters().get(p_trim));
-            }
-          }
-          
-        // add new simulation to combined model
-        outObj.simulations.add(simComb);
-        indexSecond++;
-      }
-      indexSecond = 0;
-      indexFirst++;
-      
-    }
-    
-  }
 
-  private void createDefaultSimulation(CombinedFskPortObject outObj) {
-    if (SwaggerUtil.getModelMath(outObj.modelMetadata) != null) {
-      
-//      Map<String, String> firstModelParameterValues =
-//          firstInputPort.simulations.get(firstInputPort.selectedSimulationIndex).getParameters();
-//      Map<String, String> secondModelParameterValues = secondInputPort.simulations
-//          .get(secondInputPort.selectedSimulationIndex).getParameters();
-      List<Parameter> combinedModelParameters = SwaggerUtil.getParameter(outObj.modelMetadata);
-//      JoinerNodeUtil.resolveSimulationParameters(firstModelParameterValues, secondModelParameterValues,
-//          originals, combinedModelParameters);
-
-      FskSimulation defaultSimulation = NodeUtils.createDefaultSimulation(combinedModelParameters);
-      
-      outObj.simulations.add(defaultSimulation);
-      outObj.selectedSimulationIndex = 0;
-    }    
-  }
 
   private void resetParameterIdToOriginal(List<Parameter> parameter) {
     
