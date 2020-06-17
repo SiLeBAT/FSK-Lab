@@ -160,7 +160,6 @@ class JSSimulatorNodeModel
       // If not executed
       if (val.simulations == null) {
         final List<Parameter> parameters = SwaggerUtil.getParameter(inObj.modelMetadata);
-
         loadJsonSetting();
         final List<JSSimulation> simulations = inObj.simulations.stream()
             .map(it -> toJSSimulation(it, parameters)).collect(Collectors.toList());
@@ -187,59 +186,23 @@ class JSSimulatorNodeModel
     return new PortObject[] {inObj};
   }
 
+
   private void createSimulation(FskPortObject inObj, JSSimulatorViewValue val) {
 
-    if (inObj instanceof CombinedFskPortObject) {
-      final List<Parameter> inputParams = getViewRepresentation().parameters;
-      inObj.simulations.clear();
-      
-      // For every simulation in the view value (val.simulations)
-      for (final JSSimulation jsSimulation : val.simulations) {
-        final FskSimulation fskSimulation = new FskSimulation(jsSimulation.name);
-        for (int i = 0; i < inputParams.size(); i++) {
-          // Map param id from metadata to its value from the view value simulation (jsSimulation)
-          final String paramName = inputParams.get(i).getId();
-          final String paramValue = jsSimulation.values.get(i);
-          fskSimulation.getParameters().put(paramName, paramValue);
-        }
-        inObj.simulations.add(fskSimulation);
+    final List<Parameter> inputParams = getViewRepresentation().parameters;
+    inObj.simulations.clear();
+    
+    for (final JSSimulation jsSimulation : val.simulations) {
+      final FskSimulation fskSimulation = new FskSimulation(jsSimulation.name);
+      for (int i = 0; i < inputParams.size(); i++) {
+        final String paramName = inputParams.get(i).getId();
+        final String paramValue = jsSimulation.values.get(i);
+        fskSimulation.getParameters().put(paramName, paramValue);
       }
-
-      inObj.selectedSimulationIndex = val.selectedSimulationIndex;
-    } else {
-      inObj.simulations.clear();
-      final List<String> modelMathParameter = SwaggerUtil.getParameter(inObj.modelMetadata).stream()
-          .map(Parameter::getId).collect(Collectors.toList());
-      final List<Integer> indexes = new ArrayList<>();
-      final List<Parameter> properInputParam = new ArrayList<>();
-      for (final JSSimulation jsSimulation : val.simulations) {
-        final FskSimulation fskSimulation = new FskSimulation(jsSimulation.name);
-        final List<Parameter> inputParams = getViewRepresentation().parameters;
-        index = 0;
-        inputParams.stream().forEach(param -> {
-          final Parameter paramCopy = SwaggerUtil.cloneParameter(param);
-          final String paramWithSuffix = paramCopy.getId();
-          final String paramWithoutSuffix = paramWithSuffix.replaceAll(JoinerNodeModel.SUFFIX, "");
-          if (modelMathParameter.contains(paramWithoutSuffix)
-              || modelMathParameter.contains(paramWithSuffix)) {
-            paramCopy.setId(paramWithoutSuffix);
-            properInputParam.add(paramCopy);
-            indexes.add(index);
-          }
-          index++;
-
-        });
-
-        for (int i = 0; i < properInputParam.size(); i++) {
-          final String paramName = properInputParam.get(i).getId();
-          final String paramValue = jsSimulation.values.get(indexes.get(i));
-          fskSimulation.getParameters().put(paramName, paramValue);
-        }
-        inObj.simulations.add(fskSimulation);
-      }
-
-      inObj.selectedSimulationIndex = val.selectedSimulationIndex;
+      inObj.simulations.add(fskSimulation);
     }
+
+    inObj.selectedSimulationIndex = val.selectedSimulationIndex;
   }
 
   @Override
@@ -310,7 +273,7 @@ class JSSimulatorNodeModel
     final String containerName = buildContainerName();
 
     final File settingFolder = new File(directory, containerName);
-
+   
     // Read configuration strings
     final String simulationString = NodeUtils.readConfigString(settingFolder, "simulations.json");
 
