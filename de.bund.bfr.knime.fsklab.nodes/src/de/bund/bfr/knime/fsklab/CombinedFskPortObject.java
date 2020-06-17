@@ -334,7 +334,19 @@ public class CombinedFskPortObject extends FskPortObject {
         out.putNextEntry(new ZipEntry(JOINED_VIZ + level));
         IOUtils.write(portObject.viz, out, "UTF-8");
         out.closeEntry();
+        
+        // Save selected simulation index
+        out.putNextEntry(new ZipEntry(SIMULATION_INDEX + level));
 
+        try {
+          ObjectOutputStream oos = new ObjectOutputStream(out);
+          oos.writeObject(portObject.selectedSimulationIndex);
+          out.closeEntry();
+          
+        } catch (IOException exception) {
+          exception.printStackTrace();
+        }
+        
         saveFSKPortObject(joinedPortObject.getFirstFskPortObject(), out, exec);
         saveFSKPortObject(joinedPortObject.getSecondFskPortObject(), out, exec);
 
@@ -455,6 +467,8 @@ public class CombinedFskPortObject extends FskPortObject {
       JoinRelation[] relations = null;
 
       ZipEntry entry;
+      
+      
       while ((entry = in.getNextEntry()) != null) {
         String entryName = entry.getName();
         // check if the entry contains combined FSK object
@@ -512,6 +526,7 @@ public class CombinedFskPortObject extends FskPortObject {
             gm.setDataBackground(MAPPER104.readValue(in, GenericModelDataBackground.class));
             in.getNextEntry();
 
+           
             gm.setModelMath(MAPPER104.readValue(in, GenericModelModelMath.class));
 
             modelMetadata = gm;
@@ -522,7 +537,22 @@ public class CombinedFskPortObject extends FskPortObject {
           if (entryName.startsWith(JOINED_VIZ + level)) {
             visualizationScript = IOUtils.toString(in, "UTF-8");
           }
-
+          
+          //Simulation Index
+          
+          entry = in.getNextEntry();
+          entryName = entry.getName();
+          
+          if (entryName.startsWith(SIMULATION_INDEX)) {
+            ObjectInputStream ois = new ObjectInputStream(in);
+            try {
+              selectedSimulationIndex = ((Integer) ois.readObject()).intValue();
+            } catch (ClassNotFoundException e) {
+              e.printStackTrace();
+            }
+          }
+          
+        
           // read first FSKObject
           FskPortObject firstFSKObject = loadFSKPortObject(in, spec, exec);
           // read second FSKObject
@@ -543,6 +573,8 @@ public class CombinedFskPortObject extends FskPortObject {
             portObj.simulations.addAll(simulations);
           }
 
+
+          portObj.selectedSimulationIndex = selectedSimulationIndex;
           return portObj;
 
         } else {

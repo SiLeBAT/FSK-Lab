@@ -25,6 +25,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -58,6 +59,7 @@ import de.bund.bfr.knime.fsklab.JoinRelation;
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
 import de.bund.bfr.knime.fsklab.r.client.ScriptExecutor;
 import de.bund.bfr.metadata.swagger.Parameter;
+import de.bund.bfr.metadata.swagger.Parameter.ClassificationEnum;
 import metadata.SwaggerUtil;
 
 public class RunnerNodeModel extends ExtToolOutputNodeModel {
@@ -141,7 +143,13 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 
     try (ScriptHandler handler = ScriptHandler
         .createHandler(SwaggerUtil.getLanguageWrittenIn(fskObj.modelMetadata), fskObj.packages)) {
-      runFskPortObject(handler, fskObj, exec);
+      LinkedHashMap<String,String> originalOutputParameters = new LinkedHashMap<String,String>();
+      List<Parameter> p = SwaggerUtil.getParameter(fskObj.modelMetadata);
+      p.forEach(item -> {
+        if(item.getClassification().equals(ClassificationEnum.OUTPUT))
+          originalOutputParameters.put(item.getId(), item.getId());
+        });
+      runFskPortObject(handler, fskObj, originalOutputParameters, exec);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -180,50 +188,49 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
     return embedFSKObject;
   }
 
-  public FskPortObject runFskPortObject(ScriptHandler handler, FskPortObject fskObj,
+  //TODO: make a method that just runs a simulation of a portObject runSimulation(fskObj, simulation)
+  public FskPortObject runFskPortObject(ScriptHandler handler, FskPortObject fskObj, LinkedHashMap<String,String> originalOutputParameters,
       ExecutionContext exec) throws Exception {
     LOGGER.info("Running Model: " + fskObj);
     
+
     if (fskObj instanceof CombinedFskPortObject) {
-      CombinedFskPortObject comFskObj = (CombinedFskPortObject) fskObj;
-      JoinRelation[] joinRelations = comFskObj.getJoinerRelation();
       
+      CombinedFskPortObject comFskObj = (CombinedFskPortObject) fskObj;
+      
+      
+      
+      
+      //TODO: What happens if the user adds a parameter during joining process??
+      
+      
+      // prepareSimulation 1    *******
+      FskSimulation fskSimOriginal  = comFskObj.simulations.get(comFskObj.selectedSimulationIndex);
+      FskSimulation fskSimulationFirst = JoinerNodeUtil.makeIndividualSimulation(fskSimOriginal, JoinerNodeModel.SUFFIX_FIRST);
+      
+      // create a mapping for the output parameters so that the true (original) parameter name is preserved but links      
+      LinkedHashMap<String,String> oopFirst = JoinerNodeUtil.getOriginalParameterNames(originalOutputParameters, JoinerNodeModel.SUFFIX_FIRST);
+
+      
+      
+      // if 1 is combined, go deeper
       FskPortObject firstFskObj = comFskObj.getFirstFskPortObject();
       if (firstFskObj instanceof CombinedFskPortObject) {
-        firstFskObj = runFskPortObject(handler, firstFskObj, exec);
+      
+        firstFskObj = stepIntoSubModel(firstFskObj, fskSimulationFirst, oopFirst, handler, exec);
+
       }
-      FskPortObject secondFskObj = comFskObj.getSecondFskPortObject();
+      
+      
+      
+      
 
-      LOGGER.info(" recieving '" + firstFskObj.selectedSimulationIndex
-          + "' as the selected simulation index!");
-
-      // get the index of the selected simulation saved by the JavaScript FSK Simulation
-      // Configurator the default value is 0 which is the the default simulation
+      // prepare files          *******
       ExecutionContext context = exec.createSubExecutionContext(1.0);
-
-      FskSimulation fskSimulation =
-          firstFskObj.simulations.get(firstFskObj.selectedSimulationIndex);
-      // recreate the INPUT or CONSTANT parameters which cause parameterId conflicts
-      List<Parameter> alternativeParams =
-          SwaggerUtil.getParameter(firstFskObj.modelMetadata).stream()
-              .filter(p -> p.getId().endsWith(JoinerNodeModel.SUFFIX)).collect(Collectors.toList());
-      for (Parameter param : alternativeParams) {
-        if (param.getClassification().equals(Parameter.ClassificationEnum.INPUT)
-            || param.getClassification().equals(Parameter.ClassificationEnum.CONSTANT)) {
-          // cut out the old Parameter ID
-          String oldId = param.getId().substring(0, param.getId().indexOf(JoinerNodeModel.SUFFIX));
-          // make the old parameter available for the Model script
-          if (fskSimulation.getParameters().get(param.getId()) != null) {
-            handler.runScript(oldId + " <- " + fskSimulation.getParameters().get(param.getId()),
-                exec, false);
-          }
-        }
-      }
-
       // make a map of file name and its last modification date to observe any changes which
       // means file overwriting or generating new one
       String wd1 = firstFskObj.getWorkingDirectory();
-      String wd2 = secondFskObj.getWorkingDirectory();
+      String wd2 = comFskObj.getSecondFskPortObject().getWorkingDirectory();
 
       Map<String, Long> fileModifacationMap = new HashMap<>();
       if (!wd1.isEmpty() && !wd2.isEmpty() && !wd1.equals(wd2)) {
@@ -235,12 +242,43 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
           });
         }
       }
-
+      
+      // execute 1              *******
       // run the first model!
-      LOGGER.info("Running Snippet of first Model: " + firstFskObj);
+      LOGGER.info("Running Snippet of first Model: " + firstFskObj.toString());
+      
       if (!(firstFskObj instanceof CombinedFskPortObject)) {
-        firstFskObj = runSnippet(handler, firstFskObj, fskSimulation, context);
+        firstFskObj = runSnippet(handler, firstFskObj, fskSimulationFirst, context);
+        // save output from simulation by using current output name (with suffixes)
+        // save is done by running the command in R
+        JoinerNodeUtil.saveOutputVariable( oopFirst ,handler, exec);
       }
+      
+      
+    
+      
+      
+      // execute joinCommand    *******
+      
+      
+      // prepareSimulation 2    *******
+
+      
+      FskPortObject secondFskObj = comFskObj.getSecondFskPortObject();
+
+      FskSimulation fskSimulationSecond = JoinerNodeUtil.makeIndividualSimulation(fskSimOriginal, JoinerNodeModel.SUFFIX_SECOND);
+
+      // create a mapping for the output parameters so that the true (original) parameter name is preserved but links
+      // to the current parameter (from the script)
+      LinkedHashMap<String,String> oopSecond = JoinerNodeUtil.getOriginalParameterNames(originalOutputParameters, JoinerNodeModel.SUFFIX_SECOND);
+    
+      
+      // apply join command
+      applyJoinCommandToSimulation(comFskObj, fskSimulationSecond, originalOutputParameters);
+    
+    
+
+      // prepare files          *******
       // move the generated files to the working
       // directory of the second model
       if (!wd1.isEmpty() && !wd2.isEmpty() && !wd1.equals(wd2)) {
@@ -261,96 +299,31 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
           });
         }
       }
+      // execute 2              ******* 
+      
+      
+      
 
-      // assign the value of parameters which are causing parameterId conflicts to alternative
-      // Parameter which is (maybe) used later in the joining
+      
 
-      for (Parameter param : alternativeParams) {
-        // if (!(param.getParameterClassification().equals(ParameterClassification.INPUT)
-        // || param.getParameterClassification().equals(ParameterClassification.CONSTANT))) {
-        String alternativeId = param.getId();
-        String oldId = param.getId().substring(0, param.getId().indexOf(JoinerNodeModel.SUFFIX));
-        handler.runScript(alternativeId + " <- " + oldId, exec, false);
-        // controller.eval("rm(" + oldId + ")", false);
-        // }
-      }
-
-      // apply join command
-      if (joinRelations != null) {
-
-        for (JoinRelation joinRelation : joinRelations) {
-          for (Parameter sourceParameter : SwaggerUtil.getParameter(firstFskObj.modelMetadata)) {
-
-            if (joinRelation.getSourceParam().equals(sourceParameter.getId())) {
-              // override the value of the target parameter with the value generated by the
-              // command
-              for (FskSimulation sim : secondFskObj.simulations) {
-                sim.getParameters().put(joinRelation.getTargetParam(), joinRelation.getCommand());
-              }
-            }
-          }
-        }
-      }
-
-      // get the index of the selected simulation saved by the JavaScript FSK Simulation
-      // Configurater the default value is 0 which is the the default simulation
-      FskSimulation secondfskSimulation =
-          secondFskObj.simulations.get(secondFskObj.selectedSimulationIndex);
       LOGGER.info("Running Snippet of second Model: " + secondFskObj);
       // apply join command for complex join
       if (secondFskObj instanceof CombinedFskPortObject) {
-        FskPortObject embedFSKObject = getEmbedFSKObject((CombinedFskPortObject) secondFskObj);
-        FskPortObject secondEmbedFSKObject =
-            getSecondEmbedFSKObject((CombinedFskPortObject) secondFskObj);
+//      
+        secondFskObj = stepIntoSubModel(secondFskObj, fskSimulationSecond, oopSecond, handler, exec);
 
-        if (joinRelations != null) {
-          List<Parameter> alternativeParamsx = SwaggerUtil.getParameter(firstFskObj.modelMetadata)
-              .stream().filter(p -> p.getId().endsWith(JoinerNodeModel.SUFFIX))
-              .collect(Collectors.toList());
-          for (Parameter param : alternativeParamsx) {
-            // if (!(param.getParameterClassification().equals(ParameterClassification.INPUT)
-            // || param.getParameterClassification().equals(ParameterClassification.CONSTANT))) {
-            String alternativeId = param.getId();
-            String oldId =
-                param.getId().substring(0, param.getId().indexOf(JoinerNodeModel.SUFFIX));
-            handler.runScript(alternativeId + " <- " + oldId, exec, false);
-            // controller.eval("rm(" + oldId + ")", false);
-            // }
-          }
-          for (JoinRelation joinRelation : joinRelations) {
-            for (Parameter sourceParameter : SwaggerUtil.getParameter(firstFskObj.modelMetadata)) {
 
-              if (joinRelation.getSourceParam().equals(sourceParameter.getId())) {
-                // override the value of the target parameter with the value generated by the
-                // command
-                for (FskSimulation sim : embedFSKObject.simulations) {
-                  final String embedParametername = joinRelation.getTargetParam();
-                  List<Parameter> params = SwaggerUtil.getParameter(embedFSKObject.modelMetadata)
-                      .stream().filter(p -> embedParametername.startsWith(p.getId()))
-                      .collect(Collectors.toList());
-                  if (params.size() > 0) {
-                    sim.getParameters().put(params.get(0).getId(), joinRelation.getCommand());
-                  } else {
-                    params = SwaggerUtil.getParameter(secondEmbedFSKObject.modelMetadata).stream()
-                        .filter(p -> embedParametername.startsWith(p.getId()))
-                        .collect(Collectors.toList());
-                    if (params.size() > 0) {
-                      sim.getParameters().put(params.get(0).getId(), joinRelation.getCommand());
-                    }
-                  }
-                }
-
-              }
-            }
-          }
-        }
-
-        secondFskObj = runFskPortObject(handler, secondFskObj, exec);
       } else {
-        secondFskObj = runSnippet(handler, secondFskObj, secondfskSimulation, context);
-      }
-      fskObj.workspace = secondFskObj.workspace;
+        secondFskObj = runSnippet(handler, secondFskObj, fskSimulationSecond, context);
 
+
+        // save output in the proper variable (with suffix)
+        JoinerNodeUtil.saveOutputVariable(oopSecond, handler, exec);
+
+
+      }
+//      fskObj.workspace = secondFskObj.workspace;
+      comFskObj.workspace = secondFskObj.workspace;
       return comFskObj;
     } else {
       LOGGER.info("Running simulation: " + nodeSettings.simulation);
@@ -376,6 +349,57 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
     }
   }
 
+  
+  private void applyJoinCommandToSimulation(CombinedFskPortObject fskObj, FskSimulation fskSimulation, LinkedHashMap<String, String> originalOutputParameters) {
+    
+    JoinRelation[] joinRelations = fskObj.getJoinerRelation();
+
+    if (joinRelations != null) {
+      // originalOutputParameters have the name of the actual, globally unique parameter name.
+      // the parameter name is marked (currently with []) e.g. [output_var]
+      // therefore, the join command is something like input_var = 3*[output_var]
+      // the local parameter name needs to be replaced with the unique one
+      // 
+      for (JoinRelation joinRelation : joinRelations)
+        for(Map.Entry<String,String> pair : originalOutputParameters.entrySet()) {
+          if(joinRelation.getSourceParam().equals(pair.getValue())) {
+            
+            //replace join command with unique identifier of parameter
+            String command_new = joinRelation.getCommand().replaceAll("\\[([^<]*)\\]", pair.getKey());
+            String target = joinRelation.getTargetParam().substring(0, joinRelation.getTargetParam().length() - 1);
+            
+            
+            fskSimulation.getParameters().put(target, command_new);
+
+          }
+        }
+      
+    }
+  }
+  
+  private FskPortObject stepIntoSubModel(FskPortObject fskObj,
+      FskSimulation fskSimulation,
+      LinkedHashMap<String, String> orignialParameters,
+      ScriptHandler handler,
+      final ExecutionContext exec ) {
+    
+    //carry correct simulation values
+    int selectIndex = fskObj.selectedSimulationIndex;
+    fskObj.selectedSimulationIndex = fskObj.simulations.size();
+    fskObj.simulations.add(fskSimulation);
+    try {
+      fskObj = runFskPortObject(handler, fskObj, orignialParameters, exec);
+    } catch (Exception e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    //restore original simulation (just so we don't mess with original models)
+    fskObj.simulations.remove(fskSimulation);
+    fskObj.selectedSimulationIndex = selectIndex;
+    
+    return fskObj;
+
+  }
   private FskPortObject runSnippet(ScriptHandler handler, final FskPortObject fskObj,
       final FskSimulation simulation, final ExecutionContext exec) throws Exception {
 

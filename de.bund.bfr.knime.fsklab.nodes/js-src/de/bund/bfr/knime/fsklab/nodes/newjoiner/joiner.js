@@ -396,7 +396,7 @@ joiner = function () {
     });
 
     // Update form when a link is selected (clicked)
-    _paper.on("link:pointerclick", updateForm);
+    //_paper.on("link:pointerclick", updateForm);
 
     _paper.on('link:connect', function(linkView, evt, elementViewDisconnected, magnet, arrowhead) {
       sourcePort = linkView.model.attributes.source.port;
@@ -412,7 +412,7 @@ joiner = function () {
       document.getElementById("target").value = targetPort;
 
       let command = document.getElementById("Command");
-      command.value = sourcePort;
+      command.value = "[" + sourcePort +"]";
       command.onkeyup = () => window.sJoinRealtion.command = command.value;
 
       command.onblur = () => {
@@ -427,14 +427,19 @@ joiner = function () {
         window.sJoinRealtion = {
           sourceParam: sourcePort,
           targetParam: targetPort,
-          command: sourcePort
+          command: command.value//sourcePort
         };
 
-        if (_metadata.generalInformation.languageWrittenIn) {
-          window.sJoinRealtion.language_written_in = _metadata.generalInformation.languageWrittenIn;
-          $('#commandLanguage').val(_metadata.generalInformation.languageWrittenIn);
-        }
+        if(_metadata.generalInformation.languageWrittenIn){
+          if (_metadata.generalInformation.languageWrittenIn.length > 0) {
+            window.sJoinRealtion.language_written_in = _metadata.generalInformation.languageWrittenIn;
+            $('#commandLanguage').val(_metadata.generalInformation.languageWrittenIn);
+          }else{
+            window.sJoinRealtion.language_written_in = "R";
+            $('#commandLanguage').val(_metadata.generalInformation.languageWrittenIn);
 
+          }
+        }
         if (!_value.joinRelations) {
           _value.joinRelations = []
         }
@@ -463,14 +468,14 @@ joiner = function () {
         _secondModelParameterMap[sourcePort] : _firstModelParameterMap[sourcePort];
 
       if (targetParameter != undefined) {
-        $.each(_viewValue.joinRelations, function (index, value) {
+        $.each(_value.joinRelations, function (index, value) {
 
           if (value != undefined && value.sourceParam.parameterID == sourceParameter.parameterID
             && value.targetParam.parameterID == targetParameter.parameterID) {
-            _viewValue.joinRelations.splice(index, 1);
+            _value.joinRelations.splice(index, 1);
           }
         });
-        _viewValue.jsonRepresentation = JSON.stringify(_graph.toJSON());
+        _value.jsonRepresentation = JSON.stringify(_graph.toJSON());
       }
     });
 
@@ -542,7 +547,7 @@ joiner = function () {
 
     let commandTextArea = document.getElementById("Command");
     commandTextArea.value = window.sJoinRealtion.command;
-    commandTextArea.onkeyup = () => window.sJoinRealtion.command = commandTextArea.val()
+    commandTextArea.onkeyup = () => window.sJoinRealtion.command = commandTextArea.value;
   }
 
   /** Create model to join.
