@@ -327,11 +327,11 @@ class ReaderNodeModel extends NoInternalsModel {
         for (org.sbml.jsbml.Parameter parameter : sbmlDocument.getModel().getListOfParameters()) {
 
           // Find metadata of target parameter. Connected parameter in 2nd model
-          final String parameterId = parameter.getId().replaceAll(JoinerNodeModel.SUFFIX, "");
+          final String parameterId = parameter.getId().replaceAll(JoinerNodeModel.SUFFIX_SECOND, "");
           Optional<Parameter> targetParameter = SwaggerUtil
               .getParameter(secondFskPortObject.modelMetadata).stream().filter(currentParameter -> {
                 final String currentParameterId =
-                    currentParameter.getId().replaceAll(JoinerNodeModel.SUFFIX, "");
+                    currentParameter.getId().replaceAll(JoinerNodeModel.SUFFIX_SECOND, "");
                 if (parameterId.equals(currentParameterId)) {
                   currentParameter.setId(parameter.getId());
                   return true;
@@ -348,11 +348,11 @@ class ReaderNodeModel extends NoInternalsModel {
           // Find metadata of source parameter (connected parameter of 1st model)
           final ReplacedBy replacedBy =
               ((CompSBasePlugin) parameter.getExtension("comp")).getReplacedBy();
-          final String replacement = replacedBy.getIdRef().replaceAll(JoinerNodeModel.SUFFIX, "");
+          final String replacement = replacedBy.getIdRef().replaceAll(JoinerNodeModel.SUFFIX_FIRST, "");
           Optional<Parameter> sourceParameter = SwaggerUtil
               .getParameter(firstFskPortObject.modelMetadata).stream().filter(currentParameter -> {
                 final String currentParameterId =
-                    currentParameter.getId().replaceAll(JoinerNodeModel.SUFFIX, "");
+                    currentParameter.getId().replaceAll(JoinerNodeModel.SUFFIX_FIRST, "");
                 if (replacement.equals(currentParameterId)) {
                   currentParameter.setId(replacedBy.getIdRef());
                   return true;
