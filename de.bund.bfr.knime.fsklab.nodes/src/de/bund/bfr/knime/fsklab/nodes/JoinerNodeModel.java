@@ -622,6 +622,7 @@ final class JoinerNodeModel
       // add all possible simulations to combined object
       JoinerNodeUtil.createAllPossibleSimulations(firstInputPort, secondInputPort, outObj);
      
+      // update second visualization script from the view
       outObj.getSecondFskPortObject().viz = value.getVisualizationScript();  
       
       // remove suffix from original parameters since they are needed with their original id for the scripts
