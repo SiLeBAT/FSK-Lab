@@ -8,7 +8,7 @@ joiner = function () {
   const getChartHeight = () => window.innerHeight - $(".navbar-collapse").height() - $(".modal-footer").height() - 300;
 
   const view = { version: "1.0.0", name: "FSK Joiner" };
-
+  let _occupied_targets = [];
   let _representation;
   let _value;
 
@@ -55,11 +55,17 @@ joiner = function () {
     if (value.modelScriptTree) {
       _modelScriptTree = JSON.parse(value.modelScriptTree);
     }
-
+    // set visualization script to modified version
+    if(_value.visualizationScript && _value.visualizationScript.length > 0){
+      _representation.secondModelViz = _value.visualizationScript;
+    }
+    
+    
 		if (_value.joinRelations && _value.joinRelations.length > 0) {
+      
 			$.each(_value.joinRelations, function(index, value) {
 				if (value) {
-					window.joinRelationsMap[value.sourceParam.id+","+value.targetParam.id] = value ;	
+					window.joinRelationsMap[value.sourceParam + "," + value.targetParam] = value ;	
 				}
 			});
 		} else {
@@ -246,12 +252,7 @@ joiner = function () {
       _secondVisualizationScriptMirror.refresh();
       _secondVisualizationScriptMirror.focus();
     });
-    $('#visualizationScriptB-tab').on('hide.bs.tab', () => {
-      console.log("visualizationScriptB");
-      let visualizationScriptBArea = document.getElementById("visualizationScriptBArea");
-      _representation.secondModelViz = visualizationScriptBArea.value;
-      
-    });
+    
   }
 
   function drawWorkflow() {
@@ -285,9 +286,11 @@ joiner = function () {
         return true;
       },
       validateConnection: function (cellViewS, magnetS, cellViewT, magnetT, end, linkView) {
+       
+
         if (linkView.sourceView.id != linkView.paper.viewport.children[0].id)
           return false;
-
+         
         if (cellViewT.id == linkView.paper.viewport.children[0].id &&
           magnetT && magnetT.getAttribute('port-group') === 'in')
           return false;
@@ -302,6 +305,13 @@ joiner = function () {
           cellViewS.id === cellViewT.id)
           return false;
 
+          //output to output does not make sense
+        if (magnetT && magnetT.getAttribute('port-group') === 'out' &&
+            magnetS && magnetS.getAttribute('port-group') === 'out' )
+          return false;
+
+
+        
         return true;
       },
       // Enable marking available cells and magnets
@@ -431,6 +441,7 @@ joiner = function () {
       };
 
       if (targetPort != undefined) {
+        
         window.sJoinRealtion = {
           sourceParam: sourcePort,
           targetParam: targetPort,

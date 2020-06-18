@@ -317,7 +317,7 @@ final class JoinerNodeModel
     createEmptyViewValue();
     setViewRepresentation(null);
 
-    nodeSettings.modelMetaData = "";
+    nodeSettings.modelMetaData = null;
 
     nodeSettings.connections = null;
     firstInputPort = null;
@@ -347,7 +347,7 @@ final class JoinerNodeModel
       String connectionString = flowVariables.get("JoinRelations.json").getStringValue();
       nodeSettings.connections = MAPPER.readValue(connectionString, JoinRelation[].class);
     } else {
-      File configFile = new File(settingFolder, "JoinRelation.json");
+      File configFile = new File(settingFolder, "JoinRelations.json");
       if (configFile.exists()) {
         nodeSettings.connections = MAPPER.readValue(configFile, JoinRelation[].class);
       }
@@ -479,10 +479,10 @@ final class JoinerNodeModel
       }
     }
 
-    if (StringUtils.isNotEmpty(representation.getSecondModelViz())) {
+    if (StringUtils.isNotEmpty(viewValue.getVisualizationScript())) {
       File configFile = new File(settingsFolder, "visualization.txt");
       try {
-        FileUtils.writeStringToFile(configFile, representation.getSecondModelViz(),
+        FileUtils.writeStringToFile(configFile, viewValue.getVisualizationScript(),
             StandardCharsets.UTF_8);
       } catch (IOException e) {
         // do nothing
