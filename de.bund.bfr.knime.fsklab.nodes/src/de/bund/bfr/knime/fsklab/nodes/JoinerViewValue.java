@@ -36,6 +36,7 @@ class JoinerViewValue extends JSONViewContent {
   private static final String CFG_JOINER_RELATION = "joinRelation";
   private static final String CFG_JSON_REPRESENTATION = "JSONRepresentation";
   private static final String CFG_MODELSCRIPT_TREE = "ModelScriptTree";
+  private static final String CFG_ORIGINAL_VISUALIZATION_SCRIPT = "originalVisualizationScript";
 
   private final int pseudoIdentifier = (new Random()).nextInt();
   private final ObjectMapper MAPPER = FskPlugin.getDefault().MAPPER104;
@@ -45,9 +46,13 @@ class JoinerViewValue extends JSONViewContent {
   public String jsonRepresentation;
   public String svgRepresentation;
   public String modelScriptTree;
-
+  private String visualizationScript;
   public String different;
 
+  public JoinerViewValue() {
+    visualizationScript = "";
+  }
+  
   @Override
   public void saveToNodeSettings(NodeSettingsWO settings) {
 
@@ -61,6 +66,7 @@ class JoinerViewValue extends JSONViewContent {
       }
     }
 
+    settings.addString(CFG_ORIGINAL_VISUALIZATION_SCRIPT, visualizationScript);
     settings.addString(CFG_JSON_REPRESENTATION, jsonRepresentation);
     settings.addString(CFG_MODELSCRIPT_TREE, modelScriptTree);
     settings.addString(CFG_MODEL_METADATA, modelMetaData);
@@ -82,6 +88,8 @@ class JoinerViewValue extends JSONViewContent {
     jsonRepresentation = settings.getString(CFG_JSON_REPRESENTATION);
     modelScriptTree = settings.getString(CFG_MODELSCRIPT_TREE);
     modelMetaData = settings.getString(CFG_MODEL_METADATA);
+    visualizationScript = settings.getString(CFG_ORIGINAL_VISUALIZATION_SCRIPT);
+
   }
 
   @Override
@@ -98,5 +106,13 @@ class JoinerViewValue extends JSONViewContent {
   @Override
   public int hashCode() {
     return pseudoIdentifier;
+  }
+  
+  public String getVisualizationScript() {
+    return visualizationScript;
+  }
+
+  public void setVisualizationScript(String visualizationScript) {
+    this.visualizationScript = visualizationScript;
   }
 }

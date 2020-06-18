@@ -83,7 +83,7 @@ final class JoinerNodeModel
 //  public final static String SUFFIX = "_dup";
   public final static String SUFFIX_FIRST = "1";
   public final static String SUFFIX_SECOND = "2";
-  public final static String SUFFIX = "_";
+//  public final static String SUFFIX = "_";
   
   
   Map<String,String> originals = new LinkedHashMap<String,String>();
@@ -622,7 +622,7 @@ final class JoinerNodeModel
       // add all possible simulations to combined object
       JoinerNodeUtil.createAllPossibleSimulations(firstInputPort, secondInputPort, outObj);
      
-      
+      outObj.getSecondFskPortObject().viz = value.getVisualizationScript();  
       
       // remove suffix from original parameters since they are needed with their original id for the scripts
       if (value.joinRelations != null) {
@@ -631,7 +631,7 @@ final class JoinerNodeModel
       }
      
     }
-
+    
     return new PortObject[] {outObj, svgImageFromView};
   }
 

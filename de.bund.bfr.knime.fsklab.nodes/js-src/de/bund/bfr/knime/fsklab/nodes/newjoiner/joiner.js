@@ -73,6 +73,7 @@ joiner = function () {
 
   view.getComponentValue = function() {  
     _value.modelMetaData = JSON.stringify(_handler.metaData);
+    _value.visualizationScript = _secondVisualizationScriptMirror ? _secondVisualizationScriptMirror.getValue() : _representation.secondModelScript
     return _value;
   };
 
@@ -233,7 +234,7 @@ joiner = function () {
       _secondModelScriptMirror.refresh();
       _secondModelScriptMirror.focus();
     });
-
+ 
     $('#visualizationScriptA-tab').on('shown.bs.tab', () => {
       console.log("visualizationScriptA");
       _firstVisualizationScriptMirror.refresh();
@@ -244,6 +245,12 @@ joiner = function () {
       console.log("visualizationScriptB");
       _secondVisualizationScriptMirror.refresh();
       _secondVisualizationScriptMirror.focus();
+    });
+    $('#visualizationScriptB-tab').on('hide.bs.tab', () => {
+      console.log("visualizationScriptB");
+      let visualizationScriptBArea = document.getElementById("visualizationScriptBArea");
+      _representation.secondModelViz = visualizationScriptBArea.value;
+      
     });
   }
 
@@ -430,15 +437,9 @@ joiner = function () {
           command: command.value//sourcePort
         };
 
-        if(_metadata.generalInformation.languageWrittenIn){
-          if (_metadata.generalInformation.languageWrittenIn.length > 0) {
-            window.sJoinRealtion.language_written_in = _metadata.generalInformation.languageWrittenIn;
-            $('#commandLanguage').val(_metadata.generalInformation.languageWrittenIn);
-          }else{
-            window.sJoinRealtion.language_written_in = "R";
-            $('#commandLanguage').val(_metadata.generalInformation.languageWrittenIn);
-
-          }
+        if (_metadata.generalInformation.languageWrittenIn.length > 0) {
+          window.sJoinRealtion.language_written_in = _metadata.generalInformation.languageWrittenIn;
+          $('#commandLanguage').val(_metadata.generalInformation.languageWrittenIn);
         }
         if (!_value.joinRelations) {
           _value.joinRelations = []
@@ -635,7 +636,7 @@ joiner = function () {
         lineWrapping: true,
         extraKeys: { 'Ctrl-Space': 'autocomplete' },
         mode: { 'name': language },
-        readOnly: true
+        readOnly: (textAreaId == "visualizationScriptBArea") ? false : true
       });
   }
 }();
