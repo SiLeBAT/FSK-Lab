@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Missing tooltips of quality measures https://github.com/SiLeBAT/FSK-Lab/issues/410
 - Is reference component property of reference in editor is broken https://github.com/SiLeBAT/FSK-Lab/issues/404
 - Broken JSON metadata in editor node https://github.com/SiLeBAT/FSK-Lab/issues/425
+- Editor JS: model type in view and settings not in sync https://github.com/SiLeBAT/FSK-Lab/issues/347
 
 ### Changed
 - Color of inputs and outputs in joiner node https://github.com/SiLeBAT/FSK-Lab/issues/401
