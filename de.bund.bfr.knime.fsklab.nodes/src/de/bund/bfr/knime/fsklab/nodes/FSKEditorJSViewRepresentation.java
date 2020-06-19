@@ -19,7 +19,6 @@
 package de.bund.bfr.knime.fsklab.nodes;
 
 import java.util.Objects;
-import java.util.UUID;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
@@ -37,13 +36,13 @@ final class FSKEditorJSViewRepresentation extends JSONViewContent {
    * ID of the previously connected node to this editor. This ID will be later used by the dialog
    * and node model to find when a different node has been connected to the same editor.
    */
-  private UUID connectedNodeId;
+  private String connectedNodeId;
 
-  public UUID getConnectedNodeId() {
+  public String getConnectedNodeId() {
     return connectedNodeId;
   }
 
-  public void setConnectedNodeId(UUID connectedNodeId) {
+  public void setConnectedNodeId(String connectedNodeId) {
     this.connectedNodeId = connectedNodeId;
   }
 
@@ -56,9 +55,7 @@ final class FSKEditorJSViewRepresentation extends JSONViewContent {
 
   @Override
   public void loadFromNodeSettings(NodeSettingsRO settings) throws InvalidSettingsException {
-    if (settings.containsKey(CFG_CONNECTED_NODE)) {
-      connectedNodeId = UUID.fromString(settings.getString(CFG_CONNECTED_NODE));
-    }
+      connectedNodeId = settings.getString(CFG_CONNECTED_NODE);
   }
 
   @Override
@@ -79,6 +76,6 @@ final class FSKEditorJSViewRepresentation extends JSONViewContent {
     }
 
     FSKEditorJSViewRepresentation other = (FSKEditorJSViewRepresentation) obj;
-    return connectedNodeId == other.connectedNodeId;
+    return Objects.equals(connectedNodeId, other.connectedNodeId);
   }
 }

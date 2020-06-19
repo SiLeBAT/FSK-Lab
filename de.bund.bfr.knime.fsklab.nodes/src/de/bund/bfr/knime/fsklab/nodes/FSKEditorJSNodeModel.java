@@ -32,7 +32,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
@@ -52,7 +51,6 @@ import org.knime.js.core.node.AbstractWizardNodeModel;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.fskml.RScript;
@@ -60,7 +58,6 @@ import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.FskSimulation;
-import de.bund.bfr.knime.fsklab.nodes.FSKEditorJSNodeDialog.ModelType;
 import de.bund.bfr.metadata.swagger.Model;
 import de.bund.bfr.metadata.swagger.Parameter;
 import metadata.SwaggerUtil;
@@ -74,7 +71,7 @@ final class FSKEditorJSNodeModel
     implements PortObjectHolder {
   private static final NodeLogger LOGGER = NodeLogger.getLogger("Fskx JS Editor Model");
 
-  private final FSKEditorJSNodeSettings nodeSettings = new FSKEditorJSNodeSettings();
+  private final FSKEditorJSConfig m_config = new FSKEditorJSConfig();
   private FskPortObject m_port;
 
   // Input and output port types
@@ -83,21 +80,11 @@ final class FSKEditorJSNodeModel
 
   private static final String VIEW_NAME = new FSKEditorJSNodeFactory().getInteractiveViewName();
 
-  /**
-   * Dirty solution for performReset. To keep the value that is removed by
-   * {@link AbstractWizardNodeModel#reset} a copy of the value is stored and updated by
-   * getViewValue. This copy is restored on performReset.
-   */
-  private final FSKEditorJSViewValue copyValue;
-
   static final AtomicLong TEMP_DIR_UNIFIER = new AtomicLong((int) (100000 * Math.random()));
   private static final ObjectMapper MAPPER = FskPlugin.getDefault().MAPPER104;
 
   public FSKEditorJSNodeModel() {
     super(IN_TYPES, OUT_TYPES, VIEW_NAME);
-    
-    copyValue = new FSKEditorJSViewValue();
-    getViewValue(); // Call getViewValue to initialize copyValue
   }
 
   @Override
@@ -107,75 +94,87 @@ final class FSKEditorJSNodeModel
 
   @Override
   public FSKEditorJSViewValue createEmptyViewValue() {
-    getViewValue(); // Update copyValue
     return new FSKEditorJSViewValue();
   }
 
-  @Override
-  public FSKEditorJSViewValue getViewValue() {
+//  @Override
+//  public FSKEditorJSViewValue getViewValue() {
+//
+//    FSKEditorJSViewValue val;
+//    synchronized (getLock()) {
+//      val = super.getViewValue();
+//      if (val == null) {
+//        val = new FSKEditorJSViewValue();
+//      }
 
-    FSKEditorJSViewValue val;
-    synchronized (getLock()) {
-      val = super.getViewValue();
-      if (val == null) {
-        val = new FSKEditorJSViewValue();
-      }
-
-      // If val has empty (default) values then initialize it
-      if (val.isEmpty()) {
-        if (m_port != null) {
-          // Load from input port
-          try {
-            String jsonMetadata = MAPPER.writeValueAsString(m_port.modelMetadata);
-            val.setModelMetaData(jsonMetadata);
-          } catch (Exception e) {
-            try {
-              Model model = NodeUtils.initializeModel(ModelType.genericModel);
-              val.setModelMetaData(MAPPER.writeValueAsString(model));
-            } catch (JsonProcessingException e1) {
-              LOGGER.error(e1);
-            }
-          }
-
-          val.setModelScript(m_port.model);
-          val.setVisualizationScript(m_port.viz);
-          val.setReadme(m_port.getReadme());
-        } else {
-          // Load from stored settings
-          Model model = NodeUtils.initializeModel(nodeSettings.getModelType());
-          try {
-            val.setModelMetaData(MAPPER.writeValueAsString(model));
-          } catch (JsonProcessingException e1) {
-            LOGGER.error(e1);
-          }
-
-          if (!nodeSettings.getReadmeFile().isEmpty()) {
-            try {
-              File file = new File(nodeSettings.getReadmeFile());
-              String readme = FileUtils.readFileToString(file, "UTF-8");
-              val.setReadme(readme);
-            } catch (IOException e) {
-              // If IOException then leave the default empty string from the constructor
-            }
-          }
-
-          if (nodeSettings.getResources().length > 0) {
-            val.setResourcesFiles(nodeSettings.getResources());
-          }
-        }
-      }
-    }
-    
-    updateCopyValue(val);
-
-    return val;
-  }
+//      // If val has empty (default) values then initialize it
+//      if (val.isEmpty()) {
+//        if (m_port != null) {
+//          // Load from input port
+//          try {
+//            String jsonMetadata = MAPPER.writeValueAsString(m_port.modelMetadata);
+//            val.setModelMetaData(jsonMetadata);
+//          } catch (Exception e) {
+//            try {
+//              Model model = NodeUtils.initializeModel(ModelType.genericModel);
+//              val.setModelMetaData(MAPPER.writeValueAsString(model));
+//            } catch (JsonProcessingException e1) {
+//              LOGGER.error(e1);
+//            }
+//          }
+//
+//          val.setModelScript(m_port.model);
+//          val.setVisualizationScript(m_port.viz);
+//          val.setReadme(m_port.getReadme());
+//        } else {
+//          // Load from stored settings
+//
+//          String jsonMetadata = nodeSettings.getMetadata();
+//          if (jsonMetadata.isEmpty()) {
+//            Model model = NodeUtils.initializeModel(nodeSettings.getModelType());
+//            try {
+//              jsonMetadata = MAPPER.writeValueAsString(model);
+//            } catch (JsonProcessingException err) {
+//              LOGGER.error(err);
+//            }
+//          }
+//          val.setModelMetaData(jsonMetadata);
+//
+//
+//          Model model = NodeUtils.initializeModel(nodeSettings.getModelType());
+//          try {
+//            val.setModelMetaData(MAPPER.writeValueAsString(model));
+//          } catch (JsonProcessingException e1) {
+//            LOGGER.error(e1);
+//          }
+//
+//          if (!nodeSettings.getReadmeFile().isEmpty()) {
+//            try {
+//              File file = new File(nodeSettings.getReadmeFile());
+//              String readme = FileUtils.readFileToString(file, "UTF-8");
+//              val.setReadme(readme);
+//            } catch (IOException e) {
+//              // If IOException then leave the default empty string from the constructor
+//            }
+//          }
+//
+//          if (nodeSettings.getResources().length > 0) {
+//            val.setResourcesFiles(nodeSettings.getResources());
+//          }
+//        }
+//      }
+//    }
+//
+//    return val;
+//  }
 
   @Override
   public FSKEditorJSViewRepresentation getViewRepresentation() {
-    FSKEditorJSViewRepresentation repr = new FSKEditorJSViewRepresentation();
-    if (m_port != null) {
-      repr.setConnectedNodeId(m_port.id);
+    FSKEditorJSViewRepresentation repr = super.getViewRepresentation();
+    synchronized (getLock()) {
+      if (m_port != null && repr.getConnectedNodeId() != null) {
+        repr.setConnectedNodeId(getTableId(0));
+      }
     }
     return repr;
   }
@@ -234,6 +233,8 @@ final class FSKEditorJSNodeModel
     if (inObjects.length == 1) {
       setInternalPortObjects(inObjects);
     }
+    
+    String connectedNodeId = getTableId(0);
 
     Model metadata = null;
     String readme = "";
@@ -247,8 +248,8 @@ final class FSKEditorJSNodeModel
     if (inObjects.length == 0) {
 
       // Create working directory if not set in settings
-      if (!nodeSettings.getWorkingDirectory().isEmpty()) {
-        workingDirectory = nodeSettings.getWorkingDirectory();
+      if (!m_config.getWorkingDirectory().isEmpty()) {
+        workingDirectory = m_config.getWorkingDirectory();
       } else {
         // Create a folder named after the node that will be used as working
         // directory if the node does not have a working directory
@@ -287,6 +288,9 @@ final class FSKEditorJSNodeModel
             setWarningMessage(error);
           }
         }
+
+        // Update nodeSettings
+        m_config.setMetadata(viewValue.getModelMetaData());
 
         // Get model type from metadata
         JsonNode metadataNode = MAPPER.readTree(viewValue.getModelMetaData());
@@ -365,22 +369,25 @@ final class FSKEditorJSNodeModel
   @Override
   protected void performReset() {
     m_port = null;
-    setViewValue(copyValue);
+    // TODO: Do we set the view value to null?
   }
 
   @Override
   protected void useCurrentValueAsDefault() {
+    synchronized (getLock()) {
+      copyValueToConfig();
+    }
   }
 
   @Override
   protected void saveSettingsTo(NodeSettingsWO settings) {
-    nodeSettings.save(settings);
+    m_config.save(settings);
   }
 
   @Override
   protected void loadValidatedSettingsFrom(NodeSettingsRO settings)
       throws InvalidSettingsException {
-    nodeSettings.load(settings);
+    m_config.load(settings);
   }
 
   @Override
@@ -399,15 +406,17 @@ final class FSKEditorJSNodeModel
 
   public void setHideInWizard(boolean hide) {
   }
-  
-  private void updateCopyValue(FSKEditorJSViewValue value) {
-    copyValue.setModelMetaData(value.getModelMetaData());
-    copyValue.setModelScript(value.getModelScript());
-    copyValue.setVisualizationScript(value.getVisualizationScript());
-    copyValue.setReadme(value.getReadme());
-    copyValue.setResourcesFiles(value.getResourcesFiles());
-    copyValue.setServerName(value.getServerName());
-    copyValue.setCompleted(value.isCompleted());
-    copyValue.setValidationErrors(value.getValidationErrors());
+
+  private void copyValueToConfig() {
+    FSKEditorJSViewValue viewValue = getViewValue();
+    
+    m_config.setModelMetaData(viewValue.getModelMetaData());
+    m_config.setModelScript(viewValue.getModelScript());
+    m_config.setVisualizationScript(viewValue.getVisualizationScript());
+    m_config.setReadmeFile(viewValue.getReadme());
+    m_config.setResources(viewValue.getResourcesFiles());
+    m_config.setServerName(viewValue.getServerName());
+    m_config.setCompleted(viewValue.isCompleted());
+    m_config.setValidationErrors(viewValue.getValidationErrors());
   }
 }
