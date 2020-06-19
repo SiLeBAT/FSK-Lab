@@ -96,7 +96,7 @@ final class FSKEditorJSNodeModel
   public FSKEditorJSNodeModel() {
     super(IN_TYPES, OUT_TYPES, VIEW_NAME);
     
-    copyValue = createEmptyViewValue();
+    copyValue = new FSKEditorJSViewValue();
     getViewValue(); // Call getViewValue to initialize copyValue
   }
 
@@ -107,6 +107,7 @@ final class FSKEditorJSNodeModel
 
   @Override
   public FSKEditorJSViewValue createEmptyViewValue() {
+    getViewValue(); // Update copyValue
     return new FSKEditorJSViewValue();
   }
 
@@ -117,7 +118,7 @@ final class FSKEditorJSNodeModel
     synchronized (getLock()) {
       val = super.getViewValue();
       if (val == null) {
-        val = createEmptyViewValue();
+        val = new FSKEditorJSViewValue();
       }
 
       // If val has empty (default) values then initialize it
@@ -165,15 +166,7 @@ final class FSKEditorJSNodeModel
       }
     }
     
-    // Update copyValue
-    copyValue.setModelMetaData(val.getModelMetaData());
-    copyValue.setModelScript(val.getModelScript());
-    copyValue.setVisualizationScript(val.getVisualizationScript());
-    copyValue.setReadme(val.getReadme());
-    copyValue.setResourcesFiles(val.getResourcesFiles());
-    copyValue.setServerName(val.getServerName());
-    copyValue.setCompleted(val.isCompleted());
-    copyValue.setValidationErrors(val.getValidationErrors());
+    updateCopyValue(val);
 
     return val;
   }
@@ -405,5 +398,16 @@ final class FSKEditorJSNodeModel
   }
 
   public void setHideInWizard(boolean hide) {
+  }
+  
+  private void updateCopyValue(FSKEditorJSViewValue value) {
+    copyValue.setModelMetaData(value.getModelMetaData());
+    copyValue.setModelScript(value.getModelScript());
+    copyValue.setVisualizationScript(value.getVisualizationScript());
+    copyValue.setReadme(value.getReadme());
+    copyValue.setResourcesFiles(value.getResourcesFiles());
+    copyValue.setServerName(value.getServerName());
+    copyValue.setCompleted(value.isCompleted());
+    copyValue.setValidationErrors(value.getValidationErrors());
   }
 }
