@@ -83,11 +83,21 @@ final class FSKEditorJSNodeModel
 
   private static final String VIEW_NAME = new FSKEditorJSNodeFactory().getInteractiveViewName();
 
+  /**
+   * Dirty solution for performReset. To keep the value that is removed by
+   * {@link AbstractWizardNodeModel#reset} a copy of the value is stored and updated by
+   * getViewValue. This copy is restored on performReset.
+   */
+  private final FSKEditorJSViewValue copyValue;
+
   static final AtomicLong TEMP_DIR_UNIFIER = new AtomicLong((int) (100000 * Math.random()));
   private static final ObjectMapper MAPPER = FskPlugin.getDefault().MAPPER104;
 
   public FSKEditorJSNodeModel() {
     super(IN_TYPES, OUT_TYPES, VIEW_NAME);
+    
+    copyValue = createEmptyViewValue();
+    getViewValue(); // Call getViewValue to initialize copyValue
   }
 
   @Override
@@ -154,6 +164,16 @@ final class FSKEditorJSNodeModel
         }
       }
     }
+    
+    // Update copyValue
+    copyValue.setModelMetaData(val.getModelMetaData());
+    copyValue.setModelScript(val.getModelScript());
+    copyValue.setVisualizationScript(val.getVisualizationScript());
+    copyValue.setReadme(val.getReadme());
+    copyValue.setResourcesFiles(val.getResourcesFiles());
+    copyValue.setServerName(val.getServerName());
+    copyValue.setCompleted(val.isCompleted());
+    copyValue.setValidationErrors(val.getValidationErrors());
 
     return val;
   }
@@ -352,7 +372,7 @@ final class FSKEditorJSNodeModel
   @Override
   protected void performReset() {
     m_port = null;
-    setViewValue(null); // Reset view value
+    setViewValue(copyValue);
   }
 
   @Override
