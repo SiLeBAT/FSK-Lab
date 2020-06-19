@@ -310,8 +310,16 @@ joiner = function () {
             magnetS && magnetS.getAttribute('port-group') === 'out' )
           return false;
 
+            //input to input not supported right now
+        if (magnetT && magnetT.getAttribute('port-group') === 'in' &&
+          magnetS && magnetS.getAttribute('port-group') === 'in' )
+          return false;
 
-        
+            //inputS to outpuT_Target not sensible
+         if (magnetT && magnetT.getAttribute('port-group') === 'out' &&
+            magnetS && magnetS.getAttribute('port-group') === 'in' )
+            return false;
+               
         return true;
       },
       // Enable marking available cells and magnets
