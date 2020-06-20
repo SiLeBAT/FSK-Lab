@@ -18,7 +18,7 @@
  */
 package de.bund.bfr.knime.fsklab.nodes;
 
-import java.util.Objects;
+import java.util.Random;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
@@ -30,37 +30,19 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 final class FSKEditorJSViewRepresentation extends JSONViewContent {
 
-  private static final String CFG_CONNECTED_NODE = "connectedNode";
-
-  /**
-   * ID of the previously connected node to this editor. This ID will be later used by the dialog
-   * and node model to find when a different node has been connected to the same editor.
-   */
-  private String connectedNodeId;
-
-  public String getConnectedNodeId() {
-    return connectedNodeId;
-  }
-
-  public void setConnectedNodeId(String connectedNodeId) {
-    this.connectedNodeId = connectedNodeId;
-  }
+  public final int pseudoIdentifier = (new Random()).nextInt();
 
   @Override
   public void saveToNodeSettings(NodeSettingsWO settings) {
-    if (connectedNodeId != null) {
-      settings.addString(CFG_CONNECTED_NODE, connectedNodeId.toString());
-    }
   }
 
   @Override
   public void loadFromNodeSettings(NodeSettingsRO settings) throws InvalidSettingsException {
-      connectedNodeId = settings.getString(CFG_CONNECTED_NODE);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(connectedNodeId);
+    return pseudoIdentifier;
   }
 
   @Override
@@ -74,8 +56,6 @@ final class FSKEditorJSViewRepresentation extends JSONViewContent {
     if (obj.getClass() != getClass()) {
       return false;
     }
-
-    FSKEditorJSViewRepresentation other = (FSKEditorJSViewRepresentation) obj;
-    return Objects.equals(connectedNodeId, other.connectedNodeId);
+    return true;
   }
 }
