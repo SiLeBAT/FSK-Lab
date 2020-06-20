@@ -129,6 +129,7 @@ public class CombinedFskPortObject extends FskPortObject {
     return relations;
   }
 
+  
   public void setJoinerRelation(JoinRelation[] relations) {
     this.relations = relations;
   }
@@ -756,7 +757,7 @@ public class CombinedFskPortObject extends FskPortObject {
 
       String script;
       if (nodeType == 0) {
-        script = buildJoiningScript();
+        script = ((CombinedFskPortObject)portObject).buildJoiningScript();
       } else if (nodeType == 2) {
         script = portObject.getReadme();
       } else {
@@ -1028,10 +1029,10 @@ public class CombinedFskPortObject extends FskPortObject {
   }
 
   /** Utility method to get the joining script out of the relations of a combined model. */
-  private String buildJoiningScript() {
+  public String buildJoiningScript() {
 
     StringBuilder stringBuilder = new StringBuilder();
-
+    
     JoinRelation[] relations = getJoinerRelation();
     if (relations != null && relations.length > 0) {
       for (JoinRelation relation : relations) {
