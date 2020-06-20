@@ -167,6 +167,7 @@ class JSSimulatorNodeModel
         if (val.modelMath == null) {
           val.simulations = simulations;
           val.modelMath = FromOjectToJSON(SwaggerUtil.getModelMath(inObj.modelMetadata));
+          val.selectedSimulationIndex = inObj.selectedSimulationIndex;
         }
         port = inObj;
       }
