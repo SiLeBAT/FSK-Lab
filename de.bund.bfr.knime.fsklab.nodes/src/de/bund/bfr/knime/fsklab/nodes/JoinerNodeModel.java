@@ -482,7 +482,11 @@ final class JoinerNodeModel
     if (StringUtils.isNotEmpty(viewValue.getVisualizationScript())) {
       File configFile = new File(settingsFolder, "visualization.txt");
       try {
-        FileUtils.writeStringToFile(configFile, viewValue.getVisualizationScript(),
+        
+        if(viewValue.getVisualizationScript() != "")
+          representation.setSecondModelViz(viewValue.getVisualizationScript());
+        
+        FileUtils.writeStringToFile(configFile, representation.getSecondModelViz(),
             StandardCharsets.UTF_8);
       } catch (IOException e) {
         // do nothing
@@ -623,7 +627,10 @@ final class JoinerNodeModel
       JoinerNodeUtil.createAllPossibleSimulations(firstInputPort, secondInputPort, outObj);
      
       // update second visualization script from the view
-      outObj.getSecondFskPortObject().viz = value.getVisualizationScript();  
+      if(value.getVisualizationScript() == "")
+        outObj.getSecondFskPortObject().viz = this.getViewRepresentation().getSecondModelViz();
+      else
+        outObj.getSecondFskPortObject().viz = value.getVisualizationScript();  
       
       // remove suffix from original parameters since they are needed with their original id for the scripts
       if (value.joinRelations != null) {
