@@ -18,8 +18,21 @@ simulator = function() {
 
 		create_body2();
     initUI();
-    updateSimulationName(0);  // Show initially defaultSimulation (0)
-    updateParameterValues(0); // Show initially the values for simulation 0.
+
+    if(value.simulations != void(0) && value.selectedSimulationIndex > 0){
+      let selected_sim = value.selectedSimulationIndex;
+      updateSimulationName(selected_sim);  // Show initially defaultSimulation (0)
+      updateParameterValues(selected_sim); // Show initially the values for simulation 0.
+      let simulationSelect = $('#simulationSelect');
+      simulationSelect.val(value.simulations[selected_sim].name);
+      //let selectedSimulationIndex = simulationSelect.prop('selectedIndex');
+
+    }else{
+      updateSimulationName(0);  // Show initially defaultSimulation (0)
+      updateParameterValues(0); // Show initially the values for simulation 0.
+  
+    }
+
 	};
 
 	view.getComponentValue = function() {
