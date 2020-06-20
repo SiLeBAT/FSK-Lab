@@ -75,6 +75,7 @@ joiner = function () {
     _handler = new fskutil.GenericModel(_metadata);
 
     createBody();
+    _paper.scaleContentToFit();
   }
 
   view.getComponentValue = function() {  
@@ -85,7 +86,7 @@ joiner = function () {
 
   view.getSVG = function() {
     if (!_paper) return null;
-    _paper.svg.setAttribute("width", 900);
+    _paper.svg.setAttribute("width", $('#viewContent').width());
     _paper.svg.setAttribute("height", 500);
     return (new XMLSerializer()).serializeToString(_paper.svg);
   };
@@ -207,7 +208,10 @@ joiner = function () {
     // Resize event. Resize the paper with the window.
     window.onresize = () => {
     //  _paper.setDimensions(getChartWidth(), getChartHeight());
-      _paper.scaleContentToFit({ padding: 20 });
+    
+      _paper.setDimensions($('#viewContent').width(),500);
+      _paper.scaleContentToFit();
+      //_paper.scaleContentToFit({ padding: 20 });
     };
 
 
@@ -322,9 +326,12 @@ joiner = function () {
                
         return true;
       },
+
       // Enable marking available cells and magnets
       markAvailable: true
     });
+    _paper.setDimensions($('#viewContent').width(),500);
+    
 
     let previousOne;
     function highlight(cellView) {
@@ -333,6 +340,7 @@ joiner = function () {
       cellView.highlight();
     }
 
+    
     // Highlight a cell when clicked
     _paper.on('cell:pointerclick', highlight);
 
@@ -658,4 +666,5 @@ joiner = function () {
         readOnly: (textAreaId == "visualizationScriptBArea") ? false : true
       });
   }
+  
 }();
