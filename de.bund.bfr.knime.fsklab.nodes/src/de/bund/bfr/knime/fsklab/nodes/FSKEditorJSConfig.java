@@ -35,6 +35,7 @@ class FSKEditorJSConfig {
   private static final String COMPLETED = "completed";
   private static final String ERRORS = "errors";
   private static final String WORKING_DIRECTORY = "workingDirectory";
+  private static final String CONNECTED_NODE = "connectedNode";
 
   private String m_metadata;
   private String m_modelScript;
@@ -44,6 +45,9 @@ class FSKEditorJSConfig {
   private String m_serverName;
   private boolean m_isCompleted;
   private String[] m_validationErrors;
+  
+  /** UUID of the connected node. */
+  private String m_connectedNode;
   
   /** Paths to resources: plain text files and R workspace files (.rdata). */
   private String m_workingDirectory;
@@ -72,6 +76,14 @@ class FSKEditorJSConfig {
     this.m_visualizationScript = visualizationScript;
   }
 
+  public String[] getResources() {
+    return resources;
+  }
+  
+  public void setResources(String[] resources) {
+    this.resources = resources;
+  }
+  
   public String getServerName() {
     return m_serverName;
   }
@@ -107,29 +119,6 @@ class FSKEditorJSConfig {
   /** Resources that will be load into the working directory */
   private String[] resources;
 
-
-  /** @return empty string if not set. */
-  public String getMetadata() {
-    return m_metadata != null ? m_metadata : "";
-  }
-
-  public void setMetadata(String metadata) {
-    if (metadata != null && !metadata.isEmpty()) {
-      this.m_metadata = metadata;
-    }
-  }
-
-  /** @return emtpy array if not set. */
-  public String[] getResources() {
-    return resources != null ? resources : new String[0];
-  }
-
-  public void setResources(String[] resources) {
-    if (resources != null && resources.length > 0) {
-      this.resources = resources;
-    }
-  }
-  
   /** @return empty string if not set. */
   public String getWorkingDirectory() {
     return m_workingDirectory != null ? m_workingDirectory : "";
@@ -140,21 +129,13 @@ class FSKEditorJSConfig {
       this.m_workingDirectory = workingDirectory;
     }
   }
-
-  // FIXME !
-  /** @deprecated replace with {@link FSKEditorJSConfig#loadSettings(NodeSettingsRO)}. */
-  void load(final NodeSettingsRO settings) {
-    m_metadata = settings.getString(METADATA, "");
-    m_readme = settings.getString(README, "");
-    resources = settings.getStringArray(RESOURCES, new String[0]);
+  
+  public String getConnectedNode() {
+    return m_connectedNode;
   }
-
-  // FIXME !
-  /** @deprecated replace with {@link FSKEditorJSConfig#saveSettings(NodeSettingsWO)}. */
-  void save(final NodeSettingsWO settings) {
-    settings.addString(METADATA, getMetadata());
-    settings.addString(README, m_readme);
-    settings.addStringArray(RESOURCES, getResources());
+  
+  public void setConnectedNode(String connectedNode) {
+    this.m_connectedNode = connectedNode;
   }
 
   /**
@@ -163,7 +144,6 @@ class FSKEditorJSConfig {
    * @param settings To save to.
    */
   public void saveSettings(final NodeSettingsWO settings) {
-
     settings.addString(METADATA, m_metadata);
     settings.addString(MODEL_SCRIPT, m_modelScript);
     settings.addString(VISUALIZATION_SCRIPT, m_visualizationScript);
@@ -172,6 +152,7 @@ class FSKEditorJSConfig {
     settings.addString(SERVER_NAME, m_serverName);
     settings.addBoolean(COMPLETED, m_isCompleted);
     settings.addStringArray(ERRORS, m_validationErrors);
+    settings.addString(CONNECTED_NODE, m_connectedNode);
   }
 
   /**
@@ -182,14 +163,15 @@ class FSKEditorJSConfig {
    */
   public void loadSettings(final NodeSettingsRO settings) throws InvalidSettingsException {
     m_metadata = settings.getString(METADATA);
-    m_modelScript = settings.getString(MODEL_SCRIPT);
-    m_visualizationScript = settings.getString(VISUALIZATION_SCRIPT);
-    m_readme = settings.getString(README);
+    m_modelScript = settings.getString(MODEL_SCRIPT, "");
+    m_visualizationScript = settings.getString(VISUALIZATION_SCRIPT, "");
+    m_readme = settings.getString(README, "");
     resources = settings.getStringArray(RESOURCES);
-    m_serverName = settings.getString(SERVER_NAME);
-    m_isCompleted = settings.getBoolean(COMPLETED);
-    m_validationErrors = settings.getStringArray(ERRORS);
+    m_serverName = settings.getString(SERVER_NAME, "");
+    m_isCompleted = settings.getBoolean(COMPLETED, false);
+    m_validationErrors = settings.getStringArray(ERRORS, new String[0]);
     m_workingDirectory = settings.getString(WORKING_DIRECTORY);
+    m_connectedNode = settings.getString(CONNECTED_NODE, "");
   }
 
   /**
@@ -208,5 +190,6 @@ class FSKEditorJSConfig {
     m_isCompleted = settings.getBoolean(COMPLETED, false);
     m_validationErrors = settings.getStringArray(ERRORS, "");
     m_workingDirectory = settings.getString(WORKING_DIRECTORY, "");
+    m_connectedNode = settings.getString(CONNECTED_NODE, "");
   }
 }

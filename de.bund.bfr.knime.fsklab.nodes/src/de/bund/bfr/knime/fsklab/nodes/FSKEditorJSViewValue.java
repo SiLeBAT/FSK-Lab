@@ -18,10 +18,10 @@
  */
 package de.bund.bfr.knime.fsklab.nodes;
 
-import java.util.Arrays;
 import java.util.Objects;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
@@ -99,15 +99,15 @@ class FSKEditorJSViewValue extends JSONViewContent {
       return false;
 
     FSKEditorJSViewValue other = (FSKEditorJSViewValue) obj;
-
-    return Objects.equals(modelMetaData, other.modelMetaData)
-        && Objects.equals(modelScript, other.modelScript)
-        && Objects.equals(visualizationScript, other.visualizationScript)
-        && Arrays.equals(resourcesFiles, other.resourcesFiles)
-        && Objects.equals(serverName, other.serverName)
-        && Objects.equals(isCompleted, other.isCompleted)
-        && Arrays.equals(validationErrors, other.validationErrors);
-//        && Objects.equals(modelType, other.modelType);
+    return new EqualsBuilder()
+        .append(modelMetaData, other.modelMetaData)
+        .append(modelScript, other.modelScript)
+        .append(visualizationScript, other.visualizationScript)
+        .append(resourcesFiles, other.resourcesFiles)
+        .append(serverName, other.serverName)
+        .append(isCompleted, other.isCompleted)
+        .append(validationErrors, other.validationErrors)
+        .isEquals();
   }
 
   @Override
