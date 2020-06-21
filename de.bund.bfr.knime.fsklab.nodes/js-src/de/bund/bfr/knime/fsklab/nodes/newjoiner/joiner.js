@@ -291,7 +291,17 @@ joiner = function () {
       },
       validateConnection: function (cellViewS, magnetS, cellViewT, magnetT, end, linkView) {
        
-
+        var links = _graph.getLinks();
+        for (var i = 0; i < links.length; i++)
+        {  
+            if(linkView == links[i].findView(_paper)) //Skip the wire the user is drawing
+            continue;
+    
+            if ( (( cellViewT.model.id  == links[i].get('source').id ) && ( magnetT.getAttribute('port') == links[i].get('source').port)) ||
+            (( cellViewT.model.id  == links[i].get('target').id ) && ( magnetT.getAttribute('port') == links[i].get('target').port)) ){
+                return false;
+            }
+        } 
         if (linkView.sourceView.id != linkView.paper.viewport.children[0].id)
           return false;
          
@@ -315,9 +325,9 @@ joiner = function () {
           return false;
 
             //input to input not supported right now
-        if (magnetT && magnetT.getAttribute('port-group') === 'in' &&
-          magnetS && magnetS.getAttribute('port-group') === 'in' )
-          return false;
+        // if (magnetT && magnetT.getAttribute('port-group') === 'in' &&
+        //   magnetS && magnetS.getAttribute('port-group') === 'in' )
+        //   return false;
 
             //inputS to outpuT_Target not sensible
          if (magnetT && magnetT.getAttribute('port-group') === 'out' &&
