@@ -145,10 +145,11 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
         .createHandler(SwaggerUtil.getLanguageWrittenIn(fskObj.modelMetadata), fskObj.packages)) {
       LinkedHashMap<String,String> originalOutputParameters = new LinkedHashMap<String,String>();
       List<Parameter> p = SwaggerUtil.getParameter(fskObj.modelMetadata);
-      p.forEach(item -> {
-        if(item.getClassification().equals(ClassificationEnum.OUTPUT))
-          originalOutputParameters.put(item.getId(), item.getId());
-        });
+      p.forEach(item -> originalOutputParameters.put(item.getId(), item.getId() ));
+//      p.forEach(item -> {
+//        if(item.getClassification().equals(ClassificationEnum.OUTPUT))
+//          originalOutputParameters.put(item.getId(), item.getId());
+//        });
       runFskPortObject(handler, fskObj, originalOutputParameters, exec);
     } catch (Exception e) {
       e.printStackTrace();
@@ -207,6 +208,11 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
       // prepareSimulation 1    *******
       FskSimulation fskSimOriginal  = comFskObj.simulations.get(comFskObj.selectedSimulationIndex);
       FskSimulation fskSimulationFirst = JoinerNodeUtil.makeIndividualSimulation(fskSimOriginal, JoinerNodeModel.SUFFIX_FIRST);
+      
+      // get local parameters to store  
+      List<Parameter> p = SwaggerUtil.getParameter(fskObj.modelMetadata);
+      p.forEach(item -> originalOutputParameters.put(item.getId(), item.getId() ));
+      
       
       // create a mapping for the output parameters so that the true (original) parameter name is preserved but links      
       LinkedHashMap<String,String> oopFirst = JoinerNodeUtil.getOriginalParameterNames(originalOutputParameters, JoinerNodeModel.SUFFIX_FIRST);

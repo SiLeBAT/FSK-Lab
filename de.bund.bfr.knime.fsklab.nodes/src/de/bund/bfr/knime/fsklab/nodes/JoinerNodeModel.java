@@ -628,9 +628,11 @@ final class JoinerNodeModel
      
       // update second visualization script from the view
       if(value.getVisualizationScript() == "")
-        outObj.getSecondFskPortObject().viz = this.getViewRepresentation().getSecondModelViz();
+        setLastVisualizationScript(outObj, this.getViewRepresentation().getSecondModelViz());
+        //outObj.getSecondFskPortObject().viz = this.getViewRepresentation().getSecondModelViz();
       else
-        outObj.getSecondFskPortObject().viz = value.getVisualizationScript();  
+        setLastVisualizationScript(outObj, value.getVisualizationScript());
+        //outObj.getSecondFskPortObject().viz = value.getVisualizationScript();  
       
       // remove suffix from original parameters since they are needed with their original id for the scripts
       if (value.joinRelations != null) {
@@ -644,7 +646,13 @@ final class JoinerNodeModel
   }
 
  
-
+  private void setLastVisualizationScript(FskPortObject fskObj, String viz) {
+    if(fskObj instanceof CombinedFskPortObject)
+      setLastVisualizationScript(((CombinedFskPortObject) fskObj).getSecondFskPortObject(), viz);
+    else
+      fskObj.viz = viz;
+    
+  }
 
 
   private void resetParameterIdToOriginal(List<Parameter> parameter) {
