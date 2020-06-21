@@ -345,7 +345,7 @@ fskutil = function () {
             // Create input
             this.input.className = type === "checkbox" ? "form-check-input" : "form-control";
             this.input.type = type;
-            if(type ==="date"){
+            if(type ==="date" && typeof(value) != "string"){
                 let day = (""+value[2]).length > 1 ? (""+value[2]) : ("0"+value[2]);
                 let month = (""+value[1]).length > 1 ? (""+value[1]) : ("0"+value[1]);
                 this.input.value = value[0]+"-"+month+"-"+day;
