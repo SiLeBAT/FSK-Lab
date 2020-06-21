@@ -18,10 +18,10 @@
  */
 package de.bund.bfr.knime.fsklab.nodes;
 
-import java.util.Arrays;
 import java.util.Objects;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
@@ -37,6 +37,7 @@ class FSKEditorJSViewValue extends JSONViewContent {
   private static final String CFG_SERVER_NAME = "serverName";
   private static final String CFG_COMPLETED = "completed";
   private static final String CFG_VALIDATION_ERRORS = "validationErrors";
+  private static final String CFG_CONNECTED_NODE = "connectedNode";
 
   private String modelMetaData;
   private String modelScript;
@@ -46,6 +47,14 @@ class FSKEditorJSViewValue extends JSONViewContent {
   private String serverName;
   private boolean isCompleted;
   private String[] validationErrors;
+  
+  /**
+   * ID of the previously connected node to this editor. This ID will be later used by the dialog
+   * and node model to find when a different node has been connected to the same editor.
+   */
+  private String connectedNodeId;
+
+
 
   public FSKEditorJSViewValue() {
     modelScript = "";
@@ -67,6 +76,7 @@ class FSKEditorJSViewValue extends JSONViewContent {
     settings.addString(CFG_SERVER_NAME, serverName);
     settings.addBoolean(CFG_COMPLETED, isCompleted);
     settings.addStringArray(CFG_VALIDATION_ERRORS, validationErrors);
+    settings.addString(CFG_CONNECTED_NODE, connectedNodeId.toString());
   }
 
   @Override
@@ -87,6 +97,7 @@ class FSKEditorJSViewValue extends JSONViewContent {
     serverName = settings.getString(CFG_SERVER_NAME);
     isCompleted = settings.getBoolean(CFG_COMPLETED);
     validationErrors = settings.getStringArray(CFG_VALIDATION_ERRORS);
+    connectedNodeId = settings.getString(CFG_CONNECTED_NODE);
   }
 
   @Override
@@ -99,15 +110,16 @@ class FSKEditorJSViewValue extends JSONViewContent {
       return false;
 
     FSKEditorJSViewValue other = (FSKEditorJSViewValue) obj;
-
-    return Objects.equals(modelMetaData, other.modelMetaData)
-        && Objects.equals(modelScript, other.modelScript)
-        && Objects.equals(visualizationScript, other.visualizationScript)
-        && Arrays.equals(resourcesFiles, other.resourcesFiles)
-        && Objects.equals(serverName, other.serverName)
-        && Objects.equals(isCompleted, other.isCompleted)
-        && Arrays.equals(validationErrors, other.validationErrors);
-//        && Objects.equals(modelType, other.modelType);
+    return new EqualsBuilder()
+        .append(modelMetaData, other.modelMetaData)
+        .append(modelScript, other.modelScript)
+        .append(visualizationScript, other.visualizationScript)
+        .append(resourcesFiles, other.resourcesFiles)
+        .append(serverName, other.serverName)
+        .append(isCompleted, other.isCompleted)
+        .append(validationErrors, other.validationErrors)
+        .append(connectedNodeId, other.connectedNodeId)
+        .isEquals();
   }
 
   @Override
@@ -178,6 +190,14 @@ class FSKEditorJSViewValue extends JSONViewContent {
 
   public void setValidationErrors(String[] validationErrors) {
     this.validationErrors = validationErrors;
+  }
+  
+  public String getConnectedNodeId() {
+    return connectedNodeId;
+  }
+
+  public void setConnectedNodeId(String connectedNodeId) {
+    this.connectedNodeId = connectedNodeId;
   }
 
   /**

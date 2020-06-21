@@ -53,7 +53,6 @@ import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
-import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.util.FilesHistoryPanel;
 import org.knime.core.node.util.FilesHistoryPanel.LocationValidation;
@@ -61,21 +60,25 @@ import org.knime.core.node.workflow.FlowVariable;
 import org.knime.core.node.workflow.NodeContext;
 import org.knime.core.node.workflow.WorkflowContext;
 import org.knime.core.util.FileUtil;
-import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.FBrowseButton;
 
 class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
 
+  private static final String MODEL_TYPE = "modelType";
+  private static final String README_FILE = "readmeFile";
+
+  private ModelType m_modelType;
+  
+  /** Absolute path to readme file. */
+  private String m_readmeFile;
+  
+  private final FSKEditorJSConfig m_config;
+
   private final DefaultComboBoxModel<ModelType> modelTypeComboBoxModel;
-
   private final FilesHistoryPanel m_readmePanel;
-
   private final FilesHistoryPanel m_workingDirectoryPanel;
-
   private FileTableModel fileModel = new FileTableModel();
-
   private JTable fileTable = new JTable(fileModel);
-
   private File currentWorkingDirectory;
 
   private WorkingDirectoryChangeListener changeListener = new WorkingDirectoryChangeListener();
@@ -108,6 +111,8 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
   }
 
   public FSKEditorJSNodeDialog() {
+    
+    m_config = new FSKEditorJSConfig();
 
     modelTypeComboBoxModel = new DefaultComboBoxModel<>(ModelType.values());
 
@@ -124,6 +129,15 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
     createUI();
   }
 
+  /** @return {@link ModelType#genericModel} if not set. */
+  public ModelType getModelType() {
+    return m_modelType != null ? m_modelType : ModelType.genericModel;
+  }
+
+  public void setModelType(ModelType modelType) {
+    this.m_modelType = modelType;
+  }
+  
   /**
    * Update the dialog with the passed data.
    * 
@@ -167,51 +181,52 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
   @Override
   protected void loadSettingsFrom(NodeSettingsRO settings, PortObjectSpec[] specs)
       throws NotConfigurableException {
+    
+    m_config.loadSettingsForDialog(settings, specs[0]);
 
-    FSKEditorJSNodeSettings settingsHelper = new FSKEditorJSNodeSettings();
-    settingsHelper.load(settings);
-
-    // Update dialog
-    updateDialog(settingsHelper.getModelType(), settingsHelper.getReadmeFile(),
-        settingsHelper.getWorkingDirectory());
+    ModelType modelType = ModelType.valueOf(settings.getString(MODEL_TYPE, "genericModel"));
+    String readmeFile = settings.getString(README_FILE, "");
+    String workingDirectory = m_config.getWorkingDirectory();
+    
+    updateDialog(modelType, readmeFile, workingDirectory);
   }
 
-  /** Loads settings from input port. */
-  @Override
-  protected void loadSettingsFrom(NodeSettingsRO settings, PortObject[] input)
-      throws NotConfigurableException {
-
-    FSKEditorJSViewRepresentation repr = new FSKEditorJSNodeModel().getViewRepresentation();
-    FskPortObject inputPort = (FskPortObject) input[0];
-
-    // If the node id stored in representation is the same as the one from the input port, then
-    // the settings described the same model connected to this editor
-    if (inputPort.id == repr.getConnectedNodeId()) {
-      // Keep settings
-      FSKEditorJSNodeSettings editorSettings = new FSKEditorJSNodeSettings();
-      editorSettings.load(settings);
-
-      // Fill dialog with settings
-      updateDialog(editorSettings.getModelType(), editorSettings.getReadmeFile(),
-          editorSettings.getWorkingDirectory());
-    }
-
-    // Editor has been connected to another model.
-    else {
-      ModelType modelType = ModelType.valueOf(inputPort.modelMetadata.getModelType());
-
-      // Readme cannot be assigned for now as the dialog uses a file (readme file)
-      // and the port object has a string (raw readme). In this case, an empty string is assigned
-      // and the full readme from the port object will be read in the node model.
-      String readme = "";
-
-      String workingDirectory = inputPort.getWorkingDirectory();
-      updateDialog(modelType, readme, workingDirectory);
-
-      // And update the connected node id in the representation
-      repr.setConnectedNodeId(inputPort.id);
-    }
-  }
+//  /** Loads settings from input port. */
+//  @Override
+//  protected void loadSettingsFrom(NodeSettingsRO settings, PortObject[] input)
+//      throws NotConfigurableException {
+//
+//    FSKEditorJSViewRepresentation repr = new FSKEditorJSNodeModel().getViewRepresentation();
+//    FskPortObject inputPort = (FskPortObject) input[0];
+//
+//    // If the node id stored in representation is the same as the one from the input port, then
+//    // the settings described the same model connected to this editor
+//    if (inputPort.id == repr.getConnectedNodeId()) {
+//      // Keep settings
+//      FSKEditorJSConfig editorSettings = new FSKEditorJSConfig();
+//      editorSettings.load(settings);
+//
+//      // Fill dialog with settings
+//      updateDialog(getModelType(), editorSettings.getReadmeFile(),
+//          editorSettings.getWorkingDirectory());
+//    }
+//
+//    // Editor has been connected to another model.
+//    else {
+//      ModelType modelType = ModelType.valueOf(inputPort.modelMetadata.getModelType());
+//
+//      // Readme cannot be assigned for now as the dialog uses a file (readme file)
+//      // and the port object has a string (raw readme). In this case, an empty string is assigned
+//      // and the full readme from the port object will be read in the node model.
+//      String readme = "";
+//
+//      String workingDirectory = inputPort.getWorkingDirectory();
+//      updateDialog(modelType, readme, workingDirectory);
+//
+//      // And update the connected node id in the representation
+//      repr.setConnectedNodeId(inputPort.id);
+//    }
+//  }
 
   @Override
   protected void saveSettingsTo(NodeSettingsWO settings) throws InvalidSettingsException {
@@ -219,12 +234,10 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
     m_readmePanel.addToHistory();
     m_workingDirectoryPanel.addToHistory();
 
-    FSKEditorJSNodeSettings settingsHelper = new FSKEditorJSNodeSettings();
-    settingsHelper.setReadme(m_readmePanel.getSelectedFile().trim());
-    settingsHelper.setWorkingDirectory(m_workingDirectoryPanel.getSelectedFile().trim());
-    settingsHelper.setResources(fileModel.filenames);
-    settingsHelper.setModelType((ModelType) modelTypeComboBoxModel.getSelectedItem());
-    settingsHelper.save(settings);
+    settings.addString(MODEL_TYPE, m_modelType.name());
+    settings.addString(README_FILE, m_readmeFile);
+    
+    m_config.saveSettings(settings);
   }
 
   private void createUI() {
