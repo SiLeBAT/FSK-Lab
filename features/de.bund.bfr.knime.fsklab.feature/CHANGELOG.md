@@ -6,19 +6,33 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.8.1] - 2020-6-22
+
 ### Fixed
 - Broken visualization of readmes in the view of combined port objects https://github.com/SiLeBAT/FSK-Lab/issues/414
 - Broken visualization of scripts in the view of combined port objects https://github.com/SiLeBAT/FSK-Lab/issues/413
 - Fixed execution of joined models. Simulation of single models were removed.
-- Fixed encoding of some tooltips in editor node https://github.com/SiLeBAT/FSK-Lab/issues/409
+- Fixed encoding of some tooltips in Editor node https://github.com/SiLeBAT/FSK-Lab/issues/409
 - Missing tooltips of quality measures https://github.com/SiLeBAT/FSK-Lab/issues/410
-- Is reference component property of reference in editor is broken https://github.com/SiLeBAT/FSK-Lab/issues/404
-- Broken JSON metadata in editor node https://github.com/SiLeBAT/FSK-Lab/issues/425
+- Is reference component property of reference in Editor is broken https://github.com/SiLeBAT/FSK-Lab/issues/404
+- Broken JSON metadata in Editor node https://github.com/SiLeBAT/FSK-Lab/issues/425. Metadata is saved using the KNIME default settings mechanism. The external folder approach is replaced.
 - Editor JS: model type in view and settings not in sync https://github.com/SiLeBAT/FSK-Lab/issues/347
+- Fixed KNIME dependencies conflict. FSK-Lab installs fine and does not need the -clean workaround.
 
 ### Changed
-- Color of inputs and outputs in joiner node https://github.com/SiLeBAT/FSK-Lab/issues/401
-- Vertical alignment of parameters in joiner node https://github.com/SiLeBAT/FSK-Lab/issues/400
+- improved overall stability due to improved testing pipeline
+- Color of inputs and outputs in Joiner node https://github.com/SiLeBAT/FSK-Lab/issues/401
+- Vertical alignment of parameters in Joiner node https://github.com/SiLeBAT/FSK-Lab/issues/400
+- Improved visualization of JSON model metadata in ports.
+- Handling of parameters in Combined Object received major overhaul.
+  - Instead of a static suffix _dup, every parameter is given a unique identifier
+  - Combined models work regardless of nesting complexity.
+  - Full support of join commands.
+- Support for adding and executing simulations for combined models added 
+- Improved visualization of Joiner JS view
+  - Off center position of models in view fixed
+  - In Joiner View, a target port can now only have one input connection
+
 
 ## [1.8.0] - 2020-4-2
 
