@@ -353,7 +353,6 @@ final class FSKEditorJSNodeModel
     value.setServerName(m_config.getServerName());
     value.setCompleted(m_config.isCompleted());
     value.setValidationErrors(m_config.getValidationErrors());
-    value.setConnectedNodeId(m_config.getConnectedNode());
   }
 
   private void copyValueToConfig() {
@@ -366,7 +365,6 @@ final class FSKEditorJSNodeModel
     m_config.setServerName(value.getServerName());
     m_config.setCompleted(value.isCompleted());
     m_config.setValidationErrors(value.getValidationErrors());
-    m_config.setConnectedNode(value.getConnectedNodeId());
   }
 
   /**
@@ -375,7 +373,6 @@ final class FSKEditorJSNodeModel
    * @param connectedNodeId UUID of the connected node
    */
   private void copyConnectedNodeToView(String connectedNodeId, FSKEditorJSViewValue value) {
-    value.setConnectedNodeId(connectedNodeId);
 
     try {
       String jsonMetadata = MAPPER.writeValueAsString(m_port.modelMetadata);

@@ -37,7 +37,6 @@ class FSKEditorJSViewValue extends JSONViewContent {
   private static final String CFG_SERVER_NAME = "serverName";
   private static final String CFG_COMPLETED = "completed";
   private static final String CFG_VALIDATION_ERRORS = "validationErrors";
-  private static final String CFG_CONNECTED_NODE = "connectedNode";
 
   private String modelMetaData;
   private String modelScript;
@@ -48,14 +47,6 @@ class FSKEditorJSViewValue extends JSONViewContent {
   private boolean isCompleted;
   private String[] validationErrors;
   
-  /**
-   * ID of the previously connected node to this editor. This ID will be later used by the dialog
-   * and node model to find when a different node has been connected to the same editor.
-   */
-  private String connectedNodeId;
-
-
-
   public FSKEditorJSViewValue() {
     modelScript = "";
     visualizationScript = "";
@@ -76,7 +67,6 @@ class FSKEditorJSViewValue extends JSONViewContent {
     settings.addString(CFG_SERVER_NAME, serverName);
     settings.addBoolean(CFG_COMPLETED, isCompleted);
     settings.addStringArray(CFG_VALIDATION_ERRORS, validationErrors);
-    settings.addString(CFG_CONNECTED_NODE, connectedNodeId.toString());
   }
 
   @Override
@@ -97,7 +87,6 @@ class FSKEditorJSViewValue extends JSONViewContent {
     serverName = settings.getString(CFG_SERVER_NAME);
     isCompleted = settings.getBoolean(CFG_COMPLETED);
     validationErrors = settings.getStringArray(CFG_VALIDATION_ERRORS);
-    connectedNodeId = settings.getString(CFG_CONNECTED_NODE);
   }
 
   @Override
@@ -118,7 +107,6 @@ class FSKEditorJSViewValue extends JSONViewContent {
         .append(serverName, other.serverName)
         .append(isCompleted, other.isCompleted)
         .append(validationErrors, other.validationErrors)
-        .append(connectedNodeId, other.connectedNodeId)
         .isEquals();
   }
 
@@ -192,14 +180,6 @@ class FSKEditorJSViewValue extends JSONViewContent {
     this.validationErrors = validationErrors;
   }
   
-  public String getConnectedNodeId() {
-    return connectedNodeId;
-  }
-
-  public void setConnectedNodeId(String connectedNodeId) {
-    this.connectedNodeId = connectedNodeId;
-  }
-
   /**
    * Utility check for checking quickly if this view value is empty. A view value with all its
    * mandatory properties not set is considered empty.

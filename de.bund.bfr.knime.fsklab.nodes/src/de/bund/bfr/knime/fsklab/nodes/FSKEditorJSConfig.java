@@ -35,7 +35,6 @@ class FSKEditorJSConfig {
   private static final String COMPLETED = "completed";
   private static final String ERRORS = "errors";
   private static final String WORKING_DIRECTORY = "workingDirectory";
-  private static final String CONNECTED_NODE = "connectedNode";
 
   private String m_metadata;
   private String m_modelScript;
@@ -152,7 +151,6 @@ class FSKEditorJSConfig {
     settings.addString(SERVER_NAME, m_serverName);
     settings.addBoolean(COMPLETED, m_isCompleted);
     settings.addStringArray(ERRORS, m_validationErrors);
-    settings.addString(CONNECTED_NODE, m_connectedNode);
   }
 
   /**
@@ -170,8 +168,7 @@ class FSKEditorJSConfig {
     m_serverName = settings.getString(SERVER_NAME, "");
     m_isCompleted = settings.getBoolean(COMPLETED, false);
     m_validationErrors = settings.getStringArray(ERRORS, new String[0]);
-    m_workingDirectory = settings.getString(WORKING_DIRECTORY);
-    m_connectedNode = settings.getString(CONNECTED_NODE, "");
+    m_workingDirectory = settings.getString(WORKING_DIRECTORY, "");
   }
 
   /**
@@ -190,6 +187,5 @@ class FSKEditorJSConfig {
     m_isCompleted = settings.getBoolean(COMPLETED, false);
     m_validationErrors = settings.getStringArray(ERRORS, "");
     m_workingDirectory = settings.getString(WORKING_DIRECTORY, "");
-    m_connectedNode = settings.getString(CONNECTED_NODE, "");
   }
 }
