@@ -23,6 +23,7 @@ import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObjectSpec;
+import de.bund.bfr.knime.fsklab.nodes.FSKEditorJSNodeDialog.ModelType;
 
 class FSKEditorJSConfig {
 
@@ -35,6 +36,7 @@ class FSKEditorJSConfig {
   private static final String COMPLETED = "completed";
   private static final String ERRORS = "errors";
   private static final String WORKING_DIRECTORY = "workingDirectory";
+  private static final String MODEL_TYPE = "modelType";
 
   private String m_metadata;
   private String m_modelScript;
@@ -44,6 +46,7 @@ class FSKEditorJSConfig {
   private String m_serverName;
   private boolean m_isCompleted;
   private String[] m_validationErrors;
+  private String m_modelType;
   
   /** UUID of the connected node. */
   private String m_connectedNode;
@@ -136,6 +139,14 @@ class FSKEditorJSConfig {
   public void setConnectedNode(String connectedNode) {
     this.m_connectedNode = connectedNode;
   }
+  
+  public String getModelType() {
+    return m_modelType;
+  }
+  
+  public void setModelType(String modelType) {
+    m_modelType = modelType;
+  }
 
   /**
    * Saves current parameters to settings object.
@@ -151,6 +162,7 @@ class FSKEditorJSConfig {
     settings.addString(SERVER_NAME, m_serverName);
     settings.addBoolean(COMPLETED, m_isCompleted);
     settings.addStringArray(ERRORS, m_validationErrors);
+    settings.addString(MODEL_TYPE, m_modelType);
   }
 
   /**
@@ -169,6 +181,7 @@ class FSKEditorJSConfig {
     m_isCompleted = settings.getBoolean(COMPLETED, false);
     m_validationErrors = settings.getStringArray(ERRORS, new String[0]);
     m_workingDirectory = settings.getString(WORKING_DIRECTORY, "");
+    m_modelType = settings.getString(MODEL_TYPE, ModelType.genericModel.name());
   }
 
   /**
@@ -187,5 +200,6 @@ class FSKEditorJSConfig {
     m_isCompleted = settings.getBoolean(COMPLETED, false);
     m_validationErrors = settings.getStringArray(ERRORS, "");
     m_workingDirectory = settings.getString(WORKING_DIRECTORY, "");
+    m_modelType = settings.getString(MODEL_TYPE, ModelType.genericModel.name());
   }
 }

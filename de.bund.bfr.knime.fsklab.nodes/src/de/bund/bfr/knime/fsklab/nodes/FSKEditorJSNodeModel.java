@@ -53,7 +53,6 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.fskml.RScript;
 import de.bund.bfr.knime.fsklab.FskPlugin;
@@ -229,13 +228,16 @@ final class FSKEditorJSNodeModel
       String jsonMetadata = viewValue.getModelMetaData();
       if (jsonMetadata != null && !jsonMetadata.isEmpty()) {
         // Get model type from metadata
-        JsonNode metadataNode = MAPPER.readTree(viewValue.getModelMetaData());
-        String modelType = metadataNode.get("modelType").asText("genericModel");
+        String modelType = viewValue.getModelType();
 
-        // Deserialize metadata to concrete class according to modelType
+//        JsonNode metadataNode = MAPPER.readTree(viewValue.getModelMetaData());
+//        String modelType = metadataNode.get("modelType").asText("genericModel");
+//
+//        // Deserialize metadata to concrete class according to modelType
         Class<? extends Model> modelClass = SwaggerUtil.modelClasses.get(modelType);
 
-        metadata = MAPPER.treeToValue(metadataNode, modelClass);
+//        metadata = MAPPER.treeToValue(metadataNode, modelClass);
+        metadata = MAPPER.readValue(viewValue.getModelMetaData(), modelClass);
       }
 
       // Take simulation from input port (if connected) or view value otherwise
@@ -353,6 +355,7 @@ final class FSKEditorJSNodeModel
     value.setServerName(m_config.getServerName());
     value.setCompleted(m_config.isCompleted());
     value.setValidationErrors(m_config.getValidationErrors());
+    value.setModelType(m_config.getModelType());
   }
 
   private void copyValueToConfig() {
@@ -365,6 +368,7 @@ final class FSKEditorJSNodeModel
     m_config.setServerName(value.getServerName());
     m_config.setCompleted(value.isCompleted());
     m_config.setValidationErrors(value.getValidationErrors());
+    m_config.setModelType(value.getModelType());
   }
 
   /**
@@ -383,6 +387,8 @@ final class FSKEditorJSNodeModel
     value.setModelScript(m_port.model);
     value.setVisualizationScript(m_port.viz);
     value.setReadme(m_port.getReadme());
+    value.setModelType(m_port.modelMetadata.getModelType());
+    
     // Cannot assign resource files, server name, completed and validation errors
   }
 }

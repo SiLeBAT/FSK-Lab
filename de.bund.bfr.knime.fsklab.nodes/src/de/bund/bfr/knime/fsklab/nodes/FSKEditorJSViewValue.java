@@ -26,6 +26,7 @@ import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.js.core.JSONViewContent;
+import de.bund.bfr.knime.fsklab.nodes.FSKEditorJSNodeDialog.ModelType;
 
 class FSKEditorJSViewValue extends JSONViewContent {
 
@@ -37,6 +38,7 @@ class FSKEditorJSViewValue extends JSONViewContent {
   private static final String CFG_SERVER_NAME = "serverName";
   private static final String CFG_COMPLETED = "completed";
   private static final String CFG_VALIDATION_ERRORS = "validationErrors";
+  private static final String MODEL_TYPE = "modelType";
 
   private String modelMetaData;
   private String modelScript;
@@ -46,6 +48,7 @@ class FSKEditorJSViewValue extends JSONViewContent {
   private String serverName;
   private boolean isCompleted;
   private String[] validationErrors;
+  private String modelType;
   
   public FSKEditorJSViewValue() {
     modelScript = "";
@@ -55,6 +58,7 @@ class FSKEditorJSViewValue extends JSONViewContent {
     serverName = "";
     isCompleted = false;
     validationErrors = new String[0];
+    modelType = ModelType.genericModel.name();
   }
 
   @Override
@@ -67,6 +71,7 @@ class FSKEditorJSViewValue extends JSONViewContent {
     settings.addString(CFG_SERVER_NAME, serverName);
     settings.addBoolean(CFG_COMPLETED, isCompleted);
     settings.addStringArray(CFG_VALIDATION_ERRORS, validationErrors);
+    settings.addString(MODEL_TYPE, modelType);
   }
 
   @Override
@@ -87,6 +92,7 @@ class FSKEditorJSViewValue extends JSONViewContent {
     serverName = settings.getString(CFG_SERVER_NAME);
     isCompleted = settings.getBoolean(CFG_COMPLETED);
     validationErrors = settings.getStringArray(CFG_VALIDATION_ERRORS);
+    modelType = settings.getString(MODEL_TYPE, ModelType.genericModel.name());
   }
 
   @Override
@@ -107,13 +113,14 @@ class FSKEditorJSViewValue extends JSONViewContent {
         .append(serverName, other.serverName)
         .append(isCompleted, other.isCompleted)
         .append(validationErrors, other.validationErrors)
+        .append(modelType, other.modelType)
         .isEquals();
   }
 
   @Override
   public int hashCode() {
     return Objects.hash(modelMetaData, modelScript, visualizationScript, readme, resourcesFiles,
-        serverName, isCompleted, validationErrors); 
+        serverName, isCompleted, validationErrors, modelType); 
   }
 
   public String getModelMetaData() {
@@ -178,6 +185,14 @@ class FSKEditorJSViewValue extends JSONViewContent {
 
   public void setValidationErrors(String[] validationErrors) {
     this.validationErrors = validationErrors;
+  }
+  
+  public String getModelType() {
+    return modelType;
+  }
+  
+  public void setModelType(String modelType) {
+    this.modelType = modelType;
   }
   
   /**
