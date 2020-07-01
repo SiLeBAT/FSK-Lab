@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+- change extension of generated R workspace files from .r to .RData. The URI of .RData is used in the manifest.
+
 ## [1.8.1] - 2020-6-22
 
 ### Fixed
