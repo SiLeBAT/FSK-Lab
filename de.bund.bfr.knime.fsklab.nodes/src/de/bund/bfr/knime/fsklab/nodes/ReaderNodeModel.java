@@ -431,7 +431,8 @@ class ReaderNodeModel extends NoInternalsModel {
             } else if (resourceType.equals(ResourceType.visualizationScript)) {
               visualizationScript = loadTextEntry(entry);
             } else if (resourceType.equals(ResourceType.workspace)) {
-              workspace = FileUtil.createTempFile("workspace", ".r");
+              // Legacy check. Look for R workspace with R URI (from old files)
+              workspace = FileUtil.createTempFile("workspace", ".RData");
               entry.extractFile(workspace);
             }
           }
@@ -451,7 +452,19 @@ class ReaderNodeModel extends NoInternalsModel {
       archive.getEntriesWithFormat(textUri).stream()
           .filter(entry -> entry.getDescriptions().size() == 0).forEach(resourceEntries::add);
       resourceEntries.addAll(archive.getEntriesWithFormat(URIS.get("csv")));
-      resourceEntries.addAll(archive.getEntriesWithFormat(URIS.get("rdata")));
+      
+      for (ArchiveEntry entry : archive.getEntriesWithFormat(URIS.get("rdata"))) {
+        // All the RData that are not annotated as model workspace are stored add to resourceEntries
+        if (entry.getDescriptions().isEmpty()) {
+          resourceEntries.add(entry);
+        } else {
+          final FskMetaDataObject fmdo = new FskMetaDataObject(entry.getDescriptions().get(0));
+          if (fmdo.getResourceType() == ResourceType.workspace) {
+            workspace = FileUtil.createTempFile("workspace", ".RData");
+            entry.extractFile(workspace);
+          }
+        }
+      }
 
       for (final ArchiveEntry entry : resourceEntries) {
         String path = entry.getEntityPath();

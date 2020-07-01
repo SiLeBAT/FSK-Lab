@@ -133,7 +133,7 @@ public class RScriptHandler extends ScriptHandler {
   @Override
   void saveWorkspace(final FskPortObject fskObj, ExecutionContext exec) throws Exception {
     if (fskObj.workspace == null) {
-      fskObj.workspace = FileUtil.createTempFile("workspace", ".R").toPath();
+      fskObj.workspace = FileUtil.createTempFile("workspace", ".RData").toPath();
     }
     controller.saveWorkspace(fskObj.workspace, exec);
   }

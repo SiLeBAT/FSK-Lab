@@ -703,8 +703,7 @@ class WriterNodeModel extends NoInternalsModel {
     // Only save R workspace smaller than 100 MB
     if (fileSizeInMB < 100) {
       final ArchiveEntry workspaceEntry = archive.addEntry(workspace.toFile(),
-          filePrefix + "workspace." + scriptHandler.getFileExtension(),
-          FSKML.getURIS(1, 0, 12).get(scriptHandler.getFileExtension()));
+          filePrefix + "workspace.RData", FSKML.getURIS(1, 0, 12).get("rdata"));
       workspaceEntry.addDescription(new FskMetaDataObject(ResourceType.workspace).metaDataObject);
     } else {
       LOGGER.warn("Results file larger than 100 MB -> Skipping file");
