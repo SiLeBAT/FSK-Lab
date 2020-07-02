@@ -172,11 +172,12 @@ class FSKEditorJSConfig {
    * @throws InvalidSettingsException If incomplete or wrong.
    */
   public void loadSettings(final NodeSettingsRO settings) throws InvalidSettingsException {
-    m_metadata = settings.getString(METADATA);
+    
+    m_metadata = settings.getString(METADATA, "");
     m_modelScript = settings.getString(MODEL_SCRIPT, "");
     m_visualizationScript = settings.getString(VISUALIZATION_SCRIPT, "");
     m_readme = settings.getString(README, "");
-    resources = settings.getStringArray(RESOURCES);
+    resources = settings.getStringArray(RESOURCES, new String[0]);
     m_serverName = settings.getString(SERVER_NAME, "");
     m_isCompleted = settings.getBoolean(COMPLETED, false);
     m_validationErrors = settings.getStringArray(ERRORS, new String[0]);
