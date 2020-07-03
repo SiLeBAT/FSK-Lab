@@ -205,11 +205,11 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
 
     ModelType modelType;
     try {
-      if (inputObject.modelMetadata != null
+      if (StringUtils.isNotEmpty(m_config.getModelType())) {
+        modelType = ModelType.valueOf(m_config.getModelType());
+      } else if (inputObject.modelMetadata != null
           && StringUtils.isNotEmpty(inputObject.modelMetadata.getModelType())) {
         modelType = ModelType.valueOf(inputObject.modelMetadata.getModelType());
-      } else if (StringUtils.isNotEmpty(m_config.getModelType())) {
-        modelType = ModelType.valueOf(m_config.getModelType());
       } else {
         modelType = ModelType.genericModel;
       }
