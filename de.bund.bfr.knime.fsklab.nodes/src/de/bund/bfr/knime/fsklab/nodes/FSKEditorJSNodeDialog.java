@@ -53,6 +53,7 @@ import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
+import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.util.FilesHistoryPanel;
 import org.knime.core.node.util.FilesHistoryPanel.LocationValidation;
@@ -63,6 +64,7 @@ import org.knime.core.util.FileUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.FskPlugin;
+import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.FBrowseButton;
 import de.bund.bfr.metadata.swagger.Model;
 
@@ -192,13 +194,42 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
   }
 
   @Override
+  protected void loadSettingsFrom(NodeSettingsRO settings, PortObject[] input)
+      throws NotConfigurableException {
+
+    FskPortObject inputObject = (FskPortObject) input[0];
+    try {
+      m_config.loadSettings(settings);
+    } catch (InvalidSettingsException e) {
+    }
+
+    ModelType modelType;
+    try {
+      if (inputObject.modelMetadata != null
+          && StringUtils.isNotEmpty(inputObject.modelMetadata.getModelType())) {
+        modelType = ModelType.valueOf(inputObject.modelMetadata.getModelType());
+      } else if (StringUtils.isNotEmpty(m_config.getModelType())) {
+        modelType = ModelType.valueOf(m_config.getModelType());
+      } else {
+        modelType = ModelType.genericModel;
+      }
+    } catch (IllegalArgumentException err) {
+      modelType = ModelType.genericModel;
+    }
+
+    String readmeFile = settings.getString(README_FILE, "");
+    String workingDirectory = inputObject.getWorkingDirectory();
+    updateDialog(modelType, readmeFile, workingDirectory);
+  }
+
+  @Override
   protected void saveSettingsTo(NodeSettingsWO settings) throws InvalidSettingsException {
 
     m_readmePanel.addToHistory();
     m_workingDirectoryPanel.addToHistory();
 
     String modelType = ((ModelType) modelTypeComboBoxModel.getSelectedItem()).name();
-    
+
     // If the model class has changed, then discard the metadata for now
     // TODO: the metadata must be converted between schemas
     if (!modelType.equals(m_config.getModelType())) {
