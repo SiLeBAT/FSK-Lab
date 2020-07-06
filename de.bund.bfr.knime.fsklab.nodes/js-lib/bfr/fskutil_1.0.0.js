@@ -345,14 +345,14 @@ fskutil = function () {
             // Create input
             this.input.className = type === "checkbox" ? "form-check-input" : "form-control";
             this.input.type = type;
-            if(type ==="date" && typeof(value) != "string"){
-                let day = (""+value[2]).length > 1 ? (""+value[2]) : ("0"+value[2]);
-                let month = (""+value[1]).length > 1 ? (""+value[1]) : ("0"+value[1]);
-                this.input.value = value[0]+"-"+month+"-"+day;
-            }else{
+            if (type === "date" && typeof (value) != "string") {
+                let day = ("" + value[2]).length > 1 ? ("" + value[2]) : ("0" + value[2]);
+                let month = ("" + value[1]).length > 1 ? ("" + value[1]) : ("0" + value[1]);
+                this.input.value = value[0] + "-" + month + "-" + day;
+            } else {
                 this.input.value = value;
             }
-                       
+
             this.input.title = helperText;
 
             // Create div for input
@@ -1191,12 +1191,10 @@ fskutil = function () {
             this.metadata.scope = this.panels.scopeGeneral.data;
             this.metadata.scope.product = this.panels.product.data;
             this.metadata.scope.hazard = this.panels.hazard.data;
-            this.metadata.scope.populationGroup = this.panels.population.data;
 
             // Data background
             this.metadata.dataBackground.study = this.panels.study.data;
             this.metadata.dataBackground.studySample = this.panels.studySample.data;
-            this.metadata.dataBackground.dietaryAssessmentMethod = this.panels.dietaryAssessmentMethod.data;
             this.metadata.dataBackground.laboratory = this.panels.laboratory.data;
             this.metadata.dataBackground.assay = this.panels.assay.data;
 
@@ -1205,7 +1203,6 @@ fskutil = function () {
             this.metadata.modelMath.parameter = this.panels.parameter.data;
             this.metadata.modelMath.qualityMeasures = this.panels.qualityMeasures.data;
             this.metadata.modelMath.modelEquation = this.panels.modelEquation.data;
-            this.metadata.modelMath.exposure = this.panels.exposure.data;
 
             this.metadata.modelType = "predictiveModel";
 
@@ -1242,6 +1239,9 @@ fskutil = function () {
                 assay: new fskutil.TablePanel("Assay", schema.assay, this.metadata.dataBackground.assay),
                 modelMath: new fskutil.FormPanel("Model math", schema.modelMath, this.metadata.modelMath),
                 parameter: new fskutil.TablePanel("Parameter", schema.parameter, this.metadata.modelMath.parameter),
+                qualityMeasures: new fskutil.TablePanel("Quality measures", schema.qualityMeasures,
+                    this.metadata.modelMath.qualityMeasures),
+                modelEquation: new fskutil.TablePanel("Model equation", schema.modelEquation, this.metadata.modelMath.modelEquation)
             };
         }
 
@@ -1258,7 +1258,10 @@ fskutil = function () {
                 { "id": "studySample", "label": "Study sample" },
                 { "id": "laboratory", "label": "Laboratory" },
                 { "id": "assay", "label": "Assay" }]) +
-                fskutil.createSubMenu("Model math", [{ "id": "parameter", "label": "Parameter" }]);
+                fskutil.createSubMenu("Model math", [{ "id": "parameter", "label": "Parameter" },
+                { "id": "qualityMeasures", "label": "Quality measures" },
+                { "id": "modelEquation", "label": "Model equation" }
+            ]);
         }
     }
 
