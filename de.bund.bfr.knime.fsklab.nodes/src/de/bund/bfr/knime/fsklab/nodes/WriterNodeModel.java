@@ -199,6 +199,8 @@ class WriterNodeModel extends NoInternalsModel {
           archive.addEntry(resourceFile, filenameString, URIS.get("png"));
         } else if (FilenameUtils.isExtension(filenameString, "tiff")) {
           archive.addEntry(resourceFile, filenameString, URIS.get("tiff"));
+        } else if (FilenameUtils.isExtension(filenameString, "xlsx")) {
+          archive.addEntry(resourceFile, filenameString, URIS.get("xlsx"));
         }
       }
     }
@@ -230,15 +232,6 @@ class WriterNodeModel extends NoInternalsModel {
     String userReadme = fskObj.getReadme();
     String finalReadme = WriterNodeUtils.prepareReadme(userReadme);
     addReadme(archive, finalReadme, filePrefix);
-
-    // Add metadata spreadsheet
-    if (!fskObj.getSpreadsheet().isEmpty()) {
-      File spreadsheetFile = FileUtil.getFileFromURL(FileUtil.toURL(fskObj.getSpreadsheet()));
-
-      if (spreadsheetFile.exists()) {
-        archive.addEntry(spreadsheetFile, filePrefix + "metadata.xlsx", URIS.get("xlsx"));
-      }
-    }
   }
 
   private static void writeCombinedObject(CombinedFskPortObject fskObj, CombineArchive archive,

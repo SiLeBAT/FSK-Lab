@@ -209,6 +209,8 @@ final class FSKEditorJSNodeModel
 
         workingDirectory = newWorkingDirectory.getPath();
       }
+    } else {
+      workingDirectory = m_port.getWorkingDirectory();
     }
 
     synchronized (getLock()) {

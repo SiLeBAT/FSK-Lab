@@ -452,6 +452,7 @@ class ReaderNodeModel extends NoInternalsModel {
       archive.getEntriesWithFormat(textUri).stream()
           .filter(entry -> entry.getDescriptions().size() == 0).forEach(resourceEntries::add);
       resourceEntries.addAll(archive.getEntriesWithFormat(URIS.get("csv")));
+      resourceEntries.addAll(archive.getEntriesWithFormat(URIS.get("xlsx")));
       
       for (ArchiveEntry entry : archive.getEntriesWithFormat(URIS.get("rdata"))) {
         // All the RData that are not annotated as model workspace are stored add to resourceEntries
@@ -492,16 +493,6 @@ class ReaderNodeModel extends NoInternalsModel {
         }
       }
 
-      // Get metadata spreadsheet
-      String spreadsheetPath = "";
-      Optional<ArchiveEntry> excelEntry = archive.getEntriesWithFormat(URIS.get("xlsx")).stream()
-          .filter(entry -> entry.getEntityPath().indexOf(pathToResource) == 0).findAny();
-      if (excelEntry.isPresent()) {
-        File tempFile = FileUtil.createTempFile("metadata", ".xlsx");
-        excelEntry.get().extractFile(tempFile);
-        spreadsheetPath = tempFile.getAbsolutePath();
-      }
-
       // Retrieve missing libraries from CRAN
       HashSet<String> packagesSet = new HashSet<>();
       if (!modelScript.isEmpty()) {
@@ -520,7 +511,7 @@ class ReaderNodeModel extends NoInternalsModel {
 
       FskPortObject fskObj =
           new FskPortObject(modelScript, visualizationScript, model, workspacePath, packagesList,
-              workingDirectory.toString(), plotPath, readme, spreadsheetPath);
+              workingDirectory.toString(), plotPath, readme);
 
       // Read selected simulation index and simulations
       Optional<ArchiveEntry> simulationsEntry = archive.getEntriesWithFormat(URIS.get("sedml"))

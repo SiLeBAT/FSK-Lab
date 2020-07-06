@@ -149,7 +149,7 @@ public class CombinedFskPortObject extends FskPortObject {
       final Model modelMetadata, final Path workspace, final List<String> packages,
       final String workingDirectory, final String plot, final FskPortObject firstFskPortObject,
       final FskPortObject secondFskPortObject) throws IOException {
-    super(model, viz, modelMetadata, workspace, packages, workingDirectory, plot, "", "");
+    super(model, viz, modelMetadata, workspace, packages, workingDirectory, plot, "");
     this.firstFskPortObject = firstFskPortObject;
     this.secondFskPortObject = secondFskPortObject;
     objectNum = numOfInstances;
@@ -217,8 +217,6 @@ public class CombinedFskPortObject extends FskPortObject {
     private static final String PLOT = "plot";
 
     private static final String README = "readme";
-
-    private static final String SPREADSHEET = "spreadsheet";
 
     private static final String JOINER_RELATION = "joinrelation";
 
@@ -407,13 +405,6 @@ public class CombinedFskPortObject extends FskPortObject {
           out.closeEntry();
         }
 
-        // Save spreadsheet
-        if (StringUtils.isNotEmpty(portObject.getSpreadsheet())) {
-          out.putNextEntry(new ZipEntry(SPREADSHEET + level));
-          IOUtils.write(portObject.getSpreadsheet(), out, "UTF-8");
-          out.closeEntry();
-        }
-
         // Save simulations
         if (!portObject.simulations.isEmpty()) {
           out.putNextEntry(new ZipEntry(SIMULATION + level));
@@ -460,7 +451,6 @@ public class CombinedFskPortObject extends FskPortObject {
 
       String plot = ""; // Empty string if not set
       String readme = ""; // Empty string if not set
-      String spreadsheet = ""; // Empty string if not set
 
       List<FskSimulation> simulations = new ArrayList<>();
       int selectedSimulationIndex = 0;
@@ -634,8 +624,6 @@ public class CombinedFskPortObject extends FskPortObject {
             plot = IOUtils.toString(in, "UTF-8");
           } else if (entryName.startsWith(README)) {
             readme = IOUtils.toString(in, "UTF-8");
-          } else if (entryName.startsWith(SPREADSHEET)) {
-            spreadsheet = IOUtils.toString(in, "UTF-8");
           } else if (entryName.startsWith(SIMULATION)) {
             try {
               ObjectInputStream ois = new ObjectInputStream(in);
@@ -659,7 +647,7 @@ public class CombinedFskPortObject extends FskPortObject {
         }
       }
       final FskPortObject portObj = new FskPortObject(modelScript, visualizationScript,
-          modelMetadata, workspacePath, packages, workingDirectory, plot, readme, spreadsheet);
+          modelMetadata, workspacePath, packages, workingDirectory, plot, readme);
 
       if (!simulations.isEmpty()) {
         portObj.simulations.addAll(simulations);

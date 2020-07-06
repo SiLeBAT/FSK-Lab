@@ -306,7 +306,7 @@ class CreatorNodeModel extends NoInternalsModel {
     }
 
     final FskPortObject portObj = new FskPortObject(modelScript, vizScript, modelMetadata, null,
-        librariesList, workingDirectory, plotPath, readme, nodeSettings.spreadsheet);
+        librariesList, workingDirectory, plotPath, readme);
 
     List<Parameter> parameters = SwaggerUtil.getParameter(modelMetadata);
     if (SwaggerUtil.getModelMath(modelMetadata) != null) {
