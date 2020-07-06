@@ -1008,7 +1008,7 @@ fskutil = function () {
             this.metadata.modelMath.modelEquation = this.panels.modelEquation.data;
             this.metadata.modelMath.exposure = this.panels.exposure.data;
 
-            this.metadata.modelType = "GenericModel";
+            this.metadata.modelType = "genericModel";
 
             this.metadata = metadataFix(this.metadata);
 
@@ -1121,7 +1121,7 @@ fskutil = function () {
             // Model math
             this.metadata.modelMath.parameter = this.panels.parameter.data;
 
-            this.metadata.modelType = "DataModel";
+            this.metadata.modelType = "dataModel";
 
             this.metadata = metadataFix(this.metadata);
 
@@ -1207,7 +1207,7 @@ fskutil = function () {
             this.metadata.modelMath.modelEquation = this.panels.modelEquation.data;
             this.metadata.modelMath.exposure = this.panels.exposure.data;
 
-            this.metadata.modelType = "PredictiveModel";
+            this.metadata.modelType = "predictiveModel";
 
             this.metadata = metadataFix(this.metadata);
 
@@ -1297,7 +1297,7 @@ fskutil = function () {
             this.metadata.modelMath.qualityMeasures = this.panels.qualityMeasures.data;
             this.metadata.modelMath.modelEquation = this.panels.modelEquation.data;
 
-            this.metadata.modelType = "OtherModel";
+            this.metadata.modelType = "otherModel";
 
             this.metadata = metadataFix(this.metadata);
 
@@ -1397,7 +1397,7 @@ fskutil = function () {
             this.metadata.modelMath.modelEquation = this.panels.modelEquation.data;
             this.metadata.modelMath.exposure = this.panels.exposure.data;
 
-            this.metadata.modelType = "DoseResponseModel";
+            this.metadata.modelType = "doseResponseModel";
 
             this.metadata = metadataFix(this.metadata);
 
@@ -1462,7 +1462,8 @@ fskutil = function () {
 
     fskutil.ToxicologicalModel = class {
 
-        constructor() {
+        constructor(metadata) {
+            this.metadata = metadata;
             this.panels = this._createPanels();
             this.menus = this._createMenus();
         }
@@ -1484,7 +1485,6 @@ fskutil = function () {
             // Data background
             this.metadata.dataBackground.study = this.panels.study.data;
             this.metadata.dataBackground.studySample = this.panels.studySample.data;
-            this.metadata.dataBackground.dietaryAssessmentMethod = this.panels.dietaryAssessmentMethod.data;
             this.metadata.dataBackground.laboratory = this.panels.laboratory.data;
             this.metadata.dataBackground.assay = this.panels.assay.data;
 
@@ -1495,7 +1495,7 @@ fskutil = function () {
             this.metadata.modelMath.modelEquation = this.panels.modelEquation.data;
             this.metadata.modelMath.exposure = this.panels.exposure.data;
 
-            this.metadata.modelType = "ToxicologicalModel";
+            this.metadata.modelType = "toxicologicalModel";
 
             this.metadata = metadataFix(this.metadata);
 
@@ -1597,7 +1597,7 @@ fskutil = function () {
             this.metadata.modelMath.modelEquation = this.panels.modelEquation.data;
             this.metadata.modelMath.exposure = this.panels.exposure.data;
 
-            this.metadata.modelType = "ExposureModel";
+            this.metadata.modelType = "exposureModel";
 
             this.metadata = metadataFix(this.metadata);
 
@@ -1700,7 +1700,7 @@ fskutil = function () {
             this.metadata.modelMath.qualityMeasures = this.panels.qualityMeasures.data;
             this.metadata.modelMath.modelEquation = this.panels.modelEquation.data;
 
-            this.metadata.modelType = "ProcessModel";
+            this.metadata.modelType = "processModel";
 
             this.metadata = metadataFix(this.metadata);
 
@@ -1796,7 +1796,7 @@ fskutil = function () {
             this.metadata.modelMath.qualityMeasures = this.panels.qualityMeasures.data;
             this.metadata.modelMath.modelEquation = this.panels.modelEquation.data;
 
-            this.metadata.modelType = "ConsumptionModel";
+            this.metadata.modelType = "consumptionModel";
 
             this.metadata = metadataFix(this.metadata);
 
@@ -1897,7 +1897,7 @@ fskutil = function () {
             this.metadata.modelMath.modelEquation = this.panels.modelEquation.data;
             this.metadata.modelMath.exposure = this.panels.exposure.data;
 
-            this.metadata.modelType = "HealthModel";
+            this.metadata.modelType = "healthModel";
 
             this.metadata = metadataFix(this.metadata);
 
@@ -2003,7 +2003,7 @@ fskutil = function () {
             this.metadata.modelMath.modelEquation = this.panels.modelEquation.data;
             this.metadata.modelMath.exposure = this.panels.exposure.data;
 
-            this.metadata.modelType = "RiskModel";
+            this.metadata.modelType = "riskModel";
 
             this.metadata = metadataFix(this.metadata);
 
@@ -2114,7 +2114,7 @@ fskutil = function () {
             this.metadata.modelMath.modelEquation = this.panels.modelEquation.data;
             this.metadata.modelMath.exposure = this.panels.exposure.data;
 
-            this.metadata.modelType = "QraModel";
+            this.metadata.modelType = "qraModel";
 
             this.metadata = metadataFix(this.metadata);
 
