@@ -2022,7 +2022,7 @@ fskutil = function () {
 
         _createPanels() {
 
-            let schema = fskui.genericModel;
+            let schema = fskui.riskModel;
 
             return {
                 generalInformation: new fskutil.FormPanel("General", schema.generalInformation, this.metadata.generalInformation),
@@ -2038,7 +2038,7 @@ fskutil = function () {
                 study: new fskutil.FormPanel("Study", schema.study, this.metadata.dataBackground.study),
                 studySample: new fskutil.TablePanel("Study sample", schema.studySample,
                     this.metadata.dataBackground.studySample),
-                dietaryAssessmentMethod: new fskutil.TablePanel("Dietary assessment method", this.dialogs.methodDialog,
+                dietaryAssessmentMethod: new fskutil.TablePanel("Dietary assessment method",
                     schema.dietaryAssessmentMethod, this.metadata.dataBackground.dietaryAssessmentMethod),
                 laboratory: new fskutil.TablePanel("Laboratory", schema.laboratory,
                     this.metadata.dataBackground.laboratory),
