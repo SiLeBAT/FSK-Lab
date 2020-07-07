@@ -117,6 +117,15 @@ final class FSKEditorJSNodeModel
         copyConnectedNodeToView(connectedNodeId, value);
       }
       
+      if (value.getModelMetaData() == null && value.getModelType() == null) {
+        Model metadata = NodeUtils.initializeModel(ModelType.genericModel);
+        try {
+          m_config.setModelMetaData(MAPPER.writeValueAsString(metadata));
+          m_config.setModelType(ModelType.genericModel.name());
+        } catch (JsonProcessingException e) {
+        }
+      }
+      
       if (value.getModelScript() == null) {
         value.setModelScript("");
       }
