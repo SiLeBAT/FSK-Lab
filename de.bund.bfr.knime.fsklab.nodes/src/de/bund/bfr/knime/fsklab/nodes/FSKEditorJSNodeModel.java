@@ -116,6 +116,14 @@ final class FSKEditorJSNodeModel
       if (value.isEmpty() && m_port != null) {
         copyConnectedNodeToView(connectedNodeId, value);
       }
+      
+      if (value.getModelScript() == null) {
+        value.setModelScript("");
+      }
+      
+      if (value.getVisualizationScript() == null) {
+        value.setVisualizationScript("");
+      }
     }
 
     return value;
