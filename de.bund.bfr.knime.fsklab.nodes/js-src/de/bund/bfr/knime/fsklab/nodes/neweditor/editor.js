@@ -80,7 +80,8 @@ fskeditorjs = function () {
       resourceFiles: _val.resourceFiles, // TODO: get actual resource files from editor
       serverName: _val.serverName, // TODO: get actual serverName from editor?
       isCompleted: true,
-      validationErrors: []
+      validationErrors: [],
+      modelType: _metadata.modelType
     };
 
     return viewValue;
