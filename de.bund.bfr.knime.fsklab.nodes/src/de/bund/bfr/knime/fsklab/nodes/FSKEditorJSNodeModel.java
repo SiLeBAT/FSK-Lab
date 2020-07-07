@@ -171,7 +171,7 @@ final class FSKEditorJSNodeModel
   protected PortObject[] performExecute(PortObject[] inObjects, ExecutionContext exec)
       throws Exception {
 
-    if (inObjects.length == 1) {
+    if (inObjects[0] != null) {
       setInternalPortObjects(inObjects);
     }
 
@@ -185,7 +185,8 @@ final class FSKEditorJSNodeModel
     String visualizationScript = "";
     String[] resources = new String[0];
 
-    if (inObjects.length == 0) {
+    // Input object is null if missing (according to NodeModel#execute)
+    if (inObjects[0] == null) {
 
       // Create working directory if not set in settings
       if (!m_config.getWorkingDirectory().isEmpty()) {
