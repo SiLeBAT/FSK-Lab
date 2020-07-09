@@ -42,6 +42,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
@@ -83,6 +84,7 @@ import de.bund.bfr.knime.fsklab.nodes.common.ui.FPanel;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.JsonPanel;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.ScriptPanel;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.UIUtils;
+import de.bund.bfr.knime.fsklab.nodes.environment.EnvironmentManager;
 import de.bund.bfr.knime.fsklab.rakip.RakipModule;
 import de.bund.bfr.knime.fsklab.rakip.RakipUtil;
 import de.bund.bfr.metadata.swagger.ConsumptionModel;
@@ -129,7 +131,7 @@ public class CombinedFskPortObject extends FskPortObject {
     return relations;
   }
 
-  
+
   public void setJoinerRelation(JoinRelation[] relations) {
     this.relations = relations;
   }
@@ -147,19 +149,20 @@ public class CombinedFskPortObject extends FskPortObject {
 
   public CombinedFskPortObject(final String model, final String param, final String viz,
       final Model modelMetadata, final Path workspace, final List<String> packages,
-      final String workingDirectory, final String plot, final FskPortObject firstFskPortObject,
-      final FskPortObject secondFskPortObject) throws IOException {
-    super(model, viz, modelMetadata, workspace, packages, workingDirectory, plot, "");
+      final Optional<EnvironmentManager> environmentManager, final String plot,
+      final FskPortObject firstFskPortObject, final FskPortObject secondFskPortObject)
+      throws IOException {
+    super(model, viz, modelMetadata, workspace, packages, environmentManager, plot, "");
     this.firstFskPortObject = firstFskPortObject;
     this.secondFskPortObject = secondFskPortObject;
     objectNum = numOfInstances;
     numOfInstances += 1;
   }
 
-  public CombinedFskPortObject(final String workingDirectory, final List<String> packages,
-      final FskPortObject firstFskPortObject, final FskPortObject secondFskPortObject)
-      throws IOException {
-    super(workingDirectory, "", packages);
+  public CombinedFskPortObject(final Optional<EnvironmentManager> environmentManager,
+      final List<String> packages, final FskPortObject firstFskPortObject,
+      final FskPortObject secondFskPortObject) throws IOException {
+    super(environmentManager, "", packages);
     this.firstFskPortObject = firstFskPortObject;
     this.secondFskPortObject = secondFskPortObject;
     objectNum = numOfInstances;
@@ -167,10 +170,10 @@ public class CombinedFskPortObject extends FskPortObject {
   }
 
   public CombinedFskPortObject(final String model, final String viz, final Model modelMetadata,
-      final String workingDirectory, final List<String> packages,
+      final Optional<EnvironmentManager> environmentManager, final List<String> packages,
       final FskPortObject firstFskPortObject, final FskPortObject secondFskPortObject)
       throws IOException {
-    super(workingDirectory, "", packages);
+    super(environmentManager, "", packages);
     this.model = model;
     this.viz = viz;
     this.firstFskPortObject = firstFskPortObject;
@@ -333,7 +336,7 @@ public class CombinedFskPortObject extends FskPortObject {
         out.putNextEntry(new ZipEntry(JOINED_VIZ + level));
         IOUtils.write(portObject.viz, out, "UTF-8");
         out.closeEntry();
-        
+
         // Save selected simulation index
         out.putNextEntry(new ZipEntry(SIMULATION_INDEX + level));
 
@@ -341,11 +344,11 @@ public class CombinedFskPortObject extends FskPortObject {
           ObjectOutputStream oos = new ObjectOutputStream(out);
           oos.writeObject(portObject.selectedSimulationIndex);
           out.closeEntry();
-          
+
         } catch (IOException exception) {
           exception.printStackTrace();
         }
-        
+
         saveFSKPortObject(joinedPortObject.getFirstFskPortObject(), out, exec);
         saveFSKPortObject(joinedPortObject.getSecondFskPortObject(), out, exec);
 
@@ -385,9 +388,9 @@ public class CombinedFskPortObject extends FskPortObject {
         }
 
         // Save working directory
-        if (StringUtils.isNotEmpty(portObject.getWorkingDirectory())) {
+        if (portObject.getEnvironmentManager().isPresent()) {
           out.putNextEntry(new ZipEntry(WORKING_DIRECTORY + level));
-          IOUtils.write(portObject.getWorkingDirectory(), out, "UTF-8");
+          MAPPER104.writeValue(out, portObject.getEnvironmentManager().get());
           out.closeEntry();
         }
 
@@ -447,7 +450,7 @@ public class CombinedFskPortObject extends FskPortObject {
 
       Model modelMetadata = null;
 
-      String workingDirectory = ""; // Empty string if not set
+      Optional<EnvironmentManager> environmentManager = Optional.empty();
 
       String plot = ""; // Empty string if not set
       String readme = ""; // Empty string if not set
@@ -458,8 +461,8 @@ public class CombinedFskPortObject extends FskPortObject {
       JoinRelation[] relations = null;
 
       ZipEntry entry;
-      
-      
+
+
       while ((entry = in.getNextEntry()) != null) {
         String entryName = entry.getName();
         // check if the entry contains combined FSK object
@@ -517,7 +520,7 @@ public class CombinedFskPortObject extends FskPortObject {
             gm.setDataBackground(MAPPER104.readValue(in, GenericModelDataBackground.class));
             in.getNextEntry();
 
-           
+
             gm.setModelMath(MAPPER104.readValue(in, GenericModelModelMath.class));
 
             modelMetadata = gm;
@@ -528,12 +531,12 @@ public class CombinedFskPortObject extends FskPortObject {
           if (entryName.startsWith(JOINED_VIZ + level)) {
             visualizationScript = IOUtils.toString(in, "UTF-8");
           }
-          
-          //Simulation Index
-          
+
+          // Simulation Index
+
           entry = in.getNextEntry();
           entryName = entry.getName();
-          
+
           if (entryName.startsWith(SIMULATION_INDEX)) {
             ObjectInputStream ois = new ObjectInputStream(in);
             try {
@@ -542,8 +545,8 @@ public class CombinedFskPortObject extends FskPortObject {
               e.printStackTrace();
             }
           }
-          
-        
+
+
           // read first FSKObject
           FskPortObject firstFSKObject = loadFSKPortObject(in, spec, exec);
           // read second FSKObject
@@ -552,8 +555,7 @@ public class CombinedFskPortObject extends FskPortObject {
           // build combined object out of the previous objects
           final CombinedFskPortObject portObj =
               new CombinedFskPortObject(modelScript, visualizationScript, modelMetadata,
-                  FileUtil.createTempDir("combined").getAbsolutePath(), new ArrayList<>(),
-                  firstFSKObject, secondFSKObject);
+                  Optional.empty(), new ArrayList<>(), firstFSKObject, secondFSKObject);
           portObj.workspace = workspacePath;
 
           if (relations != null && relations.length > 0) {
@@ -619,7 +621,8 @@ public class CombinedFskPortObject extends FskPortObject {
           } else if (entryName.startsWith(LIBRARY_LIST)) {
             packages = IOUtils.readLines(in, "UTF-8");
           } else if (entryName.startsWith(WORKING_DIRECTORY)) {
-            workingDirectory = IOUtils.toString(in, "UTF-8");
+            EnvironmentManager actualManager = MAPPER104.readValue(in, EnvironmentManager.class);
+            environmentManager = Optional.of(actualManager);
           } else if (entryName.startsWith(PLOT)) {
             plot = IOUtils.toString(in, "UTF-8");
           } else if (entryName.startsWith(README)) {
@@ -647,7 +650,7 @@ public class CombinedFskPortObject extends FskPortObject {
         }
       }
       final FskPortObject portObj = new FskPortObject(modelScript, visualizationScript,
-          modelMetadata, workspacePath, packages, workingDirectory, plot, readme);
+          modelMetadata, workspacePath, packages, environmentManager, plot, readme);
 
       if (!simulations.isEmpty()) {
         portObj.simulations.addAll(simulations);
@@ -745,7 +748,7 @@ public class CombinedFskPortObject extends FskPortObject {
 
       String script;
       if (nodeType == 0) {
-        script = ((CombinedFskPortObject)portObject).buildJoiningScript();
+        script = ((CombinedFskPortObject) portObject).buildJoiningScript();
       } else if (nodeType == 2) {
         script = portObject.getReadme();
       } else {
@@ -1020,7 +1023,7 @@ public class CombinedFskPortObject extends FskPortObject {
   public String buildJoiningScript() {
 
     StringBuilder stringBuilder = new StringBuilder();
-    
+
     JoinRelation[] relations = getJoinerRelation();
     if (relations != null && relations.length > 0) {
       for (JoinRelation relation : relations) {

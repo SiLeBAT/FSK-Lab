@@ -18,25 +18,17 @@
  */
 package de.bund.bfr.knime.fsklab.nodes;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
-import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
@@ -44,14 +36,7 @@ import org.knime.core.node.port.PortObjectHolder;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.web.ValidationError;
-import org.knime.core.node.workflow.NodeContext;
-import org.knime.core.node.workflow.WorkflowContext;
-import org.knime.core.util.FileUtil;
-import org.knime.core.util.IRemoteFileUtilsService;
 import org.knime.js.core.node.AbstractWizardNodeModel;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.FrameworkUtil;
-import org.osgi.framework.ServiceReference;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -61,6 +46,8 @@ import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.FskSimulation;
 import de.bund.bfr.knime.fsklab.nodes.FSKEditorJSNodeDialog.ModelType;
+import de.bund.bfr.knime.fsklab.nodes.environment.EnvironmentManager;
+import de.bund.bfr.knime.fsklab.nodes.environment.ExistingEnvironmentManager;
 import de.bund.bfr.metadata.swagger.Model;
 import de.bund.bfr.metadata.swagger.Parameter;
 import metadata.SwaggerUtil;
@@ -72,7 +59,6 @@ import metadata.SwaggerUtil;
 final class FSKEditorJSNodeModel
     extends AbstractWizardNodeModel<FSKEditorJSViewRepresentation, FSKEditorJSViewValue>
     implements PortObjectHolder {
-  private static final NodeLogger LOGGER = NodeLogger.getLogger("Fskx JS Editor Model");
 
   private final FSKEditorJSConfig m_config = new FSKEditorJSConfig();
   private FskPortObject m_port;
@@ -162,28 +148,6 @@ final class FSKEditorJSNodeModel
     return new PortObjectSpec[] {FskPortObjectSpec.INSTANCE};
   }
 
-  /**
-   * Downloads a file from a URL.The code here is considering that the fileURL is using KNIME
-   * Protocol
-   * 
-   * @param fileURL HTTP URL of the file to be downloaded
-   * @param workingDir path of the directory to save the file
-   * @throws IOException
-   * @throws URISyntaxException
-   * @throws InvalidSettingsException
-   */
-  private void downloadFileToWorkingDir(String fileURL, String workingDir)
-      throws IOException, URISyntaxException, InvalidSettingsException {
-    String fileName = fileURL.substring(fileURL.lastIndexOf("/") + 1, fileURL.length());
-    String destinationPath = workingDir + File.separator + fileName;
-    File fileTodownload = new File(destinationPath);
-    LOGGER.info("JS EDITOR  path to write to: " + destinationPath);
-    try (InputStream inStream = FileUtil.openInputStream(fileURL);
-        OutputStream outStream = new FileOutputStream(fileTodownload)) {
-      IOUtils.copy(inStream, outStream);
-    }
-  }
-
   @Override
   protected PortObject[] performExecute(PortObject[] inObjects, ExecutionContext exec)
       throws Exception {
@@ -195,40 +159,19 @@ final class FSKEditorJSNodeModel
     // Create port object
     Model metadata = null;
     String readme = "";
-    String workingDirectory = "";
     List<String> packages = Collections.emptyList();
     List<FskSimulation> simulations = Collections.emptyList();
     String modelScript = "";
     String visualizationScript = "";
-    String[] resources = new String[0];
 
-    // Input object is null if missing (according to NodeModel#execute)
-    if (inObjects[0] == null) {
-
-      // Create working directory if not set in settings
-      if (!m_config.getWorkingDirectory().isEmpty()) {
-        workingDirectory = m_config.getWorkingDirectory();
-      } else {
-        // Create a folder named after the node that will be used as working
-        // directory if the node does not have a working directory
-        final NodeContext nodeContext = NodeContext.getContext();
-        WorkflowContext workflowContext = nodeContext.getWorkflowManager().getContext();
-
-        // The new working directory will be named as the node's name with id and no spaces,
-        // followed by _workingDirectory<COUNTER>.
-        final String newWorkingDirectoryName =
-            nodeContext.getNodeContainer().getNameWithID().replaceAll("\\W", "").replace(" ", "")
-                + "_workingDirectory" + TEMP_DIR_UNIFIER.getAndIncrement();
-
-        // This folder is placed in the workflow.
-        File newWorkingDirectory =
-            new File(workflowContext.getCurrentLocation(), newWorkingDirectoryName);
-        newWorkingDirectory.mkdir();
-
-        workingDirectory = newWorkingDirectory.getPath();
-      }
+    Optional<EnvironmentManager> environmentManager;
+    if (inObjects[0] != null) {
+      environmentManager = ((FskPortObject) inObjects[0]).getEnvironmentManager();
+    } else if (!m_config.getWorkingDirectory().isEmpty()) {
+      EnvironmentManager actualManager = new ExistingEnvironmentManager(m_config.getWorkingDirectory());
+      environmentManager = Optional.of(actualManager);
     } else {
-      workingDirectory = m_port.getWorkingDirectory();
+      environmentManager = Optional.empty();
     }
 
     synchronized (getLock()) {
@@ -278,9 +221,9 @@ final class FSKEditorJSNodeModel
 
       // resources files via fskEditorProxyValue will be available only in online mode of the
       // editor
-      if (viewValue.getResourcesFiles() != null && viewValue.getResourcesFiles().length > 0) {
-        resources = viewValue.getResourcesFiles();
-      }
+//      if (viewValue.getResourcesFiles() != null && viewValue.getResourcesFiles().length > 0) {
+//        resources = viewValue.getResourcesFiles();
+//      }
 
       // Collect R packages
       final Set<String> librariesSet = new HashSet<>();
@@ -289,27 +232,28 @@ final class FSKEditorJSNodeModel
       packages = new ArrayList<>(librariesSet);
     }
 
-    if (resources.length > 0) {
-      for (String fileRequestString : resources) {
-        downloadFileToWorkingDir(fileRequestString, workingDirectory);
-      }
-      // delete the parent folder of the uploaded files after moving them to the working
-      // directory. parentFolderPath is always uses KNIME protocol
-      String firstFile = resources[0];
-      String parentFolderPath = firstFile.substring(0, firstFile.lastIndexOf("/"));
-      BundleContext ctx = FrameworkUtil.getBundle(IRemoteFileUtilsService.class).getBundleContext();
-      ServiceReference<IRemoteFileUtilsService> ref =
-          ctx.getServiceReference(IRemoteFileUtilsService.class);
-      if (ref != null) {
-        try {
-          ctx.getService(ref).delete(new URL(parentFolderPath));
-        } finally {
-          ctx.ungetService(ref);
-        }
-      }
-    }
+    // TODO: Support resources upload
+//    if (resources.length > 0) {
+//      for (String fileRequestString : resources) {
+//        downloadFileToWorkingDir(fileRequestString, workingDirectory);
+//      }
+//      // delete the parent folder of the uploaded files after moving them to the working
+//      // directory. parentFolderPath is always uses KNIME protocol
+//      String firstFile = resources[0];
+//      String parentFolderPath = firstFile.substring(0, firstFile.lastIndexOf("/"));
+//      BundleContext ctx = FrameworkUtil.getBundle(IRemoteFileUtilsService.class).getBundleContext();
+//      ServiceReference<IRemoteFileUtilsService> ref =
+//          ctx.getServiceReference(IRemoteFileUtilsService.class);
+//      if (ref != null) {
+//        try {
+//          ctx.getService(ref).delete(new URL(parentFolderPath));
+//        } finally {
+//          ctx.ungetService(ref);
+//        }
+//      }
+//    }
 
-    FskPortObject outputPort = new FskPortObject(workingDirectory, readme, packages);
+    FskPortObject outputPort = new FskPortObject(environmentManager, readme, packages);
     outputPort.model = modelScript;
     outputPort.viz = visualizationScript;
     if (!simulations.isEmpty()) {

@@ -21,10 +21,7 @@ package de.bund.bfr.knime.fsklab.nodes;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,8 +29,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.knime.base.data.xml.SvgCell;
 import org.knime.base.data.xml.SvgImageContent;
@@ -50,7 +45,6 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.image.ImagePortObject;
 import org.knime.core.node.port.image.ImagePortObjectSpec;
-import org.knime.core.util.FileUtil;
 import de.bund.bfr.knime.fsklab.CombinedFskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
@@ -59,7 +53,6 @@ import de.bund.bfr.knime.fsklab.JoinRelation;
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
 import de.bund.bfr.knime.fsklab.r.client.ScriptExecutor;
 import de.bund.bfr.metadata.swagger.Parameter;
-import de.bund.bfr.metadata.swagger.Parameter.ClassificationEnum;
 import metadata.SwaggerUtil;
 
 public class RunnerNodeModel extends ExtToolOutputNodeModel {
@@ -202,7 +195,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
       
       
       
-      //TODO: What happens if the user adds a parameter during joining process??
+      //TODO: What happens if the user adds a parameter during joining process?? ¯\(°_o)/¯
       
       
       // prepareSimulation 1    *******
@@ -231,23 +224,23 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
       
       
 
-      // prepare files          *******
+      // TODO: prepare files          *******
       ExecutionContext context = exec.createSubExecutionContext(1.0);
       // make a map of file name and its last modification date to observe any changes which
       // means file overwriting or generating new one
-      String wd1 = firstFskObj.getWorkingDirectory();
-      String wd2 = comFskObj.getSecondFskPortObject().getWorkingDirectory();
-
-      Map<String, Long> fileModifacationMap = new HashMap<>();
-      if (!wd1.isEmpty() && !wd2.isEmpty() && !wd1.equals(wd2)) {
-        try (Stream<Path> paths =
-            Files.walk(FileUtil.getFileFromURL(FileUtil.toURL(wd1)).toPath())) {
-          paths.filter(Files::isRegularFile).forEach(currentFile -> {
-            fileModifacationMap.put(currentFile.toFile().getName(),
-                currentFile.toFile().lastModified());
-          });
-        }
-      }
+//      String wd1 = firstFskObj.getWorkingDirectory();
+//      String wd2 = comFskObj.getSecondFskPortObject().getWorkingDirectory();
+//
+//      Map<String, Long> fileModifacationMap = new HashMap<>();
+//      if (!wd1.isEmpty() && !wd2.isEmpty() && !wd1.equals(wd2)) {
+//        try (Stream<Path> paths =
+//            Files.walk(FileUtil.getFileFromURL(FileUtil.toURL(wd1)).toPath())) {
+//          paths.filter(Files::isRegularFile).forEach(currentFile -> {
+//            fileModifacationMap.put(currentFile.toFile().getName(),
+//                currentFile.toFile().lastModified());
+//          });
+//        }
+//      }
       
       // execute 1              *******
       // run the first model!
@@ -284,27 +277,27 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
     
     
 
-      // prepare files          *******
+      // TODO: prepare files          *******
       // move the generated files to the working
       // directory of the second model
-      if (!wd1.isEmpty() && !wd2.isEmpty() && !wd1.equals(wd2)) {
-        Path targetDirectory = FileUtil.getFileFromURL(FileUtil.toURL(wd2)).toPath();
-        try (Stream<Path> paths =
-            Files.walk(FileUtil.getFileFromURL(FileUtil.toURL(wd1)).toPath())) {
-          paths.filter(Files::isRegularFile).forEach(currentFile -> {
-            // move new and modified files
-            Long fileLastModified = fileModifacationMap.get(currentFile.toFile().getName());
-            if (fileLastModified == null
-                || currentFile.toFile().lastModified() != fileLastModified) {
-              try {
-                FileUtils.copyFileToDirectory(currentFile.toFile(), targetDirectory.toFile());
-              } catch (IOException e) {
-                e.printStackTrace();
-              }
-            }
-          });
-        }
-      }
+//      if (!wd1.isEmpty() && !wd2.isEmpty() && !wd1.equals(wd2)) {
+//        Path targetDirectory = FileUtil.getFileFromURL(FileUtil.toURL(wd2)).toPath();
+//        try (Stream<Path> paths =
+//            Files.walk(FileUtil.getFileFromURL(FileUtil.toURL(wd1)).toPath())) {
+//          paths.filter(Files::isRegularFile).forEach(currentFile -> {
+//            // move new and modified files
+//            Long fileLastModified = fileModifacationMap.get(currentFile.toFile().getName());
+//            if (fileLastModified == null
+//                || currentFile.toFile().lastModified() != fileLastModified) {
+//              try {
+//                FileUtils.copyFileToDirectory(currentFile.toFile(), targetDirectory.toFile());
+//              } catch (IOException e) {
+//                e.printStackTrace();
+//              }
+//            }
+//          });
+//        }
+//      }
       // execute 2              ******* 
       
       

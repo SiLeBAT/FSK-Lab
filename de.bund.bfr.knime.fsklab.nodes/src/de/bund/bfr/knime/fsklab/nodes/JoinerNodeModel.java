@@ -29,6 +29,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import javax.json.Json;
@@ -56,7 +57,6 @@ import org.knime.core.node.web.ValidationError;
 import org.knime.core.node.workflow.FlowVariable;
 import org.knime.core.node.workflow.NodeContainer;
 import org.knime.core.node.workflow.NodeContext;
-import org.knime.core.util.FileUtil;
 import org.knime.js.core.node.AbstractSVGWizardNodeModel;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -80,14 +80,14 @@ final class JoinerNodeModel
   private FskPortObject firstInputPort;
   private FskPortObject secondInputPort;
 
-//  public final static String SUFFIX = "_dup";
+  // public final static String SUFFIX = "_dup";
   public final static String SUFFIX_FIRST = "1";
   public final static String SUFFIX_SECOND = "2";
-//  public final static String SUFFIX = "_";
-  
-  
-  Map<String,String> originals = new LinkedHashMap<String,String>();
-  
+  // public final static String SUFFIX = "_";
+
+
+  Map<String, String> originals = new LinkedHashMap<String, String>();
+
   private final static ObjectMapper MAPPER = FskPlugin.getDefault().MAPPER104;
 
   // Input and output port types
@@ -482,10 +482,10 @@ final class JoinerNodeModel
     if (StringUtils.isNotEmpty(viewValue.getVisualizationScript())) {
       File configFile = new File(settingsFolder, "visualization.txt");
       try {
-        
-        if(viewValue.getVisualizationScript() != "")
+
+        if (viewValue.getVisualizationScript() != "")
           representation.setSecondModelViz(viewValue.getVisualizationScript());
-        
+
         FileUtils.writeStringToFile(configFile, representation.getSecondModelViz(),
             StandardCharsets.UTF_8);
       } catch (IOException e) {
@@ -524,7 +524,7 @@ final class JoinerNodeModel
   public void setHideInWizard(boolean hide) {
   }
 
-  
+
   /** @return string with node name and id with format "{name} (#{id}) setting". */
   private static String buildContainerName() {
     final NodeContainer nodeContainer = NodeContext.getContext().getNodeContainer();
@@ -540,8 +540,7 @@ final class JoinerNodeModel
         .addListener(new NodeRemovedListener(nodeWithId, buildContainerName()));
 
     setInternalPortObjects(inObjects);
-    JoinerNodeUtil.addIdentifierToParameters(
-        SwaggerUtil.getParameter(firstInputPort.modelMetadata),
+    JoinerNodeUtil.addIdentifierToParameters(SwaggerUtil.getParameter(firstInputPort.modelMetadata),
         SwaggerUtil.getParameter(secondInputPort.modelMetadata));
 
     synchronized (getLock()) {
@@ -559,16 +558,15 @@ final class JoinerNodeModel
       }
     }
   }
-  
- 
+
+
 
   @Override
   protected PortObject[] performExecuteCreatePortObjects(PortObject svgImageFromView,
       PortObject[] inObjects, ExecutionContext exec) throws Exception {
 
-    CombinedFskPortObject outObj =
-        new CombinedFskPortObject(FileUtil.createTempDir("combined").getAbsolutePath(),
-            new ArrayList<>(), firstInputPort, secondInputPort);
+    CombinedFskPortObject outObj = new CombinedFskPortObject(Optional.empty(), new ArrayList<>(),
+        firstInputPort, secondInputPort);
 
     JoinRelation[] connections = new JoinRelation[0];
 
@@ -588,22 +586,23 @@ final class JoinerNodeModel
       if (StringUtils.isNotEmpty(value.modelMetaData)) {
         outObj.modelMetadata = MAPPER.readValue(value.modelMetaData,
             SwaggerUtil.modelClasses.get(secondInputPort.modelMetadata.getModelType()));
-        
+
       } else {
         outObj.modelMetadata = secondInputPort.modelMetadata;
       }
 
-      // change default values for CombinedModel to those of the currently selected simulations (model1 & model2)
+      // change default values for CombinedModel to those of the currently selected simulations
+      // (model1 & model2)
       JoinerNodeUtil.createDefaultParameterValues(
           firstInputPort.simulations.get(firstInputPort.selectedSimulationIndex),
           secondInputPort.simulations.get(secondInputPort.selectedSimulationIndex),
           SwaggerUtil.getParameter(outObj.modelMetadata));
-       
 
-      
+
+
       // give the new combined model a name:
       // suggestion: model1.name + model2.name
-      
+
       if (StringUtils.isNotEmpty(value.modelScriptTree)) {
         JsonArray scriptTree = getScriptArray(value.modelScriptTree);
         setScriptBack(firstInputPort, secondInputPort, scriptTree);
@@ -615,52 +614,55 @@ final class JoinerNodeModel
       packageSet.addAll(firstInputPort.packages);
       packageSet.addAll(secondInputPort.packages);
       outObj.packages.addAll(packageSet);
-     
+
       JoinerNodeUtil.removeJoinedParameters(connections, outObj);
-      
+
 
       // Create default simulation out of parameters metadata
       JoinerNodeUtil.createDefaultSimulation(outObj);
 
-      
+
       // add all possible simulations to combined object
       JoinerNodeUtil.createAllPossibleSimulations(firstInputPort, secondInputPort, outObj);
-     
+
       // update second visualization script from the view
-      if(value.getVisualizationScript() == "")
+      if (value.getVisualizationScript() == "")
         setLastVisualizationScript(outObj, this.getViewRepresentation().getSecondModelViz());
-        //outObj.getSecondFskPortObject().viz = this.getViewRepresentation().getSecondModelViz();
+      // outObj.getSecondFskPortObject().viz = this.getViewRepresentation().getSecondModelViz();
       else
         setLastVisualizationScript(outObj, value.getVisualizationScript());
-        //outObj.getSecondFskPortObject().viz = value.getVisualizationScript();  
-      
-      // remove suffix from original parameters since they are needed with their original id for the scripts
+      // outObj.getSecondFskPortObject().viz = value.getVisualizationScript();
+
+      // remove suffix from original parameters since they are needed with their original id for the
+      // scripts
       if (value.joinRelations != null) {
-        resetParameterIdToOriginal(SwaggerUtil.getParameter(outObj.getFirstFskPortObject().modelMetadata));
-        resetParameterIdToOriginal(SwaggerUtil.getParameter(outObj.getSecondFskPortObject().modelMetadata));
+        resetParameterIdToOriginal(
+            SwaggerUtil.getParameter(outObj.getFirstFskPortObject().modelMetadata));
+        resetParameterIdToOriginal(
+            SwaggerUtil.getParameter(outObj.getSecondFskPortObject().modelMetadata));
       }
-     
+
     }
-    
+
     return new PortObject[] {outObj, svgImageFromView};
   }
 
- 
+
   private void setLastVisualizationScript(FskPortObject fskObj, String viz) {
-    if(fskObj instanceof CombinedFskPortObject)
+    if (fskObj instanceof CombinedFskPortObject)
       setLastVisualizationScript(((CombinedFskPortObject) fskObj).getSecondFskPortObject(), viz);
     else
       fskObj.viz = viz;
-    
+
   }
 
 
   private void resetParameterIdToOriginal(List<Parameter> parameter) {
-    
-    for(Parameter p : parameter) {
+
+    for (Parameter p : parameter) {
       p.setId(p.getId().substring(0, p.getId().length() - 1));
     }
-    
+
   }
 
   @Override

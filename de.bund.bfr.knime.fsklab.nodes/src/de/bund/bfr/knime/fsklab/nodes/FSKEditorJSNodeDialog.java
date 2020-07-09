@@ -218,8 +218,10 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
     }
 
     String readmeFile = settings.getString(README_FILE, "");
-    String workingDirectory = inputObject.getWorkingDirectory();
-    updateDialog(modelType, readmeFile, workingDirectory);
+    
+    // TODO: working directory
+//    String workingDirectory = inputObject.getWorkingDirectory();
+    updateDialog(modelType, readmeFile, "");
   }
 
   @Override

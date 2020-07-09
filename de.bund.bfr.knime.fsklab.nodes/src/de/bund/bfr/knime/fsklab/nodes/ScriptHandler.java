@@ -3,9 +3,9 @@ package de.bund.bfr.knime.fsklab.nodes;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.NodeLogger;
-import org.knime.core.util.FileUtil;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskSimulation;
 import de.bund.bfr.knime.fsklab.nodes.plot.ModelPlotter;
@@ -41,11 +41,11 @@ public abstract class ScriptHandler implements AutoCloseable {
     // Sets up working directory with resource files. This directory needs to be deleted.
     exec.setProgress(0.05, "Add resource files");
     {
-      String workingDirectoryString = fskObj.getWorkingDirectory();
-      if (!workingDirectoryString.isEmpty()) {
-        Path workingDirectory =
-            FileUtil.getFileFromURL(FileUtil.toURL(workingDirectoryString)).toPath();
-        setWorkingDirectory(workingDirectory, exec);
+      if (fskObj.getEnvironmentManager().isPresent()) {
+        Optional<Path> workingDirectory = fskObj.getEnvironmentManager().get().getEnvironment();
+        if (workingDirectory.isPresent()) {
+          setWorkingDirectory(workingDirectory.get(), exec);
+        }
       }
     }
     // START RUNNING MODEL

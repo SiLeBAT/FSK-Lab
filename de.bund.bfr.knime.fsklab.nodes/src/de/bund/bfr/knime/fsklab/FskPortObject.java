@@ -40,8 +40,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.TreeMap;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import javax.swing.BorderFactory;
@@ -81,6 +81,7 @@ import de.bund.bfr.knime.fsklab.nodes.common.ui.FPanel;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.JsonPanel;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.ScriptPanel;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.UIUtils;
+import de.bund.bfr.knime.fsklab.nodes.environment.EnvironmentManager;
 import de.bund.bfr.knime.fsklab.rakip.RakipModule;
 import de.bund.bfr.knime.fsklab.rakip.RakipUtil;
 import de.bund.bfr.metadata.swagger.ConsumptionModel;
@@ -125,7 +126,7 @@ public class FskPortObject implements PortObject {
   public String viz;
 
   /** Paths to resources: plain text files and R workspace files (.rdata). */
-  private final String workingDirectory;
+  private final Optional<EnvironmentManager> environmentManager;
 
   /** Path to plot. */
   private String plot;
@@ -151,32 +152,26 @@ public class FskPortObject implements PortObject {
   public Model modelMetadata;
 
   public FskPortObject(final String model, final String viz, final Model modelMetadata,
-      final Path workspace, final List<String> packages, final String workingDirectory,
+      final Path workspace, final List<String> packages, final Optional<EnvironmentManager> environmentManager,
       final String plot, final String readme) throws IOException {
 
     this.model = model;
     this.viz = viz;
-
     this.modelMetadata = modelMetadata;
-
     this.workspace = workspace;
     this.packages = packages;
-
-    this.workingDirectory = workingDirectory;
-
+    this.environmentManager = environmentManager;
     this.plot = plot;
-
     this.readme = StringUtils.defaultString(readme);
 
     objectNum = numOfInstances;
     numOfInstances += 1;
   }
 
-  public FskPortObject(final String workingDirectory, String readme, final List<String> packages)
+  public FskPortObject(final Optional<EnvironmentManager> environmentManager, String readme, final List<String> packages)
       throws IOException {
-    this.workingDirectory = workingDirectory;
+    this.environmentManager = environmentManager;
     this.packages = packages;
-
     this.readme = readme;
   }
 
@@ -190,11 +185,8 @@ public class FskPortObject implements PortObject {
     return "FSK Object";
   }
 
-  /**
-   * @return empty string if not set.
-   */
-  public String getWorkingDirectory() {
-    return workingDirectory != null ? workingDirectory : "";
+  public Optional<EnvironmentManager> getEnvironmentManager() {
+    return environmentManager;
   }
 
   /**
@@ -243,8 +235,6 @@ public class FskPortObject implements PortObject {
     private static final String PLOT = "plot";
 
     private static final String README = "readme";
-
-    private static final String SPREADSHEET = "spreadsheet";
 
     /** Object mapper for 1.0.2 metadata. */
     private static final ObjectMapper MAPPER102;
@@ -329,9 +319,9 @@ public class FskPortObject implements PortObject {
       }
 
       // Save working directory
-      if (StringUtils.isNotEmpty(portObject.workingDirectory)) {
+      if (portObject.environmentManager.isPresent()) {
         out.putNextEntry(new ZipEntry(WORKING_DIRECTORY));
-        IOUtils.write(portObject.workingDirectory, out, "UTF-8");
+        MAPPER104.writeValue(out, portObject.environmentManager.get());
         out.closeEntry();
       }
 
@@ -389,7 +379,7 @@ public class FskPortObject implements PortObject {
 
       Model modelMetadata = null;
 
-      String workingDirectory = ""; // Empty string if not set
+      Optional<EnvironmentManager> environmentManager = Optional.empty();
 
       String plot = ""; // Empty string if not set
       String readme = ""; // Empty string if not set
@@ -453,7 +443,8 @@ public class FskPortObject implements PortObject {
         } else if (entryName.equals("library.list")) {
           packages = IOUtils.readLines(in, "UTF-8");
         } else if (entryName.equals(WORKING_DIRECTORY)) {
-          workingDirectory = IOUtils.toString(in, "UTF-8");
+          EnvironmentManager actualManager = MAPPER104.readValue(in, EnvironmentManager.class);
+          environmentManager = Optional.of(actualManager);
         } else if (entryName.equals(PLOT)) {
           plot = IOUtils.toString(in, "UTF-8");
         } else if (entryName.equals(README)) {
@@ -481,7 +472,7 @@ public class FskPortObject implements PortObject {
       in.close();
 
       final FskPortObject portObj = new FskPortObject(modelScript, visualizationScript,
-          modelMetadata, workspacePath, packages, workingDirectory, plot, readme);
+          modelMetadata, workspacePath, packages, environmentManager, plot, readme);
 
       if (!simulations.isEmpty()) {
         portObj.simulations.addAll(simulations);

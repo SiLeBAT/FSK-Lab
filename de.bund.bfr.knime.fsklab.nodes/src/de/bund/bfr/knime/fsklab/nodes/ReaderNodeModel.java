@@ -25,7 +25,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.net.URL;
-import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -35,7 +34,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
@@ -79,6 +77,8 @@ import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.FskSimulation;
 import de.bund.bfr.knime.fsklab.JoinRelation;
+import de.bund.bfr.knime.fsklab.nodes.environment.ArchivedEnvironmentManager;
+import de.bund.bfr.knime.fsklab.nodes.environment.EnvironmentManager;
 import de.bund.bfr.knime.fsklab.rakip.RakipUtil;
 import de.bund.bfr.metadata.swagger.GenericModel;
 import de.bund.bfr.metadata.swagger.GenericModelDataBackground;
@@ -89,7 +89,6 @@ import de.bund.bfr.metadata.swagger.Model;
 import de.bund.bfr.metadata.swagger.Parameter;
 import de.unirostock.sems.cbarchive.ArchiveEntry;
 import de.unirostock.sems.cbarchive.CombineArchive;
-import de.unirostock.sems.cbarchive.meta.MetaDataObject;
 import metadata.SwaggerUtil;
 
 
@@ -259,10 +258,7 @@ class ReaderNodeModel extends NoInternalsModel {
       currentWorkingDirectory.mkdir();
     }
 
-    final Path workingDirectory = currentWorkingDirectory.toPath();
-
     Model model = new Model();
-
 
     // more one than one element means this model is joined one
     if (ListOfPaths != null && ListOfPaths.size() > 1) {
@@ -327,7 +323,8 @@ class ReaderNodeModel extends NoInternalsModel {
         for (org.sbml.jsbml.Parameter parameter : sbmlDocument.getModel().getListOfParameters()) {
 
           // Find metadata of target parameter. Connected parameter in 2nd model
-          final String parameterId = parameter.getId().replaceAll(JoinerNodeModel.SUFFIX_SECOND, "");
+          final String parameterId =
+              parameter.getId().replaceAll(JoinerNodeModel.SUFFIX_SECOND, "");
           Optional<Parameter> targetParameter = SwaggerUtil
               .getParameter(secondFskPortObject.modelMetadata).stream().filter(currentParameter -> {
                 final String currentParameterId =
@@ -348,7 +345,8 @@ class ReaderNodeModel extends NoInternalsModel {
           // Find metadata of source parameter (connected parameter of 1st model)
           final ReplacedBy replacedBy =
               ((CompSBasePlugin) parameter.getExtension("comp")).getReplacedBy();
-          final String replacement = replacedBy.getIdRef().replaceAll(JoinerNodeModel.SUFFIX_FIRST, "");
+          final String replacement =
+              replacedBy.getIdRef().replaceAll(JoinerNodeModel.SUFFIX_FIRST, "");
           Optional<Parameter> sourceParameter = SwaggerUtil
               .getParameter(firstFskPortObject.modelMetadata).stream().filter(currentParameter -> {
                 final String currentParameterId =
@@ -386,11 +384,11 @@ class ReaderNodeModel extends NoInternalsModel {
       String currentModelID =
           SwaggerUtil.getModelName(firstFskPortObject.modelMetadata).replaceAll("\\W", "");
       if (currentModelID.equals(firstModelId)) {
-        topfskObj = new CombinedFskPortObject("", "", model, workingDirectory.toString(),
-            new ArrayList<>(), firstFskPortObject, secondFskPortObject);
+        topfskObj = new CombinedFskPortObject("", "", model, Optional.empty(), new ArrayList<>(),
+            firstFskPortObject, secondFskPortObject);
       } else {
-        topfskObj = new CombinedFskPortObject("", "", model, workingDirectory.toString(),
-            new ArrayList<>(), secondFskPortObject, firstFskPortObject);
+        topfskObj = new CombinedFskPortObject("", "", model, Optional.empty(), new ArrayList<>(),
+            secondFskPortObject, firstFskPortObject);
       }
 
       topfskObj.viz = getEmbedSecondFSKObject(topfskObj).viz;
@@ -408,7 +406,7 @@ class ReaderNodeModel extends NoInternalsModel {
       }
 
       topfskObj.setJoinerRelation(connectionList.toArray(new JoinRelation[connectionList.size()]));
-      
+
       return topfskObj;
     } else {
       String modelScript = "";
@@ -417,81 +415,73 @@ class ReaderNodeModel extends NoInternalsModel {
       String pathToResource = ListOfPaths.get(0);
       String readme = "";
 
-      for (final ArchiveEntry entry : archive.getEntriesWithFormat(URIS.get("r"))) {
-        String path = entry.getEntityPath();
-        if (path.indexOf(pathToResource) == 0) {
-          List<MetaDataObject> descriptions = entry.getDescriptions();
+      // Get entries of the current model
+      List<ArchiveEntry> entries = archive.getEntries().stream()
+          .filter(entry -> entry.getEntityPath().indexOf(pathToResource) == 0)
+          .collect(Collectors.toList());
 
-          if (descriptions.size() > 0) {
-            final FskMetaDataObject fmdo = new FskMetaDataObject(descriptions.get(0));
-            final ResourceType resourceType = fmdo.getResourceType();
-
-            if (resourceType.equals(ResourceType.modelScript)) {
-              modelScript = loadTextEntry(entry);
-            } else if (resourceType.equals(ResourceType.visualizationScript)) {
-              visualizationScript = loadTextEntry(entry);
-            } else if (resourceType.equals(ResourceType.workspace)) {
-              // Legacy check. Look for R workspace with R URI (from old files)
-              workspace = FileUtil.createTempFile("workspace", ".RData");
-              entry.extractFile(workspace);
-            }
-          }
-        }
-      }
-
-      // Read readme
       URI textUri = URI.create("http://purl.org/NET/mediatypes/text-xplain");
-      Optional<ArchiveEntry> readmeEntry = archive.getEntriesWithFormat(textUri).stream()
-          .filter(entry -> entry.getDescriptions().size() > 0).findAny();
-      if (readmeEntry.isPresent()) {
-        readme = loadTextEntry(readmeEntry.get());
-      }
+      URI rUri = URIS.get("r");
+      URI csvUri = URIS.get("csv");
+      URI xlsxUri = URIS.get("xlsx");
+      URI rdataUri = URIS.get("rdata");
+      URI jsonUri = URIS.get("json");
+      URI sedmlUri = URIS.get("sedml");
 
-      // Extract resources
-      Set<ArchiveEntry> resourceEntries = new HashSet<>();
-      archive.getEntriesWithFormat(textUri).stream()
-          .filter(entry -> entry.getDescriptions().size() == 0).forEach(resourceEntries::add);
-      resourceEntries.addAll(archive.getEntriesWithFormat(URIS.get("csv")));
-      resourceEntries.addAll(archive.getEntriesWithFormat(URIS.get("xlsx")));
-      
-      for (ArchiveEntry entry : archive.getEntriesWithFormat(URIS.get("rdata"))) {
-        // All the RData that are not annotated as model workspace are stored add to resourceEntries
-        if (entry.getDescriptions().isEmpty()) {
-          resourceEntries.add(entry);
-        } else {
-          final FskMetaDataObject fmdo = new FskMetaDataObject(entry.getDescriptions().get(0));
-          if (fmdo.getResourceType() == ResourceType.workspace) {
+      // Load R scripts
+      for (ArchiveEntry entry : entries) {
+        if (entry.getFormat().equals(rUri) && !entry.getDescriptions().isEmpty()) {
+          FskMetaDataObject fmdo = new FskMetaDataObject(entry.getDescriptions().get(0));
+          ResourceType resourceType = fmdo.getResourceType();
+
+          if (resourceType == ResourceType.modelScript) {
+            modelScript = loadTextEntry(entry);
+          } else if (resourceType == ResourceType.visualizationScript) {
+            visualizationScript = loadTextEntry(entry);
+          } else if (resourceType == ResourceType.workspace) {
+            // Legacy check. Look for R workspace with R URI (from old files)
             workspace = FileUtil.createTempFile("workspace", ".RData");
             entry.extractFile(workspace);
           }
         }
       }
 
-      for (final ArchiveEntry entry : resourceEntries) {
-        String path = entry.getEntityPath();
-        if (path.indexOf(pathToResource) == 0) {
-          Path targetPath = workingDirectory.resolve(entry.getFileName());
+      // Read readme
+      Optional<ArchiveEntry> readmeEntry =
+          entries.stream().filter(entry -> entry.getFormat().equals(textUri))
+              .filter(entry -> !entry.getDescriptions().isEmpty()).findAny();
+      if (readmeEntry.isPresent()) {
+        readme = loadTextEntry(readmeEntry.get());
+      }
 
-          try {
-            Files.createFile(targetPath);
-            entry.extractFile(targetPath.toFile());
-          } catch (FileAlreadyExistsException e) {
-            // Do nothing, the resource is already there
-          }
+      // Extract workspace
+      Optional<ArchiveEntry> workspaceEntry =
+          entries.stream().filter(entry -> entry.getFormat().equals(rdataUri))
+              .filter(entry -> !entry.getDescriptions().isEmpty()).findAny();
+      if (workspaceEntry.isPresent()) {
+        FskMetaDataObject fmdo =
+            new FskMetaDataObject(workspaceEntry.get().getDescriptions().get(0));
+        if (fmdo.getResourceType() == ResourceType.workspace) {
+          workspace = FileUtil.createTempFile("workspace", ".RData");
+          workspaceEntry.get().extractFile(workspace);
         }
       }
 
-      // Gets metadata
-      {
-        // Find metadata entry
-        Optional<ArchiveEntry> metadataEntry = archive.getEntriesWithFormat(URIS.get("json"))
-            .stream().filter(entry -> entry.getEntityPath().indexOf(pathToResource) == 0)
-            .filter(entry -> entry.getEntityPath().endsWith("metaData.json")).findAny();
+      // Retrieves resources
+      String[] resourcePaths = entries.stream()
+          .filter(entry -> entry.getFormat().equals(textUri) || entry.getFormat().equals(csvUri)
+              || entry.getFormat().equals(xlsxUri) || entry.getFormat().equals(rdataUri))
+          .map(ArchiveEntry::getPath).toArray(String[]::new);
+      EnvironmentManager environmentManager =
+          new ArchivedEnvironmentManager(archive.getZipLocation().getAbsolutePath(), resourcePaths);
 
-        if (metadataEntry.isPresent()) {
-          model = readMetadata(metadataEntry.get());
-        }
-      }
+      // Gets metadata from metadata entry (metaData.json)
+      Optional<ArchiveEntry> metadataEntry =
+          entries.stream().filter(entry -> entry.getFormat().equals(jsonUri))
+              .filter(entry -> entry.getEntityPath().endsWith("metaData.json")).findAny();
+      if (metadataEntry.isPresent()) {
+        model = readMetadata(metadataEntry.get());
+      } ;
 
       // Retrieve missing libraries from CRAN
       HashSet<String> packagesSet = new HashSet<>();
@@ -509,15 +499,14 @@ class ReaderNodeModel extends NoInternalsModel {
       // empty string is used.
       String plotPath = "";
 
-      FskPortObject fskObj =
-          new FskPortObject(modelScript, visualizationScript, model, workspacePath, packagesList,
-              workingDirectory.toString(), plotPath, readme);
+      FskPortObject fskObj = new FskPortObject(modelScript, visualizationScript, model,
+          workspacePath, packagesList, Optional.of(environmentManager), plotPath, readme);
 
       // Read selected simulation index and simulations
-      Optional<ArchiveEntry> simulationsEntry = archive.getEntriesWithFormat(URIS.get("sedml"))
-          .stream().filter(entry -> entry.getEntityPath().indexOf(pathToResource) == 0).findAny();
-      if (simulationsEntry.isPresent()) {
-        SimulationSettings simulationSettings = readSimulationSettings(simulationsEntry.get());
+      Optional<ArchiveEntry> simulationEntry =
+          entries.stream().filter(entry -> entry.getFormat().equals(sedmlUri)).findAny();
+      if (simulationEntry.isPresent()) {
+        SimulationSettings simulationSettings = readSimulationSettings(simulationEntry.get());
         fskObj.selectedSimulationIndex = simulationSettings.selectedSimulationIndex;
         fskObj.simulations.addAll(simulationSettings.simulations);
       }
@@ -573,11 +562,13 @@ class ReaderNodeModel extends NoInternalsModel {
       // 1.0.3 (with EMF)
       GenericModel gm = new GenericModel();
       gm.setModelType("genericModel");
-      gm.setGeneralInformation(mapper.treeToValue(jsonNode.get("generalInformation"), GenericModelGeneralInformation.class));
+      gm.setGeneralInformation(mapper.treeToValue(jsonNode.get("generalInformation"),
+          GenericModelGeneralInformation.class));
       gm.setScope(mapper.treeToValue(jsonNode.get("scope"), GenericModelScope.class));
-      gm.setDataBackground(mapper.treeToValue(jsonNode.get("dataBackground"), GenericModelDataBackground.class));
+      gm.setDataBackground(
+          mapper.treeToValue(jsonNode.get("dataBackground"), GenericModelDataBackground.class));
       gm.setModelMath(mapper.treeToValue(jsonNode.get("modelMath"), GenericModelModelMath.class));
-      
+
       model = gm;
     } else {
       // Pre-RAKIP
@@ -629,7 +620,7 @@ class ReaderNodeModel extends NoInternalsModel {
    *   </listOfChanges>
    * </model> 
    * }
-   *         </pre>
+   * </pre>
    */
   private SimulationSettings readSimulationSettings(ArchiveEntry simulationsEntry)
       throws IOException, XMLException {

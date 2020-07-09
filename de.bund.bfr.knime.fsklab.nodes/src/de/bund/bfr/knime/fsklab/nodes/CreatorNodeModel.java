@@ -42,8 +42,6 @@ import org.apache.poi.ss.usermodel.Row.MissingCellPolicy;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.knime.core.data.DataCell;
-import org.knime.core.data.DataRow;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
@@ -62,6 +60,8 @@ import de.bund.bfr.fskml.ScriptFactory;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.FskSimulation;
+import de.bund.bfr.knime.fsklab.nodes.environment.EnvironmentManager;
+import de.bund.bfr.knime.fsklab.nodes.environment.ExistingEnvironmentManager;
 import de.bund.bfr.metadata.swagger.GenericModel;
 import de.bund.bfr.metadata.swagger.Model;
 import de.bund.bfr.metadata.swagger.Parameter;
@@ -280,6 +280,15 @@ class CreatorNodeModel extends NoInternalsModel {
     String vizScript = vizRScript != null ? vizRScript.getScript() : "";
 
     String workingDirectory = nodeSettings.getWorkingDirectory();
+    
+    Optional<EnvironmentManager> environmentManager;
+    if (!nodeSettings.getWorkingDirectory().isEmpty()) {
+      EnvironmentManager actualManager =
+          new ExistingEnvironmentManager(nodeSettings.getWorkingDirectory());
+      environmentManager = Optional.of(actualManager);
+    } else {
+      environmentManager = Optional.empty();
+    }
 
     // The creator imports a non-execute model without plot, thus the path to
     // the plot is an empty string.
@@ -306,7 +315,7 @@ class CreatorNodeModel extends NoInternalsModel {
     }
 
     final FskPortObject portObj = new FskPortObject(modelScript, vizScript, modelMetadata, null,
-        librariesList, workingDirectory, plotPath, readme);
+        librariesList, environmentManager, plotPath, readme);
 
     List<Parameter> parameters = SwaggerUtil.getParameter(modelMetadata);
     if (SwaggerUtil.getModelMath(modelMetadata) != null) {
@@ -390,13 +399,6 @@ class CreatorNodeModel extends NoInternalsModel {
       LOGGER.error(e.getMessage());
       throw new IOException(trimmedPath + ": cannot be read");
     }
-  }
-
-  private static boolean isRowEmpty(DataRow row) {
-    for (DataCell cell : row)
-      if (!cell.isMissing())
-        return false;
-    return true;
   }
 
   /** Parses metadata-filled tables imported from a Google Drive spreadsheet. */
