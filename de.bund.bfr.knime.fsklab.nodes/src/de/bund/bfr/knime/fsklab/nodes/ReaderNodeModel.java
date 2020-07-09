@@ -471,7 +471,7 @@ class ReaderNodeModel extends NoInternalsModel {
       String[] resourcePaths = entries.stream()
           .filter(entry -> entry.getFormat().equals(textUri) || entry.getFormat().equals(csvUri)
               || entry.getFormat().equals(xlsxUri) || entry.getFormat().equals(rdataUri))
-          .map(ArchiveEntry::getPath).toArray(String[]::new);
+          .map(ArchiveEntry::getEntityPath).toArray(String[]::new);
       EnvironmentManager environmentManager =
           new ArchivedEnvironmentManager(archive.getZipLocation().getAbsolutePath(), resourcePaths);
 
@@ -481,7 +481,7 @@ class ReaderNodeModel extends NoInternalsModel {
               .filter(entry -> entry.getEntityPath().endsWith("metaData.json")).findAny();
       if (metadataEntry.isPresent()) {
         model = readMetadata(metadataEntry.get());
-      } ;
+      }
 
       // Retrieve missing libraries from CRAN
       HashSet<String> packagesSet = new HashSet<>();

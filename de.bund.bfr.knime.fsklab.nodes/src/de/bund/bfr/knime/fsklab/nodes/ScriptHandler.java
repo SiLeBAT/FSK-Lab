@@ -14,9 +14,9 @@ import de.bund.bfr.metadata.swagger.Parameter.ClassificationEnum;
 import metadata.SwaggerUtil;
 
 public abstract class ScriptHandler implements AutoCloseable {
-  
+
   protected ModelPlotter plotter;
-  
+
   /**
    * This template method runs a snippet of script code. It does not save the stdOutput or the
    * stdErrOutput. After running this method, "cleanup" has to be called in order to close the
@@ -40,14 +40,18 @@ public abstract class ScriptHandler implements AutoCloseable {
       throws Exception {
     // Sets up working directory with resource files. This directory needs to be deleted.
     exec.setProgress(0.05, "Add resource files");
-    {
-      if (fskObj.getEnvironmentManager().isPresent()) {
-        Optional<Path> workingDirectory = fskObj.getEnvironmentManager().get().getEnvironment();
-        if (workingDirectory.isPresent()) {
-          setWorkingDirectory(workingDirectory.get(), exec);
-        }
-      }
+    Optional<Path> workingDirectory;
+    if (fskObj.getEnvironmentManager().isPresent()) {
+      workingDirectory = fskObj.getEnvironmentManager().get().getEnvironment();
+    } else {
+      workingDirectory = Optional.empty();
     }
+
+    if (workingDirectory.isPresent()) {
+      setWorkingDirectory(workingDirectory.get(), exec);
+    }
+
+
     // START RUNNING MODEL
     exec.setProgress(0.1, "Setting up output capturing");
     setupOutputCapturing(exec);
@@ -59,23 +63,24 @@ public abstract class ScriptHandler implements AutoCloseable {
 
     exec.setProgress(0.72, "Set parameter values");
     LOGGER.info(" Running with '" + simulation.getName() + "' simulation!");
-    
-    //load libraries before (python) parameters are evaluated
-    
+
+    // load libraries before (python) parameters are evaluated
+
     // Dirty workaround. Only execute simulation if there are parameters configured.
     if (!simulation.getParameters().isEmpty()) {
       String paramScript = buildParameterScript(simulation);
-      Arrays.stream(fskObj.model.split("\\r?\\n")).filter(id -> id.startsWith("import")).forEach(line -> {
-        try {
-          runScript(line,exec,false);
-          
-        } catch (Exception e) {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        }
-      });
+      Arrays.stream(fskObj.model.split("\\r?\\n")).filter(id -> id.startsWith("import"))
+          .forEach(line -> {
+            try {
+              runScript(line, exec, false);
 
-      runScript(paramScript, exec, true);      
+            } catch (Exception e) {
+              // TODO Auto-generated catch block
+              e.printStackTrace();
+            }
+          });
+
+      runScript(paramScript, exec, true);
     }
 
     exec.setProgress(0.75, "Run models script");
@@ -110,15 +115,20 @@ public abstract class ScriptHandler implements AutoCloseable {
     finishOutputCapturing(exec);
 
     saveWorkspace(fskObj, exec);
+   
+    if (fskObj.getEnvironmentManager().isPresent() && workingDirectory.isPresent()) {
+      fskObj.getEnvironmentManager().get().deleteEnvironment(workingDirectory.get());
+    }
   }
 
   abstract void convertToKnimeDataTable(FskPortObject fskObj, ExecutionContext exec)
       throws Exception;
 
-  public static ScriptHandler createHandler(String script_type, List<String> packages) throws Exception {
-    
+  public static ScriptHandler createHandler(String script_type, List<String> packages)
+      throws Exception {
+
     final ScriptHandler handler;
-    
+
     if (script_type == null) {
       handler = new RScriptHandler(packages);
     } else {
@@ -131,7 +141,7 @@ public abstract class ScriptHandler implements AutoCloseable {
         handler = new RScriptHandler();
       }
     }
-    
+
     return handler;
   }
 

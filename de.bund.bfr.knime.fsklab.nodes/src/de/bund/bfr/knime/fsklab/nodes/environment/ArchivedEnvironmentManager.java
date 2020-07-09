@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
 import java.util.Optional;
+import org.apache.commons.io.FileUtils;
 import org.jdom2.JDOMException;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
@@ -66,5 +67,10 @@ public class ArchivedEnvironmentManager implements EnvironmentManager {
     } catch (IOException | JDOMException | ParseException | CombineArchiveException e) {
       return Optional.empty();
     }
+  }
+  
+  @Override
+  public void deleteEnvironment(Path path) {
+    FileUtils.deleteQuietly(path.toFile());
   }
 }

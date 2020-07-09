@@ -443,8 +443,17 @@ public class FskPortObject implements PortObject {
         } else if (entryName.equals("library.list")) {
           packages = IOUtils.readLines(in, "UTF-8");
         } else if (entryName.equals(WORKING_DIRECTORY)) {
+          
+          // Back up and configure class loader of current thread
+          ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
+          Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
+          
+          // Deserialize working directory
           EnvironmentManager actualManager = MAPPER104.readValue(in, EnvironmentManager.class);
           environmentManager = Optional.of(actualManager);
+          
+          // Restore class loader
+          Thread.currentThread().setContextClassLoader(originalClassLoader);
         } else if (entryName.equals(PLOT)) {
           plot = IOUtils.toString(in, "UTF-8");
         } else if (entryName.equals(README)) {
