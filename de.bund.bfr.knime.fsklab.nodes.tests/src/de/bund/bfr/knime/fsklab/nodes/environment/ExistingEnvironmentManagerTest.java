@@ -3,7 +3,6 @@ package de.bund.bfr.knime.fsklab.nodes.environment;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -11,8 +10,6 @@ import java.nio.file.Path;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class ExistingEnvironmentManagerTest {
 	
@@ -55,10 +52,5 @@ public class ExistingEnvironmentManagerTest {
 		assertTrue(Files.exists(environment));
 		assertTrue(Files.isDirectory(environment));
 		assertTrue(Files.list(environment).findAny().isPresent());
-		
-		ObjectMapper mapper = new ObjectMapper();
-		File file = new File("C:/Users/de/Desktop/workingDirectory.json");
-		EnvironmentManager deserializeManager = mapper.readValue(file, EnvironmentManager.class);
-		System.out.println(mapper.writeValueAsString(deserializeManager));
 	}
 }
