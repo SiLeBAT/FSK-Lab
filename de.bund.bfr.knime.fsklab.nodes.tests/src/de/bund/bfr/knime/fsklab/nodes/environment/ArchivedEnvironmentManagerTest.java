@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -12,8 +11,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.junit.Test;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class ArchivedEnvironmentManagerTest {
 
@@ -62,19 +59,5 @@ public class ArchivedEnvironmentManagerTest {
 
 		List<Path> files = Files.list(environment).collect(Collectors.toList());
 		assertEquals(2, files.size());
-	}
-	
-	@Test
-	public void testName() throws Exception {
-		
-		ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
-		Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
-		
-		ObjectMapper mapper = new ObjectMapper();
-		File file = new File("C:/Users/de/Desktop/workingDirectory.json");
-		ExistingEnvironmentManager deserializeManager = mapper.readValue(file, ExistingEnvironmentManager.class);
-		System.out.println(mapper.writeValueAsString(deserializeManager));
-		
-		Thread.currentThread().setContextClassLoader(originalClassLoader);
 	}
 }
