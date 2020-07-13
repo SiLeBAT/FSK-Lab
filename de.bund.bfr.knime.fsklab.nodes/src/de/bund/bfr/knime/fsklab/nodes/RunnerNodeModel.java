@@ -21,7 +21,10 @@ package de.bund.bfr.knime.fsklab.nodes;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -29,6 +32,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.knime.base.data.xml.SvgCell;
 import org.knime.base.data.xml.SvgImageContent;
@@ -228,6 +233,35 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
       ExecutionContext context = exec.createSubExecutionContext(1.0);
       // make a map of file name and its last modification date to observe any changes which
       // means file overwriting or generating new one
+      
+      Optional<Path> workingDirectory1;
+      if (firstFskObj.getEnvironmentManager().isPresent()) {
+        workingDirectory1 = firstFskObj.getEnvironmentManager().get().getEnvironment();
+      } else {
+        workingDirectory1 = Optional.empty();
+      }
+      Optional<Path> workingDirectory2;
+      if (comFskObj.getSecondFskPortObject().getEnvironmentManager().isPresent()) {
+        workingDirectory2 = comFskObj.getSecondFskPortObject().getEnvironmentManager().get().getEnvironment();
+      } else {
+        workingDirectory2 = Optional.empty();
+      }
+      Map<String, Long> fileModifacationMap = new HashMap<>();
+
+      if (workingDirectory1.isPresent() && workingDirectory2.isPresent()
+          && !workingDirectory1.equals(workingDirectory2) ) {
+        
+        try (Stream<Path> paths = Files.walk(workingDirectory1.get())) {
+          
+          paths.filter(Files::isRegularFile).forEach(currentFile -> {
+            fileModifacationMap.put(currentFile.toFile().getName(),
+                currentFile.toFile().lastModified());
+          });
+        
+        }
+        
+        
+      }
 //      String wd1 = firstFskObj.getWorkingDirectory();
 //      String wd2 = comFskObj.getSecondFskPortObject().getWorkingDirectory();
 //
@@ -280,6 +314,31 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
       // TODO: prepare files          *******
       // move the generated files to the working
       // directory of the second model
+
+      if (workingDirectory1.isPresent() && workingDirectory2.isPresent()
+          && !workingDirectory1.get().equals(workingDirectory2.get()) ) {
+        
+        Path targetDirectory = workingDirectory2.get();
+        try (Stream<Path> paths = Files.walk(workingDirectory1.get())) {
+          
+          paths.filter(Files::isRegularFile).forEach(currentFile -> {
+            // move new and modified files
+            
+          Long fileLastModified = fileModifacationMap.get(currentFile.toFile().getName());
+          if (fileLastModified == null
+              || currentFile.toFile().lastModified() != fileLastModified) {
+            try {
+              FileUtils.copyFileToDirectory(currentFile.toFile(), targetDirectory.toFile());
+            } catch (IOException e) {
+              e.printStackTrace();
+            }
+          }
+        });
+        
+        }
+        
+        
+      }
 //      if (!wd1.isEmpty() && !wd2.isEmpty() && !wd1.equals(wd2)) {
 //        Path targetDirectory = FileUtil.getFileFromURL(FileUtil.toURL(wd2)).toPath();
 //        try (Stream<Path> paths =
