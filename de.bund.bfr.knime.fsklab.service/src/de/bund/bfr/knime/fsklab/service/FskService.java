@@ -1,82 +1,54 @@
 package de.bund.bfr.knime.fsklab.service;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
+import java.util.Properties;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FileUtils;
 import org.eclipse.jetty.server.HttpConnectionFactory;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
+import org.h2.tools.DeleteDbFiles;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import de.bund.bfr.knime.fsklab.vocabularies.VocabulariesDatabase;
-import de.bund.bfr.knime.fsklab.vocabularies.data.AvailabilityRepository;
-import de.bund.bfr.knime.fsklab.vocabularies.data.BasicRepository;
-import de.bund.bfr.knime.fsklab.vocabularies.data.CollectionToolRepository;
-import de.bund.bfr.knime.fsklab.vocabularies.data.CountryRepository;
-import de.bund.bfr.knime.fsklab.vocabularies.data.FishAreaRepository;
-import de.bund.bfr.knime.fsklab.vocabularies.data.FormatRepository;
-import de.bund.bfr.knime.fsklab.vocabularies.data.HazardRepository;
-import de.bund.bfr.knime.fsklab.vocabularies.data.HazardTypeRepository;
-import de.bund.bfr.knime.fsklab.vocabularies.data.IndSumRepository;
-import de.bund.bfr.knime.fsklab.vocabularies.data.LaboratoryAccreditationRepository;
-import de.bund.bfr.knime.fsklab.vocabularies.data.LanguageRepository;
-import de.bund.bfr.knime.fsklab.vocabularies.data.LanguageWrittenInRepository;
-import de.bund.bfr.knime.fsklab.vocabularies.data.ModelClassRepository;
-import de.bund.bfr.knime.fsklab.vocabularies.data.ModelEquationClassRepository;
-import de.bund.bfr.knime.fsklab.vocabularies.data.ModelSubclassRepository;
-import de.bund.bfr.knime.fsklab.vocabularies.data.PackagingRepository;
-import de.bund.bfr.knime.fsklab.vocabularies.data.ParameterDistributionRepository;
-import de.bund.bfr.knime.fsklab.vocabularies.data.ParameterSourceRepository;
-import de.bund.bfr.knime.fsklab.vocabularies.data.ParameterSubjectRepository;
-import de.bund.bfr.knime.fsklab.vocabularies.data.PopulationRepository;
-import de.bund.bfr.knime.fsklab.vocabularies.data.ProductMatrixRepository;
-import de.bund.bfr.knime.fsklab.vocabularies.data.ProductTreatmentRepository;
-import de.bund.bfr.knime.fsklab.vocabularies.data.ProductionMethodRepository;
-import de.bund.bfr.knime.fsklab.vocabularies.data.PublicationStatusRepository;
-import de.bund.bfr.knime.fsklab.vocabularies.data.PublicationTypeRepository;
-import de.bund.bfr.knime.fsklab.vocabularies.data.RegionRepository;
-import de.bund.bfr.knime.fsklab.vocabularies.data.RightRepository;
-import de.bund.bfr.knime.fsklab.vocabularies.data.SamplingMethodRepository;
-import de.bund.bfr.knime.fsklab.vocabularies.data.SamplingPointRepository;
-import de.bund.bfr.knime.fsklab.vocabularies.data.SamplingProgramRepository;
-import de.bund.bfr.knime.fsklab.vocabularies.data.SamplingStrategyRepository;
-import de.bund.bfr.knime.fsklab.vocabularies.data.SoftwareRepository;
-import de.bund.bfr.knime.fsklab.vocabularies.data.SourceRepository;
-import de.bund.bfr.knime.fsklab.vocabularies.data.StatusRepository;
-import de.bund.bfr.knime.fsklab.vocabularies.data.UnitCategoryRepository;
-import de.bund.bfr.knime.fsklab.vocabularies.data.UnitRepository;
+import de.bund.bfr.rakip.vocabularies.data.*;
 
 public class FskService implements Runnable {
-	
+
 	private Server server;
-	
+
 	public FskService() {
 		server = new Server(0);
 	}
-	
+
 	public int getPort() {
 		return server.getURI() != null ? server.getURI().getPort() : -1;
 	}
 
 	@Override
 	public void run() {
-
-
+		
 		Connection connection;
 		try {
-			connection = new VocabulariesDatabase().getConnection();
-		} catch (Exception err) {
-			err.printStackTrace();
+			initDatabase();
+			connection = DriverManager.getConnection("jdbc:h2:~/vocabularies");
+		} catch (SQLException e1) {
 			return;
 		}
 
@@ -136,7 +108,7 @@ public class FskService implements Runnable {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private static class BasicHandler extends AbstractHandler {
 
 		private final ObjectMapper mapper;
@@ -148,8 +120,8 @@ public class FskService implements Runnable {
 		}
 
 		@Override
-		public void handle(String target, Request baseRequest, HttpServletRequest request,
-				HttpServletResponse response) throws IOException, ServletException {
+		public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response)
+				throws IOException, ServletException {
 
 			response.setContentType("application/json; charset=UTF-8");
 
@@ -168,8 +140,60 @@ public class FskService implements Runnable {
 			}
 		}
 	}
-	
+
 	public static void main(String[] args) {
 		new Thread(new FskService()).start();
+	}
+
+	private void initDatabase() throws SQLException {
+
+		final Properties fastImportProperties = new Properties();
+		fastImportProperties.put("LOG", 0);
+		fastImportProperties.put("CACHE_SIZE", 65536);
+		fastImportProperties.put("LOCK_MODE", 0);
+		fastImportProperties.put("UNDO_LOG", 0);
+
+		DeleteDbFiles.execute("~", "vocabularies", true); // Delete DB if it exists
+		final Connection initialConnection = DriverManager.getConnection("jdbc:h2:~/vocabularies",
+				fastImportProperties);
+		
+		// Load tables
+		String tableFile = FskService.class.getClassLoader().getResource("data/tables.sql").getFile();
+		try {
+			System.out.println("Creating tables");
+			String script = FileUtils.readFileToString(new File(tableFile), "UTF-8");
+
+			Statement statement = initialConnection.createStatement();
+			statement.execute(script);
+		} catch (IOException | SQLException e) {
+			e.printStackTrace();
+		}
+
+		// Insert data
+		List<String> filenames = Arrays.asList("availability.sql", "collection_tool.sql", "country.sql",
+				"fish_area.sql", "format.sql", "hazard_type.sql", "hazard.sql", "ind_sum.sql",
+				"laboratory_accreditation.sql", "language_written_in.sql", "language.sql", "model_class.sql",
+				"model_equation_class.sql", "packaging.sql", "parameter_distribution.sql", "parameter_source.sql",
+				"parameter_subject.sql", "population.sql", "prodmeth.sql", "prodTreat.sql", "product_matrix.sql",
+				"publication_status.sql", "region.sql", "rights.sql", "sampling_method.sql", "sampling_point.sql",
+				"sampling_program.sql", "software.sql", "sources.sql", "status.sql", "unit.sql");
+
+		for (String filename : filenames) {
+
+			System.out.println("Loading " + filename);
+
+			String filePath = FskService.class.getClassLoader().getResource("data/initialdata/" + filename).getFile();
+			File file = new File(filePath);
+
+			Statement statement;
+			try {
+				statement = initialConnection.createStatement();
+				for (String line : FileUtils.readLines(file, "UTF-8")) {
+					statement.execute(line);
+				}
+			} catch (IOException | SQLException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }
