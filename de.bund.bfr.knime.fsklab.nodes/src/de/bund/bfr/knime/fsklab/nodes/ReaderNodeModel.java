@@ -322,48 +322,57 @@ class ReaderNodeModel extends NoInternalsModel {
 
         for (org.sbml.jsbml.Parameter parameter : sbmlDocument.getModel().getListOfParameters()) {
 
+          //********************** CUT THE SHENANIGANS *************************
           // Find metadata of target parameter. Connected parameter in 2nd model
-          final String parameterId =
-              parameter.getId().replaceAll(JoinerNodeModel.SUFFIX_SECOND, "");
-          Optional<Parameter> targetParameter = SwaggerUtil
-              .getParameter(secondFskPortObject.modelMetadata).stream().filter(currentParameter -> {
-                final String currentParameterId =
-                    currentParameter.getId().replaceAll(JoinerNodeModel.SUFFIX_SECOND, "");
-                if (parameterId.equals(currentParameterId)) {
-                  currentParameter.setId(parameter.getId());
-                  return true;
-                } else {
-                  return false;
-                }
-              }).findAny();
-
-          // If the metadata of targetParamter is not found, skip to next parameter
-          if (!targetParameter.isPresent()) {
-            continue;
-          }
-
-          // Find metadata of source parameter (connected parameter of 1st model)
-          final ReplacedBy replacedBy =
+//          final String parameterId =
+//              parameter.getId().replaceAll(JoinerNodeModel.SUFFIX_SECOND, "");
+//          Optional<Parameter> targetParameter = SwaggerUtil
+//              .getParameter(secondFskPortObject.modelMetadata).stream().filter(currentParameter -> {
+//                final String currentParameterId =
+//                    currentParameter.getId().replaceAll(JoinerNodeModel.SUFFIX_SECOND, "");
+//                if (parameterId.equals(currentParameterId)) {
+//                  currentParameter.setId(parameter.getId());
+//                  return true;
+//                } else {
+//                  return false;
+//                }
+//              }).findAny();
+//
+//          // If the metadata of targetParamter is not found, skip to next parameter
+//          if (!targetParameter.isPresent()) {
+//            continue;
+//          }
+          
+          //********************** CUT THE SHENANIGANS *************************
+          
+          
+          
+//          // Find metadata of source parameter (connected parameter of 1st model)
+         final ReplacedBy replacedBy =
               ((CompSBasePlugin) parameter.getExtension("comp")).getReplacedBy();
-          final String replacement =
-              replacedBy.getIdRef().replaceAll(JoinerNodeModel.SUFFIX_FIRST, "");
-          Optional<Parameter> sourceParameter = SwaggerUtil
-              .getParameter(firstFskPortObject.modelMetadata).stream().filter(currentParameter -> {
-                final String currentParameterId =
-                    currentParameter.getId().replaceAll(JoinerNodeModel.SUFFIX_FIRST, "");
-                if (replacement.equals(currentParameterId)) {
-                  currentParameter.setId(replacedBy.getIdRef());
-                  return true;
-                } else {
-                  return false;
-                }
-              }).findAny();
 
-          // If the metadata of sourceParmeter is not found, skip to next parameter
-          if (!sourceParameter.isPresent()) {
-            continue;
-          }
-
+         //********************** CUT THE SHENANIGANS *************************         
+//          final String replacement =
+//              replacedBy.getIdRef().replaceAll(JoinerNodeModel.SUFFIX_FIRST, "");
+//          Optional<Parameter> sourceParameter = SwaggerUtil
+//              .getParameter(firstFskPortObject.modelMetadata).stream().filter(currentParameter -> {
+//                final String currentParameterId =
+//                    currentParameter.getId().replaceAll(JoinerNodeModel.SUFFIX_FIRST, "");
+//                if (replacement.equals(currentParameterId)) {
+//                  currentParameter.setId(replacedBy.getIdRef());
+//                  return true;
+//                } else {
+//                  return false;
+//                }
+//              }).findAny();
+//
+//          // If the metadata of sourceParmeter is not found, skip to next parameter
+//          if (!sourceParameter.isPresent()) {
+//            continue;
+//          }
+         //********************** CUT THE SHENANIGANS *************************
+         
+         
           String command = null;
           if (parameter.getAnnotation() != null
               && parameter.getAnnotation().getNonRDFannotation() != null) {
@@ -375,8 +384,10 @@ class ReaderNodeModel extends NoInternalsModel {
             }
           }
 
-          connectionList.add(new JoinRelation(sourceParameter.get().getId(),
-              targetParameter.get().getId(), command, null));
+          connectionList.add(new JoinRelation(replacedBy.getIdRef(),
+            parameter.getId(), command, null));
+//          connectionList.add(new JoinRelation(sourceParameter.get().getId(),
+//              targetParameter.get().getId(), command, null));
         }
       }
 
