@@ -58,7 +58,7 @@ FSK-Lab is based on R 3.4, [https://r-project.org](https://r-project.org), which
         </ul>
       </p>
       <h4>Installing R manually</h4>
-      <p>If R is already installed it can be configured to be used in FSK-Lab. First two R packages need to be installed. These can be easily installed in an R console with the command: <code>install.packages(c('Rserve', 'miniCRAN')).</code>
+      <p>If R is already installed it can be configured to be used in FSK-Lab. First two R packages need to be installed. These can be easily installed in an R console with the command: <code>install.packages(c('Rserve', 'miniCRAN','svglite'))</code>.
       </p>
       <p>The path to R needs to be set in Preferences, FSK-Lab settings.
       <img src="assets/fsk_preferences.png" alt="FSK settings">
