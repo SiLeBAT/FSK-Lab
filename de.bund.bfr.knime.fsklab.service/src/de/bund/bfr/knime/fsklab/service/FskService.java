@@ -170,6 +170,7 @@ public class FskService implements Runnable {
 		public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response)
 				throws IOException, ServletException {
 
+		    response.addHeader("Access-Control-Allow-Origin", "*");
 			response.setContentType("application/json; charset=UTF-8");
 
 			if (request.getParameter("id") != null) {
@@ -181,6 +182,9 @@ public class FskService implements Runnable {
 				} else {
 					response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 				}
+			} else if (request.getParameter("names") != null) {
+				response.setStatus(HttpServletResponse.SC_OK);
+				mapper.writeValue(response.getWriter(), repository.getAllNames());
 			} else {
 				response.setStatus(HttpServletResponse.SC_OK);
 				mapper.writeValue(response.getWriter(), repository.getAll());
