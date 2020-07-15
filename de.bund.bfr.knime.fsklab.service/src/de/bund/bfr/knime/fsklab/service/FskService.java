@@ -2,6 +2,9 @@ package de.bund.bfr.knime.fsklab.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -17,6 +20,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jetty.server.HttpConnectionFactory;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
@@ -24,17 +29,56 @@ import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.h2.tools.DeleteDbFiles;
+import org.knime.core.node.NodeLogger;
+import org.osgi.framework.Bundle;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import de.bund.bfr.rakip.vocabularies.data.*;
+import de.bund.bfr.rakip.vocabularies.data.AvailabilityRepository;
+import de.bund.bfr.rakip.vocabularies.data.BasicRepository;
+import de.bund.bfr.rakip.vocabularies.data.CollectionToolRepository;
+import de.bund.bfr.rakip.vocabularies.data.CountryRepository;
+import de.bund.bfr.rakip.vocabularies.data.FishAreaRepository;
+import de.bund.bfr.rakip.vocabularies.data.FormatRepository;
+import de.bund.bfr.rakip.vocabularies.data.HazardRepository;
+import de.bund.bfr.rakip.vocabularies.data.HazardTypeRepository;
+import de.bund.bfr.rakip.vocabularies.data.IndSumRepository;
+import de.bund.bfr.rakip.vocabularies.data.LaboratoryAccreditationRepository;
+import de.bund.bfr.rakip.vocabularies.data.LanguageRepository;
+import de.bund.bfr.rakip.vocabularies.data.LanguageWrittenInRepository;
+import de.bund.bfr.rakip.vocabularies.data.ModelClassRepository;
+import de.bund.bfr.rakip.vocabularies.data.ModelEquationClassRepository;
+import de.bund.bfr.rakip.vocabularies.data.ModelSubclassRepository;
+import de.bund.bfr.rakip.vocabularies.data.PackagingRepository;
+import de.bund.bfr.rakip.vocabularies.data.ParameterDistributionRepository;
+import de.bund.bfr.rakip.vocabularies.data.ParameterSourceRepository;
+import de.bund.bfr.rakip.vocabularies.data.ParameterSubjectRepository;
+import de.bund.bfr.rakip.vocabularies.data.PopulationRepository;
+import de.bund.bfr.rakip.vocabularies.data.ProductMatrixRepository;
+import de.bund.bfr.rakip.vocabularies.data.ProductTreatmentRepository;
+import de.bund.bfr.rakip.vocabularies.data.ProductionMethodRepository;
+import de.bund.bfr.rakip.vocabularies.data.PublicationStatusRepository;
+import de.bund.bfr.rakip.vocabularies.data.PublicationTypeRepository;
+import de.bund.bfr.rakip.vocabularies.data.RegionRepository;
+import de.bund.bfr.rakip.vocabularies.data.RightRepository;
+import de.bund.bfr.rakip.vocabularies.data.SamplingMethodRepository;
+import de.bund.bfr.rakip.vocabularies.data.SamplingPointRepository;
+import de.bund.bfr.rakip.vocabularies.data.SamplingProgramRepository;
+import de.bund.bfr.rakip.vocabularies.data.SamplingStrategyRepository;
+import de.bund.bfr.rakip.vocabularies.data.SoftwareRepository;
+import de.bund.bfr.rakip.vocabularies.data.SourceRepository;
+import de.bund.bfr.rakip.vocabularies.data.StatusRepository;
+import de.bund.bfr.rakip.vocabularies.data.UnitCategoryRepository;
+import de.bund.bfr.rakip.vocabularies.data.UnitRepository;
 
 public class FskService implements Runnable {
+
+	private static final NodeLogger LOGGER = NodeLogger.getLogger(FskService.class);
 
 	private Server server;
 
 	public FskService() {
-		server = new Server(0);
+		server = new Server(8080);
 	}
 
 	public int getPort() {
@@ -43,12 +87,14 @@ public class FskService implements Runnable {
 
 	@Override
 	public void run() {
-		
+
 		Connection connection;
 		try {
 			initDatabase();
-			connection = DriverManager.getConnection("jdbc:h2:~/vocabularies");
-		} catch (SQLException e1) {
+
+			connection = DriverManager.getConnection("jdbc:h2:~/.fsk/vocabularies");
+		} catch (SQLException | ClassNotFoundException e1) {
+			LOGGER.error("Initializing DB", e1);
 			return;
 		}
 
@@ -105,6 +151,7 @@ public class FskService implements Runnable {
 			server.start();
 			server.join();
 		} catch (Exception e) {
+			LOGGER.error(server, e);
 			e.printStackTrace();
 		}
 	}
@@ -145,7 +192,7 @@ public class FskService implements Runnable {
 		new Thread(new FskService()).start();
 	}
 
-	private void initDatabase() throws SQLException {
+	private void initDatabase() throws SQLException, ClassNotFoundException {
 
 		final Properties fastImportProperties = new Properties();
 		fastImportProperties.put("LOG", 0);
@@ -153,20 +200,23 @@ public class FskService implements Runnable {
 		fastImportProperties.put("LOCK_MODE", 0);
 		fastImportProperties.put("UNDO_LOG", 0);
 
-		DeleteDbFiles.execute("~", "vocabularies", true); // Delete DB if it exists
-		final Connection initialConnection = DriverManager.getConnection("jdbc:h2:~/vocabularies",
+		Class.forName("org.h2.Driver");
+		DeleteDbFiles.execute("~/.fsk", "vocabularies", true); // Delete DB if it exists
+		final Connection initialConnection = DriverManager.getConnection("jdbc:h2:~/.fsk/vocabularies",
 				fastImportProperties);
-		
+
 		// Load tables
-		String tableFile = FskService.class.getClassLoader().getResource("data/tables.sql").getFile();
+		Bundle bundle = Platform.getBundle("de.bund.bfr.knime.fsklab.service");
+
 		try {
-			System.out.println("Creating tables");
-			String script = FileUtils.readFileToString(new File(tableFile), "UTF-8");
+			File file = getResource(bundle, "data/tables.sql");
+			String script = FileUtils.readFileToString(file, "UTF-8");
 
 			Statement statement = initialConnection.createStatement();
 			statement.execute(script);
-		} catch (IOException | SQLException e) {
+		} catch (IOException | SQLException | URISyntaxException e) {
 			e.printStackTrace();
+			LOGGER.error("Fail to create DB", e);
 		}
 
 		// Insert data
@@ -180,20 +230,25 @@ public class FskService implements Runnable {
 
 		for (String filename : filenames) {
 
-			System.out.println("Loading " + filename);
-
-			String filePath = FskService.class.getClassLoader().getResource("data/initialdata/" + filename).getFile();
-			File file = new File(filePath);
-
-			Statement statement;
 			try {
-				statement = initialConnection.createStatement();
+				Statement statement = initialConnection.createStatement();
+
+				File file = getResource(bundle, "data/initialdata/" + filename);
 				for (String line : FileUtils.readLines(file, "UTF-8")) {
 					statement.execute(line);
 				}
-			} catch (IOException | SQLException e) {
+			} catch (IOException | SQLException | URISyntaxException e) {
 				e.printStackTrace();
 			}
 		}
+
+		initialConnection.close();
+	}
+
+	private static File getResource(final Bundle bundle, final String path) throws IOException, URISyntaxException {
+		URL fileURL = bundle.getEntry(path);
+		URL resolvedFileURL = FileLocator.toFileURL(fileURL);
+		URI resolvedURI = new URI(resolvedFileURL.getProtocol(), resolvedFileURL.getPath(), null);
+		return new File(resolvedURI);
 	}
 }

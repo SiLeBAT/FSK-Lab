@@ -3,7 +3,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry excluding="de/bund/bfr/knime/fsklab/service/servlet/AvailabilityServlet.java|de/bund/bfr/knime/fsklab/service/FskServlet.java" kind="src" path="src"/>
-	<classpathentry kind="src" path="resources"/>
-	<classpathentry kind="lib" path="vocabularies-0.0.1.jar"/>
+	<classpathentry kind="lib" path="vocabularies-0.0.1.jar" sourcepath="vocabularies-0.0.1-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

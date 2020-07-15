@@ -29,6 +29,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.threetenbp.ThreeTenModule;
 import de.bund.bfr.knime.fsklab.rakip.RakipModule;
+import de.bund.bfr.knime.fsklab.service.FskService;
 import metadata.EmfMetadataModule;
 
 public class FskPlugin extends AbstractUIPlugin {
@@ -46,6 +47,8 @@ public class FskPlugin extends AbstractUIPlugin {
    */
   public ObjectMapper OBJECT_MAPPER;
   public ObjectMapper OLD_OBJECT_MAPPER;
+  
+  private Thread service;
 
   public FskPlugin() {
     plugin = this;
@@ -71,6 +74,10 @@ public class FskPlugin extends AbstractUIPlugin {
     OBJECT_MAPPER.registerModule(new ThreeTenModule());
 
     OLD_OBJECT_MAPPER = new ObjectMapper().registerModule(new RakipModule());
+    
+    service = new Thread(new FskService());
+    service.setName("FSK-Service");
+    service.start();
   }
 
   @Override
@@ -80,6 +87,8 @@ public class FskPlugin extends AbstractUIPlugin {
 
     OBJECT_MAPPER = null;
     plugin = null;
+    
+    service.stop();
   }
 
   /** @return Singleton instance of the plugin. */
