@@ -98,18 +98,6 @@
 			<artifactId>de.bund.bfr.knime.fsklab.r</artifactId>
 			<version>1.0.0-SNAPSHOT</version>
 			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>de.bund.bfr.knime</groupId>
-			<artifactId>de.bund.bfr.knime.fsklab.vocabularies</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>de.bund.bfr.knime</groupId>
-			<artifactId>de.bund.bfr.knime.fsklab.vocabularies.tests</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
-			<scope>test</scope>
 		</dependency>	
 		<dependency>
 			<groupId>de.bund.bfr.knime</groupId>
