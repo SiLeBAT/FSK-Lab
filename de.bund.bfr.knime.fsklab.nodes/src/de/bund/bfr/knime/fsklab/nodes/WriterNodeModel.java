@@ -29,6 +29,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.xml.stream.XMLStreamException;
 import org.apache.commons.io.FileUtils;
@@ -170,37 +171,33 @@ class WriterNodeModel extends NoInternalsModel {
 
     // If the model has an associated working directory with resources these resources
     // need to be saved into the archive.
-    String workingDirectoryString = fskObj.getWorkingDirectory();
-    if (!workingDirectoryString.isEmpty()) {
+    if (fskObj.getEnvironmentManager().isPresent()) {
+      Optional<Path> workingDirectory = fskObj.getEnvironmentManager().get().getEnvironment();
+      if (workingDirectory.isPresent()) {
+        // Adds resources
+        final List<Path> resources = Files.list(workingDirectory.get()).collect(Collectors.toList());
+        for (final Path resourcePath : resources) {
 
-      // The working directory from fskObj (as a string) can be a KNIME relative path
-      // and needs to be converted to a Path
-      Path workingDirectory =
-          FileUtil.getFileFromURL(FileUtil.toURL(workingDirectoryString)).toPath();
+          final String filenameString = filePrefix + resourcePath.getFileName().toString();
+          final File resourceFile = resourcePath.toFile();
 
-      // Adds resources
-      final List<Path> resources = Files.list(workingDirectory).collect(Collectors.toList());
-      for (final Path resourcePath : resources) {
-
-        final String filenameString = filePrefix + resourcePath.getFileName().toString();
-        final File resourceFile = resourcePath.toFile();
-
-        if (FilenameUtils.isExtension(filenameString, "txt")) {
-          archive.addEntry(resourceFile, filenameString, URIS.get("plain"));
-        } else if (FilenameUtils.isExtension(filenameString, "RData")) {
-          archive.addEntry(resourceFile, filenameString, URIS.get("rdata"));
-        } else if (FilenameUtils.isExtension(filenameString, "csv")) {
-          archive.addEntry(resourceFile, filenameString, URIS.get("csv"));
-        } else if (FilenameUtils.isExtension(filenameString, "jpeg")) {
-          archive.addEntry(resourceFile, filenameString, URIS.get("jpeg"));
-        } else if (FilenameUtils.isExtension(filenameString, "bmp")) {
-          archive.addEntry(resourceFile, filenameString, URIS.get("bmp"));
-        } else if (FilenameUtils.isExtension(filenameString, "png")) {
-          archive.addEntry(resourceFile, filenameString, URIS.get("png"));
-        } else if (FilenameUtils.isExtension(filenameString, "tiff")) {
-          archive.addEntry(resourceFile, filenameString, URIS.get("tiff"));
-        } else if (FilenameUtils.isExtension(filenameString, "xlsx")) {
-          archive.addEntry(resourceFile, filenameString, URIS.get("xlsx"));
+          if (FilenameUtils.isExtension(filenameString, "txt")) {
+            archive.addEntry(resourceFile, filenameString, URIS.get("plain"));
+          } else if (FilenameUtils.isExtension(filenameString, "RData")) {
+            archive.addEntry(resourceFile, filenameString, URIS.get("rdata"));
+          } else if (FilenameUtils.isExtension(filenameString, "csv")) {
+            archive.addEntry(resourceFile, filenameString, URIS.get("csv"));
+          } else if (FilenameUtils.isExtension(filenameString, "jpeg")) {
+            archive.addEntry(resourceFile, filenameString, URIS.get("jpeg"));
+          } else if (FilenameUtils.isExtension(filenameString, "bmp")) {
+            archive.addEntry(resourceFile, filenameString, URIS.get("bmp"));
+          } else if (FilenameUtils.isExtension(filenameString, "png")) {
+            archive.addEntry(resourceFile, filenameString, URIS.get("png"));
+          } else if (FilenameUtils.isExtension(filenameString, "tiff")) {
+            archive.addEntry(resourceFile, filenameString, URIS.get("tiff"));
+          } else if (FilenameUtils.isExtension(filenameString, "xlsx")) {
+            archive.addEntry(resourceFile, filenameString, URIS.get("xlsx"));
+          }
         }
       }
     }

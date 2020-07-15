@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
+import org.apache.commons.io.FileUtils;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 
@@ -51,5 +52,10 @@ public class FilesEnvironmentManager implements EnvironmentManager {
     } catch (IOException e) {
       return Optional.empty();
     }
+  }
+  
+  @Override
+  public void deleteEnvironment(Path path) {
+    FileUtils.deleteQuietly(path.toFile());
   }
 }

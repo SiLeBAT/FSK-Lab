@@ -12,4 +12,7 @@ public interface EnvironmentManager {
   
   @JsonIgnore
   Optional<Path> getEnvironment();
+
+  @JsonIgnore
+  void deleteEnvironment(Path path);
 }

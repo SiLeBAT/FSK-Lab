@@ -4,9 +4,9 @@ Bundle-ManifestVersion: 2
 Bundle-Name: BfR FSK-Lab extension nodes
 Bundle-SymbolicName: de.bund.bfr.knime.fsklab.nodes;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Require-Bundle: com.fasterxml.jackson.core.jackson-annotations,
- com.fasterxml.jackson.core.jackson-core,
- com.fasterxml.jackson.core.jackson-databind,
+Require-Bundle: com.fasterxml.jackson.core.jackson-annotations;bundle-version="2.8.9",
+ com.fasterxml.jackson.core.jackson-core;bundle-version="2.8.9",
+ com.fasterxml.jackson.core.jackson-databind;bundle-version="2.8.9",
  com.fifesoft.rsyntaxtextarea,
  de.bund.bfr.knime.fsklab.metadata.model,
  de.bund.bfr.knime.fsklab.nodes.common,
@@ -76,5 +76,6 @@ Export-Package: de.bund.bfr.knime.fsklab;
    de.unirostock.sems.cbarchive,
    javax.swing,
    de.bund.bfr.knime.fsklab.r.client",
+ de.bund.bfr.knime.fsklab.nodes.environment,
  de.bund.bfr.knime.fsklab.nodes.plot;uses:="org.knime.python2.kernel,de.bund.bfr.knime.fsklab.r.client"
 Import-Package: org.w3c.dom.events;resolution:=optional

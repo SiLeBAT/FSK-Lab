@@ -44,4 +44,9 @@ public class ExistingEnvironmentManager implements EnvironmentManager {
 
     return Optional.of(environment);
   }
+  
+  @Override
+  public void deleteEnvironment(Path path) {
+    // The path existed previously and should not be removed.
+  }
 }
