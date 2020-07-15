@@ -458,17 +458,15 @@ class ReaderNodeModel extends NoInternalsModel {
       }
 
       // Read readme
-      Optional<ArchiveEntry> readmeEntry =
-          entries.stream().filter(entry -> entry.getFormat().equals(textUri))
-              .filter(entry -> !entry.getDescriptions().isEmpty()).findAny();
+      Optional<ArchiveEntry> readmeEntry = getArchiveEntry(entries, textUri);
+      
+      
       if (readmeEntry.isPresent()) {
         readme = loadTextEntry(readmeEntry.get());
       }
 
       // Extract workspace
-      Optional<ArchiveEntry> workspaceEntry =
-          entries.stream().filter(entry -> entry.getFormat().equals(rdataUri))
-              .filter(entry -> !entry.getDescriptions().isEmpty()).findAny();
+      Optional<ArchiveEntry> workspaceEntry = getArchiveEntry(entries, rdataUri);
       if (workspaceEntry.isPresent()) {
         FskMetaDataObject fmdo =
             new FskMetaDataObject(workspaceEntry.get().getDescriptions().get(0));
@@ -526,6 +524,16 @@ class ReaderNodeModel extends NoInternalsModel {
     }
   }
 
+  /** @return entry of specific URI out of an {@link ArchiveEntry}. */
+  private Optional<ArchiveEntry> getArchiveEntry(List<ArchiveEntry> entries, URI uri ){
+    
+    Optional<ArchiveEntry> archive_entry =
+        entries.stream().filter(entry -> entry.getFormat().equals(uri))
+            .filter(entry -> !entry.getDescriptions().isEmpty()).findAny();
+    
+    return archive_entry;
+  }
+  
   /** @return text content out of an {@link ArchiveEntry}. */
   private static String loadTextEntry(final ArchiveEntry entry) throws IOException {
 
