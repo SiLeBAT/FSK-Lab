@@ -103,7 +103,7 @@ simulator = function() {
 
         // Select the default simulation (0)
         simulationSelect.val('defaultSimulation');
-
+        _val.selectedSimulationIndex = 0;
         // Update UI
         updateSimulationName(0);
         updateParameterValues(0);
