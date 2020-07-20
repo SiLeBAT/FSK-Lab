@@ -1,5 +1,9 @@
 package de.bund.bfr.knime.fsklab.service;
 
+import static spark.Spark.after;
+import static spark.Spark.get;
+import static spark.Spark.port;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -10,31 +14,22 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 import java.util.Properties;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jetty.server.HttpConnectionFactory;
-import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.handler.AbstractHandler;
-import org.eclipse.jetty.server.handler.ContextHandler;
-import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.h2.tools.DeleteDbFiles;
 import org.knime.core.node.NodeLogger;
 import org.osgi.framework.Bundle;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 
+import de.bund.bfr.rakip.vocabularies.data.AccreditationProcedureRepository;
 import de.bund.bfr.rakip.vocabularies.data.AvailabilityRepository;
+import de.bund.bfr.rakip.vocabularies.data.BasicProcessRepository;
 import de.bund.bfr.rakip.vocabularies.data.BasicRepository;
 import de.bund.bfr.rakip.vocabularies.data.CollectionToolRepository;
 import de.bund.bfr.rakip.vocabularies.data.CountryRepository;
@@ -50,6 +45,8 @@ import de.bund.bfr.rakip.vocabularies.data.ModelClassRepository;
 import de.bund.bfr.rakip.vocabularies.data.ModelEquationClassRepository;
 import de.bund.bfr.rakip.vocabularies.data.ModelSubclassRepository;
 import de.bund.bfr.rakip.vocabularies.data.PackagingRepository;
+import de.bund.bfr.rakip.vocabularies.data.ParameterClassificationRepository;
+import de.bund.bfr.rakip.vocabularies.data.ParameterDatatypeRepository;
 import de.bund.bfr.rakip.vocabularies.data.ParameterDistributionRepository;
 import de.bund.bfr.rakip.vocabularies.data.ParameterSourceRepository;
 import de.bund.bfr.rakip.vocabularies.data.ParameterSubjectRepository;
@@ -68,12 +65,17 @@ import de.bund.bfr.rakip.vocabularies.data.SamplingStrategyRepository;
 import de.bund.bfr.rakip.vocabularies.data.SoftwareRepository;
 import de.bund.bfr.rakip.vocabularies.data.SourceRepository;
 import de.bund.bfr.rakip.vocabularies.data.StatusRepository;
+import de.bund.bfr.rakip.vocabularies.data.TechnologyTypeRepository;
 import de.bund.bfr.rakip.vocabularies.data.UnitCategoryRepository;
 import de.bund.bfr.rakip.vocabularies.data.UnitRepository;
+import spark.Filter;
+import spark.ResponseTransformer;
 
 public class FskService implements Runnable {
 
 	private static final NodeLogger LOGGER = NodeLogger.getLogger(FskService.class);
+
+	private static final JsonTransformer jsonTransformer = new JsonTransformer();
 
 	private Server server;
 
@@ -98,100 +100,132 @@ public class FskService implements Runnable {
 			return;
 		}
 
-		server.getConnectors()[0].getConnectionFactory(HttpConnectionFactory.class);
+		port(8080);
 
-		HashMap<String, BasicRepository<?>> repositories = new HashMap<>();
-		repositories.put("/api/availability", new AvailabilityRepository(connection));
-		repositories.put("/api/collection_tool", new CollectionToolRepository(connection));
-		repositories.put("/api/country", new CountryRepository(connection));
-		repositories.put("/api/fish_area", new FishAreaRepository(connection));
-		repositories.put("/api/format", new FormatRepository(connection));
-		repositories.put("/api/hazard", new HazardRepository(connection));
-		repositories.put("/api/hazard_type", new HazardTypeRepository(connection));
-		repositories.put("/api/ind_sum", new IndSumRepository(connection));
-		repositories.put("/api/laboratory_accreditation", new LaboratoryAccreditationRepository(connection));
-		repositories.put("/api/language", new LanguageRepository(connection));
-		repositories.put("/api/language_written_in", new LanguageWrittenInRepository(connection));
-		repositories.put("/api/model_class", new ModelClassRepository(connection));
-		repositories.put("/api/model_equation_class", new ModelEquationClassRepository(connection));
-		repositories.put("/api/model_subclass", new ModelSubclassRepository(connection));
-		repositories.put("/api/packaging", new PackagingRepository(connection));
-		repositories.put("/api/parameter_distribution", new ParameterDistributionRepository(connection));
-		repositories.put("/api/parameter_source", new ParameterSourceRepository(connection));
-		repositories.put("/api/parameter_subject", new ParameterSubjectRepository(connection));
-		repositories.put("/api/population", new PopulationRepository(connection));
-		repositories.put("/api/product_matrix", new ProductMatrixRepository(connection));
-		repositories.put("/api/product_treatment", new ProductTreatmentRepository(connection));
-		repositories.put("/api/production_method", new ProductionMethodRepository(connection));
-		repositories.put("/api/publication_status", new PublicationStatusRepository(connection));
-		repositories.put("/api/publication_type", new PublicationTypeRepository(connection));
-		repositories.put("/api/region", new RegionRepository(connection));
-		repositories.put("/api/right", new RightRepository(connection));
-		repositories.put("/api/sampling_method", new SamplingMethodRepository(connection));
-		repositories.put("/api/sampling_point", new SamplingPointRepository(connection));
-		repositories.put("/api/sampling_program", new SamplingProgramRepository(connection));
-		repositories.put("/api/sampling_strategy", new SamplingStrategyRepository(connection));
-		repositories.put("/api/software", new SoftwareRepository(connection));
-		repositories.put("/api/source", new SourceRepository(connection));
-		repositories.put("/api/status", new StatusRepository(connection));
-		repositories.put("/api/unit", new UnitRepository(connection));
-		repositories.put("/api/unit_category", new UnitCategoryRepository(connection));
-
-		ContextHandlerCollection contexts = new ContextHandlerCollection();
-		ObjectMapper mapper = new ObjectMapper();
-		repositories.entrySet().forEach(entry -> {
-			ContextHandler contextHandler = new ContextHandler(entry.getKey());
-			contextHandler.setHandler(new BasicHandler(mapper, entry.getValue()));
-			contexts.addHandler(contextHandler);
+		// Enable CORS
+		after((Filter) (request, response) -> {
+			response.header("Access-Control-Allow-Origin", "*");
+			response.header("Access-Control-Allow-Methods", "GET");
 		});
 
-		server.setHandler(contexts);
+		get("getById/:vocabulary/:id", (req, res) -> {
+			res.type("application/json");
+			BasicRepository<?> repository = getRepository(req.params(":vocabulary"), connection);
+			int id = Integer.parseInt(req.params(":id"));
+			return repository.getById(id);
+		}, jsonTransformer);
 
-		try {
-			server.start();
-			server.join();
-		} catch (Exception e) {
-			LOGGER.error(server, e);
-			e.printStackTrace();
-		}
+		get("/getAll/:vocabulary", (req, res) -> {
+			res.type("application/json");
+			BasicRepository<?> repository = getRepository(req.params(":vocabulary"), connection);
+			return repository.getAll();
+		}, jsonTransformer);
+
+		get("/getAllNames/:vocabulary", (req, res) -> {
+			res.type("application/json");
+			BasicRepository<?> repository = getRepository(req.params(":vocabulary"), connection);
+			return repository.getAllNames();
+		}, jsonTransformer);
 	}
 
-	private static class BasicHandler extends AbstractHandler {
+	private static class JsonTransformer implements ResponseTransformer {
 
-		private final ObjectMapper mapper;
-		private final BasicRepository<?> repository;
-
-		BasicHandler(ObjectMapper mapper, BasicRepository<?> repository) {
-			this.mapper = mapper;
-			this.repository = repository;
-		}
+		private Gson gson = new Gson();
 
 		@Override
-		public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response)
-				throws IOException, ServletException {
-
-		    response.addHeader("Access-Control-Allow-Origin", "*");
-			response.setContentType("application/json; charset=UTF-8");
-
-			if (request.getParameter("id") != null) {
-				int id = Integer.parseInt(request.getParameter("id"));
-				Optional<?> item = repository.getById(id);
-				if (item.isPresent()) {
-					response.setStatus(HttpServletResponse.SC_OK);
-					mapper.writeValue(response.getWriter(), item.get());
-				} else {
-					response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-				}
-			} else if (request.getParameter("names") != null) {
-				response.setStatus(HttpServletResponse.SC_OK);
-				mapper.writeValue(response.getWriter(), repository.getAllNames());
-			} else {
-				response.setStatus(HttpServletResponse.SC_OK);
-				mapper.writeValue(response.getWriter(), repository.getAll());
-			}
+		public String render(Object model) {
+			return gson.toJson(model);
 		}
 	}
 
+	private BasicRepository<?> getRepository(String vocabulary, Connection connection) {
+		switch (vocabulary) {
+		case "accreditation_procedure":
+			return new AccreditationProcedureRepository(connection);
+		case "availability":
+			return new AvailabilityRepository(connection);
+		case "basic_process":
+			return new BasicProcessRepository(connection);
+		case "collection_tool":
+			return new CollectionToolRepository(connection);
+		case "country":
+			return new CountryRepository(connection);
+		case "fish_area":
+			return new FishAreaRepository(connection);
+		case "format":
+			return new FormatRepository(connection);
+		case "hazard":
+			return new HazardRepository(connection);
+		case "hazard_type":
+			return new HazardTypeRepository(connection);
+		case "ind_sum":
+			return new IndSumRepository(connection);
+		case "laboratory_accreditation":
+			return new LaboratoryAccreditationRepository(connection);
+		case "language":
+			return new LanguageRepository(connection);
+		case "language_written_in":
+			return new LanguageWrittenInRepository(connection);
+		case "model_class":
+			return new ModelClassRepository(connection);
+		case "model_equation_class":
+			return new ModelEquationClassRepository(connection);
+		case "model_subclass":
+			return new ModelSubclassRepository(connection);
+		case "packaging":
+			return new PackagingRepository(connection);
+		case "parameter_classification":
+			return new ParameterClassificationRepository(connection);
+		case "parameter_datatype":
+			return new ParameterDatatypeRepository(connection);
+		case "parameter_distribution":
+			return new ParameterDistributionRepository(connection);
+		case "parameter_source":
+			return new ParameterSourceRepository(connection);
+		case "parameter_subject":
+			return new ParameterSubjectRepository(connection);
+		case "population":
+			return new PopulationRepository(connection);
+		case "product_matrix":
+			return new ProductMatrixRepository(connection);
+		case "product_treatment":
+			return new ProductTreatmentRepository(connection);
+		case "production_method":
+			return new ProductionMethodRepository(connection);
+		case "publication_status":
+			return new PublicationStatusRepository(connection);
+		case "publication_type":
+			return new PublicationTypeRepository(connection);
+		case "region":
+			return new RegionRepository(connection);
+		case "right":
+			return new RightRepository(connection);
+		case "sampling_method":
+			return new SamplingMethodRepository(connection);
+		case "sampling_point":
+			return new SamplingPointRepository(connection);
+		case "sampling_program":
+			return new SamplingProgramRepository(connection);
+		case "sampling_strategy":
+			return new SamplingStrategyRepository(connection);
+		case "software":
+			return new SoftwareRepository(connection);
+		case "source":
+			return new SourceRepository(connection);
+		case "status":
+			return new StatusRepository(connection);
+		case "unit":
+			return new UnitRepository(connection);
+		case "unit_category":
+			return new UnitCategoryRepository(connection);
+		case "technology_type":
+			return new TechnologyTypeRepository(connection);
+		}
+
+		return null;
+	}
+
+	// TODO: Remove test
 	public static void main(String[] args) {
 		new Thread(new FskService()).start();
 	}
@@ -224,13 +258,15 @@ public class FskService implements Runnable {
 		}
 
 		// Insert data
-		List<String> filenames = Arrays.asList("availability.sql", "collection_tool.sql", "country.sql",
-				"fish_area.sql", "format.sql", "hazard_type.sql", "hazard.sql", "ind_sum.sql",
+		List<String> filenames = Arrays.asList("accreditation_procedure.sql", "availability.sql", "collection_tool.sql",
+				"country.sql", "fish_area.sql", "format.sql", "hazard_type.sql", "hazard.sql", "ind_sum.sql",
 				"laboratory_accreditation.sql", "language_written_in.sql", "language.sql", "model_class.sql",
-				"model_equation_class.sql", "packaging.sql", "parameter_distribution.sql", "parameter_source.sql",
-				"parameter_subject.sql", "population.sql", "prodmeth.sql", "prodTreat.sql", "product_matrix.sql",
-				"publication_status.sql", "region.sql", "rights.sql", "sampling_method.sql", "sampling_point.sql",
-				"sampling_program.sql", "software.sql", "sources.sql", "status.sql", "unit.sql");
+				"model_equation_class.sql", "packaging.sql", "parameter_classification.sql", "parameter_datatype.sql",
+				"parameter_distribution.sql", "parameter_source.sql", "parameter_subject.sql", "population.sql",
+				"prodmeth.sql", "prodTreat.sql", "product_matrix.sql", "publication_status.sql", "publication_type.sql",
+				"region.sql", "rights.sql", "sampling_method.sql", "sampling_point.sql", "sampling_program.sql",
+				"sampling_strategy.sql", "software.sql", "sources.sql", "status.sql", "technology_type.sql",
+				"unit.sql");
 
 		for (String filename : filenames) {
 
