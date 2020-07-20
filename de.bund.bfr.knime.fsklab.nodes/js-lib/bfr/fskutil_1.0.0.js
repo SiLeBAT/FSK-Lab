@@ -57,12 +57,16 @@ fskutil = function () {
      * @param {Array} vocabulary String array with vocabulary terms.
      */
     fskutil.addControlledVocabulary = function (input, vocabulary) {
-        $(input).typeahead({
-            source: vocabulary,
-            autoSelect: true,
-            fitToElement: true,
-            showHintOnFocus: true
-        });
+        fetch('http://localhost:8080/getAllNames/' + vocabulary)
+            .then(response => response.json())
+            .then(data => {
+                $(input).typeahead({
+                    source: data,
+                    autoSelect: true,
+                    fitToElement: true,
+                    showHintOnFocus: true
+                });
+            });
     }
 
     fskutil.SimpleTable = class {
@@ -318,7 +322,7 @@ fskutil = function () {
          * @param {string} type Property type: text, url, checkbox, etc.
          * @param {string} helperText Tooltip
          * @param {string} value Initial value of the property.
-         * @param {Array} vocabulary List of possible value for autocompletion.
+         * @param {Array} vocabulary Vocabulary name.
          */
         constructor(name, mandatory, type, helperText, value, vocabulary = null) {
 
@@ -338,7 +342,7 @@ fskutil = function () {
          * @param {string} type Property type: text, url, checkbox, etc.
          * @param {string} helperText Tooltip
          * @param {string} value Initial value of the property.
-         * @param {Array} vocabulary List of possible value for autocompletion.
+         * @param {Array} vocabulary Vocabulary name.
          */
         _create(name, mandatory, type, helperText, value, vocabulary) {
 
@@ -558,11 +562,15 @@ fskutil = function () {
         _create(name, mandatory, helperText, value, vocabulary) {
 
             this.select.className = "form-control";
-            // Add options from vocabulary. The option matching value is selected.
-            this.select.innerHTML = vocabulary.map(item => `<option>${item}</option>`)
-                .join("");
             this.select.value = value;
             this.select.title = helperText;
+
+            // Add options from vocabulary. The option matching value is selected.
+            fetch('http://localhost:8080/getAllNames/' + vocabulary)
+                .then(response => response.json())
+                .then(data => {
+                    this.select.innerHTML = data.map(item => `<option>${item}</option>`).join("")
+                });
 
             // Create div for select
             let selectDiv = document.createElement("div");
@@ -622,17 +630,16 @@ fskutil = function () {
      *  it returns undefined.
      */
     fskutil.createForm = function (prop, value) {
-        let vocabulary = prop.vocabulary ? cv[prop.vocabulary] : null;
         let isMandatory = prop.required ? prop.required : false;
 
         if (prop.type === "text" || prop.type === "number" || prop.type === "url" ||
             prop.type === "date")
             return new fskutil.InputForm(prop.label, isMandatory, prop.type, prop.description,
-                value ? value : "", vocabulary);
+                value ? value : "", prop.vocabulary);
 
         if (prop.type === "enum")
             return new fskutil.SelectForm(prop.label, isMandatory, prop.description, value,
-                vocabulary);
+                prop.vocabulary);
 
         if (prop.type === "boolean")
             return new fskutil.InputForm(prop.label, false, "checkbox",
@@ -640,11 +647,11 @@ fskutil = function () {
 
         if (prop.type === "text-array")
             return new fskutil.ArrayForm(prop.label, isMandatory, prop.type,
-                value ? value : [], prop.description, vocabulary);
+                value ? value : [], prop.description, prop.vocabulary);
 
         if (prop.type === "date-array")
             return new fskutil.ArrayForm(prop.label, isMandatory, prop.type,
-                value ? value : [], prop.description, vocabulary);
+                value ? value : [], prop.description, prop.vocabulary);
     }
 
     /**
