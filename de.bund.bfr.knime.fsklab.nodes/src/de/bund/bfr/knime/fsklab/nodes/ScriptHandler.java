@@ -79,8 +79,7 @@ public abstract class ScriptHandler implements AutoCloseable {
               e.printStackTrace();
             }
           });
-
-      runScript(paramScript, exec, true);
+     runScript(paramScript, exec, false);
     }
 
     exec.setProgress(0.75, "Run models script");
