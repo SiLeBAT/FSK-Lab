@@ -74,6 +74,13 @@ CREATE TABLE model_subclass (
     PRIMARY KEY(id),
     FOREIGN KEY(class_id) REFERENCES model_class(id));
     
+CREATE TABLE basic_process (
+	id INTEGER NOT NULL,
+	name VARCHAR(128) NOT NULL,
+	class_id INTEGER NOT NULL,
+	PRIMARY KEY(id),
+	FOREIGN KEY(class_id) REFERENCES model_class(id));
+    
 CREATE TABLE model_equation_class (
     id INTEGER NOT NULL,
     name VARCHAR(255),
@@ -211,3 +218,30 @@ CREATE TABLE unit (
     category_id INTEGER,
     PRIMARY KEY(id),
     FOREIGN KEY(category_id) REFERENCES unit_category(id));
+    
+-- Study assay technology type
+CREATE TABLE technology_type (
+    id INTEGER NOT NULL,
+    ssd VARCHAR(6) NOT NULL,
+    name VARCHAR(128) NOT NULL,
+    comment VARCHAR(256),
+    PRIMARY KEY(id));
+
+-- SSD MDSTAT (xs:string(5))
+CREATE TABLE accreditation_procedure (
+    id INTEGER NOT NULL,
+    mdstat VARCHAR(5) NOT NULL, 
+    name VARCHAR(50),
+    PRIMARY KEY(id));
+
+CREATE TABLE parameter_classification (
+	id INTEGER NOT NULL,
+	name VARCHAR(10) NOT NULL,
+	comment VARCHAR(256),
+	PRIMARY KEY(id));
+
+CREATE TABLE parameter_datatype (
+	id INTEGER NOT NULL,
+	name VARCHAR(16) NOT NULL,
+	comment VARCHAR(300),
+	represented_as VARCHAR(8));

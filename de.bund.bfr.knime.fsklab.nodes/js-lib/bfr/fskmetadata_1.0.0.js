@@ -10,7 +10,7 @@ ui = {
         "label": "Source",
         "type": "text",
         "description": "A source from which the model/data is derived",
-        "vocabulary": "Source"
+        "vocabulary": "source"
     }, {
         "id": "identifier",
         "label": "Identifier",
@@ -33,14 +33,14 @@ ui = {
         "label": "Rights",
         "type": "text",
         "description": "Rights granted for usage, distribution and modification of this FSK file",
-        "vocabulary": "Rights",
+        "vocabulary": "right",
         "required": true
     }, {
         "id": "availability",
         "label": "Availability",
         "type": "text",
         "description": "Availability of data or model, i.e. if the annotated model code / data is included in this FSK file",
-        "vocabulary": "Availability"
+        "vocabulary": "availability"
     }, {
         "id": "url",
         "label": "URL",
@@ -51,31 +51,31 @@ ui = {
         "label": "Format",
         "type": "text",
         "description": "File extension of the model or data file (including version number of format if applicable)",
-        "vocabulary": "Format"
+        "vocabulary": "format"
     }, {
         "id": "language",
         "label": "Language",
         "type": "text",
         "description": "A language of the resource (some data or reports can be available in French language for example)",
-        "vocabulary": "Language"
+        "vocabulary": "language"
     }, {
         "id": "software",
         "label": "Software",
         "type": "text",
         "description": "The program or software language in which the model has been implemented",
-        "vocabulary": "Software"
+        "vocabulary": "software"
     }, {
         "id": "languageWrittenIn",
         "label": "Language written in",
         "type": "text",
         "description": "Software language used to write the model, e.g. R or MatLab",
-        "vocabulary": "Language_written_in"
+        "vocabulary": "language_written_in"
     }, {
         "id": "status",
         "label": "Status",
         "type": "text",
         "description": "The curation status of the model",
-        "vocabulary": "Status"
+        "vocabulary": "status"
     }, {
         "id": "objective",
         "label": "Objective",
@@ -92,7 +92,7 @@ ui = {
         "label": "Model class",
         "type": "enum",
         "description": "Type of model according to RAKIP classification",
-        "vocabulary": "Model_Class",
+        "vocabulary": "model_class",
         "required": true
     }, {
         "id": "modelClassComment",
@@ -110,7 +110,7 @@ ui = {
         "label": "Basic process",
         "type": "text-array",
         "description": "Defines the impact of the process on the hazard (so far only valid for process models and predictive models)",
-        "vocabulary": "Basic_process"
+        "vocabulary": "basic_process"
     }],
     "contact": [{
         "id": "title",
@@ -148,7 +148,7 @@ ui = {
         "label": "Country",
         "type": "text",
         "description": "Full name of the country in English",
-        "vocabulary": "Country"
+        "vocabulary": "country"
     }, {
         "id": "zipCode",
         "label": "Zip code",
@@ -159,7 +159,7 @@ ui = {
         "label": "Region",
         "type": "text",
         "description": "State or province",
-        "vocabulary": "Region"
+        "vocabulary": "region"
     }, {
         "id": "timeZone",
         "label": "Timezone",
@@ -193,7 +193,7 @@ ui = {
             "label": "Type",
             "type": "text",
             "description": "The type of publication, e.g. Report, Journal article, Book, Online database, ...",
-            "vocabulary": "Publication_Type"
+            "vocabulary": "publication_type"
         }, {
             "id": "date",
             "label": "Date",
@@ -246,7 +246,7 @@ ui = {
             "label": "Status",
             "type": "text",
             "description": "The status of this publication, e.g. Published, Submitted, etc.",
-            "vocabulary": "Publication_Status"
+            "vocabulary": "publication_status"
         }, {
             "id": "website",
             "label": "Website",
@@ -276,7 +276,7 @@ ui = {
             "label": "Name",
             "type": "text",
             "description": "The product, matrix or environment (e.g food product, lab media, soil etc.) for which the model or data applies",
-            "vocabulary": "Product_matrix_name",
+            "vocabulary": "product_matrix",
             "required": true
         }, {
             "id": "description",
@@ -288,44 +288,44 @@ ui = {
             "label": "Unit",
             "type": "text",
             "description": "Unit of the product, matrix or environment for which the model or data applies",
-            "vocabulary": "Parameter_unit",
+            "vocabulary": "unit",
             "required": true
         }, {
             "id": "method",
             "label": "Method",
             "type": "text-array",
             "description": "Type of production for the product/ matrix",
-            "vocabulary": "Method_of_production"
+            "vocabulary": "production_method"
         }, {
             "id": "packaging",
             "label": "Packaging",
             "type": "text-array",
             "description": "Describe container or wrapper that holds the product/matrix. Common type of packaging (paper or plastic bags, boxes, tinplate or aluminium cans, plastic trays, plastic bottles, glass bottles or jars)",
-            "vocabulary": "Packaging"
+            "vocabulary": "packaging"
         }, {
             "id": "treatment",
             "label": "Treatment",
             "type": "text-array",
             "description": "Used to characterise a product/matrix based on the treatment or processes applied to the product or any indexed ingredient",
-            "vocabulary": "Product_treatment"
+            "vocabulary": "product_treatment"
         }, {
             "id": "originCountry",
             "label": "Origin country",
             "type": "text",
             "description": "Country of origin of the food/product (ISO 3166-1-alpha-2 country code)",
-            "vocabulary": "Country"
+            "vocabulary": "country"
         }, {
             "id": "originArea",
             "label": "Origin area",
             "type": "text",
             "description": "Area of origin of the food/product (Nomenclature of territorial units for statistics – NUTS – coding system valid only for EEA and Switzerland).",
-            "vocabulary": "Area_of_origin"
+            "vocabulary": "region"
         }, {
             "id": "fisheriesArea",
             "label": "Fisheries area",
             "type": "text",
             "description": "Fisheries or aquaculture area specifying the origin of the sample (FAO Fisheries areas)",
-            "vocabulary": "Fisheries_area"
+            "vocabulary": "fish_area"
         }, {
             "id": "productionDate",
             "label": "Production date",
@@ -344,13 +344,13 @@ ui = {
             "label": "Type",
             "type": "text",
             "description": "General classification of the hazard for which the model or data applies",
-            "vocabulary": "Hazard_type"
+            "vocabulary": "hazard_type"
         }, {
             "id": "name",
             "label": "Name",
             "type": "text",
             "description": "Name of the hazard (agent, contaminant, chemical) for which the data or model applies",
-            "vocabulary": "Hazard_name",
+            "vocabulary": "hazard",
             "required": true
         }, {
             "id": "description",
@@ -362,7 +362,7 @@ ui = {
             "label": "Unit",
             "type": "text",
             "description": "Unit of the hazard for which the model or data applies",
-            "vocabulary": "Parameter_unit"
+            "vocabulary": "unit"
         }, {
             "id": "adverseEffect",
             "label": "Adverse effect",
@@ -413,7 +413,7 @@ ui = {
             "label": "Ind sum",
             "type": "text",
             "description": "Define if the parameter reported is an individual residue/analyte, a summed residue definition or part of a sum a summed residue definition",
-            "vocabulary": "Hazard_ind_sum"
+            "vocabulary": "ind_sum"
         }],
     "populationGroup": [{
         "id": "name",
@@ -461,13 +461,13 @@ ui = {
         "label": "Region",
         "type": "text-array",
         "description": "Spatial information (area) on which the population group of the model or data applies",
-        "vocabulary": "Region"
+        "vocabulary": "region"
     }, {
         "id": "country",
         "label": "Country",
         "type": "text-array",
         "description": "Country on which the population group of the model or data applies",
-        "vocabulary": "Country"
+        "vocabulary": "country"
     }, {
         "id": "populationRiskFactor",
         "label": "Risk factor",
@@ -510,7 +510,7 @@ ui = {
         "label": "Technology type",
         "type": "text",
         "description": "The technology being employed to observe this measurement",
-        "vocabulary": "Study_Assay_Technology_Type"
+        "vocabulary": "technology_type"
     }, {
         "id": "assayTechnologyPlatform",
         "label": "Technology platform",
@@ -521,7 +521,7 @@ ui = {
         "label": "Accreditation procedure",
         "type": "text",
         "description": "Accreditation procedure for the analytical method used",
-        "vocabulary": "Accreditation_procedure_Ass_Tec"
+        "vocabulary": "accreditation_procedure"
     }, {
         "id": "protocolName",
         "label": "Protocol name",
@@ -575,19 +575,19 @@ ui = {
         "label": "Sampling strategy",
         "type": "text",
         "description": "Sampling strategy (ref. EUROSTAT - Typology of sampling strategy, version of July 2009)",
-        "vocabulary": "Sampling_strategy"
+        "vocabulary": "sampling_strategy"
     }, {
         "id": "typeOfSamplingProgram",
         "label": "Sampling program",
         "type": "text",
         "description": "Indicate the type of programm for which the samples have been collected",
-        "vocabulary": "Type_of_sampling_program"
+        "vocabulary": "sampling_program"
     }, {
         "id": "samplingMethod",
         "label": "Sampling method",
         "type": "text",
         "description": "Sampling method used to take the sample",
-        "vocabulary": "Sampling_method"
+        "vocabulary": "sampling_method"
     }, {
         "id": "samplingPlan",
         "label": "Sampling plan",
@@ -616,14 +616,14 @@ ui = {
         "label": "Sampling point",
         "type": "text",
         "description": "Point in the food chain where the sample was taken. (Doc. ESTAT/F5/ES/155 “Data dictionary of activities of the establishments”).",
-        "vocabulary": "Sampling_point"
+        "vocabulary": "sampling_point"
     }],
     "dietaryAssessmentMethod": [{
         "id": "collectionTool",
         "label": "Collection tool",
         "type": "text",
         "description": "Food diaries, interview, 24-hour recall interview, food propensy questionnaire, portion size measurement aids, eating outside questionnaire",
-        "vocabulary": "Method_tool_to_collect_data",
+        "vocabulary": "collection_tool",
         "required": true
     }, {
         "id": "numberOfNonConsecutiveOneDay",
@@ -665,7 +665,7 @@ ui = {
         "label": "Country",
         "type": "text",
         "description": "Country where the laboratory is placed. (ISO 3166-1-alpha-2)",
-        "vocabulary": "Country"
+        "vocabulary": "country"
     }, {
         "id": "accreditation",
         "label": "Accreditation",
@@ -743,7 +743,7 @@ ui = {
         "label": "Classification",
         "type": "enum",
         "description": "General classification of the parameter (e.g. Input, Constant, Output...)",
-        "vocabulary": "Parameter_classification",
+        "vocabulary": "parameter_classification",
         "required": true
     }, {
         "id": "name",
@@ -761,39 +761,39 @@ ui = {
         "label": "Unit",
         "type": "text",
         "description": "Unit of the parameter",
-        "vocabulary": "Parameter_unit",
+        "vocabulary": "unit",
         "required": true
     }, {
         "id": "unitCategory",
         "label": "Unit category",
         "type": "text",
         "description": "",
-        "vocabulary": "Parameter_unit_category"
+        "vocabulary": "unit_category"
     }, {
         "id": "dataType",
         "label": "Data type",
         "type": "enum",
         "description": "Information on the data format of the parameter, e.g. if it the input parameter is a file location or a date or a number. This is important for software tools interpreting the metadata and generate user interfaces for parameter input.",
-        "vocabulary": "Parameter_data_type",
+        "vocabulary": "parameter_datatype",
         "required": true
     }, {
         "id": "source",
         "label": "Source",
         "type": "text",
         "description": "Information on the type of knowledge used to define the parameter value",
-        "vocabulary": "Parameter_source"
+        "vocabulary": "parameter_source"
     }, {
         "id": "subject",
         "label": "Subject",
         "type": "text",
         "description": "Scope of the parameter, e.g. if it refers to an animal, a batch of animals, a batch of products, a carcass, a carcass skin etc",
-        "vocabulary": "Parameter_subject"
+        "vocabulary": "parameter_subject"
     }, {
         "id": "distribution",
         "label": "Distribution",
         "type": "text",
         "description": 'Distribution describing the parameter variabilty. If no distribution selected this means the value provided in "Parameter value" is a point estimate. In case a distribution is selected the value provided in "Parameter value" is a string that the model code can parse in order to sample from the named distribution',
-        "vocabulary": "Parameter_distribution"
+        "vocabulary": "parameter_distribution"
     }, {
         "id": "value",
         "label": "Value",
@@ -1038,7 +1038,7 @@ const _predictiveModelGeneralInformation = {
             "label": "Source",
             "type": "text",
             "description": "A source from which the model/data is derived",
-            "vocabulary": "Source"
+            "vocabulary": "source"
         },
         {
             "id": "identifier",
@@ -1064,14 +1064,14 @@ const _predictiveModelGeneralInformation = {
             "label": "Rights",
             "type": "text",
             "description": "Rights granted for usage, distribution and modification of this FSK file",
-            "vocabulary": "Rights",
+            "vocabulary": "right",
             "required": true
         }, {
             "id": "availability",
             "label": "Availability",
             "type": "text",
             "description": "Availability of data or model, i.e. if the annotated model code / data is included in this FSK file",
-            "vocabulary": "Availability"
+            "vocabulary": "availability"
         },
         {
             "id": "url",
@@ -1083,33 +1083,33 @@ const _predictiveModelGeneralInformation = {
             "label": "Format",
             "type": "text",
             "description": "File extension of the model or data file (including version number of format if applicable)",
-            "vocabulary": "Format"
+            "vocabulary": "format"
         }, {
             "id": "language",
             "label": "Language",
             "type": "text",
             "description": "A language of the resource (some data or reports can be available in French language for example)",
-            "vocabulary": "Language"
+            "vocabulary": "language"
         },
         {
             "id": "software",
             "label": "Software",
             "type": "text",
             "description": "The program or software language in which the model has been implemented",
-            "vocabulary": "Software"
+            "vocabulary": "software"
         }, {
             "id": "languageWrittenIn",
             "label": "Language written in",
             "type": "text",
             "description": "Software language used to write the model, e.g. R or MatLab",
-            "vocabulary": "Language_written_in"
+            "vocabulary": "language_written_in"
         },
         {
             "id": "status",
             "label": "Status",
             "type": "text",
             "description": "The curation status of the model",
-            "vocabulary": "Status"
+            "vocabulary": "status"
         },
         {
             "id": "objective",
@@ -1145,7 +1145,7 @@ const fskui = {
                 "label": "Source",
                 "type": "text",
                 "description": "A source from which the model/data is derived",
-                "vocabulary": "Source"
+                "vocabulary": "source"
             }, {
                 "id": "identifier",
                 "label": "Identifier",
@@ -1168,14 +1168,14 @@ const fskui = {
                 "label": "Rights",
                 "type": "text",
                 "description": "Rights granted for usage, distribution and modification of this FSK file",
-                "vocabulary": "Rights",
+                "vocabulary": "right",
                 "required": true
             }, {
                 "id": "availability",
                 "label": "Availability",
                 "type": "text",
                 "description": "Availability of data or model, i.e. if the annotated model code / data is included in this FSK file",
-                "vocabulary": "Availability"
+                "vocabulary": "availability"
             }, {
                 "id": "url",
                 "label": "URL",
@@ -1186,31 +1186,31 @@ const fskui = {
                 "label": "Format",
                 "type": "text",
                 "description": "File extension of the model or data file (including version number of format if applicable)",
-                "vocabulary": "Format"
+                "vocabulary": "format"
             }, {
                 "id": "language",
                 "label": "Language",
                 "type": "text",
                 "description": "A language of the resource (some data or reports can be available in French language for example)",
-                "vocabulary": "Language"
+                "vocabulary": "language"
             }, {
                 "id": "software",
                 "label": "Software",
                 "type": "text",
                 "description": "The program or software language in which the model has been implemented",
-                "vocabulary": "Software"
+                "vocabulary": "software"
             }, {
                 "id": "languageWrittenIn",
                 "label": "Language written in",
                 "type": "text",
                 "description": "Software language used to write the model, e.g. R or MatLab",
-                "vocabulary": "Language_written_in"
+                "vocabulary": "language_written_in"
             }, {
                 "id": "status",
                 "label": "Status",
                 "type": "text",
                 "description": "The curation status of the model",
-                "vocabulary": "Status"
+                "vocabulary": "status"
             }, {
                 "id": "objective",
                 "label": "Objective",
@@ -1242,7 +1242,7 @@ const fskui = {
                 "label": "Source",
                 "type": "text",
                 "description": "A related resource from which the described resource is derived",
-                "vocabulary": "Source"
+                "vocabulary": "source"
             },
             {
                 "id": "identifier",
@@ -1269,7 +1269,7 @@ const fskui = {
                 "label": "Rights",
                 "type": "text",
                 "description": "Information on rights held in an over the resource",
-                "vocabulary": "Rights",
+                "vocabulary": "right",
                 "required": true
             },
             {
@@ -1277,7 +1277,7 @@ const fskui = {
                 "label": "Availability",
                 "type": "text",
                 "description": "Availability of data",
-                "vocabulary": "Availability"
+                "vocabulary": "availability"
             },
             {
                 "id": "url",
@@ -1290,21 +1290,21 @@ const fskui = {
                 "label": "Format",
                 "type": "text",
                 "description": "Form of data (file extension)",
-                "vocabulary": "Format"
+                "vocabulary": "format"
             },
             {
                 "id": "language",
                 "label": "Language",
                 "type": "text",
                 "description": "A language of the resource (some data or reports can be available in French language for example)",
-                "vocabulary": "Language"
+                "vocabulary": "language"
             },
             {
                 "id": "status",
                 "label": "Status",
                 "type": "text",
                 "description": "The curation status of the model",
-                "vocabulary": "Status"
+                "vocabulary": "status"
             },
             {
                 "id": "objective",
@@ -1369,7 +1369,7 @@ const fskui = {
                 "label": "Source",
                 "type": "text",
                 "description": "A related resource from which the described resource is derived",
-                "vocabulary": "Source"
+                "vocabulary": "source"
             },
             {
                 "id": "identifier",
@@ -1396,7 +1396,7 @@ const fskui = {
                 "label": "Rights",
                 "type": "text",
                 "description": "Information on rights held in an over the resource",
-                "vocabulary": "Rights",
+                "vocabulary": "right",
                 "required": true
             },
             {
@@ -1404,7 +1404,7 @@ const fskui = {
                 "label": "Availability",
                 "type": "text",
                 "description": "Availability of data",
-                "vocabulary": "Availability"
+                "vocabulary": "availability"
             },
             {
                 "id": "url",
@@ -1417,14 +1417,14 @@ const fskui = {
                 "label": "Format",
                 "type": "text",
                 "description": "Form of data (file extension)",
-                "vocabulary": "Format"
+                "vocabulary": "format"
             },
             {
                 "id": "language",
                 "label": "Language",
                 "type": "text",
                 "description": "A language of the resource (some data or reports can be available in French language for example)",
-                "vocabulary": "Language"
+                "vocabulary": "language"
             },
             {
                 id: "software",
@@ -1438,14 +1438,14 @@ const fskui = {
                 "label": "Language written in",
                 "type": "text",
                 "description": "Software language used to write the model, e.g. R or MatLab",
-                "vocabulary": "Language_written_in"
+                "vocabulary": "language_written_in"
             },
             {
                 "id": "status",
                 "label": "Status",
                 "type": "text",
                 "description": "The curation status of the model",
-                "vocabulary": "Status"
+                "vocabulary": "status"
             },
             {
                 "id": "objective",
@@ -1599,7 +1599,7 @@ const fskui = {
                 label: "Language written in",
                 type: "text",
                 description: "Language used to write the model, e.g. R or MatLab",
-                vocabulary: "Language_written_in"
+                vocabulary: "language_written_in"
             },
             {
                 id: "status",

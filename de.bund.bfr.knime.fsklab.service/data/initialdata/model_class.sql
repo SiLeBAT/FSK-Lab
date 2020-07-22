@@ -125,3 +125,53 @@ INSERT INTO model_subclass (id, name, comment, class_id) VALUES (101, 'QALY', 'Q
 -- QRA models
 INSERT INTO model_subclass (id, name, comment, class_id) VALUES (102, 'QCRA', 'Quantitative chemical risk assessment model', 8);
 INSERT INTO model_subclass (id, name, comment, class_id) VALUES (103, 'QMRA', 'Quantitative microbial risk assessment model', 8);
+
+-- Predictive models
+INSERT INTO basic_process (id, name, class_id) VALUES (0, 'growth', 6);
+INSERT INTO basic_process (id, name, class_id) VALUES (1, 'growth-inactivation', 6);
+INSERT INTO basic_process (id, name, class_id) VALUES (2, 'growth-inactivation-survival', 6);
+INSERT INTO basic_process (id, name, class_id) VALUES (3, 'growth-no growth', 6);
+INSERT INTO basic_process (id, name, class_id) VALUES (4, 'growth-survival', 6);
+INSERT INTO basic_process (id, name, class_id) VALUES (5, 'inactivation', 6);
+INSERT INTO basic_process (id, name, class_id) VALUES (6, 'inactivation-survival', 6);
+INSERT INTO basic_process (id, name, class_id) VALUES (7, 'Other', 6);
+INSERT INTO basic_process (id, name, class_id) VALUES (8, 'survival', 6);
+INSERT INTO basic_process (id, name, class_id) VALUES (9, 'unknown', 6);
+
+-- Process models
+INSERT INTO basic_process (id, name, class_id) VALUES (10, 'No Change (MICROBIAL)', 7);
+INSERT INTO basic_process (id, name, class_id) VALUES (11, 'Concentration', 7);
+INSERT INTO basic_process (id, name, class_id) VALUES (12, 'Contamination', 7);
+INSERT INTO basic_process (id, name, class_id) VALUES (13, 'Cross contamination', 7);
+INSERT INTO basic_process (id, name, class_id) VALUES (14, 'Decrease (CHEMICAL)', 7);
+INSERT INTO basic_process (id, name, class_id) VALUES (15, 'Decrease (MICROBIAL)', 7);
+INSERT INTO basic_process (id, name, class_id) VALUES (16, 'Decrease by Inactivation model (MICROBIAL)', 7);
+INSERT INTO basic_process (id, name, class_id) VALUES (17, 'Evapuration-Dilution (CHEMICAL)', 7);
+INSERT INTO basic_process (id, name, class_id) VALUES (18, 'Evapuration-Dilution (MICROBIAL)', 7);
+INSERT INTO basic_process (id, name, class_id) VALUES (19, 'Growth', 7);
+INSERT INTO basic_process (id, name, class_id) VALUES (20, 'Inactivation', 7);
+INSERT INTO basic_process (id, name, class_id) VALUES (21, 'Increase by Addition (CHEMICAL)', 7);
+INSERT INTO basic_process (id, name, class_id) VALUES (22, 'Increase by Addition (MICROBIAL)', 7);
+INSERT INTO basic_process (id, name, class_id) VALUES (23, 'Increase by Cross Contamination (Amount) (MICROBIAL)', 7);
+INSERT INTO basic_process (id, name, class_id) VALUES (24, 'Increase by Cross Contamination (Concentration) (MICROBIAL)', 7);
+INSERT INTO basic_process (id, name, class_id) VALUES (25, 'Increase by Growth (MICROBIAL)', 7);
+INSERT INTO basic_process (id, name, class_id) VALUES (26, 'Increase by growth model (MICROBIAL)', 7);
+INSERT INTO basic_process (id, name, class_id) VALUES (27, 'Joining', 7);
+INSERT INTO basic_process (id, name, class_id) VALUES (28, 'Mass-change (CHEMICAL)', 7);
+INSERT INTO basic_process (id, name, class_id) VALUES (29, 'Mixing', 7);
+INSERT INTO basic_process (id, name, class_id) VALUES (30, 'No Change (CHEMICAL)', 7);
+INSERT INTO basic_process (id, name, class_id) VALUES (31, 'Other', 7);
+INSERT INTO basic_process (id, name, class_id) VALUES (32, 'Partioning', 7);
+INSERT INTO basic_process (id, name, class_id) VALUES (33, 'Partitioning (CHEMICAL)', 7);
+INSERT INTO basic_process (id, name, class_id) VALUES (34, 'Partitioning (MICROBIAL)', 7);
+INSERT INTO basic_process (id, name, class_id) VALUES (35, 'Placeholder (CHEMICAL)', 7);
+INSERT INTO basic_process (id, name, class_id) VALUES (36, 'Placeholder (MICROBIAL)', 7);
+INSERT INTO basic_process (id, name, class_id) VALUES (37, 'Pooling (CHEMICAL)', 7);
+INSERT INTO basic_process (id, name, class_id) VALUES (38, 'Pooling (MICROBIAL)', 7);
+INSERT INTO basic_process (id, name, class_id) VALUES (39, 'Redistribution (Partial) (CHEMICAL)', 7);
+INSERT INTO basic_process (id, name, class_id) VALUES (40, 'Redistribution (Partial) (MICROBIAL)', 7);
+INSERT INTO basic_process (id, name, class_id) VALUES (41, 'Redistribution (Total) (CHEMICAL)', 7);
+INSERT INTO basic_process (id, name, class_id) VALUES (42, 'Redistribution (Total) (MICROBIAL) Removal', 7);
+INSERT INTO basic_process (id, name, class_id) VALUES (43, 'Sampling (OC curve) (MICROBIAL)', 7);
+INSERT INTO basic_process (id, name, class_id) VALUES (44, 'Sampling (Simple Poisson) (MICROBIAL)', 7);
+INSERT INTO basic_process (id, name, class_id) VALUES (45, 'Set Maximum Population Density (MICROBIAL)', 7);

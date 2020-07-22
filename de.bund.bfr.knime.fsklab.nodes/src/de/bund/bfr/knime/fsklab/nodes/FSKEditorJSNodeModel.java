@@ -200,10 +200,8 @@ final class FSKEditorJSNodeModel
         metadata = MAPPER.readValue(viewValue.getModelMetaData(), modelClass);
       }
 
-      // Take simulation from input port (if connected) or view value otherwise
-      if (m_port != null) {
-        simulations = m_port.simulations;
-      } else if (metadata != null && SwaggerUtil.getModelMath(metadata) != null
+      // Take simulation from view value otherwise from input port (if connected)
+      if (metadata != null && SwaggerUtil.getModelMath(metadata) != null
           && SwaggerUtil.getParameter(metadata) != null) {
         // Take parameters from view value (metadata)
         List<Parameter> parameters = SwaggerUtil.getParameter(metadata);
@@ -213,6 +211,8 @@ final class FSKEditorJSNodeModel
 
         // 3. Assign newDefaultSimulation
         simulations = Arrays.asList(newDefaultSimulation);
+      } else if (m_port != null) {
+        simulations = m_port.simulations;
       }
 
       modelScript = StringUtils.defaultString(viewValue.getModelScript(), "");
