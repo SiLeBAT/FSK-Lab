@@ -32,7 +32,7 @@ ui = {
         "id": "rights",
         "label": "Rights",
         "type": "text",
-        "description": "Rights granted for usage, distribution and modification of this FSK file",
+        "description": "Rights granted for usage, distribution and modification of this FSKX file",
         "vocabulary": "right",
         "required": true
     }, {
@@ -1063,7 +1063,7 @@ const _predictiveModelGeneralInformation = {
             "id": "rights",
             "label": "Rights",
             "type": "text",
-            "description": "Rights granted for usage, distribution and modification of this FSK file",
+            "description": "Rights granted for usage, distribution and modification of this FSKX file",
             "vocabulary": "right",
             "required": true
         }, {
@@ -1167,7 +1167,7 @@ const fskui = {
                 "id": "rights",
                 "label": "Rights",
                 "type": "text",
-                "description": "Rights granted for usage, distribution and modification of this FSK file",
+                "description": "Rights granted for usage, distribution and modification of this FSKX file",
                 "vocabulary": "right",
                 "required": true
             }, {
