@@ -9,11 +9,21 @@
 
 	<fullDescription>
 		<intro>
-			Extracts the metadata in an FSK object into a KNIME table.
+		<p>
+			Extracts the metadata in an FSK object to a KNIME JSON table with the four
+			metadata elements defined in RAKIP for every model: general information,
+			scope, data background and model math.
+		</p>
+		<p>
+			The metadata is configured into separate JSON columns with each element.
+			These columns contain JSON objects that can be further processed with
+			KNIME JSON nodes. This table only describes the metadata of one model and
+			then only needs one row.
+		</p>
 		</intro>
 	</fullDescription>
 	<ports>
-		<inPort name="FSK object" index="0">FSK object</inPort>
-		<outPort name="Metadata" index="0">Metadata</outPort>
+		<inPort name="FSK model" index="0">Input FSK model</inPort>
+		<outPort name="Metadata" index="0">JSON table with metadata.</outPort>
 	</ports>
 </knimeNode>
