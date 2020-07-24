@@ -130,7 +130,7 @@ ui = {
     }, {
         "id": "email",
         "label": "Email",
-        "type": "text",
+        "type": "email",
         "description": "The address for eletronic mail communication.",
         "required": true
     }, {

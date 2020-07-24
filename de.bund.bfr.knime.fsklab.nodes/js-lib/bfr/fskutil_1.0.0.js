@@ -349,6 +349,7 @@ fskutil = function () {
             // Create input
             this.input.className = type === "checkbox" ? "form-check-input" : "form-control";
             this.input.type = type;
+
             if (type === "date" && typeof (value) != "string") {
                 let day = ("" + value[2]).length > 1 ? ("" + value[2]) : ("0" + value[2]);
                 let month = ("" + value[1]).length > 1 ? ("" + value[1]) : ("0" + value[1]);
@@ -371,6 +372,7 @@ fskutil = function () {
                 inputDiv.appendChild(this.helpBlock);
             }
 
+            
             // Add autocomplete to input with vocabulary
             if (vocabulary) {
                 fskutil.addControlledVocabulary(this.input, vocabulary);
@@ -411,6 +413,19 @@ fskutil = function () {
                 isValid = true;
             } else {
                 isValid = this.input.value ? true : false;
+                // if email input is empty, reset the default error message
+                if(!isValid && this.input.type === "email"){
+                    this.helpBlock.textContent = `Email is a required property`;
+                }
+                // check if mail has correct structure
+                if(isValid && this.input.type === "email"){
+
+                    let re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\ ".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                    isValid =  re.test(this.input.value);
+                    this.helpBlock.textContent = `This is not a valid email address`;
+
+                }
+
             }
 
             if (!isValid) {
@@ -633,7 +648,7 @@ fskutil = function () {
         let isMandatory = prop.required ? prop.required : false;
 
         if (prop.type === "text" || prop.type === "number" || prop.type === "url" ||
-            prop.type === "date")
+            prop.type === "date" || prop.type === "email")
             return new fskutil.InputForm(prop.label, isMandatory, prop.type, prop.description,
                 value ? value : "", prop.vocabulary);
 
