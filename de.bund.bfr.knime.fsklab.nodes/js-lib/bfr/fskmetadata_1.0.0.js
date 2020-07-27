@@ -104,7 +104,7 @@ ui = {
         "label": "Subclass",
         "type": "text-array",
         "description": "Sub-cassification of the model given the Model Class",
-        "vocabulary": "Model_Sub_Class"
+        "vocabulary": "model_subclass"
     }, {
         "id": "basicProcess",
         "label": "Basic process",
