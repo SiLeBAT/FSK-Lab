@@ -134,12 +134,12 @@ joiner = function () {
       <form id="detailsForm">
         <div class="form-group row">
           <label class="col-sm-2 col-form-label" for="source">Source Port:</label>
-          <div class="col-sm-10"><input type="text" class="form-control" id="source"></div>
+          <div class="col-sm-10"><input type="text" class="form-control" id="source" readonly></div>
         </div>
         <div class="form-group row">
           <label class="col-sm-2 col-form-label" for="target">Target Port:</label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" id="target"">
+            <input type="text" class="form-control" id="target" readonly>
           </div>
         </div>
         <div class="form-group row">
@@ -545,7 +545,7 @@ joiner = function () {
           source: { id: firstNodeId, port: portIds[0] },
           target: { id: secondNodeId, port: portIds[1] }
         });
-
+        
         links.push(link);
       });
       _graph.addCells(links);
