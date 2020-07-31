@@ -73,7 +73,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
   private final RunnerNodeInternalSettings internalSettings = new RunnerNodeInternalSettings();
 
   private RunnerNodeSettings nodeSettings = new RunnerNodeSettings();
-
+  private FskPortObject fskObj = null;
   // Input and output port types
   private static final PortType[] IN_TYPES = {FskPortObject.TYPE};
   private static final PortType[] OUT_TYPES = {FskPortObject.TYPE, ImagePortObject.TYPE_OPTIONAL};
@@ -96,7 +96,8 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
   @Override
   protected void saveInternals(File nodeInternDir, ExecutionMonitor exec)
       throws IOException, CanceledExecutionException {
-    internalSettings.saveInternals(nodeInternDir);
+    //internalSettings.saveInternals(nodeInternDir);
+    internalSettings.saveInternals(nodeInternDir,fskObj);
   }
 
   @Override
@@ -131,6 +132,8 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
   protected PortObject[] execute(PortObject[] inData, ExecutionContext exec) throws Exception {
 
     FskPortObject fskObj = (FskPortObject) inData[0];
+    this.fskObj = fskObj;
+    
     final List<FskSimulation> simulation = fskObj.simulations;
     if (StringUtils.isNotBlank(nodeSettings.simulation)) {
       FskPortObject fskObjk = fskObj;
@@ -152,7 +155,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
     } catch (Exception e) {
       e.printStackTrace();
     }
-
+    
     try (FileInputStream fis = new FileInputStream(internalSettings.imageFile)) {
       final SvgImageContent content = new SvgImageContent(fis);
       ImagePortObject imgObj = new ImagePortObject(content, SVG_SPEC);

@@ -303,6 +303,8 @@ class CreatorNodeModel extends NoInternalsModel {
     }
     List<String> librariesList = new ArrayList<>(librariesSet);
 
+    // generated resource files (empty)
+    List<String> resourceFiles = new ArrayList<>();
     // Import readme
     exec.checkCanceled();
     String readmePath = nodeSettings.getReadme();
@@ -315,7 +317,7 @@ class CreatorNodeModel extends NoInternalsModel {
     }
 
     final FskPortObject portObj = new FskPortObject(modelScript, vizScript, modelMetadata, null,
-        librariesList, environmentManager, plotPath, readme);
+        librariesList, resourceFiles, environmentManager, plotPath, readme);
 
     List<Parameter> parameters = SwaggerUtil.getParameter(modelMetadata);
     if (SwaggerUtil.getModelMath(modelMetadata) != null) {

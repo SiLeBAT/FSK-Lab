@@ -497,6 +497,10 @@ class ReaderNodeModel extends NoInternalsModel {
       if (!modelScript.isEmpty()) {
         packagesSet.addAll(new RScript(modelScript).getLibraries());
       }
+      
+      // generated resource Files (empty)
+      List<String> resourceFiles = new ArrayList<>();
+      
       if (!visualizationScript.isEmpty()) {
         packagesSet.addAll(new RScript(visualizationScript).getLibraries());
       }
@@ -509,7 +513,7 @@ class ReaderNodeModel extends NoInternalsModel {
       String plotPath = "";
 
       FskPortObject fskObj = new FskPortObject(modelScript, visualizationScript, model,
-          workspacePath, packagesList, Optional.of(environmentManager), plotPath, readme);
+          workspacePath, packagesList, resourceFiles, Optional.of(environmentManager), plotPath, readme);
 
       // Read selected simulation index and simulations
       Optional<ArchiveEntry> simulationEntry =
