@@ -25,6 +25,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -178,13 +179,9 @@ class WriterNodeModel extends NoInternalsModel {
         // Adds resources
         
         List<Path> resources = Files.list(workingDirectory.get()).collect(Collectors.toList());
-        
-        // check, if resource files are available, if not, look into /internals folder
-        
-        List<Path> resourceFiles = new ArrayList<>();
-        fskObj.resourceFiles.forEach(f -> resourceFiles.add(Paths.get(f)));
-        resources.addAll(resourceFiles);
-        
+
+        // add generated resources
+        resources.addAll(fskObj.generatedResourceFiles.getResourcePaths());
         
         for (final Path resourcePath : resources) {
 

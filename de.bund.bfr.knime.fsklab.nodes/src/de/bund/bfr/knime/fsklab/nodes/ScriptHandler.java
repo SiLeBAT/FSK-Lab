@@ -14,6 +14,7 @@ import org.knime.core.node.workflow.WorkflowManager;
 import org.knime.core.util.FileUtil;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskSimulation;
+import de.bund.bfr.knime.fsklab.nodes.environment.GeneratedResourceFiles;
 import de.bund.bfr.knime.fsklab.nodes.plot.ModelPlotter;
 import de.bund.bfr.metadata.swagger.Parameter;
 import de.bund.bfr.metadata.swagger.Parameter.ClassificationEnum;
@@ -123,22 +124,21 @@ public abstract class ScriptHandler implements AutoCloseable {
     
     // save files from output parameters in internalSettings /generatedData
     final File file = new File("C:\\Users\\schuelet\\Documents\\Arbeit", "camp-alt.csv");
-    NodeContext nodeContext = NodeContext.getContext();
-    ReferencedFile nodeDirectory = nodeContext.getNodeContainer().getNodeContainerDirectory();
-   
+  
     try {
 
       String file_prefix = FilenameUtils.getBaseName(file.getName());
-      String file_suffix = FilenameUtils.getExtension(file.getName());
+ 
       File temp_dir = FileUtil.createTempDir(file_prefix);
       final File temp_resourceFile = new File(temp_dir.getAbsolutePath(),file.getName());
-      //new File(nodeDirectory.getFile().getAbsolutePath(), file.getName());
-      
+            
       FileUtil.copy(file, temp_resourceFile );
+
+      GeneratedResourceFiles generatedResourceFiles = new GeneratedResourceFiles(); 
+      generatedResourceFiles.addResourceFile(temp_resourceFile);
+      fskObj.generatedResourceFiles = generatedResourceFiles;
      
-      fskObj.resourceFiles.add(temp_resourceFile.getAbsolutePath());
-      
-     internalSettings.resourceFiles.add(temp_resourceFile);  
+      internalSettings.resourceFiles.add(temp_resourceFile);  
   
     }catch(Exception e) {
       LOGGER.warn("resourceFiles not found ", e);

@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.io.FileUtils;
@@ -30,6 +31,7 @@ import org.knime.core.data.image.png.PNGImageContent;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.util.FileUtil;
 import de.bund.bfr.knime.fsklab.FskPortObject;
+import de.bund.bfr.knime.fsklab.nodes.environment.GeneratedResourceFiles;
 
 public class RunnerNodeInternalSettings {
 
@@ -46,7 +48,7 @@ public class RunnerNodeInternalSettings {
   public FskPortObject portObj = null;
   public RunnerNodeInternalSettings() {
     try {
-      resourceFiles = new ArrayList<File>();
+      //resourceFiles = new ArrayList<File>();
       internalFiles = new ArrayList<File>();
       imageFile = FileUtil.createTempFile("FskxRunner-", ".svg");
     } catch (IOException e) {
@@ -62,36 +64,34 @@ public class RunnerNodeInternalSettings {
     // yes: in case we reset the node, the list needs to be cleared and deleted
       final File resource = new File(nodeInternDir,"camp-alt.csv");
       internalFiles.add(resource);
-    
-//    final File file = new File(nodeInternDir, "Rplot.svg");
-//
-//    if (file.exists() && file.canRead()) {
-//      FileUtil.copy(file, imageFile);
-//      try (InputStream is = new FileInputStream(imageFile)) {
-//        plot = new PNGImageContent(is).getImage();
-//      }
-//    }
+ 
   }
 
   /** Saves the saved image. */
   public void saveInternals(File nodeInternDir, FskPortObject fskObj) throws IOException {
     
-    fskObj.resourceFiles.clear();
+  
+    
+    
     List<File> temp_dirs = new ArrayList<File>(); 
-    for(File f : resourceFiles) {
+    for(Path path : fskObj.generatedResourceFiles.getResourcePaths()) {
       
  
-      temp_dirs.add(new File(f.getParent()));
+      File resourceFile = path.toFile();
+      temp_dirs.add(resourceFile.getParentFile());
       
-      final File file = new File(nodeInternDir, f.getName());
+      final File internalFile = new File(nodeInternDir, resourceFile.getName());
       
-      FileUtil.copy(f, file);
-      internalFiles.add(file);
-      fskObj.resourceFiles.add(file.getAbsolutePath());
+      FileUtil.copy(resourceFile, internalFile);
+      internalFiles.add(internalFile);
+  
+     
       
     }
     
-    //internalFiles.forEach(f -> fskObj.resourceFiles.add(f.getAbsolutePath()));
+    fskObj.generatedResourceFiles = new GeneratedResourceFiles(nodeInternDir);
+    internalFiles.forEach(file -> fskObj.generatedResourceFiles.addResourceFile(file));
+
     for(File dir : temp_dirs) {
       try {
         FileUtil.deleteRecursively(dir);  
