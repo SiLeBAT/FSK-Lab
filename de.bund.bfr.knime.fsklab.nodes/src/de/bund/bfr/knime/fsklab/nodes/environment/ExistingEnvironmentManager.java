@@ -27,6 +27,10 @@ public class ExistingEnvironmentManager implements EnvironmentManager {
   public ExistingEnvironmentManager(String environmentPath) {
     this.environmentPath = environmentPath;
   }
+  
+  public String getEnvironmentPath() {
+    return environmentPath;
+  }
 
   @Override
   public Optional<Path> getEnvironment() {
