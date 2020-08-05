@@ -38,6 +38,14 @@ public class ArchivedEnvironmentManager implements EnvironmentManager {
     this.archivePath = archivePath;
     this.entries = entries;
   }
+  
+  public String getArchivePath() {
+    return archivePath;
+  }
+  
+  public String[] getEntries() {
+    return entries;
+  }
 
   @Override
   public Optional<Path> getEnvironment() {

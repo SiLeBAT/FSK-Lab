@@ -1,7 +1,8 @@
 package de.bund.bfr.knime.fsklab.service;
 
-import static spark.Spark.after;
+import static spark.Spark.before;
 import static spark.Spark.get;
+import static spark.Spark.options;
 import static spark.Spark.port;
 
 import java.io.File;
@@ -68,7 +69,6 @@ import de.bund.bfr.rakip.vocabularies.data.StatusRepository;
 import de.bund.bfr.rakip.vocabularies.data.TechnologyTypeRepository;
 import de.bund.bfr.rakip.vocabularies.data.UnitCategoryRepository;
 import de.bund.bfr.rakip.vocabularies.data.UnitRepository;
-import spark.Filter;
 import spark.ResponseTransformer;
 
 public class FskService implements Runnable {
@@ -103,10 +103,22 @@ public class FskService implements Runnable {
 		port(8080);
 
 		// Enable CORS
-		after((Filter) (request, response) -> {
-			response.header("Access-Control-Allow-Origin", "*");
-			response.header("Access-Control-Allow-Methods", "GET");
+		options("/*", (request, response) -> {
+
+			String accessControlRequestHeaders = request.headers("Access-Control-Request-Headers");
+			if (accessControlRequestHeaders != null) {
+				response.header("Access-Control-Allow-Headers", accessControlRequestHeaders);
+			}
+
+			String accessControlRequestMethod = request.headers("Access-Control-Request-Method");
+			if (accessControlRequestMethod != null) {
+				response.header("Access-Control-Allow-Methods", accessControlRequestMethod);
+			}
+
+			return "OK";
 		});
+
+		before((request, response) -> response.header("Access-Control-Allow-Origin", "*"));
 
 		get("getById/:vocabulary/:id", (req, res) -> {
 			res.type("application/json");
@@ -126,6 +138,25 @@ public class FskService implements Runnable {
 			BasicRepository<?> repository = getRepository(req.params(":vocabulary"), connection);
 			return repository.getAllNames();
 		}, jsonTransformer);
+
+		// TODO: for future reference
+//		post("/list", (req, res) -> {
+//			res.type("application/json");
+//			res.status(200);
+//
+//			// Back up and configure class loader of current thread
+//			ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
+//			Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
+//
+//			String body = req.body();
+//			EnvironmentManager mgr = MAPPER.readValue(body, EnvironmentManager.class);
+//			System.out.println(mgr);
+//
+//			// Restore class loader
+//			Thread.currentThread().setContextClassLoader(originalClassLoader);
+//
+//			return mgr.getFilenames();
+//		}, jsonTransformer);
 	}
 
 	private static class JsonTransformer implements ResponseTransformer {
@@ -223,11 +254,6 @@ public class FskService implements Runnable {
 		}
 
 		return null;
-	}
-
-	// TODO: Remove test
-	public static void main(String[] args) {
-		new Thread(new FskService()).start();
 	}
 
 	private void initDatabase() throws SQLException, ClassNotFoundException {

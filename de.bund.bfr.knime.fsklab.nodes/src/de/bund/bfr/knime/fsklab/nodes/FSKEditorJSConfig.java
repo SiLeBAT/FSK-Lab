@@ -18,42 +18,45 @@
  */
 package de.bund.bfr.knime.fsklab.nodes;
 
+import java.io.IOException;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObjectSpec;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.nodes.FSKEditorJSNodeDialog.ModelType;
+import de.bund.bfr.knime.fsklab.nodes.environment.EnvironmentManager;
 
 class FSKEditorJSConfig {
+
+  private static final ObjectMapper MAPPER = FskPlugin.getDefault().MAPPER104;
 
   private static final String METADATA = "ModelMetaData";
   private static final String MODEL_SCRIPT = "modelScript";
   private static final String VISUALIZATION_SCRIPT = "visualizationScript";
   private static final String README = "readme";
-  private static final String RESOURCES = "resources";
+  private static final String ENVIRONMENT = "environment";
   private static final String SERVER_NAME = "serverName";
   private static final String COMPLETED = "completed";
   private static final String ERRORS = "errors";
-  private static final String WORKING_DIRECTORY = "workingDirectory";
   private static final String MODEL_TYPE = "modelType";
 
   private String m_metadata;
   private String m_modelScript;
   private String m_visualizationScript;
   private String m_readme;
-  private String[] m_resourceFiles;
+  private EnvironmentManager m_environment;
   private String m_serverName;
   private boolean m_isCompleted;
   private String[] m_validationErrors;
   private String m_modelType;
-  
+
   /** UUID of the connected node. */
   private String m_connectedNode;
-  
-  /** Paths to resources: plain text files and R workspace files (.rdata). */
-  private String m_workingDirectory;
-  
+
   public String getModelMetaData() {
     return m_metadata;
   }
@@ -81,11 +84,11 @@ class FSKEditorJSConfig {
   public String[] getResources() {
     return resources;
   }
-  
+
   public void setResources(String[] resources) {
     this.resources = resources;
   }
-  
+
   public String getServerName() {
     return m_serverName;
   }
@@ -121,29 +124,26 @@ class FSKEditorJSConfig {
   /** Resources that will be load into the working directory */
   private String[] resources;
 
-  /** @return empty string if not set. */
-  public String getWorkingDirectory() {
-    return m_workingDirectory != null ? m_workingDirectory : "";
+  public EnvironmentManager getEnvironmentManager() {
+    return m_environment;
   }
 
-  public void setWorkingDirectory(String workingDirectory) {
-    if (workingDirectory != null && !workingDirectory.isEmpty()) {
-      this.m_workingDirectory = workingDirectory;
-    }
+  public void setEnvironmentManager(EnvironmentManager environment) {
+    this.m_environment = environment;
   }
-  
+
   public String getConnectedNode() {
     return m_connectedNode;
   }
-  
+
   public void setConnectedNode(String connectedNode) {
     this.m_connectedNode = connectedNode;
   }
-  
+
   public String getModelType() {
     return m_modelType;
   }
-  
+
   public void setModelType(String modelType) {
     m_modelType = modelType;
   }
@@ -158,7 +158,15 @@ class FSKEditorJSConfig {
     settings.addString(MODEL_SCRIPT, m_modelScript);
     settings.addString(VISUALIZATION_SCRIPT, m_visualizationScript);
     settings.addString(README, m_readme);
-    settings.addStringArray(RESOURCES, m_resourceFiles);
+
+    if (m_environment != null) {
+      try {
+        byte[] environmentBytes = MAPPER.writeValueAsBytes(m_environment);
+        settings.addByteArray(ENVIRONMENT, environmentBytes);
+      } catch (JsonProcessingException e) {
+      }
+    }
+
     settings.addString(SERVER_NAME, m_serverName);
     settings.addBoolean(COMPLETED, m_isCompleted);
     settings.addStringArray(ERRORS, m_validationErrors);
@@ -172,16 +180,23 @@ class FSKEditorJSConfig {
    * @throws InvalidSettingsException If incomplete or wrong.
    */
   public void loadSettings(final NodeSettingsRO settings) throws InvalidSettingsException {
-    
+
     m_metadata = settings.getString(METADATA, "");
     m_modelScript = settings.getString(MODEL_SCRIPT, "");
     m_visualizationScript = settings.getString(VISUALIZATION_SCRIPT, "");
     m_readme = settings.getString(README, "");
-    resources = settings.getStringArray(RESOURCES, new String[0]);
+
+    if (settings.containsKey(ENVIRONMENT)) {
+      try {
+        byte[] environmentBytes = settings.getByteArray(ENVIRONMENT);
+        m_environment = MAPPER.readValue(environmentBytes, EnvironmentManager.class);
+      } catch (IOException e) {
+      }
+    }
+
     m_serverName = settings.getString(SERVER_NAME, "");
     m_isCompleted = settings.getBoolean(COMPLETED, false);
     m_validationErrors = settings.getStringArray(ERRORS, new String[0]);
-    m_workingDirectory = settings.getString(WORKING_DIRECTORY, "");
     m_modelType = settings.getString(MODEL_TYPE, ModelType.genericModel.name());
   }
 
@@ -196,11 +211,19 @@ class FSKEditorJSConfig {
     m_modelScript = settings.getString(MODEL_SCRIPT, "");
     m_visualizationScript = settings.getString(VISUALIZATION_SCRIPT, "");
     m_readme = settings.getString(README, "");
-    resources = settings.getStringArray(RESOURCES, "");
+    
+    if (settings.containsKey(ENVIRONMENT)) {
+      try {
+        byte[] environmentBytes = settings.getByteArray(ENVIRONMENT);
+        m_environment = MAPPER.readValue(environmentBytes, EnvironmentManager.class);
+      } catch (IOException | InvalidSettingsException e) {
+        // InvalidSettingsException is not thrown as the key is already checked.
+      }
+    }
+    
     m_serverName = settings.getString(SERVER_NAME, "");
     m_isCompleted = settings.getBoolean(COMPLETED, false);
     m_validationErrors = settings.getStringArray(ERRORS, "");
-    m_workingDirectory = settings.getString(WORKING_DIRECTORY, "");
     m_modelType = settings.getString(MODEL_TYPE, ModelType.genericModel.name());
   }
 }

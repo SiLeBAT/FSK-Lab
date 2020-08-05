@@ -47,7 +47,6 @@ import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.FskSimulation;
 import de.bund.bfr.knime.fsklab.nodes.FSKEditorJSNodeDialog.ModelType;
 import de.bund.bfr.knime.fsklab.nodes.environment.EnvironmentManager;
-import de.bund.bfr.knime.fsklab.nodes.environment.ExistingEnvironmentManager;
 import de.bund.bfr.metadata.swagger.Model;
 import de.bund.bfr.metadata.swagger.Parameter;
 import metadata.SwaggerUtil;
@@ -164,12 +163,11 @@ final class FSKEditorJSNodeModel
     String modelScript = "";
     String visualizationScript = "";
 
-    Optional<EnvironmentManager> environmentManager;
-    if (inObjects[0] != null) {
+    Optional<EnvironmentManager> environmentManager;   
+    if (m_config.getEnvironmentManager() != null) {
+      environmentManager = Optional.of(m_config.getEnvironmentManager());
+    } else if (inObjects[0] != null) {
       environmentManager = ((FskPortObject) inObjects[0]).getEnvironmentManager();
-    } else if (!m_config.getWorkingDirectory().isEmpty()) {
-      EnvironmentManager actualManager = new ExistingEnvironmentManager(m_config.getWorkingDirectory());
-      environmentManager = Optional.of(actualManager);
     } else {
       environmentManager = Optional.empty();
     }
@@ -312,7 +310,7 @@ final class FSKEditorJSNodeModel
     value.setModelScript(m_config.getModelScript());
     value.setVisualizationScript(m_config.getVisualizationScript());
     value.setReadme(m_config.getReadme());
-    value.setResourcesFiles(m_config.getResources());
+    value.setEnvironment(m_config.getEnvironmentManager());
     value.setServerName(m_config.getServerName());
     value.setCompleted(m_config.isCompleted());
     value.setValidationErrors(m_config.getValidationErrors());
@@ -325,7 +323,7 @@ final class FSKEditorJSNodeModel
     m_config.setModelScript(value.getModelScript());
     m_config.setVisualizationScript(value.getVisualizationScript());
     m_config.setReadmeFile(value.getReadme());
-    m_config.setResources(value.getResourcesFiles());
+    m_config.setEnvironmentManager(value.getEnvironment());
     m_config.setServerName(value.getServerName());
     m_config.setCompleted(value.isCompleted());
     m_config.setValidationErrors(value.getValidationErrors());
@@ -349,7 +347,8 @@ final class FSKEditorJSNodeModel
     value.setVisualizationScript(m_port.viz);
     value.setReadme(m_port.getReadme());
     value.setModelType(m_port.modelMetadata.getModelType());
+    m_port.getEnvironmentManager().ifPresent(value::setEnvironment);
     
-    // Cannot assign resource files, server name, completed and validation errors
+    // Cannot assign server name, completed and validation errors
   }
 }

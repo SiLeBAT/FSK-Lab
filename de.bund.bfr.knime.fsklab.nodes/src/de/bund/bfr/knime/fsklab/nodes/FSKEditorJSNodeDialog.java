@@ -22,30 +22,20 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.InvalidPathException;
-import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.Date;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
+import javax.swing.JRadioButton;
 import javax.swing.JTable;
-import javax.swing.SwingWorker;
-import javax.swing.border.TitledBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.table.AbstractTableModel;
-import org.apache.commons.io.FileUtils;
+import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
 import org.apache.commons.lang3.StringUtils;
 import org.knime.core.node.DataAwareNodeDialogPane;
 import org.knime.core.node.FlowVariableModel;
@@ -58,14 +48,14 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.util.FilesHistoryPanel;
 import org.knime.core.node.util.FilesHistoryPanel.LocationValidation;
 import org.knime.core.node.workflow.FlowVariable;
-import org.knime.core.node.workflow.NodeContext;
-import org.knime.core.node.workflow.WorkflowContext;
-import org.knime.core.util.FileUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.FskPortObject;
-import de.bund.bfr.knime.fsklab.nodes.common.ui.FBrowseButton;
+import de.bund.bfr.knime.fsklab.nodes.environment.ArchivedEnvironmentManager;
+import de.bund.bfr.knime.fsklab.nodes.environment.EnvironmentManager;
+import de.bund.bfr.knime.fsklab.nodes.environment.ExistingEnvironmentManager;
+import de.bund.bfr.knime.fsklab.nodes.environment.FilesEnvironmentManager;
 import de.bund.bfr.metadata.swagger.Model;
 
 class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
@@ -79,12 +69,14 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
 
   private final DefaultComboBoxModel<ModelType> modelTypeComboBoxModel;
   private final FilesHistoryPanel m_readmePanel;
-  private final FilesHistoryPanel m_workingDirectoryPanel;
-  private FileTableModel fileModel = new FileTableModel();
-  private JTable fileTable = new JTable(fileModel);
-  private File currentWorkingDirectory;
 
-  private WorkingDirectoryChangeListener changeListener = new WorkingDirectoryChangeListener();
+  private final JTextField m_workingDirectoryField;
+
+  private final JRadioButton m_archivedEnvironmentButton;
+  private final JRadioButton m_directoryEnvironmentButton;
+  private final JRadioButton m_filesEnvironmentButton;
+
+  private final DefaultTableModel m_filesTableModel;
 
   private static final ObjectMapper MAPPER = FskPlugin.getDefault().MAPPER104;
 
@@ -125,11 +117,15 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
     m_readmePanel =
         new FilesHistoryPanel(readmeVariable, "readme", LocationValidation.None, ".txt");
 
-    FlowVariableModel directoryVariable =
-        createFlowVariableModel("workingDirectory", FlowVariable.Type.STRING);
-    m_workingDirectoryPanel =
-        new FilesHistoryPanel(directoryVariable, "directory", LocationValidation.None);
-    m_workingDirectoryPanel.getComponent(0).setEnabled(false);
+    m_workingDirectoryField = new JTextField(80);
+    m_workingDirectoryField.setEditable(false);
+
+    // Radio buttons
+    m_archivedEnvironmentButton = new JRadioButton("Archived environment");
+    m_directoryEnvironmentButton = new JRadioButton("Directory environment");
+    m_filesEnvironmentButton = new JRadioButton("Files environment");
+
+    m_filesTableModel = new DefaultTableModel(0, 1);
 
     createUI();
   }
@@ -139,37 +135,64 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
    * 
    * @param modelType Non null model type.
    * @param readmeFile Empty string if not set.
-   * @param workingDirectory Empty string if not set.
+   * @param environment Null if not set.
    */
-  private void updateDialog(ModelType modelType, String readmeFile, String workingDirectory) {
-
+  private void updateDialog(ModelType modelType, String readmeFile,
+      EnvironmentManager environment) {
     modelTypeComboBoxModel.setSelectedItem(modelType);
-
     m_readmePanel.setSelectedFile(!readmeFile.isEmpty() ? readmeFile : "");
 
-    if (!workingDirectory.isEmpty()) {
+    if (environment != null) {
 
-      try {
-        m_workingDirectoryPanel.setSelectedFile(workingDirectory);
+      if (environment instanceof ArchivedEnvironmentManager) {
+        m_archivedEnvironmentButton.setSelected(true);
+        m_workingDirectoryField.setEnabled(false);
 
-        // Populate resources table with all the files in the working directory
-        URL url = FileUtil.toURL(m_workingDirectoryPanel.getSelectedFile());
-        Path localPath = FileUtil.resolveToPath(url);
+        if (environment != null && environment instanceof ArchivedEnvironmentManager) {
+          ArchivedEnvironmentManager archivedEnvironment = (ArchivedEnvironmentManager) environment;
 
-        if (localPath != null) {
-          // Clear and local file names from directory localPath
-          fileModel.filenames = Files.walk(localPath).filter(Files::isRegularFile)
-              .map(Path::toString).toArray(String[]::new);
-          fileTable.revalidate();
-          currentWorkingDirectory = new File(workingDirectory);
+          // Update directoryPanel
+          m_workingDirectoryField.setText(archivedEnvironment.getArchivePath());
+
+          // update table
+          m_filesTableModel.setRowCount(0);
+          for (String entry : archivedEnvironment.getEntries()) {
+            String[] row = {entry};
+            m_filesTableModel.addRow(row);
+          }
+        } else {
+          clearEnvironmentPanel();
         }
-      } catch (Exception err) {
-        m_workingDirectoryPanel.setSelectedFile("");
-        fileModel.filenames = new String[0];
-        currentWorkingDirectory = null;
+
+      } else if (environment instanceof ExistingEnvironmentManager) {
+        m_directoryEnvironmentButton.setSelected(true);
+        m_workingDirectoryField.setEnabled(true);
+
+        if (environment != null && environment instanceof ExistingEnvironmentManager) {
+          ExistingEnvironmentManager directoryManager = (ExistingEnvironmentManager) environment;
+
+          // Update directoryPanel
+          m_workingDirectoryField.setText(directoryManager.getEnvironmentPath());
+
+          // update table
+          m_filesTableModel.setRowCount(0); // Clear table
+
+          File existingWorkingDirectory = new File(directoryManager.getEnvironmentPath());
+          File[] files = existingWorkingDirectory.listFiles(File::isFile);
+          if (files != null) {
+            for (File file : files) {
+              String[] row = {file.getAbsolutePath()};
+              m_filesTableModel.addRow(row);
+            }
+          }
+
+        } else {
+          clearEnvironmentPanel();
+        }
+
+      } else if (environment instanceof FilesEnvironmentManager) {
+        m_filesEnvironmentButton.setSelected(true);
       }
-    } else {
-      m_workingDirectoryPanel.setSelectedFile("");
     }
   }
 
@@ -188,9 +211,8 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
     }
 
     String readmeFile = settings.getString(README_FILE, "");
-    String workingDirectory = m_config.getWorkingDirectory();
 
-    updateDialog(modelType, readmeFile, workingDirectory);
+    updateDialog(modelType, readmeFile, m_config.getEnvironmentManager());
   }
 
   @Override
@@ -218,17 +240,24 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
     }
 
     String readmeFile = settings.getString(README_FILE, "");
-    
-    // TODO: working directory
-//    String workingDirectory = inputObject.getWorkingDirectory();
-    updateDialog(modelType, readmeFile, "");
+
+    // Environment. First load from settings and if empty try to get from input model.
+    EnvironmentManager environment;
+    if (m_config.getEnvironmentManager() != null) {
+      environment = m_config.getEnvironmentManager();
+    } else if (inputObject.getEnvironmentManager().isPresent()) {
+      environment = inputObject.getEnvironmentManager().get();
+    } else {
+      environment = null;
+    }
+
+    updateDialog(modelType, readmeFile, environment);
   }
 
   @Override
   protected void saveSettingsTo(NodeSettingsWO settings) throws InvalidSettingsException {
 
     m_readmePanel.addToHistory();
-    m_workingDirectoryPanel.addToHistory();
 
     String modelType = ((ModelType) modelTypeComboBoxModel.getSelectedItem()).name();
 
@@ -248,14 +277,37 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
 
     m_readmeFile = m_readmePanel.getSelectedFile().trim();
     settings.addString(README_FILE, m_readmeFile);
+    
+    // environment
+    if (m_archivedEnvironmentButton.isSelected()) {
+      // Take archive path
+      String archivePath = m_workingDirectoryField.getText();
+      // Take entries
+      String[] entries = new String[m_filesTableModel.getRowCount()];
+      for (int row = 0; row < m_filesTableModel.getRowCount(); row++) {
+        entries[row] = (String) m_filesTableModel.getValueAt(row, 0);
+      }
+      // Create and set environment
+      m_config.setEnvironmentManager(new ArchivedEnvironmentManager(archivePath, entries));
+    } else if (m_directoryEnvironmentButton.isSelected()) {
+      // Take directory path
+      String directoryPath = m_workingDirectoryField.getText();
+      // Create and set environment
+      m_config.setEnvironmentManager(new ExistingEnvironmentManager(directoryPath));
+    } else if (m_filesEnvironmentButton.isSelected()) {
+      // Take entries
+      String[] entries = new String[m_filesTableModel.getRowCount()];
+      for (int row = 0; row < m_filesTableModel.getRowCount(); row++) {
+        entries[row] = (String) m_filesTableModel.getValueAt(row, 0);
+      }
+      // Create and set environment
+      m_config.setEnvironmentManager(new FilesEnvironmentManager(entries));
+    }
 
     m_config.saveSettings(settings);
   }
 
   private void createUI() {
-
-    final NodeContext nodeContext = NodeContext.getContext();
-    final WorkflowContext workflowContext = nodeContext.getWorkflowManager().getContext();
 
     // Model type panel
     final JPanel modelTypePanel = new JPanel(new BorderLayout());
@@ -274,187 +326,130 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
     readmePanel.add(m_readmePanel, BorderLayout.NORTH);
     readmePanel.add(Box.createHorizontalGlue());
 
-    // Working directory panel
-    final JPanel workingDirectoryPanel = new JPanel(new BorderLayout());
-    workingDirectoryPanel.setBorder(
-        BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Working directory:"));
-    workingDirectoryPanel.add(m_workingDirectoryPanel, BorderLayout.NORTH);
-    workingDirectoryPanel.add(Box.createHorizontalGlue());
-
-    m_workingDirectoryPanel.addChangeListener(changeListener);
-
-    FBrowseButton resourcesButton = new FBrowseButton("Browse");
-    resourcesButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-
-        JFileChooser fc = new JFileChooser();
-        fc.setMultiSelectionEnabled(true);
-        fc.setDialogType(JFileChooser.OPEN_DIALOG);
-        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-
-        int response = fc.showOpenDialog(resourcesButton);
-        if (response == JFileChooser.APPROVE_OPTION) {
-
-          File[] files = fc.getSelectedFiles();
-
-          // Get working directory
-          if (StringUtils.isNotEmpty(m_workingDirectoryPanel.getSelectedFile())) {
-            try {
-              currentWorkingDirectory = FileUtil
-                  .getFileFromURL(FileUtil.toURL(m_workingDirectoryPanel.getSelectedFile()));
-            } catch (InvalidPathException | MalformedURLException err) {
-              err.printStackTrace();
-            }
-          } else {
-            currentWorkingDirectory = new File(workflowContext.getCurrentLocation(),
-                nodeContext.getNodeContainer().getNameWithID().toString().replaceAll("\\W", "")
-                    .replace(" ", "") + "_" + "workingDirectory"
-                    + FSKEditorJSNodeModel.TEMP_DIR_UNIFIER.getAndIncrement());
-            currentWorkingDirectory.mkdir();
-            m_workingDirectoryPanel.setSelectedFile(currentWorkingDirectory.getAbsolutePath());
-          }
-
-          resourcesButton.setEnabled(false);
-          new SwingWorker<Void, Void>() {
-
-            @Override
-            protected Void doInBackground() throws IOException {
-
-              for (File oneFile : files) {
-                File targetFile = new File(currentWorkingDirectory, oneFile.getName());
-                FileUtils.copyFile(oneFile, targetFile);
-              }
-
-              return null;
-            }
-
-            protected void done() {
-              resourcesButton.setEnabled(true);
-            }
-
-          }.execute();
-
-          fileModel.filenames =
-              Arrays.stream(files).map(p -> p.toPath().toString()).toArray(String[]::new);
-          fileTable.revalidate();
-        }
-      }
-    });
-
     JPanel container = new JPanel();
     container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
     container.add(modelTypePanel);
     container.add(readmePanel);
-    container.add(workingDirectoryPanel);
-
-    JPanel fileSelector = new JPanel(new BorderLayout());
-
-    TitledBorder border = new TitledBorder("Select Resource(s) - to move to the working directory");
-    border.setTitleJustification(TitledBorder.CENTER);
-    border.setTitlePosition(TitledBorder.TOP);
-
-    fileSelector.add(resourcesButton, BorderLayout.NORTH);
-    fileSelector.add(new JScrollPane(fileTable), BorderLayout.CENTER);
-    fileSelector.setBorder(border);
-
-    container.add(fileSelector);
-
 
     addTab("Options", container);
+
+    // Environment tab
+
+    // Working directory panel
+    JButton workingDirectoryButton = new JButton("Browse");
+    workingDirectoryButton.addActionListener(new WorkingDirectoryButtonListener());
+    
+    JPanel workingDirectoryPanel = new JPanel();
+    workingDirectoryPanel.add(new JLabel("Working directory:"));
+    workingDirectoryPanel.add(m_workingDirectoryField);
+    workingDirectoryPanel.add(workingDirectoryButton);
+
+    // Group the radio buttons.
+    ButtonGroup group = new ButtonGroup();
+    group.add(m_archivedEnvironmentButton);
+    group.add(m_directoryEnvironmentButton);
+    group.add(m_filesEnvironmentButton);
+
+    // Register a listener for the radio buttons.
+    m_archivedEnvironmentButton.addActionListener(new ArchivedEnvironmentButtonListener());
+    m_directoryEnvironmentButton.addActionListener(new DirectoryEnvironmentButtonListener());
+    m_filesEnvironmentButton.addActionListener(new FilesEnvironmentButtonListener());
+
+    // Put the radio buttons in a row
+    JPanel radioPanel = new JPanel();
+    radioPanel.setLayout(new BoxLayout(radioPanel, BoxLayout.X_AXIS));
+
+    radioPanel.add(m_archivedEnvironmentButton);
+    radioPanel.add(m_directoryEnvironmentButton);
+    radioPanel.add(m_filesEnvironmentButton);
+
+    // Files table: List files in directory
+    JTable table = new JTable(m_filesTableModel);
+
+    JPanel environmentContainer = new JPanel();
+    environmentContainer.setLayout(new BoxLayout(environmentContainer, BoxLayout.Y_AXIS));
+    environmentContainer.add(workingDirectoryPanel);
+    environmentContainer.add(radioPanel);
+    environmentContainer.add(table);
+
+    addTab("Environment", environmentContainer);
   }
 
-  private class FileTableModel extends AbstractTableModel {
-
-    private static final long serialVersionUID = 7828275630230509962L;
-
-    private String[] filenames;
-
-    private final String[] columnNames =
-        {"Name", "Size", "Last modified", "Readable?", "Writable?"};
-
-    // This table model works for any one given directory
-    public FileTableModel() {
-      filenames = new String[0];
-    }
+  private class ArchivedEnvironmentButtonListener implements ActionListener {
 
     @Override
-    public int getColumnCount() {
-      return 5;
-    }
-
-    @Override
-    public int getRowCount() {
-      return filenames.length;
-    } // # of files in dir
-
-    @Override
-    public String getColumnName(int col) {
-      return columnNames[col];
-    }
-
-    // The method that must actually return the value of each cell.
-    @Override
-    public Object getValueAt(int row, int col) {
-      File f = new File(filenames[row]);
-      switch (col) {
-        case 0:
-          return f.getName();
-        case 1:
-          return Long.valueOf(f.length());
-        case 2:
-          return new Date(f.lastModified());
-        case 3:
-          return f.canRead();
-        case 4:
-          return f.canWrite();
-        default:
-          return null;
-      }
+    public void actionPerformed(ActionEvent e) {
+      clearEnvironmentPanel();
+      m_workingDirectoryField.setEnabled(false);
     }
   }
 
-  private class WorkingDirectoryChangeListener implements ChangeListener {
+  private class DirectoryEnvironmentButtonListener implements ActionListener {
 
     @Override
-    public void stateChanged(ChangeEvent e) {
+    public void actionPerformed(ActionEvent e) {
+      m_archivedEnvironmentButton.setEnabled(false);
+      clearEnvironmentPanel();
+      m_workingDirectoryField.setEnabled(true);
+    }
+  }
 
-      // Disable text field
-      m_workingDirectoryPanel.getComponent(0).setEnabled(false);
+  private class FilesEnvironmentButtonListener implements ActionListener {
 
-      // If selected director is not null or empty
-      if (StringUtils.isNotEmpty(m_workingDirectoryPanel.getSelectedFile())) {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      m_archivedEnvironmentButton.setEnabled(false);
+      clearEnvironmentPanel();
+      m_workingDirectoryField.setEnabled(true);
+    }
+  }
 
-        // Get selected directory
-        String selectedDirectory = m_workingDirectoryPanel.getSelectedFile();
-        try {
-          File newDirectory = FileUtil.getFileFromURL(FileUtil.toURL(selectedDirectory));
+  private class WorkingDirectoryButtonListener implements ActionListener {
 
-          // Create new working directory
-          if (!newDirectory.exists()) {
-            newDirectory.mkdir();
-          }
+    @Override
+    public void actionPerformed(ActionEvent e) {
 
-          // If old working directory is set, copy the old directory to the new one.
-          if (!newDirectory.equals(currentWorkingDirectory)) {
-            int choice = JOptionPane.showConfirmDialog(null, "Working directory is already set to "
-                + currentWorkingDirectory + " \nAre you sure you want to change?");
-            if (choice == JOptionPane.YES_OPTION) {
-              FileUtils.copyDirectory(currentWorkingDirectory, newDirectory);
+      if (m_directoryEnvironmentButton.isSelected()) {
+
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        fileChooser.setMultiSelectionEnabled(false);
+        if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+
+          // Update m_workingDirectoryField
+          File selectedFile = fileChooser.getSelectedFile();
+          m_workingDirectoryField.setText(selectedFile.getAbsolutePath());
+
+          // Update table model
+          m_filesTableModel.setRowCount(0);
+          File[] files = selectedFile.listFiles(File::isFile);
+          if (files != null) {
+            for (File file : files) {
+              String[] row = {file.getAbsolutePath()};
+              m_filesTableModel.addRow(row);
             }
           }
+        }
+      } else if (m_filesEnvironmentButton.isSelected()) {
 
-          // Update fileModel.filenames with the files in newDirectory
-          fileModel.filenames = Arrays.stream(newDirectory.listFiles()).map(File::getAbsolutePath)
-              .toArray(String[]::new);
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fileChooser.setMultiSelectionEnabled(true);
 
-          // Update currentWorkingDirectory
-          currentWorkingDirectory = newDirectory;
-
-        } catch (InvalidPathException | IOException err) {
-          err.printStackTrace();
+        // Update table model
+        if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+          m_filesTableModel.setRowCount(0);
+          for (File file : fileChooser.getSelectedFiles()) {
+            String[] row = {file.getAbsolutePath()};
+            m_filesTableModel.addRow(row);
+          }
         }
       }
     }
+  }
+
+  private void clearEnvironmentPanel() {
+    m_workingDirectoryField.setText("");
+    m_filesTableModel.setRowCount(0); // Clear table
   }
 }
