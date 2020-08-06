@@ -140,58 +140,62 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
   private void updateDialog(ModelType modelType, String readmeFile,
       EnvironmentManager environment) {
     modelTypeComboBoxModel.setSelectedItem(modelType);
-    m_readmePanel.setSelectedFile(!readmeFile.isEmpty() ? readmeFile : "");
+    m_readmePanel.setSelectedFile(readmeFile);
+    clearEnvironmentPanel();
 
     if (environment != null) {
 
       if (environment instanceof ArchivedEnvironmentManager) {
+        ArchivedEnvironmentManager archivedEnvironment = (ArchivedEnvironmentManager) environment;
+
         m_archivedEnvironmentButton.setSelected(true);
+
+        // Update m_workingDirectoryField
         m_workingDirectoryField.setEnabled(false);
+        m_workingDirectoryField.setText(archivedEnvironment.getArchivePath());
 
-        if (environment != null && environment instanceof ArchivedEnvironmentManager) {
-          ArchivedEnvironmentManager archivedEnvironment = (ArchivedEnvironmentManager) environment;
+        // Update m_filesTableModel
+        for (String entry : archivedEnvironment.getEntries()) {
+          String[] row = {entry};
+          m_filesTableModel.addRow(row);
+        }
+      } else if (environment instanceof ExistingEnvironmentManager) {
+        ExistingEnvironmentManager directoryManager = (ExistingEnvironmentManager) environment;
 
-          // Update directoryPanel
-          m_workingDirectoryField.setText(archivedEnvironment.getArchivePath());
+        m_archivedEnvironmentButton.setEnabled(false);
+        m_directoryEnvironmentButton.setSelected(true);
 
-          // update table
-          m_filesTableModel.setRowCount(0);
-          for (String entry : archivedEnvironment.getEntries()) {
-            String[] row = {entry};
+        // Update m_workingDirectoryField
+        m_workingDirectoryField.setEnabled(true);
+        m_workingDirectoryField.setText(directoryManager.getEnvironmentPath());
+
+        // Update m_filesTableModel
+        File existingWorkingDirectory = new File(directoryManager.getEnvironmentPath());
+        File[] files = existingWorkingDirectory.listFiles(File::isFile);
+        if (files != null) {
+          for (File file : files) {
+            String[] row = {file.getAbsolutePath()};
             m_filesTableModel.addRow(row);
           }
-        } else {
-          clearEnvironmentPanel();
-        }
-
-      } else if (environment instanceof ExistingEnvironmentManager) {
-        m_directoryEnvironmentButton.setSelected(true);
-        m_workingDirectoryField.setEnabled(true);
-
-        if (environment != null && environment instanceof ExistingEnvironmentManager) {
-          ExistingEnvironmentManager directoryManager = (ExistingEnvironmentManager) environment;
-
-          // Update directoryPanel
-          m_workingDirectoryField.setText(directoryManager.getEnvironmentPath());
-
-          // update table
-          m_filesTableModel.setRowCount(0); // Clear table
-
-          File existingWorkingDirectory = new File(directoryManager.getEnvironmentPath());
-          File[] files = existingWorkingDirectory.listFiles(File::isFile);
-          if (files != null) {
-            for (File file : files) {
-              String[] row = {file.getAbsolutePath()};
-              m_filesTableModel.addRow(row);
-            }
-          }
-
-        } else {
-          clearEnvironmentPanel();
         }
 
       } else if (environment instanceof FilesEnvironmentManager) {
+        FilesEnvironmentManager filesManager = (FilesEnvironmentManager) environment;
+
+        m_archivedEnvironmentButton.setEnabled(false);
         m_filesEnvironmentButton.setSelected(true);
+
+        // Update m_workingDirectoryField
+        m_workingDirectoryField.setEnabled(false);
+
+        // Update m_filesTableModel
+        String[] files = filesManager.getFiles();
+        if (files != null) {
+          for (String file : files) {
+            String[] row = {file};
+            m_filesTableModel.addRow(row);
+          }
+        }
       }
     }
   }
@@ -223,6 +227,7 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
     try {
       m_config.loadSettings(settings);
     } catch (InvalidSettingsException e) {
+      throw new NotConfigurableException(e.getMessage(), e);
     }
 
     ModelType modelType;
@@ -277,7 +282,7 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
 
     m_readmeFile = m_readmePanel.getSelectedFile().trim();
     settings.addString(README_FILE, m_readmeFile);
-    
+
     // environment
     if (m_archivedEnvironmentButton.isSelected()) {
       // Take archive path
@@ -338,7 +343,7 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
     // Working directory panel
     JButton workingDirectoryButton = new JButton("Browse");
     workingDirectoryButton.addActionListener(new WorkingDirectoryButtonListener());
-    
+
     JPanel workingDirectoryPanel = new JPanel();
     workingDirectoryPanel.add(new JLabel("Working directory:"));
     workingDirectoryPanel.add(m_workingDirectoryField);

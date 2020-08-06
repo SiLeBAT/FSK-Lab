@@ -28,6 +28,10 @@ public class FilesEnvironmentManager implements EnvironmentManager {
   public FilesEnvironmentManager(String[] files) {
     this.files = files;
   }
+  
+  public String[] getFiles() {
+    return files;
+  }
 
   @Override
   public Optional<Path> getEnvironment() {

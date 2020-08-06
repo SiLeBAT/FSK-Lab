@@ -23,6 +23,7 @@ import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
+import org.knime.core.node.NotConfigurableException;
 import org.knime.core.node.port.PortObjectSpec;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -188,9 +189,17 @@ class FSKEditorJSConfig {
 
     if (settings.containsKey(ENVIRONMENT)) {
       try {
+        // Back up and configure class loader of current thread
+        ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
+        Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
+
         byte[] environmentBytes = settings.getByteArray(ENVIRONMENT);
         m_environment = MAPPER.readValue(environmentBytes, EnvironmentManager.class);
+
+        // Restore class loader
+        Thread.currentThread().setContextClassLoader(originalClassLoader);
       } catch (IOException e) {
+        throw new InvalidSettingsException(e.getMessage(), e);
       }
     }
 
@@ -205,22 +214,31 @@ class FSKEditorJSConfig {
    * 
    * @param settings To load from.
    * @param spec the {@link DataTableSpec} to use for loading
+   * @throws NotConfigurableException
    */
-  public void loadSettingsForDialog(final NodeSettingsRO settings, final PortObjectSpec spec) {
+  public void loadSettingsForDialog(final NodeSettingsRO settings, final PortObjectSpec spec)
+      throws NotConfigurableException {
     m_metadata = settings.getString(METADATA, "");
     m_modelScript = settings.getString(MODEL_SCRIPT, "");
     m_visualizationScript = settings.getString(VISUALIZATION_SCRIPT, "");
     m_readme = settings.getString(README, "");
-    
+
     if (settings.containsKey(ENVIRONMENT)) {
       try {
+        // Back up and configure class loader of current thread
+        ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
+        Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
+
         byte[] environmentBytes = settings.getByteArray(ENVIRONMENT);
         m_environment = MAPPER.readValue(environmentBytes, EnvironmentManager.class);
+
+        // Restore class loader
+        Thread.currentThread().setContextClassLoader(originalClassLoader);
       } catch (IOException | InvalidSettingsException e) {
-        // InvalidSettingsException is not thrown as the key is already checked.
+        throw new NotConfigurableException(e.getMessage(), e);
       }
     }
-    
+
     m_serverName = settings.getString(SERVER_NAME, "");
     m_isCompleted = settings.getBoolean(COMPLETED, false);
     m_validationErrors = settings.getStringArray(ERRORS, "");
