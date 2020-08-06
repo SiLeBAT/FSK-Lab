@@ -336,7 +336,7 @@ public class FskPortObject implements PortObject {
       }
       
       // Save generated resource Files
-      if (!portObject.generatedResourceFiles.getResourcePaths().isEmpty()) {
+      if (portObject.generatedResourceFiles != null) {
         out.putNextEntry(new ZipEntry(GENERATED_RESOURCE_FILES));
         MAPPER104.writeValue(out, portObject.generatedResourceFiles);
         out.closeEntry();
@@ -348,7 +348,6 @@ public class FskPortObject implements PortObject {
         IOUtils.write(portObject.plot, out, "UTF-8");
         out.closeEntry();
       }
-List<Path> prr = portObject.generatedResourceFiles.getResourcePaths();
       // Save README
       if (StringUtils.isNotEmpty(portObject.readme)) {
         out.putNextEntry(new ZipEntry(README));
@@ -393,7 +392,7 @@ List<Path> prr = portObject.generatedResourceFiles.getResourcePaths();
 
       final Path workspacePath = FileUtil.createTempFile("workspace", ".r").toPath();
       List<String> packages = new ArrayList<>();
-      List<String> resourceFiles = new ArrayList<>();
+      
       Model modelMetadata = null;
 
       Optional<EnvironmentManager> environmentManager = Optional.empty();

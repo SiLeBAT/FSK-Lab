@@ -1,16 +1,12 @@
 package de.bund.bfr.knime.fsklab.nodes;
 
-import java.io.File;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import org.apache.commons.io.FilenameUtils;
-import org.knime.core.internal.ReferencedFile;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.NodeLogger;
-import org.knime.core.node.workflow.NodeContext;
-import org.knime.core.node.workflow.WorkflowManager;
 import org.knime.core.util.FileUtil;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskSimulation;
@@ -51,13 +47,19 @@ public abstract class ScriptHandler implements AutoCloseable {
     if (fskObj.getEnvironmentManager().isPresent()) {
       workingDirectory = fskObj.getEnvironmentManager().get().getEnvironment();
     } else {
+      // @Miguel: this is a workaround. But we ALWAYS need a working directory, so I suggest to 
+      // change the environment manager to always create some sort of default directory.
+         //workingDirectory = Optional.of(FileUtil.createTempDir("defaultWorkingDirectory").toPath());
       workingDirectory = Optional.empty();
     }
 
     if (workingDirectory.isPresent()) {
       setWorkingDirectory(workingDirectory.get(), exec);
+    }else {
+      workingDirectory = Optional.of(Files.createTempDirectory("workingDirectory"));
+      setWorkingDirectory(workingDirectory.get(), exec);
     }
-
+    
 
     // START RUNNING MODEL
     exec.setProgress(0.1, "Setting up output capturing");
@@ -122,27 +124,9 @@ public abstract class ScriptHandler implements AutoCloseable {
 
     saveWorkspace(fskObj, exec);
     
-    // save files from output parameters in internalSettings /generatedData
-    final File file = new File("C:\\Users\\schuelet\\Documents\\Arbeit", "camp-alt.csv");
   
-    try {
-
-      String file_prefix = FilenameUtils.getBaseName(file.getName());
- 
-      File temp_dir = FileUtil.createTempDir(file_prefix);
-      final File temp_resourceFile = new File(temp_dir.getAbsolutePath(),file.getName());
-            
-      FileUtil.copy(file, temp_resourceFile );
-
-      GeneratedResourceFiles generatedResourceFiles = new GeneratedResourceFiles(); 
-      generatedResourceFiles.addResourceFile(temp_resourceFile);
-      fskObj.generatedResourceFiles = generatedResourceFiles;
-     
-      internalSettings.resourceFiles.add(temp_resourceFile);  
-  
-    }catch(Exception e) {
-      LOGGER.warn("resourceFiles not found ", e);
-    }
+    // create a new GeneratedResourceFiles to collect and save output parameters which are files
+    fskObj.generatedResourceFiles = GeneratedResourceFiles.saveGeneratedResourceFiles(fskObj, workingDirectory, exec, this);
     
     // delete working directory
     if (fskObj.getEnvironmentManager().isPresent() && workingDirectory.isPresent()) {
@@ -174,6 +158,7 @@ public abstract class ScriptHandler implements AutoCloseable {
 
     return handler;
   }
+
 
   /**
    * Set the directory in which the interpreter can temporarily save data while executing the script

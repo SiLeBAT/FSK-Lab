@@ -85,6 +85,7 @@ import de.bund.bfr.knime.fsklab.nodes.common.ui.JsonPanel;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.ScriptPanel;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.UIUtils;
 import de.bund.bfr.knime.fsklab.nodes.environment.EnvironmentManager;
+import de.bund.bfr.knime.fsklab.nodes.environment.GeneratedResourceFiles;
 import de.bund.bfr.knime.fsklab.rakip.RakipModule;
 import de.bund.bfr.knime.fsklab.rakip.RakipUtil;
 import de.bund.bfr.metadata.swagger.ConsumptionModel;
@@ -143,16 +144,18 @@ public class CombinedFskPortObject extends FskPortObject {
       PortTypeRegistry.getInstance().getPortType(FskPortObject.class, true);
 
   public static final String[] RESOURCE_EXTENSIONS = new String[] {"txt", "RData", "csv"};
-
+  
   private static int numOfInstances = 0;
+  
   private static Random ran = new Random();
 
   public CombinedFskPortObject(final String model, final String param, final String viz,
       final Model modelMetadata, final Path workspace, final List<String> packages,
+      final GeneratedResourceFiles generatedResourceFiles,
       final Optional<EnvironmentManager> environmentManager, final String plot,
       final FskPortObject firstFskPortObject, final FskPortObject secondFskPortObject)
       throws IOException {
-    super(model, viz, modelMetadata, workspace, packages, environmentManager, plot, "");
+    super(model, viz, modelMetadata, workspace, packages, generatedResourceFiles, environmentManager, plot, "");
     this.firstFskPortObject = firstFskPortObject;
     this.secondFskPortObject = secondFskPortObject;
     objectNum = numOfInstances;
@@ -165,6 +168,9 @@ public class CombinedFskPortObject extends FskPortObject {
     super(environmentManager, "", packages);
     this.firstFskPortObject = firstFskPortObject;
     this.secondFskPortObject = secondFskPortObject;
+   
+    this.generatedResourceFiles = new GeneratedResourceFiles();
+   
     objectNum = numOfInstances;
     numOfInstances += 1;
   }
@@ -180,6 +186,7 @@ public class CombinedFskPortObject extends FskPortObject {
     this.secondFskPortObject = secondFskPortObject;
     this.modelMetadata = modelMetadata;
 
+    this.generatedResourceFiles = new GeneratedResourceFiles();
     objectNum = numOfInstances;
     numOfInstances += 1;
   }
@@ -216,7 +223,7 @@ public class CombinedFskPortObject extends FskPortObject {
     private static final String SIMULATION_INDEX = "xSimulationIndex";
 
     private static final String WORKING_DIRECTORY = "workingDirectory";
-
+    private static final String GENERATED_RESOURCE_FILES = "generatedResourceFiles";
     private static final String PLOT = "plot";
 
     private static final String README = "readme";
@@ -386,14 +393,20 @@ public class CombinedFskPortObject extends FskPortObject {
           IOUtils.writeLines(portObject.packages, "\n", out, StandardCharsets.UTF_8);
           out.closeEntry();
         }
-
+     
         // Save working directory
         if (portObject.getEnvironmentManager().isPresent()) {
           out.putNextEntry(new ZipEntry(WORKING_DIRECTORY + level));
           MAPPER104.writeValue(out, portObject.getEnvironmentManager().get());
           out.closeEntry();
         }
-
+        
+        // Save generated resource Files
+        if (portObject.generatedResourceFiles != null) {
+          out.putNextEntry(new ZipEntry(GENERATED_RESOURCE_FILES + level));
+          MAPPER104.writeValue(out, portObject.generatedResourceFiles);
+          out.closeEntry();
+        }
         // Save plot
         if (StringUtils.isNotEmpty(portObject.getPlot())) {
           out.putNextEntry(new ZipEntry(PLOT + level));
@@ -451,7 +464,8 @@ public class CombinedFskPortObject extends FskPortObject {
       Model modelMetadata = null;
 
       Optional<EnvironmentManager> environmentManager = Optional.empty();
-
+      GeneratedResourceFiles generatedResourceFiles = new GeneratedResourceFiles();
+      
       String plot = ""; // Empty string if not set
       String readme = ""; // Empty string if not set
 
@@ -623,7 +637,11 @@ public class CombinedFskPortObject extends FskPortObject {
           } else if (entryName.startsWith(WORKING_DIRECTORY)) {
             EnvironmentManager actualManager = MAPPER104.readValue(in, EnvironmentManager.class);
             environmentManager = Optional.of(actualManager);
-          } else if (entryName.startsWith(PLOT)) {
+          } else if (entryName.startsWith(GENERATED_RESOURCE_FILES)) {
+          // Deserialize generatedResourceFiles Object
+            generatedResourceFiles = MAPPER104.readValue(in, GeneratedResourceFiles.class);
+                    
+          }  else if (entryName.startsWith(PLOT)) {
             plot = IOUtils.toString(in, "UTF-8");
           } else if (entryName.startsWith(README)) {
             readme = IOUtils.toString(in, "UTF-8");
@@ -650,7 +668,7 @@ public class CombinedFskPortObject extends FskPortObject {
         }
       }
       final FskPortObject portObj = new FskPortObject(modelScript, visualizationScript,
-          modelMetadata, workspacePath, packages, environmentManager, plot, readme);
+          modelMetadata, workspacePath, packages, generatedResourceFiles, environmentManager, plot, readme);
 
       if (!simulations.isEmpty()) {
         portObj.simulations.addAll(simulations);
