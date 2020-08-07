@@ -46,6 +46,7 @@ import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
+import org.knime.core.node.port.PortObjectHolder;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.image.ImagePortObject;
@@ -60,7 +61,7 @@ import de.bund.bfr.knime.fsklab.r.client.ScriptExecutor;
 import de.bund.bfr.metadata.swagger.Parameter;
 import metadata.SwaggerUtil;
 
-public class RunnerNodeModel extends ExtToolOutputNodeModel {
+public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjectHolder {
 
   private static final NodeLogger LOGGER = NodeLogger.getLogger("Fskx Runner Node Model");
 
@@ -103,6 +104,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
   @Override
   protected void reset() {
     internalSettings.reset();
+    fskObj = null;
   }
 
   // --- node settings methods ---
@@ -131,8 +133,10 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
   @Override
   protected PortObject[] execute(PortObject[] inData, ExecutionContext exec) throws Exception {
 
+    this.setInternalPortObjects(inData);
+    
     FskPortObject fskObj = (FskPortObject) inData[0];
-    this.fskObj = fskObj;
+//    this.fskObj = fskObj;
     
     final List<FskSimulation> simulation = fskObj.simulations;
     if (StringUtils.isNotBlank(nodeSettings.simulation)) {
@@ -190,6 +194,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
   public FskPortObject runFskPortObject(ScriptHandler handler, FskPortObject fskObj, LinkedHashMap<String,String> originalOutputParameters,
       ExecutionContext exec) throws Exception {
     LOGGER.info("Running Model: " + fskObj);
+    
     
 
     if (fskObj instanceof CombinedFskPortObject) {
@@ -427,5 +432,15 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 
   private static final LinkedList<String> getLinkedListFromOutput(final String output) {
     return Arrays.stream(output.split("\\r?\\n")).collect(Collectors.toCollection(LinkedList::new));
+  }
+
+  @Override
+  public PortObject[] getInternalPortObjects() {
+    return new PortObject[] {fskObj};
+  }
+
+  @Override
+  public void setInternalPortObjects(PortObject[] portObjects) {
+    fskObj = (FskPortObject) portObjects[0];    
   }
 }

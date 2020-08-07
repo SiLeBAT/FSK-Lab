@@ -88,11 +88,7 @@ public class RunnerNodeInternalSettings {
 
       // Directories with temporary files are deleted since their copies are in the /internal folder.
       for(File dir : temp_dirs) {
-        try {
-          FileUtil.deleteRecursively(dir);  
-        }catch(Exception e) {
-
-        }
+        FileUtils.deleteQuietly(dir);  
       }
     }//else
   }//saveInternals

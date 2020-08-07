@@ -127,10 +127,9 @@ public class GeneratedResourceFiles {
    * */ 
   public List<Path> getResourcePaths(){
 
-    List<Path> resourcePaths = new ArrayList<>();
+    List<Path> resourcePaths = this.resourceFiles.stream().map(Paths::get).collect(Collectors.toList());
 
-    this.resourceFiles.forEach(f -> resourcePaths.add(Paths.get(f)));
-
+    
     // Validate the paths of the files:
     // Check if files are in temporary folder or in /internal folder of the Runner that created them.
     validatePaths(resourcePaths);
@@ -193,7 +192,8 @@ public class GeneratedResourceFiles {
 
       for(Parameter outParam : outParams) {
 
-        output_files.addAll( Arrays.asList(handler.runScript(outParam.getId(), exec, true)));
+        String[] eval = handler.runScript(outParam.getId(), exec, true);
+        output_files.addAll( Arrays.asList(eval));
       }
 
       // There must always be a working directory! 
