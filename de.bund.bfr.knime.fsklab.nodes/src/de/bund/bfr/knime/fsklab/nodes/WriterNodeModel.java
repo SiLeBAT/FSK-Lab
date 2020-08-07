@@ -25,7 +25,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -175,7 +177,12 @@ class WriterNodeModel extends NoInternalsModel {
       Optional<Path> workingDirectory = fskObj.getEnvironmentManager().get().getEnvironment();
       if (workingDirectory.isPresent()) {
         // Adds resources
-        final List<Path> resources = Files.list(workingDirectory.get()).collect(Collectors.toList());
+        
+        List<Path> resources = Files.list(workingDirectory.get()).collect(Collectors.toList());
+
+        // add generated resources
+        resources.addAll(fskObj.generatedResourceFiles.getResourcePaths());
+        
         for (final Path resourcePath : resources) {
 
           final String filenameString = filePrefix + resourcePath.getFileName().toString();
@@ -267,6 +274,7 @@ class WriterNodeModel extends NoInternalsModel {
   protected PortObject[] execute(PortObject[] inObjects, ExecutionContext exec) throws Exception {
 
     FskPortObject in = (FskPortObject) inObjects[0];
+    
     scriptHandler = ScriptHandler.createHandler(SwaggerUtil.getLanguageWrittenIn(in.modelMetadata),
         in.packages);
     URL url = FileUtil.toURL(nodeSettings.filePath);

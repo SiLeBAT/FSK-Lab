@@ -82,6 +82,7 @@ import de.bund.bfr.knime.fsklab.nodes.common.ui.JsonPanel;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.ScriptPanel;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.UIUtils;
 import de.bund.bfr.knime.fsklab.nodes.environment.EnvironmentManager;
+import de.bund.bfr.knime.fsklab.nodes.environment.GeneratedResourceFiles;
 import de.bund.bfr.knime.fsklab.rakip.RakipModule;
 import de.bund.bfr.knime.fsklab.rakip.RakipUtil;
 import de.bund.bfr.metadata.swagger.ConsumptionModel;
@@ -128,6 +129,9 @@ public class FskPortObject implements PortObject {
   /** Paths to resources: plain text files and R workspace files (.rdata). */
   private final Optional<EnvironmentManager> environmentManager;
 
+  /** Paths to generated resources **/
+  public GeneratedResourceFiles generatedResourceFiles;
+  
   /** Path to plot. */
   private String plot;
 
@@ -152,7 +156,8 @@ public class FskPortObject implements PortObject {
   public Model modelMetadata;
 
   public FskPortObject(final String model, final String viz, final Model modelMetadata,
-      final Path workspace, final List<String> packages, final Optional<EnvironmentManager> environmentManager,
+      final Path workspace, final List<String> packages, final GeneratedResourceFiles generatedResourceFiles,
+      final Optional<EnvironmentManager> environmentManager,
       final String plot, final String readme) throws IOException {
 
     this.model = model;
@@ -161,6 +166,7 @@ public class FskPortObject implements PortObject {
     this.workspace = workspace;
     this.packages = packages;
     this.environmentManager = environmentManager;
+    this.generatedResourceFiles = generatedResourceFiles;
     this.plot = plot;
     this.readme = StringUtils.defaultString(readme);
 
@@ -171,6 +177,7 @@ public class FskPortObject implements PortObject {
   public FskPortObject(final Optional<EnvironmentManager> environmentManager, String readme, final List<String> packages)
       throws IOException {
     this.environmentManager = environmentManager;
+    //this.generatedResourceFiles = new GeneratedResourceFiles();
     this.packages = packages;
     this.readme = readme;
   }
@@ -189,6 +196,7 @@ public class FskPortObject implements PortObject {
     return environmentManager;
   }
 
+  
   /**
    * @return empty string if not set.
    */
@@ -231,6 +239,7 @@ public class FskPortObject implements PortObject {
     private static final String SIMULATION_INDEX = "simulationIndex";
 
     private static final String WORKING_DIRECTORY = "workingDirectory";
+    private static final String GENERATED_RESOURCE_FILES = "generatedResourceFiles";
 
     private static final String PLOT = "plot";
 
@@ -317,21 +326,28 @@ public class FskPortObject implements PortObject {
         IOUtils.writeLines(portObject.packages, "\n", out, StandardCharsets.UTF_8);
         out.closeEntry();
       }
-
+      
+      
       // Save working directory
       if (portObject.environmentManager.isPresent()) {
         out.putNextEntry(new ZipEntry(WORKING_DIRECTORY));
         MAPPER104.writeValue(out, portObject.environmentManager.get());
         out.closeEntry();
       }
-
+      
+      // Save generated resource Files
+      if (portObject.generatedResourceFiles != null) {
+        out.putNextEntry(new ZipEntry(GENERATED_RESOURCE_FILES));
+        MAPPER104.writeValue(out, portObject.generatedResourceFiles);
+        out.closeEntry();
+      }
+            
       // Save plot
       if (StringUtils.isNotEmpty(portObject.plot)) {
         out.putNextEntry(new ZipEntry(PLOT));
         IOUtils.write(portObject.plot, out, "UTF-8");
         out.closeEntry();
       }
-
       // Save README
       if (StringUtils.isNotEmpty(portObject.readme)) {
         out.putNextEntry(new ZipEntry(README));
@@ -376,11 +392,13 @@ public class FskPortObject implements PortObject {
 
       final Path workspacePath = FileUtil.createTempFile("workspace", ".r").toPath();
       List<String> packages = new ArrayList<>();
-
+      
       Model modelMetadata = null;
 
       Optional<EnvironmentManager> environmentManager = Optional.empty();
 
+      GeneratedResourceFiles generatedResourceFiles = new GeneratedResourceFiles();
+      
       String plot = ""; // Empty string if not set
       String readme = ""; // Empty string if not set
 
@@ -442,7 +460,7 @@ public class FskPortObject implements PortObject {
           Files.copy(in, workspacePath, StandardCopyOption.REPLACE_EXISTING);
         } else if (entryName.equals("library.list")) {
           packages = IOUtils.readLines(in, "UTF-8");
-        } else if (entryName.equals(WORKING_DIRECTORY)) {
+        }else if (entryName.equals(WORKING_DIRECTORY)) {
           
           // Back up and configure class loader of current thread
           ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
@@ -451,6 +469,17 @@ public class FskPortObject implements PortObject {
           // Deserialize working directory
           EnvironmentManager actualManager = MAPPER104.readValue(in, EnvironmentManager.class);
           environmentManager = Optional.of(actualManager);
+          
+          // Restore class loader
+          Thread.currentThread().setContextClassLoader(originalClassLoader);
+        } else if (entryName.equals(GENERATED_RESOURCE_FILES)) {
+          
+          // Back up and configure class loader of current thread
+          ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
+          Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
+          
+          // Deserialize generatedResourceFiles Object
+          generatedResourceFiles = MAPPER104.readValue(in, GeneratedResourceFiles.class);
           
           // Restore class loader
           Thread.currentThread().setContextClassLoader(originalClassLoader);
@@ -481,7 +510,7 @@ public class FskPortObject implements PortObject {
       in.close();
 
       final FskPortObject portObj = new FskPortObject(modelScript, visualizationScript,
-          modelMetadata, workspacePath, packages, environmentManager, plot, readme);
+          modelMetadata, workspacePath, packages, generatedResourceFiles, environmentManager, plot, readme);
 
       if (!simulations.isEmpty()) {
         portObj.simulations.addAll(simulations);

@@ -61,7 +61,7 @@ public class JoinerNodeUtil {
   }
 
   /**
-   * This method saves the output a model script using its globally unique parameter name so 
+   * This method saves the output of a model script using its globally unique parameter name so 
    * they can't be overwritten by other models in the same session
    * 
    * @param originalOutputParameters map that contains the globally unique parameter names

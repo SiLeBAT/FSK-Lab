@@ -46,6 +46,7 @@ import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
+import org.knime.core.node.port.PortObjectHolder;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.image.ImagePortObject;
@@ -60,7 +61,7 @@ import de.bund.bfr.knime.fsklab.r.client.ScriptExecutor;
 import de.bund.bfr.metadata.swagger.Parameter;
 import metadata.SwaggerUtil;
 
-public class RunnerNodeModel extends ExtToolOutputNodeModel {
+public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjectHolder {
 
   private static final NodeLogger LOGGER = NodeLogger.getLogger("Fskx Runner Node Model");
 
@@ -73,7 +74,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
   private final RunnerNodeInternalSettings internalSettings = new RunnerNodeInternalSettings();
 
   private RunnerNodeSettings nodeSettings = new RunnerNodeSettings();
-
+  private FskPortObject fskObj = null;
   // Input and output port types
   private static final PortType[] IN_TYPES = {FskPortObject.TYPE};
   private static final PortType[] OUT_TYPES = {FskPortObject.TYPE, ImagePortObject.TYPE_OPTIONAL};
@@ -90,18 +91,20 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
   @Override
   protected void loadInternals(File nodeInternDir, ExecutionMonitor exec)
       throws IOException, CanceledExecutionException {
-    internalSettings.loadInternals(nodeInternDir);
+//    internalSettings.loadInternals(nodeInternDir);
   }
 
   @Override
   protected void saveInternals(File nodeInternDir, ExecutionMonitor exec)
       throws IOException, CanceledExecutionException {
-    internalSettings.saveInternals(nodeInternDir);
+    //internalSettings.saveInternals(nodeInternDir);
+    internalSettings.saveInternals(nodeInternDir,fskObj);
   }
 
   @Override
   protected void reset() {
     internalSettings.reset();
+    fskObj = null;
   }
 
   // --- node settings methods ---
@@ -130,7 +133,11 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
   @Override
   protected PortObject[] execute(PortObject[] inData, ExecutionContext exec) throws Exception {
 
+    this.setInternalPortObjects(inData);
+    
     FskPortObject fskObj = (FskPortObject) inData[0];
+//    this.fskObj = fskObj;
+    
     final List<FskSimulation> simulation = fskObj.simulations;
     if (StringUtils.isNotBlank(nodeSettings.simulation)) {
       FskPortObject fskObjk = fskObj;
@@ -144,15 +151,11 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
       LinkedHashMap<String,String> originalOutputParameters = new LinkedHashMap<String,String>();
       List<Parameter> p = SwaggerUtil.getParameter(fskObj.modelMetadata);
       p.forEach(item -> originalOutputParameters.put(item.getId(), item.getId() ));
-//      p.forEach(item -> {
-//        if(item.getClassification().equals(ClassificationEnum.OUTPUT))
-//          originalOutputParameters.put(item.getId(), item.getId());
-//        });
       runFskPortObject(handler, fskObj, originalOutputParameters, exec);
     } catch (Exception e) {
       e.printStackTrace();
     }
-
+    
     try (FileInputStream fis = new FileInputStream(internalSettings.imageFile)) {
       final SvgImageContent content = new SvgImageContent(fis);
       ImagePortObject imgObj = new ImagePortObject(content, SVG_SPEC);
@@ -191,6 +194,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
   public FskPortObject runFskPortObject(ScriptHandler handler, FskPortObject fskObj, LinkedHashMap<String,String> originalOutputParameters,
       ExecutionContext exec) throws Exception {
     LOGGER.info("Running Model: " + fskObj);
+    
     
 
     if (fskObj instanceof CombinedFskPortObject) {
@@ -240,43 +244,26 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
       } else {
         workingDirectory1 = Optional.empty();
       }
+      
+      
+      // copy generated resources (output parameters) to working directory of second 
+      // model
+      for(Path path : comFskObj.generatedResourceFiles.getResourcePaths()) {
+        
+        FileUtils.copyFileToDirectory(path.toFile(), workingDirectory1.get().toFile());
+      }
+      
+      
       Optional<Path> workingDirectory2;
       if (comFskObj.getSecondFskPortObject().getEnvironmentManager().isPresent()) {
         workingDirectory2 = comFskObj.getSecondFskPortObject().getEnvironmentManager().get().getEnvironment();
       } else {
         workingDirectory2 = Optional.empty();
       }
-      Map<String, Long> fileModifacationMap = new HashMap<>();
-
-      if (workingDirectory1.isPresent() && workingDirectory2.isPresent()
-          && !workingDirectory1.equals(workingDirectory2) ) {
-        
-        try (Stream<Path> paths = Files.walk(workingDirectory1.get())) {
-          
-          paths.filter(Files::isRegularFile).forEach(currentFile -> {
-            fileModifacationMap.put(currentFile.toFile().getName(),
-                currentFile.toFile().lastModified());
-          });
-        
-        }
-        
-        
-      }
-//      String wd1 = firstFskObj.getWorkingDirectory();
-//      String wd2 = comFskObj.getSecondFskPortObject().getWorkingDirectory();
-//
-//      Map<String, Long> fileModifacationMap = new HashMap<>();
-//      if (!wd1.isEmpty() && !wd2.isEmpty() && !wd1.equals(wd2)) {
-//        try (Stream<Path> paths =
-//            Files.walk(FileUtil.getFileFromURL(FileUtil.toURL(wd1)).toPath())) {
-//          paths.filter(Files::isRegularFile).forEach(currentFile -> {
-//            fileModifacationMap.put(currentFile.toFile().getName(),
-//                currentFile.toFile().lastModified());
-//          });
-//        }
-//      }
+      
       
       // execute 1              *******
+      
       // run the first model!
       LOGGER.info("Running Snippet of first Model: " + firstFskObj.toString());
       
@@ -285,14 +272,12 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
         // save output from simulation by using current output name (with suffixes)
         // save is done by running the command in R
         JoinerNodeUtil.saveOutputVariable( oopFirst ,handler, exec);
+        
+        // collect paths to generated resource files in combined object
+        firstFskObj.generatedResourceFiles.getResourcePaths().forEach(path -> comFskObj.generatedResourceFiles.addResourceFile(path.toFile()));
+        
       }
-      
-      
-    
-      
-      
-      // execute joinCommand    *******
-      
+        
       
       // prepareSimulation 2    *******
 
@@ -309,60 +294,16 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
       // apply join command
       applyJoinCommandToSimulation(comFskObj, fskSimulationSecond, originalOutputParameters);
     
-    
-
-      // TODO: prepare files          *******
-      // move the generated files to the working
-      // directory of the second model
-
-      if (workingDirectory1.isPresent() && workingDirectory2.isPresent()
-          && !workingDirectory1.get().equals(workingDirectory2.get()) ) {
         
-        Path targetDirectory = workingDirectory2.get();
-        try (Stream<Path> paths = Files.walk(workingDirectory1.get())) {
-          
-          paths.filter(Files::isRegularFile).forEach(currentFile -> {
-            // move new and modified files
-            
-          Long fileLastModified = fileModifacationMap.get(currentFile.toFile().getName());
-          if (fileLastModified == null
-              || currentFile.toFile().lastModified() != fileLastModified) {
-            try {
-              FileUtils.copyFileToDirectory(currentFile.toFile(), targetDirectory.toFile());
-            } catch (IOException e) {
-              e.printStackTrace();
-            }
-          }
-        });
-        
-        }
-        
-        
+      // copy generated resources (output parameters) to working directory of second 
+      // model
+      for(Path path : firstFskObj.generatedResourceFiles.getResourcePaths()) {
+        FileUtils.copyFileToDirectory(path.toFile(), workingDirectory2.get().toFile());
       }
-//      if (!wd1.isEmpty() && !wd2.isEmpty() && !wd1.equals(wd2)) {
-//        Path targetDirectory = FileUtil.getFileFromURL(FileUtil.toURL(wd2)).toPath();
-//        try (Stream<Path> paths =
-//            Files.walk(FileUtil.getFileFromURL(FileUtil.toURL(wd1)).toPath())) {
-//          paths.filter(Files::isRegularFile).forEach(currentFile -> {
-//            // move new and modified files
-//            Long fileLastModified = fileModifacationMap.get(currentFile.toFile().getName());
-//            if (fileLastModified == null
-//                || currentFile.toFile().lastModified() != fileLastModified) {
-//              try {
-//                FileUtils.copyFileToDirectory(currentFile.toFile(), targetDirectory.toFile());
-//              } catch (IOException e) {
-//                e.printStackTrace();
-//              }
-//            }
-//          });
-//        }
-//      }
+      
+   
       // execute 2              ******* 
-      
-      
-      
-
-      
+        
 
       LOGGER.info("Running Snippet of second Model: " + secondFskObj);
       // apply join command for complex join
@@ -372,12 +313,15 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 
 
       } else {
-        secondFskObj = runSnippet(handler, secondFskObj, fskSimulationSecond, context);
+        
+         secondFskObj = runSnippet(handler, secondFskObj, fskSimulationSecond, context);
 
 
         // save output in the proper variable (with suffix)
         JoinerNodeUtil.saveOutputVariable(oopSecond, handler, exec);
-
+        
+        // collect paths to generated resource files in combined object
+        secondFskObj.generatedResourceFiles.getResourcePaths().forEach(path -> comFskObj.generatedResourceFiles.addResourceFile(path.toFile()));
 
       }
 //      fskObj.workspace = secondFskObj.workspace;
@@ -488,5 +432,15 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 
   private static final LinkedList<String> getLinkedListFromOutput(final String output) {
     return Arrays.stream(output.split("\\r?\\n")).collect(Collectors.toCollection(LinkedList::new));
+  }
+
+  @Override
+  public PortObject[] getInternalPortObjects() {
+    return new PortObject[] {fskObj};
+  }
+
+  @Override
+  public void setInternalPortObjects(PortObject[] portObjects) {
+    fskObj = (FskPortObject) portObjects[0];    
   }
 }

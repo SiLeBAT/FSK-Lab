@@ -62,6 +62,7 @@ import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.FskSimulation;
 import de.bund.bfr.knime.fsklab.nodes.environment.EnvironmentManager;
 import de.bund.bfr.knime.fsklab.nodes.environment.ExistingEnvironmentManager;
+import de.bund.bfr.knime.fsklab.nodes.environment.GeneratedResourceFiles;
 import de.bund.bfr.metadata.swagger.GenericModel;
 import de.bund.bfr.metadata.swagger.Model;
 import de.bund.bfr.metadata.swagger.Parameter;
@@ -303,6 +304,8 @@ class CreatorNodeModel extends NoInternalsModel {
     }
     List<String> librariesList = new ArrayList<>(librariesSet);
 
+    // generated resource files (empty)
+    GeneratedResourceFiles generatedResourceFiles = new GeneratedResourceFiles();
     // Import readme
     exec.checkCanceled();
     String readmePath = nodeSettings.getReadme();
@@ -315,7 +318,7 @@ class CreatorNodeModel extends NoInternalsModel {
     }
 
     final FskPortObject portObj = new FskPortObject(modelScript, vizScript, modelMetadata, null,
-        librariesList, environmentManager, plotPath, readme);
+        librariesList, generatedResourceFiles, environmentManager, plotPath, readme);
 
     List<Parameter> parameters = SwaggerUtil.getParameter(modelMetadata);
     if (SwaggerUtil.getModelMath(modelMetadata) != null) {

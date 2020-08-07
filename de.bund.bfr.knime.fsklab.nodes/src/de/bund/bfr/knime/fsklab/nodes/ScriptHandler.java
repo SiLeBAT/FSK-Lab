@@ -1,13 +1,16 @@
 package de.bund.bfr.knime.fsklab.nodes;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.NodeLogger;
+import org.knime.core.util.FileUtil;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskSimulation;
+import de.bund.bfr.knime.fsklab.nodes.environment.GeneratedResourceFiles;
 import de.bund.bfr.knime.fsklab.nodes.plot.ModelPlotter;
 import de.bund.bfr.metadata.swagger.Parameter;
 import de.bund.bfr.metadata.swagger.Parameter.ClassificationEnum;
@@ -44,13 +47,19 @@ public abstract class ScriptHandler implements AutoCloseable {
     if (fskObj.getEnvironmentManager().isPresent()) {
       workingDirectory = fskObj.getEnvironmentManager().get().getEnvironment();
     } else {
+      // @Miguel: this is a workaround. But we ALWAYS need a working directory, so I suggest to 
+      // change the environment manager to always create some sort of default directory.
+         //workingDirectory = Optional.of(FileUtil.createTempDir("defaultWorkingDirectory").toPath());
       workingDirectory = Optional.empty();
     }
 
     if (workingDirectory.isPresent()) {
       setWorkingDirectory(workingDirectory.get(), exec);
+    }else {
+      workingDirectory = Optional.of(Files.createTempDirectory("workingDirectory"));
+      setWorkingDirectory(workingDirectory.get(), exec);
     }
-
+    
 
     // START RUNNING MODEL
     exec.setProgress(0.1, "Setting up output capturing");
@@ -114,10 +123,16 @@ public abstract class ScriptHandler implements AutoCloseable {
     finishOutputCapturing(exec);
 
     saveWorkspace(fskObj, exec);
-   
+    
+  
+    // create a new GeneratedResourceFiles to collect and save output parameters which are files
+    fskObj.generatedResourceFiles = GeneratedResourceFiles.saveGeneratedResourceFiles(fskObj, workingDirectory, exec, this);
+    
+    // delete working directory
     if (fskObj.getEnvironmentManager().isPresent() && workingDirectory.isPresent()) {
       fskObj.getEnvironmentManager().get().deleteEnvironment(workingDirectory.get());
     }
+  
   }
 
   abstract void convertToKnimeDataTable(FskPortObject fskObj, ExecutionContext exec)
@@ -143,6 +158,7 @@ public abstract class ScriptHandler implements AutoCloseable {
 
     return handler;
   }
+
 
   /**
    * Set the directory in which the interpreter can temporarily save data while executing the script

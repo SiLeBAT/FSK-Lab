@@ -20,13 +20,18 @@ package de.bund.bfr.knime.fsklab.nodes;
 
 import java.awt.Image;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
-import org.knime.core.data.image.png.PNGImageContent;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.util.FileUtil;
+import de.bund.bfr.knime.fsklab.CombinedFskPortObject;
+import de.bund.bfr.knime.fsklab.FskPortObject;
+import de.bund.bfr.knime.fsklab.nodes.environment.GeneratedResourceFiles;
 
 public class RunnerNodeInternalSettings {
 
@@ -37,10 +42,13 @@ public class RunnerNodeInternalSettings {
    */
   public File imageFile = null;
 
-  public Image plot = null;
 
+/**
+ * TODO: Check if saving the image in a separate file is still necessary.
+ * */
   public RunnerNodeInternalSettings() {
     try {
+    
       imageFile = FileUtil.createTempFile("FskxRunner-", ".svg");
     } catch (IOException e) {
       LOGGER.error("Cannot create temporary file.", e);
@@ -48,29 +56,46 @@ public class RunnerNodeInternalSettings {
     }
   }
 
-  /** Loads the saved image. */
-  public void loadInternals(File nodeInternDir) throws IOException {
-    final File file = new File(nodeInternDir, "Rplot.svg");
 
-    if (file.exists() && file.canRead()) {
-      FileUtil.copy(file, imageFile);
-      try (InputStream is = new FileInputStream(imageFile)) {
-        plot = new PNGImageContent(is).getImage();
+  /** save generated resource files in the /internal folder*/
+  public void saveInternals(File nodeInternDir, FskPortObject fskObj) throws IOException {
+
+    if(fskObj instanceof CombinedFskPortObject) {
+
+      FskPortObject firstObj    = ((CombinedFskPortObject)fskObj).getFirstFskPortObject();
+      FskPortObject secondObj   = ((CombinedFskPortObject)fskObj).getSecondFskPortObject();
+
+      saveInternals(nodeInternDir,firstObj);
+      saveInternals(nodeInternDir,secondObj);
+
+    } else {
+
+      // FSK Object contains paths to resource files (if there are any).
+      // On saving thie workflow, these files are copied to the /internal 
+      // folder of the Runner node that created the files
+      List<File> temp_dirs = new ArrayList<File>(); 
+      for(Path path : fskObj.generatedResourceFiles.getResourcePaths()) {
+
+        File resourceFile = path.toFile();
+        
+        temp_dirs.add(resourceFile.getParentFile());
+
+        final File internalFile = new File(nodeInternDir, resourceFile.getName());
+
+        FileUtil.copy(resourceFile, internalFile);
+        
+      }//for
+
+      // Directories with temporary files are deleted since their copies are in the /internal folder.
+      for(File dir : temp_dirs) {
+        FileUtils.deleteQuietly(dir);  
       }
-    }
-  }
-
-  /** Saves the saved image. */
-  public void saveInternals(File nodeInternDir) throws IOException {
-    if (plot != null) {
-      final File file = new File(nodeInternDir, "Rplot.svg");
-      FileUtil.copy(imageFile, file);
-    }
-  }
+    }//else
+  }//saveInternals
 
   /** Clear the contents of the image file. */
   public void reset() {
-    plot = null;
+//    plot = null;
     FileUtils.deleteQuietly(imageFile);
   }
 }
