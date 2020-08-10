@@ -671,7 +671,7 @@ ui = {
         "label": "Accreditation",
         "type": "text-array",
         "description": "The laboratory accreditation to ISO/IEC 17025",
-        "vocabulary": "Laboratory_accreditation",
+        "vocabulary": "laboratory_accreditation",
         "required": true
     }],
     "assay": [{
