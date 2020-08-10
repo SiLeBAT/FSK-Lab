@@ -21,7 +21,7 @@ ui = {
         "id": "creationDate",
         "label": "Creation date",
         "type": "date",
-        "description": "Creation date/time of the FSK file",
+        "description": "Creation date/time of the FSKX file",
         "required": true
     }, {
         "id": "modificationDate",
@@ -1051,7 +1051,7 @@ const _predictiveModelGeneralInformation = {
             "id": "creationDate",
             "label": "Creation date",
             "type": "date",
-            "description": "Creation date/time of the FSK file",
+            "description": "Creation date/time of the FSKX file",
             "required": true
         }, {
             "id": "modificationDate",
@@ -1156,7 +1156,7 @@ const fskui = {
                 "id": "creationDate",
                 "label": "Creation date",
                 "type": "date",
-                "description": "Creation date/time of the FSK file",
+                "description": "Creation date/time of the FSKX file",
                 "required": true
             }, {
                 "id": "modificationDate",
