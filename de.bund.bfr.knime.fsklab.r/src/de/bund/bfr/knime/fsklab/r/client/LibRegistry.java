@@ -50,354 +50,376 @@ import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
  */
 public class LibRegistry {
 
-	private static LibRegistry instance;
+  private static LibRegistry instance;
 
-	/** Installation path. */
-	private final Path installPath;
+  /** Installation path. */
+  private final Path installPath;
 
-	/** miniCRAN repository path. */
-	private final Path repoPath;
+  /** miniCRAN repository path. */
+  private final Path repoPath;
 
-	/** Utility set to keep count of installed libraries. */
-	private final Set<String> installedLibs;
+  /** Utility set to keep count of installed libraries. */
+  private final Set<String> installedLibs;
 
-	/** Utility RController for running R commands. */
-	private final RController controller = new RController();
+  /** Utility RController for running R commands. */
+  private final RController controller = new RController();
 
-	private String type;
+  private String type;
 
-	private RWrapper rWrapper;
+  private RWrapper rWrapper;
 
-	private final String MIRROR = "https://cran.rstudio.com";
+  private final String MIRROR = "https://cran.rstudio.com";
 
-	private LibRegistry() throws IOException, RException {
+  private LibRegistry() throws IOException, RException {
 
-		if (Platform.isWindows()) {
-			type = "win.binary";
-		} else if (Platform.isMac()) {
-			type = "mac.binary";
-		} else {
-			type = "source";
-		}
+    if (Platform.isWindows()) {
+      type = "win.binary";
+    } else if (Platform.isMac()) {
+      type = "mac.binary";
+    } else {
+      type = "source";
+    }
 
-		// Prepare rWrapper
-		rWrapper = new RWrapper();
-		rWrapper.library("miniCRAN");
+    // Prepare rWrapper
+    rWrapper = new RWrapper();
+    rWrapper.library("miniCRAN");
 
-		Path userFolder = Paths.get(System.getProperty("user.home"));
-		Path fskFolder = userFolder.resolve(".fsk");
+    Path userFolder = Paths.get(System.getProperty("user.home"));
+    Path fskFolder = userFolder.resolve(".fsk");
 
-		// CRAN and library folders
-		installPath = fskFolder.resolve("library");
-		repoPath = fskFolder.resolve("cran");
+    // CRAN and library folders
+    installPath = fskFolder.resolve("library");
+    repoPath = fskFolder.resolve("cran");
 
-		// Validate .fsk folder
-		if (Files.exists(fskFolder)) {
-			// TODO: Need to validate further: library and CRAN
+    // Validate .fsk folder
+    if (Files.exists(fskFolder)) {
+      // TODO: Need to validate further: library and CRAN
 
-			// Initialize `installedLibs` with `installPath`
-			String[] pkgArray = installPath.toFile().list();
-			installedLibs = Arrays.stream(pkgArray).collect(Collectors.toSet());
-		} else {
+      // Initialize `installedLibs` with `installPath`
+      String[] pkgArray = installPath.toFile().list();
+      installedLibs = Arrays.stream(pkgArray).collect(Collectors.toSet());
 
-			// Create directories
-			Files.createDirectory(fskFolder);
-			Files.createDirectory(repoPath);
-			Files.createDirectory(installPath);
+      // Remove libraries, that are technically installed but with an incompatible version to avoid trouble during execution
+      installedLibs.removeIf(
+          lib ->{
+            try {
+              controller.eval("library("+ lib + ")", true);
+              return false;
+            }catch(Exception e) {
+              return true;
+            }
+          });
+    } else {
 
-			// Create CRAN structure in repoPath
-			rWrapper.makeRepo(repoPath);
+      // Create directories
+      Files.createDirectory(fskFolder);
+      Files.createDirectory(repoPath);
+      Files.createDirectory(installPath);
 
-			installedLibs = new HashSet<>();
-		}
-	}
+      // Create CRAN structure in repoPath
+      rWrapper.makeRepo(repoPath);
 
-	public synchronized static LibRegistry instance() throws IOException, RException {
-		if (instance == null) {
-			instance = new LibRegistry();
-		}
-		return instance;
-	}
+      installedLibs = new HashSet<>();
+    }
+  }
 
-	/**
-	 * Install a list of packages into the repository. Already installed packages
-	 * are ignored.
-	 * 
-	 * @param libs list of names of R libraries
-	 * @throws RException
-	 * @throws REXPMismatchException
-	 * @throws NoInternetException
-	 */
-	public synchronized void install(final List<String> packages)
-			throws RException, REXPMismatchException, NoInternetException {
+  public synchronized static LibRegistry instance() throws IOException, RException {
+    if (instance == null) {
+      instance = new LibRegistry();
+    }
+    return instance;
+  }
 
-		if (installedLibs.containsAll(packages))
-			return;
-		
-		if (rWrapper.areAllInstalled(packages))
-			return;
+  /**
+   * Install a list of packages into the repository. Already installed packages
+   * are ignored.
+   * 
+   * @param libs list of names of R libraries
+   * @throws RException
+   * @throws REXPMismatchException
+   * @throws NoInternetException
+   */
+  public synchronized void install(final List<String> packages)
+      throws RException, REXPMismatchException, NoInternetException {
 
-		if (!isNetAvailable()) {
-			throw new NoInternetException(packages);
-		}
+    if (installedLibs.containsAll(packages))
+      return;
 
-		// Gets missing packages
-		List<String> missingPackages = rWrapper.pkgDep(packages).stream().filter(pkg -> !installedLibs.contains(pkg))
-				.collect(Collectors.toList());
+    if (rWrapper.areAllInstalled(packages))
+      return;
 
-		if (!missingPackages.isEmpty()) {
+    if (!isNetAvailable()) {
+      throw new NoInternetException(packages);
+    }
 
-			// Adds the dependencies to the miniCRAN repository
-			rWrapper.addPackage(missingPackages, repoPath);
+    //pkgDep requires miniCRAN to be loaded, on repeated executions of the Runner this might not have happened 
+    rWrapper.library("miniCRAN");
 
-			// Install with install.packages directly on Linux
-			if (Platform.isLinux()) {
-				rWrapper.installOnLinux(missingPackages, installPath);
-			} else {
-				// Gets the paths to the binaries of these dependencies
-				List<Path> paths = rWrapper.checkVersions(missingPackages, repoPath);
+    // Gets missing packages
+    List<String> missingPackages;
 
-				// Install binaries
-				rWrapper.installPackages(paths, installPath);
+    // try to collect missing packages; if it fails, consider all packages as missing
+    try {
+      missingPackages = rWrapper.pkgDep(packages).stream().filter(pkg -> !installedLibs.contains(pkg))
+          .collect(Collectors.toList());
 
-				// Adds names of installed libraries to utility set
-				installedLibs.addAll(missingPackages);
-			}
-		}
-	}
+    }catch(Exception e) {
+      missingPackages = packages;
+    }
 
-	/**
-	 * Gets list of paths to the binaries of the desired libraries.
-	 * 
-	 * @param libs
-	 * @return list of paths to the binaries of the desired libraries
-	 * @throws RException
-	 * @throws REXPMismatchException
-	 */
-	public Set<Path> getPaths(List<String> libs) throws RException, REXPMismatchException {
-		// Gets list of R dependencies of libs
-		List<String> deps = rWrapper.pkgDep(libs);
+    if (!missingPackages.isEmpty()) {
 
-		// Gets the paths to the binaries of these dependencies
-		List<Path> paths = rWrapper.checkVersions(deps, repoPath);
-		return new HashSet<>(paths);
-	}
+      // Adds the dependencies to the miniCRAN repository
+      rWrapper.addPackage(missingPackages, repoPath);
 
-	/**
-	 * @return Path of a single R package or null if lib cannot be found.
-	 * @throws RException
-	 * @throws REXPMismatchException
-	 */
-	public Path getPath(String lib) throws REXPMismatchException, RException {
-		List<String> libs = Arrays.asList(lib);
-		List<Path> paths = rWrapper.checkVersions(libs, repoPath);
-		return paths.isEmpty() ? null : paths.get(0);
-	}
+      // Install with install.packages directly on Linux
+      if (Platform.isLinux()) {
+        rWrapper.installOnLinux(missingPackages, installPath);
+      } else {
+        // Gets the paths to the binaries of these dependencies
+        List<Path> paths = rWrapper.checkVersions(missingPackages, repoPath);
 
-	public Path getInstallationPath() {
-		return installPath;
-	}
+        // Install binaries
+        rWrapper.installPackages(paths, installPath);
 
-	public Path getRepositoryPath() {
-		return repoPath;
-	}
+        // Adds names of installed libraries to utility set
+        installedLibs.addAll(missingPackages);
+      }
+    }
+  }
 
-	private boolean isNetAvailable() {
-		try {
-			final URL url = new URL(MIRROR);
-			final URLConnection conn;
-			
-			// Open url with proxy if on BfR computer
-			if (InetAddress.getLocalHost().getCanonicalHostName().endsWith("it.bfr-science.de")) {
-				conn = url.openConnection(new Proxy(Proxy.Type.HTTP, new InetSocketAddress("webproxy", 8080)));
-			} else {
-				conn = url.openConnection();
-			}
-			
-			conn.connect();
-			conn.getInputStream().close();
-			return true;
-		} catch (MalformedURLException e) {
-			throw new RuntimeException(e);
-		} catch (IOException e) {
-			return false;
-		}
-	}
-	
-	public static class NoInternetException extends Exception {
-		/** Generated serialVersionUID */
-		private static final long serialVersionUID = 2815440774381106769L;
+  /**
+   * Gets list of paths to the binaries of the desired libraries.
+   * 
+   * @param libs
+   * @return list of paths to the binaries of the desired libraries
+   * @throws RException
+   * @throws REXPMismatchException
+   */
+  public Set<Path> getPaths(List<String> libs) throws RException, REXPMismatchException {
+    // Gets list of R dependencies of libs
+    List<String> deps = rWrapper.pkgDep(libs);
 
-		/** Constructor */
-		public NoInternetException(final List<String> packages) {
-			super("Not connected to Internet. Packages {" + String.join(",", packages) + "} could not be downloaded");
-		}
-	}
+    // Gets the paths to the binaries of these dependencies
+    List<Path> paths = rWrapper.checkVersions(deps, repoPath);
+    return new HashSet<>(paths);
+  }
 
-	private class RWrapper {
+  /**
+   * @return Path of a single R package or null if lib cannot be found.
+   * @throws RException
+   * @throws REXPMismatchException
+   */
+  public Path getPath(String lib) throws REXPMismatchException, RException {
+    List<String> libs = Arrays.asList(lib);
+    List<Path> paths = rWrapper.checkVersions(libs, repoPath);
+    return paths.isEmpty() ? null : paths.get(0);
+  }
 
-		// R commands
-		/**
-		 * Load and attach add-on packages.
-		 * 
-		 * @param pkg The name of a package.
-		 * @throws RException
-		 * 
-		 * @see <a href=
-		 *      "https://stat.ethz.ch/R-manual/R-devel/library/base/html/library.html">
-		 *      R documentation</a>
-		 */
-		void library(final String pkg) throws RException {
-			String cmd = "library(" + pkg + ")";
-			controller.eval(cmd, false);
-		}
+  public Path getInstallationPath() {
+    return installPath;
+  }
 
-		boolean areAllInstalled(final List<String> pkgs) {
-			for (String pkg : pkgs) {
-				try {
-					library(pkg);
-				} catch (RException e) {
-					return false;
-				}
-			}
-			return true;
-		}
+  public Path getRepositoryPath() {
+    return repoPath;
+  }
 
-		/**
-		 * Install packages from local files.
-		 * 
-		 * @param pkgs List of package files. The files can be source distributions
-		 *             (.tar.gz) or binary distributions (.zip for Windows and .tgz for
-		 *             Mac).
-		 * @param lib  Directory where packages are installed.
-		 * @throws RException
-		 * 
-		 * @see <a href=
-		 *      "https://stat.ethz.ch/R-manual/R-devel/library/utils/html/install.packages.html">
-		 *      R documentation</a>
-		 */
-		void installPackages(final List<Path> pkgs, final Path lib) throws RException {
+  private boolean isNetAvailable() {
+    try {
+      final URL url = new URL(MIRROR);
+      final URLConnection conn;
 
-			String pkgsAsString = pkgs.stream().map(Path::toString).map(FilenameUtils::separatorsToUnix)
-					.map(str -> "'" + str + "'").collect(Collectors.joining(", "));
+      // Open url with proxy if on BfR computer
+      if (InetAddress.getLocalHost().getCanonicalHostName().endsWith("it.bfr-science.de")) {
+        conn = url.openConnection(new Proxy(Proxy.Type.HTTP, new InetSocketAddress("webproxy", 8080)));
+      } else {
+        conn = url.openConnection();
+      }
 
-			String pkgList = "c(" + pkgsAsString + ")";
-			String cmd = "install.packages(" + pkgList + ", repos = NULL, lib = '" + _path2String(lib) + "', type = '"
-					+ type + "')";
-			controller.eval(cmd, false);
-		}
+      conn.connect();
+      conn.getInputStream().close();
+      return true;
+    } catch (MalformedURLException e) {
+      throw new RuntimeException(e);
+    } catch (IOException e) {
+      return false;
+    }
+  }
 
-		void installOnLinux(final List<String> packages, final Path lib) throws RException {
-			String pkgList = "c(" + packages.stream().map(str -> "'" + str + "'").collect(Collectors.joining(", "))
-					+ ")";
-			String cmd = String.format("install.packages(%s, lib = '%s')", pkgList, _path2String(lib));
-			controller.eval(cmd, false);
-		}
+  public static class NoInternetException extends Exception {
+    /** Generated serialVersionUID */
+    private static final long serialVersionUID = 2815440774381106769L;
 
-		// miniCRAN commands
-		/**
-		 * Add packages to a miniCRAN repository.
-		 * 
-		 * @param pkgs List of names of packages to be downloaded.
-		 * @param path Destination download path. This path is the root folder of the
-		 *             repository.
-		 * @throws RException
-		 * 
-		 * @see <a href=
-		 *      "https://cran.r-project.org/web/packages/miniCRAN/miniCRAN.pdf">
-		 *      miniCRAN documentation</a>
-		 */
-		void addPackage(final List<String> pkgs, final Path path) throws RException {
-			String cmd = "addPackage(" + _pkgList(pkgs) + ", '" + _path2String(path) + "', repos = '" + MIRROR
-					+ "', type = '" + type + "', deps = FALSE)";
-			controller.eval(cmd, false);
-		}
+    /** Constructor */
+    public NoInternetException(final List<String> packages) {
+      super("Not connected to Internet. Packages {" + String.join(",", packages) + "} could not be downloaded");
+    }
+  }
 
-		/**
-		 * Returns the file paths for the specified packages.
-		 * 
-		 * @param pkgs List of names of packages.
-		 * @param path The local path to the directory where the miniCRAN repo resides.
-		 * @return the file paths for the specified packages
-		 * @throws REXPMismatchException
-		 * @throws RException
-		 * 
-		 * @see <a href=
-		 *      "https://cran.r-project.org/web/packages/miniCRAN/miniCRAN.pdf">
-		 *      miniCRAN documentation</a>
-		 */
-		List<Path> checkVersions(final List<String> pkgs, final Path path) throws REXPMismatchException, RException {
-			String cmd = "checkVersions(" + _pkgList(pkgs) + ", '" + _path2String(path) + "', type = '" + type + "')";
+  private class RWrapper {
 
-			REXP rexp = controller.eval(cmd, true);
+    // R commands
+    /**
+     * Load and attach add-on packages.
+     * 
+     * @param pkg The name of a package.
+     * @throws RException
+     * 
+     * @see <a href=
+     *      "https://stat.ethz.ch/R-manual/R-devel/library/base/html/library.html">
+     *      R documentation</a>
+     */
+    void library(final String pkg) throws RException {
+      String cmd = "library(" + pkg + ")";
+      controller.eval(cmd, false);
+    }
 
-			// Sometimes checkVersions returns a list (specially on Mac)
-			if (rexp.isList()) {
-				RList list = rexp.asList();
-				REXP element0 = list.at(0);
-				String[] values = element0.asStrings();
+    boolean areAllInstalled(final List<String> pkgs) {
+      for (String pkg : pkgs) {
+        try {
+          library(pkg);
+        } catch (RException e) {
+          return false;
+        }
+      }
+      return true;
+    }
 
-				return Arrays.stream(values).map(Paths::get).collect(Collectors.toList());
-			}
+    /**
+     * Install packages from local files.
+     * 
+     * @param pkgs List of package files. The files can be source distributions
+     *             (.tar.gz) or binary distributions (.zip for Windows and .tgz for
+     *             Mac).
+     * @param lib  Directory where packages are installed.
+     * @throws RException
+     * 
+     * @see <a href=
+     *      "https://stat.ethz.ch/R-manual/R-devel/library/utils/html/install.packages.html">
+     *      R documentation</a>
+     */
+    void installPackages(final List<Path> pkgs, final Path lib) throws RException {
 
-			if (rexp.isString()) {
-				String[] pathsArray = rexp.asStrings();
-				return Arrays.stream(pathsArray).map(Paths::get).collect(Collectors.toList());
-			}
+      String pkgsAsString = pkgs.stream().map(Path::toString).map(FilenameUtils::separatorsToUnix)
+          .map(str -> "'" + str + "'").collect(Collectors.joining(", "));
 
-			throw new REXPMismatchException(rexp, "Unsupported return type");
-		}
+      String pkgList = "c(" + pkgsAsString + ")";
+      String cmd = "install.packages(" + pkgList + ", repos = NULL, lib = '" + _path2String(lib) + "', type = '"
+          + type + "')";
+      controller.eval(cmd, false);
+    }
 
-		/**
-		 * Creates a local repository in the specified path.
-		 * <p>
-		 * Creates a CRAN folder structure in the specified destination folder and then
-		 * creates the PACKAGES index file. Since the folder structure mimics the
-		 * required structure and files of a CRAN repository, it supports functions like
-		 * <i>install.packages()</i>.
-		 * 
-		 * @param path Destination download path. This path is the root folder of the
-		 *             repository.
-		 * @throws RException
-		 * 
-		 * @see <a href=
-		 *      "https://cran.r-project.org/web/packages/miniCRAN/miniCRAN.pdf">
-		 *      miniCRAN documentation</a>
-		 */
-		void makeRepo(final Path path) throws RException {
-			String cmd = "makeRepo(c(), '" + _path2String(path) + "', repos = '" + MIRROR + "', type = '" + type + "')";
-			controller.eval(cmd, false);
-		}
+    void installOnLinux(final List<String> packages, final Path lib) throws RException {
+      String pkgList = "c(" + packages.stream().map(str -> "'" + str + "'").collect(Collectors.joining(", "))
+          + ")";
+      String cmd = String.format("install.packages(%s, lib = '%s')", pkgList, _path2String(lib));
+      controller.eval(cmd, false);
+    }
 
-		/**
-		 * Retrieve package dependencies.
-		 * <p>
-		 * Perform recursive retrieve for Depends, Imports and LinkLibrary. Performs
-		 * non-recursive retrieve for Suggests.
-		 * 
-		 * @param pkgs List of names of packages.
-		 * @return the dependencies of the specified packages
-		 * @throws RException
-		 * @throws REXPMismatchException
-		 * 
-		 * @see <a href=
-		 *      "https://cran.r-project.org/web/packages/miniCRAN/miniCRAN.pdf">
-		 *      miniCRAN documentation</a>
-		 */
-		List<String> pkgDep(final List<String> pkgs) throws RException, REXPMismatchException {
-			String cmd = "pkgDep(" + _pkgList(pkgs) + ", type = '" + type + "', repos = '" + MIRROR +"')";
-			REXP rexp = controller.eval(cmd, true);
-			return Arrays.asList(rexp.asStrings());
-		}
+    // miniCRAN commands
+    /**
+     * Add packages to a miniCRAN repository.
+     * 
+     * @param pkgs List of names of packages to be downloaded.
+     * @param path Destination download path. This path is the root folder of the
+     *             repository.
+     * @throws RException
+     * 
+     * @see <a href=
+     *      "https://cran.r-project.org/web/packages/miniCRAN/miniCRAN.pdf">
+     *      miniCRAN documentation</a>
+     */
+    void addPackage(final List<String> pkgs, final Path path) throws RException {
+      String cmd = "addPackage(" + _pkgList(pkgs) + ", '" + _path2String(path) + "', repos = '" + MIRROR
+          + "', type = '" + type + "', deps = FALSE)";
+      controller.eval(cmd, false);
+    }
 
-		// Utility method. Should not be used outside of RCommandBuilder.
-		String _pkgList(final List<String> pkgs) {
-			return "c(" + pkgs.stream().map(pkg -> "'" + pkg + "'").collect(Collectors.joining(", ")) + ")";
-		}
+    /**
+     * Returns the file paths for the specified packages.
+     * 
+     * @param pkgs List of names of packages.
+     * @param path The local path to the directory where the miniCRAN repo resides.
+     * @return the file paths for the specified packages
+     * @throws REXPMismatchException
+     * @throws RException
+     * 
+     * @see <a href=
+     *      "https://cran.r-project.org/web/packages/miniCRAN/miniCRAN.pdf">
+     *      miniCRAN documentation</a>
+     */
+    List<Path> checkVersions(final List<String> pkgs, final Path path) throws REXPMismatchException, RException {
+      String cmd = "checkVersions(" + _pkgList(pkgs) + ", '" + _path2String(path) + "', type = '" + type + "')";
 
-		// Utility method. Should not be used outside of RCommandBuilder.
-		String _path2String(final Path path) {
-			return FilenameUtils.separatorsToUnix(path.toString());
-		}
-	}
+      REXP rexp = controller.eval(cmd, true);
+
+      // Sometimes checkVersions returns a list (specially on Mac)
+      if (rexp.isList()) {
+        RList list = rexp.asList();
+        REXP element0 = list.at(0);
+        String[] values = element0.asStrings();
+
+        return Arrays.stream(values).map(Paths::get).collect(Collectors.toList());
+      }
+
+      if (rexp.isString()) {
+        String[] pathsArray = rexp.asStrings();
+        return Arrays.stream(pathsArray).map(Paths::get).collect(Collectors.toList());
+      }
+
+      throw new REXPMismatchException(rexp, "Unsupported return type");
+    }
+
+    /**
+     * Creates a local repository in the specified path.
+     * <p>
+     * Creates a CRAN folder structure in the specified destination folder and then
+     * creates the PACKAGES index file. Since the folder structure mimics the
+     * required structure and files of a CRAN repository, it supports functions like
+     * <i>install.packages()</i>.
+     * 
+     * @param path Destination download path. This path is the root folder of the
+     *             repository.
+     * @throws RException
+     * 
+     * @see <a href=
+     *      "https://cran.r-project.org/web/packages/miniCRAN/miniCRAN.pdf">
+     *      miniCRAN documentation</a>
+     */
+    void makeRepo(final Path path) throws RException {
+      String cmd = "makeRepo(c(), '" + _path2String(path) + "', repos = '" + MIRROR + "', type = '" + type + "')";
+      controller.eval(cmd, false);
+    }
+
+    /**
+     * Retrieve package dependencies.
+     * <p>
+     * Perform recursive retrieve for Depends, Imports and LinkLibrary. Performs
+     * non-recursive retrieve for Suggests.
+     * 
+     * @param pkgs List of names of packages.
+     * @return the dependencies of the specified packages
+     * @throws RException
+     * @throws REXPMismatchException
+     * 
+     * @see <a href=
+     *      "https://cran.r-project.org/web/packages/miniCRAN/miniCRAN.pdf">
+     *      miniCRAN documentation</a>
+     */
+    List<String> pkgDep(final List<String> pkgs) throws RException, REXPMismatchException {
+      String cmd = "pkgDep(" + _pkgList(pkgs) + ", type = '" + type + "', repos = '" + MIRROR +"')";
+      REXP rexp = controller.eval(cmd, true);
+      return Arrays.asList(rexp.asStrings());
+    }
+
+    // Utility method. Should not be used outside of RCommandBuilder.
+    String _pkgList(final List<String> pkgs) {
+      return "c(" + pkgs.stream().map(pkg -> "'" + pkg + "'").collect(Collectors.joining(", ")) + ")";
+    }
+
+    // Utility method. Should not be used outside of RCommandBuilder.
+    String _path2String(final Path path) {
+      return FilenameUtils.separatorsToUnix(path.toString());
+    }
+  }
 }
