@@ -27,7 +27,7 @@ ui = {
         "id": "modificationDate",
         "label": "Modification date",
         "type": "date-array",
-        "description": "Date/time of the last version of the FSK file"
+        "description": "Date/time of the last version of the FSKX file"
     }, {
         "id": "rights",
         "label": "Rights",
@@ -1057,7 +1057,7 @@ const _predictiveModelGeneralInformation = {
             "id": "modificationDate",
             "label": "Modification date",
             "type": "date-array",
-            "description": "Date/time of the last version of the FSK file"
+            "description": "Date/time of the last version of the FSKX file"
         },
         {
             "id": "rights",
@@ -1162,7 +1162,7 @@ const fskui = {
                 "id": "modificationDate",
                 "label": "Modification date",
                 "type": "date-array",
-                "description": "Date/time of the last version of the FSK file"
+                "description": "Date/time of the last version of the FSKX file"
             }, {
                 "id": "rights",
                 "label": "Rights",
