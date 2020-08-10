@@ -19,7 +19,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 public class ExistingEnvironmentManager implements EnvironmentManager {
 
   private final String environmentPath;
-  
+
   public ExistingEnvironmentManager() {
     this("");
   }
@@ -27,7 +27,7 @@ public class ExistingEnvironmentManager implements EnvironmentManager {
   public ExistingEnvironmentManager(String environmentPath) {
     this.environmentPath = environmentPath;
   }
-  
+
   public String getEnvironmentPath() {
     return environmentPath;
   }
@@ -48,7 +48,7 @@ public class ExistingEnvironmentManager implements EnvironmentManager {
 
     return Optional.of(environment);
   }
-  
+
   @Override
   public void deleteEnvironment(Path path) {
     // The path existed previously and should not be removed.
