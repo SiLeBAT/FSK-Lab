@@ -18,32 +18,32 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
  */
 @JsonAutoDetect(fieldVisibility = Visibility.ANY)
 public class FilesEnvironmentManager implements EnvironmentManager {
-  
+
   private final String[] files;
-  
+
   public FilesEnvironmentManager() {
     this(new String[0]);
   }
-  
+
   public FilesEnvironmentManager(String[] files) {
     this.files = files;
   }
-  
+
   public String[] getFiles() {
     return files;
   }
 
   @Override
   public Optional<Path> getEnvironment() {
-   
+
     if (files == null || files.length == 0)
       return Optional.empty();
-    
+
     for (String filePath : files) {
       if (Files.notExists(Paths.get(filePath)))
-          return Optional.empty();
+        return Optional.empty();
     }
-    
+
     try {
       Path environment = Files.createTempDirectory("workingDirectory");
       for (String filePath : files) {
@@ -51,13 +51,13 @@ public class FilesEnvironmentManager implements EnvironmentManager {
         Path targetPath = environment.resolve(sourcePath.getFileName());
         Files.copy(Paths.get(filePath), targetPath);
       }
-      
+
       return Optional.of(environment);
     } catch (IOException e) {
       return Optional.empty();
     }
   }
-  
+
   @Override
   public void deleteEnvironment(Path path) {
     FileUtils.deleteQuietly(path.toFile());

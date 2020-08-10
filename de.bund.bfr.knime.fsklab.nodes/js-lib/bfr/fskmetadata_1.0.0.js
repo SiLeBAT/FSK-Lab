@@ -21,13 +21,13 @@ ui = {
         "id": "creationDate",
         "label": "Creation date",
         "type": "date",
-        "description": "Creation date/time of the FSK file",
+        "description": "Creation date/time of the FSKX file",
         "required": true
     }, {
         "id": "modificationDate",
         "label": "Modification date",
         "type": "date-array",
-        "description": "Date/time of the last version of the FSK file"
+        "description": "Date/time of the last version of the FSKX file"
     }, {
         "id": "rights",
         "label": "Rights",
@@ -671,7 +671,7 @@ ui = {
         "label": "Accreditation",
         "type": "text-array",
         "description": "The laboratory accreditation to ISO/IEC 17025",
-        "vocabulary": "Laboratory_accreditation",
+        "vocabulary": "laboratory_accreditation",
         "required": true
     }],
     "assay": [{
@@ -1051,13 +1051,13 @@ const _predictiveModelGeneralInformation = {
             "id": "creationDate",
             "label": "Creation date",
             "type": "date",
-            "description": "Creation date/time of the FSK file",
+            "description": "Creation date/time of the FSKX file",
             "required": true
         }, {
             "id": "modificationDate",
             "label": "Modification date",
             "type": "date-array",
-            "description": "Date/time of the last version of the FSK file"
+            "description": "Date/time of the last version of the FSKX file"
         },
         {
             "id": "rights",
@@ -1156,13 +1156,13 @@ const fskui = {
                 "id": "creationDate",
                 "label": "Creation date",
                 "type": "date",
-                "description": "Creation date/time of the FSK file",
+                "description": "Creation date/time of the FSKX file",
                 "required": true
             }, {
                 "id": "modificationDate",
                 "label": "Modification date",
                 "type": "date-array",
-                "description": "Date/time of the last version of the FSK file"
+                "description": "Date/time of the last version of the FSKX file"
             }, {
                 "id": "rights",
                 "label": "Rights",

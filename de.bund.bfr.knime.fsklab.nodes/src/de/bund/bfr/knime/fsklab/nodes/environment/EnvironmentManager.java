@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 
 @JsonTypeInfo(use = Id.CLASS, include = As.PROPERTY)
 public interface EnvironmentManager {
-  
+
   @JsonIgnore
   Optional<Path> getEnvironment();
 

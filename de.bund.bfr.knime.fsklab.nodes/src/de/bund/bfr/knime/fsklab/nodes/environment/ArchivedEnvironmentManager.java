@@ -38,11 +38,11 @@ public class ArchivedEnvironmentManager implements EnvironmentManager {
     this.archivePath = archivePath;
     this.entries = entries;
   }
-  
+
   public String getArchivePath() {
     return archivePath;
   }
-  
+
   public String[] getEntries() {
     return entries;
   }
@@ -76,7 +76,7 @@ public class ArchivedEnvironmentManager implements EnvironmentManager {
       return Optional.empty();
     }
   }
-  
+
   @Override
   public void deleteEnvironment(Path path) {
     FileUtils.deleteQuietly(path.toFile());
