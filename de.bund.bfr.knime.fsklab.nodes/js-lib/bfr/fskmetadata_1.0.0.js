@@ -608,7 +608,7 @@ ui = {
         "required": true
     }, {
         "id": "lotSizeUnit",
-        "label": "Size unit",
+        "label": "Lot size unit",
         "type": "text",
         "description": "Unit in which the lot size is expressed"
     }, {
@@ -707,7 +707,7 @@ ui = {
         "description": "Limit of quantification reported in the unit specified by the variable 'Hazard unit'"
     }, {
         "id": "leftCensoredData",
-        "label": "Censored data",
+        "label": "Left-censored data",
         "type": "text",
         "description": "Percentage of measures equal to LOQ and/or LOD"
     }, {
