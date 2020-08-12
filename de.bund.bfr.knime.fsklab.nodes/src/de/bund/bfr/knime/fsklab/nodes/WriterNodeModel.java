@@ -25,9 +25,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
-import java.nio.file.LinkOption;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -153,20 +151,7 @@ class WriterNodeModel extends NoInternalsModel {
       Map<String, URI> URIS) throws Exception {
 
     addVersion(archive);
-    // Adds model script
-    final ArchiveEntry modelEntry =
-        addRScript(archive, fskObj.model, filePrefix + "model." + scriptHandler.getFileExtension());
-    modelEntry.addDescription(new FskMetaDataObject(ResourceType.modelScript).metaDataObject);
-
-    // Adds visualization script
-    final ArchiveEntry vizEntry = addRScript(archive, fskObj.viz,
-        filePrefix + "visualization." + scriptHandler.getFileExtension());
-    vizEntry.addDescription(new FskMetaDataObject(ResourceType.visualizationScript).metaDataObject);
-
-    // Adds R workspace file
-    if (fskObj.workspace != null) {
-      addWorkspace(archive, fskObj.workspace, filePrefix);
-    }
+   
 
     // Adds model metadata
     addMetaData(archive, fskObj.modelMetadata, filePrefix + "metaData.json");
@@ -205,10 +190,27 @@ class WriterNodeModel extends NoInternalsModel {
           } else if (FilenameUtils.isExtension(filenameString, "xlsx")) {
             archive.addEntry(resourceFile, filenameString, URIS.get("xlsx"));
           }
+          // ADD additional resource files that the model script might need
+          else if (FilenameUtils.isExtension(filenameString, scriptHandler.getFileExtension())) {
+          archive.addEntry(resourceFile, filenameString, FSKML.getURIS(1, 0, 12).get(scriptHandler.getFileExtension()));
+          }
         }
       }
     }
+    // Adds model script
+    final ArchiveEntry modelEntry =
+        addRScript(archive, fskObj.model, filePrefix + "model." + scriptHandler.getFileExtension());
+    modelEntry.addDescription(new FskMetaDataObject(ResourceType.modelScript).metaDataObject);
 
+    // Adds visualization script
+    final ArchiveEntry vizEntry = addRScript(archive, fskObj.viz,
+        filePrefix + "visualization." + scriptHandler.getFileExtension());
+    vizEntry.addDescription(new FskMetaDataObject(ResourceType.visualizationScript).metaDataObject);
+
+    // Adds R workspace file
+    if (fskObj.workspace != null) {
+      addWorkspace(archive, fskObj.workspace, filePrefix);
+    }
     // Add simulations
     {
       SEDMLDocument sedmlDoc = createSedml(fskObj);
@@ -223,6 +225,7 @@ class WriterNodeModel extends NoInternalsModel {
       addParameterScript(archive, sim, filePrefix);
     }
 
+    // TODO: THIS DOES NOT WORK IN WINDOWS: png file cant be opened without renaming the file to .svg  
     // Add PNG plot. If file is not set (empty string) or does not exist then skip\
     // this step.
     File plotFile = new File(fskObj.getPlot());
@@ -559,7 +562,7 @@ class WriterNodeModel extends NoInternalsModel {
     final File file = File.createTempFile("temp", ".r");
     FileUtils.writeStringToFile(file, script, "UTF-8");
 
-    final ArchiveEntry entry = archive.addEntry(file, filename, FSKML.getURIS(1, 0, 12).get("r"));
+    final ArchiveEntry entry = archive.addEntry(file, filename, FSKML.getURIS(1, 0, 12).get(scriptHandler.getFileExtension()));
     file.delete();
 
     return entry;
