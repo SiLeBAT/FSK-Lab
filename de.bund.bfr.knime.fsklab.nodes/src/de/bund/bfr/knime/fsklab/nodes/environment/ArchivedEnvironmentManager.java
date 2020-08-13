@@ -1,13 +1,14 @@
 package de.bund.bfr.knime.fsklab.nodes.environment;
 
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.ParseException;
 import java.util.Optional;
 import org.apache.commons.io.FileUtils;
 import org.jdom2.JDOMException;
+import org.knime.core.util.FileUtil;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import de.unirostock.sems.cbarchive.ArchiveEntry;
@@ -52,8 +53,17 @@ public class ArchivedEnvironmentManager implements EnvironmentManager {
 
     if (archivePath == null || archivePath.isEmpty())
       return Optional.empty();
-
-    Path archiveFile = Paths.get(archivePath);
+    
+    Path archiveFile; 
+    
+    try {
+      URL url = FileUtil.toURL(archivePath);
+      archiveFile = FileUtil.resolveToPath(url);
+    }catch(Exception e) {
+      return Optional.empty();
+    }
+    
+   
     if (Files.notExists(archiveFile))
       return Optional.empty();
 

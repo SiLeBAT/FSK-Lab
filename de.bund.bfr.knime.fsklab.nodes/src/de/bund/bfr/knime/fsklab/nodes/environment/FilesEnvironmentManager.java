@@ -3,9 +3,11 @@ package de.bund.bfr.knime.fsklab.nodes.environment;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import org.apache.commons.io.FileUtils;
+import org.knime.core.util.FileUtil;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 
@@ -39,17 +41,28 @@ public class FilesEnvironmentManager implements EnvironmentManager {
     if (files == null || files.length == 0)
       return Optional.empty();
 
-    for (String filePath : files) {
-      if (Files.notExists(Paths.get(filePath)))
+ 
+    List<Path> filePaths = new ArrayList<>();
+    try {
+      for (String filePath : files) {
+        filePaths.add(FileUtil.resolveToPath(FileUtil.toURL(filePath)));
+      }
+
+    }catch(Exception e) {
+      return Optional.empty();
+    }
+    
+    for (Path filePath : filePaths) {
+      if (Files.notExists(filePath))
         return Optional.empty();
     }
 
     try {
       Path environment = Files.createTempDirectory("workingDirectory");
-      for (String filePath : files) {
-        Path sourcePath = Paths.get(filePath);
+      for (Path filePath : filePaths) {
+        Path sourcePath = filePath;
         Path targetPath = environment.resolve(sourcePath.getFileName());
-        Files.copy(Paths.get(filePath), targetPath);
+        Files.copy(filePath, targetPath);
       }
 
       return Optional.of(environment);
