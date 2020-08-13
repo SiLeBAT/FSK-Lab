@@ -79,12 +79,12 @@ ui = {
     }, {
         "id": "objective",
         "label": "Objective",
-        "type": "text",
+        "type": "long-text",
         "description": "Objective of the model or data"
     }, {
         "id": "description",
         "label": "Description",
-        "type": "text",
+        "type": "long-text",
         "description": "General description of the study, data or model"
     }],
     "modelCategory": [{
@@ -97,7 +97,7 @@ ui = {
     }, {
         "id": "modelClassComment",
         "label": "Comment",
-        "type": "text",
+        "type": "long-text",
         "description": ""
     }, {
         "id": "modelSubClass",
@@ -120,12 +120,12 @@ ui = {
     }, {
         "id": "familyName",
         "label": "Family name",
-        "type": "text",
+        "type": "long-text",
         "description": "Family name or surname."
     }, {
         "id": "givenName",
         "label": "Given name",
-        "type": "text",
+        "type": "long-text",
         "description": "Given name"
     }, {
         "id": "email",
@@ -173,12 +173,12 @@ ui = {
     }, {
         "id": "note",
         "label": "Note",
-        "type": "text",
+        "type": "long-text",
         "description": "Supplemental information or a comment"
     }, {
         "id": "organization",
         "label": "Organization",
-        "type": "text",
+        "type": "long-text",
         "description": "Organization information"
     }],
     "reference": [
@@ -207,29 +207,29 @@ ui = {
         }, {
             "id": "doi",
             "label": "DOI",
-            "type": "text",
+            "type": "long-text",
             "description": "DOI related to this publication",
             "required": true
         }, {
             "id": "authorList",
             "label": "Author list",
-            "type": "text",
+            "type": "long-text",
             "description": "Name and surname of the authors who contributed to this publication"
         }, {
             "id": "title",
             "label": "Title",
-            "type": "text",
+            "type": "long-text",
             "description": "Title of the publication in which the model or the data has been described",
             "required": true
         }, {
             "id": "abstract",
             "label": "Abstract",
-            "type": "text",
+            "type": "long-text",
             "description": "Abstract of the publication in which the model or the data has been described"
         }, {
             "id": "journal",
             "label": "Journal",
-            "type": "text",
+            "type": "long-text",
             "description": "Data on the details of the journal in which the model or the data has been described"
         }, {
             "id": "volume",
@@ -255,14 +255,14 @@ ui = {
         }, {
             "id": "comment",
             "label": "Comment",
-            "type": "text",
+            "type": "long-text",
             "description": "Further comments related to the reference description, e.g. which section in there describes the specific model or which figure in there can be reproduced with the visualization script"
         }
     ],
     "scope": [{
         "id": "generalComment",
         "label": "General comment",
-        "type": "text",
+        "type": "long-text",
         "description": "General comments on the scope of the study, data or model",
     }, {
         "id": "spatialInformation",
@@ -281,7 +281,7 @@ ui = {
         }, {
             "id": "description",
             "label": "Description",
-            "type": "text",
+            "type": "long-text",
             "description": "Detailed description of the product, matrix or environment for which the model or data applies"
         }, {
             "id": "unit",
@@ -355,7 +355,7 @@ ui = {
         }, {
             "id": "description",
             "label": "Description",
-            "type": "text",
+            "type": "long-text",
             "description": "Description of the hazard for which the model or data applies"
         }, {
             "id": "unit",
@@ -488,12 +488,12 @@ ui = {
     }, {
         "id": "title",
         "label": "Title",
-        "type": "text",
+        "type": "long-text",
         "description": "A title for the Study"
     }, {
         "id": "description",
         "label": "Description",
-        "type": "text",
+        "type": "long-text",
         "description": "A brief description of the study aims"
     }, {
         "id": "designType",
@@ -530,7 +530,7 @@ ui = {
     }, {
         "id": "protocolDescription",
         "label": "Protocol description",
-        "type": "text",
+        "type": "long-text",
         "description": "A description of the Protocol"
     }, {
         "id": "protocolURI",
@@ -683,7 +683,7 @@ ui = {
     }, {
         "id": "description",
         "label": "Description",
-        "type": "text",
+        "type": "long-text",
         "description": "General description of the assay. Corresponds to the Protocol REF in ISA"
     }, {
         "id": "moisturePercentage",
@@ -922,13 +922,13 @@ const _genericModelScope = {
         {
             id: "generalComment",
             label: "General comment",
-            type: "text",
+            type: "long-text",
             description: "General comments on the scope of the study, data or model"
         },
         {
             id: "temporalInformation",
             label: "Temporal information",
-            type: "text",
+            type: "long-text",
             description: "Spatial information (area) on which the model or data applies"
         },
         {
@@ -949,13 +949,13 @@ const _exposureModelScope = {
         {
             id: "generalComment",
             label: "General comment",
-            type: "text",
+            type: "long-text",
             description: "General comments on the scope of the study, data or model"
         },
         {
             id: "temporalInformation",
             label: "Temporal information",
-            type: "text",
+            type: "long-text",
             description: "Spatial information (area) on which the model or data applies"
         },
         {
@@ -1114,13 +1114,13 @@ const _predictiveModelGeneralInformation = {
         {
             "id": "objective",
             "label": "Objective",
-            "type": "text",
+            "type": "long-text",
             "description": "Objective of the model or data"
         },
         {
             "id": "description",
             "label": "Description",
-            "type": "text",
+            "type": "long-text",
             "description": "General description of the study, data or model"
         }
     ],
@@ -1214,12 +1214,12 @@ const fskui = {
             }, {
                 "id": "objective",
                 "label": "Objective",
-                "type": "text",
+                "type": "long-text",
                 "description": "Objective of the model or data"
             }, {
                 "id": "description",
                 "label": "Description",
-                "type": "text",
+                "type": "long-text",
                 "description": "General description of the study, data or model"
             }
         ],
@@ -1309,13 +1309,13 @@ const fskui = {
             {
                 "id": "objective",
                 "label": "Objective",
-                "type": "text",
+                "type": "long-text",
                 "description": "Objective of the model or data"
             },
             {
                 "id": "description",
                 "label": "Description",
-                "type": "text",
+                "type": "long-text",
                 "description": "General description of the study, data or model"
             }
         ],
@@ -1333,13 +1333,13 @@ const fskui = {
             {
                 id: "generalComment",
                 label: "General comment",
-                type: "text",
+                type: "long-text",
                 description: "General comments on the scope of the study, data or model"
             },
             {
                 id: "temporalInformation",
                 label: "Temporal information",
-                type: "text",
+                type: "long-text",
                 description: "Spatial information (area) on which the model or data applies"
             },
             {
@@ -1450,13 +1450,13 @@ const fskui = {
             {
                 "id": "objective",
                 "label": "Objective",
-                "type": "text",
+                "type": "long-text",
                 "description": "Objective of the model or data"
             },
             {
                 "id": "description",
                 "label": "Description",
-                "type": "text",
+                "type": "long-text",
                 "description": "General description of the study, data or model"
             }
         ],
@@ -1469,13 +1469,13 @@ const fskui = {
             {
                 id: "generalComment",
                 label: "General comment",
-                type: "text",
+                type: "long-text",
                 description: "General comments on the scope of the study, data or model"
             },
             {
                 id: "temporalInformation",
                 label: "Temporal information",
-                type: "text",
+                type: "long-text",
                 description: "Spatial information (area) on which the model or data applies"
             },
             {
@@ -1611,13 +1611,13 @@ const fskui = {
             {
                 id: "objective",
                 label: "Objective",
-                type: "text",
+                type: "long-text",
                 description: "Objective of the model"
             },
             {
                 id: "description",
                 label: "Description",
-                type: "text",
+                type: "long-text",
                 description: "General description of the model"
             }
         ],
@@ -1630,19 +1630,19 @@ const fskui = {
             {
                 id: "generalComment",
                 label: "General comment",
-                type: "text",
+                type: "long-text",
                 description: "General comments on the scope of the model"
             },
             {
                 id: "temporalInformation",
                 label: "Temporal information",
-                type: "text",
+                type: "long-text",
                 description: "Temporal information on which the model applies / An interval of time that is named or defined by its start and end dates (period of study)"
             },
             {
                 id: "spatialInformation",
                 label: "Spatial information",
-                type: "text",
+                type: "long-text",
                 description: "Spatial information (area) on which the model applies"
             }
         ],
@@ -1677,13 +1677,13 @@ const fskui = {
             {
                 id: "generalComment",
                 label: "General comment",
-                type: "text",
+                type: "long-text",
                 description: "General comments on the scope of the study, data or model"
             },
             {
                 id: "temporalInformation",
                 label: "Temporal information",
-                type: "text",
+                type: "long-text",
                 description: "Spatial information (area) on which the model or data applies"
             },
             {
@@ -1706,13 +1706,13 @@ const fskui = {
             {
                 id: "generalComment",
                 label: "General comment",
-                type: "text",
+                type: "long-text",
                 description: "General comments on the scope of the study, data or model"
             },
             {
                 id: "temporalInformation",
                 label: "Temporal information",
-                type: "text",
+                type: "long-text",
                 description: "Spatial information (area) on which the model or data applies"
             },
             {
@@ -1733,13 +1733,13 @@ const fskui = {
             {
                 id: "generalComment",
                 label: "General comment",
-                type: "text",
+                type: "long-text",
                 description: "General comments on the scope of the study, data or model"
             },
             {
                 id: "temporalInformation",
                 label: "Temporal information",
-                type: "text",
+                type: "long-text",
                 description: "Spatial information (area) on which the model or data applies"
             },
             {
@@ -1767,13 +1767,13 @@ const fskui = {
             {
                 id: "generalComment",
                 label: "General comment",
-                type: "text",
+                type: "long-text",
                 description: "General comments on the scope of the study, data or model"
             },
             {
                 id: "temporalInformation",
                 label: "Temporal information",
-                type: "text",
+                type: "long-text",
                 description: "Spatial information (area) on which the model or data applies"
             },
             {

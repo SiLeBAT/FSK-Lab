@@ -371,7 +371,6 @@ fskutil = function () {
                 this.helpBlock.textContent = `${name} is a required property`;
                 inputDiv.appendChild(this.helpBlock);
             }
-
             
             // Add autocomplete to input with vocabulary
             if (vocabulary) {
@@ -437,6 +436,81 @@ fskutil = function () {
 
             // Add new validation class
             this.group.classList.add(isValid ? "has-success" : "has-error");
+
+            return isValid;
+        }
+    }
+
+    /**
+     * Create a Bootstrap 3 form-group for a textarea. 
+     */
+    fskutil.TextareaForm = class {
+
+        /**
+         * Create a Bootstrap 3 form-group.
+         * 
+         * ```
+         * <div class="form-group row">
+         *   <label>name</label>
+         *   <textarea class="form-control" rows="3"></textarea>
+         * </div>
+         * ```
+         */
+        constructor(name, mandatory, helperText, value) {
+            this.name = name;
+            this.mandatory = mandatory;
+            this.helperText = helperText;
+            
+            this.textarea = document.createElement("textarea");
+            this.group = document.createElement("div");
+
+            this._create(name, mandatory, helperText, value);
+        }
+
+        /**
+         * @param {string} name Property name
+         * @param {boolean} mandatory `true` if mandatory, `false` if optional.
+         * @param {string} helperText Tooltip
+         * @param {string} value Initial value of the property.
+         */
+        _create(name, mandatory, helperText, value) {
+
+            this.textarea.title = helperText;
+            this.textarea.value = value;
+            this.textarea.className = "form-control";
+
+            let inputDiv = document.createElement("div");
+            inputDiv.className = "col-sm-10";
+            inputDiv.appendChild(this.textarea);
+
+            // Collect everything into group
+            this.group.classList.add("form-group", "row");
+            this.group.appendChild(fskutil.createLabel(name, mandatory, helperText));
+            this.group.appendChild(inputDiv);
+        }
+
+        get value() {
+            return this.textarea.value;
+        }
+
+        set value(newValue) {
+            this.textarea.value = newValue;
+        }
+
+        clear() {
+            this.textarea.value = "";
+        }
+
+        /**
+         * @return {boolean} If the textarea is valid.
+         */
+        validate() {
+            let isValid;
+            if (!this.mandatory) {
+                isValid = true;
+            } else {
+                isValid = this.textarea.value ? true : false;
+            }
 
             return isValid;
         }
@@ -651,6 +725,10 @@ fskutil = function () {
             prop.type === "date" || prop.type === "email")
             return new fskutil.InputForm(prop.label, isMandatory, prop.type, prop.description,
                 value ? value : "", prop.vocabulary);
+        
+        if (prop.type === "long-text")
+            return new fskutil.TextareaForm(prop.label, isMandatory, prop.description,
+                value ? value : "");
 
         if (prop.type === "enum")
             return new fskutil.SelectForm(prop.label, isMandatory, prop.description, value,
