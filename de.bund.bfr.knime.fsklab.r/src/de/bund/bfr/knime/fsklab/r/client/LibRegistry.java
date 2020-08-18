@@ -92,7 +92,7 @@ public class LibRegistry {
     repoPath = fskFolder.resolve("cran");
 
     // Validate .fsk folder
-    if (Files.exists(fskFolder)) {
+    if (Files.exists(installPath) && Files.exists(repoPath)) {
       // TODO: Need to validate further: library and CRAN
 
       // Initialize `installedLibs` with `installPath`
@@ -112,7 +112,6 @@ public class LibRegistry {
     } else {
 
       // Create directories
-      Files.createDirectory(fskFolder);
       Files.createDirectory(repoPath);
       Files.createDirectory(installPath);
 
