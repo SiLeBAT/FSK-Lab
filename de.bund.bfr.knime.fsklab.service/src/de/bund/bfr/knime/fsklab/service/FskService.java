@@ -1,10 +1,10 @@
 package de.bund.bfr.knime.fsklab.service;
 
+import static spark.Spark.awaitInitialization;
 import static spark.Spark.before;
 import static spark.Spark.get;
 import static spark.Spark.options;
 import static spark.Spark.port;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -17,17 +17,13 @@ import java.sql.Statement;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
-
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jetty.server.Server;
 import org.h2.tools.DeleteDbFiles;
 import org.knime.core.node.NodeLogger;
 import org.osgi.framework.Bundle;
-
 import com.google.gson.Gson;
-
 import de.bund.bfr.rakip.vocabularies.data.AccreditationProcedureRepository;
 import de.bund.bfr.rakip.vocabularies.data.AvailabilityRepository;
 import de.bund.bfr.rakip.vocabularies.data.BasicProcessRepository;
@@ -76,15 +72,11 @@ public class FskService implements Runnable {
   private static final NodeLogger LOGGER = NodeLogger.getLogger(FskService.class);
 
   private static final JsonTransformer jsonTransformer = new JsonTransformer();
-
-  private Server server;
-
-  public FskService() {
-    server = new Server(0);
-  }
+  
+  private int port;
 
   public int getPort() {
-    return server.getURI() != null ? server.getURI().getPort() : -1;
+    return port;
   }
 
   @Override
@@ -111,7 +103,7 @@ public class FskService implements Runnable {
       if (accessControlRequestMethod != null) {
         response.header("Access-Control-Allow-Methods", accessControlRequestMethod);
       }
-
+      
       return "OK";
     });
 
@@ -160,6 +152,10 @@ public class FskService implements Runnable {
     //
     // return mgr.getFilenames();
     // }, jsonTransformer);
+    
+    // After initializing the service, get the randomly picked port by Spark.
+    awaitInitialization();
+    port = port();
   }
 
   private static class JsonTransformer implements ResponseTransformer {

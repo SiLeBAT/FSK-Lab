@@ -56,8 +56,8 @@ fskutil = function () {
      * @param {Element} input Input element
      * @param {Array} vocabulary String array with vocabulary terms.
      */
-    fskutil.addControlledVocabulary = function (input, vocabulary) {
-        fetch('http://localhost:8080/getAllNames/' + vocabulary)
+    fskutil.addControlledVocabulary = function (input, vocabulary, port) {
+        fetch(`http://localhost:${port}/getAllNames/${vocabulary}`)
             .then(response => response.json())
             .then(data => {
                 $(input).typeahead({
@@ -71,9 +71,10 @@ fskutil = function () {
 
     fskutil.SimpleTable = class {
 
-        constructor(type, data, vocabulary) {
+        constructor(type, data, vocabulary, port) {
             this.type = type === "text-array" ? "text" : "date";
             this.vocabulary = vocabulary;
+            this.port = port;
 
             this.table = document.createElement("table");
             this.table.className = "table";
@@ -121,7 +122,7 @@ fskutil = function () {
 
             // Add autocomplete to input with vocabulary
             if (this.vocabulary) {
-                fskutil.addControlledVocabulary(input, this.vocabulary);
+                fskutil.addControlledVocabulary(input, this.vocabulary, this.port);
             }
 
             // If enter is pressed when the input if focused, lose focus and add a
@@ -324,7 +325,7 @@ fskutil = function () {
          * @param {string} value Initial value of the property.
          * @param {Array} vocabulary Vocabulary name.
          */
-        constructor(name, mandatory, type, helperText, value, vocabulary = null) {
+        constructor(name, mandatory, type, helperText, value, port, vocabulary = null) {
 
             this.name = name;
             this.mandatory = mandatory;
@@ -333,7 +334,7 @@ fskutil = function () {
 
             this.input = document.createElement("input");
             this.group = document.createElement("div");
-            this._create(name, mandatory, type, helperText, value, vocabulary);
+            this._create(name, mandatory, type, helperText, value, vocabulary, port);
         }
 
         /**
@@ -344,7 +345,7 @@ fskutil = function () {
          * @param {string} value Initial value of the property.
          * @param {Array} vocabulary Vocabulary name.
          */
-        _create(name, mandatory, type, helperText, value, vocabulary) {
+        _create(name, mandatory, type, helperText, value, vocabulary, port) {
 
             // Create input
             this.input.className = type === "checkbox" ? "form-check-input" : "form-control";
@@ -374,7 +375,7 @@ fskutil = function () {
             
             // Add autocomplete to input with vocabulary
             if (vocabulary) {
-                fskutil.addControlledVocabulary(this.input, vocabulary);
+                fskutil.addControlledVocabulary(this.input, vocabulary, port);
             }
 
             // Collect everything into group
@@ -540,9 +541,9 @@ fskutil = function () {
      */
     fskutil.ArrayForm = class {
 
-        constructor(name, mandatory, type, value, helperText, vocabulary) {
+        constructor(name, mandatory, type, value, helperText, vocabulary, port) {
             this.group = document.createElement("div");
-            this.simpleTable = new fskutil.SimpleTable(type, value, vocabulary);
+            this.simpleTable = new fskutil.SimpleTable(type, value, vocabulary, port);
             this._create(name, mandatory, helperText);
         }
 
@@ -640,22 +641,22 @@ fskutil = function () {
          *   </select>
          * </div>```
          */
-        constructor(name, mandatory, helperText, value, vocabulary = null) {
+        constructor(name, mandatory, helperText, value, port, vocabulary = null) {
 
             this.select = document.createElement("select");
             this.group = document.createElement("div");
 
-            this._create(name, mandatory, helperText, value, vocabulary);
+            this._create(name, mandatory, helperText, value, vocabulary, port);
         }
 
-        _create(name, mandatory, helperText, value, vocabulary) {
+        _create(name, mandatory, helperText, value, vocabulary, port) {
 
             this.select.className = "form-control";
             this.select.value = value;
             this.select.title = helperText;
 
             // Add options from vocabulary. The option matching value is selected.
-            fetch('http://localhost:8080/getAllNames/' + vocabulary)
+            fetch(`http://localhost:${port}/getAllNames/${vocabulary}`)
                 .then(response => response.json())
                 .then(data => {
                     this.select.innerHTML = data.map(item => `<option>${item}</option>`).join("")
@@ -718,13 +719,13 @@ fskutil = function () {
      * @returns InputForm or ArrayForm for the supported type. If wrong type
      *  it returns undefined.
      */
-    fskutil.createForm = function (prop, value) {
+    fskutil.createForm = function (prop, value, port) {
         let isMandatory = prop.required ? prop.required : false;
 
         if (prop.type === "text" || prop.type === "number" || prop.type === "url" ||
             prop.type === "date" || prop.type === "email")
             return new fskutil.InputForm(prop.label, isMandatory, prop.type, prop.description,
-                value ? value : "", prop.vocabulary);
+                value ? value : "", port, prop.vocabulary);
         
         if (prop.type === "long-text")
             return new fskutil.TextareaForm(prop.label, isMandatory, prop.description,
@@ -732,19 +733,19 @@ fskutil = function () {
 
         if (prop.type === "enum")
             return new fskutil.SelectForm(prop.label, isMandatory, prop.description, value,
-                prop.vocabulary);
+                port, prop.vocabulary);
 
         if (prop.type === "boolean")
             return new fskutil.InputForm(prop.label, false, "checkbox",
-                prop.description, value);
+                prop.description, value, port);
 
         if (prop.type === "text-array")
             return new fskutil.ArrayForm(prop.label, isMandatory, prop.type,
-                value ? value : [], prop.description, prop.vocabulary);
+                value ? value : [], prop.description, port, prop.vocabulary);
 
         if (prop.type === "date-array")
             return new fskutil.ArrayForm(prop.label, isMandatory, prop.type,
-                value ? value : [], prop.description, prop.vocabulary);
+                value ? value : [], prop.description, port, prop.vocabulary);
     }
 
     /**
@@ -781,7 +782,7 @@ fskutil = function () {
          * @param {title} title Dialog title
          * @param {formData} formData Object with form data
          */
-        constructor(id, title, formData) {
+        constructor(id, title, formData, port) {
             this.inputs = {};  // Hash of inputs by id
 
             // Index of the row currently edited. It is -1 if no row is being edited.
@@ -789,15 +790,15 @@ fskutil = function () {
             this.editedRow = -1;
 
             this.modal = document.createElement("div");
-            this.create(id, title, formData);
+            this.create(id, title, formData, port);
         }
 
-        create(id, title, formData) {
+        create(id, title, formData, port) {
 
             // modal body
             let form = document.createElement("form");
             formData.forEach(prop => {
-                let inputForm = fskutil.createForm(prop);
+                let inputForm = fskutil.createForm(prop, null, port);
                 if (inputForm) {
                     form.appendChild(inputForm.group);
                     this.inputs[prop.id] = inputForm;
@@ -881,11 +882,11 @@ fskutil = function () {
      */
     fskutil.FormPanel = class {
 
-        constructor(title, formData, data) {
+        constructor(title, formData, data, port) {
             this.panel = document.createElement("div");
             this.inputs = {};
 
-            this._create(title, formData, data);
+            this._create(title, formData, data, port);
         }
 
         /**
@@ -902,7 +903,7 @@ fskutil = function () {
          * @param {*} title 
          * @param {*} formData 
          */
-        _create(title, formData, data) {
+        _create(title, formData, data, port) {
 
             this.panel.classList.add("panel", "panel-default");
             this.panel.innerHTML = `<div class="panel-heading">
@@ -911,7 +912,7 @@ fskutil = function () {
 
             let form = document.createElement("form");
             formData.forEach(prop => {
-                let inputForm = fskutil.createForm(prop, data ? data[prop.id] : null);
+                let inputForm = fskutil.createForm(prop, data ? data[prop.id] : null, port);
                 if (inputForm) {
                     form.appendChild(inputForm.group);
                     this.inputs[prop.id] = inputForm;
@@ -975,13 +976,13 @@ fskutil = function () {
          * @param {object} formData Related data from the UI schema.
          * @param {object} data Initial data of the table.
          */
-        constructor(title, formData, data) {
+        constructor(title, formData, data, port) {
 
             this.panel = document.createElement("div");
 
             // Register this panel in dialog (TODO: this should be done in Dialog's constr)
             // this.dialog = dialog;
-            this.dialog = new fskutil.Dialog(title + "Dialog", "Add " + title, formData);
+            this.dialog = new fskutil.Dialog(title + "Dialog", "Add " + title, formData, port);
             this.dialog.panel = this;
 
             this.table = new fskutil.AdvancedTable(data, formData, this.dialog, this);
@@ -1071,9 +1072,9 @@ fskutil = function () {
     // Handler for generic model schema
     fskutil.GenericModel = class {
 
-        constructor(metadata) {
+        constructor(metadata, servicePort) {
             this.metadata = metadata;
-            this.panels = this._createPanels();
+            this.panels = this._createPanels(servicePort);
             this.menus = this._createMenus();
         }
 
@@ -1125,34 +1126,34 @@ fskutil = function () {
             return isValid;
         }
 
-        _createPanels() {
+        _createPanels(port) {
 
             let schema = fskui.genericModel;
 
             return {
-                generalInformation: new fskutil.FormPanel("General", schema.generalInformation, this.metadata.generalInformation),
-                modelCategory: new fskutil.FormPanel("Model category", schema.modelCategory, this.metadata.generalInformation.modelCategory),
-                author: new fskutil.TablePanel("Author", schema.contact, this.metadata.generalInformation.author),
-                creator: new fskutil.TablePanel("Creator", schema.contact, this.metadata.generalInformation.creator),
-                reference: new fskutil.TablePanel("Reference", schema.reference, this.metadata.generalInformation.reference),
-                scopeGeneral: new fskutil.FormPanel("General", schema.scope, this.metadata.scope),
-                product: new fskutil.TablePanel("Product", schema.product, this.metadata.scope.product),
-                hazard: new fskutil.TablePanel("Hazard", schema.hazard, this.metadata.scope.hazard),
+                generalInformation: new fskutil.FormPanel("General", schema.generalInformation, this.metadata.generalInformation, port),
+                modelCategory: new fskutil.FormPanel("Model category", schema.modelCategory, this.metadata.generalInformation.modelCategory, port),
+                author: new fskutil.TablePanel("Author", schema.contact, this.metadata.generalInformation.author, port),
+                creator: new fskutil.TablePanel("Creator", schema.contact, this.metadata.generalInformation.creator, port),
+                reference: new fskutil.TablePanel("Reference", schema.reference, this.metadata.generalInformation.reference, port),
+                scopeGeneral: new fskutil.FormPanel("General", schema.scope, this.metadata.scope, port),
+                product: new fskutil.TablePanel("Product", schema.product, this.metadata.scope.product, port),
+                hazard: new fskutil.TablePanel("Hazard", schema.hazard, this.metadata.scope.hazard, port),
                 population: new fskutil.TablePanel("Population", schema.populationGroup,
-                    this.metadata.scope.populationGroup),
-                study: new fskutil.FormPanel("Study", schema.study, this.metadata.dataBackground.study),
+                    this.metadata.scope.populationGroup, port),
+                study: new fskutil.FormPanel("Study", schema.study, this.metadata.dataBackground.study, port),
                 studySample: new fskutil.TablePanel("Study sample", schema.studySample,
-                    this.metadata.dataBackground.studySample),
+                    this.metadata.dataBackground.studySample, port),
                 dietaryAssessmentMethod: new fskutil.TablePanel("Dietary assessment method",
-                    schema.dietaryAssessmentMethod, this.metadata.dataBackground.dietaryAssessmentMethod),
-                laboratory: new fskutil.TablePanel("Laboratory", schema.laboratory, this.metadata.dataBackground.laboratory),
-                assay: new fskutil.TablePanel("Assay", schema.assay, this.metadata.dataBackground.assay),
-                modelMath: new fskutil.FormPanel("Model math", schema.modelMath, this.metadata.modelMath),
-                parameter: new fskutil.TablePanel("Parameter", schema.parameter, this.metadata.modelMath.parameter),
+                    schema.dietaryAssessmentMethod, this.metadata.dataBackground.dietaryAssessmentMethod, port),
+                laboratory: new fskutil.TablePanel("Laboratory", schema.laboratory, this.metadata.dataBackground.laboratory, port),
+                assay: new fskutil.TablePanel("Assay", schema.assay, this.metadata.dataBackground.assay, port),
+                modelMath: new fskutil.FormPanel("Model math", schema.modelMath, this.metadata.modelMath, port),
+                parameter: new fskutil.TablePanel("Parameter", schema.parameter, this.metadata.modelMath.parameter, port),
                 qualityMeasures: new fskutil.TablePanel("Quality measures", schema.qualityMeasures,
-                    this.metadata.modelMath.qualityMeasures),
-                modelEquation: new fskutil.TablePanel("Model equation", schema.modelEquation, this.metadata.modelMath.modelEquation),
-                exposure: new fskutil.TablePanel("Exposure", schema.exposure, this.metadata.modelMath.exposure)
+                    this.metadata.modelMath.qualityMeasures, port),
+                modelEquation: new fskutil.TablePanel("Model equation", schema.modelEquation, this.metadata.modelMath.modelEquation, port),
+                exposure: new fskutil.TablePanel("Exposure", schema.exposure, this.metadata.modelMath.exposure, port)
             };
         }
 
@@ -1182,9 +1183,9 @@ fskutil = function () {
 
     fskutil.DataModel = class {
 
-        constructor(metadata) {
+        constructor(metadata, servicePort) {
             this.metadata = metadata;
-            this.panels = this._createPanels();
+            this.panels = this._createPanels(servicePort);
             this.menus = this._createMenus();
         }
 
@@ -1228,26 +1229,26 @@ fskutil = function () {
             return this.metadata;
         }
 
-        _createPanels() {
+        _createPanels(port) {
 
             let schema = fskui.dataModel;
 
             return {
-                generalInformation: new fskutil.FormPanel("General", schema.generalInformation, this.metadata.generalInformation),
-                author: new fskutil.TablePanel("Author", schema.contact, this.metadata.generalInformation.author),
-                creator: new fskutil.TablePanel("Creator", schema.contact, this.metadata.generalInformation.creator),
-                reference: new fskutil.TablePanel("Reference", schema.reference, this.metadata.generalInformation.reference),
-                scopeGeneral: new fskutil.FormPanel("General", schema.scope, this.metadata.scope),
-                product: new fskutil.TablePanel("Product", schema.product, this.metadata.scope.product),
-                hazard: new fskutil.TablePanel("Hazard", schema.hazard, this.metadata.scope.hazard),
-                population: new fskutil.TablePanel("Population", schema.populationGroup, this.metadata.scope.populationGroup),
-                study: new fskutil.FormPanel("Study", schema.study, this.metadata.dataBackground.study),
-                studySample: new fskutil.TablePanel("Study sample", schema.studySample, this.metadata.dataBackground.studySample),
+                generalInformation: new fskutil.FormPanel("General", schema.generalInformation, this.metadata.generalInformation, port),
+                author: new fskutil.TablePanel("Author", schema.contact, this.metadata.generalInformation.author, port),
+                creator: new fskutil.TablePanel("Creator", schema.contact, this.metadata.generalInformation.creator, port),
+                reference: new fskutil.TablePanel("Reference", schema.reference, this.metadata.generalInformation.reference, port),
+                scopeGeneral: new fskutil.FormPanel("General", schema.scope, this.metadata.scope, port),
+                product: new fskutil.TablePanel("Product", schema.product, this.metadata.scope.product, port),
+                hazard: new fskutil.TablePanel("Hazard", schema.hazard, this.metadata.scope.hazard, port),
+                population: new fskutil.TablePanel("Population", schema.populationGroup, this.metadata.scope.populationGroup, port),
+                study: new fskutil.FormPanel("Study", schema.study, this.metadata.dataBackground.study, port),
+                studySample: new fskutil.TablePanel("Study sample", schema.studySample, this.metadata.dataBackground.studySample, port),
                 dietaryAssessmentMethod: new fskutil.TablePanel("Dietary assessment method",
-                    schema.dietaryAssessmentMethod, this.metadata.dataBackground.dietaryAssessmentMethod),
-                laboratory: new fskutil.TablePanel("Laboratory", schema.laboratory, this.metadata.dataBackground.laboratory),
-                assay: new fskutil.TablePanel("Assay", schema.assay, this.metadata.dataBackground.assay),
-                parameter: new fskutil.TablePanel("Parameter", schema.parameter, this.metadata.modelMath.parameter),
+                    schema.dietaryAssessmentMethod, this.metadata.dataBackground.dietaryAssessmentMethod, port),
+                laboratory: new fskutil.TablePanel("Laboratory", schema.laboratory, this.metadata.dataBackground.laboratory, port),
+                assay: new fskutil.TablePanel("Assay", schema.assay, this.metadata.dataBackground.assay, port),
+                parameter: new fskutil.TablePanel("Parameter", schema.parameter, this.metadata.modelMath.parameter, port)
             };
         }
 
@@ -1272,9 +1273,9 @@ fskutil = function () {
 
     fskutil.PredictiveModel = class {
 
-        constructor(metadata) {
+        constructor(metadata, servicePort) {
             this.metadata = metadata;
-            this.panels = this._createPanels();
+            this.panels = this._createPanels(servicePort);
             this.menus = this._createMenus();
         }
 
@@ -1321,27 +1322,27 @@ fskutil = function () {
             return isValid;
         }
 
-        _createPanels() {
+        _createPanels(port) {
 
             let schema = fskui.predictiveModel;
 
             return {
-                generalInformation: new fskutil.FormPanel("General", schema.generalInformation, this.metadata.generalInformation),
-                author: new fskutil.TablePanel("Author", schema.contact, this.metadata.generalInformation.author),
-                creator: new fskutil.TablePanel("Creator", schema.contact, this.metadata.generalInformation.creator),
-                reference: new fskutil.TablePanel("Reference", schema.reference, this.metadata.generalInformation.reference),
-                scopeGeneral: new fskutil.FormPanel("General", schema.scope, this.metadata.scope),
-                product: new fskutil.TablePanel("Product", schema.product, this.metadata.scope.product),
-                hazard: new fskutil.TablePanel("Hazard", schema.hazard, this.metadata.scope.hazard),
-                study: new fskutil.FormPanel("Study", schema.study, this.metadata.dataBackground.study),
-                studySample: new fskutil.TablePanel("Study sample", schema.studySample, this.metadata.dataBackground.studySample),
-                laboratory: new fskutil.TablePanel("Laboratory", schema.laboratory, this.metadata.dataBackground.laboratory),
-                assay: new fskutil.TablePanel("Assay", schema.assay, this.metadata.dataBackground.assay),
-                modelMath: new fskutil.FormPanel("Model math", schema.modelMath, this.metadata.modelMath),
-                parameter: new fskutil.TablePanel("Parameter", schema.parameter, this.metadata.modelMath.parameter),
+                generalInformation: new fskutil.FormPanel("General", schema.generalInformation, this.metadata.generalInformation, port),
+                author: new fskutil.TablePanel("Author", schema.contact, this.metadata.generalInformation.author, port),
+                creator: new fskutil.TablePanel("Creator", schema.contact, this.metadata.generalInformation.creator, port),
+                reference: new fskutil.TablePanel("Reference", schema.reference, this.metadata.generalInformation.reference, port),
+                scopeGeneral: new fskutil.FormPanel("General", schema.scope, this.metadata.scope, port),
+                product: new fskutil.TablePanel("Product", schema.product, this.metadata.scope.product, port),
+                hazard: new fskutil.TablePanel("Hazard", schema.hazard, this.metadata.scope.hazard, port),
+                study: new fskutil.FormPanel("Study", schema.study, this.metadata.dataBackground.study, port),
+                studySample: new fskutil.TablePanel("Study sample", schema.studySample, this.metadata.dataBackground.studySample, port),
+                laboratory: new fskutil.TablePanel("Laboratory", schema.laboratory, this.metadata.dataBackground.laboratory, port),
+                assay: new fskutil.TablePanel("Assay", schema.assay, this.metadata.dataBackground.assay, port),
+                modelMath: new fskutil.FormPanel("Model math", schema.modelMath, this.metadata.modelMath, port),
+                parameter: new fskutil.TablePanel("Parameter", schema.parameter, this.metadata.modelMath.parameter, port),
                 qualityMeasures: new fskutil.TablePanel("Quality measures", schema.qualityMeasures,
-                    this.metadata.modelMath.qualityMeasures),
-                modelEquation: new fskutil.TablePanel("Model equation", schema.modelEquation, this.metadata.modelMath.modelEquation)
+                    this.metadata.modelMath.qualityMeasures, port),
+                modelEquation: new fskutil.TablePanel("Model equation", schema.modelEquation, this.metadata.modelMath.modelEquation, port)
             };
         }
 
@@ -1367,9 +1368,9 @@ fskutil = function () {
 
     fskutil.OtherModel = class {
 
-        constructor(metadata) {
+        constructor(metadata, servicePort) {
             this.metadata = metadata;
-            this.panels = this._createPanels();
+            this.panels = this._createPanels(servicePort);
             this.menus = this._createMenus();
         }
 
@@ -1422,23 +1423,23 @@ fskutil = function () {
             let schema = fskui.otherModel;
 
             return {
-                generalInformation: new fskutil.FormPanel("General", schema.generalInformation, this.metadata.generalInformation),
-                modelCategory: new fskutil.FormPanel("Model category", schema.modelCategory, this.metadata.generalInformation.modelCategory),
-                author: new fskutil.TablePanel("Author", schema.contact, this.metadata.generalInformation.author),
-                creator: new fskutil.TablePanel("Creator", schema.contact, this.metadata.generalInformation.creator),
-                reference: new fskutil.TablePanel("Reference", schema.reference, this.metadata.generalInformation.reference),
-                scopeGeneral: new fskutil.FormPanel("General", schema.scope, this.metadata.scope),
-                product: new fskutil.TablePanel("Product", schema.product, this.metadata.scope.product),
-                hazard: new fskutil.TablePanel("Hazard", schema.hazard, this.metadata.scope.hazard),
-                population: new fskutil.TablePanel("Population", schema.populationGroup, this.metadata.scope.populationGroup),
-                study: new fskutil.FormPanel("Study", schema.study, this.metadata.dataBackground.study),
-                studySample: new fskutil.TablePanel("Study sample", schema.studySample, this.metadata.dataBackground.studySample),
-                laboratory: new fskutil.TablePanel("Laboratory", schema.laboratory, this.metadata.dataBackground.laboratory),
-                assay: new fskutil.TablePanel("Assay", schema.assay, this.metadata.dataBackground.assay),
-                modelMath: new fskutil.FormPanel("Model math", schema.modelMath, this.metadata.modelMath),
-                parameter: new fskutil.TablePanel("Parameter", schema.parameter, this.metadata.modelMath.parameter),
-                qualityMeasures: new fskutil.TablePanel("Quality measures", schema.qualityMeasures, this.metadata.modelMath.qualityMeasures),
-                modelEquation: new fskutil.TablePanel("Model equation", schema.modelEquation, this.metadata.modelMath.modelEquation)
+                generalInformation: new fskutil.FormPanel("General", schema.generalInformation, this.metadata.generalInformation, port),
+                modelCategory: new fskutil.FormPanel("Model category", schema.modelCategory, this.metadata.generalInformation.modelCategory, port),
+                author: new fskutil.TablePanel("Author", schema.contact, this.metadata.generalInformation.author, port),
+                creator: new fskutil.TablePanel("Creator", schema.contact, this.metadata.generalInformation.creator, port),
+                reference: new fskutil.TablePanel("Reference", schema.reference, this.metadata.generalInformation.reference, port),
+                scopeGeneral: new fskutil.FormPanel("General", schema.scope, this.metadata.scope, port),
+                product: new fskutil.TablePanel("Product", schema.product, this.metadata.scope.product, port),
+                hazard: new fskutil.TablePanel("Hazard", schema.hazard, this.metadata.scope.hazard, port),
+                population: new fskutil.TablePanel("Population", schema.populationGroup, this.metadata.scope.populationGroup, port),
+                study: new fskutil.FormPanel("Study", schema.study, this.metadata.dataBackground.study, port),
+                studySample: new fskutil.TablePanel("Study sample", schema.studySample, this.metadata.dataBackground.studySample, port),
+                laboratory: new fskutil.TablePanel("Laboratory", schema.laboratory, this.metadata.dataBackground.laboratory, port),
+                assay: new fskutil.TablePanel("Assay", schema.assay, this.metadata.dataBackground.assay, port),
+                modelMath: new fskutil.FormPanel("Model math", schema.modelMath, this.metadata.modelMath, port),
+                parameter: new fskutil.TablePanel("Parameter", schema.parameter, this.metadata.modelMath.parameter, port),
+                qualityMeasures: new fskutil.TablePanel("Quality measures", schema.qualityMeasures, this.metadata.modelMath.qualityMeasures, port),
+                modelEquation: new fskutil.TablePanel("Model equation", schema.modelEquation, this.metadata.modelMath.modelEquation, port)
             };
         }
 
@@ -1467,9 +1468,9 @@ fskutil = function () {
     // Handler for dose response model schema
     fskutil.DoseResponseModel = class {
 
-        constructor(metadata) {
+        constructor(metadata, servicePort) {
             this.metadata = metadata;
-            this.panels = this._createPanels();
+            this.panels = this._createPanels(servicePort);
             this.menus = this._createMenus();
         }
 
@@ -1520,24 +1521,24 @@ fskutil = function () {
             let schema = fskui.doseResponseModel;
 
             return {
-                generalInformation: new fskutil.FormPanel("General", schema.generalInformation, this.metadata.generalInformation),
-                modelCategory: new fskutil.FormPanel("Model category", schema.modelCategory, this.metadata.generalInformation.modelCategory),
-                author: new fskutil.TablePanel("Author", schema.contact, this.metadata.generalInformation.author),
-                creator: new fskutil.TablePanel("Creator", schema.contact, this.metadata.generalInformation.creator),
-                reference: new fskutil.TablePanel("Reference", schema.reference, this.metadata.generalInformation.reference),
-                scopeGeneral: new fskutil.FormPanel("General", schema.scope, this.metadata.scope),
-                hazard: new fskutil.TablePanel("Hazard", schema.hazard, this.metadata.scope.hazard),
-                population: new fskutil.TablePanel("Population", schema.populationGroup, this.metadata.scope.populationGroup),
-                study: new fskutil.FormPanel("Study", schema.study, this.metadata.dataBackground.study),
-                studySample: new fskutil.TablePanel("Study sample", schema.studySample, this.metadata.dataBackground.studySample),
-                laboratory: new fskutil.TablePanel("Laboratory", schema.laboratory, this.metadata.dataBackground.laboratory),
-                assay: new fskutil.TablePanel("Assay", schema.assay, this.metadata.dataBackground.assay),
-                modelMath: new fskutil.FormPanel("Model math", schema.modelMath, this.metadata.modelMath),
-                parameter: new fskutil.TablePanel("Parameter", schema.parameter, this.metadata.modelMath.parameter),
+                generalInformation: new fskutil.FormPanel("General", schema.generalInformation, this.metadata.generalInformation, port),
+                modelCategory: new fskutil.FormPanel("Model category", schema.modelCategory, this.metadata.generalInformation.modelCategory, port),
+                author: new fskutil.TablePanel("Author", schema.contact, this.metadata.generalInformation.author, port),
+                creator: new fskutil.TablePanel("Creator", schema.contact, this.metadata.generalInformation.creator, port),
+                reference: new fskutil.TablePanel("Reference", schema.reference, this.metadata.generalInformation.reference, port),
+                scopeGeneral: new fskutil.FormPanel("General", schema.scope, this.metadata.scope, port),
+                hazard: new fskutil.TablePanel("Hazard", schema.hazard, this.metadata.scope.hazard, port),
+                population: new fskutil.TablePanel("Population", schema.populationGroup, this.metadata.scope.populationGroup, port),
+                study: new fskutil.FormPanel("Study", schema.study, this.metadata.dataBackground.study, port),
+                studySample: new fskutil.TablePanel("Study sample", schema.studySample, this.metadata.dataBackground.studySample, port),
+                laboratory: new fskutil.TablePanel("Laboratory", schema.laboratory, this.metadata.dataBackground.laboratory, port),
+                assay: new fskutil.TablePanel("Assay", schema.assay, this.metadata.dataBackground.assay, port),
+                modelMath: new fskutil.FormPanel("Model math", schema.modelMath, this.metadata.modelMath, port),
+                parameter: new fskutil.TablePanel("Parameter", schema.parameter, this.metadata.modelMath.parameter, port),
                 qualityMeasures: new fskutil.TablePanel("Quality measures", schema.qualityMeasures,
-                    this.metadata.modelMath.qualityMeasures),
-                modelEquation: new fskutil.TablePanel("Model equation", schema.modelEquation, this.metadata.modelMath.modelEquation),
-                exposure: new fskutil.FormPanel("Exposure", schema.exposure, this.metadata.modelMath.exposure)
+                    this.metadata.modelMath.qualityMeasures, port),
+                modelEquation: new fskutil.TablePanel("Model equation", schema.modelEquation, this.metadata.modelMath.modelEquation, port),
+                exposure: new fskutil.FormPanel("Exposure", schema.exposure, this.metadata.modelMath.exposure, port)
             };
         }
 
@@ -1565,9 +1566,9 @@ fskutil = function () {
 
     fskutil.ToxicologicalModel = class {
 
-        constructor(metadata) {
+        constructor(metadata, servicePort) {
             this.metadata = metadata;
-            this.panels = this._createPanels();
+            this.panels = this._createPanels(servicePort);
             this.menus = this._createMenus();
         }
 
@@ -1620,24 +1621,24 @@ fskutil = function () {
             let schema = fskui.toxicologicalModel;
 
             return {
-                generalInformation: new fskutil.FormPanel("General", schema.generalInformation, this.metadata.generalInformation),
-                modelCategory: new fskutil.FormPanel("Model category", schema.modelCategory, this.metadata.generalInformation.modelCategory),
-                author: new fskutil.TablePanel("Author", schema.contact, this.metadata.generalInformation.author),
-                creator: new fskutil.TablePanel("Creator", schema.contact, this.metadata.generalInformation.creator),
-                reference: new fskutil.TablePanel("Reference", schema.reference, this.metadata.generalInformation.reference),
-                scopeGeneral: new fskutil.FormPanel("General", schema.scope, this.metadata.scope),
-                hazard: new fskutil.TablePanel("Hazard", schema.hazard, this.metadata.scope.hazard),
-                population: new fskutil.TablePanel("Population", schema.populationGroup, this.metadata.scope.populationGroup),
-                study: new fskutil.FormPanel("Study", schema.study, this.metadata.dataBackground.study),
-                studySample: new fskutil.TablePanel("Study sample", schema.studySample, this.metadata.dataBackground.studySample),
-                laboratory: new fskutil.TablePanel("Laboratory", schema.laboratory, this.metadata.dataBackground.laboratory),
-                assay: new fskutil.TablePanel("Assay", schema.assay, this.metadata.dataBackground.assay),
-                modelMath: new fskutil.FormPanel("Model math", schema.modelMath, this.metadata.modelMath),
-                parameter: new fskutil.TablePanel("Parameter", schema.parameter, this.metadata.modelMath.parameter),
+                generalInformation: new fskutil.FormPanel("General", schema.generalInformation, this.metadata.generalInformation, port),
+                modelCategory: new fskutil.FormPanel("Model category", schema.modelCategory, this.metadata.generalInformation.modelCategory, port),
+                author: new fskutil.TablePanel("Author", schema.contact, this.metadata.generalInformation.author, port),
+                creator: new fskutil.TablePanel("Creator", schema.contact, this.metadata.generalInformation.creator, port),
+                reference: new fskutil.TablePanel("Reference", schema.reference, this.metadata.generalInformation.reference, port),
+                scopeGeneral: new fskutil.FormPanel("General", schema.scope, this.metadata.scope, port),
+                hazard: new fskutil.TablePanel("Hazard", schema.hazard, this.metadata.scope.hazard, port),
+                population: new fskutil.TablePanel("Population", schema.populationGroup, this.metadata.scope.populationGroup, port),
+                study: new fskutil.FormPanel("Study", schema.study, this.metadata.dataBackground.study, port),
+                studySample: new fskutil.TablePanel("Study sample", schema.studySample, this.metadata.dataBackground.studySample, port),
+                laboratory: new fskutil.TablePanel("Laboratory", schema.laboratory, this.metadata.dataBackground.laboratory, port),
+                assay: new fskutil.TablePanel("Assay", schema.assay, this.metadata.dataBackground.assay, port),
+                modelMath: new fskutil.FormPanel("Model math", schema.modelMath, this.metadata.modelMath, port),
+                parameter: new fskutil.TablePanel("Parameter", schema.parameter, this.metadata.modelMath.parameter, port),
                 qualityMeasures: new fskutil.TablePanel("Quality measures", schema.qualityMeasures,
-                    this.metadata.modelMath.qualityMeasures),
-                modelEquation: new fskutil.TablePanel("Model equation", schema.modelEquation, this.metadata.modelMath.modelEquation),
-                exposure: new fskutil.TablePanel("Exposure", schema.exposure, this.metadata.modelMath.exposure)
+                    this.metadata.modelMath.qualityMeasures, port),
+                modelEquation: new fskutil.TablePanel("Model equation", schema.modelEquation, this.metadata.modelMath.modelEquation, port),
+                exposure: new fskutil.TablePanel("Exposure", schema.exposure, this.metadata.modelMath.exposure, port)
             };
         }
 
@@ -1665,9 +1666,9 @@ fskutil = function () {
 
     fskutil.ExposureModel = class {
 
-        constructor(metadata) {
+        constructor(metadata, servicePort) {
             this.metadata = metadata;
-            this.panels = this._createPanels();
+            this.panels = this._createPanels(servicePort);
             this.menus = this._createMenus();
         }
 
@@ -1717,31 +1718,31 @@ fskutil = function () {
             return isValid;
         }
 
-        _createPanels() {
+        _createPanels(port) {
 
             let schema = fskui.exposureModel;
 
             return {
-                generalInformation: new fskutil.FormPanel("General", schema.generalInformation, this.metadata.generalInformation),
-                modelCategory: new fskutil.FormPanel("Model category", schema.modelCategory, this.metadata.generalInformation.modelCategory),
-                author: new fskutil.TablePanel("Author", schema.contact, this.metadata.generalInformation.author),
-                creator: new fskutil.TablePanel("Creator", schema.contact, this.metadata.generalInformation.creator),
-                reference: new fskutil.TablePanel("Reference", schema.reference, this.metadata.generalInformation.reference),
-                scopeGeneral: new fskutil.FormPanel("General", schema.scope, this.metadata.scope),
-                product: new fskutil.TablePanel("Product", schema.product, this.metadata.scope.product),
-                hazard: new fskutil.TablePanel("Hazard", schema.hazard, this.metadata.scope.hazard),
-                population: new fskutil.TablePanel("Population", schema.populationGroup, this.metadata.scope.populationGroup),
-                study: new fskutil.FormPanel("Study", schema.study, this.metadata.dataBackground.study),
-                studySample: new fskutil.TablePanel("Study sample", schema.studySample, this.metadata.dataBackground.studySample),
+                generalInformation: new fskutil.FormPanel("General", schema.generalInformation, this.metadata.generalInformation, port),
+                modelCategory: new fskutil.FormPanel("Model category", schema.modelCategory, this.metadata.generalInformation.modelCategory, port),
+                author: new fskutil.TablePanel("Author", schema.contact, this.metadata.generalInformation.author, port),
+                creator: new fskutil.TablePanel("Creator", schema.contact, this.metadata.generalInformation.creator, port),
+                reference: new fskutil.TablePanel("Reference", schema.reference, this.metadata.generalInformation.reference, port),
+                scopeGeneral: new fskutil.FormPanel("General", schema.scope, this.metadata.scope, port),
+                product: new fskutil.TablePanel("Product", schema.product, this.metadata.scope.product, port),
+                hazard: new fskutil.TablePanel("Hazard", schema.hazard, this.metadata.scope.hazard, port),
+                population: new fskutil.TablePanel("Population", schema.populationGroup, this.metadata.scope.populationGroup, port),
+                study: new fskutil.FormPanel("Study", schema.study, this.metadata.dataBackground.study, port),
+                studySample: new fskutil.TablePanel("Study sample", schema.studySample, this.metadata.dataBackground.studySample, port),
                 dietaryAssessmentMethod: new fskutil.TablePanel("Dietary assessment method",
-                    schema.dietaryAssessmentMethod, this.metadata.dataBackground.dietaryAssessmentMethod),
-                laboratory: new fskutil.TablePanel("Laboratory", schema.laboratory, this.metadata.dataBackground.laboratory),
-                assay: new fskutil.TablePanel("Assay", schema.assay, this.metadata.dataBackground.assay),
-                modelMath: new fskutil.FormPanel("Model math", schema.modelMath, this.metadata.modelMath),
-                parameter: new fskutil.TablePanel("Parameter", schema.parameter, this.metadata.modelMath.parameter),
-                qualityMeasures: new fskutil.TablePanel("Quality measures", schema.qualityMeasures, this.metadata.modelMath.qualityMeasures),
-                modelEquation: new fskutil.TablePanel("Model equation", schema.modelEquation, this.metadata.modelMath.modelEquation),
-                exposure: new fskutil.TablePanel("Exposure", schema.exposure, this.metadata.modelMath.exposure)
+                    schema.dietaryAssessmentMethod, this.metadata.dataBackground.dietaryAssessmentMethod, port),
+                laboratory: new fskutil.TablePanel("Laboratory", schema.laboratory, this.metadata.dataBackground.laboratory, port),
+                assay: new fskutil.TablePanel("Assay", schema.assay, this.metadata.dataBackground.assay, port),
+                modelMath: new fskutil.FormPanel("Model math", schema.modelMath, this.metadata.modelMath, port),
+                parameter: new fskutil.TablePanel("Parameter", schema.parameter, this.metadata.modelMath.parameter, port),
+                qualityMeasures: new fskutil.TablePanel("Quality measures", schema.qualityMeasures, this.metadata.modelMath.qualityMeasures, port),
+                modelEquation: new fskutil.TablePanel("Model equation", schema.modelEquation, this.metadata.modelMath.modelEquation, port),
+                exposure: new fskutil.TablePanel("Exposure", schema.exposure, this.metadata.modelMath.exposure, port)
             };
         }
 
@@ -1771,9 +1772,9 @@ fskutil = function () {
 
     fskutil.ProcessModel = class {
 
-        constructor(metadata) {
+        constructor(metadata, servicePort) {
             this.metadata = metadata;
-            this.panels = this._createPanels();
+            this.panels = this._createPanels(servicePort);
             this.menus = this._createMenus();
         }
 
@@ -1825,22 +1826,22 @@ fskutil = function () {
             let schema = fskui.processModel;
 
             return {
-                generalInformation: new fskutil.FormPanel("General", schema.generalInformation, this.metadata.generalInformation),
-                modelCategory: new fskutil.FormPanel("Model category", schema.modelCategory, this.metadata.generalInformation.modelCategory),
-                author: new fskutil.TablePanel("Author", schema.contact, this.metadata.generalInformation.author),
-                creator: new fskutil.TablePanel("Creator", schema.contact, this.metadata.generalInformation.creator),
-                reference: new fskutil.TablePanel("Reference", schema.reference, this.metadata.generalInformation.reference),
-                scopeGeneral: new fskutil.FormPanel("General", schema.scope, this.metadata.scope),
-                product: new fskutil.TablePanel("Product", schema.product, this.metadata.scope.product),
-                hazard: new fskutil.TablePanel("Hazard", schema.hazard, this.metadata.scope.hazard),
-                study: new fskutil.FormPanel("Study", schema.study, this.metadata.dataBackground.study),
-                studySample: new fskutil.TablePanel("Study sample", schema.studySample, this.metadata.dataBackground.studySample),
-                laboratory: new fskutil.TablePanel("Laboratory", schema.laboratory, this.metadata.dataBackground.laboratory),
-                assay: new fskutil.TablePanel("Assay", schema.assay, this.metadata.dataBackground.assay),
-                modelMath: new fskutil.FormPanel("Model math", schema.modelMath, this.metadata.modelMath),
-                parameter: new fskutil.TablePanel("Parameter", schema.parameter, this.metadata.modelMath.parameter),
-                qualityMeasures: new fskutil.TablePanel("Quality measures", schema.qualityMeasures, this.metadata.modelMath.qualityMeasures),
-                modelEquation: new fskutil.TablePanel("Model equation", schema.modelEquation, this.metadata.modelMath.modelEquation)
+                generalInformation: new fskutil.FormPanel("General", schema.generalInformation, this.metadata.generalInformation, port),
+                modelCategory: new fskutil.FormPanel("Model category", schema.modelCategory, this.metadata.generalInformation.modelCategory, port),
+                author: new fskutil.TablePanel("Author", schema.contact, this.metadata.generalInformation.author, port),
+                creator: new fskutil.TablePanel("Creator", schema.contact, this.metadata.generalInformation.creator, port),
+                reference: new fskutil.TablePanel("Reference", schema.reference, this.metadata.generalInformation.reference, port),
+                scopeGeneral: new fskutil.FormPanel("General", schema.scope, this.metadata.scope, port),
+                product: new fskutil.TablePanel("Product", schema.product, this.metadata.scope.product, port),
+                hazard: new fskutil.TablePanel("Hazard", schema.hazard, this.metadata.scope.hazard, port),
+                study: new fskutil.FormPanel("Study", schema.study, this.metadata.dataBackground.study, port),
+                studySample: new fskutil.TablePanel("Study sample", schema.studySample, this.metadata.dataBackground.studySample, port),
+                laboratory: new fskutil.TablePanel("Laboratory", schema.laboratory, this.metadata.dataBackground.laboratory, port),
+                assay: new fskutil.TablePanel("Assay", schema.assay, this.metadata.dataBackground.assay, port),
+                modelMath: new fskutil.FormPanel("Model math", schema.modelMath, this.metadata.modelMath, port),
+                parameter: new fskutil.TablePanel("Parameter", schema.parameter, this.metadata.modelMath.parameter, port),
+                qualityMeasures: new fskutil.TablePanel("Quality measures", schema.qualityMeasures, this.metadata.modelMath.qualityMeasures, port),
+                modelEquation: new fskutil.TablePanel("Model equation", schema.modelEquation, this.metadata.modelMath.modelEquation, port)
             };
         }
 
@@ -1865,9 +1866,9 @@ fskutil = function () {
 
     fskutil.ConsumptionModel = class {
 
-        constructor(metadata) {
+        constructor(metadata, servicePort) {
             this.metadata = metadata;
-            this.panels = this._createPanels();
+            this.panels = this._createPanels(servicePort);
             this.menus = this._createMenus();
         }
 
@@ -1921,27 +1922,27 @@ fskutil = function () {
             let schema = fskui.consumptionModel;
 
             return {
-                generalInformation: new fskutil.FormPanel("General", schema.generalInformation, this.metadata.generalInformation),
-                modelCategory: new fskutil.FormPanel("Model category", schema.modelCategory, this.metadata.generalInformation.modelCategory),
-                author: new fskutil.TablePanel("Author", schema.contact, this.metadata.generalInformation.author),
-                creator: new fskutil.TablePanel("Creator", schema.contact, this.metadata.generalInformation.creator),
-                reference: new fskutil.TablePanel("Reference", schema.reference, this.metadata.generalInformation.reference),
-                scopeGeneral: new fskutil.FormPanel("General", schema.scope, this.metadata.scope),
-                product: new fskutil.TablePanel("Product", schema.product, this.metadata.scope.product),
+                generalInformation: new fskutil.FormPanel("General", schema.generalInformation, this.metadata.generalInformation, port),
+                modelCategory: new fskutil.FormPanel("Model category", schema.modelCategory, this.metadata.generalInformation.modelCategory, port),
+                author: new fskutil.TablePanel("Author", schema.contact, this.metadata.generalInformation.author, port),
+                creator: new fskutil.TablePanel("Creator", schema.contact, this.metadata.generalInformation.creator, port),
+                reference: new fskutil.TablePanel("Reference", schema.reference, this.metadata.generalInformation.reference, port),
+                scopeGeneral: new fskutil.FormPanel("General", schema.scope, this.metadata.scope, port),
+                product: new fskutil.TablePanel("Product", schema.product, this.metadata.scope.product, port),
                 populationGroup: new fskutil.TablePanel("Population group", schema.populationGroup,
-                    this.metadata.scope.populationGroup),
-                study: new fskutil.FormPanel("Study", schema.study, this.metadata.dataBackground.study),
+                    this.metadata.scope.populationGroup, port),
+                study: new fskutil.FormPanel("Study", schema.study, this.metadata.dataBackground.study, port),
                 studySample: new fskutil.TablePanel("Study sample", schema.studySample,
-                    this.metadata.dataBackground.studySample),
+                    this.metadata.dataBackground.studySample, port),
                 dietaryAssessmentMethod: new fskutil.TablePanel("Dietary assessment method",
-                    schema.dietaryAssessmentMethod, this.metadata.dataBackground.dietaryAssessmentMethod),
-                laboratory: new fskutil.TablePanel("Laboratory", schema.laboratory, this.metadata.dataBackground.laboratory),
-                assay: new fskutil.TablePanel("Assay", schema.assay, this.metadata.dataBackground.assay),
-                modelMath: new fskutil.FormPanel("Model math", schema.modelMath, this.metadata.modelMath),
-                parameter: new fskutil.TablePanel("Parameter", schema.parameter, this.metadata.modelMath.parameter),
+                    schema.dietaryAssessmentMethod, this.metadata.dataBackground.dietaryAssessmentMethod, port),
+                laboratory: new fskutil.TablePanel("Laboratory", schema.laboratory, this.metadata.dataBackground.laboratory, port),
+                assay: new fskutil.TablePanel("Assay", schema.assay, this.metadata.dataBackground.assay, port),
+                modelMath: new fskutil.FormPanel("Model math", schema.modelMath, this.metadata.modelMath, port),
+                parameter: new fskutil.TablePanel("Parameter", schema.parameter, this.metadata.modelMath.parameter, port),
                 qualityMeasures: new fskutil.TablePanel("Quality measures", schema.qualityMeasures,
-                    this.metadata.modelMath.qualityMeasures),
-                modelEquation: new fskutil.TablePanel("Model equation", schema.modelEquation, this.metadata.modelMath.modelEquation)
+                    this.metadata.modelMath.qualityMeasures, port),
+                modelEquation: new fskutil.TablePanel("Model equation", schema.modelEquation, this.metadata.modelMath.modelEquation, port)
             };
         }
 
@@ -1967,9 +1968,9 @@ fskutil = function () {
 
     fskutil.HealthModel = class {
 
-        constructor(metadata) {
+        constructor(metadata, servicePort) {
             this.metadata = metadata;
-            this.panels = this._createPanels();
+            this.panels = this._createPanels(servicePort);
             this.menus = this._createMenus();
         }
 
@@ -2017,33 +2018,33 @@ fskutil = function () {
             return isValid;
         }
 
-        _createPanels() {
+        _createPanels(port) {
 
             let schema = fskui.healthModel;
 
             return {
-                generalInformation: new fskutil.FormPanel("General", schema.generalInformation, this.metadata.generalInformation),
-                modelCategory: new fskutil.FormPanel("Model category", schema.modelCategory, this.metadata.generalInformation.modelCategory),
-                author: new fskutil.TablePanel("Author", schema.contact, this.metadata.generalInformation.author),
-                creator: new fskutil.TablePanel("Creator", schema.contact, this.metadata.generalInformation.creator),
-                reference: new fskutil.TablePanel("Reference", schema.reference, this.metadata.generalInformation.reference),
-                scopeGeneral: new fskutil.FormPanel("General", schema.scope, this.metadata.scope),
-                hazard: new fskutil.TablePanel("Hazard", schema.hazard, this.metadata.scope.hazard),
+                generalInformation: new fskutil.FormPanel("General", schema.generalInformation, this.metadata.generalInformation, port),
+                modelCategory: new fskutil.FormPanel("Model category", schema.modelCategory, this.metadata.generalInformation.modelCategory, port),
+                author: new fskutil.TablePanel("Author", schema.contact, this.metadata.generalInformation.author, port),
+                creator: new fskutil.TablePanel("Creator", schema.contact, this.metadata.generalInformation.creator, port),
+                reference: new fskutil.TablePanel("Reference", schema.reference, this.metadata.generalInformation.reference, port),
+                scopeGeneral: new fskutil.FormPanel("General", schema.scope, this.metadata.scope, port),
+                hazard: new fskutil.TablePanel("Hazard", schema.hazard, this.metadata.scope.hazard, port),
                 populationGroup: new fskutil.TablePanel("Population group", schema.populationGroup,
-                    this.metadata.scope.populationGroup),
-                study: new fskutil.FormPanel("Study", schema.study, this.metadata.dataBackground.study),
+                    this.metadata.scope.populationGroup, port),
+                study: new fskutil.FormPanel("Study", schema.study, this.metadata.dataBackground.study, port),
                 studySample: new fskutil.TablePanel("Study sample", schema.studySample,
-                    this.metadata.dataBackground.studySample),
+                    this.metadata.dataBackground.studySample, port),
                 laboratory: new fskutil.TablePanel("Laboratory", schema.laboratory,
-                    this.metadata.dataBackground.laboratory),
-                assay: new fskutil.TablePanel("Assay", schema.assay, this.metadata.dataBackground.assay),
-                modelMath: new fskutil.FormPanel("Model math", schema.modelMath, this.metadata.modelMath),
-                parameter: new fskutil.TablePanel("Parameter", schema.parameter, this.metadata.modelMath.parameter),
+                    this.metadata.dataBackground.laboratory, port),
+                assay: new fskutil.TablePanel("Assay", schema.assay, this.metadata.dataBackground.assay, port),
+                modelMath: new fskutil.FormPanel("Model math", schema.modelMath, this.metadata.modelMath, port),
+                parameter: new fskutil.TablePanel("Parameter", schema.parameter, this.metadata.modelMath.parameter, port),
                 qualityMeasures: new fskutil.TablePanel("Quality measures", schema.qualityMeasures,
-                    this.metadata.modelMath.qualityMeasures),
+                    this.metadata.modelMath.qualityMeasures, port),
                 modelEquation: new fskutil.TablePanel("Model equation", schema.modelEquation,
-                    this.metadata.modelMath.modelEquation),
-                exposure: new fskutil.TablePanel("Exposure", schema.exposure, this.metadata.modelMath.exposure)
+                    this.metadata.modelMath.modelEquation, port),
+                exposure: new fskutil.TablePanel("Exposure", schema.exposure, this.metadata.modelMath.exposure, port)
             };
         }
 
@@ -2071,9 +2072,9 @@ fskutil = function () {
 
     fskutil.RiskModel = class {
 
-        constructor(metadata) {
+        constructor(metadata, servicePort) {
             this.metadata = metadata;
-            this.panels = this._createPanels();
+            this.panels = this._createPanels(servicePort);
             this.menus = this._createMenus();
         }
 
@@ -2128,31 +2129,31 @@ fskutil = function () {
             let schema = fskui.riskModel;
 
             return {
-                generalInformation: new fskutil.FormPanel("General", schema.generalInformation, this.metadata.generalInformation),
-                modelCategory: new fskutil.FormPanel("Model category", schema.modelCategory, this.metadata.generalInformation.modelCategory),
-                author: new fskutil.TablePanel("Author", schema.contact, this.metadata.generalInformation.author),
-                creator: new fskutil.TablePanel("Creator", schema.contact, this.metadata.generalInformation.creator),
-                reference: new fskutil.TablePanel("Reference", schema.reference, this.metadata.generalInformation.reference),
-                scopeGeneral: new fskutil.FormPanel("General", schema.scope, this.metadata.scope),
-                product: new fskutil.TablePanel("Product", schema.product, this.metadata.scope.product),
-                hazard: new fskutil.TablePanel("Hazard", schema.hazard, this.metadata.scope.hazard),
+                generalInformation: new fskutil.FormPanel("General", schema.generalInformation, this.metadata.generalInformation, port),
+                modelCategory: new fskutil.FormPanel("Model category", schema.modelCategory, this.metadata.generalInformation.modelCategory, port),
+                author: new fskutil.TablePanel("Author", schema.contact, this.metadata.generalInformation.author, port),
+                creator: new fskutil.TablePanel("Creator", schema.contact, this.metadata.generalInformation.creator, port),
+                reference: new fskutil.TablePanel("Reference", schema.reference, this.metadata.generalInformation.reference, port),
+                scopeGeneral: new fskutil.FormPanel("General", schema.scope, this.metadata.scope, port),
+                product: new fskutil.TablePanel("Product", schema.product, this.metadata.scope.product, port),
+                hazard: new fskutil.TablePanel("Hazard", schema.hazard, this.metadata.scope.hazard, port),
                 population: new fskutil.TablePanel("Population", schema.populationGroup,
-                    this.metadata.scope.populationGroup),
-                study: new fskutil.FormPanel("Study", schema.study, this.metadata.dataBackground.study),
+                    this.metadata.scope.populationGroup, port),
+                study: new fskutil.FormPanel("Study", schema.study, this.metadata.dataBackground.study, port),
                 studySample: new fskutil.TablePanel("Study sample", schema.studySample,
-                    this.metadata.dataBackground.studySample),
+                    this.metadata.dataBackground.studySample, port),
                 dietaryAssessmentMethod: new fskutil.TablePanel("Dietary assessment method",
-                    schema.dietaryAssessmentMethod, this.metadata.dataBackground.dietaryAssessmentMethod),
+                    schema.dietaryAssessmentMethod, this.metadata.dataBackground.dietaryAssessmentMethod, port),
                 laboratory: new fskutil.TablePanel("Laboratory", schema.laboratory,
-                    this.metadata.dataBackground.laboratory),
-                assay: new fskutil.TablePanel("Assay", schema.assay, this.metadata.dataBackground.assay),
-                modelMath: new fskutil.FormPanel("Model math", schema.modelMath, this.metadata.modelMath),
-                parameter: new fskutil.TablePanel("Parameter", schema.parameter, this.metadata.modelMath.parameter),
+                    this.metadata.dataBackground.laboratory, port),
+                assay: new fskutil.TablePanel("Assay", schema.assay, this.metadata.dataBackground.assay, port),
+                modelMath: new fskutil.FormPanel("Model math", schema.modelMath, this.metadata.modelMath, port),
+                parameter: new fskutil.TablePanel("Parameter", schema.parameter, this.metadata.modelMath.parameter, port),
                 qualityMeasures: new fskutil.TablePanel("Quality measures", schema.qualityMeasures,
-                    this.metadata.modelMath.qualityMeasures),
+                    this.metadata.modelMath.qualityMeasures, port),
                 modelEquation: new fskutil.TablePanel("Model equation", schema.modelEquation,
-                    this.metadata.modelMath.modelEquation),
-                exposure: new fskutil.TablePanel("Exposure", schema.exposure, this.metadata.modelMath.exposure)
+                    this.metadata.modelMath.modelEquation, port),
+                exposure: new fskutil.TablePanel("Exposure", schema.exposure, this.metadata.modelMath.exposure, port)
             };
         }
 
@@ -2182,9 +2183,9 @@ fskutil = function () {
 
     fskutil.QraModel = class {
 
-        constructor(metadata) {
+        constructor(metadata, servicePort) {
             this.metadata = metadata;
-            this.panels = this._createPanels();
+            this.panels = this._createPanels(servicePort);
             this.menus = this._createMenus();
         }
 
@@ -2234,36 +2235,36 @@ fskutil = function () {
             return isValid;
         }
 
-        _createPanels() {
+        _createPanels(port) {
 
             let schema = fskui.qraModel;
 
             return {
-                generalInformation: new fskutil.FormPanel("General", schema.generalInformation, this.metadata.generalInformation),
-                modelCategory: new fskutil.FormPanel("Model category", schema.modelCategory, this.metadata.generalInformation.modelCategory),
-                author: new fskutil.TablePanel("Author", schema.contact, this.metadata.generalInformation.author),
-                creator: new fskutil.TablePanel("Creator", schema.contact, this.metadata.generalInformation.creator),
-                reference: new fskutil.TablePanel("Reference", schema.reference, this.metadata.generalInformation.reference),
-                scopeGeneral: new fskutil.FormPanel("General", schema.scope, this.metadata.scope),
-                product: new fskutil.TablePanel("Product", schema.product, this.metadata.scope.product),
-                hazard: new fskutil.TablePanel("Hazard", schema.hazard, this.metadata.scope.hazard),
+                generalInformation: new fskutil.FormPanel("General", schema.generalInformation, this.metadata.generalInformation, port),
+                modelCategory: new fskutil.FormPanel("Model category", schema.modelCategory, this.metadata.generalInformation.modelCategory, port),
+                author: new fskutil.TablePanel("Author", schema.contact, this.metadata.generalInformation.author, port),
+                creator: new fskutil.TablePanel("Creator", schema.contact, this.metadata.generalInformation.creator, port),
+                reference: new fskutil.TablePanel("Reference", schema.reference, this.metadata.generalInformation.reference, port),
+                scopeGeneral: new fskutil.FormPanel("General", schema.scope, this.metadata.scope, port),
+                product: new fskutil.TablePanel("Product", schema.product, this.metadata.scope.product, port),
+                hazard: new fskutil.TablePanel("Hazard", schema.hazard, this.metadata.scope.hazard, port),
                 population: new fskutil.TablePanel("Population", schema.populationGroup,
-                    this.metadata.scope.populationGroup),
-                study: new fskutil.FormPanel("Study", schema.study, this.metadata.dataBackground.study),
+                    this.metadata.scope.populationGroup, port),
+                study: new fskutil.FormPanel("Study", schema.study, this.metadata.dataBackground.study, port),
                 studySample: new fskutil.TablePanel("Study sample", schema.studySample,
-                    this.metadata.dataBackground.studySample),
+                    this.metadata.dataBackground.studySample, port),
                 dietaryAssessmentMethod: new fskutil.TablePanel("Dietary assessment method",
-                    schema.dietaryAssessmentMethod, this.metadata.dataBackground.dietaryAssessmentMethod),
+                    schema.dietaryAssessmentMethod, this.metadata.dataBackground.dietaryAssessmentMethod, port),
                 laboratory: new fskutil.TablePanel("Laboratory", schema.laboratory,
-                    this.metadata.dataBackground.laboratory),
-                assay: new fskutil.TablePanel("Assay", schema.assay, this.metadata.dataBackground.assay),
-                modelMath: new fskutil.FormPanel("Model math", schema.modelMath, this.metadata.modelMath),
-                parameter: new fskutil.TablePanel("Parameter", schema.parameter, this.metadata.modelMath.parameter),
+                    this.metadata.dataBackground.laboratory, port),
+                assay: new fskutil.TablePanel("Assay", schema.assay, this.metadata.dataBackground.assay, port),
+                modelMath: new fskutil.FormPanel("Model math", schema.modelMath, this.metadata.modelMath, port),
+                parameter: new fskutil.TablePanel("Parameter", schema.parameter, this.metadata.modelMath.parameter, port),
                 qualityMeasures: new fskutil.TablePanel("Quality measures", schema.qualityMeasures,
-                    this.metadata.modelMath.qualityMeasures),
+                    this.metadata.modelMath.qualityMeasures, port),
                 modelEquation: new fskutil.TablePanel("Model equation", schema.modelEquation,
-                    this.metadata.modelMath.modelEquation),
-                exposure: new fskutil.TablePanel("Exposure", schema.exposure, this.metadata.modelMath.exposure)
+                    this.metadata.modelMath.modelEquation, port),
+                exposure: new fskutil.TablePanel("Exposure", schema.exposure, this.metadata.modelMath.exposure, port)
             };
         }
 

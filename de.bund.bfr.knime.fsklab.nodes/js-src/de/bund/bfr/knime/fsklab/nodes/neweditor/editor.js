@@ -48,19 +48,19 @@ fskeditorjs = function () {
     }
 
     switch (_metadata.modelType) {
-      case "genericModel": handler = new fskutil.GenericModel(_metadata); break;
-      case "dataModel": handler = new fskutil.DataModel(_metadata); break;
-      case "predictiveModel": handler = new fskutil.PredictiveModel(_metadata); break;
-      case "otherModel": handler = new fskutil.OtherModel(_metadata); break;
-      case "toxicologicalModel": handler = new fskutil.ToxicologicalModel(_metadata); break;
-      case "doseResponseModel": handler = new fskutil.DoseResponseModel(_metadata); break;
-      case "exposureModel": handler = new fskutil.ExposureModel(_metadata); break;
-      case "processModel": handler = new fskutil.ProcessModel(_metadata); break;
-      case "consumptionModel": handler = new fskutil.ConsumptionModel(_metadata); break;
-      case "healthModel": handler = new fskutil.HealthModel(_metadata); break;
-      case "riskModel": handler = new fskutil.RiskModel(_metadata); break;
-      case "qraModel": handler = new fskutil.QraModel(_metadata); break;
-      default: handler = new fskutil.GenericModel(_metadata); break;
+      case "genericModel": handler = new fskutil.GenericModel(_metadata, _rep.servicePort); break;
+      case "dataModel": handler = new fskutil.DataModel(_metadata, _rep.servicePort); break;
+      case "predictiveModel": handler = new fskutil.PredictiveModel(_metadata, _rep.servicePort); break;
+      case "otherModel": handler = new fskutil.OtherModel(_metadata, _rep.servicePort); break;
+      case "toxicologicalModel": handler = new fskutil.ToxicologicalModel(_metadata, _rep.servicePort); break;
+      case "doseResponseModel": handler = new fskutil.DoseResponseModel(_metadata, _rep.servicePort); break;
+      case "exposureModel": handler = new fskutil.ExposureModel(_metadata, _rep.servicePort); break;
+      case "processModel": handler = new fskutil.ProcessModel(_metadata, _rep.servicePort); break;
+      case "consumptionModel": handler = new fskutil.ConsumptionModel(_metadata, _rep.servicePort); break;
+      case "healthModel": handler = new fskutil.HealthModel(_metadata, _rep.servicePort); break;
+      case "riskModel": handler = new fskutil.RiskModel(_metadata, _rep.servicePort); break;
+      case "qraModel": handler = new fskutil.QraModel(_metadata, _rep.servicePort); break;
+      default: handler = new fskutil.GenericModel(_metadata, _rep.servicePort); break;
     }
 
     createUI();

@@ -32,17 +32,37 @@ final class FSKEditorJSViewRepresentation extends JSONViewContent {
 
   public final int pseudoIdentifier = (new Random()).nextInt();
 
-  @Override
-  public void saveToNodeSettings(NodeSettingsWO settings) {
+  /**
+   * Port number where FSK-Service is running.
+   * 
+   * <p>
+   * The service port number is to not be saved to settings as it depends on the computer. The same
+   * port cannot be available in the future. So it is assigned during runtime by the node model.
+   * </p>
+   */
+  private int servicePort;
+
+  public FSKEditorJSViewRepresentation() {
+    servicePort = 0;
+  }
+  
+  public int getServicePort() {
+    return servicePort;
+  }
+  
+  public void setServicePort(int servicePort) {
+    this.servicePort = servicePort;
   }
 
   @Override
-  public void loadFromNodeSettings(NodeSettingsRO settings) throws InvalidSettingsException {
-  }
+  public void saveToNodeSettings(NodeSettingsWO settings) {}
+
+  @Override
+  public void loadFromNodeSettings(NodeSettingsRO settings) throws InvalidSettingsException {}
 
   @Override
   public int hashCode() {
-    return pseudoIdentifier;
+    return servicePort;
   }
 
   @Override
@@ -56,6 +76,6 @@ final class FSKEditorJSViewRepresentation extends JSONViewContent {
     if (obj.getClass() != getClass()) {
       return false;
     }
-    return true;
+    return servicePort == ((FSKEditorJSViewRepresentation)obj).servicePort;
   }
 }

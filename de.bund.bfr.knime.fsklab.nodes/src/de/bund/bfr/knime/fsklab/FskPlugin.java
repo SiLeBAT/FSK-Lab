@@ -35,7 +35,7 @@ import metadata.EmfMetadataModule;
 public class FskPlugin extends AbstractUIPlugin {
 
   private static FskPlugin plugin;
-
+  
   /**
    * Object mapper for 1.0.4 classes generated with Swagger at de.bund.bfr.metadata.swagger
    */
@@ -49,6 +49,8 @@ public class FskPlugin extends AbstractUIPlugin {
   public ObjectMapper OLD_OBJECT_MAPPER;
   
   private Thread service;
+  
+  public FskService fskService;
 
   public FskPlugin() {
     plugin = this;
@@ -75,7 +77,9 @@ public class FskPlugin extends AbstractUIPlugin {
 
     OLD_OBJECT_MAPPER = new ObjectMapper().registerModule(new RakipModule());
     
-    service = new Thread(new FskService());
+    fskService = new FskService();
+    
+    service = new Thread(fskService);
     service.setName("FSK-Service");
     service.start();
   }

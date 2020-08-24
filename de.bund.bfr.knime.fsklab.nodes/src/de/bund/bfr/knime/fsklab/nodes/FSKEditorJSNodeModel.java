@@ -77,7 +77,9 @@ final class FSKEditorJSNodeModel
 
   @Override
   public FSKEditorJSViewRepresentation createEmptyViewRepresentation() {
-    return new FSKEditorJSViewRepresentation();
+    FSKEditorJSViewRepresentation representation = new FSKEditorJSViewRepresentation();
+    representation.setServicePort(FskPlugin.getDefault().fskService.getPort());
+    return representation;
   }
 
   @Override
