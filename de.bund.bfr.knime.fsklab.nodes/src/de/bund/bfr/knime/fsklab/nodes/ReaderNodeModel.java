@@ -77,7 +77,6 @@ import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.FskSimulation;
 import de.bund.bfr.knime.fsklab.JoinRelation;
-import de.bund.bfr.knime.fsklab.nodes.JoinerNodeUtil;
 import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
 import de.bund.bfr.knime.fsklab.nodes.environment.ArchivedEnvironmentManager;
 import de.bund.bfr.knime.fsklab.nodes.environment.EnvironmentManager;
