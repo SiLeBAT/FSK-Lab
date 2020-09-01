@@ -28,7 +28,7 @@ public class PythonScriptHandler extends ScriptHandler {
   }
 
   @Override
-  void convertToKnimeDataTable(FskPortObject fskObj, ExecutionContext exec) throws Exception {
+  public void convertToKnimeDataTable(FskPortObject fskObj, ExecutionContext exec) throws Exception {
 
   }
 
@@ -44,32 +44,32 @@ public class PythonScriptHandler extends ScriptHandler {
   }
 
   @Override
-  void installLibs(FskPortObject fskObj, ExecutionContext exec, NodeLogger LOGGER)
+  public void installLibs(FskPortObject fskObj, ExecutionContext exec, NodeLogger LOGGER)
       throws Exception {
     // TODO Install neccessary packages
   }
 
   @Override
-  String buildParameterScript(FskSimulation simulation) {
+  public String buildParameterScript(FskSimulation simulation) {
     String paramScript = NodeUtils.buildParameterScript(simulation);
     paramScript = paramScript.replaceAll("<-", "=");
     return paramScript;
   }
 
   @Override
-  void plotToImageFile(RunnerNodeInternalSettings internalSettings, RunnerNodeSettings nodeSettings,
+  public void plotToImageFile(RunnerNodeInternalSettings internalSettings, RunnerNodeSettings nodeSettings,
       FskPortObject fskObj, ExecutionContext exec) throws Exception {
     plotter.plotPng(internalSettings.imageFile, fskObj.viz);
   }
 
   @Override
-  void restoreDefaultLibrary() throws Exception {
+  public void restoreDefaultLibrary() throws Exception {
     // TODO remove previously installed packages and restore the library
     // to its default state
   }
 
   @Override
-  void saveWorkspace(FskPortObject fskObj, ExecutionContext exec) throws Exception {
+  public void saveWorkspace(FskPortObject fskObj, ExecutionContext exec) throws Exception {
     fskObj.workspace = FileUtil.createTempFile("workspace", ".py").toPath();
   }
 
@@ -92,7 +92,7 @@ public class PythonScriptHandler extends ScriptHandler {
   }
 
   @Override
-  void setWorkingDirectory(Path workingDirectory, ExecutionContext exec) throws Exception {
+  public void setWorkingDirectory(Path workingDirectory, ExecutionContext exec) throws Exception {
     String cmd = "import os\n";
     String directory = workingDirectory.toString().replaceAll("\\\\", "/");
 
@@ -102,12 +102,12 @@ public class PythonScriptHandler extends ScriptHandler {
   }
 
   @Override
-  void setupOutputCapturing(ExecutionContext exec) throws Exception {
+  public void setupOutputCapturing(ExecutionContext exec) throws Exception {
     // can be left empty
   }
 
   @Override
-  void finishOutputCapturing(ExecutionContext exec) throws Exception {
+  public void finishOutputCapturing(ExecutionContext exec) throws Exception {
     // can be left empty
   }
 

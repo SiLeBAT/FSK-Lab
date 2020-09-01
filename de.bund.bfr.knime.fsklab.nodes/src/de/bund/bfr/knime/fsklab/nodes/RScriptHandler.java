@@ -42,7 +42,7 @@ public class RScriptHandler extends ScriptHandler {
     }
   }
 
-  void setWorkingDirectory(Path workingDirectory, ExecutionContext exec) throws Exception {
+  public void setWorkingDirectory(Path workingDirectory, ExecutionContext exec) throws Exception {
     controller.setWorkingDirectory(workingDirectory);
   }
 
@@ -60,7 +60,7 @@ public class RScriptHandler extends ScriptHandler {
     return null;
   }
 
-  void convertToKnimeDataTable(FskPortObject fskObj, ExecutionContext exec) throws Exception {
+  public void convertToKnimeDataTable(FskPortObject fskObj, ExecutionContext exec) throws Exception {
     LibRegistry.instance().install(Arrays.asList("data.table"));
 
     String DT = "library(data.table)\n";
@@ -107,7 +107,7 @@ public class RScriptHandler extends ScriptHandler {
   }
 
   @Override
-  void installLibs(final FskPortObject fskObj, ExecutionContext exec, NodeLogger LOGGER)
+  public void installLibs(final FskPortObject fskObj, ExecutionContext exec, NodeLogger LOGGER)
       throws Exception {
     // Install needed libraries
     if (!fskObj.packages.isEmpty()) {
@@ -119,19 +119,19 @@ public class RScriptHandler extends ScriptHandler {
   }
 
   @Override
-  String buildParameterScript(final FskSimulation simulation) {
+  public String buildParameterScript(final FskSimulation simulation) {
     return NodeUtils.buildParameterScript(simulation);
   }
 
   @Override
-  void plotToImageFile(final RunnerNodeInternalSettings internalSettings,
+  public void plotToImageFile(final RunnerNodeInternalSettings internalSettings,
       RunnerNodeSettings nodeSettings, final FskPortObject fskObj, ExecutionContext exec)
       throws Exception {
     plotter.plotPng(internalSettings.imageFile, fskObj.viz);
   }
 
   @Override
-  void saveWorkspace(final FskPortObject fskObj, ExecutionContext exec) throws Exception {
+  public void saveWorkspace(final FskPortObject fskObj, ExecutionContext exec) throws Exception {
     if (fskObj.workspace == null) {
       fskObj.workspace = FileUtil.createTempFile("workspace", ".RData").toPath();
     }
@@ -139,7 +139,7 @@ public class RScriptHandler extends ScriptHandler {
   }
 
   @Override
-  void restoreDefaultLibrary() throws Exception {
+  public void restoreDefaultLibrary() throws Exception {
     controller.restorePackagePath();
   }
 
@@ -158,12 +158,12 @@ public class RScriptHandler extends ScriptHandler {
   }
 
   @Override
-  void setupOutputCapturing(ExecutionContext exec) throws Exception {
+  public void setupOutputCapturing(ExecutionContext exec) throws Exception {
     executor.setupOutputCapturing(exec);
   }
 
   @Override
-  void finishOutputCapturing(ExecutionContext exec) throws Exception {
+  public void finishOutputCapturing(ExecutionContext exec) throws Exception {
     executor.finishOutputCapturing(exec);
   }
 
