@@ -110,11 +110,10 @@ class WriterNodeModel extends NoInternalsModel {
   public static String SECOND_MODEL = "secondModel";
   public static String SUB_MODEL1 = "submodel1";
   public static String SUB_MODEL2 = "submodel2";
-
   public static final String METADATA_TAG = "parameter";
   public static final String METADATA_NS = "fsk";
   public static final String METADATA_COMMAND = "command";
-  public static final String METADATA_COMMAND_VALUE = "commandValue";
+
   static ScriptHandler scriptHandler;
 
   private final WriterNodeSettings nodeSettings = new WriterNodeSettings();
@@ -500,7 +499,7 @@ class WriterNodeModel extends NoInternalsModel {
             // annotate the conversion command
             org.sbml.jsbml.Annotation annot = overridedParameter.getAnnotation();
             XMLAttributes attrs = new XMLAttributes();
-            attrs.add(METADATA_COMMAND_VALUE, joinRelarion.getCommand());
+            attrs.add(NodeUtils.METADATA_COMMAND_VALUE, joinRelarion.getCommand());
             XMLNode parameterNode =
                 new XMLNode(new XMLTriple(METADATA_COMMAND, null, METADATA_NS), attrs);
             annot.appendNonRDFAnnotation(parameterNode);

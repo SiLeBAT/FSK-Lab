@@ -77,6 +77,8 @@ import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.FskSimulation;
 import de.bund.bfr.knime.fsklab.JoinRelation;
+import de.bund.bfr.knime.fsklab.nodes.JoinerNodeUtil;
+import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
 import de.bund.bfr.knime.fsklab.nodes.environment.ArchivedEnvironmentManager;
 import de.bund.bfr.knime.fsklab.nodes.environment.EnvironmentManager;
 import de.bund.bfr.knime.fsklab.nodes.environment.GeneratedResourceFiles;
@@ -379,8 +381,8 @@ class ReaderNodeModel extends NoInternalsModel {
                 XMLNode nonRDFannotation = parameter.getAnnotation().getNonRDFannotation();
                 XMLNode commandNode = nonRDFannotation.getChildElement("command", "");
                 if (commandNode != null
-                    && commandNode.hasAttr(WriterNodeModel.METADATA_COMMAND_VALUE)) {
-                  command = commandNode.getAttrValue(WriterNodeModel.METADATA_COMMAND_VALUE);
+                    && commandNode.hasAttr(NodeUtils.METADATA_COMMAND_VALUE)) {
+                  command = commandNode.getAttrValue(NodeUtils.METADATA_COMMAND_VALUE);
                 }
               }
 

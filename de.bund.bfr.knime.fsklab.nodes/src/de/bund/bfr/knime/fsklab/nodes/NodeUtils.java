@@ -38,6 +38,9 @@ import de.bund.bfr.metadata.swagger.ToxicologicalModel;
 public class NodeUtils {
 
   public static final String DEFAULT_SIMULATION = "defaultSimulation";
+  
+  // used by Writer & Reader to identify Join-Relations in the SBML File
+  public static final String METADATA_COMMAND_VALUE = "commandValue";
 
   /**
    * @return the libraries URI for the running platform.
