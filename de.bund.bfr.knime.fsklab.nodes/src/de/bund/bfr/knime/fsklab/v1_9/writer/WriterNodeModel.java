@@ -91,6 +91,7 @@ import de.bund.bfr.knime.fsklab.FskSimulation;
 import de.bund.bfr.knime.fsklab.JoinRelation;
 import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
 import de.bund.bfr.knime.fsklab.nodes.ScriptHandler;
+import de.bund.bfr.knime.fsklab.nodes.WriterNodeUtils;
 import de.bund.bfr.knime.fsklab.r.client.LibRegistry;
 import de.bund.bfr.metadata.swagger.Model;
 import de.bund.bfr.metadata.swagger.Parameter;

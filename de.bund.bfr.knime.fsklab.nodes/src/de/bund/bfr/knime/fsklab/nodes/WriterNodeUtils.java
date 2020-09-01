@@ -1,4 +1,4 @@
-package de.bund.bfr.knime.fsklab.v1_9.writer;
+package de.bund.bfr.knime.fsklab.nodes;
 
 public class WriterNodeUtils {
   
