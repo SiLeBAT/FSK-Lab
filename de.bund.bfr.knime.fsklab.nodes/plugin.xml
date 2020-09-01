@@ -45,7 +45,7 @@
      <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.CreatorNodeFactory" />
      <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.RunnerNodeFactory" />
      <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.FskToRNodeFactory" />
-     <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.ReaderNodeFactory" />
+     <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.v1_9.reader.ReaderNodeFactory" />
      <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.WriterNodeFactory" />
      <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.FSK2MetadataNodeFactory" />
      <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.JSSimulatorNodeFactory" />
