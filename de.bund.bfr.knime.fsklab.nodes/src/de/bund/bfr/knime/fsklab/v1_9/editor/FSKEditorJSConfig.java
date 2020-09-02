@@ -16,7 +16,7 @@
  * Contributors: Department Biological Safety - BfR
  *************************************************************************************************
  */
-package de.bund.bfr.knime.fsklab.nodes;
+package de.bund.bfr.knime.fsklab.v1_9.editor;
 
 import java.io.IOException;
 import org.knime.core.data.DataTableSpec;
@@ -28,8 +28,8 @@ import org.knime.core.node.port.PortObjectSpec;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.FskPlugin;
-import de.bund.bfr.knime.fsklab.nodes.FSKEditorJSNodeDialog.ModelType;
 import de.bund.bfr.knime.fsklab.nodes.environment.EnvironmentManager;
+import de.bund.bfr.knime.fsklab.v1_9.editor.FSKEditorJSNodeDialog.ModelType;
 
 class FSKEditorJSConfig {
 

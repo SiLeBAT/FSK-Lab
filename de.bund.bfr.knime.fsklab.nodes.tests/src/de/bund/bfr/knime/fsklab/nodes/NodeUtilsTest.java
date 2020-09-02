@@ -6,7 +6,7 @@ import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 
-import de.bund.bfr.knime.fsklab.nodes.FSKEditorJSNodeDialog.ModelType;
+import de.bund.bfr.knime.fsklab.v1_9.editor.FSKEditorJSNodeDialog.ModelType;
 import de.bund.bfr.metadata.swagger.ConsumptionModel;
 import de.bund.bfr.metadata.swagger.DataModel;
 import de.bund.bfr.metadata.swagger.DoseResponseModel;

@@ -16,7 +16,7 @@
  * Contributors: Department Biological Safety - BfR
  *************************************************************************************************
  */
-package de.bund.bfr.knime.fsklab.nodes;
+package de.bund.bfr.knime.fsklab.v1_9.editor;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
@@ -52,13 +52,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.FskPortObject;
+import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
 import de.bund.bfr.knime.fsklab.nodes.environment.ArchivedEnvironmentManager;
 import de.bund.bfr.knime.fsklab.nodes.environment.EnvironmentManager;
 import de.bund.bfr.knime.fsklab.nodes.environment.ExistingEnvironmentManager;
 import de.bund.bfr.knime.fsklab.nodes.environment.FilesEnvironmentManager;
 import de.bund.bfr.metadata.swagger.Model;
 
-class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
+public class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
 
   private static final String README_FILE = "readmeFile";
 
@@ -80,7 +81,7 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
 
   private static final ObjectMapper MAPPER = FskPlugin.getDefault().MAPPER104;
 
-  enum ModelType {
+  public enum ModelType {
 
     genericModel("Generic model"),
     dataModel("Data model"),
