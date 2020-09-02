@@ -16,7 +16,7 @@
  * Contributors: Department Biological Safety - BfR
  *************************************************************************************************
  */
-package de.bund.bfr.knime.fsklab.nodes;
+package de.bund.bfr.knime.fsklab.v1_9.runner;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -56,6 +56,9 @@ import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.FskSimulation;
 import de.bund.bfr.knime.fsklab.JoinRelation;
+import de.bund.bfr.knime.fsklab.nodes.JoinerNodeModel;
+import de.bund.bfr.knime.fsklab.nodes.JoinerNodeUtil;
+import de.bund.bfr.knime.fsklab.nodes.ScriptHandler;
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
 import de.bund.bfr.knime.fsklab.r.client.ScriptExecutor;
 import de.bund.bfr.metadata.swagger.Parameter;
@@ -204,7 +207,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
       
       
       
-      //TODO: What happens if the user adds a parameter during joining process?? ¯\(°_o)/¯
+      //TODO: What happens if the user adds a parameter during joining process?? Â¯\(Â°_o)/Â¯
       
       
       // prepareSimulation 1    *******
