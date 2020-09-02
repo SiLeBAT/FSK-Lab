@@ -41,7 +41,7 @@ public abstract class ScriptHandler implements AutoCloseable {
    */
   public final void runSnippet(final FskPortObject fskObj, final FskSimulation simulation,
       final ExecutionContext exec, NodeLogger LOGGER,
-      final RunnerNodeInternalSettings internalSettings, RunnerNodeSettings nodeSettings)
+      final RunnerNodeInternalSettings internalSettings)
       throws Exception {
     // Sets up working directory with resource files. This directory needs to be deleted.
     exec.setProgress(0.05, "Add resource files");
