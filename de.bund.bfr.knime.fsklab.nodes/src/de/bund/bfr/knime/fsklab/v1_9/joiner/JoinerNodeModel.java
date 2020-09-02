@@ -16,7 +16,7 @@
  * Contributors: Department Biological Safety - BfR
  *************************************************************************************************
  */
-package de.bund.bfr.knime.fsklab.nodes;
+package de.bund.bfr.knime.fsklab.v1_9.joiner;
 
 import java.io.File;
 import java.io.IOException;
@@ -65,13 +65,14 @@ import de.bund.bfr.knime.fsklab.CombinedFskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.JoinRelation;
+import de.bund.bfr.knime.fsklab.nodes.NodeRemovedListener;
 import de.bund.bfr.metadata.swagger.Parameter;
 import metadata.SwaggerUtil;
 
 /**
  * Fsk Joiner node model.
  */
-final class JoinerNodeModel
+public final class JoinerNodeModel
     extends AbstractSVGWizardNodeModel<JoinerViewRepresentation, JoinerViewValue>
     implements PortObjectHolder {
 

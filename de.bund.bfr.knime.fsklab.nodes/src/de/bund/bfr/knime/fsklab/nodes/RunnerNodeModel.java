@@ -57,6 +57,8 @@ import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.FskSimulation;
 import de.bund.bfr.knime.fsklab.JoinRelation;
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
+import de.bund.bfr.knime.fsklab.v1_9.joiner.JoinerNodeModel;
+import de.bund.bfr.knime.fsklab.v1_9.joiner.JoinerNodeUtil;
 import de.bund.bfr.knime.fsklab.r.client.ScriptExecutor;
 import de.bund.bfr.metadata.swagger.Parameter;
 import metadata.SwaggerUtil;
@@ -204,7 +206,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
       
       
       
-      //TODO: What happens if the user adds a parameter during joining process?? ¯\(°_o)/¯
+      //TODO: What happens if the user adds a parameter during joining process?? ï¿½\(ï¿½_o)/ï¿½
       
       
       // prepareSimulation 1    *******
