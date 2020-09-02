@@ -12,8 +12,7 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 import org.knime.core.util.Pair;
-
-import de.bund.bfr.knime.fsklab.nodes.JSSimulatorViewValue.JSSimulation;
+import de.bund.bfr.knime.fsklab.v1_9.simulator.JSSimulatorViewValue.JSSimulation;
 
 @SuppressWarnings("static-method")
 public class SimulationSettingTest {
