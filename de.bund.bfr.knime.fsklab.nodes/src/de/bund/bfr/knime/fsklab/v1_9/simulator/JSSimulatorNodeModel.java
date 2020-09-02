@@ -20,7 +20,6 @@ package de.bund.bfr.knime.fsklab.v1_9.simulator;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.knime.core.node.CanceledExecutionException;
@@ -40,7 +39,6 @@ import org.knime.core.util.Pair;
 import org.knime.js.core.node.AbstractWizardNodeModel;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.bund.bfr.knime.fsklab.CombinedFskPortObject;
 import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskSimulation;
