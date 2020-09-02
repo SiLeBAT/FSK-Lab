@@ -18,20 +18,16 @@
  */
 package de.bund.bfr.knime.fsklab.v1_9.runner;
 
-import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.util.FileUtil;
 import de.bund.bfr.knime.fsklab.CombinedFskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObject;
-import de.bund.bfr.knime.fsklab.nodes.environment.GeneratedResourceFiles;
 
 public class RunnerNodeInternalSettings {
 
