@@ -71,7 +71,7 @@ import metadata.SwaggerUtil;
 /**
  * Fsk Joiner node model.
  */
-final class JoinerNodeModel
+public final class JoinerNodeModel
     extends AbstractSVGWizardNodeModel<JoinerViewRepresentation, JoinerViewValue>
     implements PortObjectHolder {
 

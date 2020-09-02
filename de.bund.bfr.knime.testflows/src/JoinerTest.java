@@ -12,7 +12,7 @@ import org.knime.core.node.workflow.NodeOutPort;
 
 import de.bund.bfr.knime.fsklab.CombinedFskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObject;
-import de.bund.bfr.knime.fsklab.nodes.RunnerNodeModel;
+import de.bund.bfr.knime.fsklab.v1_9.runner.RunnerNodeModel;
 import metadata.SwaggerUtil;
 
 

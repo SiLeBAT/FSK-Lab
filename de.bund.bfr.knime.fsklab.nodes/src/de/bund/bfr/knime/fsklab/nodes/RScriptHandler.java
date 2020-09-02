@@ -16,6 +16,8 @@ import de.bund.bfr.knime.fsklab.FskSimulation;
 import de.bund.bfr.knime.fsklab.nodes.plot.BasePlotter;
 import de.bund.bfr.knime.fsklab.nodes.plot.Ggplot2Plotter;
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
+import de.bund.bfr.knime.fsklab.v1_9.runner.RunnerNodeInternalSettings;
+import de.bund.bfr.knime.fsklab.v1_9.runner.RunnerNodeSettings;
 import metadata.SwaggerUtil;
 import de.bund.bfr.knime.fsklab.r.client.LibRegistry;
 import de.bund.bfr.knime.fsklab.r.client.RController;
