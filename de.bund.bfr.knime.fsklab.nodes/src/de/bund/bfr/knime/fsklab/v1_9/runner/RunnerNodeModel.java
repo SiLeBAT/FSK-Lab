@@ -207,7 +207,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
       
       
       
-      //TODO: What happens if the user adds a parameter during joining process?? �\(�_o)/�
+      //TODO: What happens if the user adds a parameter during joining process?? ¯\(°_o)/¯
       
       
       // prepareSimulation 1    *******
