@@ -7,6 +7,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import org.junit.Test;
 import de.bund.bfr.knime.fsklab.FskSimulation;
+import de.bund.bfr.knime.fsklab.v1_9.joiner.JoinerNodeModel;
+import de.bund.bfr.knime.fsklab.v1_9.joiner.JoinerNodeUtil;
 import de.bund.bfr.metadata.swagger.Parameter;
 
 @SuppressWarnings("static-method")
