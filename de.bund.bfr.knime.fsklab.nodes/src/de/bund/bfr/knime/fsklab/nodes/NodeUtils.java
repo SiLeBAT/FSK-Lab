@@ -89,7 +89,7 @@ public class NodeUtils {
    *
    * @throws IOException
    */
-  static String readConfigString(File settingsFolder, String filename) throws IOException {
+  public static String readConfigString(File settingsFolder, String filename) throws IOException {
     FlowVariable aFlowVariable = null;
     if (NodeContext.getContext().getNodeContainer().getFlowObjectStack() != null) {
       aFlowVariable = NodeContext.getContext().getNodeContainer().getFlowObjectStack()
@@ -109,7 +109,7 @@ public class NodeUtils {
    *
    * @throws IOException
    */
-  static void writeConfigString(String configString, File settingsFolder, String filename)
+  public static void writeConfigString(String configString, File settingsFolder, String filename)
       throws IOException {
     if (configString != null) {
       final File configFile = new File(settingsFolder, filename);
