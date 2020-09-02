@@ -405,7 +405,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
   private FskPortObject runSnippet(ScriptHandler handler, final FskPortObject fskObj,
       final FskSimulation simulation, final ExecutionContext exec) throws Exception {
 
-    handler.runSnippet(fskObj, simulation, exec, LOGGER, internalSettings);
+    handler.runSnippet(fskObj, simulation, exec, LOGGER, internalSettings.imageFile);
 
     // process the return value of error capturing and update error and
     // output views accordingly

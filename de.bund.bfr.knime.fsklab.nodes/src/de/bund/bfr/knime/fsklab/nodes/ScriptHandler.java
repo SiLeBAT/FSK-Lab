@@ -1,5 +1,6 @@
 package de.bund.bfr.knime.fsklab.nodes;
 
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -41,7 +42,7 @@ public abstract class ScriptHandler implements AutoCloseable {
    */
   public final void runSnippet(final FskPortObject fskObj, final FskSimulation simulation,
       final ExecutionContext exec, NodeLogger LOGGER,
-      final RunnerNodeInternalSettings internalSettings)
+      File imageFile)
       throws Exception {
     // Sets up working directory with resource files. This directory needs to be deleted.
     exec.setProgress(0.05, "Add resource files");
@@ -110,10 +111,10 @@ public abstract class ScriptHandler implements AutoCloseable {
     // convertToKnimeDataTable(fskObj,exec);
 
     try {
-      plotter.plotSvg(internalSettings.imageFile, fskObj.viz);
+      plotter.plotSvg(imageFile, fskObj.viz);
 
       // Save path of generated plot
-      fskObj.setPlot(internalSettings.imageFile.getAbsolutePath());
+      fskObj.setPlot(imageFile.getAbsolutePath());
     } catch (final Exception exception) {
       LOGGER.warn("Visualization script failed", exception);
     }
