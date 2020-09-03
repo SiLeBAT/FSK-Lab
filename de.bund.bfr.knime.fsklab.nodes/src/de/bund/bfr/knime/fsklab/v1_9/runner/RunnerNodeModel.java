@@ -248,7 +248,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
       
       // copy generated resources (output parameters) to working directory of second 
       // model
-      for(Path path : comFskObj.generatedResourceFiles.getResourcePaths()) {
+      for(Path path : comFskObj.getGeneratedResourceFiles().getResourcePaths()) {
         
         FileUtils.copyFileToDirectory(path.toFile(), workingDirectory1.get().toFile());
       }
@@ -274,7 +274,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
         JoinerNodeUtil.saveOutputVariable( oopFirst ,handler, exec);
         
         // collect paths to generated resource files in combined object
-        firstFskObj.generatedResourceFiles.getResourcePaths().forEach(path -> comFskObj.generatedResourceFiles.addResourceFile(path.toFile()));
+        firstFskObj.getGeneratedResourceFiles().getResourcePaths().forEach(path -> comFskObj.getGeneratedResourceFiles().addResourceFile(path.toFile()));
         
       }
         
@@ -297,7 +297,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
         
       // copy generated resources (output parameters) to working directory of second 
       // model
-      for(Path path : firstFskObj.generatedResourceFiles.getResourcePaths()) {
+      for(Path path : firstFskObj.getGeneratedResourceFiles().getResourcePaths()) {
         FileUtils.copyFileToDirectory(path.toFile(), workingDirectory2.get().toFile());
       }
       
@@ -321,11 +321,11 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
         JoinerNodeUtil.saveOutputVariable(oopSecond, handler, exec);
         
         // collect paths to generated resource files in combined object
-        secondFskObj.generatedResourceFiles.getResourcePaths().forEach(path -> comFskObj.generatedResourceFiles.addResourceFile(path.toFile()));
+        secondFskObj.getGeneratedResourceFiles().getResourcePaths().forEach(path -> comFskObj.getGeneratedResourceFiles().addResourceFile(path.toFile()));
 
       }
 //      fskObj.workspace = secondFskObj.workspace;
-      comFskObj.workspace = secondFskObj.workspace;
+      comFskObj.setWorkspace(secondFskObj.getWorkspace());
       return comFskObj;
     } else {
       LOGGER.info("Running simulation: " + nodeSettings.simulation);

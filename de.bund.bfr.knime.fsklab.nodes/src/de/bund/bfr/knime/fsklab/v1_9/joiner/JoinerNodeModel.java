@@ -179,11 +179,11 @@ public final class JoinerNodeModel
         }
 
         if (representation.getFirstModelScript() == null) {
-          representation.setFirstModelScript(firstInputPort.model);
+          representation.setFirstModelScript(firstInputPort.getModel());
         }
 
         if (representation.getFirstModelViz() == null) {
-          representation.setFirstModelViz(firstInputPort.viz);
+          representation.setFirstModelViz(firstInputPort.getViz());
         }
       }
 
@@ -195,14 +195,14 @@ public final class JoinerNodeModel
         }
 
         if (representation.getSecondModelScript() == null) {
-          representation.setSecondModelScript(secondInputPort.model);
+          representation.setSecondModelScript(secondInputPort.getModel());
         }
 
         if (representation.getSecondModelViz() == null) {
           if (secondInputPort instanceof CombinedFskPortObject) {
             representation.setSecondModelViz(extractSecondObjectVis(secondInputPort));
           } else {
-            representation.setSecondModelViz(secondInputPort.viz);
+            representation.setSecondModelViz(secondInputPort.getViz());
           }
         }
 
@@ -231,7 +231,7 @@ public final class JoinerNodeModel
   // second visualization script is the script which draw and control the plotting!
   private String extractSecondObjectVis(FskPortObject object) {
     if (!(object instanceof CombinedFskPortObject)) {
-      return object.viz;
+      return object.getViz();
     } else {
       return extractSecondObjectVis(((CombinedFskPortObject) object).getSecondFskPortObject());
     }
@@ -242,7 +242,7 @@ public final class JoinerNodeModel
 
     JsonObject obj1 = scriptTree.getJsonObject(0);
     if (obj1.containsKey("script")) {
-      fskObject1.model = obj1.getString("script");
+      fskObject1.setModel(obj1.getString("script"));
     } else {
       CombinedFskPortObject firstCombinedModel = (CombinedFskPortObject) fskObject1;
       setScriptBack(firstCombinedModel.getFirstFskPortObject(),
@@ -251,7 +251,7 @@ public final class JoinerNodeModel
 
     JsonObject obj2 = scriptTree.getJsonObject(2);
     if (obj2.containsKey("script")) {
-      fskObject2.model = obj2.getString("script");
+      fskObject2.setModel(obj2.getString("script"));
     } else {
       CombinedFskPortObject secondCombinedModel = (CombinedFskPortObject) fskObject2;
       setScriptBack(secondCombinedModel.getFirstFskPortObject(),
@@ -304,7 +304,7 @@ public final class JoinerNodeModel
       jsonObjectBuilder.add("nodes", array);
     } else {
       jsonObjectBuilder.add("text", SwaggerUtil.getModelName(object.modelMetadata));
-      jsonObjectBuilder.add("script", object.model);
+      jsonObjectBuilder.add("script", object.getModel());
     }
     return jsonObjectBuilder;
   }
@@ -653,7 +653,7 @@ public final class JoinerNodeModel
     if (fskObj instanceof CombinedFskPortObject)
       setLastVisualizationScript(((CombinedFskPortObject) fskObj).getSecondFskPortObject(), viz);
     else
-      fskObj.viz = viz;
+      fskObj.setViz(viz);
 
   }
 

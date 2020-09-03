@@ -122,16 +122,16 @@ public class FskPortObject implements PortObject {
       PortTypeRegistry.getInstance().getPortType(FskPortObject.class, true);
 
   /** Model script. */
-  public String model;
+  private String model;
 
   /** Visualization script. */
-  public String viz;
+  private String viz;
 
   /** Paths to resources: plain text files and R workspace files (.rdata). */
   private final Optional<EnvironmentManager> environmentManager;
 
   /** Paths to generated resources **/
-  public GeneratedResourceFiles generatedResourceFiles;
+  private GeneratedResourceFiles generatedResourceFiles;
   
   /** Path to plot. */
   private String plot;
@@ -143,7 +143,7 @@ public class FskPortObject implements PortObject {
    * R workspace file with the results of running the model. It may be null if the model has not
    * been run.
    */
-  public Path workspace;
+  private Path workspace;
 
   /** List of R packages. */
   public final List<String> packages;
@@ -196,7 +196,30 @@ public class FskPortObject implements PortObject {
   public Optional<EnvironmentManager> getEnvironmentManager() {
     return environmentManager;
   }
-
+  
+  public String getModel() {
+    return model;
+  }
+  
+  public void setModel(String model) {
+    this.model = model;
+  }
+  
+  public String getViz() {
+    return viz;
+  }
+  
+  public void setViz(String viz) {
+    this.viz = viz;
+  }
+  
+  public GeneratedResourceFiles getGeneratedResourceFiles() {
+    return generatedResourceFiles;
+  }
+  
+  public void setGeneratedResourceFiles(GeneratedResourceFiles generatedResourceFiles) {
+    this.generatedResourceFiles = generatedResourceFiles;
+  }
   
   /**
    * @return empty string if not set.
@@ -220,6 +243,14 @@ public class FskPortObject implements PortObject {
 
   public void setReadme(String readme) {
     this.readme = readme;
+  }
+  
+  public Path getWorkspace() {
+    return workspace;
+  }
+  
+  public void setWorkspace(Path workspace) {
+    this.workspace = workspace;
   }
 
   /**

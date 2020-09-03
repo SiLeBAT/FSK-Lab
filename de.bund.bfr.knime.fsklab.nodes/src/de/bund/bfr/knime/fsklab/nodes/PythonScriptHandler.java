@@ -61,7 +61,7 @@ public class PythonScriptHandler extends ScriptHandler {
   @Override
   public void plotToImageFile(RunnerNodeInternalSettings internalSettings, RunnerNodeSettings nodeSettings,
       FskPortObject fskObj, ExecutionContext exec) throws Exception {
-    plotter.plotPng(internalSettings.imageFile, fskObj.viz);
+    plotter.plotPng(internalSettings.imageFile, fskObj.getViz());
   }
 
   @Override
@@ -72,7 +72,7 @@ public class PythonScriptHandler extends ScriptHandler {
 
   @Override
   public void saveWorkspace(FskPortObject fskObj, ExecutionContext exec) throws Exception {
-    fskObj.workspace = FileUtil.createTempFile("workspace", ".py").toPath();
+    fskObj.setWorkspace(FileUtil.createTempFile("workspace", ".py").toPath());
   }
 
   @Override

@@ -255,8 +255,8 @@ final class FSKEditorJSNodeModel
 //    }
 
     FskPortObject outputPort = new FskPortObject(environmentManager, readme, packages);
-    outputPort.model = modelScript;
-    outputPort.viz = visualizationScript;
+    outputPort.setModel(modelScript);
+    outputPort.setViz(visualizationScript);
     if (!simulations.isEmpty()) {
       outputPort.simulations.addAll(simulations);
     }
@@ -346,8 +346,8 @@ final class FSKEditorJSNodeModel
     } catch (JsonProcessingException e) {
     }
 
-    value.setModelScript(m_port.model);
-    value.setVisualizationScript(m_port.viz);
+    value.setModelScript(m_port.getModel());
+    value.setVisualizationScript(m_port.getViz());
     value.setReadme(m_port.getReadme());
     value.setModelType(m_port.modelMetadata.getModelType());
     m_port.getEnvironmentManager().ifPresent(value::setEnvironment);

@@ -169,8 +169,7 @@ public class CombinedFskPortObject extends FskPortObject {
     super(environmentManager, "", packages);
     this.firstFskPortObject = firstFskPortObject;
     this.secondFskPortObject = secondFskPortObject;
-   
-    this.generatedResourceFiles = new GeneratedResourceFiles();
+    this.setGeneratedResourceFiles(new GeneratedResourceFiles());
    
     objectNum = numOfInstances;
     numOfInstances += 1;
@@ -181,13 +180,13 @@ public class CombinedFskPortObject extends FskPortObject {
       final FskPortObject firstFskPortObject, final FskPortObject secondFskPortObject)
       throws IOException {
     super(environmentManager, "", packages);
-    this.model = model;
-    this.viz = viz;
+    setModel(model);
+    setViz(viz);
     this.firstFskPortObject = firstFskPortObject;
     this.secondFskPortObject = secondFskPortObject;
     this.modelMetadata = modelMetadata;
 
-    this.generatedResourceFiles = new GeneratedResourceFiles();
+    this.setGeneratedResourceFiles(new GeneratedResourceFiles());
     objectNum = numOfInstances;
     numOfInstances += 1;
   }
@@ -312,9 +311,9 @@ public class CombinedFskPortObject extends FskPortObject {
         out.closeEntry();
 
         // workspace entry
-        if (portObject.workspace != null) {
+        if (portObject.getWorkspace() != null) {
           out.putNextEntry(new ZipEntry(JOINED_WORKSPACE + level));
-          Files.copy(portObject.workspace, out);
+          Files.copy(portObject.getWorkspace(), out);
           out.closeEntry();
         }
 
@@ -342,7 +341,7 @@ public class CombinedFskPortObject extends FskPortObject {
 
         // joined viz entry (file with visualization script)
         out.putNextEntry(new ZipEntry(JOINED_VIZ + level));
-        IOUtils.write(portObject.viz, out, "UTF-8");
+        IOUtils.write(portObject.getViz(), out, "UTF-8");
         out.closeEntry();
 
         // Save selected simulation index
@@ -364,12 +363,12 @@ public class CombinedFskPortObject extends FskPortObject {
         // model entry (file with model script)
         int level = ran.nextInt();
         out.putNextEntry(new ZipEntry(MODEL + level));
-        IOUtils.write(portObject.model, out, "UTF-8");
+        IOUtils.write(portObject.getModel(), out, "UTF-8");
         out.closeEntry();
 
         // viz entry (file with visualization script)
         out.putNextEntry(new ZipEntry(VIZ + level));
-        IOUtils.write(portObject.viz, out, "UTF-8");
+        IOUtils.write(portObject.getViz(), out, "UTF-8");
         out.closeEntry();
 
         // model type and metadata
@@ -382,9 +381,9 @@ public class CombinedFskPortObject extends FskPortObject {
         out.closeEntry();
 
         // workspace entry
-        if (portObject.workspace != null) {
+        if (portObject.getWorkspace() != null) {
           out.putNextEntry(new ZipEntry(WORKSPACE + level));
-          Files.copy(portObject.workspace, out);
+          Files.copy(portObject.getWorkspace(), out);
           out.closeEntry();
         }
 
@@ -403,9 +402,9 @@ public class CombinedFskPortObject extends FskPortObject {
         }
         
         // Save generated resource Files
-        if (portObject.generatedResourceFiles != null) {
+        if (portObject.getGeneratedResourceFiles() != null) {
           out.putNextEntry(new ZipEntry(GENERATED_RESOURCE_FILES + level));
-          MAPPER104.writeValue(out, portObject.generatedResourceFiles);
+          MAPPER104.writeValue(out, portObject.getGeneratedResourceFiles());
           out.closeEntry();
         }
         // Save plot
@@ -571,7 +570,7 @@ public class CombinedFskPortObject extends FskPortObject {
           final CombinedFskPortObject portObj =
               new CombinedFskPortObject(modelScript, visualizationScript, modelMetadata,
                   Optional.empty(), new ArrayList<>(), firstFSKObject, secondFSKObject);
-          portObj.workspace = workspacePath;
+          portObj.setWorkspace(workspacePath);
 
           if (relations != null && relations.length > 0) {
             portObj.setJoinerRelation(relations);
@@ -783,9 +782,9 @@ public class CombinedFskPortObject extends FskPortObject {
 
       String script;
       if (nodeType == 0) {
-        script = portObject.model;
+        script = portObject.getModel();
       } else if (nodeType == 1) {
-        script = portObject.viz;
+        script = portObject.getViz();
       } else if (nodeType == 2) {
         script = portObject.getReadme();
       }
