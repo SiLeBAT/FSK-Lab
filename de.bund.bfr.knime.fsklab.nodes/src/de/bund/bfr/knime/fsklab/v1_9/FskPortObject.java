@@ -77,6 +77,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.FskPlugin;
+import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.FLabel;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.FPanel;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.JsonPanel;
@@ -625,7 +626,7 @@ public class FskPortObject implements PortObject {
         simulationPanel.add(parametersPane, BorderLayout.WEST);
 
         // Panel to show preview of generated script out of parameters
-        final String previewScript = buildParameterScript(simulations.get(selectedSimulationIndex));
+        final String previewScript = NodeUtils.buildParameterScript(simulations.get(selectedSimulationIndex));
         final ScriptPanel scriptPanel = new ScriptPanel("Preview", previewScript, false, true);
         simulationPanel.add(UIUtils.createTitledPanel(scriptPanel, "Preview script"),
             BorderLayout.CENTER);
@@ -646,7 +647,7 @@ public class FskPortObject implements PortObject {
             formPanel.setValues(selectedSimulation.getParameters());
 
             // Update previewPanel
-            final String previewScript1 = buildParameterScript(selectedSimulation);
+            final String previewScript1 = NodeUtils.buildParameterScript(selectedSimulation);
             scriptPanel.setText(previewScript1);
           }
         });
@@ -798,20 +799,6 @@ public class FskPortObject implements PortObject {
       }
     }
 
-  }
-
-  /** Builds string with R parameters script out. */
-  private static String buildParameterScript(FskSimulation simulation) {
-
-    String paramScript = "";
-    for (final Map.Entry<String, String> entry : simulation.getParameters().entrySet()) {
-      final String parameterName = entry.getKey();
-      final String parameterValue = entry.getValue();
-
-      paramScript += parameterName + " <- " + parameterValue + "\n";
-    }
-
-    return paramScript;
   }
 
   @Override
