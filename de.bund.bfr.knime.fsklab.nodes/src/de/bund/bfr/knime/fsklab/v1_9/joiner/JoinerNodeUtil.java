@@ -7,12 +7,12 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.knime.core.node.ExecutionContext;
-import de.bund.bfr.knime.fsklab.CombinedFskPortObject;
-import de.bund.bfr.knime.fsklab.FskPortObject;
-import de.bund.bfr.knime.fsklab.FskSimulation;
-import de.bund.bfr.knime.fsklab.JoinRelation;
 import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
 import de.bund.bfr.knime.fsklab.nodes.ScriptHandler;
+import de.bund.bfr.knime.fsklab.v1_9.CombinedFskPortObject;
+import de.bund.bfr.knime.fsklab.v1_9.FskPortObject;
+import de.bund.bfr.knime.fsklab.v1_9.FskSimulation;
+import de.bund.bfr.knime.fsklab.v1_9.JoinRelation;
 import de.bund.bfr.metadata.swagger.Parameter;
 import metadata.SwaggerUtil;
 

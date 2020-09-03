@@ -16,7 +16,7 @@
  * Contributors: Department Biological Safety - BfR
  *************************************************************************************************
  */
-package de.bund.bfr.knime.fsklab;
+package de.bund.bfr.knime.fsklab.v1_9;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -79,6 +79,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.FLabel;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.FPanel;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.JsonPanel;

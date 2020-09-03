@@ -16,7 +16,7 @@
  * Contributors: Department Biological Safety - BfR
  *************************************************************************************************
  */
-package de.bund.bfr.knime.fsklab;
+package de.bund.bfr.knime.fsklab.v1_9;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 

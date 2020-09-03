@@ -1,4 +1,4 @@
-package de.bund.bfr.knime.fsklab;
+package de.bund.bfr.knime.fsklab.v1_9;
 
 import java.io.Serializable;
 import java.util.LinkedHashMap;

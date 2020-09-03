@@ -60,12 +60,12 @@ import org.knime.core.node.workflow.NodeContext;
 import org.knime.js.core.node.AbstractSVGWizardNodeModel;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.bund.bfr.knime.fsklab.CombinedFskPortObject;
-import de.bund.bfr.knime.fsklab.CombinedFskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.FskPlugin;
-import de.bund.bfr.knime.fsklab.FskPortObject;
-import de.bund.bfr.knime.fsklab.JoinRelation;
 import de.bund.bfr.knime.fsklab.nodes.NodeRemovedListener;
+import de.bund.bfr.knime.fsklab.v1_9.CombinedFskPortObject;
+import de.bund.bfr.knime.fsklab.v1_9.CombinedFskPortObjectSpec;
+import de.bund.bfr.knime.fsklab.v1_9.FskPortObject;
+import de.bund.bfr.knime.fsklab.v1_9.JoinRelation;
 import de.bund.bfr.metadata.swagger.Parameter;
 import metadata.SwaggerUtil;
 

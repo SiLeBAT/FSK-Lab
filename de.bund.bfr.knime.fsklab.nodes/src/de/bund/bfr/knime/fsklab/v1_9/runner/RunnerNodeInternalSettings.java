@@ -26,8 +26,8 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.util.FileUtil;
-import de.bund.bfr.knime.fsklab.CombinedFskPortObject;
-import de.bund.bfr.knime.fsklab.FskPortObject;
+import de.bund.bfr.knime.fsklab.v1_9.CombinedFskPortObject;
+import de.bund.bfr.knime.fsklab.v1_9.FskPortObject;
 
 public class RunnerNodeInternalSettings {
 
