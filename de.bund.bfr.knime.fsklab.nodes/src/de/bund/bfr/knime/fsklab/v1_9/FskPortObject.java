@@ -148,9 +148,6 @@ public class FskPortObject implements PortObject {
   /** List of R packages. */
   public final List<String> packages;
 
-  private static int numOfInstances = 0;
-
-  public int objectNum;
   public int selectedSimulationIndex = 0;
   public final List<FskSimulation> simulations = new ArrayList<>();
 
@@ -170,9 +167,6 @@ public class FskPortObject implements PortObject {
     this.generatedResourceFiles = generatedResourceFiles;
     this.plot = plot;
     this.readme = StringUtils.defaultString(readme);
-
-    objectNum = numOfInstances;
-    numOfInstances += 1;
   }
 
   public FskPortObject(final Optional<EnvironmentManager> environmentManager, String readme, final List<String> packages)
