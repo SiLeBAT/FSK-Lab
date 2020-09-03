@@ -62,20 +62,6 @@ along with this program.  If not, see &quot;http://www.gnu.org/licenses/&quot;.
    </requires>
 
    <plugin
-         id="de.bund.bfr.knime.fsklab.nodes.deprecated2"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="de.bund.bfr.knime.fsklab.nodes.deprecated"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="de.bund.bfr.knime.fsklab.metadata.model"
          download-size="0"
          install-size="0"
@@ -118,6 +104,13 @@ along with this program.  If not, see &quot;http://www.gnu.org/licenses/&quot;.
 
    <plugin
          id="de.bund.bfr.pmfml"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="de.bund.bfr.knime.fsklab.deprecatednodes"
          download-size="0"
          install-size="0"
          version="0.0.0"
