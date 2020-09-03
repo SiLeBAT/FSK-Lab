@@ -24,8 +24,7 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations;bundle-version="2
  org.jdom.2;bundle-version="2.0.6",
  org.sbml.jsbml;bundle-version="1.0.0",
  de.unirostock.sems.CombineArchive;bundle-version="1.4.0",
- com.gmail.gcolaianni5.jris;bundle-version="1.0.0",
- com.sun.jna;bundle-version="4.4.0"
+ com.gmail.gcolaianni5.jris;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ClassPath: libs/bfr-swing-1.0-SNAPSHOT.jar,
  libs/fskml-1.0.12.jar,

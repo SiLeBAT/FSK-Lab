@@ -67,10 +67,7 @@
     <node category-path="/fsklab/legacy" deprecated="true" factory-class="de.bund.bfr.knime.pmm.fskx.editor.FskEditorNodeFactory" />
     <node category-path="/fsklab/legacy" deprecated="true" factory-class="de.bund.bfr.knime.pmm.fskx.reader.FskxReaderNodeFactory" />
     <node category-path="/fsklab/legacy" deprecated="true" factory-class="de.bund.bfr.knime.pmm.fskx.runner.FskxRunnerNodeFactory" />
-    <node category-path="/fsklab/legacy" deprecated="true" factory-class="de.bund.bfr.knime.pmm.fskx.writer.FskxWriterNodeFactory" /> 
-    
-    <node category-path="/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.nodes.CreatorNodeFactory" />
-
+    <node category-path="/fsklab/legacy" deprecated="true" factory-class="de.bund.bfr.knime.pmm.fskx.writer.FskxWriterNodeFactory" />  
   </extension>
    
   <extension point="org.knime.js.core.javascriptComponents">
