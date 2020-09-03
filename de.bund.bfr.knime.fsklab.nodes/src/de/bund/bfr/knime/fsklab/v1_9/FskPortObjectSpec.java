@@ -1,4 +1,4 @@
-package de.bund.bfr.knime.fsklab;
+package de.bund.bfr.knime.fsklab.v1_9;
 /*
  ***************************************************************************************************
  * Copyright (c) 2017 Federal Institute for Risk Assessment (BfR), Germany

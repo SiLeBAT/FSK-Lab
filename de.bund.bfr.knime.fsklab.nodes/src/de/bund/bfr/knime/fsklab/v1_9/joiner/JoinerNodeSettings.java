@@ -25,7 +25,7 @@ import org.knime.core.node.NodeSettingsWO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.FskPlugin;
-import de.bund.bfr.knime.fsklab.JoinRelation;
+import de.bund.bfr.knime.fsklab.v1_9.JoinRelation;
 import de.bund.bfr.metadata.swagger.Parameter;
 
 class JoinerNodeSettings {

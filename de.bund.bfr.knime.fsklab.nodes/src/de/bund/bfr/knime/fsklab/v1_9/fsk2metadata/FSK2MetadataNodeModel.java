@@ -40,7 +40,7 @@ import org.knime.core.node.port.PortType;
 import org.knime.json.util.JSONUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.FskPlugin;
-import de.bund.bfr.knime.fsklab.FskPortObject;
+import de.bund.bfr.knime.fsklab.v1_9.FskPortObject;
 import metadata.SwaggerUtil;
 
 public class FSK2MetadataNodeModel extends StatelessModel {

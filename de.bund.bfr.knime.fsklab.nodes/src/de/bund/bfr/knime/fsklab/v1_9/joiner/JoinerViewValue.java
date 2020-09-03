@@ -27,7 +27,7 @@ import org.knime.js.core.JSONViewContent;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.FskPlugin;
-import de.bund.bfr.knime.fsklab.JoinRelation;
+import de.bund.bfr.knime.fsklab.v1_9.JoinRelation;
 
 class JoinerViewValue extends JSONViewContent {
 
