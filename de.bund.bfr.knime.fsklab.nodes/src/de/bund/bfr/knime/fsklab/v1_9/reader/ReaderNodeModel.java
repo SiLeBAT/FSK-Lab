@@ -455,7 +455,10 @@ class ReaderNodeModel extends NoInternalsModel {
 
       // Load scripts
       for (ArchiveEntry entry : entries) {
-        if (entry.getFormat().equals(scriptUri) && !entry.getDescriptions().isEmpty()) {
+        // workaround to make python models from version 1.7.2 compatible with 1.8.x
+        // those models had scripts that ended in ".r" instead of ".py"
+        if (( entry.getFormat().equals(scriptUri) || entry.getFormat().equals(URIS.get("r")) )
+            && !entry.getDescriptions().isEmpty()) {
           FskMetaDataObject fmdo = new FskMetaDataObject(entry.getDescriptions().get(0));
           ResourceType resourceType = fmdo.getResourceType();
 
