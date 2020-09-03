@@ -403,7 +403,7 @@ class ReaderNodeModel extends NoInternalsModel {
             secondFskPortObject, firstFskPortObject);
       }
 
-      topfskObj.viz = getEmbedSecondFSKObject(topfskObj).viz;
+      topfskObj.setViz(getEmbedSecondFSKObject(topfskObj).getViz());
 
       // Get select simulation index and simulations for joined model
       Optional<ArchiveEntry> simulationsEntry = archive.getEntriesWithFormat(URIS.get("sedml"))

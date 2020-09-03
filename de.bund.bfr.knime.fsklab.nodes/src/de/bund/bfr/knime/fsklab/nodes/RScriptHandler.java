@@ -129,15 +129,15 @@ public class RScriptHandler extends ScriptHandler {
   public void plotToImageFile(final RunnerNodeInternalSettings internalSettings,
       RunnerNodeSettings nodeSettings, final FskPortObject fskObj, ExecutionContext exec)
       throws Exception {
-    plotter.plotPng(internalSettings.imageFile, fskObj.viz);
+    plotter.plotPng(internalSettings.imageFile, fskObj.getViz());
   }
 
   @Override
   public void saveWorkspace(final FskPortObject fskObj, ExecutionContext exec) throws Exception {
-    if (fskObj.workspace == null) {
-      fskObj.workspace = FileUtil.createTempFile("workspace", ".RData").toPath();
+    if (fskObj.getWorkspace() == null) {
+      fskObj.setWorkspace(FileUtil.createTempFile("workspace", ".RData").toPath());
     }
-    controller.saveWorkspace(fskObj.workspace, exec);
+    controller.saveWorkspace(fskObj.getWorkspace(), exec);
   }
 
   @Override

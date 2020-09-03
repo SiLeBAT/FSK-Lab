@@ -80,7 +80,7 @@ public abstract class ScriptHandler implements AutoCloseable {
     // Dirty workaround. Only execute simulation if there are parameters configured.
     if (!simulation.getParameters().isEmpty()) {
       String paramScript = buildParameterScript(simulation);
-      Arrays.stream(fskObj.model.split("\\r?\\n")).filter(id -> id.startsWith("import"))
+      Arrays.stream(fskObj.getModel().split("\\r?\\n")).filter(id -> id.startsWith("import"))
           .forEach(line -> {
             try {
               runScript(line, exec, false);
@@ -94,7 +94,7 @@ public abstract class ScriptHandler implements AutoCloseable {
     }
 
     exec.setProgress(0.75, "Run models script");
-    runScript(fskObj.model, exec, false);
+    runScript(fskObj.getModel(), exec, false);
 
     if (RunnerNodeModel.isTest) {
       List<Parameter> parameters = SwaggerUtil.getParameter(fskObj.modelMetadata);
@@ -110,7 +110,7 @@ public abstract class ScriptHandler implements AutoCloseable {
     // convertToKnimeDataTable(fskObj,exec);
 
     try {
-      plotter.plotSvg(imageFile, fskObj.viz);
+      plotter.plotSvg(imageFile, fskObj.getViz());
 
       // Save path of generated plot
       fskObj.setPlot(imageFile.getAbsolutePath());
@@ -128,7 +128,7 @@ public abstract class ScriptHandler implements AutoCloseable {
     
   
     // create a new GeneratedResourceFiles to collect and save output parameters which are files
-    fskObj.generatedResourceFiles = GeneratedResourceFiles.saveGeneratedResourceFiles(fskObj, workingDirectory, exec, this);
+    fskObj.setGeneratedResourceFiles(GeneratedResourceFiles.saveGeneratedResourceFiles(fskObj, workingDirectory, exec, this));
     
     // delete working directory
     if (fskObj.getEnvironmentManager().isPresent() && workingDirectory.isPresent()) {

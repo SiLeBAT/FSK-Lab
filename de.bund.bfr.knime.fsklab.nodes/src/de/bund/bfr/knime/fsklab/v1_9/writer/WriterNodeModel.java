@@ -168,7 +168,7 @@ class WriterNodeModel extends NoInternalsModel {
         List<Path> resources = Files.list(workingDirectory.get()).collect(Collectors.toList());
 
         // add generated resources
-        resources.addAll(fskObj.generatedResourceFiles.getResourcePaths());
+        resources.addAll(fskObj.getGeneratedResourceFiles().getResourcePaths());
         
         for (final Path resourcePath : resources) {
 
@@ -201,17 +201,17 @@ class WriterNodeModel extends NoInternalsModel {
     }
     // Adds model script
     final ArchiveEntry modelEntry =
-        addRScript(archive, fskObj.model, filePrefix + "model." + scriptHandler.getFileExtension());
+        addRScript(archive, fskObj.getModel(), filePrefix + "model." + scriptHandler.getFileExtension());
     modelEntry.addDescription(new FskMetaDataObject(ResourceType.modelScript).metaDataObject);
 
     // Adds visualization script
-    final ArchiveEntry vizEntry = addRScript(archive, fskObj.viz,
+    final ArchiveEntry vizEntry = addRScript(archive, fskObj.getViz(),
         filePrefix + "visualization." + scriptHandler.getFileExtension());
     vizEntry.addDescription(new FskMetaDataObject(ResourceType.visualizationScript).metaDataObject);
 
     // Adds R workspace file
-    if (fskObj.workspace != null) {
-      addWorkspace(archive, fskObj.workspace, filePrefix);
+    if (fskObj.getWorkspace() != null) {
+      addWorkspace(archive, fskObj.getWorkspace(), filePrefix);
     }
     // Add simulations
     {

@@ -70,7 +70,7 @@ public class RunnerNodeInternalSettings {
       // On saving thie workflow, these files are copied to the /internal 
       // folder of the Runner node that created the files
       List<File> temp_dirs = new ArrayList<File>(); 
-      for(Path path : fskObj.generatedResourceFiles.getResourcePaths()) {
+      for(Path path : fskObj.getGeneratedResourceFiles().getResourcePaths()) {
 
         File resourceFile = path.toFile();
         
