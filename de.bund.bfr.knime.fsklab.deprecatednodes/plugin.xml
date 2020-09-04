@@ -52,7 +52,7 @@
   </extension>
 
   <extension point="org.knime.workbench.repository.nodes">
-    <!-- Deprecated nodes -->
+    <!-- 1.0.2 -->
     <node category-path="/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.nodes.reader.FskxReaderNodeFactory" />
     <node category-path="/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.nodes.writer.FskxWriterNodeFactory" />
     <node category-path="/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.nodes.creator.FskCreatorNodeFactory" />
@@ -63,11 +63,19 @@
     <node category-path="/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.nodes.editor.js.FskEditorNodeFactory" />
     <node category-path="/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.nodes.runner.FskRunnerNodeFactory" />
     
+    <!-- Pre-RAKIP -->
     <node category-path="/fsklab/legacy" deprecated="true" factory-class="de.bund.bfr.knime.pmm.fskx.creator.FskxCreatorNodeFactory" />
     <node category-path="/fsklab/legacy" deprecated="true" factory-class="de.bund.bfr.knime.pmm.fskx.editor.FskEditorNodeFactory" />
     <node category-path="/fsklab/legacy" deprecated="true" factory-class="de.bund.bfr.knime.pmm.fskx.reader.FskxReaderNodeFactory" />
     <node category-path="/fsklab/legacy" deprecated="true" factory-class="de.bund.bfr.knime.pmm.fskx.runner.FskxRunnerNodeFactory" />
-    <node category-path="/fsklab/legacy" deprecated="true" factory-class="de.bund.bfr.knime.pmm.fskx.writer.FskxWriterNodeFactory" />  
+    <node category-path="/fsklab/legacy" deprecated="true" factory-class="de.bund.bfr.knime.pmm.fskx.writer.FskxWriterNodeFactory" />
+    
+    <!-- 1.7.2 -->
+    <node category-path="/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.nodes.CreatorNodeFactory" />
+    <node category-path="/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.nodes.FSK2MetadataNodeFactory" />
+    <node category-path="/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.nodes.FskToRNodeFactory" />
+    <node category-path="/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.nodes.JoinerNodeFactory" />
+    <node category-path="/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.nodes.RunnerNodeFactory" />
   </extension>
    
   <extension point="org.knime.js.core.javascriptComponents">
