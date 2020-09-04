@@ -16,7 +16,7 @@
  * Contributors: Department Biological Safety - BfR
  ***************************************************************************************************
  */
-package de.bund.bfr.knime.fsklab.nodes.fsk2metadata;
+package de.bund.bfr.knime.fsklab.nodes.v1_7_2.fsk2metadata;
 
 import java.io.IOException;
 import javax.json.JsonValue;

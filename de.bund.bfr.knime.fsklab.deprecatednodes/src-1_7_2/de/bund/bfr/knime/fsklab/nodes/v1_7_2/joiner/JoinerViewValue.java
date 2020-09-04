@@ -16,7 +16,7 @@
  * Contributors: Department Biological Safety - BfR
  *************************************************************************************************
  */
-package de.bund.bfr.knime.fsklab.nodes.joiner;
+package de.bund.bfr.knime.fsklab.nodes.v1_7_2.joiner;
 
 import java.util.Random;
 import org.apache.commons.lang3.StringEscapeUtils;

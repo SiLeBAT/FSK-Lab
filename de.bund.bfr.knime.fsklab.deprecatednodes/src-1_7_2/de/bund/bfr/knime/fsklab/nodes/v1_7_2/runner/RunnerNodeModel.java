@@ -16,7 +16,7 @@
  * Contributors: Department Biological Safety - BfR
  *************************************************************************************************
  */
-package de.bund.bfr.knime.fsklab.nodes.runner;
+package de.bund.bfr.knime.fsklab.nodes.v1_7_2.runner;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -56,7 +56,7 @@ import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.FskSimulation;
 import de.bund.bfr.knime.fsklab.JoinRelation;
 import de.bund.bfr.knime.fsklab.nodes.ScriptHandler;
-import de.bund.bfr.knime.fsklab.nodes.joiner.JoinerNodeModel;
+import de.bund.bfr.knime.fsklab.nodes.v1_7_2.joiner.JoinerNodeModel;
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
 import de.bund.bfr.knime.fsklab.r.client.ScriptExecutor;
 import de.bund.bfr.metadata.swagger.Parameter;

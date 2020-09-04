@@ -21,14 +21,17 @@ package de.bund.bfr.knime.fsklab.nodes;
 import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeFactory;
 import org.knime.core.node.NodeView;
-import de.bund.bfr.knime.fsklab.nodes.v1_7_2.runner.RunnerNodeDialog;
-import de.bund.bfr.knime.fsklab.nodes.v1_7_2.runner.RunnerNodeModel;
+import org.knime.core.node.wizard.WizardNodeFactoryExtension;
+import de.bund.bfr.knime.fsklab.nodes.v1_7_2.editor.FSKEditorJSNodeDialog;
+import de.bund.bfr.knime.fsklab.nodes.v1_7_2.editor.FSKEditorJSNodeModel;
 
-public class RunnerNodeFactory extends NodeFactory<RunnerNodeModel> {
+
+public class FSKEditorJSNodeFactory extends NodeFactory<FSKEditorJSNodeModel> implements
+    WizardNodeFactoryExtension<FSKEditorJSNodeModel, FSKEditorJSViewRepresentation, FSKEditorJSViewValue> {
 
   @Override
-  public RunnerNodeModel createNodeModel() {
-    return new RunnerNodeModel();
+  public FSKEditorJSNodeModel createNodeModel() {
+    return new FSKEditorJSNodeModel();
   }
 
   @Override
@@ -37,17 +40,18 @@ public class RunnerNodeFactory extends NodeFactory<RunnerNodeModel> {
   }
 
   @Override
-  public NodeView<RunnerNodeModel> createNodeView(int viewIndex, RunnerNodeModel nodeModel) {
+  public NodeView<FSKEditorJSNodeModel> createNodeView(int viewIndex,
+      FSKEditorJSNodeModel nodeModel) {
     return null;
+  }
+
+  @Override
+  protected NodeDialogPane createNodeDialogPane() {
+    return new FSKEditorJSNodeDialog();
   }
 
   @Override
   protected boolean hasDialog() {
     return true;
-  }
-
-  @Override
-  protected NodeDialogPane createNodeDialogPane() {
-    return new RunnerNodeDialog();
   }
 }

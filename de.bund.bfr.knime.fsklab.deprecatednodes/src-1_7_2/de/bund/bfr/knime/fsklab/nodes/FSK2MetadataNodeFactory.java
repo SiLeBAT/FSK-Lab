@@ -22,7 +22,7 @@ import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeFactory;
 import org.knime.core.node.NodeView;
 import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
-import de.bund.bfr.knime.fsklab.nodes.fsk2metadata.FSK2MetadataNodeModel;
+import de.bund.bfr.knime.fsklab.nodes.v1_7_2.fsk2metadata.FSK2MetadataNodeModel;
 
 public class FSK2MetadataNodeFactory extends NodeFactory<FSK2MetadataNodeModel> {
 

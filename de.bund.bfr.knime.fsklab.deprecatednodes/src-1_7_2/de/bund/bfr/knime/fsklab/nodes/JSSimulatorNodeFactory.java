@@ -1,6 +1,6 @@
 /*
  ***************************************************************************************************
- * Copyright (c) 2017 Federal Institute for Risk Assessment (BfR), Germany
+ * Copyright (c) 2018 Federal Institute for Risk Assessment (BfR), Germany
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -21,33 +21,35 @@ package de.bund.bfr.knime.fsklab.nodes;
 import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeFactory;
 import org.knime.core.node.NodeView;
-import de.bund.bfr.knime.fsklab.nodes.v1_7_2.runner.RunnerNodeDialog;
-import de.bund.bfr.knime.fsklab.nodes.v1_7_2.runner.RunnerNodeModel;
+import org.knime.core.node.wizard.WizardNodeFactoryExtension;
+import de.bund.bfr.knime.fsklab.nodes.v1_7_2.simulator.JSSimulatorNodeModel;
 
-public class RunnerNodeFactory extends NodeFactory<RunnerNodeModel> {
+public class JSSimulatorNodeFactory extends NodeFactory<JSSimulatorNodeModel> implements
+    WizardNodeFactoryExtension<JSSimulatorNodeModel, JSSimulatorViewRepresentation, JSSimulatorViewValue> {
 
   @Override
-  public RunnerNodeModel createNodeModel() {
-    return new RunnerNodeModel();
+  public JSSimulatorNodeModel createNodeModel() {
+    return new JSSimulatorNodeModel();
   }
 
   @Override
-  protected int getNrNodeViews() {
+  public int getNrNodeViews() {
     return 0;
   }
 
   @Override
-  public NodeView<RunnerNodeModel> createNodeView(int viewIndex, RunnerNodeModel nodeModel) {
+  public NodeView<JSSimulatorNodeModel> createNodeView(int viewIndex,
+      JSSimulatorNodeModel nodeModel) {
+    return null;
+  }
+
+  @Override
+  protected NodeDialogPane createNodeDialogPane() {
     return null;
   }
 
   @Override
   protected boolean hasDialog() {
-    return true;
-  }
-
-  @Override
-  protected NodeDialogPane createNodeDialogPane() {
-    return new RunnerNodeDialog();
+    return false;
   }
 }

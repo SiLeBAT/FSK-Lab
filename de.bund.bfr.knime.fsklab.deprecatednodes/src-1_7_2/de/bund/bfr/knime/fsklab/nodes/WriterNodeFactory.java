@@ -21,33 +21,34 @@ package de.bund.bfr.knime.fsklab.nodes;
 import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeFactory;
 import org.knime.core.node.NodeView;
-import de.bund.bfr.knime.fsklab.nodes.v1_7_2.runner.RunnerNodeDialog;
-import de.bund.bfr.knime.fsklab.nodes.v1_7_2.runner.RunnerNodeModel;
+import de.bund.bfr.knime.fsklab.nodes.v1_7_2.writer.WriterNodeDialog;
+import de.bund.bfr.knime.fsklab.nodes.v1_7_2.writer.WriterNodeModel;
 
-public class RunnerNodeFactory extends NodeFactory<RunnerNodeModel> {
+public class WriterNodeFactory extends NodeFactory<WriterNodeModel> {
 
   @Override
-  public RunnerNodeModel createNodeModel() {
-    return new RunnerNodeModel();
+  public WriterNodeModel createNodeModel() {
+    return new WriterNodeModel();
   }
 
   @Override
-  protected int getNrNodeViews() {
+  public int getNrNodeViews() {
     return 0;
   }
 
   @Override
-  public NodeView<RunnerNodeModel> createNodeView(int viewIndex, RunnerNodeModel nodeModel) {
+  public NodeView<WriterNodeModel> createNodeView(final int viewIndex,
+      final WriterNodeModel nodeModel) {
     return null;
   }
 
   @Override
-  protected boolean hasDialog() {
+  public boolean hasDialog() {
     return true;
   }
 
   @Override
-  protected NodeDialogPane createNodeDialogPane() {
-    return new RunnerNodeDialog();
+  public NodeDialogPane createNodeDialogPane() {
+    return new WriterNodeDialog();
   }
 }

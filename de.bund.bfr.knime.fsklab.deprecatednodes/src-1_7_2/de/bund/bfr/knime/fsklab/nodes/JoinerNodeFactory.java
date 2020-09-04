@@ -22,9 +22,9 @@ import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeFactory;
 import org.knime.core.node.NodeView;
 import org.knime.core.node.wizard.WizardNodeFactoryExtension;
-import de.bund.bfr.knime.fsklab.nodes.joiner.JoinerNodeModel;
-import de.bund.bfr.knime.fsklab.nodes.joiner.JoinerViewRepresentation;
-import de.bund.bfr.knime.fsklab.nodes.joiner.JoinerViewValue;
+import de.bund.bfr.knime.fsklab.nodes.v1_7_2.joiner.JoinerNodeModel;
+import de.bund.bfr.knime.fsklab.nodes.v1_7_2.joiner.JoinerViewRepresentation;
+import de.bund.bfr.knime.fsklab.nodes.v1_7_2.joiner.JoinerViewValue;
 
 
 public class JoinerNodeFactory extends NodeFactory<JoinerNodeModel> implements

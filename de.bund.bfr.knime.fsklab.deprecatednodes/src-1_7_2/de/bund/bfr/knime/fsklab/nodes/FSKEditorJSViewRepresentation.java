@@ -16,7 +16,7 @@
  * Contributors: Department Biological Safety - BfR
  *************************************************************************************************
  */
-package de.bund.bfr.knime.fsklab.nodes.joiner;
+package de.bund.bfr.knime.fsklab.nodes;
 
 import java.util.Random;
 import org.knime.core.node.InvalidSettingsException;
@@ -29,8 +29,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 @JsonAutoDetect
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
-public
-final class JoinerViewRepresentation extends JSONViewContent {
+public final class FSKEditorJSViewRepresentation extends JSONViewContent {
 
   // no members to hash on
   public final int pseudoIdentifier = (new Random()).nextInt();

@@ -16,38 +16,23 @@
  * Contributors: Department Biological Safety - BfR
  *************************************************************************************************
  */
-package de.bund.bfr.knime.fsklab.nodes;
+package de.bund.bfr.knime.fsklab.nodes.v1_7_2.reader;
 
-import org.knime.core.node.NodeDialogPane;
-import org.knime.core.node.NodeFactory;
-import org.knime.core.node.NodeView;
-import de.bund.bfr.knime.fsklab.nodes.v1_7_2.runner.RunnerNodeDialog;
-import de.bund.bfr.knime.fsklab.nodes.v1_7_2.runner.RunnerNodeModel;
+import org.knime.core.node.InvalidSettingsException;
+import org.knime.core.node.NodeSettingsRO;
+import org.knime.core.node.NodeSettingsWO;
 
-public class RunnerNodeFactory extends NodeFactory<RunnerNodeModel> {
+class ReaderNodeSettings {
 
-  @Override
-  public RunnerNodeModel createNodeModel() {
-    return new RunnerNodeModel();
+  private static final String CFG_FILE = "filename";
+
+  String filePath = "";
+
+  void load(final NodeSettingsRO settings) throws InvalidSettingsException {
+    filePath = settings.getString(CFG_FILE);
   }
 
-  @Override
-  protected int getNrNodeViews() {
-    return 0;
-  }
-
-  @Override
-  public NodeView<RunnerNodeModel> createNodeView(int viewIndex, RunnerNodeModel nodeModel) {
-    return null;
-  }
-
-  @Override
-  protected boolean hasDialog() {
-    return true;
-  }
-
-  @Override
-  protected NodeDialogPane createNodeDialogPane() {
-    return new RunnerNodeDialog();
+  void save(final NodeSettingsWO settings) {
+    settings.addString(CFG_FILE, filePath);
   }
 }

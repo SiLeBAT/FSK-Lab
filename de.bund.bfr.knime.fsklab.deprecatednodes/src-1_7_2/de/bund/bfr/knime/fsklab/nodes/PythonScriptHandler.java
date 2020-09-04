@@ -11,8 +11,8 @@ import org.knime.python2.kernel.PythonKernelOptions;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskSimulation;
 import de.bund.bfr.knime.fsklab.nodes.plot.PythonPlotter;
-import de.bund.bfr.knime.fsklab.nodes.runner.RunnerNodeInternalSettings;
-import de.bund.bfr.knime.fsklab.nodes.runner.RunnerNodeSettings;
+import de.bund.bfr.knime.fsklab.nodes.v1_7_2.runner.RunnerNodeInternalSettings;
+import de.bund.bfr.knime.fsklab.nodes.v1_7_2.runner.RunnerNodeSettings;
 
 public class PythonScriptHandler extends ScriptHandler {
   String std_out = "";

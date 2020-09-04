@@ -16,40 +16,23 @@
  * Contributors: Department Biological Safety - BfR
  *************************************************************************************************
  */
-package de.bund.bfr.knime.fsklab.nodes.joiner;
+package de.bund.bfr.knime.fsklab.nodes.v1_7_2.writer;
 
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 
-class JoinerNodeSettings {
-    private static final String CFG_JOIN_SCRIPT = "JoinScript";    
-    private static final String CFG_MODEL_METADATA = "modelMetaData";
-   
-    private static final String CFG_MODEL_MATH1 = "modelMath1";
-    private static final String CFG_MODEL_MATH2 = "modelMath2";
+class WriterNodeSettings {
 
-    String modelMetaData;
-  
-    String modelMath1;
-    String modelMath2;
-    
-    /** Path to model script. */
-    public String joinScript = "";
+  private static final String CFG_FILE = "file";
 
-    void load(final NodeSettingsRO settings) throws InvalidSettingsException {
-      joinScript = settings.getString(CFG_JOIN_SCRIPT, "");
-      modelMetaData = settings.getString(CFG_MODEL_METADATA, "");
-      
-      modelMath1 = settings.getString(CFG_MODEL_MATH1, "");
-      modelMath2 = settings.getString(CFG_MODEL_MATH2, "");
-    }
+  String filePath = "";
 
-    void save(final NodeSettingsWO settings) {
-      settings.addString(CFG_JOIN_SCRIPT, joinScript);
-      settings.addString(CFG_MODEL_METADATA, modelMetaData);
-      
-      settings.addString(CFG_MODEL_MATH1, modelMath1);
-      settings.addString(CFG_MODEL_MATH2, modelMath2);
-    }
+  void load(final NodeSettingsRO settings) throws InvalidSettingsException {
+    filePath = settings.getString(CFG_FILE);
   }
+
+  void save(final NodeSettingsWO settings) {
+    settings.addString(CFG_FILE, filePath);
+  }
+}

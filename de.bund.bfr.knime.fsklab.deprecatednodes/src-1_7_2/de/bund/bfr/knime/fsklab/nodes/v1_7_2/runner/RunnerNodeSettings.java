@@ -16,7 +16,7 @@
  * Contributors: Department Biological Safety - BfR
  *************************************************************************************************
  */
-package de.bund.bfr.knime.fsklab.nodes.runner;
+package de.bund.bfr.knime.fsklab.nodes.v1_7_2.runner;
 
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
