@@ -2,6 +2,15 @@
     height: 100%;
 }
 
+.CodeMirror-gutters {
+    background-color: transparent;
+}
+
+.CodeMirror-linenumber {
+    /* font-weight: bold; */
+    color: #31708f;
+}
+
 #viewContent {
     padding: 5px;
 }

@@ -205,6 +205,8 @@
        <webDependency webResourceBundleID="bootstrap_3.3.6"></webDependency>
        <webDependency webResourceBundleID="bootstrap3_typeahead_4.0.2"></webDependency>
        <webDependency webResourceBundleID="datepicker"></webDependency>
+       <webDependency webResourceBundleID="RequireJS_2.3.3"></webDependency>
+       <webDependency webResourceBundleID="knimeserviceConditionalLoad_1.0"></webDependency>
     </webResourceBundle>
     
     <!-- JS and CSS code for Fsk Joiner node -->
@@ -396,12 +398,9 @@
       <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/react/react-dom.min.js" type="JAVASCRIPT" />      
     </webResourceBundle>
     
-    <webResourceBundle debug="false" name="codemirror" usesDefine="true" version="" webResourceBundleID="codemirror">    
-      <webResource relativePathSource="js-lib/codemirror/" relativePathTarget="codemirror"></webResource>
-	  <importResource relativePath="codemirror/codemirror.js" type="JAVASCRIPT" />
-	  <importResource relativePath="codemirror/codemirror.css" type="CSS" />
-	  <importResource relativePath="codemirror/r.js" type="JAVASCRIPT" />
-	  <importResource relativePath="codemirror/markdown.js" type="JAVASCRIPT" />
+    <webResourceBundle debug="false" name="codemirror" usesDefine="true" version="5.49.2" webResourceBundleID="codemirror">    
+      <webResource relativePathSource="js-lib/codemirror-5.49.2/" relativePathTarget="codemirror"></webResource>
+      <importResource relativePath="codemirror/lib/codemirror.css" type="CSS" />
     </webResourceBundle>
     
     <webResourceBundle debug="false" name="Bootstrap 3 Typeahead" usesDefine="false" version="4.0.2" webResourceBundleID="bootstrap3_typeahead_4.0.2">
