@@ -17,29 +17,11 @@ fskeditorjs = function () {
     });
   }
 
-  /** Temporary workaround for some metadata glitches. */
-  function metadataFix() {
-    // Ignore temporarily publication type
-    // TODO: publicationType takes the abbreviation instead of the full string
-    // used in the Reference dialog. Since KNIME runs getComponentValue twice,
-    // the value cannot be converted here. The 1st call to getComponentValue
-    // would get the abbreviation but the 2nd call would corrupt it. The HTML
-    // select should instead use the full string as label and the abreviation
-    // as value.
-    _metadata.generalInformation.reference.forEach(ref => delete ref.publicationType);
-
-    /* TODO: Ignore temporarily reference.
-    The reference property is of type Reference in the schema. Unfortunately,
-    nested dialogs are not supported in Bootstrap, so the type is changed
-    in the UI schema to text. Since the text type cannot be deserialized to
-    Reference, the values are discarded temporarily here.*/
-    _metadata.modelMath.parameter.forEach(param => delete param.reference);
-  }
-
   // Handler for generic model schema
   class GenericModel {
 
     constructor() {
+      this.dialogs = this._createDialogs();
       this.panels = this._createPanels();
       this.menus = this._createMenus();
     }
@@ -52,6 +34,15 @@ fskeditorjs = function () {
       _metadata.generalInformation.author = this.panels.author.data;
       _metadata.generalInformation.creator = this.panels.creator.data;
       _metadata.generalInformation.reference = this.panels.reference.data;
+
+      // Ignore temporarily publication type
+      // TODO: publicationType takes the abbreviation instead of the full string
+      // used in the Reference dialog. Since KNIME runs getComponentValue twice,
+      // the value cannot be converted here. The 1st call to getComponentValue
+      // would get the abbreviation but the 2nd call would corrupt it. The HTML
+      // select should instead use the full string as label and the abreviation
+      // as value.
+      _metadata.generalInformation.reference.forEach(ref => ref.publicationType = null);
 
       // Scope
       _metadata.scope = this.panels.scopeGeneral.data;
@@ -69,27 +60,45 @@ fskeditorjs = function () {
       // Model math
       _metadata.modelMath = this.panels.modelMath.data;
       _metadata.modelMath.parameter = this.panels.parameter.data;
-      _metadata.modelMath.parameter.forEach(param => delete param.reference);
-
       _metadata.modelMath.qualityMeasures = this.panels.qualityMeasures.data;
       _metadata.modelMath.modelEquation = this.panels.modelEquation.data;
       _metadata.modelMath.exposure = this.panels.exposure.data;
 
       _metadata.modelType = "GenericModel";
 
-      metadataFix(); 
-
       return _metadata;
     }
 
     // Validate this.panels and return boolean
     validate() {
-//      let isValid = true;
-//      if (!this.panels.generalInformation.validate()) isValid = false;
-//      if (!this.panels.modelCategory.validate()) isValid = false;
-//      if (!this.panels.scopeGeneral.validate()) isValid = false;
-//      if (!this.panels.study.validate()) isValid = false;
-      return true;
+      let isValid = true;
+      if (!this.panels.generalInformation.validate()) isValid = false;
+      if (!this.panels.modelCategory.validate()) isValid = false;
+      if (!this.panels.scopeGeneral.validate()) isValid = false;
+      if (!this.panels.study.validate()) isValid = false;
+      return isValid;
+    }
+
+    _createDialogs() {
+
+      let schema = schemas.genericModel;
+
+      return {
+        authorDialog: new Dialog("authorDialog", "Add dialog", schema.contact),
+        creatorDialog: new Dialog("creatorDialog", "Add creator", schema.contact),
+        referenceDialog: new Dialog("referenceDialog", "Add reference", schema.reference),
+        productDialog: new Dialog("productDialog", "Add product", schema.product),
+        hazardDialog: new Dialog("hazardDialog", "Add hazard", schema.hazard),
+        populationDialog: new Dialog("populationDialog", "Add population", schema.populationGroup),
+        studySampleDialog: new Dialog("studySampleDialog", "Add study sample", schema.studySample),
+        methodDialog: new Dialog("methodDialog", "Add method", schema.dietaryAssessmentMethod),
+        laboratoryDialog: new Dialog("laboratoryDialog", "Add laboratory", schema.laboratory),
+        assayDialog: new Dialog("assayDialog", "Add assay", schema.assay),
+        parameterDialog: new Dialog("parameterDialog", "Add parameter", schema.parameter),
+        measuresDialog: new Dialog("measuresDialog", "Add quality measures", schema.qualityMeasures),
+        equationDialog: new Dialog("equationDialog", "Add model equation", schema.modelEquation),
+        exposureDialog: new Dialog("exposureDialog", "Add exposure", schema.exposure)
+      };
     }
 
     _createPanels() {
@@ -99,27 +108,29 @@ fskeditorjs = function () {
       return {
         generalInformation: new FormPanel("General", schema.generalInformation, _metadata.generalInformation),
         modelCategory: new FormPanel("Model category", schema.modelCategory, _metadata.generalInformation.modelCategory),
-        author: new TablePanel("Author", schema.contact, _metadata.generalInformation.author),
-        creator: new TablePanel("Creator", schema.contact, _metadata.generalInformation.creator),
-        reference: new TablePanel("Reference", schema.reference, _metadata.generalInformation.reference),
+        author: new TablePanel("Author", this.dialogs.authorDialog, schema.contact, _metadata.generalInformation.author),
+        creator: new TablePanel("Creator", this.dialogs.creatorDialog, schema.contact, _metadata.generalInformation.creator),
+        reference: new TablePanel("Reference", this.dialogs.referenceDialog, schema.reference, _metadata.generalInformation.reference),
         scopeGeneral: new FormPanel("General", schema.scope, _metadata.scope),
-        product: new TablePanel("Product", schema.product, _metadata.scope.product),
-        hazard: new TablePanel("Hazard", schema.hazard, _metadata.scope.hazard),
-        population: new TablePanel("Population", schema.populationGroup,
+        product: new TablePanel("Product", this.dialogs.productDialog, schema.product, _metadata.scope.product),
+        hazard: new TablePanel("Hazard", this.dialogs.hazardDialog, schema.hazard, _metadata.scope.hazard),
+        population: new TablePanel("Population", this.dialogs.populationDialog, schema.populationGroup,
           _metadata.scope.populationGroup),
         study: new FormPanel("Study", schema.study, _metadata.dataBackground.study),
-        studySample: new TablePanel("Study sample", schema.studySample,
+        studySample: new TablePanel("Study sample", this.dialogs.studySampleDialog, schema.studySample,
           _metadata.dataBackground.studySample),
-        dietaryAssessmentMethod: new TablePanel("Dietary assessment method",
+        dietaryAssessmentMethod: new TablePanel("Dietary assessment method", this.dialogs.methodDialog,
           schema.dietaryAssessmentMethod, _metadata.dataBackground.dietaryAssessmentMethod),
-        laboratory: new TablePanel("Laboratory", schema.laboratory, _metadata.dataBackground.laboratory),
-        assay: new TablePanel("Assay", schema.assay, _metadata.dataBackground.assay),
+        laboratory: new TablePanel("Laboratory", this.dialogs.laboratoryDialog, schema.laboratory,
+          _metadata.dataBackground.laboratory),
+        assay: new TablePanel("Assay", this.dialogs.assayDialog, schema.assay, _metadata.dataBackground.assay),
         modelMath: new FormPanel("Model math", schema.modelMath, _metadata.modelMath),
-        parameter: new TablePanel("Parameter", schema.parameter, _metadata.modelMath.parameter),
-        qualityMeasures: new TablePanel("Quality measures", schema.qualityMeasures,
+        parameter: new TablePanel("Parameter", this.dialogs.parameterDialog, schema.parameter, _metadata.modelMath.parameter),
+        qualityMeasures: new TablePanel("Quality measures", this.dialogs.measuresDialog, schema.qualityMeasures,
           _metadata.modelMath.qualityMeasures),
-        modelEquation: new TablePanel("Model equation", schema.modelEquation, _metadata.modelMath.modelEquation),
-        exposure: new TablePanel("Exposure", schema.exposure, _metadata.modelMath.exposure)
+        modelEquation: new TablePanel("Model equation", this.dialogs.equationDialog, schema.modelEquation,
+          _metadata.modelMath.modelEquation),
+        exposure: new TablePanel("Exposure", this.dialogs.exposureDialog, schema.exposure, _metadata.modelMath.exposure)
       };
     }
 
@@ -150,6 +161,7 @@ fskeditorjs = function () {
   class DataModel {
 
     constructor() {
+      this.dialogs = this._createDialogs();
       this.panels = this._createPanels();
       this.menus = this._createMenus();
     }
@@ -171,6 +183,15 @@ fskeditorjs = function () {
       _metadata.generalInformation.creator = this.panels.creator.data;
       _metadata.generalInformation.reference = this.panels.reference.data;
 
+      // Ignore temporarily publication type
+      // TODO: publicationType takes the abbreviation instead of the full string
+      // used in the Reference dialog. Since KNIME runs getComponentValue twice,
+      // the value cannot be converted here. The 1st call to getComponentValue
+      // would get the abbreviation but the 2nd call would corrupt it. The HTML
+      // select should instead use the full string as label and the abreviation
+      // as value.
+      _metadata.generalInformation.reference.forEach(ref => ref.publicationType = null);
+
       // Scope
       _metadata.scope = this.panels.scopeGeneral.data;
       _metadata.scope.product = this.panels.product.data;
@@ -189,9 +210,26 @@ fskeditorjs = function () {
 
       _metadata.modelType = "DataModel";
 
-      metadataFix();
-
       return _metadata;
+    }
+
+    _createDialogs() {
+
+      let schema = schemas.dataModel;
+
+      return {
+        authorDialog: new Dialog("authorDialog", "Add dialog", schema.contact),
+        creatorDialog: new Dialog("creatorDialog", "Add creator", schema.contact),
+        referenceDialog: new Dialog("referenceDialog", "Add reference", schema.reference),
+        productDialog: new Dialog("productDialog", "Add product", schema.product),
+        hazardDialog: new Dialog("hazardDialog", "Add hazard", schema.hazard),
+        populationDialog: new Dialog("populationDialog", "Add population", schema.populationGroup),
+        studySampleDialog: new Dialog("studySampleDialog", "Add study sample", schema.studySample),
+        methodDialog: new Dialog("methodDialog", "Add method", schema.dietaryAssessmentMethod),
+        laboratoryDialog: new Dialog("laboratoryDialog", "Add laboratory", schema.laboratory),
+        assayDialog: new Dialog("assayDialog", "Add assay", schema.assay),
+        parameterDialog: new Dialog("parameterDialog", "Add parameter", schema.parameter),
+      };
     }
 
     _createPanels() {
@@ -200,20 +238,24 @@ fskeditorjs = function () {
 
       return {
         generalInformation: new FormPanel("General", schema.generalInformation, _metadata.generalInformation),
-        author: new TablePanel("Author", schema.contact, _metadata.generalInformation.author),
-        creator: new TablePanel("Creator", schema.contact, _metadata.generalInformation.creator),
-        reference: new TablePanel("Reference", schema.reference, _metadata.generalInformation.reference),
+        author: new TablePanel("Author", this.dialogs.authorDialog, schema.contact, _metadata.generalInformation.author),
+        creator: new TablePanel("Creator", this.dialogs.creatorDialog, schema.contact, _metadata.generalInformation.creator),
+        reference: new TablePanel("Reference", this.dialogs.referenceDialog, schema.reference,
+          _metadata.generalInformation.reference),
         scopeGeneral: new FormPanel("General", schema.scope, _metadata.scope),
-        product: new TablePanel("Product", schema.product, _metadata.scope.product),
-        hazard: new TablePanel("Hazard", schema.hazard, _metadata.scope.hazard),
-        population: new TablePanel("Population", schema.populationGroup, _metadata.scope.populationGroup),
+        product: new TablePanel("Product", this.dialogs.productDialog, schema.product, _metadata.scope.product),
+        hazard: new TablePanel("Hazard", this.dialogs.hazardDialog, schema.hazard, _metadata.scope.hazard),
+        population: new TablePanel("Population", this.dialogs.populationDialog, schema.populationGroup,
+          _metadata.scope.populationGroup),
         study: new FormPanel("Study", schema.study, _metadata.dataBackground.study),
-        studySample: new TablePanel("Study sample", schema.studySample, _metadata.dataBackground.studySample),
-        dietaryAssessmentMethod: new TablePanel("Dietary assessment method",
+        studySample: new TablePanel("Study sample", this.dialogs.studySampleDialog, schema.studySample,
+          _metadata.dataBackground.studySample),
+        dietaryAssessmentMethod: new TablePanel("Dietary assessment method", this.dialogs.methodDialog,
           schema.dietaryAssessmentMethod, _metadata.dataBackground.dietaryAssessmentMethod),
-        laboratory: new TablePanel("Laboratory", schema.laboratory, _metadata.dataBackground.laboratory),
-        assay: new TablePanel("Assay", schema.assay, _metadata.dataBackground.assay),
-        parameter: new TablePanel("Parameter", schema.parameter, _metadata.modelMath.parameter),
+        laboratory: new TablePanel("Laboratory", this.dialogs.laboratoryDialog, schema.laboratory,
+          _metadata.dataBackground.laboratory),
+        assay: new TablePanel("Assay", this.dialogs.assayDialog, schema.assay, _metadata.dataBackground.assay),
+        parameter: new TablePanel("Parameter", this.dialogs.parameterDialog, schema.parameter, _metadata.modelMath.parameter),
       };
     }
 
@@ -239,10 +281,12 @@ fskeditorjs = function () {
   class PredictiveModel {
 
     constructor() {
+      this.dialogs = this._createDialogs();
       this.panels = this._createPanels();
       this.menus = this._createMenus();
     }
 
+    // TODO: update get metaData
     get metaData() {
 
       // generalInformation
@@ -251,6 +295,15 @@ fskeditorjs = function () {
       _metadata.generalInformation.author = this.panels.author.data;
       _metadata.generalInformation.creator = this.panels.creator.data;
       _metadata.generalInformation.reference = this.panels.reference.data;
+
+      // Ignore temporarily publication type
+      // TODO: publicationType takes the abbreviation instead of the full string
+      // used in the Reference dialog. Since KNIME runs getComponentValue twice,
+      // the value cannot be converted here. The 1st call to getComponentValue
+      // would get the abbreviation but the 2nd call would corrupt it. The HTML
+      // select should instead use the full string as label and the abreviation
+      // as value.
+      _metadata.generalInformation.reference.forEach(ref => ref.publicationType = null);
 
       // Scope
       _metadata.scope = this.panels.scopeGeneral.data;
@@ -274,8 +327,6 @@ fskeditorjs = function () {
 
       _metadata.modelType = "PredictiveModel";
 
-      metadataFix();
-
       return _metadata;
     }
 
@@ -289,24 +340,43 @@ fskeditorjs = function () {
       return isValid;
     }
 
+    _createDialogs() {
+
+      let schema = schemas.predictiveModel;
+
+      return {
+        authorDialog: new Dialog("authorDialog", "Add dialog", schema.contact),
+        creatorDialog: new Dialog("creatorDialog", "Add creator", schema.contact),
+        referenceDialog: new Dialog("referenceDialog", "Add reference", schema.reference),
+        productDialog: new Dialog("productDialog", "Add product", schema.product),
+        hazardDialog: new Dialog("hazardDialog", "Add hazard", schema.hazard),
+        studySampleDialog: new Dialog("studySampleDialog", "Add study sample", schema.studySample),
+        laboratoryDialog: new Dialog("laboratoryDialog", "Add laboratory", schema.laboratory),
+        assayDialog: new Dialog("assayDialog", "Add assay", schema.assay),
+        parameterDialog: new Dialog("parameterDialog", "Add parameter", schema.parameter),
+      };
+    }
+
     _createPanels() {
 
       let schema = schemas.predictiveModel;
 
       return {
         generalInformation: new FormPanel("General", schema.generalInformation, _metadata.generalInformation),
-        author: new TablePanel("Author", schema.contact, _metadata.generalInformation.author),
-        creator: new TablePanel("Creator", schema.contact, _metadata.generalInformation.creator),
-        reference: new TablePanel("Reference", schema.reference, _metadata.generalInformation.reference),
+        author: new TablePanel("Author", this.dialogs.authorDialog, schema.contact, _metadata.generalInformation.author),
+        creator: new TablePanel("Creator", this.dialogs.creatorDialog, schema.contact, _metadata.generalInformation.creator),
+        reference: new TablePanel("Reference", this.dialogs.referenceDialog, schema.reference, _metadata.generalInformation.reference),
         scopeGeneral: new FormPanel("General", schema.scope, _metadata.scope),
-        product: new TablePanel("Product", schema.product, _metadata.scope.product),
-        hazard: new TablePanel("Hazard", schema.hazard, _metadata.scope.hazard),
+        product: new TablePanel("Product", this.dialogs.productDialog, schema.product, _metadata.scope.product),
+        hazard: new TablePanel("Hazard", this.dialogs.hazardDialog, schema.hazard, _metadata.scope.hazard),
         study: new FormPanel("Study", schema.study, _metadata.dataBackground.study),
-        studySample: new TablePanel("Study sample", schema.studySample, _metadata.dataBackground.studySample),
-        laboratory: new TablePanel("Laboratory", schema.laboratory, _metadata.dataBackground.laboratory),
-        assay: new TablePanel("Assay", schema.assay, _metadata.dataBackground.assay),
+        studySample: new TablePanel("Study sample", this.dialogs.studySampleDialog, schema.studySample,
+          _metadata.dataBackground.studySample),
+        laboratory: new TablePanel("Laboratory", this.dialogs.laboratoryDialog, schema.laboratory,
+          _metadata.dataBackground.laboratory),
+        assay: new TablePanel("Assay", this.dialogs.assayDialog, schema.assay, _metadata.dataBackground.assay),
         modelMath: new FormPanel("Model math", schema.modelMath, _metadata.modelMath),
-        parameter: new TablePanel("Parameter", schema.parameter, _metadata.modelMath.parameter),
+        parameter: new TablePanel("Parameter", this.dialogs.parameterDialog, schema.parameter, _metadata.modelMath.parameter),
       };
     }
 
@@ -330,6 +400,7 @@ fskeditorjs = function () {
   class OtherModel {
 
     constructor() {
+      this.dialogs = this._createDialogs();
       this.panels = this._createPanels();
       this.menus = this._createMenus();
     }
@@ -342,6 +413,15 @@ fskeditorjs = function () {
       _metadata.generalInformation.author = this.panels.author.data;
       _metadata.generalInformation.creator = this.panels.creator.data;
       _metadata.generalInformation.reference = this.panels.reference.data;
+
+      // Ignore temporarily publication type
+      // TODO: publicationType takes the abbreviation instead of the full string
+      // used in the Reference dialog. Since KNIME runs getComponentValue twice,
+      // the value cannot be converted here. The 1st call to getComponentValue
+      // would get the abbreviation but the 2nd call would corrupt it. The HTML
+      // select should instead use the full string as label and the abreviation
+      // as value.
+      _metadata.generalInformation.reference.forEach(ref => ref.publicationType = null);
 
       // scope
       _metadata.scope = this.panels.scopeGeneral.data;
@@ -363,8 +443,6 @@ fskeditorjs = function () {
 
       _metadata.modelType = "OtherModel";
 
-      metadataFix();
-
       return _metadata;
     }
 
@@ -378,6 +456,26 @@ fskeditorjs = function () {
       return isValid;
     }
 
+    _createDialogs() {
+
+      let schema = schemas.otherModel;
+
+      return {
+        authorDialog: new Dialog("authorDialog", "Add dialog", schema.contact),
+        creatorDialog: new Dialog("creatorDialog", "Add creator", schema.contact),
+        referenceDialog: new Dialog("referenceDialog", "Add reference", schema.reference),
+        productDialog: new Dialog("productDialog", "Add product", schema.product),
+        hazardDialog: new Dialog("hazardDialog", "Add hazard", schema.hazard),
+        populationDialog: new Dialog("populationDialog", "Add population", schema.populationGroup),
+        studySampleDialog: new Dialog("studySampleDialog", "Add study sample", schema.studySample),
+        laboratoryDialog: new Dialog("laboratoryDialog", "Add laboratory", schema.laboratory),
+        assayDialog: new Dialog("assayDialog", "Add assay", schema.assay),
+        parameterDialog: new Dialog("parameterDialog", "Add parameter", schema.parameter),
+        measuresDialog: new Dialog("measuresDialog", "Add quality measures", schema.qualityMeasures),
+        equationDialog: new Dialog("equationDialog", "Add model equation", schema.modelEquation),
+      };
+    }
+
     _createPanels() {
 
       let schema = schemas.otherModel;
@@ -385,21 +483,26 @@ fskeditorjs = function () {
       return {
         generalInformation: new FormPanel("General", schema.generalInformation, _metadata.generalInformation),
         modelCategory: new FormPanel("Model category", schema.modelCategory, _metadata.generalInformation.modelCategory),
-        author: new TablePanel("Author", schema.contact, _metadata.generalInformation.author),
-        creator: new TablePanel("Creator", schema.contact, _metadata.generalInformation.creator),
-        reference: new TablePanel("Reference", schema.reference, _metadata.generalInformation.reference),
+        author: new TablePanel("Author", this.dialogs.authorDialog, schema.contact, _metadata.generalInformation.author),
+        creator: new TablePanel("Creator", this.dialogs.creatorDialog, schema.contact, _metadata.generalInformation.creator),
+        reference: new TablePanel("Reference", this.dialogs.referenceDialog, schema.reference, _metadata.generalInformation.reference),
         scopeGeneral: new FormPanel("General", schema.scope, _metadata.scope),
-        product: new TablePanel("Product", schema.product, _metadata.scope.product),
-        hazard: new TablePanel("Hazard", schema.hazard, _metadata.scope.hazard),
-        population: new TablePanel("Population", schema.populationGroup, _metadata.scope.populationGroup),
+        product: new TablePanel("Product", this.dialogs.productDialog, schema.product, _metadata.scope.product),
+        hazard: new TablePanel("Hazard", this.dialogs.hazardDialog, schema.hazard, _metadata.scope.hazard),
+        population: new TablePanel("Population", this.dialogs.populationDialog, schema.populationGroup,
+          _metadata.scope.populationGroup),
         study: new FormPanel("Study", schema.study, _metadata.dataBackground.study),
-        studySample: new TablePanel("Study sample", schema.studySample, _metadata.dataBackground.studySample),
-        laboratory: new TablePanel("Laboratory", schema.laboratory, _metadata.dataBackground.laboratory),
-        assay: new TablePanel("Assay", schema.assay, _metadata.dataBackground.assay),
+        studySample: new TablePanel("Study sample", this.dialogs.studySampleDialog, schema.studySample,
+          _metadata.dataBackground.studySample),
+        laboratory: new TablePanel("Laboratory", this.dialogs.laboratoryDialog, schema.laboratory,
+          _metadata.dataBackground.laboratory),
+        assay: new TablePanel("Assay", this.dialogs.assayDialog, schema.assay, _metadata.dataBackground.assay),
         modelMath: new FormPanel("Model math", schema.modelMath, _metadata.modelMath),
-        parameter: new TablePanel("Parameter", schema.parameter, _metadata.modelMath.parameter),
-        qualityMeasures: new TablePanel("Quality measures", schema.qualityMeasures, _metadata.modelMath.qualityMeasures),
-        modelEquation: new TablePanel("Model equation", schema.modelEquation, _metadata.modelMath.modelEquation)
+        parameter: new TablePanel("Parameter", this.dialogs.parameterDialog, schema.parameter, _metadata.modelMath.parameter),
+        qualityMeasures: new TablePanel("Quality measures", this.dialogs.measuresDialog, schema.qualityMeasures,
+          _metadata.modelMath.qualityMeasures),
+        modelEquation: new TablePanel("Model equation", this.dialogs.equationDialog, schema.modelEquation,
+          _metadata.modelMath.modelEquation)
       };
     }
 
@@ -429,6 +532,7 @@ fskeditorjs = function () {
   class DoseResponseModel {
 
     constructor() {
+      this.dialogs = this._createDialogs();
       this.panels = this._createPanels();
       this.menus = this._createMenus();
     }
@@ -441,6 +545,15 @@ fskeditorjs = function () {
       _metadata.generalInformation.author = this.panels.author.data;
       _metadata.generalInformation.creator = this.panels.creator.data;
       _metadata.generalInformation.reference = this.panels.reference.data;
+
+      // Ignore temporarily publication type
+      // TODO: publicationType takes the abbreviation instead of the full string
+      // used in the Reference dialog. Since KNIME runs getComponentValue twice,
+      // the value cannot be converted here. The 1st call to getComponentValue
+      // would get the abbreviation but the 2nd call would corrupt it. The HTML
+      // select should instead use the full string as label and the abreviation
+      // as value.
+      _metadata.generalInformation.reference.forEach(ref => ref.publicationType = null);
 
       // scope
       _metadata.scope = this.panels.scopeGeneral.data;
@@ -462,8 +575,6 @@ fskeditorjs = function () {
 
       _metadata.modelType = "DoseResponseModel";
 
-      metadataFix();
-
       return _metadata;
     }
 
@@ -476,27 +587,50 @@ fskeditorjs = function () {
       return isValid;
     }
 
+    _createDialogs() {
+      let schema = schemas.doseResponseModel;
+
+      return {
+        authorDialog: new Dialog("authorDialog", "Add dialog", schema.contact),
+        creatorDialog: new Dialog("creatorDialog", "Add creator", schema.contact),
+        referenceDialog: new Dialog("referenceDialog", "Add reference", schema.reference),
+        hazardDialog: new Dialog("hazardDialog", "Add hazard", schema.hazard),
+        populationDialog: new Dialog("populationDialog", "Add population", schema.populationGroup),
+        studySampleDialog: new Dialog("studySampleDialog", "Add study sample", schema.studySample),
+        laboratoryDialog: new Dialog("laboratoryDialog", "Add laboratory", schema.laboratory),
+        assayDialog: new Dialog("assayDialog", "Add assay", schema.assay),
+        parameterDialog: new Dialog("parameterDialog", "Add parameter", schema.parameter),
+        measuresDialog: new Dialog("measuresDialog", "Add quality measures", schema.qualityMeasures),
+        equationDialog: new Dialog("equationDialog", "Add model equation", schema.modelEquation),
+        exposureDialog: new Dialog("exposureDialog", "Add exposure", schema.exposure)
+      };
+    }
+
     _createPanels() {
       let schema = schemas.doseResponseModel;
 
       return {
         generalInformation: new FormPanel("General", schema.generalInformation, _metadata.generalInformation),
         modelCategory: new FormPanel("Model category", schema.modelCategory, _metadata.generalInformation.modelCategory),
-        author: new TablePanel("Author", schema.contact, _metadata.generalInformation.author),
-        creator: new TablePanel("Creator", schema.contact, _metadata.generalInformation.creator),
-        reference: new TablePanel("Reference", schema.reference, _metadata.generalInformation.reference),
+        author: new TablePanel("Author", this.dialogs.authorDialog, schema.contact, _metadata.generalInformation.author),
+        creator: new TablePanel("Creator", this.dialogs.creatorDialog, schema.contact, _metadata.generalInformation.creator),
+        reference: new TablePanel("Reference", this.dialogs.referenceDialog, schema.reference, _metadata.generalInformation.reference),
         scopeGeneral: new FormPanel("General", schema.scope, _metadata.scope),
-        hazard: new TablePanel("Hazard", schema.hazard, _metadata.scope.hazard),
-        population: new TablePanel("Population", schema.populationGroup, _metadata.scope.populationGroup),
+        hazard: new TablePanel("Hazard", this.dialogs.hazardDialog, schema.hazard, _metadata.scope.hazard),
+        population: new TablePanel("Population", this.dialogs.populationDialog, schema.populationGroup,
+          _metadata.scope.populationGroup),
         study: new FormPanel("Study", schema.study, _metadata.dataBackground.study),
-        studySample: new TablePanel("Study sample", schema.studySample, _metadata.dataBackground.studySample),
-        laboratory: new TablePanel("Laboratory", schema.laboratory, _metadata.dataBackground.laboratory),
-        assay: new TablePanel("Assay", schema.assay, _metadata.dataBackground.assay),
+        studySample: new TablePanel("Study sample", this.dialogs.studySampleDialog, schema.studySample,
+          _metadata.dataBackground.studySample),
+        laboratory: new TablePanel("Laboratory", this.dialogs.laboratoryDialog, schema.laboratory,
+          _metadata.dataBackground.laboratory),
+        assay: new TablePanel("Assay", this.dialogs.assayDialog, schema.assay, _metadata.dataBackground.assay),
         modelMath: new FormPanel("Model math", schema.modelMath, _metadata.modelMath),
-        parameter: new TablePanel("Parameter", schema.parameter, _metadata.modelMath.parameter),
-        qualityMeasures: new TablePanel("Quality measures", schema.qualityMeasures,
+        parameter: new TablePanel("Parameter", this.dialogs.parameterDialog, schema.parameter, _metadata.modelMath.parameter),
+        qualityMeasures: new TablePanel("Quality measures", this.dialogs.measuresDialog, schema.qualityMeasures,
           _metadata.modelMath.qualityMeasures),
-        modelEquation: new TablePanel("Model equation", schema.modelEquation, _metadata.modelMath.modelEquation),
+        modelEquation: new TablePanel("Model equation", this.dialogs.equationDialog, schema.modelEquation,
+          _metadata.modelMath.modelEquation),
         exposure: new FormPanel("Exposure", schema.exposure, _metadata.modelMath.exposure)
       };
     }
@@ -526,6 +660,7 @@ fskeditorjs = function () {
   class ToxicologicalModel {
 
     constructor() {
+      this.dialogs = this._createDialogs();
       this.panels = this._createPanels();
       this.menus = this._createMenus();
     }
@@ -538,6 +673,15 @@ fskeditorjs = function () {
       _metadata.generalInformation.author = this.panels.author.data;
       _metadata.generalInformation.creator = this.panels.creator.data;
       _metadata.generalInformation.reference = this.panels.reference.data;
+
+      // Ignore temporarily publication type
+      // TODO: publicationType takes the abbreviation instead of the full string
+      // used in the Reference dialog. Since KNIME runs getComponentValue twice,
+      // the value cannot be converted here. The 1st call to getComponentValue
+      // would get the abbreviation but the 2nd call would corrupt it. The HTML
+      // select should instead use the full string as label and the abreviation
+      // as value.
+      _metadata.generalInformation.reference.forEach(ref => ref.publicationType = null);
 
       // Scope
       _metadata.scope = this.panels.scopeGeneral.data;
@@ -560,8 +704,6 @@ fskeditorjs = function () {
 
       _metadata.modelType = "ToxicologicalModel";
 
-      metadataFix();
-
       return _metadata;
     }
 
@@ -575,6 +717,27 @@ fskeditorjs = function () {
       return isValid;
     }
 
+    _createDialogs() {
+
+      let schema = schemas.toxicologicalModel;
+
+      return {
+        authorDialog: new Dialog("authorDialog", "Add dialog", schema.contact),
+        creatorDialog: new Dialog("creatorDialog", "Add creator", schema.contact),
+        referenceDialog: new Dialog("referenceDialog", "Add reference", schema.reference),
+        hazardDialog: new Dialog("hazardDialog", "Add hazard", schema.hazard),
+        populationDialog: new Dialog("populationDialog", "Add population", schema.populationGroup),
+        studySampleDialog: new Dialog("studySampleDialog", "Add study sample", schema.studySample),
+        methodDialog: new Dialog("methodDialog", "Add method", schema.dietaryAssessmentMethod),
+        laboratoryDialog: new Dialog("laboratoryDialog", "Add laboratory", schema.laboratory),
+        assayDialog: new Dialog("assayDialog", "Add assay", schema.assay),
+        parameterDialog: new Dialog("parameterDialog", "Add parameter", schema.parameter),
+        measuresDialog: new Dialog("measuresDialog", "Add quality measures", schema.qualityMeasures),
+        equationDialog: new Dialog("equationDialog", "Add model equation", schema.modelEquation),
+        exposureDialog: new Dialog("exposureDialog", "Add exposure", schema.exposure)
+      };
+    }
+
     _createPanels() {
 
       let schema = schemas.toxicologicalModel;
@@ -582,22 +745,26 @@ fskeditorjs = function () {
       return {
         generalInformation: new FormPanel("General", schema.generalInformation, _metadata.generalInformation),
         modelCategory: new FormPanel("Model category", schema.modelCategory, _metadata.generalInformation.modelCategory),
-        author: new TablePanel("Author", schema.contact, _metadata.generalInformation.author),
-        creator: new TablePanel("Creator", schema.contact, _metadata.generalInformation.creator),
-        reference: new TablePanel("Reference", schema.reference, _metadata.generalInformation.reference),
+        author: new TablePanel("Author", this.dialogs.authorDialog, schema.contact, _metadata.generalInformation.author),
+        creator: new TablePanel("Creator", this.dialogs.creatorDialog, schema.contact, _metadata.generalInformation.creator),
+        reference: new TablePanel("Reference", this.dialogs.referenceDialog, schema.reference, _metadata.generalInformation.reference),
         scopeGeneral: new FormPanel("General", schema.scope, _metadata.scope),
-        hazard: new TablePanel("Hazard", schema.hazard, _metadata.scope.hazard),
-        population: new TablePanel("Population", schema.populationGroup, _metadata.scope.populationGroup),
+        hazard: new TablePanel("Hazard", this.dialogs.hazardDialog, schema.hazard, _metadata.scope.hazard),
+        population: new TablePanel("Population", this.dialogs.populationDialog, schema.populationGroup,
+          _metadata.scope.populationGroup),
         study: new FormPanel("Study", schema.study, _metadata.dataBackground.study),
-        studySample: new TablePanel("Study sample", schema.studySample, _metadata.dataBackground.studySample),
-        laboratory: new TablePanel("Laboratory", schema.laboratory, _metadata.dataBackground.laboratory),
-        assay: new TablePanel("Assay", schema.assay, _metadata.dataBackground.assay),
+        studySample: new TablePanel("Study sample", this.dialogs.studySampleDialog, schema.studySample,
+          _metadata.dataBackground.studySample),
+        laboratory: new TablePanel("Laboratory", this.dialogs.laboratoryDialog, schema.laboratory,
+          _metadata.dataBackground.laboratory),
+        assay: new TablePanel("Assay", this.dialogs.assayDialog, schema.assay, _metadata.dataBackground.assay),
         modelMath: new FormPanel("Model math", schema.modelMath, _metadata.modelMath),
-        parameter: new TablePanel("Parameter", schema.parameter, _metadata.modelMath.parameter),
-        qualityMeasures: new TablePanel("Quality measures", schema.qualityMeasures,
+        parameter: new TablePanel("Parameter", this.dialogs.parameterDialog, schema.parameter, _metadata.modelMath.parameter),
+        qualityMeasures: new TablePanel("Quality measures", this.dialogs.measuresDialog, schema.qualityMeasures,
           _metadata.modelMath.qualityMeasures),
-        modelEquation: new TablePanel("Model equation", schema.modelEquation, _metadata.modelMath.modelEquation),
-        exposure: new TablePanel("Exposure", schema.exposure, _metadata.modelMath.exposure)
+        modelEquation: new TablePanel("Model equation", this.dialogs.equationDialog, schema.modelEquation,
+          _metadata.modelMath.modelEquation),
+        exposure: new TablePanel("Exposure", this.dialogs.exposureDialog, schema.exposure, _metadata.modelMath.exposure)
       };
     }
 
@@ -626,6 +793,7 @@ fskeditorjs = function () {
   class ExposureModel {
 
     constructor() {
+      this.dialogs = this._createDialogs();
       this.panels = this._createPanels();
       this.menus = this._createMenus();
     }
@@ -638,6 +806,15 @@ fskeditorjs = function () {
       _metadata.generalInformation.author = this.panels.author.data;
       _metadata.generalInformation.creator = this.panels.creator.data;
       _metadata.generalInformation.reference = this.panels.reference.data;
+
+      // Ignore temporarily publication type
+      // TODO: publicationType takes the abbreviation instead of the full string
+      // used in the Reference dialog. Since KNIME runs getComponentValue twice,
+      // the value cannot be converted here. The 1st call to getComponentValue
+      // would get the abbreviation but the 2nd call would corrupt it. The HTML
+      // select should instead use the full string as label and the abreviation
+      // as value.
+      _metadata.generalInformation.reference.forEach(ref => ref.publicationType = null);
 
       // scope
       _metadata.scope = this.panels.scopeGeneral.data;
@@ -661,8 +838,6 @@ fskeditorjs = function () {
 
       _metadata.modelType = "ExposureModel";
 
-      metadataFix();
-
       return _metadata;
     }
 
@@ -676,6 +851,28 @@ fskeditorjs = function () {
       return isValid;
     }
 
+    _createDialogs() {
+
+      let schema = schemas.exposureModel;
+
+      return {
+        authorDialog: new Dialog("authorDialog", "Add dialog", schema.contact),
+        creatorDialog: new Dialog("creatorDialog", "Add creator", schema.contact),
+        referenceDialog: new Dialog("referenceDialog", "Add reference", schema.reference),
+        productDialog: new Dialog("productDialog", "Add product", schema.product),
+        hazardDialog: new Dialog("hazardDialog", "Add hazard", schema.hazard),
+        populationDialog: new Dialog("populationDialog", "Add population", schema.populationGroup),
+        studySampleDialog: new Dialog("studySampleDialog", "Add study sample", schema.studySample),
+        methodDialog: new Dialog("methodDialog", "Add method", schema.dietaryAssessmentMethod),
+        laboratoryDialog: new Dialog("laboratoryDialog", "Add laboratory", schema.laboratory),
+        assayDialog: new Dialog("assayDialog", "Add assay", schema.assay),
+        parameterDialog: new Dialog("parameterDialog", "Add parameter", schema.parameter),
+        measuresDialog: new Dialog("measuresDialog", "Add quality measures", schema.qualityMeasures),
+        equationDialog: new Dialog("equationDialog", "Add model equation", schema.modelEquation),
+        exposureDialog: new Dialog("exposureDialog", "Add exposure", schema.exposure)
+      };
+    }
+
     _createPanels() {
 
       let schema = schemas.exposureModel;
@@ -683,24 +880,29 @@ fskeditorjs = function () {
       return {
         generalInformation: new FormPanel("General", schema.generalInformation, _metadata.generalInformation),
         modelCategory: new FormPanel("Model category", schema.modelCategory, _metadata.generalInformation.modelCategory),
-        author: new TablePanel("Author", schema.contact, _metadata.generalInformation.author),
-        creator: new TablePanel("Creator", schema.contact, _metadata.generalInformation.creator),
-        reference: new TablePanel("Reference", schema.reference, _metadata.generalInformation.reference),
+        author: new TablePanel("Author", this.dialogs.authorDialog, schema.contact, _metadata.generalInformation.author),
+        creator: new TablePanel("Creator", this.dialogs.creatorDialog, schema.contact, _metadata.generalInformation.creator),
+        reference: new TablePanel("Reference", this.dialogs.referenceDialog, schema.reference, _metadata.generalInformation.reference),
         scopeGeneral: new FormPanel("General", schema.scope, _metadata.scope),
-        product: new TablePanel("Product", schema.product, _metadata.scope.product),
-        hazard: new TablePanel("Hazard", schema.hazard, _metadata.scope.hazard),
-        population: new TablePanel("Population", schema.populationGroup, _metadata.scope.populationGroup),
+        product: new TablePanel("Product", this.dialogs.productDialog, schema.product, _metadata.scope.product),
+        hazard: new TablePanel("Hazard", this.dialogs.hazardDialog, schema.hazard, _metadata.scope.hazard),
+        population: new TablePanel("Population", this.dialogs.populationDialog, schema.populationGroup,
+          _metadata.scope.populationGroup),
         study: new FormPanel("Study", schema.study, _metadata.dataBackground.study),
-        studySample: new TablePanel("Study sample", schema.studySample, _metadata.dataBackground.studySample),
-        dietaryAssessmentMethod: new TablePanel("Dietary assessment method",
+        studySample: new TablePanel("Study sample", this.dialogs.studySampleDialog, schema.studySample,
+          _metadata.dataBackground.studySample),
+        dietaryAssessmentMethod: new TablePanel("Dietary assessment method", this.dialogs.methodDialog,
           schema.dietaryAssessmentMethod, _metadata.dataBackground.dietaryAssessmentMethod),
-        laboratory: new TablePanel("Laboratory", schema.laboratory, _metadata.dataBackground.laboratory),
-        assay: new TablePanel("Assay", schema.assay, _metadata.dataBackground.assay),
+        laboratory: new TablePanel("Laboratory", this.dialogs.laboratoryDialog, schema.laboratory,
+          _metadata.dataBackground.laboratory),
+        assay: new TablePanel("Assay", this.dialogs.assayDialog, schema.assay, _metadata.dataBackground.assay),
         modelMath: new FormPanel("Model math", schema.modelMath, _metadata.modelMath),
-        parameter: new TablePanel("Parameter", schema.parameter, _metadata.modelMath.parameter),
-        qualityMeasures: new TablePanel("Quality measures", schema.qualityMeasures, _metadata.modelMath.qualityMeasures),
-        modelEquation: new TablePanel("Model equation", schema.modelEquation, _metadata.modelMath.modelEquation),
-        exposure: new TablePanel("Exposure", schema.exposure, _metadata.modelMath.exposure)
+        parameter: new TablePanel("Parameter", this.dialogs.parameterDialog, schema.parameter, _metadata.modelMath.parameter),
+        qualityMeasures: new TablePanel("Quality measures", this.dialogs.measuresDialog, schema.qualityMeasures,
+          _metadata.modelMath.qualityMeasures),
+        modelEquation: new TablePanel("Model equation", this.dialogs.equationDialog, schema.modelEquation,
+          _metadata.modelMath.modelEquation),
+        exposure: new TablePanel("Exposure", this.dialogs.exposureDialog, schema.exposure, _metadata.modelMath.exposure)
       };
     }
 
@@ -731,10 +933,12 @@ fskeditorjs = function () {
   class ProcessModel {
 
     constructor() {
+      this.dialogs = this._createDialogs();
       this.panels = this._createPanels();
       this.menus = this._createMenus();
     }
 
+    // TODO: update get metaData
     get metaData() {
 
       // generalInformation
@@ -743,6 +947,15 @@ fskeditorjs = function () {
       _metadata.generalInformation.author = this.panels.author.data;
       _metadata.generalInformation.creator = this.panels.creator.data;
       _metadata.generalInformation.reference = this.panels.reference.data;
+
+      // Ignore temporarily publication type
+      // TODO: publicationType takes the abbreviation instead of the full string
+      // used in the Reference dialog. Since KNIME runs getComponentValue twice,
+      // the value cannot be converted here. The 1st call to getComponentValue
+      // would get the abbreviation but the 2nd call would corrupt it. The HTML
+      // select should instead use the full string as label and the abreviation
+      // as value.
+      _metadata.generalInformation.reference.forEach(ref => ref.publicationType = null);
 
       // Scope
       _metadata.scope = this.panels.scopeGeneral.data;
@@ -763,8 +976,6 @@ fskeditorjs = function () {
 
       _metadata.modelType = "ProcessModel";
 
-      metadataFix();
-
       return _metadata;
     }
 
@@ -778,6 +989,25 @@ fskeditorjs = function () {
       return isValid;
     }
 
+    _createDialogs() {
+
+      let schema = schemas.processModel;
+
+      return {
+        authorDialog: new Dialog("authorDialog", "Add dialog", schema.contact),
+        creatorDialog: new Dialog("creatorDialog", "Add creator", schema.contact),
+        referenceDialog: new Dialog("referenceDialog", "Add reference", schema.reference),
+        productDialog: new Dialog("productDialog", "Add product", schema.product),
+        hazardDialog: new Dialog("hazardDialog", "Add hazard", schema.hazard),
+        studySampleDialog: new Dialog("studySampleDialog", "Add study sample", schema.studySample),
+        laboratoryDialog: new Dialog("laboratoryDialog", "Add laboratory", schema.laboratory),
+        assayDialog: new Dialog("assayDialog", "Add assay", schema.assay),
+        parameterDialog: new Dialog("parameterDialog", "Add parameter", schema.parameter),
+        measuresDialog: new Dialog("measuresDialog", "Add quality measures", schema.qualityMeasures),
+        equationDialog: new Dialog("equationDialog", "Add model equation", schema.modelEquation)
+      };
+    }
+
     _createPanels() {
 
       let schema = schemas.processModel;
@@ -785,20 +1015,24 @@ fskeditorjs = function () {
       return {
         generalInformation: new FormPanel("General", schema.generalInformation, _metadata.generalInformation),
         modelCategory: new FormPanel("Model category", schema.modelCategory, _metadata.generalInformation.modelCategory),
-        author: new TablePanel("Author", schema.contact, _metadata.generalInformation.author),
-        creator: new TablePanel("Creator", schema.contact, _metadata.generalInformation.creator),
-        reference: new TablePanel("Reference", schema.reference, _metadata.generalInformation.reference),
+        author: new TablePanel("Author", this.dialogs.authorDialog, schema.contact, _metadata.generalInformation.author),
+        creator: new TablePanel("Creator", this.dialogs.creatorDialog, schema.contact, _metadata.generalInformation.creator),
+        reference: new TablePanel("Reference", this.dialogs.referenceDialog, schema.reference, _metadata.generalInformation.reference),
         scopeGeneral: new FormPanel("General", schema.scope, _metadata.scope),
-        product: new TablePanel("Product", schema.product, _metadata.scope.product),
-        hazard: new TablePanel("Hazard", schema.hazard, _metadata.scope.hazard),
+        product: new TablePanel("Product", this.dialogs.productDialog, schema.product, _metadata.scope.product),
+        hazard: new TablePanel("Hazard", this.dialogs.hazardDialog, schema.hazard, _metadata.scope.hazard),
         study: new FormPanel("Study", schema.study, _metadata.dataBackground.study),
-        studySample: new TablePanel("Study sample", schema.studySample, _metadata.dataBackground.studySample),
-        laboratory: new TablePanel("Laboratory", schema.laboratory, _metadata.dataBackground.laboratory),
-        assay: new TablePanel("Assay", schema.assay, _metadata.dataBackground.assay),
+        studySample: new TablePanel("Study sample", this.dialogs.studySampleDialog, schema.studySample,
+          _metadata.dataBackground.studySample),
+        laboratory: new TablePanel("Laboratory", this.dialogs.laboratoryDialog, schema.laboratory,
+          _metadata.dataBackground.laboratory),
+        assay: new TablePanel("Assay", this.dialogs.assayDialog, schema.assay, _metadata.dataBackground.assay),
         modelMath: new FormPanel("Model math", schema.modelMath, _metadata.modelMath),
-        parameter: new TablePanel("Parameter", schema.parameter, _metadata.modelMath.parameter),
-        qualityMeasures: new TablePanel("Quality measures", schema.qualityMeasures, _metadata.modelMath.qualityMeasures),
-        modelEquation: new TablePanel("Model equation", schema.modelEquation, _metadata.modelMath.modelEquation)
+        parameter: new TablePanel("Parameter", this.dialogs.parameterDialog, schema.parameter, _metadata.modelMath.parameter),
+        qualityMeasures: new TablePanel("Quality measures", this.dialogs.measuresDialog, schema.qualityMeasures,
+          _metadata.modelMath.qualityMeasures),
+        modelEquation: new TablePanel("Model equation", this.dialogs.equationDialog, schema.modelEquation,
+          _metadata.modelMath.modelEquation)
       };
     }
 
@@ -824,6 +1058,7 @@ fskeditorjs = function () {
   class ConsumptionModel {
 
     constructor() {
+      this.dialogs = this._createDialogs();
       this.panels = this._createPanels();
       this.menus = this._createMenus();
     }
@@ -837,6 +1072,15 @@ fskeditorjs = function () {
       _metadata.generalInformation.author = this.panels.author.data;
       _metadata.generalInformation.creator = this.panels.creator.data;
       _metadata.generalInformation.reference = this.panels.reference.data;
+
+      // Ignore temporarily publication type
+      // TODO: publicationType takes the abbreviation instead of the full string
+      // used in the Reference dialog. Since KNIME runs getComponentValue twice,
+      // the value cannot be converted here. The 1st call to getComponentValue
+      // would get the abbreviation but the 2nd call would corrupt it. The HTML
+      // select should instead use the full string as label and the abreviation
+      // as value.
+      _metadata.generalInformation.reference.forEach(ref => ref.publicationType = null);
 
       // Scope
       _metadata.scope = this.panels.scopeGeneral.data;
@@ -858,8 +1102,6 @@ fskeditorjs = function () {
 
       _metadata.modelType = "ConsumptionModel";
 
-      metadataFix();
-
       return _metadata;
     }
 
@@ -873,6 +1115,26 @@ fskeditorjs = function () {
       return isValid;
     }
 
+    _createDialogs() {
+
+      let schema = schemas.consumptionModel;
+
+      return {
+        authorDialog: new Dialog("authorDialog", "Add dialog", schema.contact),
+        creatorDialog: new Dialog("creatorDialog", "Add creator", schema.contact),
+        referenceDialog: new Dialog("referenceDialog", "Add reference", schema.reference),
+        productDialog: new Dialog("productDialog", "Add product", schema.product),
+        populationDialog: new Dialog("populationDialog", "Add population group", schema.populationGroup),
+        studySampleDialog: new Dialog("studySampleDialog", "Add study sample", schema.studySample),
+        methodDialog: new Dialog("methodDialog", "Add dietary assessment method", schema.dietaryAssessmentMethod),
+        laboratoryDialog: new Dialog("laboratoryDialog", "Add laboratory", schema.laboratory),
+        assayDialog: new Dialog("assayDialog", "Add assay", schema.assay),
+        parameterDialog: new Dialog("parameterDialog", "Add parameter", schema.parameter),
+        measuresDialog: new Dialog("measuresDialog", "Add quality measures", schema.qualityMeasures),
+        equationDialog: new Dialog("equationDialog", "Add model equation", schema.modelEquation)
+      };
+    }
+
     _createPanels() {
 
       let schema = schemas.consumptionModel;
@@ -880,25 +1142,27 @@ fskeditorjs = function () {
       return {
         generalInformation: new FormPanel("General", schema.generalInformation, _metadata.generalInformation),
         modelCategory: new FormPanel("Model category", schema.modelCategory, _metadata.generalInformation.modelCategory),
-        author: new TablePanel("Author", schema.contact, _metadata.generalInformation.author),
-        creator: new TablePanel("Creator", schema.contact, _metadata.generalInformation.creator),
-        reference: new TablePanel("Reference", schema.reference, _metadata.generalInformation.reference),
+        author: new TablePanel("Author", this.dialogs.authorDialog, schema.contact, _metadata.generalInformation.author),
+        creator: new TablePanel("Creator", this.dialogs.creatorDialog, schema.contact, _metadata.generalInformation.creator),
+        reference: new TablePanel("Reference", this.dialogs.referenceDialog, schema.reference, _metadata.generalInformation.reference),
         scopeGeneral: new FormPanel("General", schema.scope, _metadata.scope),
-        product: new TablePanel("Product", schema.product, _metadata.scope.product),
-        populationGroup: new TablePanel("Population group", schema.populationGroup,
+        product: new TablePanel("Product", this.dialogs.productDialog, schema.product, _metadata.scope.product),
+        populationGroup: new TablePanel("Population group", this.dialogs.populationDialog, schema.populationGroup,
           _metadata.scope.populationGroup),
         study: new FormPanel("Study", schema.study, _metadata.dataBackground.study),
-        studySample: new TablePanel("Study sample", schema.studySample,
+        studySample: new TablePanel("Study sample", this.dialogs.studySampleDialog, schema.studySample,
           _metadata.dataBackground.studySample),
-        dietaryAssessmentMethod: new TablePanel("Dietary assessment method",
+        dietaryAssessmentMethod: new TablePanel("Dietary assessment method", this.dialogs.methodDialog,
           schema.dietaryAssessmentMethod, _metadata.dataBackground.dietaryAssessmentMethod),
-        laboratory: new TablePanel("Laboratory", schema.laboratory, _metadata.dataBackground.laboratory),
-        assay: new TablePanel("Assay", schema.assay, _metadata.dataBackground.assay),
+        laboratory: new TablePanel("Laboratory", this.dialogs.laboratoryDialog, schema.laboratory,
+          _metadata.dataBackground.laboratory),
+        assay: new TablePanel("Assay", this.dialogs.assayDialog, schema.assay, _metadata.dataBackground.assay),
         modelMath: new FormPanel("Model math", schema.modelMath, _metadata.modelMath),
-        parameter: new TablePanel("Parameter", schema.parameter, _metadata.modelMath.parameter),
-        qualityMeasures: new TablePanel("Quality measures", schema.qualityMeasures,
+        parameter: new TablePanel("Parameter", this.dialogs.parameterDialog, schema.parameter, _metadata.modelMath.parameter),
+        qualityMeasures: new TablePanel("Quality measures", this.dialogs.measuresDialog, schema.qualityMeasures,
           _metadata.modelMath.qualityMeasures),
-        modelEquation: new TablePanel("Model equation", schema.modelEquation, _metadata.modelMath.modelEquation)
+        modelEquation: new TablePanel("Model equation", this.dialogs.equationDialog, schema.modelEquation,
+          _metadata.modelMath.modelEquation)
       };
     }
 
@@ -925,10 +1189,12 @@ fskeditorjs = function () {
   class HealthModel {
 
     constructor() {
+      this.dialogs = this._createDialogs();
       this.panels = this._createPanels();
       this.menus = this._createMenus();
     }
 
+    // TODO: update get metaData
     get metaData() {
 
       // generalInformation
@@ -937,6 +1203,15 @@ fskeditorjs = function () {
       _metadata.generalInformation.author = this.panels.author.data;
       _metadata.generalInformation.creator = this.panels.creator.data;
       _metadata.generalInformation.reference = this.panels.reference.data;
+
+      // Ignore temporarily publication type
+      // TODO: publicationType takes the abbreviation instead of the full string
+      // used in the Reference dialog. Since KNIME runs getComponentValue twice,
+      // the value cannot be converted here. The 1st call to getComponentValue
+      // would get the abbreviation but the 2nd call would corrupt it. The HTML
+      // select should instead use the full string as label and the abreviation
+      // as value.
+      _metadata.generalInformation.reference.forEach(ref => ref.publicationType = null);
 
       // Scope
       _metadata.scope = this.panels.scopeGeneral.data;
@@ -958,8 +1233,6 @@ fskeditorjs = function () {
 
       _metadata.modelType = "HealthModel";
 
-      metadataFix();
-
       return _metadata;
     }
 
@@ -973,6 +1246,26 @@ fskeditorjs = function () {
       return isValid;
     }
 
+    _createDialogs() {
+
+      let schema = schemas.healthModel;
+
+      return {
+        authorDialog: new Dialog("authorDialog", "Add dialog", schema.contact),
+        creatorDialog: new Dialog("creatorDialog", "Add creator", schema.contact),
+        referenceDialog: new Dialog("referenceDialog", "Add reference", schema.reference),
+        hazardDialog: new Dialog("hazardDialog", "Add hazard", schema.hazard),
+        populationDialog: new Dialog("populationDialog", "Add population group", schema.populationGroup),
+        studySampleDialog: new Dialog("studySampleDialog", "Add study sample", schema.studySample),
+        laboratoryDialog: new Dialog("laboratoryDialog", "Add laboratory", schema.laboratory),
+        assayDialog: new Dialog("assayDialog", "Add assay", schema.assay),
+        parameterDialog: new Dialog("parameterDialog", "Add parameter", schema.parameter),
+        measuresDialog: new Dialog("measuresDialog", "Add quality measures", schema.qualityMeasures),
+        equationDialog: new Dialog("equationDialog", "Add model equation", schema.modelEquation),
+        exposureDialog: new Dialog("exposureDialog", "Add exposure", schema.exposure)
+      };
+    }
+
     _createPanels() {
 
       let schema = schemas.healthModel;
@@ -980,26 +1273,26 @@ fskeditorjs = function () {
       return {
         generalInformation: new FormPanel("General", schema.generalInformation, _metadata.generalInformation),
         modelCategory: new FormPanel("Model category", schema.modelCategory, _metadata.generalInformation.modelCategory),
-        author: new TablePanel("Author", schema.contact, _metadata.generalInformation.author),
-        creator: new TablePanel("Creator", schema.contact, _metadata.generalInformation.creator),
-        reference: new TablePanel("Reference", schema.reference, _metadata.generalInformation.reference),
+        author: new TablePanel("Author", this.dialogs.authorDialog, schema.contact, _metadata.generalInformation.author),
+        creator: new TablePanel("Creator", this.dialogs.creatorDialog, schema.contact, _metadata.generalInformation.creator),
+        reference: new TablePanel("Reference", this.dialogs.referenceDialog, schema.reference, _metadata.generalInformation.reference),
         scopeGeneral: new FormPanel("General", schema.scope, _metadata.scope),
-        hazard: new TablePanel("Hazard", schema.hazard, _metadata.scope.hazard),
-        populationGroup: new TablePanel("Population group", schema.populationGroup,
+        hazard: new TablePanel("Hazard", this.dialogs.hazardDialog, schema.hazard, _metadata.scope.hazard),
+        populationGroup: new TablePanel("Population group", this.dialogs.populationDialog, schema.populationGroup,
           _metadata.scope.populationGroup),
         study: new FormPanel("Study", schema.study, _metadata.dataBackground.study),
-        studySample: new TablePanel("Study sample", schema.studySample,
+        studySample: new TablePanel("Study sample", this.dialogs.studySampleDialog, schema.studySample,
           _metadata.dataBackground.studySample),
-        laboratory: new TablePanel("Laboratory", schema.laboratory,
+        laboratory: new TablePanel("Laboratory", this.dialogs.laboratoryDialog, schema.laboratory,
           _metadata.dataBackground.laboratory),
-        assay: new TablePanel("Assay", schema.assay, _metadata.dataBackground.assay),
+        assay: new TablePanel("Assay", this.dialogs.assayDialog, schema.assay, _metadata.dataBackground.assay),
         modelMath: new FormPanel("Model math", schema.modelMath, _metadata.modelMath),
-        parameter: new TablePanel("Parameter", schema.parameter, _metadata.modelMath.parameter),
-        qualityMeasures: new TablePanel("Quality measures", schema.qualityMeasures,
+        parameter: new TablePanel("Parameter", this.dialogs.parameterDialog, schema.parameter, _metadata.modelMath.parameter),
+        qualityMeasures: new TablePanel("Quality measures", this.dialogs.measuresDialog, schema.qualityMeasures,
           _metadata.modelMath.qualityMeasures),
-        modelEquation: new TablePanel("Model equation", schema.modelEquation,
+        modelEquation: new TablePanel("Model equation", this.dialogs.equationDialog, schema.modelEquation,
           _metadata.modelMath.modelEquation),
-        exposure: new TablePanel("Exposure", schema.exposure, _metadata.modelMath.exposure)
+        exposure: new TablePanel("Exposure", this.dialogs.exposureDialog, schema.exposure, _metadata.modelMath.exposure)
       };
     }
 
@@ -1025,9 +1318,11 @@ fskeditorjs = function () {
     }
   }
 
+  // Handler for generic model schema
   class RiskModel {
 
     constructor() {
+      this.dialogs = this._createDialogs();
       this.panels = this._createPanels();
       this.menus = this._createMenus();
     }
@@ -1040,6 +1335,15 @@ fskeditorjs = function () {
       _metadata.generalInformation.author = this.panels.author.data;
       _metadata.generalInformation.creator = this.panels.creator.data;
       _metadata.generalInformation.reference = this.panels.reference.data;
+
+      // Ignore temporarily publication type
+      // TODO: publicationType takes the abbreviation instead of the full string
+      // used in the Reference dialog. Since KNIME runs getComponentValue twice,
+      // the value cannot be converted here. The 1st call to getComponentValue
+      // would get the abbreviation but the 2nd call would corrupt it. The HTML
+      // select should instead use the full string as label and the abreviation
+      // as value.
+      _metadata.generalInformation.reference.forEach(ref => ref.publicationType = null);
 
       // Scope
       _metadata.scope = this.panels.scopeGeneral.data;
@@ -1063,8 +1367,6 @@ fskeditorjs = function () {
 
       _metadata.modelType = "RiskModel";
 
-      metadataFix();
-
       return _metadata;
     }
 
@@ -1078,6 +1380,28 @@ fskeditorjs = function () {
       return isValid;
     }
 
+    _createDialogs() {
+
+      let schema = schemas.genericModel;
+
+      return {
+        authorDialog: new Dialog("authorDialog", "Add dialog", schema.contact),
+        creatorDialog: new Dialog("creatorDialog", "Add creator", schema.contact),
+        referenceDialog: new Dialog("referenceDialog", "Add reference", schema.reference),
+        productDialog: new Dialog("productDialog", "Add product", schema.product),
+        hazardDialog: new Dialog("hazardDialog", "Add hazard", schema.hazard),
+        populationDialog: new Dialog("populationDialog", "Add population", schema.populationGroup),
+        studySampleDialog: new Dialog("studySampleDialog", "Add study sample", schema.studySample),
+        methodDialog: new Dialog("methodDialog", "Add method", schema.dietaryAssessmentMethod),
+        laboratoryDialog: new Dialog("laboratoryDialog", "Add laboratory", schema.laboratory),
+        assayDialog: new Dialog("assayDialog", "Add assay", schema.assay),
+        parameterDialog: new Dialog("parameterDialog", "Add parameter", schema.parameter),
+        measuresDialog: new Dialog("measuresDialog", "Add quality measures", schema.qualityMeasures),
+        equationDialog: new Dialog("equationDialog", "Add model equation", schema.modelEquation),
+        exposureDialog: new Dialog("exposureDialog", "Add exposure", schema.exposure)
+      };
+    }
+
     _createPanels() {
 
       let schema = schemas.genericModel;
@@ -1085,29 +1409,29 @@ fskeditorjs = function () {
       return {
         generalInformation: new FormPanel("General", schema.generalInformation, _metadata.generalInformation),
         modelCategory: new FormPanel("Model category", schema.modelCategory, _metadata.generalInformation.modelCategory),
-        author: new TablePanel("Author", schema.contact, _metadata.generalInformation.author),
-        creator: new TablePanel("Creator", schema.contact, _metadata.generalInformation.creator),
-        reference: new TablePanel("Reference", schema.reference, _metadata.generalInformation.reference),
+        author: new TablePanel("Author", this.dialogs.authorDialog, schema.contact, _metadata.generalInformation.author),
+        creator: new TablePanel("Creator", this.dialogs.creatorDialog, schema.contact, _metadata.generalInformation.creator),
+        reference: new TablePanel("Reference", this.dialogs.referenceDialog, schema.reference, _metadata.generalInformation.reference),
         scopeGeneral: new FormPanel("General", schema.scope, _metadata.scope),
-        product: new TablePanel("Product", schema.product, _metadata.scope.product),
-        hazard: new TablePanel("Hazard", schema.hazard, _metadata.scope.hazard),
-        population: new TablePanel("Population", schema.populationGroup,
+        product: new TablePanel("Product", this.dialogs.productDialog, schema.product, _metadata.scope.product),
+        hazard: new TablePanel("Hazard", this.dialogs.hazardDialog, schema.hazard, _metadata.scope.hazard),
+        population: new TablePanel("Population", this.dialogs.populationDialog, schema.populationGroup,
           _metadata.scope.populationGroup),
         study: new FormPanel("Study", schema.study, _metadata.dataBackground.study),
-        studySample: new TablePanel("Study sample", schema.studySample,
+        studySample: new TablePanel("Study sample", this.dialogs.studySampleDialog, schema.studySample,
           _metadata.dataBackground.studySample),
         dietaryAssessmentMethod: new TablePanel("Dietary assessment method", this.dialogs.methodDialog,
           schema.dietaryAssessmentMethod, _metadata.dataBackground.dietaryAssessmentMethod),
-        laboratory: new TablePanel("Laboratory", schema.laboratory,
+        laboratory: new TablePanel("Laboratory", this.dialogs.laboratoryDialog, schema.laboratory,
           _metadata.dataBackground.laboratory),
-        assay: new TablePanel("Assay", schema.assay, _metadata.dataBackground.assay),
+        assay: new TablePanel("Assay", this.dialogs.assayDialog, schema.assay, _metadata.dataBackground.assay),
         modelMath: new FormPanel("Model math", schema.modelMath, _metadata.modelMath),
-        parameter: new TablePanel("Parameter", schema.parameter, _metadata.modelMath.parameter),
-        qualityMeasures: new TablePanel("Quality measures", schema.qualityMeasures,
+        parameter: new TablePanel("Parameter", this.dialogs.parameterDialog, schema.parameter, _metadata.modelMath.parameter),
+        qualityMeasures: new TablePanel("Quality measures", this.dialogs.measuresDialog, schema.qualityMeasures,
           _metadata.modelMath.qualityMeasures),
-        modelEquation: new TablePanel("Model equation", schema.modelEquation,
+        modelEquation: new TablePanel("Model equation", this.dialogs.equationDialog, schema.modelEquation,
           _metadata.modelMath.modelEquation),
-        exposure: new TablePanel("Exposure", schema.exposure, _metadata.modelMath.exposure)
+        exposure: new TablePanel("Exposure", this.dialogs.exposureDialog, schema.exposure, _metadata.modelMath.exposure)
       };
     }
 
@@ -1138,6 +1462,7 @@ fskeditorjs = function () {
   class QraModel {
 
     constructor() {
+      this.dialogs = this._createDialogs();
       this.panels = this._createPanels();
       this.menus = this._createMenus();
     }
@@ -1150,6 +1475,15 @@ fskeditorjs = function () {
       _metadata.generalInformation.author = this.panels.author.data;
       _metadata.generalInformation.creator = this.panels.creator.data;
       _metadata.generalInformation.reference = this.panels.reference.data;
+
+      // Ignore temporarily publication type
+      // TODO: publicationType takes the abbreviation instead of the full string
+      // used in the Reference dialog. Since KNIME runs getComponentValue twice,
+      // the value cannot be converted here. The 1st call to getComponentValue
+      // would get the abbreviation but the 2nd call would corrupt it. The HTML
+      // select should instead use the full string as label and the abreviation
+      // as value.
+      _metadata.generalInformation.reference.forEach(ref => ref.publicationType = null);
 
       // Scope
       _metadata.scope = this.panels.scopeGeneral.data;
@@ -1173,8 +1507,6 @@ fskeditorjs = function () {
 
       _metadata.modelType = "QraModel";
 
-      metadataFix();
-
       return _metadata;
     }
 
@@ -1188,6 +1520,28 @@ fskeditorjs = function () {
       return isValid;
     }
 
+    _createDialogs() {
+
+      let schema = schemas.qraModel;
+
+      return {
+        authorDialog: new Dialog("authorDialog", "Add dialog", schema.contact),
+        creatorDialog: new Dialog("creatorDialog", "Add creator", schema.contact),
+        referenceDialog: new Dialog("referenceDialog", "Add reference", schema.reference),
+        productDialog: new Dialog("productDialog", "Add product", schema.product),
+        hazardDialog: new Dialog("hazardDialog", "Add hazard", schema.hazard),
+        populationDialog: new Dialog("populationDialog", "Add population", schema.populationGroup),
+        studySampleDialog: new Dialog("studySampleDialog", "Add study sample", schema.studySample),
+        methodDialog: new Dialog("methodDialog", "Add method", schema.dietaryAssessmentMethod),
+        laboratoryDialog: new Dialog("laboratoryDialog", "Add laboratory", schema.laboratory),
+        assayDialog: new Dialog("assayDialog", "Add assay", schema.assay),
+        parameterDialog: new Dialog("parameterDialog", "Add parameter", schema.parameter),
+        measuresDialog: new Dialog("measuresDialog", "Add quality measures", schema.qualityMeasures),
+        equationDialog: new Dialog("equationDialog", "Add model equation", schema.modelEquation),
+        exposureDialog: new Dialog("exposureDialog", "Add exposure", schema.exposure)
+      };
+    }
+
     _createPanels() {
 
       let schema = schemas.qraModel;
@@ -1195,29 +1549,29 @@ fskeditorjs = function () {
       return {
         generalInformation: new FormPanel("General", schema.generalInformation, _metadata.generalInformation),
         modelCategory: new FormPanel("Model category", schema.modelCategory, _metadata.generalInformation.modelCategory),
-        author: new TablePanel("Author", schema.contact, _metadata.generalInformation.author),
-        creator: new TablePanel("Creator", schema.contact, _metadata.generalInformation.creator),
-        reference: new TablePanel("Reference", schema.reference, _metadata.generalInformation.reference),
+        author: new TablePanel("Author", this.dialogs.authorDialog, schema.contact, _metadata.generalInformation.author),
+        creator: new TablePanel("Creator", this.dialogs.creatorDialog, schema.contact, _metadata.generalInformation.creator),
+        reference: new TablePanel("Reference", this.dialogs.referenceDialog, schema.reference, _metadata.generalInformation.reference),
         scopeGeneral: new FormPanel("General", schema.scope, _metadata.scope),
-        product: new TablePanel("Product", schema.product, _metadata.scope.product),
-        hazard: new TablePanel("Hazard", schema.hazard, _metadata.scope.hazard),
-        population: new TablePanel("Population", schema.populationGroup,
+        product: new TablePanel("Product", this.dialogs.productDialog, schema.product, _metadata.scope.product),
+        hazard: new TablePanel("Hazard", this.dialogs.hazardDialog, schema.hazard, _metadata.scope.hazard),
+        population: new TablePanel("Population", this.dialogs.populationDialog, schema.populationGroup,
           _metadata.scope.populationGroup),
         study: new FormPanel("Study", schema.study, _metadata.dataBackground.study),
-        studySample: new TablePanel("Study sample", schema.studySample,
+        studySample: new TablePanel("Study sample", this.dialogs.studySampleDialog, schema.studySample,
           _metadata.dataBackground.studySample),
-        dietaryAssessmentMethod: new TablePanel("Dietary assessment method",
+        dietaryAssessmentMethod: new TablePanel("Dietary assessment method", this.dialogs.methodDialog,
           schema.dietaryAssessmentMethod, _metadata.dataBackground.dietaryAssessmentMethod),
-        laboratory: new TablePanel("Laboratory", schema.laboratory,
+        laboratory: new TablePanel("Laboratory", this.dialogs.laboratoryDialog, schema.laboratory,
           _metadata.dataBackground.laboratory),
-        assay: new TablePanel("Assay", schema.assay, _metadata.dataBackground.assay),
+        assay: new TablePanel("Assay", this.dialogs.assayDialog, schema.assay, _metadata.dataBackground.assay),
         modelMath: new FormPanel("Model math", schema.modelMath, _metadata.modelMath),
-        parameter: new TablePanel("Parameter", schema.parameter, _metadata.modelMath.parameter),
-        qualityMeasures: new TablePanel("Quality measures", schema.qualityMeasures,
+        parameter: new TablePanel("Parameter", this.dialogs.parameterDialog, schema.parameter, _metadata.modelMath.parameter),
+        qualityMeasures: new TablePanel("Quality measures", this.dialogs.measuresDialog, schema.qualityMeasures,
           _metadata.modelMath.qualityMeasures),
-        modelEquation: new TablePanel("Model equation", schema.modelEquation,
+        modelEquation: new TablePanel("Model equation", this.dialogs.equationDialog, schema.modelEquation,
           _metadata.modelMath.modelEquation),
-        exposure: new TablePanel("Exposure", schema.exposure, _metadata.modelMath.exposure)
+        exposure: new TablePanel("Exposure", this.dialogs.exposureDialog, schema.exposure, _metadata.modelMath.exposure)
       };
     }
 
@@ -1973,7 +2327,7 @@ fskeditorjs = function () {
         if (this.editedRow != -1) {
           this.panel.edit(this.editedRow, data);
           this.editedRow = -1;
-          Object.values(this.inputs).forEach(input => input.clear()); // Clear inputs
+          this.inputs.forEach(input => input.clear()); // Clear inputs
         } else {
           this.panel.add(data);
         }
@@ -2039,24 +2393,24 @@ fskeditorjs = function () {
     /**
      * Create a TablePanel.
      * 
-     * @param {string} title Panel title.
+     * @param {string} title Panel title.  
+     * @param {Dialog} dialog Reference to Dialog object. This Dialog is later
+     *   used for adding new entries and editing existing ones. 
      * @param {object} formData Related data from the UI schema.
      * @param {object} data Initial data of the table.
      */
-    constructor(title, formData, data) {
+    constructor(title, dialog, formData, data) {
 
       this.panel = document.createElement("div");
 
-      // Register this panel in dialog (TODO: this should be done in Dialog's constr)
-      // this.dialog = dialog;
-      this.dialog = new Dialog(title + "Dialog", "Add " + title, formData);
-      this.dialog.panel = this;
+      this.table = new AdvancedTable(data, formData, dialog, this);
 
-      this.table = new AdvancedTable(data, formData, this.dialog, this);
-
+      this._create(title, dialog, formData);
       this.data = data ? data : []; // Initialize null or undefined data
 
-      this._create(title, this.dialog, formData);
+      // Register this panel in dialog (TODO: this should be done in Dialog's constr)
+      this.dialog = dialog;
+      this.dialog.panel = this;
     }
 
     /**
@@ -2218,29 +2572,20 @@ fskeditorjs = function () {
 
   view.init = function (representation, value) {
 
-
-
     _rep = representation;
     _val = value;
 
     if (!value.modelMetaData || value.modelMetaData == "null" || value.modelMetaData == "") {
       _metadata.generalInformation = {};
-      _metadata.generalInformation.modelCategory = {};
       _metadata.scope = {};
       _metadata.modelMath = {};
       _metadata.dataBackground = {}
     } else {
       let metaData = JSON.parse(value.modelMetaData);
-
-      if (!metaData.generalInformation) {
-        _metadata.generalInformation = { modelCategory: {} };
-      } else {
-        _metadata.generalInformation = metaData.generalInformation;
-      }
-
-      _metadata.scope = metaData.scope ? metaData.scope : {};
-      _metadata.dataBackground = metaData.dataBackground ? metaData.dataBackground : {};
-      _metadata.modelMath = metaData.modelMath ? metaData.modelMath : {};
+      _metadata.generalInformation = metaData.generalInformation;
+      _metadata.scope = metaData.scope;
+      _metadata.modelMath = metaData.modelMath;
+      _metadata.dataBackground = metaData.dataBackground;
     }
 
     if (value.modelType === "genericModel") {
@@ -2279,22 +2624,20 @@ fskeditorjs = function () {
     _metadata = handler.metaData;
     let metaDataString = JSON.stringify(_metadata);
 
-    // If the code mirrors are not created yet, use the original scripts.
     let viewValue = {
       modelMetaData: metaDataString,
-      firstModelScript: _modelCodeMirror ? _modelCodeMirror.getValue() : _metadata.firstModelScript,
-      firstModelViz: _visualizationCodeMirror ? _visualizationCodeMirror.getValue() : _metadata.firstModelViz,
-      readme: _readmeCodeMirror ? _readmeCodeMirror.getValue() : _metadata.readme,
+      firstModelScript: _modelCodeMirror.getValue(),
+      firstModelViz: _visualizationCodeMirror.getValue(),
+      readme: _readmeCodeMirror.getValue(),
       resourceFiles: _val.resourceFiles, // TODO: get actual resource files from editor
       serverName: _val.serverName // TODO: get actual serverName from editor?
-    };
+    }
 
     return viewValue;
   };
 
   view.validate = () => {
-    // return handler.validate();
-    return true;
+    return handler.validate();
   }
 
   return view;
@@ -2339,7 +2682,7 @@ fskeditorjs = function () {
 
     // Add dialogs
     const container = document.getElementsByClassName("container-fluid")[0];
-    // Object.values(handler.dialogs).forEach(dialog => container.appendChild(dialog.modal));
+    Object.values(handler.dialogs).forEach(dialog => container.appendChild(dialog.modal));
 
     const viewContent = document.getElementById("viewContent");
 
@@ -2350,11 +2693,6 @@ fskeditorjs = function () {
       tabPanel.id = key;
       tabPanel.appendChild(value.panel);
 
-      // Add dialog if TablePanel
-      if (value.dialog) {
-        container.appendChild(value.dialog.modal);
-      }
-
       viewContent.appendChild(tabPanel);
     });
 
@@ -2362,42 +2700,20 @@ fskeditorjs = function () {
     document.getElementById("generalInformation").classList.add("active");
 
     // Create code mirrors for text areas with scripts and readme
-    let require_config = {
-      packages: [{
-        name: "codemirror",
-        location: "codemirror/",
-        main: "lib/codemirror"
-      }]
-    };
-
-    knimeService.loadConditionally(
-      ["codemirror", "codemirror/mode/r/r", "codemirror/mode/markdown/markdown"],
-      (arg) => {
-        window.CodeMirror = arg[0];
-        _modelCodeMirror = createCodeMirror("modelScriptArea", "text/x-rsrc");
-        _visualizationCodeMirror = createCodeMirror("visualizationScriptArea", "text/x-rsrc");
-        _readmeCodeMirror = createCodeMirror("readmeArea", "text/x-markdown");
-
-        _modelCodeMirror.on("blur", () => { _modelCodeMirror.focus(); });
-        _visualizationCodeMirror.on("blur", () => { _visualizationCodeMirror.focus(); });
-        _readmeCodeMirror.on("blur", () =>{ _readmeCodeMirror.focus(); });
-      },
-      (err) => console.log("knimeService failed to install " + err),
-      require_config);
+    _modelCodeMirror = createCodeMirror("modelScriptArea", "text/x-rsrc");
+    _visualizationCodeMirror = createCodeMirror("visualizationScriptArea", "text/x-rsrc");
+    _readmeCodeMirror = createCodeMirror("readmeArea", "text/x-markdown");
 
     $('#modelScript-tab').on('shown.bs.tab', () => {
-      _modelCodeMirror.refresh(); 
-      _modelCodeMirror.focus();
+      _modelCodeMirror.refresh();
     });
 
     $('#visualizationScript-tab').on('shown.bs.tab', () => {
       _visualizationCodeMirror.refresh();
-      _visualizationCodeMirror.focus();
     });
-    
+
     $('#readme-tab').on('shown.bs.tab', () => {
       _readmeCodeMirror.refresh();
-      _readmeCodeMirror.focus();
     });
   }
 
@@ -2420,7 +2736,6 @@ fskeditorjs = function () {
 
   // Create a CodeMirror for a given text area
   function createCodeMirror(textAreaId, language) {
-
     return window.CodeMirror.fromTextArea(document.getElementById(textAreaId),
       {
         lineNumbers: true,

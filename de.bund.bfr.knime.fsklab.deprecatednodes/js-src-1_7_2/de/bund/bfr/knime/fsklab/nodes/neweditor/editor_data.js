@@ -741,7 +741,7 @@ const ui = {
     }, {
         "id": "classification",
         "label": "Classification",
-        "type": "enum",
+        "type": "text",
         "description": "General classification of the parameter (e.g. Input, Constant, Output...)",
         "vocabulary": "Parameter_classification",
         "required": true
@@ -772,7 +772,7 @@ const ui = {
     }, {
         "id": "dataType",
         "label": "Data type",
-        "type": "enum",
+        "type": "text",
         "description": "Information on the data format of the parameter, e.g. if it the input parameter is a file location or a date or a number. This is important for software tools interpreting the metadata and generate user interfaces for parameter input.",
         "vocabulary": "Parameter_data_type",
         "required": true
@@ -800,12 +800,7 @@ const ui = {
         "type": "text",
         "description": "A default value for the parameter. This is mandatory (needs to be provided) for all parameters of type 'Input'"
     },
-    {
-        "id": "reference",
-        "label": "Reference",
-        "type": "text",
-        "description": ""
-    },
+    // TODO: reference
     {
         "id": "variabilitySubject",
         "label": "Variability subject",
