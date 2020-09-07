@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.knime.core.node.CanceledExecutionException;
@@ -403,6 +404,11 @@ public class JSSimulatorNodeModel
   /** @return string with node name and id with format "{name} (#{id}) setting". */
   private static String buildContainerName() {
     final NodeContainer nodeContainer = NodeContext.getContext().getNodeContainer();
-    return nodeContainer.getName() + " (#" + nodeContainer.getID().getIndex() + ") setting";
+    
+    // Dirty workaround. KNIME adds (deprecated) for these nodes. The old folder does not have it and are ignored.
+    // For now, (deprecated) is removed from the name so the old folders can be loaded.
+    String name = StringUtils.remove(nodeContainer.getName(), " (deprecated)");
+    
+    return name + " (#" + nodeContainer.getID().getIndex() + ") setting";
   }
 }

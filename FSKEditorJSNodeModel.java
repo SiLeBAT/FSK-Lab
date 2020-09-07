@@ -16,7 +16,7 @@
  * Contributors: Department Biological Safety - BfR
  *************************************************************************************************
  */
-package de.bund.bfr.knime.fsklab.nodes.v1_7_2.editor;
+package de.bund.bfr.knime.fsklab.nodes;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -36,9 +36,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.util.SystemOutLogger;
-import org.emfjson.jackson.module.EMFModule;
+import org.apache.commons.lang.StringUtils;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
@@ -62,47 +60,28 @@ import org.knime.js.core.node.AbstractWizardNodeModel;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.threetenbp.ThreeTenModule;
 import de.bund.bfr.fskml.RScript;
+import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.FskSimulation;
-import de.bund.bfr.knime.fsklab.nodes.FSKEditorJSNodeFactory;
-import de.bund.bfr.knime.fsklab.nodes.FSKEditorJSViewRepresentation;
-import de.bund.bfr.knime.fsklab.nodes.FSKEditorJSViewValue;
-import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
 import de.bund.bfr.metadata.swagger.GenericModel;
 import de.bund.bfr.metadata.swagger.Model;
 import de.bund.bfr.metadata.swagger.Parameter;
-import metadata.EmfMetadataModule;
 import metadata.SwaggerUtil;
 
 
 /**
  * Fsk Editor JS node model.
  */
-public final class FSKEditorJSNodeModel
+final class FSKEditorJSNodeModel
     extends AbstractWizardNodeModel<FSKEditorJSViewRepresentation, FSKEditorJSViewValue>
     implements PortObjectHolder {
   private static final NodeLogger LOGGER = NodeLogger.getLogger("Fskx JS Editor Model");
-
-  private static final ObjectMapper MAPPER;
-  static {
-    JsonFactory jsonFactory = new JsonFactory();
-    jsonFactory.configure(JsonGenerator.Feature.AUTO_CLOSE_TARGET, false);
-    jsonFactory.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, false);
-    MAPPER = new ObjectMapper(jsonFactory).registerModule(new ThreeTenModule())
-        .registerModule(new EMFModule()).registerModule(new EmfMetadataModule());
-    MAPPER.setSerializationInclusion(Include.NON_NULL);
-  }
 
   private final FSKEditorJSNodeSettings nodeSettings = new FSKEditorJSNodeSettings();
   private FskPortObject m_port;
@@ -388,13 +367,15 @@ public final class FSKEditorJSNodeModel
   }
 
   private static String FromOjectToJSON(final Object object) throws JsonProcessingException {
-    String jsonStr = MAPPER.writeValueAsString(object);
+    ObjectMapper objectMapper = FskPlugin.getDefault().OBJECT_MAPPER;
+    String jsonStr = objectMapper.writeValueAsString(object);
     return jsonStr;
   }
 
   private static <T> T getObjectFromJson(String jsonStr, Class<T> valueType)
       throws InvalidSettingsException, JsonParseException, JsonMappingException, IOException {
-    Object object = MAPPER.readValue(jsonStr, valueType);
+    ObjectMapper mapper = FskPlugin.getDefault().OBJECT_MAPPER;
+    Object object = mapper.readValue(jsonStr, valueType);
 
     return valueType.cast(object);
   }
@@ -442,10 +423,6 @@ public final class FSKEditorJSNodeModel
     File directory =
         NodeContext.getContext().getWorkflowManager().getContext().getCurrentLocation();
     String name = NodeContext.getContext().getNodeContainer().getName();
-    // Dirty workaround. KNIME adds (deprecated) for these nodes. The old folder does not have it and are ignored.
-    // For now, (deprecated) is removed from the name so the old folders can be loaded.
-    name = StringUtils.remove(name, " (deprecated)");
-    
     String id = NodeContext.getContext().getNodeContainer().getID().toString().split(":")[1];
     String containerName = name + " (#" + id + ") setting";
 
@@ -471,10 +448,6 @@ public final class FSKEditorJSNodeModel
     File directory =
         NodeContext.getContext().getWorkflowManager().getContext().getCurrentLocation();
     String name = NodeContext.getContext().getNodeContainer().getName();
-    // Dirty workaround. KNIME adds (deprecated) for these nodes. The old folder does not have it and are ignored.
-    // For now, (deprecated) is removed from the name so the old folders can be loaded.
-    name = StringUtils.remove(name, " (deprecated)");
-    
     String id = NodeContext.getContext().getNodeContainer().getID().toString().split(":")[1];
     String containerName = name + " (#" + id + ") setting";
 
