@@ -511,6 +511,10 @@ public final class JoinerNodeModel extends
     File directory =
         NodeContext.getContext().getWorkflowManager().getContext().getCurrentLocation();
     String name = NodeContext.getContext().getNodeContainer().getName();
+    // Dirty workaround. KNIME adds (deprecated) for these nodes. The old folder does not have it and are ignored.
+    // For now, (deprecated) is removed from the name so the old folders can be loaded.
+    name = StringUtils.remove(name, " (deprecated)");
+    
     String id = NodeContext.getContext().getNodeContainer().getID().toString().split(":")[1];
     String containerName = name + " (#" + id + ") setting";
 
@@ -543,6 +547,10 @@ public final class JoinerNodeModel extends
     File directory =
         NodeContext.getContext().getWorkflowManager().getContext().getCurrentLocation();
     String name = NodeContext.getContext().getNodeContainer().getName();
+    // Dirty workaround. KNIME adds (deprecated) for these nodes. The old folder does not have it and are ignored.
+    // For now, (deprecated) is removed from the name so the old folders can be loaded.
+    name = StringUtils.remove(name, " (deprecated)");
+    
     String id = NodeContext.getContext().getNodeContainer().getID().toString().split(":")[1];
     String containerName = name + " (#" + id + ") setting";
 
