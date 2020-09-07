@@ -63,7 +63,6 @@ import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.FskSimulation;
 import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
 import de.bund.bfr.knime.fsklab.nodes.ScriptHandler;
-import de.bund.bfr.knime.fsklab.nodes.creator.CreatorNodeSettings;
 import de.bund.bfr.metadata.swagger.ConsumptionModel;
 import de.bund.bfr.metadata.swagger.DataModel;
 import de.bund.bfr.metadata.swagger.DoseResponseModel;

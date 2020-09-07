@@ -49,7 +49,6 @@ import org.knime.core.node.util.FilesHistoryPanel;
 import org.knime.core.node.util.FilesHistoryPanel.LocationValidation;
 import org.knime.core.node.workflow.FlowVariable;
 import org.knime.core.util.FileUtil;
-import de.bund.bfr.knime.fsklab.nodes.creator.CreatorNodeSettings;
 
 public class CreatorNodeDialog extends NodeDialogPane {
 
