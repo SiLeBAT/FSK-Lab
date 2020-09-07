@@ -4,7 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.9.0] - 2020-9-7
+
+### Added
+- 1.7.2 nodes (ICPMF) as deprecated nodes in the legacy feature. https://github.com/SiLeBAT/FSK-Lab/issues/558
 
 ### Changed
 - Change extension of generated R workspace files from .r to .RData. The URI of .RData is used in the manifest.
@@ -14,6 +17,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 - Tooltip of General information -> Creation date. https://github.com/SiLeBAT/FSK-Lab/issues/451
 - Tooltip of General information -> Modification date. https://github.com/SiLeBAT/FSK-Lab/issues/450
+- Small issues in microservice. Random port selection.
 
 ## [1.8.1] - 2020-6-22
 
