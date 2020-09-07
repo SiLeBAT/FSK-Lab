@@ -28,7 +28,8 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations;bundle-version="2
  org.knime.json;bundle-version="3.7.1",
  com.sun.jna;bundle-version="4.4.0",
  org.knime.python2;bundle-version="3.7.2",
- org.knime.ext.svg;bundle-version="3.7.0"
+ org.knime.ext.svg;bundle-version="3.7.0",
+ org.slf4j.api;bundle-version="1.7.2"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ClassPath: libs/bfr-swing-1.0-SNAPSHOT.jar,
  libs/fskml-1.0.12.jar,
