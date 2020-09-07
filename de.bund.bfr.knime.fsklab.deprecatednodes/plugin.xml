@@ -83,6 +83,17 @@
   </extension>
    
   <extension point="org.knime.js.core.javascriptComponents">
+  
+    <!-- JavaScript component for the simulator node -->
+    <javascriptComponent
+      getComponentValue-method-name="getComponentValue"
+      implementationBundleID="de.bund.bfr.knime.fsklab.nodes.jssimulator.bundle"
+      init-method-name="init"
+      javascriptComponentID="de.bund.bfr.knime.fsklab.nodes.jssimulator"
+      name="JavaScript Simulation Configurator"
+      namespace="simulator">
+    </javascriptComponent>
+     
     <!-- Javascript component for Fsk Metadata Editor node -->
     <javascriptComponent
       getComponentValue-method-name="getComponentValue"
@@ -150,6 +161,30 @@
       <webDependency webResourceBundleID="bootstrap_3.3.6"></webDependency>
       <webDependency webResourceBundleID="jQuery_2.1.4"></webDependency>
     </webResourceBundle>
+  
+     <!-- JS and CSS for simulator node -->
+     <webResourceBundle
+       debug="true"
+       name="JavaScript Simulation Configurator"
+       usesDefine="false"
+       version="0.0.1"
+       webResourceBundleID="de.bund.bfr.knime.fsklab.nodes.jssimulator.bundle">
+       
+       <!-- JS and CSS code -->
+       <webResource
+         relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/jssimulator.js"
+         relativePathTarget="de/bund/bfr/knime/fsklab/nodes/jssimulator.js">
+       </webResource>
+       <importResource relativePath="de/bund/bfr/knime/fsklab/nodes/jssimulator.js" type="JAVASCRIPT" />
+       
+       <webResource
+         relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/jssimulator.css"
+         relativePathTarget="de/bund/bfr/knime/fsklab/nodes/jssimulator.css">
+       </webResource>
+       <importResource relativePath="de/bund/bfr/knime/fsklab/nodes/jssimulator.css" type="CSS" />
+
+       <webDependency webResourceBundleID="bootstrap_3.3.6"></webDependency>
+     </webResourceBundle>
     
     <!-- JS and CSS for experimental editor (Miguel) -->
     <webResourceBundle
