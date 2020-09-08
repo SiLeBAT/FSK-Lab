@@ -87,9 +87,9 @@
     <!-- JavaScript component for the simulator node -->
     <javascriptComponent
       getComponentValue-method-name="getComponentValue"
-      implementationBundleID="de.bund.bfr.knime.fsklab.nodes.1_7_2.jssimulator.bundle"
+      implementationBundleID="de.bund.bfr.knime.fsklab.nodes.jssimulator.bundle"
       init-method-name="init"
-      javascriptComponentID="de.bund.bfr.knime.fsklab.nodes.1_7_2.jssimulator"
+      javascriptComponentID="de.bund.bfr.knime.fsklab.nodes.jssimulator"
       name="JavaScript Simulation Configurator"
       namespace="simulator">
     </javascriptComponent>
@@ -107,11 +107,11 @@
     <!-- Javascript component for Fsk Editor node -->
     <javascriptComponent
           getComponentValue-method-name="getComponentValue"
-          implementationBundleID="de.bund.bfr.knime.fsklab.js.1_7_2.FSKEditorJS.bundle"
+          implementationBundleID="de.bund.bfr.knime.fsklab.nodes.editor.js.bundle"
           init-method-name="init"
-          javascriptComponentID="de.bund.bfr.knime.fsklab.js.1_7_2.FSKEditorJS"
+          javascriptComponentID="de.bund.bfr.knime.fsklab.nodes.editor.js"
           name="FSK Editor JS"
-          namespace="fskeditorjs">
+          namespace="fsk_editor">
     </javascriptComponent>
   </extension>
   
@@ -168,7 +168,7 @@
        name="JavaScript Simulation Configurator"
        usesDefine="false"
        version="0.0.1"
-       webResourceBundleID="de.bund.bfr.knime.fsklab.nodes.1_7_2.jssimulator.bundle">
+       webResourceBundleID="de.bund.bfr.knime.fsklab.nodes.jssimulator.bundle">
        
        <!-- JS and CSS code -->
        <webResource
@@ -192,7 +192,7 @@
        name="FSK Editor JS"
        usesDefine="true"
        version="1.0.0"
-       webResourceBundleID="de.bund.bfr.knime.fsklab.js.1_7_2.FSKEditorJS.bundle">
+       webResourceBundleID="de.bund.bfr.knime.fsklab.js.FSKEditorJS.bundle">
        
        <!-- JS and CSS code -->
        <webResource relativePathSource="js-src-1_7_2/de/bund/bfr/knime/fsklab/nodes/neweditor" relativePathTarget="neweditor" />
@@ -201,7 +201,7 @@
        <importResource relativePath="neweditor/editor.css" type="CSS" />
        <importResource relativePath="neweditor/ControlledVocabulary.js" type="JAVASCRIPT" />
 
-       <webDependency webResourceBundleID="codemirror_1_7_2"></webDependency>
+       <webDependency webResourceBundleID="codemirror"></webDependency>
        <webDependency webResourceBundleID="bootstrap_3.3.6"></webDependency>
        <webDependency webResourceBundleID="bootstrap3_typeahead_4.0.2"></webDependency>
        <webDependency webResourceBundleID="datepicker"></webDependency>
@@ -398,8 +398,8 @@
       <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/react/react-dom.min.js" type="JAVASCRIPT" />      
     </webResourceBundle>
     
-    <webResourceBundle debug="false" name="codemirror" usesDefine="true" version="" webResourceBundleID="codemirror_1_7_2">    
-      <webResource relativePathSource="js-lib-1_7_2/codemirror/" relativePathTarget="codemirror"></webResource>
+    <webResourceBundle debug="false" name="codemirror" usesDefine="true" version="" webResourceBundleID="codemirror">    
+      <webResource relativePathSource="js-lib/codemirror/" relativePathTarget="codemirror"></webResource>
 	  <importResource relativePath="codemirror/codemirror.js" type="JAVASCRIPT" />
 	  <importResource relativePath="codemirror/codemirror.css" type="CSS" />
 	  <importResource relativePath="codemirror/r.js" type="JAVASCRIPT" />
@@ -407,12 +407,12 @@
     </webResourceBundle>
     
     <webResourceBundle debug="false" name="Bootstrap 3 Typeahead" usesDefine="false" version="4.0.2" webResourceBundleID="bootstrap3_typeahead_4.0.2">
-      <webResource relativePathSource="js-lib-1_7_2/bootstrap3_typeahead" relativePathTarget="bootstrap3_typeahead" />
+      <webResource relativePathSource="js-lib/bootstrap3_typeahead" relativePathTarget="bootstrap3_typeahead" />
       <importResource relativePath="bootstrap3_typeahead/bootstrap3-typeahead.min.js" type="JAVASCRIPT" />
     </webResourceBundle>
 
     <webResourceBundle debug="false" name="datepicker" usesDefine="false" version="1.9.0" webResourceBundleID="datepicker">
-      <webResource relativePathSource="js-lib-1_7_2/datepicker" relativePathTarget="datepicker" />
+      <webResource relativePathSource="js-lib/datepicker" relativePathTarget="datepicker" />
       <importResource relativePath="datepicker/bootstrap-datepicker.min.js" type="JAVASCRIPT" />
     </webResourceBundle>
     
