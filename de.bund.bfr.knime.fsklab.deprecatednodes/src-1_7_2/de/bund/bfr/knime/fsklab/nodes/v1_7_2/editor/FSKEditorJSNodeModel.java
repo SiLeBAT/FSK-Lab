@@ -135,7 +135,7 @@ public final class FSKEditorJSNodeModel
 
   @Override
   public String getJavascriptObjectID() {
-    return "de.bund.bfr.knime.fsklab.js.FSKEditorJS";
+    return "de.bund.bfr.knime.fsklab.js.1_7_2.FSKEditorJS";
   }
 
   @Override
