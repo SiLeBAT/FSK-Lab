@@ -635,11 +635,27 @@ public class CombinedFskPortObject extends FskPortObject {
           } else if (entryName.startsWith(LIBRARY_LIST)) {
             packages = IOUtils.readLines(in, "UTF-8");
           } else if (entryName.startsWith(WORKING_DIRECTORY)) {
+         
+            // Back up and configure class loader of current thread
+            ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
+            Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
+            
             EnvironmentManager actualManager = MAPPER104.readValue(in, EnvironmentManager.class);
             environmentManager = Optional.of(actualManager);
+
+            // Restore class loader
+            Thread.currentThread().setContextClassLoader(originalClassLoader);
           } else if (entryName.startsWith(GENERATED_RESOURCE_FILES)) {
-          // Deserialize generatedResourceFiles Object
+
+            // Back up and configure class loader of current thread
+            ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
+            Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
+            
+            // Deserialize generatedResourceFiles Object
             generatedResourceFiles = MAPPER104.readValue(in, GeneratedResourceFiles.class);
+
+            // Restore class loader            
+            Thread.currentThread().setContextClassLoader(originalClassLoader);
                     
           }  else if (entryName.startsWith(PLOT)) {
             plot = IOUtils.toString(in, "UTF-8");
