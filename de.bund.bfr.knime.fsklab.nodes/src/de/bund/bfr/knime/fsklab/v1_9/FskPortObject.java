@@ -77,6 +77,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.FskPlugin;
+import de.bund.bfr.knime.fsklab.nodes.FskPortObjectUtil;
 import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.FLabel;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.FPanel;
@@ -495,27 +496,12 @@ public class FskPortObject implements PortObject {
           packages = IOUtils.readLines(in, "UTF-8");
         }else if (entryName.equals(WORKING_DIRECTORY)) {
           
-          // Back up and configure class loader of current thread
-          ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
-          Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
+          environmentManager = Optional.of(FskPortObjectUtil.deserializeAfterClassloaderReset(getClass().getClassLoader(), MAPPER104, in, EnvironmentManager.class));
           
-          // Deserialize working directory
-          EnvironmentManager actualManager = MAPPER104.readValue(in, EnvironmentManager.class);
-          environmentManager = Optional.of(actualManager);
-          
-          // Restore class loader
-          Thread.currentThread().setContextClassLoader(originalClassLoader);
         } else if (entryName.equals(GENERATED_RESOURCE_FILES)) {
           
-          // Back up and configure class loader of current thread
-          ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
-          Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
-          
-          // Deserialize generatedResourceFiles Object
-          generatedResourceFiles = MAPPER104.readValue(in, GeneratedResourceFiles.class);
-          
-          // Restore class loader
-          Thread.currentThread().setContextClassLoader(originalClassLoader);
+          generatedResourceFiles = FskPortObjectUtil.deserializeAfterClassloaderReset(getClass().getClassLoader(), MAPPER104, in, GeneratedResourceFiles.class);
+         
         } else if (entryName.equals(PLOT)) {
           plot = IOUtils.toString(in, "UTF-8");
         } else if (entryName.equals(README)) {
