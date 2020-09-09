@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension point="org.knime.js.core.webResources">
+   
+     <webResourceBundle  name="Backbone.js" version="1.4.0" webResourceBundleID="backbone_1.4.0" debug="false">
+       <webResource relativePathSource="js-lib/backbone" relativePathTarget="js-lib/backbone" />
+       <importResource relativePath="js-lib/backbone/backbone-min.js" type="JAVASCRIPT" />
+       <webDependency webResourceBundleID="underscore_1.9.1" />
+     </webResourceBundle>
+   </extension>
+   
+</plugin>
