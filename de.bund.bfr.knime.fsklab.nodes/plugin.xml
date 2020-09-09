@@ -159,12 +159,7 @@
 	   <webDependency webResourceBundleID="FskMetadata_1.0.0" />
 	   <webDependency webResourceBundleID="FskUtil_1.0.0" />
 	 </webResourceBundle>
-    
-     <webResourceBundle debug="false" name="lodash" version="4.17.15" webResourceBundleID="Lodash_4.17.15">
-       <webResource relativePathSource="js-lib/lodash/4.17.15" relativePathTarget="js-lib/lodash/4.17.15" />
-       <importResource relativePath="js-lib/lodash/4.17.15/lodash.min.js" type="JAVASCRIPT" />
-     </webResourceBundle>
-    
+      
     <webResourceBundle debug="false" name="underscore" version="1.9.1" webResourceBundleID="underscore_1.9.1">
       <webResource relativePathSource="js-lib/underscore/1.9.1" relativePathTarget="js-lib/underscore/1.9.1" />
       <importResource relativePath="js-lib/underscore/1.9.1/underscore-min.js" type="JAVASCRIPT" />
