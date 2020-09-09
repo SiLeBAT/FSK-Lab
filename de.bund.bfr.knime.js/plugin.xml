@@ -12,8 +12,8 @@
      
      <webResourceBundle name="Bootstrap 3 Typeahead" version="4.0.2" webResourceBundleID="bootstrap3_typeahead_4.0.2"
        debug="false">
-       <webResource relativePathSource="js-lib/bootstrap3_typeahead" relativePathTarget="bootstrap3_typeahead" />
-       <importResource relativePath="bootstrap3_typeahead/bootstrap3-typeahead.min.js" type="JAVASCRIPT" />
+       <webResource relativePathSource="js-lib/bootstrap3_typeahead" relativePathTarget="js-lib/bootstrap3_typeahead" />
+       <importResource relativePath="js-lib/bootstrap3_typeahead/bootstrap3-typeahead.min.js" type="JAVASCRIPT" />
      </webResourceBundle>
    </extension>
    
