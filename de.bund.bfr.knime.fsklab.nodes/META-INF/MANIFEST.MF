@@ -29,7 +29,8 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations;bundle-version="2
  org.knime.ext.svg;bundle-version="[3.7.0,5.0.0)",
  org.apache.commons.lang;bundle-version="2.6.0",
  org.sbml.jsbml;bundle-version="1.0.0",
- de.bund.bfr.knime.fsklab.service;bundle-version="1.0.0"
+ de.bund.bfr.knime.fsklab.service;bundle-version="1.0.0",
+ de.bund.bfr.knime.js;bundle-version="1.0.0"
 Bundle-Vendor: German Federal Institute for Risk Assessment (BfR)
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: de.bund.bfr.knime.fsklab.FskPlugin
