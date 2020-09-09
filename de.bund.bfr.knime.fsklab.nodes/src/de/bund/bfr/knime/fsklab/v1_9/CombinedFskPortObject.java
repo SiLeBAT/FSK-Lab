@@ -80,6 +80,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.FskPlugin;
+import de.bund.bfr.knime.fsklab.nodes.FskPortObjectUtil;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.FLabel;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.FPanel;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.JsonPanel;
@@ -635,12 +636,15 @@ public class CombinedFskPortObject extends FskPortObject {
           } else if (entryName.startsWith(LIBRARY_LIST)) {
             packages = IOUtils.readLines(in, "UTF-8");
           } else if (entryName.startsWith(WORKING_DIRECTORY)) {
-            EnvironmentManager actualManager = MAPPER104.readValue(in, EnvironmentManager.class);
-            environmentManager = Optional.of(actualManager);
+         
+            environmentManager = Optional.of(FskPortObjectUtil.deserializeAfterClassloaderReset(getClass().
+                getClassLoader(), MAPPER104, in, EnvironmentManager.class));
+            
           } else if (entryName.startsWith(GENERATED_RESOURCE_FILES)) {
-          // Deserialize generatedResourceFiles Object
-            generatedResourceFiles = MAPPER104.readValue(in, GeneratedResourceFiles.class);
-                    
+
+            generatedResourceFiles = FskPortObjectUtil.deserializeAfterClassloaderReset(getClass().
+                getClassLoader(), MAPPER104, in, GeneratedResourceFiles.class);
+            
           }  else if (entryName.startsWith(PLOT)) {
             plot = IOUtils.toString(in, "UTF-8");
           } else if (entryName.startsWith(README)) {
