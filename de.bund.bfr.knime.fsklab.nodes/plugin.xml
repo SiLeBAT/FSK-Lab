@@ -184,11 +184,6 @@
       <importResource relativePath="codemirror/lib/codemirror.css" type="CSS" />
     </webResourceBundle>
     
-    <webResourceBundle debug="false" name="Bootstrap 3 Typeahead" usesDefine="false" version="4.0.2" webResourceBundleID="bootstrap3_typeahead_4.0.2">
-      <webResource relativePathSource="js-lib/bootstrap3_typeahead" relativePathTarget="bootstrap3_typeahead" />
-      <importResource relativePath="bootstrap3_typeahead/bootstrap3-typeahead.min.js" type="JAVASCRIPT" />
-    </webResourceBundle>
-
     <webResourceBundle debug="false" name="datepicker" usesDefine="false" version="1.9.0" webResourceBundleID="datepicker">
       <webResource relativePathSource="js-lib/datepicker" relativePathTarget="datepicker" />
       <importResource relativePath="datepicker/bootstrap-datepicker.min.js" type="JAVASCRIPT" />
