@@ -60,7 +60,6 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.border.Border;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.emfjson.jackson.module.EMFModule;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.NodeLogger;
@@ -71,9 +70,6 @@ import org.knime.core.node.port.PortObjectZipOutputStream;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.PortTypeRegistry;
 import org.knime.core.util.FileUtil;
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.FskPlugin;
@@ -86,17 +82,11 @@ import de.bund.bfr.knime.fsklab.nodes.common.ui.ScriptPanel;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.UIUtils;
 import de.bund.bfr.knime.fsklab.nodes.environment.EnvironmentManager;
 import de.bund.bfr.knime.fsklab.nodes.environment.GeneratedResourceFiles;
-import de.bund.bfr.knime.fsklab.rakip.RakipModule;
-import de.bund.bfr.knime.fsklab.rakip.RakipUtil;
 import de.bund.bfr.metadata.swagger.ConsumptionModel;
 import de.bund.bfr.metadata.swagger.DataModel;
 import de.bund.bfr.metadata.swagger.DoseResponseModel;
 import de.bund.bfr.metadata.swagger.ExposureModel;
 import de.bund.bfr.metadata.swagger.GenericModel;
-import de.bund.bfr.metadata.swagger.GenericModelDataBackground;
-import de.bund.bfr.metadata.swagger.GenericModelGeneralInformation;
-import de.bund.bfr.metadata.swagger.GenericModelModelMath;
-import de.bund.bfr.metadata.swagger.GenericModelScope;
 import de.bund.bfr.metadata.swagger.HealthModel;
 import de.bund.bfr.metadata.swagger.Model;
 import de.bund.bfr.metadata.swagger.OtherModel;
@@ -264,9 +254,6 @@ public class FskPortObject implements PortObject {
 
     private static final String MODEL = "model.R";
     private static final String VIZ = "viz.R";
-    private static final String META_DATA = "metaData";
-
-    private static final String CFG_GENERAL_INFORMATION = "generalInformation";
 
     private static final String WORKSPACE = "workspace";
     private static final String SIMULATION = "simulation";
@@ -279,12 +266,6 @@ public class FskPortObject implements PortObject {
 
     private static final String README = "readme";
 
-    /** Object mapper for 1.0.2 metadata. */
-    private static final ObjectMapper MAPPER102;
-
-    /** Object mapper for 1.0.3 metadata. */
-    private static final ObjectMapper MAPPER103;
-
     /** Object mapper for 1.0.4 metadata. */
     private static final ObjectMapper MAPPER104 = FskPlugin.getDefault().MAPPER104;
 
@@ -292,19 +273,6 @@ public class FskPortObject implements PortObject {
 
     static {
       try {
-        // ObjectMapper defaults to use a JsonFactory that automatically closes
-        // the stream. When further entries are added to the archive the stream
-        // is closed and fails. The AUTO_CLOSE_TARGET needs to be disabled.
-        final JsonFactory jsonFactory = new JsonFactory();
-        jsonFactory.configure(JsonGenerator.Feature.AUTO_CLOSE_TARGET, false);
-        jsonFactory.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, false);
-
-        MAPPER102 = new ObjectMapper(jsonFactory);
-        MAPPER102.registerModule(new RakipModule());
-
-        MAPPER103 = new ObjectMapper(jsonFactory);
-        MAPPER103.registerModule(new EMFModule());
-
         modelClasses = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         modelClasses.put("genericModel", GenericModel.class);
         modelClasses.put("dataModel", DataModel.class);
@@ -447,43 +415,6 @@ public class FskPortObject implements PortObject {
           modelScript = IOUtils.toString(in, "UTF-8");
         } else if (entryName.equals(VIZ)) {
           visualizationScript = IOUtils.toString(in, "UTF-8");
-        }
-
-        // If found old deprecated metadata, restore it and convert it to new EMF
-        // metadata
-        else if (entryName.equals(META_DATA)) {
-
-          final de.bund.bfr.knime.fsklab.rakip.GenericModel genericModel =
-              MAPPER102.readValue(in, de.bund.bfr.knime.fsklab.rakip.GenericModel.class);
-
-          final GenericModel gm = new GenericModel();
-          gm.setModelType("genericModel");
-          gm.setGeneralInformation(RakipUtil.convert(genericModel.generalInformation));
-          gm.setScope(RakipUtil.convert(genericModel.scope));
-          gm.setDataBackground(RakipUtil.convert(genericModel.dataBackground));
-          gm.setModelMath(RakipUtil.convert(genericModel.modelMath));
-
-          modelMetadata = gm;
-        }
-
-        else if (entryName.equals(CFG_GENERAL_INFORMATION)) {
-          // Read deprecated EMF metadata
-          final GenericModel gm = new GenericModel();
-          gm.setModelType("genericModel");
-
-          gm.setGeneralInformation(MAPPER104.readValue(in, GenericModelGeneralInformation.class));
-          in.getNextEntry();
-
-          gm.setScope(MAPPER104.readValue(in, GenericModelScope.class));
-          in.getNextEntry();
-
-          gm.setDataBackground(MAPPER104.readValue(in, GenericModelDataBackground.class));
-          in.getNextEntry();
-
-          gm.setModelMath(MAPPER104.readValue(in, GenericModelModelMath.class));
-          in.getNextEntry();
-
-          modelMetadata = gm;
         } else if (entryName.equals("modelType")) {
           // deserialize new models
           final String modelClass = IOUtils.toString(in, "UTF-8");
