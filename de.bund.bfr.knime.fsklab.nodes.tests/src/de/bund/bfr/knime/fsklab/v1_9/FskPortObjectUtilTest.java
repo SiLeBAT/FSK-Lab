@@ -24,7 +24,7 @@ public class FskPortObjectUtilTest {
 		
 		try (InputStream inputStream = new FileInputStream(new File("files/example_environment.json"))){
 			EnvironmentManager manager = FskPortObjectUtil.deserializeAfterClassloaderReset(classLoader, mapper, inputStream, EnvironmentManager.class);
-			assertEquals(ArchivedEnvironmentManager.class,manager.getClass());
+			assertEquals(ArchivedEnvironmentManager.class, manager.getClass());
 		}
 	}
 	
@@ -37,7 +37,7 @@ public class FskPortObjectUtilTest {
 			EnvironmentManager manager = FskPortObjectUtil.deserializeAfterClassloaderReset(classLoader, mapper, inputStream, EnvironmentManager.class);
 			ArchivedEnvironmentManager actualManager = (ArchivedEnvironmentManager) manager;
 			String archivePath = actualManager.getArchivePath();
-			assertEquals("C:\\Users\\schuelet\\Documents\\Arbeit\\test_model1.fskx",archivePath);
+			assertEquals("C:\\Users\\schuelet\\Documents\\Arbeit\\test_model1.fskx", archivePath);
 			
 			String[] entries = actualManager.getEntries();
 			assertNotNull(entries );
