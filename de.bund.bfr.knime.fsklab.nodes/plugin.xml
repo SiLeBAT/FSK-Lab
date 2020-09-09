@@ -132,7 +132,7 @@
        <webDependency webResourceBundleID="codemirror"></webDependency>
        <webDependency webResourceBundleID="bootstrap_3.3.6"></webDependency>
        <webDependency webResourceBundleID="bootstrap3_typeahead_4.0.2"></webDependency>
-       <webDependency webResourceBundleID="datepicker"></webDependency>
+       <webDependency webResourceBundleID="datepicker_1.9.0"></webDependency>
        <webDependency webResourceBundleID="RequireJS_2.3.3"></webDependency>
        <webDependency webResourceBundleID="knimeserviceConditionalLoad_1.0"></webDependency>
        
@@ -182,11 +182,6 @@
     <webResourceBundle debug="false" name="codemirror" usesDefine="true" version="5.49.2" webResourceBundleID="codemirror">    
       <webResource relativePathSource="js-lib/codemirror-5.49.2/" relativePathTarget="codemirror"></webResource>
       <importResource relativePath="codemirror/lib/codemirror.css" type="CSS" />
-    </webResourceBundle>
-    
-    <webResourceBundle debug="false" name="datepicker" usesDefine="false" version="1.9.0" webResourceBundleID="datepicker">
-      <webResource relativePathSource="js-lib/datepicker" relativePathTarget="datepicker" />
-      <importResource relativePath="datepicker/bootstrap-datepicker.min.js" type="JAVASCRIPT" />
     </webResourceBundle>
     
 	<webResourceBundle
