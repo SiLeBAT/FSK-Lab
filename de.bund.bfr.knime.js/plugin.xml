@@ -15,6 +15,12 @@
        <webResource relativePathSource="js-lib/bootstrap3_typeahead" relativePathTarget="js-lib/bootstrap3_typeahead" />
        <importResource relativePath="js-lib/bootstrap3_typeahead/bootstrap3-typeahead.min.js" type="JAVASCRIPT" />
      </webResourceBundle>
+     
+     <webResourceBundle debug="false" name="codemirror" usesDefine="true" version="5.49.2" webResourceBundleID="codemirror_5.49.2">    
+      <webResource relativePathSource="js-lib/codemirror/" relativePathTarget="codemirror"></webResource>
+      <importResource relativePath="codemirror/lib/codemirror.css" type="CSS" />
+     </webResourceBundle>
+     
    </extension>
    
 </plugin>
