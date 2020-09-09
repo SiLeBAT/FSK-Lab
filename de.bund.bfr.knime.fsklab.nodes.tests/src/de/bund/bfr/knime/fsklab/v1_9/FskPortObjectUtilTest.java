@@ -2,6 +2,7 @@ package de.bund.bfr.knime.fsklab.v1_9;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,13 +19,13 @@ import de.bund.bfr.knime.fsklab.nodes.environment.EnvironmentManager;
 public class FskPortObjectUtilTest {
 
 	@Test
-	public void testDeserialize_CorrectClass_shouldReturnEqual() throws Exception {
+	public void testDeserialize_CorrectClass_shouldReturnTrue() throws Exception {
 		ObjectMapper mapper = new ObjectMapper();
 		ClassLoader classLoader = getClass().getClassLoader();
 		
 		try (InputStream inputStream = new FileInputStream(new File("files/example_environment.json"))){
 			EnvironmentManager manager = FskPortObjectUtil.deserializeAfterClassloaderReset(classLoader, mapper, inputStream, EnvironmentManager.class);
-			assertEquals(ArchivedEnvironmentManager.class, manager.getClass());
+			assertTrue(manager instanceof ArchivedEnvironmentManager);
 		}
 	}
 	
