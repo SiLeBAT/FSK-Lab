@@ -24,6 +24,8 @@
 
 	<modules>
 		<!-- Plugins -->
+		<module>de.bund.bfr.knime.js</module>
+		
 		<module>de.bund.bfr.knime.fsklab.metadata.model</module>
 		<module>de.bund.bfr.knime.fsklab.nodes</module>
 		<module>de.bund.bfr.knime.fsklab.nodes.common</module>
