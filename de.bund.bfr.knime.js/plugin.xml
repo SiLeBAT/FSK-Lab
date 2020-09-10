@@ -16,6 +16,11 @@
        <importResource relativePath="js-lib/bootstrap3_typeahead/bootstrap3-typeahead.min.js" type="JAVASCRIPT" />
      </webResourceBundle>
      
+     <webResourceBundle name="lodash" version="4.17.15" webResourceBundleID="Lodash_4.17.15" debug="false">
+       <webResource relativePathSource="js-lib/lodash" relativePathTarget="js-lib/lodash" />
+       <importResource relativePath="js-lib/lodash/lodash.min.js" type="JAVASCRIPT" />
+     </webResourceBundle>
+     
      <webResourceBundle name="underscore" version="1.9.1" webResourceBundleID="underscore_1.9.1" debug="false">
        <webResource relativePathSource="js-lib/underscore" relativePathTarget="js-lib/underscore" />
        <importResource relativePath="js-lib/underscore/underscore-min.js" type="JAVASCRIPT" />
