@@ -1,6 +1,6 @@
 fskeditorjs = function () {
 
-  const view = { version: "1.0.0" };
+  const view = { version: "1.7.2" };
   view.name = "Javascript FSK Editor";
 
   /**
