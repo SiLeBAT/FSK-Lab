@@ -20,6 +20,12 @@
        <webResource relativePathSource="js-lib/underscore" relativePathTarget="js-lib/underscore" />
        <importResource relativePath="js-lib/underscore/underscore-min.js" type="JAVASCRIPT" />
      </webResourceBundle>
+     
+     <webResourceBundle name="datepicker" version="1.9.0" webResourceBundleID="datepicker_1.9.0"
+       debug="false">
+       <webResource relativePathSource="js-lib/datepicker" relativePathTarget="js-lib/datepicker" />
+       <importResource relativePath="js-lib/datepicker/bootstrap-datepicker.min.js" type="JAVASCRIPT" />
+     </webResourceBundle>
    </extension>
    
 </plugin>
