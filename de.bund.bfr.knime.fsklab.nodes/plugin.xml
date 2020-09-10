@@ -62,9 +62,9 @@
      <!-- JavaScript component for the simulator node -->
      <javascriptComponent
        getComponentValue-method-name="getComponentValue"
-       implementationBundleID="de.bund.bfr.knime.fsklab.v1.9.simulator.bundle"
+       implementationBundleID="de.bund.bfr.knime.fsklab.nodes.jssimulator.bundle"
        init-method-name="init"
-       javascriptComponentID="de.bund.bfr.knime.fsklab.v1.9.simulator.component"
+       javascriptComponentID="de.bund.bfr.knime.fsklab.nodes.jssimulator"
        name="JavaScript Simulation Configurator"
        namespace="simulator">
      </javascriptComponent>
@@ -72,20 +72,19 @@
      <!-- Javascript component for Fsk joiner node -->
      <javascriptComponent
        getComponentValue-method-name="getComponentValue"
-       implementationBundleID="de.bund.bfr.knime.fsklab.v1.9.joiner.bundle"
+       implementationBundleID="de.bund.bfr.knime.fsklab.js.joiner.bundle"
        init-method-name="init"
-       javascriptComponentID="de.bund.bfr.knime.fsklab.v1.9.joiner.component"
+       javascriptComponentID="de.bund.bfr.knime.fsklab.js.joiner"
        name="FSK Joiner"
        namespace="joiner">
      </javascriptComponent>
-     
      <!-- Javascript component for Fsk Editor JS node -->
      <javascriptComponent
        validate-method-name="validate"
        getComponentValue-method-name="getComponentValue"
-       implementationBundleID="de.bund.bfr.knime.fsklab.v1.9.editor.bundle"
+       implementationBundleID="de.bund.bfr.knime.fsklab.js.FSKEditorJS.bundle"
        init-method-name="init"
-       javascriptComponentID="de.bund.bfr.knime.fsklab.v1.9.editor.component"
+       javascriptComponentID="de.bund.bfr.knime.fsklab.js.FSKEditorJS"
        name="FSK Editor JS"
        namespace="fskeditorjs">
      </javascriptComponent>
@@ -99,13 +98,20 @@
        name="JavaScript Simulation Configurator"
        usesDefine="false"
        version="0.0.1"
-       webResourceBundleID="de.bund.bfr.knime.fsklab.v1.9.simulator.bundle">
+       webResourceBundleID="de.bund.bfr.knime.fsklab.nodes.jssimulator.bundle">
+       
+       <!-- JS and CSS code -->
+       <webResource
+         relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/jssimulator.js"
+         relativePathTarget="de/bund/bfr/knime/fsklab/nodes/jssimulator.js">
+       </webResource>
+       <importResource relativePath="de/bund/bfr/knime/fsklab/nodes/jssimulator.js" type="JAVASCRIPT" />
        
        <webResource
-         relativePathSource="js-src/de/bund/bfr/knime/fsklab/v1.9/simulator"
-         relativePathTarget="js-src/de/bund/bfr/knime/fsklab/v1.9/simulator" />
-       <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/v1.9/simulator/jssimulator.js" type="JAVASCRIPT" />
-       <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/v1.9/simulator/jssimulator.css" type="CSS" />
+         relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/jssimulator.css"
+         relativePathTarget="de/bund/bfr/knime/fsklab/nodes/jssimulator.css">
+       </webResource>
+       <importResource relativePath="de/bund/bfr/knime/fsklab/nodes/jssimulator.css" type="CSS" />
 
        <webDependency webResourceBundleID="bootstrap_3.3.6"></webDependency>
      </webResourceBundle>
@@ -116,14 +122,12 @@
        name="FSK Editor JS"
        usesDefine="true"
        version="1.0.0"
-       webResourceBundleID="de.bund.bfr.knime.fsklab.v1.9.editor.bundle">
+       webResourceBundleID="de.bund.bfr.knime.fsklab.js.FSKEditorJS.bundle">
        
        <!-- JS and CSS code -->
-       <webResource
-         relativePathSource="js-src/de/bund/bfr/knime/fsklab/v1.9/editor"
-         relativePathTarget="js-src/de/bund/bfr/knime/fsklab/v1.9/editor" />
-       <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/v1.9/editor/editor.js" type="JAVASCRIPT" />
-       <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/v1.9/editor/editor.css" type="CSS" />
+       <webResource relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/neweditor" relativePathTarget="neweditor" />
+       <importResource relativePath="neweditor/editor.js" type="JAVASCRIPT" />
+       <importResource relativePath="neweditor/editor.css" type="CSS" />
 
        <webDependency webResourceBundleID="codemirror_5.49.2"></webDependency>
        <webDependency webResourceBundleID="bootstrap_3.3.6"></webDependency>
@@ -132,18 +136,18 @@
        <webDependency webResourceBundleID="RequireJS_2.3.3"></webDependency>
        <webDependency webResourceBundleID="knimeserviceConditionalLoad_1.0"></webDependency>
        
+       <!-- FSK dependencies -->
        <webDependency webResourceBundleID="FskMetadata_1.0.0"></webDependency>
        <webDependency webResourceBundleID="FskUtil_1.0.0"></webDependency>
+       
      </webResourceBundle>
      
      <!-- JS and CSS code for Fsk Joiner node -->	 
-	 <webResourceBundle debug="true" name="FSK Joiner"
-	   usesDefine="true" version="1.0.0" webResourceBundleID="de.bund.bfr.knime.fsklab.v1.9.joiner.bundle">
-       <webResource
-         relativePathSource="js-src/de/bund/bfr/knime/fsklab/v1.9/joiner"
-         relativePathTarget="js-src/de/bund/bfr/knime/fsklab/v1.9/joiner" />	   
-	   <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/v1.9/joiner/joiner.css" type="CSS" />
-	   <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/v1.9/joiner/joiner.js" type="JAVASCRIPT" />
+	 <webResourceBundle debug="true" name="FSK Joiner" usesDefine="true" version="1.0.0" webResourceBundleID="de.bund.bfr.knime.fsklab.js.joiner.bundle">
+	   <webResource relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/newjoiner" relativePathTarget="js-src/de/bund/bfr/knime/fsklab/nodes/newjoiner" />
+	   
+	   <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/nodes/newjoiner/joiner.css" type="CSS" />
+	   <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/nodes/newjoiner/joiner.js" type="JAVASCRIPT" />
 	   
 	   <webDependency webResourceBundleID="JointJS_3.1.1" />
 	   <webDependency webResourceBundleID="bootstrap_3.3.6" />
