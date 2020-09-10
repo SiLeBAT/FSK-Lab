@@ -426,7 +426,7 @@ class ReaderNodeModel extends NoInternalsModel {
       /**       ADD PARAMETER SUFFIXES           **/
       
       List<Parameter> op = SwaggerUtil.getParameter(topfskObj.modelMetadata);
-      List<String> opFirst = SwaggerUtil.getParameter(firstFskPortObject.modelMetadata).stream().map(Parameter::getId).collect(Collectors.toList());
+      List<String> opFirst = SwaggerUtil.getParameter(topfskObj.getFirstFskPortObject().modelMetadata).stream().map(Parameter::getId).collect(Collectors.toList());
       
       for(Parameter p : op) {
         if(p.getId().endsWith(JoinerNodeModel.SUFFIX_FIRST) || p.getId().endsWith(JoinerNodeModel.SUFFIX_SECOND))
