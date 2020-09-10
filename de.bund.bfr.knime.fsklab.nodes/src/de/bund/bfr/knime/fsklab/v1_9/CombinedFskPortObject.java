@@ -147,8 +147,6 @@ public class CombinedFskPortObject extends FskPortObject {
 
   public static final String[] RESOURCE_EXTENSIONS = new String[] {"txt", "RData", "csv"};
   
-  private static int numOfInstances = 0;
-  
   private static Random ran = new Random();
 
   public CombinedFskPortObject(final String model, final String param, final String viz,
@@ -160,8 +158,6 @@ public class CombinedFskPortObject extends FskPortObject {
     super(model, viz, modelMetadata, workspace, packages, generatedResourceFiles, environmentManager, plot, "");
     this.firstFskPortObject = firstFskPortObject;
     this.secondFskPortObject = secondFskPortObject;
-    objectNum = numOfInstances;
-    numOfInstances += 1;
   }
 
   public CombinedFskPortObject(final Optional<EnvironmentManager> environmentManager,
@@ -171,9 +167,6 @@ public class CombinedFskPortObject extends FskPortObject {
     this.firstFskPortObject = firstFskPortObject;
     this.secondFskPortObject = secondFskPortObject;
     this.setGeneratedResourceFiles(new GeneratedResourceFiles());
-   
-    objectNum = numOfInstances;
-    numOfInstances += 1;
   }
 
   public CombinedFskPortObject(final String model, final String viz, final Model modelMetadata,
@@ -188,8 +181,6 @@ public class CombinedFskPortObject extends FskPortObject {
     this.modelMetadata = modelMetadata;
 
     this.setGeneratedResourceFiles(new GeneratedResourceFiles());
-    objectNum = numOfInstances;
-    numOfInstances += 1;
   }
 
   @Override
