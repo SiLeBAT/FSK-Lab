@@ -31,6 +31,28 @@
        <webResource relativePathSource="js-lib/datepicker" relativePathTarget="js-lib/datepicker" />
        <importResource relativePath="js-lib/datepicker/bootstrap-datepicker.min.js" type="JAVASCRIPT" />
      </webResourceBundle>
+     
+     <webResourceBundle name="FSK UI Metadata schema" version="1.0.0" webResourceBundleID="FskMetadata_1.0.0"
+       debug="true" exports="fskui" usesDefine="false">
+
+	   <webResource
+	     relativePathSource="js-lib/bfr/fskmetadata_1.0.0.js"
+		 relativePathTarget="js-lib/bfr/fskmetadata_1.0.0.js">
+	   </webResource>
+
+	   <importResource relativePath="js-lib/bfr/fskmetadata_1.0.0.js" type="JAVASCRIPT"></importResource>
+	 </webResourceBundle>
+
+	 <webResourceBundle name="FSK JS utilities" version="1.0.0" webResourceBundleID="FskUtil_1.0.0"
+	   debug="true" exports="fskutil" usesDefine="false">
+
+	   <webResource
+	     relativePathSource="js-lib/bfr/fskutil_1.0.0.js"
+		 relativePathTarget="js-lib/bfr/fskutil_1.0.0.js">
+	   </webResource>
+
+	   <importResource relativePath="js-lib/bfr/fskutil_1.0.0.js" type="JAVASCRIPT"></importResource>
+	</webResourceBundle>
    </extension>
    
 </plugin>
