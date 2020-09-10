@@ -129,7 +129,7 @@
        <importResource relativePath="neweditor/editor.js" type="JAVASCRIPT" />
        <importResource relativePath="neweditor/editor.css" type="CSS" />
 
-       <webDependency webResourceBundleID="codemirror"></webDependency>
+       <webDependency webResourceBundleID="codemirror_5.49.2"></webDependency>
        <webDependency webResourceBundleID="bootstrap_3.3.6"></webDependency>
        <webDependency webResourceBundleID="bootstrap3_typeahead_4.0.2"></webDependency>
        <webDependency webResourceBundleID="datepicker_1.9.0"></webDependency>
@@ -152,7 +152,7 @@
 	   <webDependency webResourceBundleID="JointJS_3.1.1" />
 	   <webDependency webResourceBundleID="bootstrap_3.3.6" />
        <webDependency webResourceBundleID="bootstrap3_typeahead_4.0.2" />
-       <webDependency webResourceBundleID="codemirror"></webDependency>
+       <webDependency webResourceBundleID="codemirror_5.49.2"></webDependency>
        <webDependency webResourceBundleID="RequireJS_2.3.3"></webDependency>
        <webDependency webResourceBundleID="knimeserviceConditionalLoad_1.0"></webDependency>
 	   
@@ -167,11 +167,6 @@
       <webDependency webResourceBundleID="jQuery_3.3.1" />
 	  <webDependency webResourceBundleID="backbone_1.4.0" />
 	  <webDependency webResourceBundleID="Lodash_4.17.15" />
-    </webResourceBundle>
-    
-    <webResourceBundle debug="false" name="codemirror" usesDefine="true" version="5.49.2" webResourceBundleID="codemirror">    
-      <webResource relativePathSource="js-lib/codemirror-5.49.2/" relativePathTarget="codemirror"></webResource>
-      <importResource relativePath="codemirror/lib/codemirror.css" type="CSS" />
     </webResourceBundle>
     
 	<webResourceBundle
