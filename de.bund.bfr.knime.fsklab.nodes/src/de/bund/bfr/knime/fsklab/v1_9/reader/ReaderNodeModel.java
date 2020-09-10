@@ -82,12 +82,14 @@ import de.bund.bfr.knime.fsklab.v1_9.FskPortObject;
 import de.bund.bfr.knime.fsklab.v1_9.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.v1_9.FskSimulation;
 import de.bund.bfr.knime.fsklab.v1_9.JoinRelation;
+import de.bund.bfr.knime.fsklab.v1_9.joiner.JoinerNodeModel;
 import de.bund.bfr.metadata.swagger.GenericModel;
 import de.bund.bfr.metadata.swagger.GenericModelDataBackground;
 import de.bund.bfr.metadata.swagger.GenericModelGeneralInformation;
 import de.bund.bfr.metadata.swagger.GenericModelModelMath;
 import de.bund.bfr.metadata.swagger.GenericModelScope;
 import de.bund.bfr.metadata.swagger.Model;
+import de.bund.bfr.metadata.swagger.Parameter;
 import de.unirostock.sems.cbarchive.ArchiveEntry;
 import de.unirostock.sems.cbarchive.CombineArchive;
 import metadata.SwaggerUtil;
@@ -278,6 +280,9 @@ class ReaderNodeModel extends NoInternalsModel {
           new File(currentWorkingDirectory, "sub" + readLevel));
       FskPortObject secondFskPortObject = readFskPortObject(archive, secondGroup, ++readLevel,
           new File(currentWorkingDirectory, "sub" + readLevel));
+      
+    
+      
       String tempString = firstelement.substring(0, firstelement.length() - 2);
       String parentPath = tempString.substring(0, tempString.lastIndexOf('/'));
 
@@ -418,7 +423,28 @@ class ReaderNodeModel extends NoInternalsModel {
       }
 
       topfskObj.setJoinerRelation(connectionList.toArray(new JoinRelation[connectionList.size()]));
-
+      /**       ADD PARAMETER SUFFIXES           **/
+      
+      List<Parameter> op = SwaggerUtil.getParameter(topfskObj.modelMetadata);
+      List<String> opFirst = SwaggerUtil.getParameter(firstFskPortObject.modelMetadata).stream().map(Parameter::getId).collect(Collectors.toList());
+      
+      for(Parameter p : op) {
+        if(p.getId().endsWith(JoinerNodeModel.SUFFIX_FIRST) || p.getId().endsWith(JoinerNodeModel.SUFFIX_SECOND))
+          continue;
+        if(p.getId().endsWith("_dup")) {
+          p.setId(p.getId().substring(0, p.getId().length() - 5) + JoinerNodeModel.SUFFIX_FIRST);
+        }
+          
+        
+        if(opFirst.contains(p.getId()) ) {
+          p.setId(p.getId() + JoinerNodeModel.SUFFIX_FIRST);
+        }else {
+          p.setId(p.getId() + JoinerNodeModel.SUFFIX_SECOND);
+        }
+        
+      }
+      
+      
       return topfskObj;
     } else {
       String modelScript = "";
