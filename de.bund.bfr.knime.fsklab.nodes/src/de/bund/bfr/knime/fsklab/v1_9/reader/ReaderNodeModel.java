@@ -237,6 +237,10 @@ class ReaderNodeModel extends NoInternalsModel {
       fskObj = readFskPortObject(archive, modelFolders, 0, workingDirectory);
     }
 
+    // ADD PARAMETER SUFFIXES to 1.7.2 version models (combined)
+    ReaderNodeUtil.updateSuffixes(fskObj);
+    
+    
     return fskObj;
   }
 
@@ -424,10 +428,7 @@ class ReaderNodeModel extends NoInternalsModel {
 
       topfskObj.setJoinerRelation(connectionList.toArray(new JoinRelation[connectionList.size()]));
 
-      // ADD PARAMETER SUFFIXES to 1.7.2 version models (combined)
-      ReaderNodeUtil.addSuffixesToOldModel(topfskObj);
-      ReaderNodeUtil.addSuffixesToOldSimulations(topfskObj);
-      
+   
 
       return topfskObj;
     } else {
