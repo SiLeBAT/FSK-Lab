@@ -426,7 +426,8 @@ class ReaderNodeModel extends NoInternalsModel {
 
       // ADD PARAMETER SUFFIXES to 1.7.2 version models (combined)
       ReaderNodeUtil.addSuffixesToOldModel(topfskObj);
-
+      ReaderNodeUtil.addSuffixesToOldSimulations(topfskObj);
+      
 
       return topfskObj;
     } else {
