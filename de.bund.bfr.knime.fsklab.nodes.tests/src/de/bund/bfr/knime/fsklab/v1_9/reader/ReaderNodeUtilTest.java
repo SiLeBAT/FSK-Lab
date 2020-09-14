@@ -118,7 +118,6 @@ public class ReaderNodeUtilTest {
 		simMap.put("secondIn", "20");
 		simulation.getParameters().putAll(simMap);
 		List<FskSimulation> simulations = Arrays.asList(simulation);
-		;
 
 		ReaderNodeUtil.addSuffixesToOldSimulations(firstModelParameters, simulations);
 
