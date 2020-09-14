@@ -234,6 +234,9 @@ class ReaderNodeModel extends NoInternalsModel {
       fskObj = readFskPortObject(archive, modelFolders, 0, workingDirectory);
     }
 
+    // ADD PARAMETER SUFFIXES to 1.7.2 version models (combined)
+    ReaderNodeUtil.updateSuffixes(fskObj);
+    
     return fskObj;
   }
 
