@@ -6,21 +6,20 @@ import de.bund.bfr.metadata.swagger.Parameter;
 public class UpdateMetadataSuffixes {
 
   /**
-   * This method adds the correct suffix to each parameter from the metadata. The main purpose is to
-   * make 1.7.2 models compatible with 1.8+ of FSK-Lab. If the suffixes are already correct, no
-   * changes are made.
+   * This method adds the correct suffix to each parameter from the metadata.
    * 
-   * @param combObj: A combined FSK Port Object that might not have the correct parameter suffixes
-   *        in the metadata.
-   * 
+   * @param firstModelParameters: Reference parameter id's from the first sub-model to compare with
+   *        parameters of the combined model.
+   * @param originalParameters: The parameters which are updated by adding a legal suffix to them.
    */
   public static void addSuffixesToOldModel(List<String> firstModelParameters,
       List<Parameter> originalParameters) {
 
 
     for (Parameter p : originalParameters) {
-
       p.setId(ReaderNodeUtil.addSuffix(firstModelParameters, p.getId()));
     }
+
   }
+
 }

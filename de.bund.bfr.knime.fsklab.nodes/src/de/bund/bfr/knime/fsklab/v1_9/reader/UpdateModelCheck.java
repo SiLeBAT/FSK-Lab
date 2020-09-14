@@ -8,7 +8,37 @@ import de.bund.bfr.metadata.swagger.Parameter;
 import de.bund.bfr.metadata.swagger.Parameter.ClassificationEnum;
 import metadata.SwaggerUtil;
 
+/**
+ * 
+ * @author SchueleT
+ */
 public class UpdateModelCheck {
+
+
+
+  /**
+   * Method checks if a model needs to update its parameters to be compliant to FSK-Lab version
+   * 1.8+. It compares the number of parameter in the metadata suffixes with the maximum depth of
+   * the model. If the depth is greater than the number of legal suffixes, it means the model needs
+   * an update to be executable in FSK-Lab.
+   * 
+   * @param fskObj
+   * @return true if the model is outdated and needs an update.
+   */
+  public static boolean modelNeedsUpdate(FskPortObject fskObj) {
+
+    if (fskObj instanceof CombinedFskPortObject) {
+
+      int depthFirst = getNumberOfSubmodels(fskObj);
+
+      int numberSuffixes = getNumberOfSuffixes(SwaggerUtil.getParameter(fskObj.modelMetadata));
+      if (depthFirst > numberSuffixes)
+        return true;
+
+    }
+
+    return false;
+  }
 
   /**
    * 
@@ -33,6 +63,12 @@ public class UpdateModelCheck {
   }
 
 
+  /**
+   * Method to count the number of legal suffixes of a parameter id.
+   * 
+   * @param param: Parameter id.
+   * @return number of legal suffixes.
+   */
   private static int getNumberOfSuffixes(String param) {
 
     int number = 0;
@@ -47,6 +83,12 @@ public class UpdateModelCheck {
     return number;
   }
 
+  /**
+   * Method to determine the depth of a combined model, i.e. how many submodels a model has.
+   * 
+   * @param fskObj
+   * @return the maximum depth of a combined model.
+   */
   private static int getNumberOfSubmodels(FskPortObject fskObj) {
 
     if (!(fskObj instanceof CombinedFskPortObject))
@@ -54,28 +96,13 @@ public class UpdateModelCheck {
 
     CombinedFskPortObject combObj = (CombinedFskPortObject) fskObj;
 
-    // if depth == 3 -> number of suffixes == 3
-    if (combObj.getFirstFskPortObject() instanceof CombinedFskPortObject)
-      return 1 + getNumberOfSubmodels(combObj.getFirstFskPortObject());
+    int depthFirst = 1 + getNumberOfSubmodels(combObj.getFirstFskPortObject());
+    int depthSecond = 1 + getNumberOfSubmodels(combObj.getSecondFskPortObject());
 
-    return 1 + getNumberOfSubmodels(combObj.getSecondFskPortObject());
+    return (depthFirst > depthSecond) ? depthFirst : depthSecond;
 
 
   }
 
-  public static boolean modelNeedsUpdate(FskPortObject fskObj) {
-
-    if (fskObj instanceof CombinedFskPortObject) {
-
-      int depthFirst = getNumberOfSubmodels(fskObj);
-
-      int numberSuffixes = getNumberOfSuffixes(SwaggerUtil.getParameter(fskObj.modelMetadata));
-      if (depthFirst > numberSuffixes)
-        return true;
-
-    }
-
-    return false;
-  }
 
 }
