@@ -1,6 +1,6 @@
 simulator = function() {
 	
-	var view = { version: "0.0.1" };
+	var view = { version: "1.7.2" };
 	view.name = "JavaScript Simulation Configurator"
 
 	var _rep;

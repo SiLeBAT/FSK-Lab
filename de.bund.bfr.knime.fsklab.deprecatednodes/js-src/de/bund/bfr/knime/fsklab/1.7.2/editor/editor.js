@@ -1,6 +1,6 @@
 fskeditorjs = function () {
 
-  const view = { version: "1.0.0" };
+  const view = { version: "1.7.2" };
   view.name = "Javascript FSK Editor";
 
   /**
@@ -2700,9 +2700,28 @@ fskeditorjs = function () {
     document.getElementById("generalInformation").classList.add("active");
 
     // Create code mirrors for text areas with scripts and readme
-    _modelCodeMirror = createCodeMirror("modelScriptArea", "text/x-rsrc");
-    _visualizationCodeMirror = createCodeMirror("visualizationScriptArea", "text/x-rsrc");
-    _readmeCodeMirror = createCodeMirror("readmeArea", "text/x-markdown");
+    let require_config = {
+      packages: [{
+        name: "codemirror",
+        location: "codemirror/",
+        main: "lib/codemirror"
+      }]
+    };
+
+    knimeService.loadConditionally(
+      ["codemirror", "codemirror/mode/r/r", "codemirror/mode/markdown/markdown"],
+      (arg) => {
+        window.CodeMirror = arg[0];
+        _modelCodeMirror = createCodeMirror("modelScriptArea", "text/x-rsrc");
+        _visualizationCodeMirror = createCodeMirror("visualizationScriptArea", "text/x-rsrc");
+        _readmeCodeMirror = createCodeMirror("readmeArea", "text/x-markdown");
+
+        _modelCodeMirror.on("blur", () => { _modelCodeMirror.focus(); });
+        _visualizationCodeMirror.on("blur", () => { _visualizationCodeMirror.focus(); });
+        _readmeCodeMirror.on("blur", () =>{ _readmeCodeMirror.focus(); });
+      },
+      (err) => console.log("knimeService failed to install " + err),
+      require_config);
 
     $('#modelScript-tab').on('shown.bs.tab', () => {
       _modelCodeMirror.refresh();

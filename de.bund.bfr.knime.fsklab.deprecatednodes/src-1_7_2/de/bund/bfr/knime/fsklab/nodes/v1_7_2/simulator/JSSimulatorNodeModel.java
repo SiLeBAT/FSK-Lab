@@ -93,7 +93,7 @@ public class JSSimulatorNodeModel
 
   @Override
   public String getJavascriptObjectID() {
-    return "de.bund.bfr.knime.fsklab.nodes.jssimulator";
+    return "de.bund.bfr.knime.fsklab.v1.7.2.simulator.component";
   }
 
   @Override
