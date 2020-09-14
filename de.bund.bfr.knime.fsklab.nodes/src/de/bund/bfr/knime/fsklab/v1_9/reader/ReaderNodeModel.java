@@ -82,12 +82,15 @@ import de.bund.bfr.knime.fsklab.v1_9.FskPortObject;
 import de.bund.bfr.knime.fsklab.v1_9.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.v1_9.FskSimulation;
 import de.bund.bfr.knime.fsklab.v1_9.JoinRelation;
+import de.bund.bfr.knime.fsklab.v1_9.joiner.JoinerNodeModel;
+import de.bund.bfr.knime.fsklab.v1_9.joiner.JoinerNodeUtil;
 import de.bund.bfr.metadata.swagger.GenericModel;
 import de.bund.bfr.metadata.swagger.GenericModelDataBackground;
 import de.bund.bfr.metadata.swagger.GenericModelGeneralInformation;
 import de.bund.bfr.metadata.swagger.GenericModelModelMath;
 import de.bund.bfr.metadata.swagger.GenericModelScope;
 import de.bund.bfr.metadata.swagger.Model;
+import de.bund.bfr.metadata.swagger.Parameter;
 import de.unirostock.sems.cbarchive.ArchiveEntry;
 import de.unirostock.sems.cbarchive.CombineArchive;
 import metadata.SwaggerUtil;
@@ -133,16 +136,16 @@ class ReaderNodeModel extends NoInternalsModel {
 
     try {
       Files.walk(workflowContext.getCurrentLocation().toPath())
-      .filter(path -> path.toString()
-          .contains(nodeContext.getNodeContainer().getNameWithID().toString()
-              .replaceAll("\\W", "").replace(" ", "") + "_" + "workingDirectory"))
-      .sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(file -> {
-        try {
-          file.delete();
-        } catch (Exception ex) {
-          ex.printStackTrace();
-        }
-      });
+          .filter(path -> path.toString()
+              .contains(nodeContext.getNodeContainer().getNameWithID().toString()
+                  .replaceAll("\\W", "").replace(" ", "") + "_" + "workingDirectory"))
+          .sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(file -> {
+            try {
+              file.delete();
+            } catch (Exception ex) {
+              ex.printStackTrace();
+            }
+          });
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -172,7 +175,7 @@ class ReaderNodeModel extends NoInternalsModel {
 
       try (
           InputStream inStream =
-          FileUtil.openStreamWithTimeout(new URL(nodeSettings.filePath), 10000);
+              FileUtil.openStreamWithTimeout(new URL(nodeSettings.filePath), 10000);
           OutputStream outStream = new FileOutputStream(temporaryFile)) {
         IOUtils.copy(inStream, outStream);
       }
@@ -229,11 +232,15 @@ class ReaderNodeModel extends NoInternalsModel {
       WorkflowContext workflowContext = nodeContext.getWorkflowManager().getContext();
       File workingDirectory = new File(workflowContext.getCurrentLocation(),
           nodeContext.getNodeContainer().getNameWithID().toString().replaceAll("\\W", "")
-          .replace(" ", "") + "_workingDirectory");
+              .replace(" ", "") + "_workingDirectory");
 
       fskObj = readFskPortObject(archive, modelFolders, 0, workingDirectory);
     }
 
+    // ADD PARAMETER SUFFIXES to 1.7.2 version models (combined)
+    ReaderNodeUtil.updateSuffixes(fskObj);
+    
+    
     return fskObj;
   }
 
@@ -278,6 +285,9 @@ class ReaderNodeModel extends NoInternalsModel {
           new File(currentWorkingDirectory, "sub" + readLevel));
       FskPortObject secondFskPortObject = readFskPortObject(archive, secondGroup, ++readLevel,
           new File(currentWorkingDirectory, "sub" + readLevel));
+
+
+
       String tempString = firstelement.substring(0, firstelement.length() - 2);
       String parentPath = tempString.substring(0, tempString.lastIndexOf('/'));
 
@@ -321,75 +331,74 @@ class ReaderNodeModel extends NoInternalsModel {
             compModelPlugin.getNumSubmodels() > 0 ? compModelPlugin.getSubmodel(0).getModelRef()
                 : "";
 
-            for (org.sbml.jsbml.Parameter parameter : sbmlDocument.getModel().getListOfParameters()) {
+        for (org.sbml.jsbml.Parameter parameter : sbmlDocument.getModel().getListOfParameters()) {
 
-              //********************** CUT THE SHENANIGANS *************************
-              // Find metadata of target parameter. Connected parameter in 2nd model
-              //          final String parameterId =
-              //              parameter.getId().replaceAll(JoinerNodeModel.SUFFIX_SECOND, "");
-              //          Optional<Parameter> targetParameter = SwaggerUtil
-              //              .getParameter(secondFskPortObject.modelMetadata).stream().filter(currentParameter -> {
-              //                final String currentParameterId =
-              //                    currentParameter.getId().replaceAll(JoinerNodeModel.SUFFIX_SECOND, "");
-              //                if (parameterId.equals(currentParameterId)) {
-              //                  currentParameter.setId(parameter.getId());
-              //                  return true;
-              //                } else {
-              //                  return false;
-              //                }
-              //              }).findAny();
-              //
-              //          // If the metadata of targetParamter is not found, skip to next parameter
-              //          if (!targetParameter.isPresent()) {
-              //            continue;
-              //          }
+          // ********************** CUT THE SHENANIGANS *************************
+          // Find metadata of target parameter. Connected parameter in 2nd model
+          // final String parameterId =
+          // parameter.getId().replaceAll(JoinerNodeModel.SUFFIX_SECOND, "");
+          // Optional<Parameter> targetParameter = SwaggerUtil
+          // .getParameter(secondFskPortObject.modelMetadata).stream().filter(currentParameter -> {
+          // final String currentParameterId =
+          // currentParameter.getId().replaceAll(JoinerNodeModel.SUFFIX_SECOND, "");
+          // if (parameterId.equals(currentParameterId)) {
+          // currentParameter.setId(parameter.getId());
+          // return true;
+          // } else {
+          // return false;
+          // }
+          // }).findAny();
+          //
+          // // If the metadata of targetParamter is not found, skip to next parameter
+          // if (!targetParameter.isPresent()) {
+          // continue;
+          // }
 
-              //********************** CUT THE SHENANIGANS *************************
-
-
-
-              //          // Find metadata of source parameter (connected parameter of 1st model)
-              final ReplacedBy replacedBy =
-                  ((CompSBasePlugin) parameter.getExtension("comp")).getReplacedBy();
-
-              //********************** CUT THE SHENANIGANS *************************         
-              //          final String replacement =
-              //              replacedBy.getIdRef().replaceAll(JoinerNodeModel.SUFFIX_FIRST, "");
-              //          Optional<Parameter> sourceParameter = SwaggerUtil
-              //              .getParameter(firstFskPortObject.modelMetadata).stream().filter(currentParameter -> {
-              //                final String currentParameterId =
-              //                    currentParameter.getId().replaceAll(JoinerNodeModel.SUFFIX_FIRST, "");
-              //                if (replacement.equals(currentParameterId)) {
-              //                  currentParameter.setId(replacedBy.getIdRef());
-              //                  return true;
-              //                } else {
-              //                  return false;
-              //                }
-              //              }).findAny();
-              //
-              //          // If the metadata of sourceParmeter is not found, skip to next parameter
-              //          if (!sourceParameter.isPresent()) {
-              //            continue;
-              //          }
-              //********************** CUT THE SHENANIGANS *************************
+          // ********************** CUT THE SHENANIGANS *************************
 
 
-              String command = null;
-              if (parameter.getAnnotation() != null
-                  && parameter.getAnnotation().getNonRDFannotation() != null) {
-                XMLNode nonRDFannotation = parameter.getAnnotation().getNonRDFannotation();
-                XMLNode commandNode = nonRDFannotation.getChildElement("command", "");
-                if (commandNode != null
-                    && commandNode.hasAttr(NodeUtils.METADATA_COMMAND_VALUE)) {
-                  command = commandNode.getAttrValue(NodeUtils.METADATA_COMMAND_VALUE);
-                }
-              }
 
-              connectionList.add(new JoinRelation(replacedBy.getIdRef(),
-                  parameter.getId(), command, null));
-              //          connectionList.add(new JoinRelation(sourceParameter.get().getId(),
-              //              targetParameter.get().getId(), command, null));
+          // // Find metadata of source parameter (connected parameter of 1st model)
+          final ReplacedBy replacedBy =
+              ((CompSBasePlugin) parameter.getExtension("comp")).getReplacedBy();
+
+          // ********************** CUT THE SHENANIGANS *************************
+          // final String replacement =
+          // replacedBy.getIdRef().replaceAll(JoinerNodeModel.SUFFIX_FIRST, "");
+          // Optional<Parameter> sourceParameter = SwaggerUtil
+          // .getParameter(firstFskPortObject.modelMetadata).stream().filter(currentParameter -> {
+          // final String currentParameterId =
+          // currentParameter.getId().replaceAll(JoinerNodeModel.SUFFIX_FIRST, "");
+          // if (replacement.equals(currentParameterId)) {
+          // currentParameter.setId(replacedBy.getIdRef());
+          // return true;
+          // } else {
+          // return false;
+          // }
+          // }).findAny();
+          //
+          // // If the metadata of sourceParmeter is not found, skip to next parameter
+          // if (!sourceParameter.isPresent()) {
+          // continue;
+          // }
+          // ********************** CUT THE SHENANIGANS *************************
+
+
+          String command = null;
+          if (parameter.getAnnotation() != null
+              && parameter.getAnnotation().getNonRDFannotation() != null) {
+            XMLNode nonRDFannotation = parameter.getAnnotation().getNonRDFannotation();
+            XMLNode commandNode = nonRDFannotation.getChildElement("command", "");
+            if (commandNode != null && commandNode.hasAttr(NodeUtils.METADATA_COMMAND_VALUE)) {
+              command = commandNode.getAttrValue(NodeUtils.METADATA_COMMAND_VALUE);
             }
+          }
+
+          connectionList
+              .add(new JoinRelation(replacedBy.getIdRef(), parameter.getId(), command, null));
+          // connectionList.add(new JoinRelation(sourceParameter.get().getId(),
+          // targetParameter.get().getId(), command, null));
+        }
       }
 
       CombinedFskPortObject topfskObj;
@@ -419,6 +428,8 @@ class ReaderNodeModel extends NoInternalsModel {
 
       topfskObj.setJoinerRelation(connectionList.toArray(new JoinRelation[connectionList.size()]));
 
+   
+
       return topfskObj;
     } else {
       String modelScript = "";
@@ -443,21 +454,22 @@ class ReaderNodeModel extends NoInternalsModel {
       // Gets metadata from metadata entry (metaData.json)
       Optional<ArchiveEntry> metadataEntry =
           entries.stream().filter(entry -> entry.getFormat().equals(jsonUri))
-          .filter(entry -> entry.getEntityPath().endsWith("metaData.json")).findAny();
+              .filter(entry -> entry.getEntityPath().endsWith("metaData.json")).findAny();
       if (metadataEntry.isPresent()) {
         model = readMetadata(metadataEntry.get());
       }
 
       // The URI of the model script (varies on the language of the model)
       // TODO: MAKE IT MORE GENERIC
-      String languageWrittenIn = SwaggerUtil.getLanguageWrittenIn(model).toLowerCase().startsWith("r") ? "r" : "py" ;
+      String languageWrittenIn =
+          SwaggerUtil.getLanguageWrittenIn(model).toLowerCase().startsWith("r") ? "r" : "py";
       URI scriptUri = URIS.get(languageWrittenIn);
 
       // Load scripts
       for (ArchiveEntry entry : entries) {
         // workaround to make python models from version 1.7.2 compatible with 1.8.x
         // those models had scripts that ended in ".r" instead of ".py"
-        if (( entry.getFormat().equals(scriptUri) || entry.getFormat().equals(URIS.get("r")) )
+        if ((entry.getFormat().equals(scriptUri) || entry.getFormat().equals(URIS.get("r")))
             && !entry.getDescriptions().isEmpty()) {
           FskMetaDataObject fmdo = new FskMetaDataObject(entry.getDescriptions().get(0));
           ResourceType resourceType = fmdo.getResourceType();
@@ -496,13 +508,17 @@ class ReaderNodeModel extends NoInternalsModel {
       // Retrieves resources
       List<ArchiveEntry> resourceEntries = new ArrayList<>();
       // Add r scripts without descriptions (no model or visualization script)
-      entries.stream().filter(entry -> entry.getFormat().equals(scriptUri) && entry.getDescriptions().isEmpty())
-      .forEach(resourceEntries::add);
+      entries.stream()
+          .filter(entry -> entry.getFormat().equals(scriptUri) && entry.getDescriptions().isEmpty())
+          .forEach(resourceEntries::add);
       // ... add other entries (not R scripts)
-      entries.stream().filter(entry ->  entry.getFormat().equals(textUri) || entry.getFormat().equals(csvUri)
-          || entry.getFormat().equals(xlsxUri) || entry.getFormat().equals(rdataUri)).forEach(resourceEntries::add);
+      entries.stream()
+          .filter(entry -> entry.getFormat().equals(textUri) || entry.getFormat().equals(csvUri)
+              || entry.getFormat().equals(xlsxUri) || entry.getFormat().equals(rdataUri))
+          .forEach(resourceEntries::add);
 
-      String[] resourcePaths = resourceEntries.stream().map(ArchiveEntry::getEntityPath).toArray(String[]::new);
+      String[] resourcePaths =
+          resourceEntries.stream().map(ArchiveEntry::getEntityPath).toArray(String[]::new);
 
       EnvironmentManager environmentManager =
           new ArchivedEnvironmentManager(archive.getZipLocation().getAbsolutePath(), resourcePaths);
@@ -528,8 +544,9 @@ class ReaderNodeModel extends NoInternalsModel {
       // empty string is used.
       String plotPath = "";
 
-      FskPortObject fskObj = new FskPortObject(modelScript, visualizationScript, model,
-          workspacePath, packagesList, generatedResourceFiles, Optional.of(environmentManager), plotPath, readme);
+      FskPortObject fskObj =
+          new FskPortObject(modelScript, visualizationScript, model, workspacePath, packagesList,
+              generatedResourceFiles, Optional.of(environmentManager), plotPath, readme);
 
       // Read selected simulation index and simulations
       Optional<ArchiveEntry> simulationEntry =
@@ -545,11 +562,11 @@ class ReaderNodeModel extends NoInternalsModel {
   }
 
   /** @return entry of specific URI out of an {@link ArchiveEntry}. */
-  private Optional<ArchiveEntry> getArchiveEntry(List<ArchiveEntry> entries, URI uri ){
+  private Optional<ArchiveEntry> getArchiveEntry(List<ArchiveEntry> entries, URI uri) {
 
     Optional<ArchiveEntry> archive_entry =
         entries.stream().filter(entry -> entry.getFormat().equals(uri))
-        .filter(entry -> !entry.getDescriptions().isEmpty()).findAny();
+            .filter(entry -> !entry.getDescriptions().isEmpty()).findAny();
 
     return archive_entry;
   }
