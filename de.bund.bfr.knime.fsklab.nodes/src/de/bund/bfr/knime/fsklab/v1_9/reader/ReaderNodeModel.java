@@ -453,7 +453,8 @@ class ReaderNodeModel extends NoInternalsModel {
 
       // The URI of the model script (varies on the language of the model)
       // TODO: MAKE IT MORE GENERIC
-      String languageWrittenIn = SwaggerUtil.getLanguageWrittenIn(model).toLowerCase().startsWith("r") ? "r" : "py" ;
+      String languageWrittenIn = StringUtils.defaultString(SwaggerUtil.getLanguageWrittenIn(model), "r");
+      languageWrittenIn = languageWrittenIn.toLowerCase().startsWith("r") ? "r" : "py" ;
       URI scriptUri = URIS.get(languageWrittenIn);
 
       // Load scripts
