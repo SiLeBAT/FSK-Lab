@@ -25,7 +25,9 @@ public class PythonScriptHandler extends ScriptHandler {
   public PythonScriptHandler(PythonVersionOption version) throws IOException {
     
     PythonKernelOptions m_kernelOptions = new PythonKernelOptions();
-    m_kernelOptions.setPythonVersionOption(version);
+    if(version != null) {
+      m_kernelOptions.setPythonVersionOption(version);
+    }
     controller = new PythonKernel(m_kernelOptions);
     
     // Currently only PythonPlotter is assigned as it is the only available for Python
@@ -34,11 +36,7 @@ public class PythonScriptHandler extends ScriptHandler {
 
   // if no version is given in the model metadata, use the KNIME preference setting
   public PythonScriptHandler() throws IOException {
-    // automatically receive information about used Python Version (2.7 or 3.x)
-    PythonKernelOptions m_kernelOptions = new PythonKernelOptions();
-    controller = new PythonKernel(m_kernelOptions);
-    
-    this.plotter = new PythonPlotter(controller);
+    this(null);
   }
   
   @Override
