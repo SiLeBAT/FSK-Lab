@@ -8,6 +8,7 @@ import org.knime.core.node.NodeLogger;
 import org.knime.core.util.FileUtil;
 import org.knime.python2.kernel.PythonKernel;
 import org.knime.python2.kernel.PythonKernelOptions;
+import org.knime.python2.kernel.PythonKernelOptions.PythonVersionOption;
 import de.bund.bfr.knime.fsklab.nodes.plot.PythonPlotter;
 import de.bund.bfr.knime.fsklab.v1_9.FskPortObject;
 import de.bund.bfr.knime.fsklab.v1_9.FskSimulation;
@@ -20,7 +21,18 @@ public class PythonScriptHandler extends ScriptHandler {
   // controller that communicates with Python Installation
   PythonKernel controller;
 
-  // Currently only PythonPlotter is assigned as it is the only available for Python
+  
+  public PythonScriptHandler(PythonVersionOption version) throws IOException {
+    
+    PythonKernelOptions m_kernelOptions = new PythonKernelOptions();
+    m_kernelOptions.setPythonVersionOption(version);
+    controller = new PythonKernel(m_kernelOptions);
+    
+    // Currently only PythonPlotter is assigned as it is the only available for Python
+    this.plotter = new PythonPlotter(controller);
+  }
+
+  // if no version is given in the model metadata, use the KNIME preference setting
   public PythonScriptHandler() throws IOException {
     // automatically receive information about used Python Version (2.7 or 3.x)
     PythonKernelOptions m_kernelOptions = new PythonKernelOptions();
@@ -28,7 +40,7 @@ public class PythonScriptHandler extends ScriptHandler {
     
     this.plotter = new PythonPlotter(controller);
   }
-
+  
   @Override
   public void convertToKnimeDataTable(FskPortObject fskObj, ExecutionContext exec) throws Exception {
 
