@@ -140,41 +140,55 @@ public class LibRegistry {
    */
   public synchronized void install(final List<String> packages)
       throws RException, REXPMismatchException, NoInternetException {
-
-    if (installedLibs.containsAll(packages))
-      return;
-
-    if (rWrapper.areAllInstalled(packages))
-      return;
-
+    
     if (!isNetAvailable()) {
       throw new NoInternetException(packages);
     }
+    
+    if (Platform.isLinux()) {
+      // Install missing packages
+      controller.addPackagePath(installPath);
+      
+      String[] installedPackagesArray = controller.eval("rownames(installed.packages())", true).asStrings();
+      Set<String> installedPackagesSet = Arrays.stream(installedPackagesArray).collect(Collectors.toSet());
+      
+      for (String pkg : packages) {
+        if (!installedPackagesSet.contains(pkg)) {
+          String cmd = String.format("install.packages('%s', lib = '%s', repos = '%s')", pkg, rWrapper._path2String(installPath), MIRROR);
+          controller.eval(cmd, false);
+        }
+      }
+      
+      installedPackagesArray = controller.eval("rownames(installed.packages())", true).asStrings();
+      installedPackagesSet = Arrays.stream(installedPackagesArray).collect(Collectors.toSet());
+      
+    } else {
+      if (installedLibs.containsAll(packages))
+        return;
 
-    //pkgDep requires miniCRAN to be loaded, on repeated executions of the Runner this might not have happened 
-    rWrapper.library("miniCRAN");
+      if (rWrapper.areAllInstalled(packages))
+        return;
 
-    // Gets missing packages
-    List<String> missingPackages;
+      // pkgDep requires miniCRAN to be loaded, on repeated executions of the Runner this might not have happened 
+      rWrapper.library("miniCRAN");
 
-    // try to collect missing packages; if it fails, consider all packages as missing
-    try {
-      missingPackages = rWrapper.pkgDep(packages).stream().filter(pkg -> !installedLibs.contains(pkg))
-          .collect(Collectors.toList());
+      // Gets missing packages
+      List<String> missingPackages;
 
-    }catch(Exception e) {
-      missingPackages = packages;
-    }
+      // try to collect missing packages; if it fails, consider all packages as missing
+      try {
+        missingPackages = rWrapper.pkgDep(packages).stream().filter(pkg -> !installedLibs.contains(pkg))
+            .collect(Collectors.toList());
+      } catch(Exception e) {
+        missingPackages = packages;
+      }
 
-    if (!missingPackages.isEmpty()) {
+      if (!missingPackages.isEmpty()) {
 
-      // Adds the dependencies to the miniCRAN repository
-      rWrapper.addPackage(missingPackages, repoPath);
+        // Adds the dependencies to the miniCRAN repository
+        rWrapper.addPackage(missingPackages, repoPath);
 
-      // Install with install.packages directly on Linux
-      if (Platform.isLinux()) {
-        rWrapper.installOnLinux(missingPackages, installPath);
-      } else {
+        // Install with install.packages directly on Linux
         // Gets the paths to the binaries of these dependencies
         List<Path> paths = rWrapper.checkVersions(missingPackages, repoPath);
 
@@ -183,7 +197,7 @@ public class LibRegistry {
 
         // Adds names of installed libraries to utility set
         installedLibs.addAll(missingPackages);
-      }
+      } 
     }
   }
 
@@ -305,13 +319,6 @@ public class LibRegistry {
       String pkgList = "c(" + pkgsAsString + ")";
       String cmd = "install.packages(" + pkgList + ", repos = NULL, lib = '" + _path2String(lib) + "', type = '"
           + type + "')";
-      controller.eval(cmd, false);
-    }
-
-    void installOnLinux(final List<String> packages, final Path lib) throws RException {
-      String pkgList = "c(" + packages.stream().map(str -> "'" + str + "'").collect(Collectors.joining(", "))
-          + ")";
-      String cmd = String.format("install.packages(%s, lib = '%s')", pkgList, _path2String(lib));
       controller.eval(cmd, false);
     }
 
