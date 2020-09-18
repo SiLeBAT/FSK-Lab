@@ -113,6 +113,7 @@ class JSSimulatorNodeModel
         final List<Parameter> parameters = SwaggerUtil.getParameter(port.modelMetadata);
         val.simulations = port.simulations.stream().map(it -> toJSSimulation(it, parameters))
             .collect(Collectors.toList());
+        val.selectedSimulationIndex = port.selectedSimulationIndex;
       }
     }
 
