@@ -167,8 +167,12 @@ class WriterNodeModel extends NoInternalsModel {
         
         List<Path> resources = Files.list(workingDirectory.get()).collect(Collectors.toList());
 
-        // add generated resources
-        resources.addAll(fskObj.getGeneratedResourceFiles().getResourcePaths());
+        // Add generated resources
+        fskObj.getGeneratedResourcesDirectory().ifPresent(directory -> {
+          for (File generatedResource : directory.listFiles()) {
+            resources.add(generatedResource.toPath());
+          }
+        });
         
         for (final Path resourcePath : resources) {
 
