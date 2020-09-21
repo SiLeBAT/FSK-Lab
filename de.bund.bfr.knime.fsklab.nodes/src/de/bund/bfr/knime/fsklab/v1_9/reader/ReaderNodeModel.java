@@ -117,7 +117,7 @@ class ReaderNodeModel extends NoInternalsModel {
 
   @Override
   protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
-    CheckUtils.checkDestinationFile(settings.getString("filename"), true);
+    nodeSettings.filePath.validateSettings(settings);
   }
 
   @Override
@@ -151,13 +151,17 @@ class ReaderNodeModel extends NoInternalsModel {
 
   @Override
   protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
+    String warning = CheckUtils.checkSourceFile(nodeSettings.filePath.getStringValue());
+    if (warning != null) {
+        setWarningMessage(warning);
+    }
     return new PortObjectSpec[] {FskPortObjectSpec.INSTANCE};
   }
 
   @Override
   protected PortObject[] execute(PortObject[] inObjects, ExecutionContext exec) throws Exception {
 
-    URL url = FileUtil.toURL(nodeSettings.filePath);
+    URL url = FileUtil.toURL(nodeSettings.filePath.getStringValue());
     Path localPath = FileUtil.resolveToPath(url);
 
     FskPortObject inObject;
@@ -172,7 +176,7 @@ class ReaderNodeModel extends NoInternalsModel {
 
       try (
           InputStream inStream =
-          FileUtil.openStreamWithTimeout(new URL(nodeSettings.filePath), 10000);
+          FileUtil.openStreamWithTimeout(new URL(nodeSettings.filePath.getStringValue()), 10000);
           OutputStream outStream = new FileOutputStream(temporaryFile)) {
         IOUtils.copy(inStream, outStream);
       }
