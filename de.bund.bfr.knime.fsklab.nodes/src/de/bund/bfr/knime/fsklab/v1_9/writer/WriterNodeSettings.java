@@ -21,18 +21,19 @@ package de.bund.bfr.knime.fsklab.v1_9.writer;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
+import org.knime.core.node.defaultnodesettings.SettingsModelString;
 
 class WriterNodeSettings {
 
   private static final String CFG_FILE = "file";
 
-  String filePath = "";
+  SettingsModelString filePath = new SettingsModelString(CFG_FILE, null);
 
   void load(final NodeSettingsRO settings) throws InvalidSettingsException {
-    filePath = settings.getString(CFG_FILE);
+    filePath.setStringValue(settings.getString(CFG_FILE));
   }
 
   void save(final NodeSettingsWO settings) {
-    settings.addString(CFG_FILE, filePath);
+    settings.addString(CFG_FILE, filePath.getStringValue());
   }
 }

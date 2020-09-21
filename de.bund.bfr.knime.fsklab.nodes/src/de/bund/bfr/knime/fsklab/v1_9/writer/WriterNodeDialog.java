@@ -55,7 +55,7 @@ class WriterNodeDialog extends NodeDialogPane {
       nodeSettings.load(settings);
 
       m_filePanel.updateHistory();
-      m_filePanel.setSelectedFile(nodeSettings.filePath);
+      m_filePanel.setSelectedFile(nodeSettings.filePath.getStringValue());
 
     } catch (InvalidSettingsException exception) {
       throw new NotConfigurableException(exception.getMessage(), exception);
@@ -64,7 +64,7 @@ class WriterNodeDialog extends NodeDialogPane {
 
   @Override
   protected void saveSettingsTo(NodeSettingsWO settings) throws InvalidSettingsException {
-    nodeSettings.filePath = m_filePanel.getSelectedFile().trim();
+    nodeSettings.filePath.setStringValue(m_filePanel.getSelectedFile().trim());
     m_filePanel.addToHistory();
     
     nodeSettings.save(settings);

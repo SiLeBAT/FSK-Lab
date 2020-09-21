@@ -138,7 +138,7 @@ class WriterNodeModel extends NoInternalsModel {
 
   @Override
   protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
-    CheckUtils.checkDestinationFile(settings.getString("file"), true);
+    nodeSettings.filePath.validateSettings(settings);
   }
 
   @Override
@@ -146,6 +146,11 @@ class WriterNodeModel extends NoInternalsModel {
 
   @Override
   protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
+    String warning = CheckUtils.checkDestinationFile(nodeSettings.filePath.getStringValue(), true);
+    if (warning != null) {
+        setWarningMessage(warning);
+    }
+    
     return new PortObjectSpec[] {};
   }
 
@@ -282,7 +287,7 @@ class WriterNodeModel extends NoInternalsModel {
     
     scriptHandler = ScriptHandler.createHandler(SwaggerUtil.getLanguageWrittenIn(in.modelMetadata),
         in.packages);
-    URL url = FileUtil.toURL(nodeSettings.filePath);
+    URL url = FileUtil.toURL(nodeSettings.filePath.getStringValue());
     File localPath = FileUtil.getFileFromURL(url);
 
     if (localPath != null) {
