@@ -23,11 +23,13 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
+import org.knime.base.node.io.table.read.ReadTableNodeModel;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
+import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.util.FilesHistoryPanel;
 import org.knime.core.node.util.FilesHistoryPanel.LocationValidation;
@@ -35,12 +37,12 @@ import org.knime.core.node.workflow.FlowVariable;
 
 class ReaderNodeDialog extends NodeDialogPane {
 
-  private final ReaderNodeSettings nodeSettings;
+  final SettingsModelString nodeSettings;
 
   private final FilesHistoryPanel m_filePanel;
 
   ReaderNodeDialog() {
-    nodeSettings = new ReaderNodeSettings();
+   nodeSettings = new SettingsModelString(ReaderNodeModel.CFG_FILE, "");
     m_filePanel =
         new FilesHistoryPanel(createFlowVariableModel("filename", FlowVariable.Type.STRING),
             "fskx_reader", LocationValidation.FileInput, ".fskx");
@@ -52,10 +54,10 @@ class ReaderNodeDialog extends NodeDialogPane {
   protected void loadSettingsFrom(NodeSettingsRO settings, PortObjectSpec[] specs)
       throws NotConfigurableException {
     try {
-      nodeSettings.load(settings);
+      nodeSettings.loadSettingsFrom(settings);
 
       m_filePanel.updateHistory();
-      m_filePanel.setSelectedFile(nodeSettings.filePath.getStringValue());
+      m_filePanel.setSelectedFile(nodeSettings.getStringValue());
     } catch (InvalidSettingsException exception) {
       throw new NotConfigurableException(exception.getMessage(), exception);
     }
@@ -63,10 +65,10 @@ class ReaderNodeDialog extends NodeDialogPane {
 
   @Override
   protected void saveSettingsTo(NodeSettingsWO settings) throws InvalidSettingsException {
-    nodeSettings.filePath.setStringValue(m_filePanel.getSelectedFile().trim());
+    nodeSettings.setStringValue(m_filePanel.getSelectedFile().trim());
     m_filePanel.addToHistory();
 
-    nodeSettings.save(settings);
+    nodeSettings.saveSettingsTo(settings);
   }
 
   private JPanel initLayout() {
