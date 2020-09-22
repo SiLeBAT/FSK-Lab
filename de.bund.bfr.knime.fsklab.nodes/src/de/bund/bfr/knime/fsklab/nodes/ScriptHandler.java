@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Optional;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.NodeLogger;
-import org.knime.python2.kernel.PythonKernelOptions.PythonVersionOption;
 import de.bund.bfr.knime.fsklab.nodes.environment.GeneratedResourceFiles;
 import de.bund.bfr.knime.fsklab.nodes.plot.ModelPlotter;
 import de.bund.bfr.knime.fsklab.v1_9.FskPortObject;
@@ -153,15 +152,7 @@ public abstract class ScriptHandler implements AutoCloseable {
       if (type.startsWith("r")) {
         handler = new RScriptHandler(packages);
       } else if (type.startsWith("py")) {
-        // check for the python version
-        if(type.startsWith("python 2")) {
-          handler = new PythonScriptHandler(PythonVersionOption.PYTHON2);
-        }else if(type.startsWith("python 3")){
-          handler = new PythonScriptHandler(PythonVersionOption.PYTHON3);  
-        }else {
-          handler = new PythonScriptHandler(); // use version from KNIME preference page
-        }
-        
+        handler = new PythonScriptHandler();
       } else {
         handler = new RScriptHandler();
       }
