@@ -393,7 +393,7 @@ public class CombinedFskPortObject extends FskPortObject {
         
         // Save generated resource files
         if (portObject.generatedResourcesDirectory.isPresent()) {
-          out.putNextEntry(new ZipEntry(GENERATED_RESOURCE_FILES));
+          out.putNextEntry(new ZipEntry(GENERATED_RESOURCE_FILES + level));
           IOUtils.write(portObject.generatedResourcesDirectory.get().getAbsolutePath(), out, StandardCharsets.UTF_8);
           out.closeEntry();
         }
