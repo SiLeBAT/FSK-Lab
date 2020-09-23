@@ -121,7 +121,7 @@ class WriterNodeModel extends NoInternalsModel {
   static ScriptHandler scriptHandler;
 
   static final String CFG_FILE = "file";
-  private final SettingsModelString nodeSetting = new SettingsModelString(CFG_FILE, null);
+  private final SettingsModelString filePath = new SettingsModelString(CFG_FILE, null);
 
   public WriterNodeModel() {
     super(IN_TYPES, OUT_TYPES);
@@ -129,18 +129,18 @@ class WriterNodeModel extends NoInternalsModel {
 
   @Override
   protected void saveSettingsTo(NodeSettingsWO settings) {
-    nodeSetting.saveSettingsTo(settings);
+    filePath.saveSettingsTo(settings);
   }
 
   @Override
   protected void loadValidatedSettingsFrom(NodeSettingsRO settings)
       throws InvalidSettingsException {
-    nodeSetting.loadSettingsFrom(settings);
+    filePath.loadSettingsFrom(settings);
   }
 
   @Override
   protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
-    nodeSetting.validateSettings(settings);
+    filePath.validateSettings(settings);
   }
 
   @Override
@@ -148,7 +148,7 @@ class WriterNodeModel extends NoInternalsModel {
 
   @Override
   protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
-    String warning = CheckUtils.checkDestinationFile(nodeSetting.getStringValue(), true);
+    String warning = CheckUtils.checkDestinationFile(filePath.getStringValue(), true);
     if (warning != null) {
         setWarningMessage(warning);
     }
@@ -289,7 +289,7 @@ class WriterNodeModel extends NoInternalsModel {
     
     scriptHandler = ScriptHandler.createHandler(SwaggerUtil.getLanguageWrittenIn(in.modelMetadata),
         in.packages);
-    URL url = FileUtil.toURL(nodeSetting.getStringValue());
+    URL url = FileUtil.toURL(filePath.getStringValue());
     File localPath = FileUtil.getFileFromURL(url);
 
     if (localPath != null) {
