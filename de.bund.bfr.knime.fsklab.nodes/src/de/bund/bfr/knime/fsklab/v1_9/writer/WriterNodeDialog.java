@@ -37,12 +37,12 @@ import org.knime.core.node.workflow.FlowVariable;
 
 class WriterNodeDialog extends NodeDialogPane {
 
-  private final SettingsModelString nodeSettings;
+  private final SettingsModelString nodeSetting;
 
   private final FilesHistoryPanel m_filePanel;
 
   public WriterNodeDialog() {
-    nodeSettings = new SettingsModelString(WriterNodeModel.CFG_FILE, "");
+    nodeSetting = new SettingsModelString(WriterNodeModel.CFG_FILE, "");
 
 
     m_filePanel = new FilesHistoryPanel(createFlowVariableModel("file", FlowVariable.Type.STRING),
@@ -55,10 +55,10 @@ class WriterNodeDialog extends NodeDialogPane {
   protected void loadSettingsFrom(NodeSettingsRO settings, PortObjectSpec[] specs)
       throws NotConfigurableException {
     try {
-      nodeSettings.loadSettingsFrom(settings);
+      nodeSetting.loadSettingsFrom(settings);
 
       m_filePanel.updateHistory();
-      m_filePanel.setSelectedFile(nodeSettings.getStringValue());
+      m_filePanel.setSelectedFile(nodeSetting.getStringValue());
 
     } catch (InvalidSettingsException exception) {
       throw new NotConfigurableException(exception.getMessage(), exception);
@@ -67,10 +67,10 @@ class WriterNodeDialog extends NodeDialogPane {
 
   @Override
   protected void saveSettingsTo(NodeSettingsWO settings) throws InvalidSettingsException {
-    nodeSettings.setStringValue(m_filePanel.getSelectedFile().trim());
+    nodeSetting.setStringValue(m_filePanel.getSelectedFile().trim());
     m_filePanel.addToHistory();
     
-    nodeSettings.saveSettingsTo(settings);
+    nodeSetting.saveSettingsTo(settings);
   }
   
   private JPanel initLayout() {
