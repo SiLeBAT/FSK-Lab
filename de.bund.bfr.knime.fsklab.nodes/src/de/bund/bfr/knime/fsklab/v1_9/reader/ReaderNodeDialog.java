@@ -37,7 +37,7 @@ import org.knime.core.node.workflow.FlowVariable;
 
 class ReaderNodeDialog extends NodeDialogPane {
 
-  final SettingsModelString filePath;
+  private final SettingsModelString filePath;
 
   private final FilesHistoryPanel m_filePanel;
 
