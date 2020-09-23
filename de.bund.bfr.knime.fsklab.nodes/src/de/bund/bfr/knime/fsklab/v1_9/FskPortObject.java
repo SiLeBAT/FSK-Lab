@@ -125,7 +125,7 @@ public class FskPortObject implements PortObject {
   /**
    * Temporary folder for generated resources. It may be empty if the model has not been run.
    */
-  protected Optional<File> generatedResourcesDirectory;
+  protected Optional<File> generatedResourcesDirectory = Optional.empty();
   
   /** Path to plot. */
   private String plot;

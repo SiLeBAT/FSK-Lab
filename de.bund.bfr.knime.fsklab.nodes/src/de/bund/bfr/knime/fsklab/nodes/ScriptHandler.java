@@ -324,7 +324,7 @@ public abstract class ScriptHandler implements AutoCloseable {
         .map(Parameter::getId).collect(Collectors.toList());
 
     // Get filenames out of the output file parameter values
-    String command = "c(" +  outputFileParameterIds + ")";
+    String command = "c(" +  String.join(", ", outputFileParameterIds) + ")";
 
     try {
       String[] filenames = runScript(command, exec, true);
@@ -336,6 +336,8 @@ public abstract class ScriptHandler implements AutoCloseable {
         File targetFile = new File(newResourcesDirectory, filename);
         FileUtil.copy(sourceFile, targetFile, exec);
       }
+      
+      fskPortObject.setGeneratedResourcesDirectory(newResourcesDirectory);
     } catch (Exception e) {
     }
   }
