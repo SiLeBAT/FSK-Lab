@@ -6,9 +6,10 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.NodeLogger;
-import de.bund.bfr.knime.fsklab.nodes.environment.GeneratedResourceFiles;
+import org.knime.core.util.FileUtil;
 import de.bund.bfr.knime.fsklab.nodes.plot.ModelPlotter;
 import de.bund.bfr.knime.fsklab.v1_9.FskPortObject;
 import de.bund.bfr.knime.fsklab.v1_9.FskSimulation;
@@ -127,8 +128,11 @@ public abstract class ScriptHandler implements AutoCloseable {
     saveWorkspace(fskObj, exec);
     
   
-    // create a new GeneratedResourceFiles to collect and save output parameters which are files
-    fskObj.setGeneratedResourceFiles(GeneratedResourceFiles.saveGeneratedResourceFiles(fskObj, workingDirectory, exec, this));
+    // Save generated resources
+    if (workingDirectory.isPresent()) {
+      File workingDirectoryFile = workingDirectory.get().toFile();
+      saveGeneratedResources(fskObj, workingDirectoryFile, exec.createSubExecutionContext(1));
+    }
     
     // delete working directory
     if (fskObj.getEnvironmentManager().isPresent() && workingDirectory.isPresent()) {
@@ -298,4 +302,56 @@ public abstract class ScriptHandler implements AutoCloseable {
    *         would be "r" )
    */
   public abstract String getFileExtension();
+  
+  /**
+   * Creates the string command in R or Python to return a java String array with the values of the passed
+   * variables. For example:
+   * <ul>
+   * <li>c(0, 1, 2) should return [0, 1, 2] when called in R.
+   * <li>[0, 1, 2] should return [0, 1, 2] when called in Python.
+   * </ul>
+   * 
+   * @param items List of strings
+   * @return Command in the script language to retrieve a vector with the values of the passed variables.
+   */
+  protected abstract String createVectorQuery(List<String> variableNames);
+  
+  private void saveGeneratedResources(FskPortObject fskPortObject, File workingDirectory, ExecutionContext exec) {
+
+    // Delete previous resources if they exist
+    fskPortObject.getGeneratedResourcesDirectory().ifPresent(directory -> {
+      if (directory.exists()) {
+        FileUtil.deleteRecursively(directory);
+      }
+    });
+
+    List<Parameter> parameterMetadata = SwaggerUtil.getParameter(fskPortObject.modelMetadata);
+
+    if (parameterMetadata == null) {
+      return;
+    }
+
+    List<String> outputFileParameterIds = parameterMetadata.stream()
+        .filter(currentParameter -> currentParameter.getClassification() == Parameter.ClassificationEnum.OUTPUT
+        && currentParameter.getDataType() == Parameter.DataTypeEnum.FILE)
+        .map(Parameter::getId).collect(Collectors.toList());
+
+    // Get filenames out of the output file parameter values
+    String command = createVectorQuery(outputFileParameterIds);
+
+    try {
+      String[] filenames = runScript(command, exec, true);
+
+      // Copy every resource from the working directory
+      File newResourcesDirectory = FileUtil.createTempDir("generatedResources");
+      for (String filename : filenames) {
+        File sourceFile = new File(workingDirectory, filename);
+        File targetFile = new File(newResourcesDirectory, filename);
+        FileUtil.copy(sourceFile, targetFile, exec);
+      }
+      
+      fskPortObject.setGeneratedResourcesDirectory(newResourcesDirectory);
+    } catch (Exception e) {
+    }
+  }
 }

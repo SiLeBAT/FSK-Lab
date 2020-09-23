@@ -30,7 +30,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.knime.base.data.xml.SvgCell;
 import org.knime.base.data.xml.SvgImageContent;
@@ -48,6 +47,7 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.image.ImagePortObject;
 import org.knime.core.node.port.image.ImagePortObjectSpec;
+import org.knime.core.util.FileUtil;
 import de.bund.bfr.knime.fsklab.nodes.ScriptHandler;
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
 import de.bund.bfr.knime.fsklab.r.client.ScriptExecutor;
@@ -91,14 +91,13 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
   @Override
   protected void loadInternals(File nodeInternDir, ExecutionMonitor exec)
       throws IOException, CanceledExecutionException {
-//    internalSettings.loadInternals(nodeInternDir);
+    // No internal settings
   }
 
   @Override
   protected void saveInternals(File nodeInternDir, ExecutionMonitor exec)
       throws IOException, CanceledExecutionException {
-    //internalSettings.saveInternals(nodeInternDir);
-    internalSettings.saveInternals(nodeInternDir,fskObj);
+    // No internals settings
   }
 
   @Override
@@ -246,21 +245,15 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
       }
       
       
-      // copy generated resources (output parameters) to working directory of second 
-      // model
-      for(Path path : comFskObj.getGeneratedResourceFiles().getResourcePaths()) {
-        
-        FileUtils.copyFileToDirectory(path.toFile(), workingDirectory1.get().toFile());
+      // Copy generated resources of the combined model to working directory of first model
+      if (comFskObj.getGeneratedResourcesDirectory().isPresent()) {
+        File combinedModelGeneratedResourcesDir = comFskObj.getGeneratedResourcesDirectory().get();
+        File firstModelWorkingDirectory = workingDirectory1.get().toFile();
+        for (File sourceFile : combinedModelGeneratedResourcesDir.listFiles()) {
+          File targetFile = new File(firstModelWorkingDirectory, sourceFile.getName());
+          FileUtil.copy(sourceFile, targetFile, context);
+        }
       }
-      
-      
-      Optional<Path> workingDirectory2;
-      if (comFskObj.getSecondFskPortObject().getEnvironmentManager().isPresent()) {
-        workingDirectory2 = comFskObj.getSecondFskPortObject().getEnvironmentManager().get().getEnvironment();
-      } else {
-        workingDirectory2 = Optional.empty();
-      }
-      
       
       // execute 1              *******
       
@@ -273,9 +266,22 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
         // save is done by running the command in R
         JoinerNodeUtil.saveOutputVariable( oopFirst ,handler, exec);
         
-        // collect paths to generated resource files in combined object
-        firstFskObj.getGeneratedResourceFiles().getResourcePaths().forEach(path -> comFskObj.getGeneratedResourceFiles().addResourceFile(path.toFile()));
-        
+        // Copy generated resources from first model to the combined model generated resources
+        if (firstFskObj.getGeneratedResourcesDirectory().isPresent()) {
+          File firstModelGeneratedResourcesDir = firstFskObj.getGeneratedResourcesDirectory().get();
+
+          // Delete generated resources of the combined model if existing
+          comFskObj.getGeneratedResourcesDirectory().ifPresent(directory -> {
+            if (directory.exists()) {
+              FileUtil.deleteRecursively(directory);
+            }
+          });
+
+          File combinedModelGeneratedResourcesDir = FileUtil.createTempDir("generatedResources");
+          comFskObj.setGeneratedResourcesDirectory(combinedModelGeneratedResourcesDir);
+
+          FileUtil.copyDir(firstModelGeneratedResourcesDir, combinedModelGeneratedResourcesDir);
+        }
       }
         
       
@@ -294,13 +300,22 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
       // apply join command
       applyJoinCommandToSimulation(comFskObj, fskSimulationSecond, originalOutputParameters);
     
-        
-      // copy generated resources (output parameters) to working directory of second 
-      // model
-      for(Path path : firstFskObj.getGeneratedResourceFiles().getResourcePaths()) {
-        FileUtils.copyFileToDirectory(path.toFile(), workingDirectory2.get().toFile());
+      Optional<Path> workingDirectory2;
+      if (comFskObj.getSecondFskPortObject().getEnvironmentManager().isPresent()) {
+        workingDirectory2 = comFskObj.getSecondFskPortObject().getEnvironmentManager().get().getEnvironment();
+      } else {
+        workingDirectory2 = Optional.empty();
       }
-      
+        
+      // Copy generated resources in the first model to the working directory of the second model
+      // TODO: Big error still not solved: What if workingDirectory2 is empty??
+      if (firstFskObj.getGeneratedResourcesDirectory().isPresent()) {
+        File secondModelWorkingDirectory = workingDirectory2.get().toFile();
+        for (File sourceFile : firstFskObj.getGeneratedResourcesDirectory().get().listFiles()) {
+          File targetFile = new File(secondModelWorkingDirectory, sourceFile.getName());
+          FileUtil.copy(sourceFile, targetFile, context);
+        }
+      }
    
       // execute 2              ******* 
         
@@ -320,11 +335,17 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
         // save output in the proper variable (with suffix)
         JoinerNodeUtil.saveOutputVariable(oopSecond, handler, exec);
         
-        // collect paths to generated resource files in combined object
-        secondFskObj.getGeneratedResourceFiles().getResourcePaths().forEach(path -> comFskObj.getGeneratedResourceFiles().addResourceFile(path.toFile()));
+        // Copy generated resources from the second model to the combined model
+        if (secondFskObj.getGeneratedResourcesDirectory().isPresent()) {
+          File secondModelGeneratedResourcesDir = secondFskObj.getGeneratedResourcesDirectory().get();
 
+          for (File sourceFile : secondModelGeneratedResourcesDir.listFiles()) {
+            File targetFile = new File(comFskObj.getGeneratedResourcesDirectory().get(), sourceFile.getName());
+            FileUtil.copy(sourceFile, targetFile, context);
+          }
+        }
       }
-//      fskObj.workspace = secondFskObj.workspace;
+      
       comFskObj.setWorkspace(secondFskObj.getWorkspace());
       return comFskObj;
     } else {
