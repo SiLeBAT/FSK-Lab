@@ -9,22 +9,22 @@ Bundle-ClassPath: foodprocess.jar,
  lib/jfreechart-1.0.13.jar
 Bundle-Activator: de.bund.bfr.knime.foodprocess.FoodProcessNodePlugin
 Bundle-Vendor: BfR
-Require-Bundle: org.eclipse.core.runtime,
- org.knime.workbench.core,
- org.knime.workbench.repository,
- org.knime.base,
+Require-Bundle: com.jgoodies;bundle-version="1.4.0",
  de.bund.bfr.knime.foodprocess.pcml,
+ de.bund.bfr.knime.foodprocess.util;bundle-version="1.0.0",
  de.bund.bfr.knime.pmm.bfrdbiface.lib;bundle-version="1.0.0",
  de.bund.bfr.knime.pmm.common;bundle-version="1.0.0",
- org.knime.workbench.ui.layout,
- org.hsh.bfr.db;bundle-version="1.0.0",
  de.bund.bfr.knime.pmm.nodes,
- org.knime.workbench.editor;bundle-version="3.7.2",
- org.knime.workbench.ui;bundle-version="3.7.0",
+ org.hsh.bfr.db;bundle-version="1.0.0",
  org.eclipse.core.resources;bundle-version="3.12.0",
- de.bund.bfr.knime.foodprocess.util;bundle-version="1.0.0",
+ org.eclipse.core.runtime,
  org.eclipse.ui.ide,
- com.jgoodies;bundle-version="1.4.0"
+ org.knime.base;bundle-version="[4.0.0,5.0.0)",
+ org.knime.workbench.core;bundle-version="[4.0.0,5.0.0)",
+ org.knime.workbench.editor;bundle-version="[4.0.0,5.0.0)",
+ org.knime.workbench.ui;bundle-version="[4.0.0,5.0.0)",
+ org.knime.workbench.ui.layout;bundle-version="[4.0.0,5.0.0)",
+ org.knime.workbench.repository;bundle-version="[4.0.0,5.0.0)"
 Bundle-ActivationPolicy: lazy
 Export-Package: de.bund.bfr.knime.foodprocess,
  de.bund.bfr.knime.foodprocess.lib

@@ -4,10 +4,10 @@ Bundle-Name: de.bund.bfr.knime.util
 Bundle-SymbolicName: de.bund.bfr.knime.foodprocess.util
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: BfR
-Require-Bundle: org.eclipse.core.runtime,
- de.bund.bfr.knime.pmm.bfrdbiface.lib;bundle-version="1.0.0",
- org.hsh.bfr.db;bundle-version="1.0.0",
- de.bund.bfr.knime.pmm.common;bundle-version="1.0.0"
+Require-Bundle: de.bund.bfr.knime.pmm.bfrdbiface.lib;bundle-version="1.0.0",
+ de.bund.bfr.knime.pmm.common;bundle-version="1.0.0",
+ org.eclipse.core.runtime,
+ org.hsh.bfr.db;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .

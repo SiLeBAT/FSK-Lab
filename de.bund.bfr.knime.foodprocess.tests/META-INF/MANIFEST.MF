@@ -11,4 +11,4 @@ Require-Bundle: org.junit,
  de.bund.bfr.knime.pmm.common,
  de.bund.bfr.knime.foodprocess,
  de.bund.bfr.knime.pmm.nodes,
- org.knime.core
+ org.knime.core;bundle-version="[4.0.0,5.0.0)"

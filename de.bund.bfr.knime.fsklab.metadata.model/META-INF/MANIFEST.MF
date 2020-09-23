@@ -44,17 +44,17 @@ Export-Package: com.fasterxml.jackson.datatype.threetenbp,
  org.threeten.bp.jdk8,
  org.threeten.bp.temporal,
  org.threeten.bp.zone
-Require-Bundle: org.eclipse.emf.ecore;visibility:=reexport,
- com.fasterxml.jackson.core.jackson-annotations,
- com.fasterxml.jackson.core.jackson-core,
- com.fasterxml.jackson.core.jackson-databind,
+Require-Bundle: com.fasterxml.jackson.core.jackson-annotations;bundle-version="2.8.9",
+ com.fasterxml.jackson.core.jackson-core;bundle-version="2.8.9",
+ com.fasterxml.jackson.core.jackson-databind;bundle-version="2.8.9",
+ com.google.ez-vcard;bundle-version="0.10.6",
+ com.gmail.gcolaianni5.jris;bundle-version="1.0.0",
+ com.google.gson;bundle-version="2.8.1",
+ de.bund.bfr.pmfml;bundle-version="0.0.12",
  org.apache.servicemix.bundles.poi;bundle-version="3.17.0",
  org.apache.commons.lang3;bundle-version="3.3.1",
- org.junit,
- org.glassfish.javax.json,
- com.google.gson,
- de.bund.bfr.pmfml;bundle-version="0.0.12",
- com.google.ez-vcard;bundle-version="0.10.6",
- com.gmail.gcolaianni5.jris;bundle-version="1.0.0"
+ org.eclipse.emf.ecore;bundle-version="2.13.0";visibility:=reexport,
+ org.glassfish.javax.json;bundle-version="1.0.4",
+ org.junit;bundle-version="4.12.0"
 Bundle-ActivationPolicy: lazy
 Automatic-Module-Name: de.bund.bfr.knime.fsklab.metadata.model
