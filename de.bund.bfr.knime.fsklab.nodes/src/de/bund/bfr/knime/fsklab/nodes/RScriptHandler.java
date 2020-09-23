@@ -193,4 +193,9 @@ public class RScriptHandler extends ScriptHandler {
     controller.close();
 
   }
+  
+  @Override
+  protected String createVectorQuery(List<String> variableNames) {
+    return "c(" +  String.join(", ", variableNames) + ")";
+  }
 }

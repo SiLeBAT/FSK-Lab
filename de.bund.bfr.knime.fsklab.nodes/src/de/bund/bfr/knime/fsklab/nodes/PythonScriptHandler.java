@@ -138,4 +138,9 @@ public class PythonScriptHandler extends ScriptHandler {
     controller.close();
 
   }
+  
+  @Override
+  protected String createVectorQuery(List<String> variableNames) {
+    return "print([" + String.join(",", variableNames) + "])";
+  }
 }

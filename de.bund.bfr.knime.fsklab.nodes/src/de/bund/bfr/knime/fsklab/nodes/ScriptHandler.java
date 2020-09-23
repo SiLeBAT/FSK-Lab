@@ -303,6 +303,19 @@ public abstract class ScriptHandler implements AutoCloseable {
    */
   public abstract String getFileExtension();
   
+  /**
+   * Creates the string command in R or Python to return a java String array with the values of the passed
+   * variables. For example:
+   * <ul>
+   * <li>c(0, 1, 2) should return [0, 1, 2] when called in R.
+   * <li>[0, 1, 2] should return [0, 1, 2] when called in Python.
+   * </ul>
+   * 
+   * @param items List of strings
+   * @return Command in the script language to retrieve a vector with the values of the passed variables.
+   */
+  protected abstract String createVectorQuery(List<String> variableNames);
+  
   private void saveGeneratedResources(FskPortObject fskPortObject, File workingDirectory, ExecutionContext exec) {
 
     // Delete previous resources if they exist
@@ -324,7 +337,7 @@ public abstract class ScriptHandler implements AutoCloseable {
         .map(Parameter::getId).collect(Collectors.toList());
 
     // Get filenames out of the output file parameter values
-    String command = "c(" +  String.join(", ", outputFileParameterIds) + ")";
+    String command = createVectorQuery(outputFileParameterIds);
 
     try {
       String[] filenames = runScript(command, exec, true);
