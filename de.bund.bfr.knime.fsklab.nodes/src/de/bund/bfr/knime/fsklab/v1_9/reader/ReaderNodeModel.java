@@ -101,7 +101,7 @@ class ReaderNodeModel extends NoInternalsModel {
 
   static final String CFG_FILE = "filename";
   
-  private final SettingsModelString nodeSettings = new SettingsModelString(CFG_FILE, null);
+  private final SettingsModelString filePath = new SettingsModelString(CFG_FILE, null);
 
   
   public ReaderNodeModel() {
@@ -110,18 +110,18 @@ class ReaderNodeModel extends NoInternalsModel {
 
   @Override
   protected void saveSettingsTo(NodeSettingsWO settings) {
-    nodeSettings.saveSettingsTo(settings);
+    filePath.saveSettingsTo(settings);
   }
 
   @Override
   protected void loadValidatedSettingsFrom(NodeSettingsRO settings)
       throws InvalidSettingsException {
-    nodeSettings.loadSettingsFrom(settings);
+    filePath.loadSettingsFrom(settings);
   }
 
   @Override
   protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
-    nodeSettings.validateSettings(settings);
+    filePath.validateSettings(settings);
   }
 
   @Override
@@ -155,7 +155,7 @@ class ReaderNodeModel extends NoInternalsModel {
 
   @Override
   protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
-    String warning = CheckUtils.checkSourceFile(nodeSettings.getStringValue());
+    String warning = CheckUtils.checkSourceFile(filePath.getStringValue());
     if (warning != null) {
         setWarningMessage(warning);
     }
@@ -165,7 +165,7 @@ class ReaderNodeModel extends NoInternalsModel {
   @Override
   protected PortObject[] execute(PortObject[] inObjects, ExecutionContext exec) throws Exception {
 
-    URL url = FileUtil.toURL(nodeSettings.getStringValue());
+    URL url = FileUtil.toURL(filePath.getStringValue());
     Path localPath = FileUtil.resolveToPath(url);
 
     FskPortObject inObject;
@@ -180,7 +180,7 @@ class ReaderNodeModel extends NoInternalsModel {
 
       try (
           InputStream inStream =
-          FileUtil.openStreamWithTimeout(new URL(nodeSettings.getStringValue()), 10000);
+          FileUtil.openStreamWithTimeout(new URL(filePath.getStringValue()), 10000);
           OutputStream outStream = new FileOutputStream(temporaryFile)) {
         IOUtils.copy(inStream, outStream);
       }
