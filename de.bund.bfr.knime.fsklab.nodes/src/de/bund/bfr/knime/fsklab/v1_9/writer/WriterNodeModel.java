@@ -55,6 +55,7 @@ import org.knime.core.node.NoInternalsModel;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
+import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
@@ -119,7 +120,8 @@ class WriterNodeModel extends NoInternalsModel {
 
   static ScriptHandler scriptHandler;
 
-  private final WriterNodeSettings nodeSettings = new WriterNodeSettings();
+  static final String CFG_FILE = "file";
+  private final SettingsModelString filePath = new SettingsModelString(CFG_FILE, null);
 
   public WriterNodeModel() {
     super(IN_TYPES, OUT_TYPES);
@@ -127,18 +129,18 @@ class WriterNodeModel extends NoInternalsModel {
 
   @Override
   protected void saveSettingsTo(NodeSettingsWO settings) {
-    nodeSettings.save(settings);
+    filePath.saveSettingsTo(settings);
   }
 
   @Override
   protected void loadValidatedSettingsFrom(NodeSettingsRO settings)
       throws InvalidSettingsException {
-    nodeSettings.load(settings);
+    filePath.loadSettingsFrom(settings);
   }
 
   @Override
   protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
-    CheckUtils.checkDestinationFile(settings.getString("file"), true);
+    filePath.validateSettings(settings);
   }
 
   @Override
@@ -146,6 +148,11 @@ class WriterNodeModel extends NoInternalsModel {
 
   @Override
   protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
+    String warning = CheckUtils.checkDestinationFile(filePath.getStringValue(), true);
+    if (warning != null) {
+        setWarningMessage(warning);
+    }
+    
     return new PortObjectSpec[] {};
   }
 
@@ -282,7 +289,7 @@ class WriterNodeModel extends NoInternalsModel {
     
     scriptHandler = ScriptHandler.createHandler(SwaggerUtil.getLanguageWrittenIn(in.modelMetadata),
         in.packages);
-    URL url = FileUtil.toURL(nodeSettings.filePath);
+    URL url = FileUtil.toURL(filePath.getStringValue());
     File localPath = FileUtil.getFileFromURL(url);
 
     if (localPath != null) {
