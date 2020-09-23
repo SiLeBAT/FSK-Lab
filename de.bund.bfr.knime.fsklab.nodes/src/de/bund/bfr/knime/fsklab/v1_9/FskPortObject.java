@@ -28,6 +28,7 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -81,7 +82,6 @@ import de.bund.bfr.knime.fsklab.nodes.common.ui.JsonPanel;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.ScriptPanel;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.UIUtils;
 import de.bund.bfr.knime.fsklab.nodes.environment.EnvironmentManager;
-import de.bund.bfr.knime.fsklab.nodes.environment.GeneratedResourceFiles;
 import de.bund.bfr.metadata.swagger.ConsumptionModel;
 import de.bund.bfr.metadata.swagger.DataModel;
 import de.bund.bfr.metadata.swagger.DoseResponseModel;
@@ -122,8 +122,10 @@ public class FskPortObject implements PortObject {
   /** Paths to resources: plain text files and R workspace files (.rdata). */
   private final Optional<EnvironmentManager> environmentManager;
 
-  /** Paths to generated resources **/
-  private GeneratedResourceFiles generatedResourceFiles;
+  /**
+   * Temporary folder for generated resources. It may be empty if the model has not been run.
+   */
+  protected Optional<File> generatedResourcesDirectory;
   
   /** Path to plot. */
   private String plot;
@@ -146,7 +148,7 @@ public class FskPortObject implements PortObject {
   public Model modelMetadata;
 
   public FskPortObject(final String model, final String viz, final Model modelMetadata,
-      final Path workspace, final List<String> packages, final GeneratedResourceFiles generatedResourceFiles,
+      final Path workspace, final List<String> packages,
       final Optional<EnvironmentManager> environmentManager,
       final String plot, final String readme) throws IOException {
 
@@ -156,7 +158,6 @@ public class FskPortObject implements PortObject {
     this.workspace = workspace;
     this.packages = packages;
     this.environmentManager = environmentManager;
-    this.generatedResourceFiles = generatedResourceFiles;
     this.plot = plot;
     this.readme = StringUtils.defaultString(readme);
   }
@@ -164,7 +165,6 @@ public class FskPortObject implements PortObject {
   public FskPortObject(final Optional<EnvironmentManager> environmentManager, String readme, final List<String> packages)
       throws IOException {
     this.environmentManager = environmentManager;
-    //this.generatedResourceFiles = new GeneratedResourceFiles();
     this.packages = packages;
     this.readme = readme;
   }
@@ -199,14 +199,6 @@ public class FskPortObject implements PortObject {
     this.viz = viz;
   }
   
-  public GeneratedResourceFiles getGeneratedResourceFiles() {
-    return generatedResourceFiles;
-  }
-  
-  public void setGeneratedResourceFiles(GeneratedResourceFiles generatedResourceFiles) {
-    this.generatedResourceFiles = generatedResourceFiles;
-  }
-  
   /**
    * @return empty string if not set.
    */
@@ -238,6 +230,14 @@ public class FskPortObject implements PortObject {
   public void setWorkspace(Path workspace) {
     this.workspace = workspace;
   }
+  
+  public Optional<File> getGeneratedResourcesDirectory() {
+    return generatedResourcesDirectory;
+  }
+
+  public void setGeneratedResourcesDirectory(File generatedResourcesDirectory) {
+    this.generatedResourcesDirectory = Optional.of(generatedResourcesDirectory);
+  }
 
   /**
    * Serializer used to save this port object.
@@ -254,7 +254,7 @@ public class FskPortObject implements PortObject {
     private static final String SIMULATION_INDEX = "simulationIndex";
 
     private static final String WORKING_DIRECTORY = "workingDirectory";
-    private static final String GENERATED_RESOURCE_FILES = "generatedResourceFiles";
+    private static final String GENERATED_RESOURCE_FILES = "generatedResourcesDirectory";
 
     private static final String PLOT = "plot";
 
@@ -331,10 +331,10 @@ public class FskPortObject implements PortObject {
         out.closeEntry();
       }
       
-      // Save generated resource Files
-      if (portObject.generatedResourceFiles != null) {
+      // Save generated resource files
+      if (portObject.generatedResourcesDirectory.isPresent()) {
         out.putNextEntry(new ZipEntry(GENERATED_RESOURCE_FILES));
-        MAPPER104.writeValue(out, portObject.generatedResourceFiles);
+        IOUtils.write(portObject.generatedResourcesDirectory.get().getAbsolutePath(), out, StandardCharsets.UTF_8);
         out.closeEntry();
       }
             
@@ -393,7 +393,7 @@ public class FskPortObject implements PortObject {
 
       Optional<EnvironmentManager> environmentManager = Optional.empty();
 
-      GeneratedResourceFiles generatedResourceFiles = new GeneratedResourceFiles();
+      Optional<File> generatedResourcesDirectory = Optional.empty();
       
       String plot = ""; // Empty string if not set
       String readme = ""; // Empty string if not set
@@ -425,7 +425,8 @@ public class FskPortObject implements PortObject {
           
         } else if (entryName.equals(GENERATED_RESOURCE_FILES)) {
           
-          generatedResourceFiles = FskPortObjectUtil.deserializeAfterClassloaderReset(getClass().getClassLoader(), MAPPER104, in, GeneratedResourceFiles.class);
+          String directory = IOUtils.toString(in, StandardCharsets.UTF_8);
+          generatedResourcesDirectory = Optional.of(new File(directory));
          
         } else if (entryName.equals(PLOT)) {
           plot = IOUtils.toString(in, "UTF-8");
@@ -454,12 +455,14 @@ public class FskPortObject implements PortObject {
       in.close();
 
       final FskPortObject portObj = new FskPortObject(modelScript, visualizationScript,
-          modelMetadata, workspacePath, packages, generatedResourceFiles, environmentManager, plot, readme);
+          modelMetadata, workspacePath, packages, environmentManager, plot, readme);
 
       if (!simulations.isEmpty()) {
         portObj.simulations.addAll(simulations);
       }
       portObj.selectedSimulationIndex = selectedSimulationIndex;
+      generatedResourcesDirectory.ifPresent(portObj::setGeneratedResourcesDirectory);
+      
       return portObj;
     }
   }

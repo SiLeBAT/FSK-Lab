@@ -75,7 +75,6 @@ import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
 import de.bund.bfr.knime.fsklab.nodes.environment.ArchivedEnvironmentManager;
 import de.bund.bfr.knime.fsklab.nodes.environment.EnvironmentManager;
-import de.bund.bfr.knime.fsklab.nodes.environment.GeneratedResourceFiles;
 import de.bund.bfr.knime.fsklab.rakip.RakipUtil;
 import de.bund.bfr.knime.fsklab.v1_9.CombinedFskPortObject;
 import de.bund.bfr.knime.fsklab.v1_9.FskPortObject;
@@ -518,9 +517,6 @@ class ReaderNodeModel extends NoInternalsModel {
         packagesSet.addAll(new RScript(modelScript).getLibraries());
       }
 
-      // generated resource Files (empty)
-      GeneratedResourceFiles generatedResourceFiles = new GeneratedResourceFiles();
-
       if (!visualizationScript.isEmpty()) {
         packagesSet.addAll(new RScript(visualizationScript).getLibraries());
       }
@@ -533,7 +529,7 @@ class ReaderNodeModel extends NoInternalsModel {
       String plotPath = "";
 
       FskPortObject fskObj = new FskPortObject(modelScript, visualizationScript, model,
-          workspacePath, packagesList, generatedResourceFiles, Optional.of(environmentManager), plotPath, readme);
+          workspacePath, packagesList, Optional.of(environmentManager), plotPath, readme);
 
       // Read selected simulation index and simulations
       Optional<ArchiveEntry> simulationEntry =
