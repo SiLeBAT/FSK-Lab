@@ -3,12 +3,12 @@ Bundle-ManifestVersion: 2
 Bundle-Name: PCML Definition
 Bundle-SymbolicName: de.bund.bfr.knime.foodprocess.pcml;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Require-Bundle: org.eclipse.core.runtime,
- org.knime.core;bundle-version="2.5.4",
- de.bund.bfr.knime.foodprocess.util;bundle-version="1.0.0",
+Require-Bundle: de.bund.bfr.knime.foodprocess.util;bundle-version="1.0.0",
  de.bund.bfr.knime.pmm.common;bundle-version="1.0.0",
+ org.eclipse.core.runtime,
  org.junit,
- org.knime.core.pmml
+ org.knime.core;bundle-version="[4.0.0,5.0.0)",
+ org.knime.core.pmml;bundle-version="[4.0.0,5.0.0)"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ClassPath: lib/xmlbeans-pcml-1-0.jar,

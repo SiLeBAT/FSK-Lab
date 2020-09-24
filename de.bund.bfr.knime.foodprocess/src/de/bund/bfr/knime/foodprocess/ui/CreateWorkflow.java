@@ -34,6 +34,7 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -63,7 +64,7 @@ import org.knime.core.node.workflow.WorkflowCreationHelper;
 import org.knime.core.node.workflow.WorkflowManager;
 import org.knime.core.node.workflow.WorkflowPersistor;
 import org.knime.core.util.VMFileLocker;
-import org.knime.workbench.ui.nature.KNIMEProjectNature;
+import org.knime.workbench.ui.KNIMEUIPlugin;
 import org.knime.core.node.workflow.NativeNodeContainer;
 
 import de.bund.bfr.knime.foodprocess.FoodProcessNodeFactory;
@@ -545,5 +546,54 @@ public class CreateWorkflow extends AbstractHandler {
     		catch (Exception e) {}
     	}
     	return result;
+    }
+    
+    /**
+     * Class taken from KNIME 3. Removed in KNIME 4 but still needed in FoodProcess-Lab.
+     * 
+     * Project nature for KNIME projects, not used by now.
+     *
+     * @author Florian Georg, University of Konstanz
+     */
+    class KNIMEProjectNature implements IProjectNature {
+
+        /** Project nature ID as defined in plugin.xml. */
+        public static final String ID = KNIMEUIPlugin.PLUGIN_ID
+            + ".KNIMEProjectNature";
+
+        private IProject m_project;
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void configure() throws CoreException {
+            // nothing to do
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void deconfigure() throws CoreException {
+            // nothing to do
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public IProject getProject() {
+            return m_project;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void setProject(final IProject project) {
+            m_project = project;
+
+        }
     }
 }
