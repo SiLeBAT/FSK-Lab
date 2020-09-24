@@ -40,4 +40,3 @@ Bundle-ClassPath: libs/bfr-swing-1.0-SNAPSHOT.jar,
  sedml_libs/jlibsedml-2.2.3.jar,
  sedml_libs/jmathml-2.2.1.jar,
  sedml_libs/xom-1.2.5.jar
-Import-Package: org.w3c.dom.events;resolution:=optional
