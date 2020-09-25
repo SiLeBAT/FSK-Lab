@@ -45,7 +45,10 @@ import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
 import de.bund.bfr.knime.fsklab.nodes.SimulationSetting;
 import de.bund.bfr.knime.fsklab.v1_9.FskPortObject;
 import de.bund.bfr.knime.fsklab.v1_9.FskSimulation;
+import de.bund.bfr.knime.fsklab.v1_9.editor.FSKEditorJSViewValue;
+import de.bund.bfr.knime.fsklab.v1_9.editor.FSKEditorJSNodeDialog.ModelType;
 import de.bund.bfr.knime.fsklab.v1_9.simulator.JSSimulatorViewValue.JSSimulation;
+import de.bund.bfr.metadata.swagger.Model;
 import de.bund.bfr.metadata.swagger.Parameter;
 import de.bund.bfr.metadata.swagger.Parameter.ClassificationEnum;
 import metadata.SwaggerUtil;
@@ -100,24 +103,29 @@ class JSSimulatorNodeModel
 
   @Override
   public JSSimulatorViewValue getViewValue() {
-    JSSimulatorViewValue val;
-    synchronized (getLock()) {
-      val = super.getViewValue();
 
-      if (val == null) {
-        val = createEmptyViewValue();
+    JSSimulatorViewValue value = super.getViewValue();
+    synchronized (getLock()) {
+
+      final String connectedNodeId = getTableId(0);
+
+
+      if (value == null) {
+        value = createEmptyViewValue();
       }
 
-      if (val.simulations == null && port != null && port.simulations != null) {
+      if (value.getSimulations().length == 0 && port != null && port.simulations != null) {
         // Convert from FskSimulation(s) to JSSimulation(s)
-        final List<Parameter> parameters = SwaggerUtil.getParameter(port.modelMetadata);
-        val.simulations = port.simulations.stream().map(it -> toJSSimulation(it, parameters))
-            .collect(Collectors.toList());
-        val.selectedSimulationIndex = port.selectedSimulationIndex;
+        value.setSimulations(convertSimulations(port.modelMetadata));
+        value.setSimulationIndex(port.selectedSimulationIndex);
+      }
+     
+      if(value.getModelMath() == null) {
+        value.setModelMath("");
       }
     }
 
-    return val;
+    return value;
   }
 
   @Override
@@ -139,6 +147,15 @@ class JSSimulatorNodeModel
     return rep;
   }
 
+  private JSSimulation[] convertSimulations(Model metadata){
+    final List<Parameter> parameters = SwaggerUtil.getParameter(port.modelMetadata);
+    Object[] jsSims = port.simulations.stream().map(it -> toJSSimulation(it, parameters))
+        .collect(Collectors.toList()).toArray();
+    
+    return (JSSimulation[]) jsSims;
+  }
+  
+  
   @Override
   protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
     return inSpecs;
@@ -157,19 +174,19 @@ class JSSimulatorNodeModel
 
     synchronized (getLock()) {
 
-      final JSSimulatorViewValue val = getViewValue();
+      final JSSimulatorViewValue value = getViewValue();
 
       // If not executed
-      if (val.simulations == null) {
+      if (value.getSimulations() == null || value.getSimulations().length == 0) {
         final List<Parameter> parameters = SwaggerUtil.getParameter(inObj.modelMetadata);
         loadJsonSetting();
         final List<JSSimulation> simulations = inObj.simulations.stream()
             .map(it -> toJSSimulation(it, parameters)).collect(Collectors.toList());
 
-        if (val.modelMath == null) {
-          val.simulations = simulations;
-          val.modelMath = FromOjectToJSON(SwaggerUtil.getModelMath(inObj.modelMetadata));
-          val.selectedSimulationIndex = inObj.selectedSimulationIndex;
+        if (value.getModelMath() == null || value.getModelMath() == "") {
+          value.setSimulations(convertSimulations(inObj.modelMetadata));
+          value.setModelMath(FromOjectToJSON(SwaggerUtil.getModelMath(inObj.modelMetadata)));
+          value.setSimulationIndex(inObj.selectedSimulationIndex);
         }
         port = inObj;
       }
@@ -178,10 +195,10 @@ class JSSimulatorNodeModel
 
       // Converts JSSimulation(s) back to FskSimulation(s)
       port = inObj; // Needed by getViewRepresentation
-      createSimulation(inObj, val);
+      createSimulation(inObj, value);
 
       LOGGER
-          .info(" saving '" + val.selectedSimulationIndex + "' as the selected simulation index!");
+          .info(" saving '" + value.getSimulationIndex() + "' as the selected simulation index!");
     }
 
     exec.setProgress(1);
@@ -194,8 +211,8 @@ class JSSimulatorNodeModel
 
     final List<Parameter> inputParams = getViewRepresentation().parameters;
     inObj.simulations.clear();
-    
-    for (final JSSimulation jsSimulation : val.simulations) {
+
+    for (final JSSimulation jsSimulation : val.getSimulations()) {
       final FskSimulation fskSimulation = new FskSimulation(jsSimulation.name);
       for (int i = 0; i < inputParams.size(); i++) {
         final String paramName = inputParams.get(i).getId();
@@ -205,7 +222,7 @@ class JSSimulatorNodeModel
       inObj.simulations.add(fskSimulation);
     }
 
-    inObj.selectedSimulationIndex = val.selectedSimulationIndex;
+    inObj.selectedSimulationIndex = val.getSimulationIndex();
   }
 
   @Override
@@ -253,6 +270,7 @@ class JSSimulatorNodeModel
 
     try {
       final JSSimulatorViewValue vv = getViewValue();
+
       saveJsonSetting(vv.simulations, vv.modelMath);
     } catch (IOException | CanceledExecutionException e) {
       e.printStackTrace();
@@ -276,7 +294,7 @@ class JSSimulatorNodeModel
     final String containerName = buildContainerName();
 
     final File settingFolder = new File(directory, containerName);
-   
+
     // Read configuration strings
     final String simulationString = NodeUtils.readConfigString(settingFolder, "simulations.json");
 
