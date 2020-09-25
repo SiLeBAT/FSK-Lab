@@ -18,8 +18,8 @@
  */
 package de.bund.bfr.knime.fsklab.v1_9.simulator;
 
-import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.knime.core.node.CanceledExecutionException;
@@ -33,19 +33,14 @@ import org.knime.core.node.port.PortObjectHolder;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.web.ValidationError;
-import org.knime.core.node.workflow.NodeContainer;
-import org.knime.core.node.workflow.NodeContext;
-import org.knime.core.util.Pair;
 import org.knime.js.core.node.AbstractWizardNodeModel;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.FskPlugin;
-import de.bund.bfr.knime.fsklab.nodes.NodeRemovedListener;
-import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
-import de.bund.bfr.knime.fsklab.nodes.SimulationSetting;
 import de.bund.bfr.knime.fsklab.v1_9.FskPortObject;
 import de.bund.bfr.knime.fsklab.v1_9.FskSimulation;
 import de.bund.bfr.knime.fsklab.v1_9.simulator.JSSimulatorViewValue.JSSimulation;
+import de.bund.bfr.metadata.swagger.Model;
 import de.bund.bfr.metadata.swagger.Parameter;
 import de.bund.bfr.metadata.swagger.Parameter.ClassificationEnum;
 import metadata.SwaggerUtil;
@@ -54,10 +49,14 @@ class JSSimulatorNodeModel
     extends AbstractWizardNodeModel<JSSimulatorViewRepresentation, JSSimulatorViewValue>
     implements PortObjectHolder {
 
+  private final JSSimulatorConfig m_config = new JSSimulatorConfig();
+
   private static final NodeLogger LOGGER =
       NodeLogger.getLogger("JavaScript FSK Simulation Configurator");
 
   private FskPortObject port;
+
+  private static final ObjectMapper MAPPER = FskPlugin.getDefault().MAPPER104;
 
   // Input and output port types
   private static final PortType[] IN_TYPES = {FskPortObject.TYPE};
@@ -96,28 +95,36 @@ class JSSimulatorNodeModel
   }
 
   @Override
-  public void saveCurrentValue(NodeSettingsWO content) {}
+  public void saveCurrentValue(NodeSettingsWO content) {
+  }
 
   @Override
   public JSSimulatorViewValue getViewValue() {
-    JSSimulatorViewValue val;
-    synchronized (getLock()) {
-      val = super.getViewValue();
 
-      if (val == null) {
-        val = createEmptyViewValue();
+    JSSimulatorViewValue value = super.getViewValue();
+    synchronized (getLock()) {
+
+      if (value.getSimulations().length == 0) {
+        copyConfigToView(value);
       }
 
-      if (val.simulations == null && port != null && port.simulations != null) {
+      if (value.getSimulations() == null) {
         // Convert from FskSimulation(s) to JSSimulation(s)
-        final List<Parameter> parameters = SwaggerUtil.getParameter(port.modelMetadata);
-        val.simulations = port.simulations.stream().map(it -> toJSSimulation(it, parameters))
-            .collect(Collectors.toList());
-        val.selectedSimulationIndex = port.selectedSimulationIndex;
+        value.setSimulations(convertSimulations(port.modelMetadata));
+        value.setSimulationIndex(port.selectedSimulationIndex);
+       
+      }
+
+      if (value.getModelMath() == null) {
+        try {
+          value.setModelMath(FromOjectToJSON(SwaggerUtil.getModelMath(port.modelMetadata)));
+        }catch(JsonProcessingException e) {
+          e.printStackTrace();
+        }
       }
     }
 
-    return val;
+    return value;
   }
 
   @Override
@@ -139,6 +146,13 @@ class JSSimulatorNodeModel
     return rep;
   }
 
+  private JSSimulation[] convertSimulations(Model metadata) {
+    final List<Parameter> parameters = SwaggerUtil.getParameter(port.modelMetadata);
+    final List<JSSimulation> simulations = port.simulations.stream()
+        .map(it -> toJSSimulation(it, parameters)).collect(Collectors.toList());
+    return (JSSimulation[]) simulations.toArray(new JSSimulation[0]);
+  }
+
   @Override
   protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
     return inSpecs;
@@ -148,64 +162,41 @@ class JSSimulatorNodeModel
   protected PortObject[] performExecute(PortObject[] inObjects, ExecutionContext exec)
       throws IOException, CanceledExecutionException, InvalidSettingsException {
 
-    final String nameWithID = NodeContext.getContext().getNodeContainer().getNameWithID();
-    final String containerName = buildContainerName();
-    NodeContext.getContext().getWorkflowManager()
-        .addListener(new NodeRemovedListener(nameWithID, containerName));
-
-    final FskPortObject inObj = (FskPortObject) inObjects[0];
+    if (inObjects[0] != null) {
+      setInternalPortObjects(inObjects);
+    }
 
     synchronized (getLock()) {
 
-      final JSSimulatorViewValue val = getViewValue();
+      final JSSimulatorViewValue value = getViewValue();
 
-      // If not executed
-      if (val.simulations == null) {
-        final List<Parameter> parameters = SwaggerUtil.getParameter(inObj.modelMetadata);
-        loadJsonSetting();
-        final List<JSSimulation> simulations = inObj.simulations.stream()
-            .map(it -> toJSSimulation(it, parameters)).collect(Collectors.toList());
+      createSimulation(value);
 
-        if (val.modelMath == null) {
-          val.simulations = simulations;
-          val.modelMath = FromOjectToJSON(SwaggerUtil.getModelMath(inObj.modelMetadata));
-          val.selectedSimulationIndex = inObj.selectedSimulationIndex;
-        }
-        port = inObj;
-      }
-
-      // Takes modified simulations from val
-
-      // Converts JSSimulation(s) back to FskSimulation(s)
-      port = inObj; // Needed by getViewRepresentation
-      createSimulation(inObj, val);
-
-      LOGGER
-          .info(" saving '" + val.selectedSimulationIndex + "' as the selected simulation index!");
+      LOGGER.info(" saving '" + value.getSimulationIndex() + "' as the selected simulation index!");
     }
 
     exec.setProgress(1);
 
-    return new PortObject[] {inObj};
+    return new PortObject[] {port};
   }
 
 
-  private void createSimulation(FskPortObject inObj, JSSimulatorViewValue val) {
+  private void createSimulation(JSSimulatorViewValue val) {
 
     final List<Parameter> inputParams = getViewRepresentation().parameters;
-    inObj.simulations.clear();
-    
-    for (final JSSimulation jsSimulation : val.simulations) {
+    port.simulations.clear();
+
+    for (final JSSimulation jsSimulation : val.getSimulations()) {
       final FskSimulation fskSimulation = new FskSimulation(jsSimulation.name);
       for (int i = 0; i < inputParams.size(); i++) {
         final String paramName = inputParams.get(i).getId();
         final String paramValue = jsSimulation.values.get(i);
         fskSimulation.getParameters().put(paramName, paramValue);
       }
-      inObj.simulations.add(fskSimulation);
+      port.simulations.add(fskSimulation);
     }
 
-    inObj.selectedSimulationIndex = val.selectedSimulationIndex;
+    port.selectedSimulationIndex = val.getSimulationIndex();
   }
 
   @Override
@@ -214,10 +205,14 @@ class JSSimulatorNodeModel
   }
 
   @Override
-  protected void useCurrentValueAsDefault() {}
+  protected void useCurrentValueAsDefault() {
+    copyValueToConfig();
+  }
 
   @Override
-  protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {}
+  protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
+    new JSSimulatorConfig().loadSettings(settings);
+  }
 
   @Override
   public PortObject[] getInternalPortObjects() {
@@ -230,7 +225,8 @@ class JSSimulatorNodeModel
   }
 
   @Override
-  public void setHideInWizard(boolean hide) {}
+  public void setHideInWizard(boolean hide) {
+  }
 
   private static JSSimulation toJSSimulation(FskSimulation fskSim, List<Parameter> parameters) {
     final JSSimulation jsSim = new JSSimulation();
@@ -250,81 +246,33 @@ class JSSimulatorNodeModel
 
   @Override
   protected void saveSettingsTo(NodeSettingsWO settings) {
-
-    try {
-      final JSSimulatorViewValue vv = getViewValue();
-      saveJsonSetting(vv.simulations, vv.modelMath);
-    } catch (IOException | CanceledExecutionException e) {
-      e.printStackTrace();
-    }
+    m_config.saveSettings(settings);
   }
 
   @Override
   protected void loadValidatedSettingsFrom(NodeSettingsRO settings)
       throws InvalidSettingsException {
-    try {
-      loadJsonSetting();
-    } catch (IOException | CanceledExecutionException e) {
-      e.printStackTrace();
-    }
-  }
-
-
-  protected void loadJsonSetting() throws IOException, CanceledExecutionException {
-    final File directory =
-        NodeContext.getContext().getWorkflowManager().getContext().getCurrentLocation();
-    final String containerName = buildContainerName();
-
-    final File settingFolder = new File(directory, containerName);
-   
-    // Read configuration strings
-    final String simulationString = NodeUtils.readConfigString(settingFolder, "simulations.json");
-
-    // Update view value
-    final JSSimulatorViewValue viewValue = getViewValue();
-
-    // Parse simulation string and update view Value
-    final Pair<Integer, List<JSSimulation>> simulationsInfo =
-        SimulationSetting.from(simulationString);
-    viewValue.selectedSimulationIndex = simulationsInfo.getFirst();
-    viewValue.simulations = simulationsInfo.getSecond();
-
-    viewValue.modelMath = NodeUtils.readConfigString(settingFolder, "modelMath.json");
-  }
-
-  protected void saveJsonSetting(List<JSSimulation> simulationList, String modelMath)
-      throws IOException, CanceledExecutionException {
-
-    if (simulationList == null) {
-      return;
-    }
-
-    final File directory =
-        NodeContext.getContext().getWorkflowManager().getContext().getCurrentLocation();
-
-    final String containerName = buildContainerName();
-
-    final File settingFolder = new File(directory, containerName);
-    if (!settingFolder.exists()) {
-      settingFolder.mkdir();
-    }
-
-    final String joinedSimulations = SimulationSetting
-        .toString(new Pair<>(getViewValue().selectedSimulationIndex, simulationList));
-    NodeUtils.writeConfigString(joinedSimulations, settingFolder, "simulations.json");
-    NodeUtils.writeConfigString(modelMath, settingFolder, "modelMath.json");
+    m_config.loadSettings(settings);
   }
 
 
   private static String FromOjectToJSON(final Object object) throws JsonProcessingException {
-    final ObjectMapper objectMapper = FskPlugin.getDefault().OBJECT_MAPPER;
-    final String jsonStr = objectMapper.writeValueAsString(object);
+    final String jsonStr = MAPPER.writeValueAsString(object);
     return jsonStr;
   }
 
-  /** @return string with node name and id with format "{name} (#{id}) setting". */
-  private static String buildContainerName() {
-    final NodeContainer nodeContainer = NodeContext.getContext().getNodeContainer();
-    return nodeContainer.getName() + " (#" + nodeContainer.getID().getIndex() + ") setting";
+
+  private void copyConfigToView(JSSimulatorViewValue value) {
+    value.setModelMath(m_config.getModelMath());
+    value.setSimulationIndex(m_config.getSimulationIndex());
+    value.setSimulations(m_config.getSimulations());
   }
+
+  private void copyValueToConfig() {
+    JSSimulatorViewValue value = getViewValue();
+    m_config.setModelMath(value.getModelMath());
+    m_config.setSimulationIndex(value.getSimulationIndex());
+    m_config.setSimulations(value.getSimulations());
+  }
+
 }

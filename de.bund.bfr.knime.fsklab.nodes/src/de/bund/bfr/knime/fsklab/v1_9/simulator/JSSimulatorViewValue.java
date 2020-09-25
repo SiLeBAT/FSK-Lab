@@ -18,6 +18,7 @@
  */
 package de.bund.bfr.knime.fsklab.v1_9.simulator;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -26,24 +27,64 @@ import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.js.core.JSONViewContent;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import de.bund.bfr.knime.fsklab.FskPlugin;
 
 /**
  * Value of the JavaScript simulator node.
  *
  * It contains the simulation name and the parameter values.
  */
-@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-public class JSSimulatorViewValue extends JSONViewContent {
 
-  List<JSSimulation> simulations;
-  int selectedSimulationIndex = 0;
-  String modelMath;
+public class JSSimulatorViewValue extends JSONViewContent {
+  
+  private static final ObjectMapper MAPPER = FskPlugin.getDefault().MAPPER104;
+
+  private static final String CFG_MODEL_MATH = "modelMath";
+  private static final String CFG_SIMULATIONS = "simulations";
+  private static final String CFG_SIMULATION_INDEX = "selectedSimulationIndex";
+
+  
+  private JSSimulation[] simulations;
+  private int selectedSimulationIndex;
+  private String modelMath;
+  
+  
+  public JSSimulatorViewValue() {
+    simulations = new JSSimulation[0];
+    modelMath = "";
+  }
   
   @Override
-  public void saveToNodeSettings(NodeSettingsWO settings) {}
+  public void saveToNodeSettings(NodeSettingsWO settings) {
+    settings.addInt(CFG_SIMULATION_INDEX, selectedSimulationIndex);
+    settings.addString(CFG_MODEL_MATH, modelMath);
+    
+    if (simulations.length != 0) {
+      try {
+        String simulationStrings = MAPPER.writeValueAsString(simulations);
+        settings.addString(CFG_SIMULATIONS, simulationStrings);
+      } catch (JsonProcessingException e) {
+      }
+    }
+    
+  }
 
   @Override
-  public void loadFromNodeSettings(NodeSettingsRO settings) throws InvalidSettingsException {}
+  public void loadFromNodeSettings(NodeSettingsRO settings) throws InvalidSettingsException {
+    selectedSimulationIndex = settings.getInt(CFG_SIMULATION_INDEX);
+    modelMath = settings.getString(CFG_MODEL_MATH);
+    
+    if (settings.containsKey(CFG_SIMULATIONS)) {
+      try {
+        String simulationStrings = settings.getString(CFG_SIMULATIONS);
+        simulations = MAPPER.readValue(simulationStrings, JSSimulation[].class);
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+  }
 
   @Override
   public boolean equals(Object obj) {
@@ -64,9 +105,30 @@ public class JSSimulatorViewValue extends JSONViewContent {
 
   @Override
   public int hashCode() {
-    return simulations.hashCode() + selectedSimulationIndex;
+    return Objects.hash(simulations, selectedSimulationIndex, modelMath);
   }
 
+  public String getModelMath() {
+    return modelMath;
+  }
+  public void setModelMath(String modelMath) {
+    this.modelMath = modelMath;
+  }
+  public int getSimulationIndex() {
+    return selectedSimulationIndex;
+  }
+  public void setSimulationIndex(int selectedSimulationIndex) {
+    this.selectedSimulationIndex = selectedSimulationIndex;
+  }
+  public JSSimulation[] getSimulations() {
+    return simulations;
+  }
+  public void setSimulations(JSSimulation[] simulations) {
+    this.simulations = simulations;
+  }
+  
+  
+  
   @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
   public static class JSSimulation {
 
