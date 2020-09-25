@@ -30,14 +30,13 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.FskPlugin;
-import de.bund.bfr.knime.fsklab.nodes.environment.EnvironmentManager;
 
 /**
  * Value of the JavaScript simulator node.
  *
  * It contains the simulation name and the parameter values.
  */
-@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
+
 public class JSSimulatorViewValue extends JSONViewContent {
   
   private static final ObjectMapper MAPPER = FskPlugin.getDefault().MAPPER104;
@@ -54,11 +53,8 @@ public class JSSimulatorViewValue extends JSONViewContent {
   
   public JSSimulatorViewValue() {
     simulations = new JSSimulation[0];
-    selectedSimulationIndex = 0;
     modelMath = "";
-    
   }
-  
   
   @Override
   public void saveToNodeSettings(NodeSettingsWO settings) {
@@ -130,6 +126,7 @@ public class JSSimulatorViewValue extends JSONViewContent {
   public void setSimulations(JSSimulation[] simulations) {
     this.simulations = simulations;
   }
+  
   
   
   @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
