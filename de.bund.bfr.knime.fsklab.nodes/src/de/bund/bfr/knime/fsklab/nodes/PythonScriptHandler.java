@@ -6,6 +6,7 @@ import java.util.List;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.util.FileUtil;
+import org.knime.python2.PythonVersion;
 import org.knime.python2.kernel.PythonKernel;
 import org.knime.python2.kernel.PythonKernelOptions;
 import de.bund.bfr.knime.fsklab.nodes.plot.PythonPlotter;
@@ -20,19 +21,29 @@ public class PythonScriptHandler extends ScriptHandler {
   // controller that communicates with Python Installation
   PythonKernel controller;
 
-  
-  public PythonScriptHandler() throws IOException {
-    
+
+  public PythonScriptHandler(PythonVersion version) throws IOException {
+
     PythonKernelOptions m_kernelOptions = new PythonKernelOptions();
-    controller = new PythonKernel(m_kernelOptions);
-    
+    if (version != null) {
+
+      // m_kernelOptions.setPythonVersionOption(version);
+      controller = new PythonKernel(m_kernelOptions.forPythonVersion(version));
+    } else {
+      controller = new PythonKernel(m_kernelOptions);
+    }
+
     // Currently only PythonPlotter is assigned as it is the only available for Python
     this.plotter = new PythonPlotter(controller);
   }
-
+  // if no version is given in the model metadata, use the KNIME preference setting
+  public PythonScriptHandler() throws IOException {
+    this(null);
+  }
 
   @Override
-  public void convertToKnimeDataTable(FskPortObject fskObj, ExecutionContext exec) throws Exception {
+  public void convertToKnimeDataTable(FskPortObject fskObj, ExecutionContext exec)
+      throws Exception {
 
   }
 
@@ -61,8 +72,9 @@ public class PythonScriptHandler extends ScriptHandler {
   }
 
   @Override
-  public void plotToImageFile(RunnerNodeInternalSettings internalSettings, RunnerNodeSettings nodeSettings,
-      FskPortObject fskObj, ExecutionContext exec) throws Exception {
+  public void plotToImageFile(RunnerNodeInternalSettings internalSettings,
+      RunnerNodeSettings nodeSettings, FskPortObject fskObj, ExecutionContext exec)
+      throws Exception {
     plotter.plotPng(internalSettings.imageFile, fskObj.getViz());
   }
 
@@ -138,7 +150,7 @@ public class PythonScriptHandler extends ScriptHandler {
     controller.close();
 
   }
-  
+
   @Override
   protected String createVectorQuery(List<String> variableNames) {
     return "print([" + String.join(",", variableNames) + "])";
