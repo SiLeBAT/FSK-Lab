@@ -157,11 +157,11 @@ public abstract class ScriptHandler implements AutoCloseable {
       if (type.startsWith("r")) {
         handler = new RScriptHandler(packages);
       } else if (type.startsWith("py")) {
-        if(type.startsWith("python 2")) {
+        if (type.startsWith("python 2")) {
           handler = new PythonScriptHandler(PythonVersion.PYTHON2);
-        }else if(type.startsWith("python 3")){
+        } else if (type.startsWith("python 3")) {
           handler = new PythonScriptHandler(PythonVersion.PYTHON3);  
-        }else {
+        } else {
           handler = new PythonScriptHandler(); // use version from KNIME preference page
         }
       } else {
