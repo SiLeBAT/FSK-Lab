@@ -36,18 +36,16 @@ public class FSKDBViewRepresentation extends JSONViewContent {
 
   private static final String TABLE_ID = "tableid";
 
-  private String tableID;
+  private String m_tableID;
+  private JSONDataTable m_table;
 
   public String getTableID() {
-    return tableID;
+    return m_tableID;
   }
 
   public void setTableID(String tableID) {
-    this.tableID = tableID;
+    this.m_tableID = tableID;
   }
-
-  private JSONDataTable m_table;
-
 
   /**
    * @return the table
@@ -68,7 +66,7 @@ public class FSKDBViewRepresentation extends JSONViewContent {
    */
   @Override
   public void saveToNodeSettings(final NodeSettingsWO settings) {
-    settings.addString(TABLE_ID, tableID);
+    settings.addString(TABLE_ID, m_tableID);
     if (m_table != null) {
       m_table.saveJSONToNodeSettings(settings);
     }
@@ -79,7 +77,7 @@ public class FSKDBViewRepresentation extends JSONViewContent {
    */
   @Override
   public void loadFromNodeSettings(final NodeSettingsRO settings) throws InvalidSettingsException {
-    tableID = settings.getString(TABLE_ID, "");
+    m_tableID = settings.getString(TABLE_ID, "");
     m_table = JSONDataTable.loadFromNodeSettings(settings);
   }
 
@@ -98,7 +96,7 @@ public class FSKDBViewRepresentation extends JSONViewContent {
       return false;
     }
     FSKDBViewRepresentation other = (FSKDBViewRepresentation) obj;
-    return new EqualsBuilder().append(tableID, other.tableID).isEquals();
+    return new EqualsBuilder().append(m_tableID, other.m_tableID).isEquals();
   }
 
   /**
@@ -106,6 +104,6 @@ public class FSKDBViewRepresentation extends JSONViewContent {
    */
   @Override
   public int hashCode() {
-    return new HashCodeBuilder().append(tableID).toHashCode();
+    return new HashCodeBuilder().append(m_tableID).toHashCode();
   }
 }
