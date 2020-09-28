@@ -19,8 +19,8 @@ simulator = function() {
 		create_body2();
     initUI();
 
-    if(value.simulations != void(0) && value.simulationIndex > 0){
-      let selected_sim = value.simulationIndex;
+    if(value.simulations != void(0) && value.selectedSimulationIndex > 0){
+      let selected_sim = value.selectedSimulationIndex;
       updateSimulationName(selected_sim);  // Show initially defaultSimulation (0)
       updateParameterValues(selected_sim); // Show initially the values for simulation 0.
       let simulationSelect = $('#simulationSelect');
@@ -36,7 +36,6 @@ simulator = function() {
 	};
 
 	view.getComponentValue = function() {
-		_val.simulationIndex = _val.selectedSimulationIndex;
 		return _val;
   };
   

@@ -19,7 +19,6 @@
 package de.bund.bfr.knime.fsklab.v1_9.simulator;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.knime.core.node.CanceledExecutionException;
@@ -111,7 +110,7 @@ class JSSimulatorNodeModel
       if (value.getSimulations() == null) {
         // Convert from FskSimulation(s) to JSSimulation(s)
         value.setSimulations(convertSimulations(port.modelMetadata));
-        value.setSimulationIndex(port.selectedSimulationIndex);
+        value.setSelectedSimulationIndex(port.selectedSimulationIndex);
        
       }
 
@@ -172,7 +171,7 @@ class JSSimulatorNodeModel
 
       createSimulation(value);
 
-      LOGGER.info(" saving '" + value.getSimulationIndex() + "' as the selected simulation index!");
+      LOGGER.info(" saving '" + value.getSelectedSimulationIndex() + "' as the selected simulation index!");
     }
 
     exec.setProgress(1);
@@ -196,7 +195,7 @@ class JSSimulatorNodeModel
       port.simulations.add(fskSimulation);
     }
 
-    port.selectedSimulationIndex = val.getSimulationIndex();
+    port.selectedSimulationIndex = val.getSelectedSimulationIndex();
   }
 
   @Override
@@ -255,23 +254,21 @@ class JSSimulatorNodeModel
     m_config.loadSettings(settings);
   }
 
-
   private static String FromOjectToJSON(final Object object) throws JsonProcessingException {
     final String jsonStr = MAPPER.writeValueAsString(object);
     return jsonStr;
   }
 
-
   private void copyConfigToView(JSSimulatorViewValue value) {
     value.setModelMath(m_config.getModelMath());
-    value.setSimulationIndex(m_config.getSimulationIndex());
+    value.setSelectedSimulationIndex(m_config.getSelectedSimulationIndex());
     value.setSimulations(m_config.getSimulations());
   }
 
   private void copyValueToConfig() {
     JSSimulatorViewValue value = getViewValue();
     m_config.setModelMath(value.getModelMath());
-    m_config.setSimulationIndex(value.getSimulationIndex());
+    m_config.setSelectedSimulationIndex(value.getSelectedSimulationIndex());
     m_config.setSimulations(value.getSimulations());
   }
 

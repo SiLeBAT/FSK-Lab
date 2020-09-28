@@ -38,44 +38,43 @@ import de.bund.bfr.knime.fsklab.FskPlugin;
  */
 
 public class JSSimulatorViewValue extends JSONViewContent {
-  
+
   private static final ObjectMapper MAPPER = FskPlugin.getDefault().MAPPER104;
 
   private static final String CFG_MODEL_MATH = "modelMath";
   private static final String CFG_SIMULATIONS = "simulations";
   private static final String CFG_SIMULATION_INDEX = "selectedSimulationIndex";
 
-  
   private JSSimulation[] simulations;
   private int selectedSimulationIndex;
   private String modelMath;
-  
-  
+
   public JSSimulatorViewValue() {
     simulations = new JSSimulation[0];
     modelMath = "";
   }
-  
+
   @Override
   public void saveToNodeSettings(NodeSettingsWO settings) {
     settings.addInt(CFG_SIMULATION_INDEX, selectedSimulationIndex);
     settings.addString(CFG_MODEL_MATH, modelMath);
-    
+
     if (simulations.length != 0) {
       try {
         String simulationStrings = MAPPER.writeValueAsString(simulations);
         settings.addString(CFG_SIMULATIONS, simulationStrings);
       } catch (JsonProcessingException e) {
+        e.printStackTrace();
       }
     }
-    
+
   }
 
   @Override
   public void loadFromNodeSettings(NodeSettingsRO settings) throws InvalidSettingsException {
     selectedSimulationIndex = settings.getInt(CFG_SIMULATION_INDEX);
     modelMath = settings.getString(CFG_MODEL_MATH);
-    
+
     if (settings.containsKey(CFG_SIMULATIONS)) {
       try {
         String simulationStrings = settings.getString(CFG_SIMULATIONS);
@@ -111,24 +110,27 @@ public class JSSimulatorViewValue extends JSONViewContent {
   public String getModelMath() {
     return modelMath;
   }
+
   public void setModelMath(String modelMath) {
     this.modelMath = modelMath;
   }
-  public int getSimulationIndex() {
+
+  public int getSelectedSimulationIndex() {
     return selectedSimulationIndex;
   }
-  public void setSimulationIndex(int selectedSimulationIndex) {
+
+  public void setSelectedSimulationIndex(int selectedSimulationIndex) {
     this.selectedSimulationIndex = selectedSimulationIndex;
   }
+
   public JSSimulation[] getSimulations() {
     return simulations;
   }
+
   public void setSimulations(JSSimulation[] simulations) {
     this.simulations = simulations;
   }
-  
-  
-  
+
   @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
   public static class JSSimulation {
 

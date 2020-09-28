@@ -28,11 +28,11 @@ public class JSSimulatorConfig {
     this.m_modelMath = modelMath;
   }
 
-  public int getSimulationIndex() {
+  public int getSelectedSimulationIndex() {
     return m_selectedSimulationIndex;
   }
 
-  public void setSimulationIndex(int selectedSimulationIndex) {
+  public void setSelectedSimulationIndex(int selectedSimulationIndex) {
     this.m_selectedSimulationIndex = selectedSimulationIndex;
   }
 
