@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<knimeNode icon="fskdbview.png" type="Source"
+	deprecated="false" xmlns="http://knime.org/node/v2.8"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://knime.org/node/v2.8 http://knime.org/node/v2.8.xsd">
+	<name>FSK DB View</name>
+
+	<shortDescription>This node visualizes FSK models as a HTML Table.</shortDescription>
+
+	<fullDescription>
+		<intro>
+
+		</intro>
+	</fullDescription>
+	<interactiveView name="FSK DB View">
+		JavaScript view to visualize FSK models as a HTML Table.
+	</interactiveView>
+	<ports>
+		<inPort name="FSK Metadata Table" index="0">Input FSK Metadata
+			Table</inPort>
+		<outPort name="FSK Metadata Table" index="0">Output FSK Metadata
+			Table</outPort>
+	</ports>
+</knimeNode>
