@@ -52,10 +52,10 @@
      <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.v1_9.joiner.JoinerNodeFactory" />
      <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.v1_9.editor.FSKEditorJSNodeFactory" />
      
-     <!-- Please deprecate the next extension point definition before release -->
-     <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.v1_9.fskdbview.FSKDBViewNodeFactory"/>
+     
      
      <!-- Disable workflow writer and reader nodes (unfinished)
+     <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.v1_9.fskdbview.FSKDBViewNodeFactory"/>
      <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.WorkflowWriterNodeFactory" />
      <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.WorkflowReaderNodeFactory" />
      -->
