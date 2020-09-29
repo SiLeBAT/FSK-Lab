@@ -18,13 +18,11 @@
  */
 package de.bund.bfr.knime.fsklab.v1_9.fskdbview;
 
-import java.io.File;
-import java.io.IOException;
 import org.knime.core.data.DataTableSpec;
+import org.knime.core.data.DataTableSpecCreator;
+import org.knime.core.node.BufferedDataContainer;
 import org.knime.core.node.BufferedDataTable;
-import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
-import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
@@ -33,6 +31,7 @@ import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.web.ValidationError;
+import org.knime.js.core.JSONDataTable;
 import org.knime.js.core.node.AbstractWizardNodeModel;
 import de.bund.bfr.knime.fsklab.v1_9.editor.FSKEditorJSNodeFactory;
 
@@ -45,12 +44,13 @@ import de.bund.bfr.knime.fsklab.v1_9.editor.FSKEditorJSNodeFactory;
 public class FSKDBViewNodeModel
     extends AbstractWizardNodeModel<FSKDBViewRepresentation, FSKDBViewValue> {
   // Input and output port types
-  private static final PortType[] IN_OUT_TYPES = {BufferedDataTable.TYPE};
+  private static final PortType[] IN_TYPES = {BufferedDataTable.TYPE_OPTIONAL};
+  private static final PortType[] OUT_TYPES = {BufferedDataTable.TYPE};
 
   private static final String VIEW_NAME = new FSKEditorJSNodeFactory().getInteractiveViewName();
 
   protected FSKDBViewNodeModel() {
-    super(IN_OUT_TYPES, IN_OUT_TYPES, VIEW_NAME);
+    super(IN_TYPES, OUT_TYPES, VIEW_NAME);
   }
 
   /**
@@ -185,9 +185,41 @@ public class FSKDBViewNodeModel
   @Override
   protected PortObject[] performExecute(PortObject[] inObjects, ExecutionContext exec)
       throws Exception {
+    PortObject inPort = inObjects[0];
+    PortObject outputPort = null;
     synchronized (getLock()) {
+      FSKDBViewRepresentation representation = getViewRepresentation();
+      if (inPort == null) {
+        // if the optional input port is not provided then
+        outputPort = createEmptyTable(exec);
+      } else if (representation.getTable() == null) {
+
+        // construct a BufferedDataTable from the input object.
+        BufferedDataTable table = (BufferedDataTable) inPort;
+        JSONDataTable jsonTable = JSONDataTable.newBuilder().setDataTable(table).build(exec);
+        representation.setTable(jsonTable);
+
+        // set the table ID which will be used in broadcasting and receiving event in the component.
+        String connectedNodeId = getTableId(0);
+        representation.setTableID(connectedNodeId);
+
+        outputPort = inPort;
+      }
     }
-    return new PortObject[] {inObjects[0]};
+    return new PortObject[] {outputPort};
+  }
+
+  /**
+   * A helper method for creating an empty table in the case of empty input port.
+   * 
+   * @param ExecutionContext exec.
+   * @return an empty BufferedDataTable instance.
+   */
+  private static BufferedDataTable createEmptyTable(final ExecutionContext exec) {
+    BufferedDataContainer container =
+        exec.createDataContainer(new DataTableSpecCreator().createSpec());
+    container.close();
+    return container.getTable();
   }
 
   @Override
