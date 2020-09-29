@@ -185,16 +185,17 @@ public class FSKDBViewNodeModel
   @Override
   protected PortObject[] performExecute(PortObject[] inObjects, ExecutionContext exec)
       throws Exception {
-    PortObject outport = inObjects[0];
+    PortObject inPort = inObjects[0];
+    PortObject outputPort = null;
     synchronized (getLock()) {
       FSKDBViewRepresentation representation = getViewRepresentation();
-      if (outport == null) {
+      if (inPort == null) {
         // if the optional input port is not provided then
-        outport = createEmptyTable(exec);
+        outputPort = createEmptyTable(exec);
       } else if (representation.getTable() == null) {
 
         // construct a BufferedDataTable from the input object.
-        BufferedDataTable table = (BufferedDataTable) inObjects[0];
+        BufferedDataTable table = (BufferedDataTable) inPort;
         JSONDataTable jsonTable = JSONDataTable.newBuilder().setDataTable(table).build(exec);
         representation.setTable(jsonTable);
 
@@ -202,10 +203,10 @@ public class FSKDBViewNodeModel
         String connectedNodeId = getTableId(0);
         representation.setTableID(connectedNodeId);
 
-        outport = inObjects[0];
+        outputPort = inPort;
       }
     }
-    return new PortObject[] {outport};
+    return new PortObject[] {outputPort};
   }
 
   /**
@@ -214,12 +215,11 @@ public class FSKDBViewNodeModel
    * @param ExecutionContext exec.
    * @return an empty BufferedDataTable instance.
    */
-  private BufferedDataTable createEmptyTable(final ExecutionContext exec) {
+  private static BufferedDataTable createEmptyTable(final ExecutionContext exec) {
     BufferedDataContainer container =
         exec.createDataContainer(new DataTableSpecCreator().createSpec());
     container.close();
-    BufferedDataTable out = container.getTable();
-    return out;
+    return container.getTable();
   }
 
   @Override
