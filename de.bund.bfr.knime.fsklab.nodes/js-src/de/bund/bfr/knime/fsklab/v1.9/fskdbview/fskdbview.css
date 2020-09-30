@@ -1,0 +1,474 @@
+/********icon******/
+@import url(https://fonts.googleapis.com/icon?family=Material+Icons);
+
+body {
+    padding: 3%;
+    background: #fff;
+    margin: 0
+}
+
+
+/************************NAVIGATION BAR*********************/
+
+.topnav {
+    overflow: hidden;
+    border-radius: 5px;
+}
+
+.topnav h1 {
+    float: left;
+    color: white;
+    margin-left: 30px
+}
+
+.topnav .fa {
+    float: right;
+    margin-left: 10px;
+    color: white;
+}
+
+.topnav a {
+    float: right;
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 16px;
+    margin-top: 10px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.topnav a.Nav {
+    margin-top: 10px;
+    border-radius: 5px;
+}
+
+a.Nav:hover {
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: all .3s cubic-bezier(0.445, 0.05, 0.55, 0.95);
+}
+
+.topnav a:visited {
+    color: white;
+    text-decoration: none;
+}
+
+.topnav .icon {
+    display: none;
+}
+
+.sidenav {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    right: 0;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+}
+
+.sidenav a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 16px;
+    color: white;
+    display: block;
+    transition: 0.3s;
+}
+
+.sidenav a.Nav {
+    border-radius: 5px;
+}
+
+.sidenav .fa {
+    float: right;
+    margin-left: 10px;
+    color: white;
+}
+
+.sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+    text-align: center;
+    background-color: transparent;
+    color: #ffffff
+}
+
+.sidenav .closebtn:hover {
+    color: #ffffff
+}
+
+
+/************************SEARCH BAR**************************/
+
+#searchBar {
+    padding: 25px 2px 10px 2px;
+}
+
+#filter-search {
+    background-repeat: no-repeat;
+    text-indent: 20px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1em;
+    padding: 0.5em 0.5em 0.5em 0.7em;
+    width: 40%;
+    border: none;
+    border-radius: 5px;
+    border-bottom-width: medium;
+    border-bottom-style: none;
+    border-bottom-color: currentcolor;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 8px;
+    text-align: left;
+    float: left;
+    color: rgb(130, 162, 200);
+}
+
+#env {
+    width: 75%;
+}
+
+#clear {
+    cursor: pointer;
+    margin: auto -30px;
+    font-size: 24px;
+    padding: 5px;
+    color: rgb(130, 162, 200);
+}
+
+#reset {
+    background-color: whitesmoke;
+    border: none;
+    border-radius: 5px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1em;
+    color: #6d7177;
+    text-align: center;
+    display: block;
+    border-bottom-width: medium;
+    border-bottom-style: none;
+    border-bottom-color: currentcolor;
+    border-bottom: 1px solid #ddd;
+    float: right;
+    width: 20%;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 2px 5px 0 rgba(0, 0, 0, 0.12);
+}
+
+#reset:hover {
+    background-color: #e1e3e8;
+}
+
+select {
+    border: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+#numberModels {
+    float: right;
+    /*color: rgb(130,162,200);*/
+    opacity: 0.8;
+    padding: 0.5em 0.5em 0.5em 0.7em;
+}
+
+
+/*************TABLE**********************/
+
+#MainTable {
+    border-collapse: collapse;
+    font-size: 14px;
+    overflow-y: auto;
+    overflow-x: scroll;
+    table-layout: fixed;
+}
+
+#MainTable table {
+    box-sizing: border-box;
+    -webkit-box-shadow: 0 0px 20px 0px rgba(0, 0, 0, 0.15);
+}
+
+#MainTable thead th {
+    position: sticky;
+    top: 0;
+    vertical-align: middle;
+    border-bottom: 0.1px;
+}
+
+#MainTable th,
+#MainTable td {
+    text-align: left;
+    padding: 12px;
+    border-collapse: collapse;
+}
+
+#MainTable td {
+    word-wrap: break-word;
+    word-break: break-all;
+    /*  overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;*/
+    text-align: justify;
+}
+
+#MainTable #cleft {
+    border-radius: 5px 0 0 5px;
+}
+
+#MainTable #cright {
+    border-radius: 0 5px 5px 0;
+}
+
+#soft,
+#env,
+#haz {
+    height: 20px;
+    border-radius: 5px 0 0 5px;
+    padding-left: 5px;
+    margin-top: 5px;
+    vertical-align: middle;
+    display: inline-block;
+}
+
+.downloadButton a {
+    color: white;
+}
+
+.hideColumn {
+    display: none;
+}
+
+#MainTable tr:hover {
+    background-color: #e1e3e8;
+}
+
+.fa-remove {
+    background-color: white;
+    /*color:  rgb(156, 179, 207);*/
+    font-size: 16px;
+    border: none;
+    height: 20px;
+    border-radius: 0 5px 5px 0;
+    display: inline-block;
+    margin-top: 5px;
+    vertical-align: middle;
+}
+
+table.sortable th.actives:hover {
+    cursor: pointer;
+}
+
+th.actives.ascending,
+th.actives.descending,
+table.sortable th.actives:hover {
+    background-color: rgba(65, 128, 232, 0.74);
+    color: #fff;
+}
+
+
+/*************** Arrows for table sorting ******************/
+
+th.actives.ascending:after {
+    font-size: 60%;
+    content: '\25B2';
+    float: left;
+    padding: 4px 5px 0 0;
+}
+
+th.actives.descending:after {
+    font-size: 60%;
+    content: '\25BC';
+    float: left;
+    padding: 4px 5px 0 0;
+}
+
+.crit {
+    border-radius: 5px;
+    webkit-box-shadow: 0 0px 40px 0px rgba(0, 0, 0, 0.15);
+}
+
+.modal-body {
+    overflow-x: auto;
+}
+
+/* used for sidebar tab/collapse*/
+@media (min-width: 768px) {
+    .visible-tabs {
+        display: none;
+    }
+    #MainTable {
+        height: 300px;
+    }
+    #soft {
+        width: 65px;
+    }
+    #haz {
+        width: 100px;
+    }
+    #cright,
+    #cleft {
+        width: 3%;
+    }
+    #col1 {
+        width: 20%;
+    }
+    #col2,
+    #col6,
+    #col7 {
+        width: 8%;
+    }
+    #colS {
+        width: 15%;
+    }
+    #colE,
+    #colH {
+        width: 17%;
+    }
+}
+
+@media (min-width: 992px) {
+    .hidden-tabs {
+        display: none !important;
+    }
+    #MainTable {
+        height: auto;
+    }
+    .navbar a {
+        font-size: 15px;
+    }
+    .navbar .fa {
+        font-size: 17px;
+    }
+    #soft {
+        width: 65px;
+    }
+    #haz {
+        width: 100px;
+    }
+    #cright,
+    #cleft {
+        width: 3%;
+    }
+    #col1 {
+        width: 20%;
+    }
+    #col2,
+    #col6,
+    #col7 {
+        width: 8%;
+    }
+    #colS {
+        width: 15%;
+    }
+    #colE {
+        width: 20%;
+    }
+    #colH {
+        width: 20%;
+    }
+}
+
+@media (min-width: 1200px) {
+    .visible-tabs {
+        display: block !important;
+    }
+    #MainTable {
+        height: auto;
+    }
+    #soft {
+        width: 65px;
+    }
+    #haz {
+        width: 110px;
+    }
+    .navbar a {
+        font-size: 16px;
+    }
+    .navbar .fa {
+        font-size: 19px;
+    }
+    #cright,
+    #cleft {
+        width: 3%;
+    }
+    #col1 {
+        width: 20%;
+    }
+    #col2,
+    #col6,
+    #col7 {
+        width: 8%;
+    }
+    #colS {
+        width: 10%;
+    }
+    #colE {
+        width: 28%;
+    }
+    #colH {
+        width: 15%;
+    }
+}
+
+@media screen and (max-height: 450px) {
+    .sidenav {
+        padding-top: 15px;
+    }
+    .sidenav a {
+        font-size: 18px;
+    }
+}
+
+@media screen and (max-width: 1320px) {
+    .topnav a {
+        display: none;
+    }
+    .topnav a.icon {
+        float: right;
+        display: block;
+        font-size: 36px;
+    }
+    .topnav a.icon:hover {
+        /*background-color: rgba(65, 128, 232, 0.74);*/
+        color: #f2f2f2;
+    }
+}
+
+@media screen and (min-width: 1320px) {
+    .sidenav {
+        display: none;
+    }
+}
+
+/* fallback */
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: url(https://fonts.gstatic.com/s/materialicons/v55/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2) format('woff2');
+}
+
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -moz-font-feature-settings: 'liga';
+  -moz-osx-font-smoothing: grayscale;
+}

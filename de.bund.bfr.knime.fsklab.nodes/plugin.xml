@@ -52,7 +52,10 @@
      <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.v1_9.joiner.JoinerNodeFactory" />
      <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.v1_9.editor.FSKEditorJSNodeFactory" />
      
+     
+     
      <!-- Disable workflow writer and reader nodes (unfinished)
+     <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.v1_9.fskdbview.FSKDBViewNodeFactory"/>
      <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.WorkflowWriterNodeFactory" />
      <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.WorkflowReaderNodeFactory" />
      -->
@@ -88,6 +91,17 @@
        javascriptComponentID="de.bund.bfr.knime.fsklab.v1.9.editor.component"
        name="FSK Editor JS"
        namespace="fskeditorjs">
+     </javascriptComponent>
+     
+     <!-- Javascript component for Fsk DB View node -->
+     <javascriptComponent
+       validate-method-name="validate"
+       getComponentValue-method-name="getComponentValue"
+       implementationBundleID="de.bund.bfr.knime.fsklab.v1.9.fskdbview.bundle"
+       init-method-name="init"
+       javascriptComponentID="de.bund.bfr.knime.fsklab.v1.9.fskdbview.component"
+       name="FSK DB View"
+       namespace="fskdbview">
      </javascriptComponent>
    </extension>
    
@@ -154,6 +168,18 @@
 	   
 	   <webDependency webResourceBundleID="FskMetadata_1.0.0" />
 	   <webDependency webResourceBundleID="FskUtil_1.0.0" />
+	 </webResourceBundle>
+	 
+	 <!-- JS and CSS for FSK DB VIEW node -->	 
+	 <webResourceBundle debug="true" name="FSK DB View"
+	   usesDefine="true" version="1.0.0" webResourceBundleID="de.bund.bfr.knime.fsklab.v1.9.fskdbview.bundle">
+       <webResource
+         relativePathSource="js-src/de/bund/bfr/knime/fsklab/v1.9/fskdbview"
+         relativePathTarget="js-src/de/bund/bfr/knime/fsklab/v1.9/fskdbview" />	   
+	   <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/v1.9/fskdbview/fskdbview.css" type="CSS" />
+	   <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/v1.9/fskdbview/fskdbview.js" type="JAVASCRIPT" />
+	   
+       <webDependency webResourceBundleID="bootstrap_3.3.6"/>
 	 </webResourceBundle>
 
   </extension>

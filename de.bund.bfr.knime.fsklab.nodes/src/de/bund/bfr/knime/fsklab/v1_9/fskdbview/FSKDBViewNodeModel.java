@@ -193,7 +193,7 @@ public class FSKDBViewNodeModel
         // if the optional input port is not provided then
         outputPort = createEmptyTable(exec);
       } else if (representation.getTable() == null) {
-
+        
         // construct a BufferedDataTable from the input object.
         BufferedDataTable table = (BufferedDataTable) inPort;
         JSONDataTable jsonTable = JSONDataTable.newBuilder().setDataTable(table).build(exec);
