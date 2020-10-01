@@ -477,12 +477,12 @@ fskdbview = function () {
       $("#col7").click(() => sortColumn("#col7", 7));
 
       // Handle model selection. 
-      // The number of max allowed selection is controlled by _representation.maxSelctionNumber
+      // The number of max allowed selection is controlled by _representation.maxSelectionNumber
       let selectedBox = null;
       $('.checkbox1').click(function () {
         selectedBox = this.name;
         if ($(this).prop("checked") == true) {
-          if (window.selectedModels.length >= _representation.maxSelctionNumber) {
+          if (window.selectedModels.length >= _representation.maxSelectionNumber) {
             $(this).prop("checked", false);
             return;
           }

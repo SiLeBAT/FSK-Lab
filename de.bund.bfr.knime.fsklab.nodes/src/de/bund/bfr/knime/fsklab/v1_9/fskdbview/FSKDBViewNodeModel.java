@@ -234,7 +234,7 @@ public class FSKDBViewNodeModel
     synchronized (getLock()) {
       FSKDBViewRepresentation representation = getViewRepresentation();
       representation.setRemoteRepositoryURL(m_repositoryLocationSettings.getStringValue());
-      representation.setMaxSelctionNumber(
+      representation.setMaxSelectionNumber(
           ((SettingsModelIntegerBounded) m_maxSelectionNumberSettings).getIntValue());
       if (inPort == null) {
         // if the optional input port is not provided then
