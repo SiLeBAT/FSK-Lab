@@ -4,38 +4,14 @@ fskdbview = function () {
     version: "0.0.1"
   };
   view.name = "FSK DB View"
-
-  var _representation;
-  var _value;
-
-  view.init = function (representation, value) {
-    _representation = representation;
-    _value = value;
-
-    createUI();
-  };
-
-  view.getComponentValue = function () {
-    return _value;
-  };
-
-  view.validate = function () {
-    return true;
-  }
-
   //transform JQuery :contains selector to case insensitive
   jQuery.expr[':'].contains = function (a, i, m) {
     return jQuery(a).text().toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
   };
+  window.selectedModels = [];
+  let _endpoint;
+  let _globalVars = {};
 
-  //TODO get the end point from the user setting
-  let _endpoint = "https://knime.bfr.berlin/backend/";
-  let _globalVars = {
-
-    metadataEndpoint: _endpoint + "metadata",
-    imageEndpoint: _endpoint + "image/",
-    downloadEndpoint: _endpoint + "download/"
-  }
 
   // These sets are used with the th-filters
   let _softwareSet = new Set();
@@ -49,8 +25,28 @@ fskdbview = function () {
     buttonColor: "rgb(83,121,166)",
     hoverColor: "rgb(130,162,200)",
   };
+  var _representation;
+  var _value;
 
+  view.init = function (representation, value) {
+    _representation = representation;
+    _value = value;
+    _endpoint = _representation.remoteRepositoryURL ? _representation.remoteRepositoryURL : "https://knime.bfr.berlin/backend/";
+    _globalVars = {
+      metadataEndpoint: _endpoint + "metadata",
+      imageEndpoint: _endpoint + "image/",
+      downloadEndpoint: _endpoint + "download/"
+    }
+    createUI();
+  };
 
+  view.getComponentValue = function () {
+    return _value;
+  };
+
+  view.validate = function () {
+    return true;
+  }
 
   /**
    * Create a Bootstrap dropdown menu.
@@ -60,13 +56,13 @@ fskdbview = function () {
   function createSubMenu(name, submenus) {
 
     return `<li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button"
-                          aria-haspopup="true" aria-expanded="false">${name}<span class="caret"></a>
-                        <ul class="dropdown-menu">
-                        ${submenus.map(entry => `<li><a href="#${entry.id}" aria-controls="#${entry.id}"
-                          role="button" data-toggle="tab">${entry.label}</a></li>`).join("")}
-                        </ul>
-                      </li>`;
+                              <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+                                aria-haspopup="true" aria-expanded="false">${name}<span class="caret"></a>
+                              <ul class="dropdown-menu">
+                              ${submenus.map(entry => `<li><a href="#${entry.id}" aria-controls="#${entry.id}"
+                                role="button" data-toggle="tab">${entry.label}</a></li>`).join("")}
+                              </ul>
+                            </li>`;
   }
 
   /**
@@ -82,24 +78,24 @@ fskdbview = function () {
   function createSimplePanel(title, formData, data) {
 
     return `<div class="panel panel-default">
-                        <div class="panel-heading">
-                          <h3>${title}</h3>
-                        </div>
-                        <div class="panel-body">
-                          <table class="table">
-                            <thead>
-                              <th>Property</th>
-                              <th>Value</th>
-                            </thead>
-                            <tbody>
-                            ${formData.map(prop => `<tr>
-                              <td>${prop.label}</td>
-                              <td>${data && data[prop.id] ? data[prop.id] : ""}</td>
-                            </tr>`).join("")}
-                            </tbody>
-                          </table>
-                        </div>
-                      </div> <!-- .panel -->`;
+                              <div class="panel-heading">
+                                <h3>${title}</h3>
+                              </div>
+                              <div class="panel-body">
+                                <table class="table">
+                                  <thead>
+                                    <th>Property</th>
+                                    <th>Value</th>
+                                  </thead>
+                                  <tbody>
+                                  ${formData.map(prop => `<tr>
+                                    <td>${prop.label}</td>
+                                    <td>${data && data[prop.id] ? data[prop.id] : ""}</td>
+                                  </tr>`).join("")}
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div> <!-- .panel -->`;
   }
 
   /**
@@ -130,18 +126,18 @@ fskdbview = function () {
     }
 
     return `<div class="panel panel-default">
-                        <div class="panel-heading">
-                          <h3>${title}</h3>
-                        </div>
-                        <div class="table-responsive">
-                          <table class="table">
-                            <thead>
-                              ${formData.map(prop => `<th>${prop.label}</th>`).join("")}
-                            </thead>
-                            <tbody>${rows.join("")}</tbody>
-                          </table>
-                        </div>
-                      </div> <!-- .panel -->`;
+                              <div class="panel-heading">
+                                <h3>${title}</h3>
+                              </div>
+                              <div class="table-responsive">
+                                <table class="table">
+                                  <thead>
+                                    ${formData.map(prop => `<th>${prop.label}</th>`).join("")}
+                                  </thead>
+                                  <tbody>${rows.join("")}</tbody>
+                                </table>
+                              </div>
+                            </div> <!-- .panel -->`;
   }
 
   function createPlotPanel(img) {
@@ -198,31 +194,31 @@ fskdbview = function () {
     let mainTable = document.createElement("div");
     mainTable.id = "MainTable";
     mainTable.innerHTML = `<table id="TableElement" class="sortable table table-sm table-responsive-xl">
-                          <thead>
-                            <th id="cleft">Check</th>
-                            <th class="actives" id="col1" scope="col" data-sort="name">Model Name</th>
-                            <th class="actives hideColumn" id="col2" scope="col" data-sort="name">ModelID</th>
-                            <th class="actives" id="colS" data-sort="name">
-                              <span id="col3">Software</span><br/>
-                              <span><select id="soft" class="crit"><option selected="selected">Select</option></select>
-                              <button id="clearSoft" title="reset" class="fa fa-remove"></button></span>
-                            </th>
-                            <th class="actives" id="colE" data-sort="name">
-                              <span id="col4">Environment</span><br/>
-                              <span><select id="env" class="crit"><option selected="selected">Select</option></select>
-                              <button id="clearEnv" title="reset" class="fa fa-remove"></button></span>
-                            </th>
-                            <th class="actives" id="colH" data-sort="name">
-                              <span id="col5">Hazard</span><br/>
-                              <span>
-                                <select id="haz" class="crit"><option selected="selected">Select</option></select>
-                                <button id="clearHaz" title="reset" class="fa fa-remove"></button>
-                              </span>
-                            </th>
-                            <th id="cright">Details</th>
-                          </thead>
-                          <tbody id="rows"></tbody>
-                          </table></div>`;
+                                <thead>
+                                  <th id="cleft">Check</th>
+                                  <th class="actives" id="col1" scope="col" data-sort="name">Model Name</th>
+                                  <th class="actives hideColumn" id="col2" scope="col" data-sort="name">ModelID</th>
+                                  <th class="actives" id="colS" data-sort="name">
+                                    <span id="col3">Software</span><br/>
+                                    <span><select id="soft" class="crit"><option selected="selected">Select</option></select>
+                                    <button id="clearSoft" title="reset" class="fa fa-remove"></button></span>
+                                  </th>
+                                  <th class="actives" id="colE" data-sort="name">
+                                    <span id="col4">Environment</span><br/>
+                                    <span><select id="env" class="crit"><option selected="selected">Select</option></select>
+                                    <button id="clearEnv" title="reset" class="fa fa-remove"></button></span>
+                                  </th>
+                                  <th class="actives" id="colH" data-sort="name">
+                                    <span id="col5">Hazard</span><br/>
+                                    <span>
+                                      <select id="haz" class="crit"><option selected="selected">Select</option></select>
+                                      <button id="clearHaz" title="reset" class="fa fa-remove"></button>
+                                    </span>
+                                  </th>
+                                  <th id="cright">Details</th>
+                                </thead>
+                                <tbody id="rows"></tbody>
+                                </table></div>`;
     container.appendChild(mainTable);
 
     body.appendChild(container);
@@ -318,12 +314,12 @@ fskdbview = function () {
 
     // add search bar
     navBar.innerHTML += `<div id="searchBar">
-                            <div>
-                              <input id="filter-search" class="form-control"  type="search" placeholder="Search" aria-label="Search">
-                              <span id="clear" class="fa fa-times-circle"></span>
-                              <div id="numberModels"></div>
-                            </div>
-                          </div>`;
+                                  <div>
+                                    <input id="filter-search" class="form-control"  type="search" placeholder="Search" aria-label="Search">
+                                    <span id="clear" class="fa fa-times-circle"></span>
+                                    <div id="numberModels"></div>
+                                  </div>
+                                </div>`;
 
     return navBar
   }
@@ -382,22 +378,22 @@ fskdbview = function () {
 
       // Add row to table
       $("#rows").append(`<tr id="${i}">
-                              <td><input type="checkbox" class="checkbox1" name="${i}"></td>
-                              <td>${modelName}</td>
-                              <td class="hideColumn">${modelId}</td>
-                              <td class="softCol columnS">${software}</td>
-                              <td class="envCol columnS">${Array.from(environment).join(' ')}</td>
-                              <td class="hazCol columnS">${Array.from(hazard).join(' ')}</td>
-                              <td>
-                                <button type="button" class="btn btn-primary detailsButton"
-                                  id="opener${i}">Edit</button>
-                                <br>
-                                <br>
-                                ${url ? `<a class="btn btn-primary downloadButton" href="${url}" download>Download</a>` : ""}
-                                
-                                <div id="wrapper${i}"></div>
-                              </td>
-                            </tr>`);
+                                    <td><input type="checkbox" class="checkbox1" name="${i}"></td>
+                                    <td>${modelName}</td>
+                                    <td class="hideColumn">${modelId}</td>
+                                    <td class="softCol columnS">${software}</td>
+                                    <td class="envCol columnS">${Array.from(environment).join(' ')}</td>
+                                    <td class="hazCol columnS">${Array.from(hazard).join(' ')}</td>
+                                    <td>
+                                      <button type="button" class="btn btn-primary detailsButton"
+                                        id="opener${i}">Edit</button>
+                                      <br>
+                                      <br>
+                                      ${url ? `<a class="btn btn-primary downloadButton" href="${url}" download>Download</a>` : ""}
+                                      
+                                      <div id="wrapper${i}"></div>
+                                    </td>
+                                  </tr>`);
 
       $("#opener" + i).click((event) => editModel(event));
       $('#checkbox1').change(function () {
@@ -480,20 +476,31 @@ fskdbview = function () {
       $("#col6").click(() => sortColumn("#col6", 6));
       $("#col7").click(() => sortColumn("#col7", 7));
 
-      // Handle model selection. Only one row (model) can be selected and the
-      // view value is updated with the current selection
+      // Handle model selection. 
+      // The number of max allowed selection is controlled by _representation.maxSelectionNumber
       let selectedBox = null;
       $('.checkbox1').click(function () {
         selectedBox = this.name;
-        if (this.name == selectedBox) {
+        if ($(this).prop("checked") == true) {
+          if (window.selectedModels.length >= _representation.maxSelectionNumber) {
+            $(this).prop("checked", false);
+            return;
+          }
           this.checked = true;
           $(this).closest("tr").css("background-color", "#e1e3e8");
+          // save selected model
+          window.selectedModels.push(_representation.metadata[selectedBox]);
         } else {
           this.checked = false;
           $(this).closest("tr").css("background-color", "transparent");
+          //filter out the model if the Checkbox is unchecked
+          window.selectedModels = window.selectedModels.filter(function (value, index, arr) {
+            let selectedModelID = getData(_representation.metadata[selectedBox], "generalInformation", "identifier")
+            let currentModelId = getData(value, "generalInformation", "identifier");
+            return selectedModelID != currentModelId;
+          });
         };
-        // save selected model
-        _value.selectedModel = _representation.metadata[selectedBox];
+
       });
     });
   }

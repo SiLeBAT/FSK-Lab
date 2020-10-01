@@ -20,7 +20,10 @@ package de.bund.bfr.knime.fsklab.v1_9.fskdbview;
 
 import org.knime.core.node.FlowVariableModel;
 import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
+import org.knime.core.node.defaultnodesettings.DialogComponentNumber;
 import org.knime.core.node.defaultnodesettings.DialogComponentString;
+import org.knime.core.node.defaultnodesettings.SettingsModelInteger;
+import org.knime.core.node.defaultnodesettings.SettingsModelNumber;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.workflow.FlowVariable;
 
@@ -43,10 +46,18 @@ public class FSKDBViewNodeDialog extends DefaultNodeSettingsPane {
     SettingsModelString stringSettings = FSKDBViewNodeModel.createRepositoryLocationSettingsModel();
     FlowVariableModel repositoryVariable =
         createFlowVariableModel("repository", FlowVariable.Type.STRING);
+    
+    SettingsModelNumber intSettings = FSKDBViewNodeModel.createMaxSelectionNumberSettingsModel();
+    FlowVariableModel maxSelectionNumberVariable =
+        createFlowVariableModel("maxSelectionNumber", FlowVariable.Type.INTEGER);
 
-    // Add a new String component to the dialog.
+    // Add a new String component to the dialog for Repository URL.
     addDialogComponent(
         new DialogComponentString(stringSettings, "Repository URL", true, 30, repositoryVariable));
+    
+    // Add a new Number component to the dialog for the number of models allowed to be selected.
+    addDialogComponent(
+        new DialogComponentNumber(intSettings, "Max Selection Number",1, maxSelectionNumberVariable));
   }
 }
 

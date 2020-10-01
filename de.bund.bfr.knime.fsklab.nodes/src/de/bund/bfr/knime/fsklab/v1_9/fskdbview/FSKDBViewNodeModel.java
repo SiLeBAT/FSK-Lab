@@ -27,6 +27,8 @@ import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
+import org.knime.core.node.defaultnodesettings.SettingsModelIntegerBounded;
+import org.knime.core.node.defaultnodesettings.SettingsModelNumber;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortType;
@@ -96,6 +98,45 @@ public class FSKDBViewNodeModel
     return new SettingsModelString(KEY_REPOSITORY_LOCATION, DEFAULT_REPOSITORY_LOCATION);
   }
 
+  /**
+   * The settings key to retrieve and store settings shared between node dialog and node model. In
+   * this case, the key for the maximum number of models that are allowed to be selected that should
+   * be entered by the user in the dialog.
+   */
+  private static final String MAX_SELECTION_NUMBER = "max_selection_number";
+
+  /**
+   * The default the maximum number of models that are allowed to be selected.
+   */
+  private static final int DEFAULT_MAX_SELECTION_NUMBER = 2;
+
+  /**
+   * The settings model to manage the shared settings. This model will hold the value entered by the
+   * user in the dialog and will update once the user changes the value. Furthermore, it provides
+   * methods to easily load and save the value to and from the shared settings (see: <br>
+   * {@link #loadValidatedSettingsFrom(NodeSettingsRO)}, {@link #saveSettingsTo(NodeSettingsWO)}).
+   * <br>
+   * Here, we use a SettingsModelNumber as the the maximum number of models that are allowed to be
+   * selected is a number. Also have a look at the comments in the constructor of the
+   * {@link FSKDBViewNodeDialog} as the settings models are also used to create simple dialogs.
+   */
+  private final SettingsModelNumber m_maxSelectionNumberSettings =
+      createMaxSelectionNumberSettingsModel();
+
+
+  /**
+   * A convenience method to create a new settings model used for the maximum number of models
+   * allowed to be selected number. Minimum 2 models and maximum is 4 are allowed to be selected in
+   * the JS View HTML table This method will also be used in the {@link FSKDBViewNodeDialog}. The
+   * settings model will sync via the above defined key.
+   * 
+   * @return a new SettingsModelNumber with the key for the the maximum number of models allowed to
+   *         be selected number (between 2 and 4)
+   */
+  static SettingsModelNumber createMaxSelectionNumberSettingsModel() {
+    return new SettingsModelIntegerBounded(MAX_SELECTION_NUMBER, DEFAULT_MAX_SELECTION_NUMBER, 2,
+        4);
+  }
 
   /**
    * {@inheritDoc}
@@ -103,6 +144,7 @@ public class FSKDBViewNodeModel
   @Override
   protected void saveSettingsTo(final NodeSettingsWO settings) {
     m_repositoryLocationSettings.saveSettingsTo(settings);
+    m_maxSelectionNumberSettings.saveSettingsTo(settings);
   }
 
   /**
@@ -112,6 +154,7 @@ public class FSKDBViewNodeModel
   protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
       throws InvalidSettingsException {
     m_repositoryLocationSettings.loadSettingsFrom(settings);
+    m_maxSelectionNumberSettings.loadSettingsFrom(settings);
   }
 
   /**
@@ -120,12 +163,13 @@ public class FSKDBViewNodeModel
   @Override
   protected void validateSettings(final NodeSettingsRO settings) throws InvalidSettingsException {
     m_repositoryLocationSettings.validateSettings(settings);
+    m_maxSelectionNumberSettings.validateSettings(settings);
   }
 
   @Override
   public FSKDBViewRepresentation createEmptyViewRepresentation() {
-    FSKDBViewRepresentation representation = new FSKDBViewRepresentation();
-    return representation;
+    return new FSKDBViewRepresentation();
+
   }
 
   @Override
@@ -189,11 +233,14 @@ public class FSKDBViewNodeModel
     PortObject outputPort = null;
     synchronized (getLock()) {
       FSKDBViewRepresentation representation = getViewRepresentation();
+      representation.setRemoteRepositoryURL(m_repositoryLocationSettings.getStringValue());
+      representation.setMaxSelectionNumber(
+          ((SettingsModelIntegerBounded) m_maxSelectionNumberSettings).getIntValue());
       if (inPort == null) {
         // if the optional input port is not provided then
         outputPort = createEmptyTable(exec);
       } else if (representation.getTable() == null) {
-        
+
         // construct a BufferedDataTable from the input object.
         BufferedDataTable table = (BufferedDataTable) inPort;
         JSONDataTable jsonTable = JSONDataTable.newBuilder().setDataTable(table).build(exec);
