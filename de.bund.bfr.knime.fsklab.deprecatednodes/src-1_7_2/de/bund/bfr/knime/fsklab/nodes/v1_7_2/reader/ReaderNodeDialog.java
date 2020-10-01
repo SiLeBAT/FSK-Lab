@@ -28,6 +28,7 @@ import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
+import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.util.FilesHistoryPanel;
 import org.knime.core.node.util.FilesHistoryPanel.LocationValidation;
@@ -35,12 +36,11 @@ import org.knime.core.node.workflow.FlowVariable;
 
 public class ReaderNodeDialog extends NodeDialogPane {
 
-  private final ReaderNodeSettings nodeSettings;
-
+  private final SettingsModelString filePath;
   private final FilesHistoryPanel m_filePanel;
 
   public ReaderNodeDialog() {
-    nodeSettings = new ReaderNodeSettings();
+    filePath = new SettingsModelString(ReaderNodeModel.CFG_FILE, "");
     m_filePanel =
         new FilesHistoryPanel(createFlowVariableModel("filename", FlowVariable.Type.STRING),
             "fskx_reader", LocationValidation.FileInput, ".fskx");
@@ -52,10 +52,10 @@ public class ReaderNodeDialog extends NodeDialogPane {
   protected void loadSettingsFrom(NodeSettingsRO settings, PortObjectSpec[] specs)
       throws NotConfigurableException {
     try {
-      nodeSettings.load(settings);
+      filePath.loadSettingsFrom(settings);
 
       m_filePanel.updateHistory();
-      m_filePanel.setSelectedFile(nodeSettings.filePath);
+      m_filePanel.setSelectedFile(filePath.getStringValue());
     } catch (InvalidSettingsException exception) {
       throw new NotConfigurableException(exception.getMessage(), exception);
     }
@@ -63,10 +63,10 @@ public class ReaderNodeDialog extends NodeDialogPane {
 
   @Override
   protected void saveSettingsTo(NodeSettingsWO settings) throws InvalidSettingsException {
-    nodeSettings.filePath = m_filePanel.getSelectedFile().trim();
+    filePath.setStringValue(m_filePanel.getSelectedFile().trim());
     m_filePanel.addToHistory();
 
-    nodeSettings.save(settings);
+    filePath.saveSettingsTo(settings);
   }
 
   private JPanel initLayout() {
