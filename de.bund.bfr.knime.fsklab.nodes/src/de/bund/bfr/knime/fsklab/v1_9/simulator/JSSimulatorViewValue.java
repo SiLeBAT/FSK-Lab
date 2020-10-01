@@ -59,7 +59,7 @@ public class JSSimulatorViewValue extends JSONViewContent {
     settings.addInt(CFG_SIMULATION_INDEX, selectedSimulationIndex);
     settings.addString(CFG_MODEL_MATH, modelMath);
 
-    if (simulations.length != 0) {
+    if (simulations != null && simulations.length != 0) {
       try {
         String simulationStrings = MAPPER.writeValueAsString(simulations);
         settings.addString(CFG_SIMULATIONS, simulationStrings);

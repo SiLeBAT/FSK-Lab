@@ -53,7 +53,7 @@ public class JSSimulatorConfig {
     settings.addInt(SIMULATION_INDEX, m_selectedSimulationIndex);
     settings.addString(CFG_MODEL_MATH, m_modelMath);
 
-    if (m_simulations.length != 0) {
+    if (m_simulations != null && m_simulations.length != 0) {
       try {
         String simulationStrings = MAPPER.writeValueAsString(m_simulations);
         settings.addString(CFG_SIMULATIONS, simulationStrings);

@@ -49,11 +49,10 @@ class JSSimulatorNodeModel
     implements PortObjectHolder {
 
   private final JSSimulatorConfig m_config = new JSSimulatorConfig();
+  private FskPortObject port;
 
   private static final NodeLogger LOGGER =
       NodeLogger.getLogger("JavaScript FSK Simulation Configurator");
-
-  private FskPortObject port;
 
   private static final ObjectMapper MAPPER = FskPlugin.getDefault().MAPPER104;
 
@@ -62,7 +61,6 @@ class JSSimulatorNodeModel
   private static final PortType[] OUT_TYPES = {FskPortObject.TYPE};
 
   private static final String VIEW_NAME = new JSSimulatorNodeFactory().getInteractiveViewName();
-  int index = 0;
 
   public JSSimulatorNodeModel() {
     super(IN_TYPES, OUT_TYPES, VIEW_NAME);
@@ -103,21 +101,21 @@ class JSSimulatorNodeModel
     JSSimulatorViewValue value = super.getViewValue();
     synchronized (getLock()) {
 
-      if (value.getSimulations().length == 0) {
-        copyConfigToView(value);
-      }
-
       if (value.getSimulations() == null) {
         // Convert from FskSimulation(s) to JSSimulation(s)
         value.setSimulations(convertSimulations(port.modelMetadata));
         value.setSelectedSimulationIndex(port.selectedSimulationIndex);
-       
+      }
+
+      if (value.getSimulations().length == 0) {
+        copyConfigToView(value);
       }
 
       if (value.getModelMath() == null) {
         try {
-          value.setModelMath(FromOjectToJSON(SwaggerUtil.getModelMath(port.modelMetadata)));
-        }catch(JsonProcessingException e) {
+          value.setModelMath(
+              MAPPER.writeValueAsString(SwaggerUtil.getModelMath(port.modelMetadata)));
+        } catch (JsonProcessingException e) {
           e.printStackTrace();
         }
       }
@@ -171,7 +169,8 @@ class JSSimulatorNodeModel
 
       createSimulation(value);
 
-      LOGGER.info(" saving '" + value.getSelectedSimulationIndex() + "' as the selected simulation index!");
+      LOGGER.info(
+          " saving '" + value.getSelectedSimulationIndex() + "' as the selected simulation index!");
     }
 
     exec.setProgress(1);
@@ -252,11 +251,6 @@ class JSSimulatorNodeModel
   protected void loadValidatedSettingsFrom(NodeSettingsRO settings)
       throws InvalidSettingsException {
     m_config.loadSettings(settings);
-  }
-
-  private static String FromOjectToJSON(final Object object) throws JsonProcessingException {
-    final String jsonStr = MAPPER.writeValueAsString(object);
-    return jsonStr;
   }
 
   private void copyConfigToView(JSSimulatorViewValue value) {
