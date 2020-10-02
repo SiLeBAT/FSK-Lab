@@ -145,7 +145,7 @@ public class LibRegistry {
       throw new NoInternetException(packages);
     }
     
-    if (Platform.isLinux()) {
+    if (Platform.isLinux() || Platform.isMac()) {
       // Install missing packages
       controller.addPackagePath(installPath);
       
