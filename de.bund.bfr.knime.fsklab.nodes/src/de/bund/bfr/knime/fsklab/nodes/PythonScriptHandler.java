@@ -22,21 +22,12 @@ public class PythonScriptHandler extends ScriptHandler {
   PythonKernel controller;
 
   
-  public PythonScriptHandler(PythonVersionOption version) throws IOException {
+  public PythonScriptHandler() throws IOException {
 
     PythonKernelOptions m_kernelOptions = new PythonKernelOptions();
-    if (version != null) {
-      m_kernelOptions.setPythonVersionOption(version);
-    }
-    
     controller = new PythonKernel(m_kernelOptions);
-
     // Currently only PythonPlotter is assigned as it is the only available for Python
     this.plotter = new PythonPlotter(controller);
-  }
-  // if no version is given in the model metadata, use the KNIME preference setting
-  public PythonScriptHandler() throws IOException {
-    this(null);
   }
 
   @Override
