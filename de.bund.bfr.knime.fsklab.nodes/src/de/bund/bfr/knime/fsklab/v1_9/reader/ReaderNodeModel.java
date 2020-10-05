@@ -305,6 +305,24 @@ class ReaderNodeModel extends NoInternalsModel {
         }
       }
 
+      // Get workspace
+      URI rdataUri = URIS.get("rdata");
+      File workspace = null; // null if missing
+
+      Optional<ArchiveEntry> workspaceEntry = archive.getEntriesWithFormat(rdataUri).stream()
+          .filter(entry -> entry.getEntityPath().startsWith(parentPath))
+          .filter(entry -> StringUtils.countMatches(entry.getEntityPath(),"/")
+              == StringUtils.countMatches(parentPath, "/") + 1)
+          .findAny();
+      if (workspaceEntry.isPresent()) {
+        ArchiveEntry entry = workspaceEntry.get();
+        FskMetaDataObject fmdo = new FskMetaDataObject(entry.getDescriptions().get(0));
+        if (fmdo.getResourceType() == ResourceType.workspace) {
+            workspace = FileUtil.createTempFile("workspace", ".RData");
+            entry.extractFile(workspace);
+        }
+      }
+
       List<JoinRelation> connectionList = new ArrayList<>();
 
       // Find SBML entry in archive
@@ -425,6 +443,10 @@ class ReaderNodeModel extends NoInternalsModel {
         SimulationSettings simulationSettings = readSimulationSettings(simulationsEntry.get());
         topfskObj.selectedSimulationIndex = simulationSettings.selectedSimulationIndex;
         topfskObj.simulations.addAll(simulationSettings.simulations);
+      }
+      
+      if (workspace != null) {
+        topfskObj.setWorkspace(workspace.toPath());
       }
 
       topfskObj.setJoinerRelation(connectionList.toArray(new JoinRelation[connectionList.size()]));
