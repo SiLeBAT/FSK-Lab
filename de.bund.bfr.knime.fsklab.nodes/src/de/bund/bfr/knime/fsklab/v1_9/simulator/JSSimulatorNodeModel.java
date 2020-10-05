@@ -101,14 +101,16 @@ class JSSimulatorNodeModel
     JSSimulatorViewValue value = super.getViewValue();
     synchronized (getLock()) {
 
-      if (value.getSimulations() == null) {
+      // Copy simulation from settings
+      if (value.getSimulations() == null || value.getSimulations().length == 0) {
+        copyConfigToView(value);
+      }
+
+      // If still not initialized, then copy from input model
+      if (value.getSimulations() == null || value.getSimulations().length == 0) {
         // Convert from FskSimulation(s) to JSSimulation(s)
         value.setSimulations(convertSimulations(port.modelMetadata));
         value.setSelectedSimulationIndex(port.selectedSimulationIndex);
-      }
-
-      if (value.getSimulations().length == 0) {
-        copyConfigToView(value);
       }
 
       if (value.getModelMath() == null) {
@@ -135,7 +137,6 @@ class JSSimulatorNodeModel
       if (rep.parameters == null && port != null) {
         // Take only input parameters from metadata
         rep.parameters = SwaggerUtil.getParameter(port.modelMetadata).stream()
-            .filter(p -> p.getClassification() != ClassificationEnum.OUTPUT)
             .collect(Collectors.toList());
       }
     }
