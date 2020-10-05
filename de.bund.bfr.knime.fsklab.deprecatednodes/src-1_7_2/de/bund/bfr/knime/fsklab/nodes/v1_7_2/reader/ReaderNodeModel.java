@@ -52,6 +52,7 @@ import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NoInternalsModel;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
+import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
@@ -106,6 +107,8 @@ public class ReaderNodeModel extends NoInternalsModel {
   private static final ObjectMapper MAPPER103;
   private static final ObjectMapper MAPPER104;
   
+  static final String CFG_FILE = "filename";
+  
   static {
     MAPPER103 = EMFModule.setupDefaultMapper();
     MAPPER103.registerModule(new ThreeTenModule());
@@ -119,7 +122,7 @@ public class ReaderNodeModel extends NoInternalsModel {
     MAPPER104.setSerializationInclusion(Include.NON_NULL);
   }
 
-  private final ReaderNodeSettings nodeSettings = new ReaderNodeSettings();
+  private final SettingsModelString filePath = new SettingsModelString(CFG_FILE, null);
 
   public ReaderNodeModel() {
     super(IN_TYPES, OUT_TYPES);
@@ -127,18 +130,18 @@ public class ReaderNodeModel extends NoInternalsModel {
 
   @Override
   protected void saveSettingsTo(NodeSettingsWO settings) {
-    nodeSettings.save(settings);
+    filePath.saveSettingsTo(settings);
   }
 
   @Override
   protected void loadValidatedSettingsFrom(NodeSettingsRO settings)
       throws InvalidSettingsException {
-    nodeSettings.load(settings);
+    filePath.loadSettingsFrom(settings);
   }
 
   @Override
   protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
-    CheckUtils.checkDestinationFile(settings.getString("filename"), true);
+    filePath.validateSettings(settings);
   }
 
   @Override
@@ -172,13 +175,19 @@ public class ReaderNodeModel extends NoInternalsModel {
 
   @Override
   protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
+    
+    String warning = CheckUtils.checkSourceFile(filePath.getStringValue());
+    if (warning != null) {
+      setWarningMessage(warning);
+    }
+    
     return new PortObjectSpec[] {FskPortObjectSpec.INSTANCE};
   }
 
   @Override
   protected PortObject[] execute(PortObject[] inObjects, ExecutionContext exec) throws Exception {
 
-    URL url = FileUtil.toURL(nodeSettings.filePath);
+    URL url = FileUtil.toURL(filePath.getStringValue());
     Path localPath = FileUtil.resolveToPath(url);
 
     FskPortObject inObject;
@@ -191,7 +200,7 @@ public class ReaderNodeModel extends NoInternalsModel {
       File temporaryFile = FileUtil.createTempFile("model", "fskx");
       temporaryFile.delete();
 
-      try (InputStream inStream = FileUtil.openStreamWithTimeout(new URL(nodeSettings.filePath),10000);
+      try (InputStream inStream = FileUtil.openStreamWithTimeout(new URL(filePath.getStringValue()),10000);
           OutputStream outStream = new FileOutputStream(temporaryFile)) {
         IOUtils.copy(inStream, outStream);
       }
