@@ -298,10 +298,8 @@ public class FSKDBViewNodeModel
       String rowKey = row.getRowKey();
       DataCell jsonCell = new StringCell(jsonRow);
       BooleanCell booleanCell = BooleanCell.FALSE;
-      if (selectionList != null) {
-        if (selectionList.contains(rowKey.toString())) {
+      if (selectionList != null && selectionList.contains(rowKey.toString())) {
           booleanCell = BooleanCell.TRUE;
-        }
       }
 
       DataRow convertedRow = new DefaultRow(rowKey, new DataCell[] {jsonCell, booleanCell});
