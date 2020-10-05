@@ -272,6 +272,11 @@ class WriterNodeModel extends NoInternalsModel {
       writeFSKObject(sfskObj, archive,
           filePrefix + normalizeName(sfskObj) + System.getProperty("file.separator"), URIS);
     }
+    
+    // Adds R workspace file
+    if (fskObj.getWorkspace() != null) {
+      addWorkspace(archive, fskObj.getWorkspace(), filePrefix);
+    }
 
     // Adds model metadata of combined model
     addMetaData(archive, fskObj.modelMetadata, filePrefix + "metaData.json");
