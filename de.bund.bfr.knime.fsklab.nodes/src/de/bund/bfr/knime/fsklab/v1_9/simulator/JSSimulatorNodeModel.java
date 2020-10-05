@@ -137,6 +137,7 @@ class JSSimulatorNodeModel
       if (rep.parameters == null && port != null) {
         // Take only input parameters from metadata
         rep.parameters = SwaggerUtil.getParameter(port.modelMetadata).stream()
+            .filter(p -> p.getClassification() != ClassificationEnum.OUTPUT)
             .collect(Collectors.toList());
       }
     }
