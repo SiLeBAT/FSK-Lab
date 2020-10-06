@@ -18,11 +18,12 @@
  */
 package de.bund.bfr.knime.fsklab.v1_9.fskdbview;
 
-import java.util.Objects;
 import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
+import org.knime.js.core.JSONDataTable;
 import org.knime.js.core.JSONViewContent;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -33,6 +34,22 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 public class FSKDBViewValue extends JSONViewContent {
   private static final String TABLE_ID = "tableid";
   private String tableID;
+  private JSONDataTable m_table;
+  private String[] m_selection = {};
+
+  /**
+   * @return the table
+   */
+  public JSONDataTable getTable() {
+    return m_table;
+  }
+
+  /**
+   * @param table the table to set
+   */
+  public void setTable(final JSONDataTable table) {
+    m_table = table;
+  }
 
   public String getTableID() {
     return tableID;
@@ -40,6 +57,21 @@ public class FSKDBViewValue extends JSONViewContent {
 
   public void setTableID(String tableID) {
     this.tableID = tableID;
+  }
+
+
+  /**
+   * @return the selection
+   */
+  public String[] getSelection() {
+    return m_selection;
+  }
+
+  /**
+   * @param selection the selection to set
+   */
+  public void setSelection(final String[] selection) {
+    m_selection = selection;
   }
 
   /**
@@ -70,12 +102,13 @@ public class FSKDBViewValue extends JSONViewContent {
       return false;
 
     FSKDBViewValue other = (FSKDBViewValue) obj;
-    return new EqualsBuilder().append(tableID, other.tableID).isEquals();
+    return new EqualsBuilder().append(tableID, other.tableID).append(m_selection, other.m_selection)
+        .append(m_table, other.m_table).isEquals();
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(tableID);
+    return new HashCodeBuilder().append(m_selection).append(m_table).toHashCode();
   }
 
 }

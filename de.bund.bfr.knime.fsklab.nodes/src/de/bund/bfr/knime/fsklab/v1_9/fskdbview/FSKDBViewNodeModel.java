@@ -18,8 +18,17 @@
  */
 package de.bund.bfr.knime.fsklab.v1_9.fskdbview;
 
+import java.util.Arrays;
+import java.util.List;
+import org.knime.core.data.DataCell;
+import org.knime.core.data.DataRow;
+import org.knime.core.data.DataTable;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.data.DataTableSpecCreator;
+import org.knime.core.data.DataType;
+import org.knime.core.data.def.BooleanCell;
+import org.knime.core.data.def.DefaultRow;
+import org.knime.core.data.def.StringCell;
 import org.knime.core.node.BufferedDataContainer;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.ExecutionContext;
@@ -34,6 +43,7 @@ import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.web.ValidationError;
 import org.knime.js.core.JSONDataTable;
+import org.knime.js.core.JSONDataTable.JSONDataTableRow;
 import org.knime.js.core.node.AbstractWizardNodeModel;
 import de.bund.bfr.knime.fsklab.v1_9.editor.FSKEditorJSNodeFactory;
 
@@ -231,14 +241,19 @@ public class FSKDBViewNodeModel
       throws Exception {
     PortObject inPort = inObjects[0];
     PortObject outputPort = null;
+
     synchronized (getLock()) {
       FSKDBViewRepresentation representation = getViewRepresentation();
       representation.setRemoteRepositoryURL(m_repositoryLocationSettings.getStringValue());
       representation.setMaxSelectionNumber(
           ((SettingsModelIntegerBounded) m_maxSelectionNumberSettings).getIntValue());
-      if (inPort == null) {
+
+      if (inPort == null && representation.getTable() == null) {
         // if the optional input port is not provided then
         outputPort = createEmptyTable(exec);
+        JSONDataTable jsonTable =
+            JSONDataTable.newBuilder().setDataTable((DataTable) outputPort).build(exec);
+        representation.setTable(jsonTable);
       } else if (representation.getTable() == null) {
 
         // construct a BufferedDataTable from the input object.
@@ -251,9 +266,48 @@ public class FSKDBViewNodeModel
         representation.setTableID(connectedNodeId);
 
         outputPort = inPort;
+      } else {
+        outputPort = convertJSONTableToBufferedDataTable(exec);
       }
     }
     return new PortObject[] {outputPort};
+  }
+
+  /**
+   * A helper method for convert the received JSON Table from the JS View to a BufferedDataTable
+   * adding a new column for selection.
+   * 
+   * @param ExecutionContext exec.
+   * @return a BufferedDataTable instance.
+   */
+  private BufferedDataTable convertJSONTableToBufferedDataTable(final ExecutionContext exec) {
+
+    String[] colNames = new String[] {"JSON", "Selected (Table View)"};
+    DataType[] colTypes = new DataType[] {StringCell.TYPE, BooleanCell.TYPE};
+    DataTableSpec spec = new DataTableSpec(colNames, colTypes);
+    BufferedDataContainer container = exec.createDataContainer(spec);
+
+
+    List<String> selectionList = null;
+    FSKDBViewValue viewValue = getViewValue();
+    if (viewValue != null && viewValue.getSelection() != null) {
+      selectionList = Arrays.asList(viewValue.getSelection());
+    }
+    for (JSONDataTableRow row : viewValue.getTable().getRows()) {
+      String jsonRow = (String) row.getData()[0];
+      String rowKey = row.getRowKey();
+      DataCell jsonCell = new StringCell(jsonRow);
+      BooleanCell booleanCell = BooleanCell.FALSE;
+      if (selectionList != null && selectionList.contains(rowKey.toString())) {
+          booleanCell = BooleanCell.TRUE;
+      }
+
+      DataRow convertedRow = new DefaultRow(rowKey, new DataCell[] {jsonCell, booleanCell});
+      container.addRowToTable(convertedRow);
+    }
+
+    container.close();
+    return container.getTable();
   }
 
   /**
