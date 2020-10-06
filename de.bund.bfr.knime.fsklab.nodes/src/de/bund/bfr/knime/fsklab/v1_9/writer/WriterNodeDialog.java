@@ -23,7 +23,6 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
-import org.knime.base.node.io.table.write.WriteTableNodeModel;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeSettingsRO;
@@ -44,9 +43,9 @@ class WriterNodeDialog extends NodeDialogPane {
   public WriterNodeDialog() {
     filePath = new SettingsModelString(WriterNodeModel.CFG_FILE, "");
 
-
     m_filePanel = new FilesHistoryPanel(createFlowVariableModel("file", FlowVariable.Type.STRING),
         "fskx_writer", LocationValidation.FileOutput, ".fskx");
+    m_filePanel.setDialogTypeSaveWithExtension(".fskx");
 
     addTab("Options", initLayout());
   }
