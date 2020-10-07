@@ -2,13 +2,12 @@ joiner = function () {
 
   // Dimension utility functions.
   // Returns the windows width minus the left and right padding.
-  const getChartWidth = () => window.innerWidth - 32;
+  //const getChartWidth = () => window.innerWidth - 32;
 
   // Returns the window height minus the navbar and modal footer
-  const getChartHeight = () => window.innerHeight - $(".navbar-collapse").height() - $(".modal-footer").height() - 300;
+  //const getChartHeight = () => window.innerHeight - $(".navbar-collapse").height() - $(".modal-footer").height() - 300;
 
   const view = { version: "1.0.0", name: "FSK Joiner" };
-  let _occupied_targets = [];
   let _representation;
   let _value;
 
@@ -25,14 +24,6 @@ joiner = function () {
   let _firstModelParameterMap = {};
   let _secondModelParameterMap = {};
 
-  let _handler;
-
-  let _firstModelScriptMirror;
-  let _secondModelScriptMirror;
-  let _firstVisualizationScriptMirror;
-  let _secondVisualizationScriptMirror;
-
-  fskutil = new fskutil();
 
   window.joinRelationsMap = {};
 
@@ -51,14 +42,6 @@ joiner = function () {
         modelMath: {}
       };
     }
-
-    if (value.modelScriptTree) {
-      _modelScriptTree = JSON.parse(value.modelScriptTree);
-    }
-    // set visualization script to modified version
-    if(_value.visualizationScript && _value.visualizationScript.length > 0){
-      _representation.secondModelViz = _value.visualizationScript;
-    }
     
     
 		if (_value.joinRelations && _value.joinRelations.length > 0) {
@@ -72,15 +55,13 @@ joiner = function () {
       _value.joinRelations = [];
     }
 
-    _handler = new fskutil.GenericModel(_metadata);
 
+    
     createBody();
     _paper.scaleContentToFit();
   }
 
   view.getComponentValue = function() {  
-    _value.modelMetaData = JSON.stringify(_handler.metaData);
-    _value.visualizationScript = _secondVisualizationScriptMirror ? _secondVisualizationScriptMirror.getValue() : _representation.secondModelScript
     return _value;
   };
 
@@ -98,34 +79,7 @@ joiner = function () {
     $('body').html(`<div class="container-fluid">
 <nav class="navbar navbar-default">
  <div class="navbar-collapse collapse">
-   <ul class="nav navbar-nav" id="viewTab">
-     <li role="presentation">
-       <a id="join-tab" href="#joinPanel" aria-controls="joinPanel" role="tab" data-toggle="tab">Join</a>
-     </li>
-     ${_handler.menus}
-
-     <li class="dropdown">
-       <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button"
-         aria-haspopup="true" aria-expanded="false">Model script<span class="caret"></a>
-       <ul class="dropdown-menu">
-         <li><a id="modelScriptA-tab" href="#modelScriptA" aria-controls="#modelScriptA"
-           role="button" data-toggle="tab">Model A</a></li>
-         <li><a id="modelScriptB-tab" href="#modelScriptB" aria-controls="#modelScriptB"
-           role="button" data-toggle="tab">Model B</a></li>
-       </ul>
-     </li>
-
-      <li class="dropdown">
-       <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button"
-         aria-haspopup="true" aria-expanded="false">Visualization script<span class="caret"></a>
-       <ul class="dropdown-menu">
-         <li><a id="visualizationScriptA-tab" href="#visualizationScriptA" aria-controls="#visualizationScriptA"
-           role="button" data-toggle="tab">Model A</a></li>
-         <li><a id="visualizationScriptB-tab" href="#visualizationScriptB" aria-controls="#visualizationScriptB"
-           role="button" data-toggle="tab">Model B</a></li>
-       </ul>
-     </li>
-   </ul>
+   
  </div>
 
   <div class="tab-content" id="viewContent">
@@ -185,23 +139,7 @@ joiner = function () {
 </nav>
 </div>`);
 
-    // Add tab-pane(s)
-    const container = document.getElementsByClassName("container-fluid")[0];
-    const viewContent = document.getElementById("viewContent");
-    Object.entries(_handler.panels).forEach(([key, value]) => {
-      let tabPanel = document.createElement("div");
-      tabPanel.setAttribute("role", "tabpanel");
-      tabPanel.className = "tab-pane";
-      tabPanel.id = key;
-      tabPanel.appendChild(value.panel);
-
-      // Add dialog if fskutil.TablePanel
-      if (value.dialog) {
-        container.appendChild(value.dialog.modal);
-      }
-
-      viewContent.appendChild(tabPanel);
-    });
+  
 
     drawWorkflow();
 
@@ -215,47 +153,7 @@ joiner = function () {
     };
 
 
-    // Configure CodeMirror
-    let require_config = {
-      packages: [{ name: "codemirror", location: "codemirror/", main: "lib/codemirror"}]
-    };
-    knimeService.loadConditionally(
-      ["codemirror", "codemirror/mode/r/r"],
-      (arg) => {
-        window.CodeMirror = arg[0];
-
-        _firstModelScriptMirror = createCodeMirror("modelScriptAArea", "text/x-rsrc");
-        _firstVisualizationScriptMirror = createCodeMirror("visualizationScriptAArea", "text/x-rsrc");
-
-        _secondModelScriptMirror = createCodeMirror("modelScriptBArea", "text/x-rsrc");
-        _secondVisualizationScriptMirror = createCodeMirror("visualizationScriptBArea", "text/x-rsrc");
-      },
-      (err) => console.log("knimeService failed to install " + err),
-      require_config);
-
-    $('#modelScriptA-tab').on('shown.bs.tab', () => {
-      console.log("modelScriptA");
-      _firstModelScriptMirror.refresh(); 
-      _firstModelScriptMirror.focus();
-    });
-
-    $('#modelScriptB-tab').on('shown.bs.tab', () => {
-      console.log("modelScriptB");
-      _secondModelScriptMirror.refresh();
-      _secondModelScriptMirror.focus();
-    });
- 
-    $('#visualizationScriptA-tab').on('shown.bs.tab', () => {
-      console.log("visualizationScriptA");
-      _firstVisualizationScriptMirror.refresh();
-      _firstVisualizationScriptMirror.focus();
-    });
-
-    $('#visualizationScriptB-tab').on('shown.bs.tab', () => {
-      console.log("visualizationScriptB");
-      _secondVisualizationScriptMirror.refresh();
-      _secondVisualizationScriptMirror.focus();
-    });
+    
     
   }
 
@@ -664,17 +562,5 @@ joiner = function () {
     return atomic;
   }
 
-  // Create a CodeMirror for a given text area
-  function createCodeMirror(textAreaId, language) {
-
-    return window.CodeMirror.fromTextArea(document.getElementById(textAreaId),
-      {
-        lineNumbers: true,
-        lineWrapping: true,
-        extraKeys: { 'Ctrl-Space': 'autocomplete' },
-        mode: { 'name': language },
-        readOnly: (textAreaId == "visualizationScriptBArea") ? false : true
-      });
-  }
   
 }();
