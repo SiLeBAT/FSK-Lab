@@ -8,16 +8,18 @@
 
 	<fullDescription>
 		<intro>
-			Joins two FSK objects and produces Combined FSK Object which keeps both of the provided FSK Objects. 
+			Joins two,three or four FSK objects and produces Combined FSK Object which keeps all of the provided FSK Objects. 
 		</intro>
 	</fullDescription>
 	<interactiveView name="FSK Joiner">
-			JavaScript view to join two models.
+			JavaScript view to join 2-4 models.
 	</interactiveView>
 	<ports>
-		<inPort name="FSK object" index="0">FSK object (required)</inPort>
-		<inPort name="FSK object" index="1">FSK object (required)</inPort>
-		<outPort name="Combined FSK object" index="0">Combined FSK object</outPort>
-		<outPort name="Joining Diagram" index="1">Joining Diagram</outPort>
+		<inPort name="FSK object" index="0">FSK object (optional)</inPort>
+		<inPort name="FSK object" index="1">FSK object (optional)</inPort>
+		<inPort name="FSK object" index="0">FSK object (optional)</inPort>
+		<inPort name="FSK object" index="1">FSK object (optional)</inPort>
+		<outPort name="Combined FSK object" index="0">Combined FSK object (optional)</outPort>
+		<outPort name="Joining Diagram" index="1">Joining Diagram (optional)</outPort>
 	</ports>
 </knimeNode>

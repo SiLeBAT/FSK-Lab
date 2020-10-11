@@ -21,6 +21,7 @@ import de.bund.bfr.metadata.swagger.DoseResponseModelGeneralInformation;
 import de.bund.bfr.metadata.swagger.ExposureModel;
 import de.bund.bfr.metadata.swagger.GenericModel;
 import de.bund.bfr.metadata.swagger.GenericModelGeneralInformation;
+import de.bund.bfr.metadata.swagger.GenericModelModelMath;
 import de.bund.bfr.metadata.swagger.HealthModel;
 import de.bund.bfr.metadata.swagger.Model;
 import de.bund.bfr.metadata.swagger.ModelCategory;
@@ -128,7 +129,7 @@ public class NodeUtils {
     
     switch (modelType) {
       case genericModel:
-        return new GenericModel()
+        return new GenericModel().modelMath(new GenericModelModelMath())
             .generalInformation(new GenericModelGeneralInformation()
                 .modelCategory(new ModelCategory().modelClass("Generic model")))
             .modelType("genericModel");

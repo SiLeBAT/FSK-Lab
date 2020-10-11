@@ -39,22 +39,24 @@ final class JoinerViewRepresentation extends JSONViewContent {
 
   private static final String CFG_MODEL1_PARAMETERS = "params1";
   private static final String CFG_MODEL2_PARAMETERS = "params2";
+  private static final String CFG_MODEL3_PARAMETERS = "params3";
+  private static final String CFG_MODEL4_PARAMETERS = "params4";
   private static final String CFG_FIRST_MODEL_NAME = "firstModelName";
-  private static final String CFG_FIRST_MODEL_SCRIPT = "firstModelScript";
-  private static final String CFG_FIRST_MODEL_VISUALIZATION = "firstModelViz";
   private static final String CFG_SECOND_MODEL_NAME = "secondModelName";
-  private static final String CFG_SECOND_MODEL_SCRIPT = "secondModelScript";
-  private static final String CFG_SECOND_MODEL_VISUALIZATION = "secondModelViz";
+  private static final String CFG_THIRD_MODEL_NAME = "thirdModelName";
+  private static final String CFG_FOURTH_MODEL_NAME = "fourthModelName";
   private static final ObjectMapper MAPPER = FskPlugin.getDefault().MAPPER104;
 
   private Parameter[] firstModelParameters;
   private Parameter[] secondModelParameters;
+  private Parameter[] thirdModelParameters;
+  private Parameter[] fourthModelParameters;
+
   private String firstModelName;
-  private String firstModelScript;
-  private String firstModelViz;
   private String secondModelName;
-  private String secondModelScript;
-  private String secondModelViz;
+  private String thirdModelName;
+  private String fourthModelName;
+
   private String modelType;
 
   public Parameter[] getFirstModelParameters() {
@@ -73,6 +75,22 @@ final class JoinerViewRepresentation extends JSONViewContent {
     this.secondModelParameters = secondModelParameters;
   }
 
+  public Parameter[] getThirdModelParameters() {
+    return thirdModelParameters;
+  }
+
+  public void setThirdModelParameters(Parameter[] thirdModelParameters) {
+    this.thirdModelParameters = thirdModelParameters;
+  }
+
+  public Parameter[] getFourthModelParameters() {
+    return fourthModelParameters;
+  }
+
+  public void setFourthModelParameters(Parameter[] fourthModelParameters) {
+    this.fourthModelParameters = fourthModelParameters;
+  }
+
   public String getFirstModelName() {
     return firstModelName;
   }
@@ -89,36 +107,20 @@ final class JoinerViewRepresentation extends JSONViewContent {
     this.secondModelName = secondModelName;
   }
 
-  public String getFirstModelScript() {
-    return firstModelScript;
+  public String getThirdModelName() {
+    return thirdModelName;
   }
 
-  public void setFirstModelScript(String firstModelScript) {
-    this.firstModelScript = firstModelScript;
+  public void setThirdModelName(String thridModelName) {
+    this.thirdModelName = thridModelName;
   }
 
-  public String getFirstModelViz() {
-    return firstModelViz;
+  public String getFourthModelName() {
+    return fourthModelName;
   }
 
-  public void setFirstModelViz(String firstModelViz) {
-    this.firstModelViz = firstModelViz;
-  }
-
-  public String getSecondModelScript() {
-    return secondModelScript;
-  }
-
-  public void setSecondModelScript(String secondModelScript) {
-    this.secondModelScript = secondModelScript;
-  }
-
-  public String getSecondModelViz() {
-    return secondModelViz;
-  }
-
-  public void setSecondModelViz(String secondModelViz) {
-    this.secondModelViz = secondModelViz;
+  public void setFourthModelName(String fourthModelName) {
+    this.fourthModelName = fourthModelName;
   }
 
   public String getModelType() {
@@ -150,12 +152,28 @@ final class JoinerViewRepresentation extends JSONViewContent {
       }
     }
 
+    if (thirdModelParameters != null && thirdModelParameters.length > 0) {
+      try {
+        String parametersAsString = MAPPER.writeValueAsString(thirdModelParameters);
+        settings.addString(CFG_MODEL3_PARAMETERS, parametersAsString);
+      } catch (JsonProcessingException err) {
+        // do nothing
+      }
+    }
+
+    if (fourthModelParameters != null && fourthModelParameters.length > 0) {
+      try {
+        String parametersAsString = MAPPER.writeValueAsString(fourthModelParameters);
+        settings.addString(CFG_MODEL4_PARAMETERS, parametersAsString);
+      } catch (JsonProcessingException err) {
+        // do nothing
+      }
+    }
+
     settings.addString(CFG_FIRST_MODEL_NAME, firstModelName);
-    settings.addString(CFG_FIRST_MODEL_SCRIPT, firstModelScript);
-    settings.addString(CFG_FIRST_MODEL_VISUALIZATION, firstModelViz);
     settings.addString(CFG_SECOND_MODEL_NAME, secondModelName);
-    settings.addString(CFG_SECOND_MODEL_SCRIPT, secondModelScript);
-    settings.addString(CFG_SECOND_MODEL_VISUALIZATION, secondModelViz);
+    settings.addString(CFG_THIRD_MODEL_NAME, thirdModelName);
+    settings.addString(CFG_FOURTH_MODEL_NAME, fourthModelName);
   }
 
   @Override
@@ -179,18 +197,34 @@ final class JoinerViewRepresentation extends JSONViewContent {
       }
     }
 
+    if (settings.containsKey(CFG_MODEL3_PARAMETERS)) {
+      try {
+        thirdModelParameters =
+            MAPPER.readValue(settings.getString(CFG_MODEL3_PARAMETERS), Parameter[].class);
+      } catch (IOException err) {
+        // do nothing
+      }
+    }
+
+    if (settings.containsKey(CFG_MODEL4_PARAMETERS)) {
+      try {
+        fourthModelParameters =
+            MAPPER.readValue(settings.getString(CFG_MODEL4_PARAMETERS), Parameter[].class);
+      } catch (IOException err) {
+        // do nothing
+      }
+    }
+
     firstModelName = settings.getString(CFG_FIRST_MODEL_NAME);
-    firstModelScript = settings.getString(CFG_FIRST_MODEL_SCRIPT);
-    firstModelViz = settings.getString(CFG_FIRST_MODEL_VISUALIZATION);
     secondModelName = settings.getString(CFG_SECOND_MODEL_NAME);
-    secondModelScript = settings.getString(CFG_SECOND_MODEL_SCRIPT);
-    secondModelViz = settings.getString(CFG_SECOND_MODEL_VISUALIZATION);
+    thirdModelName = settings.getString(CFG_THIRD_MODEL_NAME);
+    fourthModelName = settings.getString(CFG_FOURTH_MODEL_NAME);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(firstModelParameters, secondModelParameters, firstModelName,
-        firstModelScript, firstModelViz, secondModelName, secondModelScript, secondModelViz,
+    return Objects.hash(firstModelParameters, secondModelParameters, thirdModelParameters,
+        fourthModelParameters, firstModelName, secondModelName, thirdModelName, fourthModelName,
         modelType);
   }
 
@@ -209,12 +243,11 @@ final class JoinerViewRepresentation extends JSONViewContent {
     JoinerViewRepresentation other = (JoinerViewRepresentation) obj;
     return Arrays.deepEquals(firstModelParameters, other.firstModelParameters)
         && Arrays.deepEquals(secondModelParameters, other.secondModelParameters)
+        && Arrays.deepEquals(thirdModelParameters, other.thirdModelParameters)
+        && Arrays.deepEquals(fourthModelParameters, other.fourthModelParameters)
         && firstModelName.equals(other.firstModelName)
-        && firstModelScript.equals(other.firstModelScript)
-        && firstModelViz.equals(other.firstModelViz)
         && secondModelName.equals(other.secondModelName)
-        && secondModelScript.equals(other.secondModelScript)
-        && secondModelViz.equals(other.secondModelViz)
-        && modelType.equals(other.modelType);
+        && thirdModelName.equals(other.thirdModelName)
+        && fourthModelName.equals(other.fourthModelName) && modelType.equals(other.modelType);
   }
 }
