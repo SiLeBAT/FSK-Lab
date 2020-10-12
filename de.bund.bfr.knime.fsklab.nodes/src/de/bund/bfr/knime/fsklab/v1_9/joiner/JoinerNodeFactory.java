@@ -38,8 +38,7 @@ public class JoinerNodeFactory extends NodeFactory<JoinerNodeModel> implements
   }
 
   @Override
-  public NodeView<JoinerNodeModel> createNodeView(int viewIndex,
-      JoinerNodeModel nodeModel) {
+  public NodeView<JoinerNodeModel> createNodeView(int viewIndex, JoinerNodeModel nodeModel) {
     return null;
   }
 

@@ -127,8 +127,7 @@ public final class JoinerNodeModel
   }
 
   @Override
-  public void saveCurrentValue(NodeSettingsWO content) {
-  }
+  public void saveCurrentValue(NodeSettingsWO content) {}
 
   @Override
   public JoinerViewValue getViewValue() {
@@ -253,8 +252,7 @@ public final class JoinerNodeModel
   }
 
   @Override
-  protected void useCurrentValueAsDefault() {
-  }
+  protected void useCurrentValueAsDefault() {}
 
   protected void loadJsonSetting() throws IOException, CanceledExecutionException {
 
@@ -408,8 +406,7 @@ public final class JoinerNodeModel
   }
 
   @Override
-  protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
-  }
+  protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {}
 
   @Override
   public PortObject[] getInternalPortObjects() {
@@ -431,8 +428,7 @@ public final class JoinerNodeModel
   }
 
 
-  public void setHideInWizard(boolean hide) {
-  }
+  public void setHideInWizard(boolean hide) {}
 
 
   /** @return string with node name and id with format "{name} (#{id}) setting". */
