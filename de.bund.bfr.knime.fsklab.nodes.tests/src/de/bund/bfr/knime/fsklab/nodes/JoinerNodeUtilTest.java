@@ -116,7 +116,7 @@ public class JoinerNodeUtilTest {
 
     FskSimulation second =
         JoinerNodeUtil.makeIndividualSimulation(fskSimulation, JoinerNodeModel.SUFFIX_SECOND);
-    assertTrue(second.getParameters().size() == 2);
+    assertEquals(second.getParameters().size(), 2);
     assertEquals(second.getParameters().get("out11"), "1");
     assertEquals(second.getParameters().get("out12"), "2");
   }
