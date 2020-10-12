@@ -78,16 +78,16 @@ public final class JoinerNodeModel
   private FskPortObject fourthInputPort;
 
   // public final static String SUFFIX = "_dup";
-  public final static String SUFFIX_FIRST = "1";
-  public final static String SUFFIX_SECOND = "2";
-  public final static String SUFFIX_THIRD = "3";
-  public final static String SUFFIX_FOURTH = "4";
-  // public final static String SUFFIX = "_";
+  public static final String SUFFIX_FIRST = "1";
+  public static final String SUFFIX_SECOND = "2";
+  public static final String SUFFIX_THIRD = "3";
+  public static final String SUFFIX_FOURTH = "4";
+  // public static final String SUFFIX = "_";
 
 
   Map<String, String> originals = new LinkedHashMap<String, String>();
 
-  private final static ObjectMapper MAPPER = FskPlugin.getDefault().MAPPER104;
+  private static final ObjectMapper MAPPER = FskPlugin.getDefault().MAPPER104;
 
   // Input and output port types
   private static final PortType[] IN_TYPES = {FskPortObject.TYPE_OPTIONAL,
@@ -188,32 +188,22 @@ public final class JoinerNodeModel
         }
       }
 
-      if (firstInputPort != null) {
-        if (representation.getFirstModelName() == null) {
-          representation.setFirstModelName(SwaggerUtil.getModelName(firstInputPort.modelMetadata));
-        }
+      if (firstInputPort != null && representation.getFirstModelName() == null) {
+        representation.setFirstModelName(SwaggerUtil.getModelName(firstInputPort.modelMetadata));
       }
 
-      if (secondInputPort != null) {
-        if (representation.getSecondModelName() == null) {
-          representation
-              .setSecondModelName(SwaggerUtil.getModelName(secondInputPort.modelMetadata));
-        }
+      if (secondInputPort != null && representation.getSecondModelName() == null) {
+        representation.setSecondModelName(SwaggerUtil.getModelName(secondInputPort.modelMetadata));
         // TODO To be changed to a generic type
         representation.setModelType(secondInputPort.modelMetadata.getModelType());
       }
 
-      if (thirdInputPort != null) {
-        if (representation.getThirdModelName() == null) {
-          representation.setThirdModelName(SwaggerUtil.getModelName(thirdInputPort.modelMetadata));
-        }
+      if (thirdInputPort != null && representation.getThirdModelName() == null) {
+        representation.setThirdModelName(SwaggerUtil.getModelName(thirdInputPort.modelMetadata));
       }
 
-      if (fourthInputPort != null) {
-        if (representation.getFourthModelName() == null) {
-          representation
-              .setFourthModelName(SwaggerUtil.getModelName(fourthInputPort.modelMetadata));
-        }
+      if (fourthInputPort != null && representation.getFourthModelName() == null) {
+        representation.setFourthModelName(SwaggerUtil.getModelName(fourthInputPort.modelMetadata));
       }
     }
 
