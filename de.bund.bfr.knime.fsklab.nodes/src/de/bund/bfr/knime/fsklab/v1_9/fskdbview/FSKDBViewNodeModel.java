@@ -212,8 +212,7 @@ public class FSKDBViewNodeModel
   }
 
   @Override
-  public void setHideInWizard(boolean hide) {
-  }
+  public void setHideInWizard(boolean hide) {}
 
   @Override
   public ValidationError validateViewValue(FSKDBViewValue viewContent) {
@@ -221,8 +220,7 @@ public class FSKDBViewNodeModel
   }
 
   @Override
-  public void saveCurrentValue(NodeSettingsWO content) {
-  }
+  public void saveCurrentValue(NodeSettingsWO content) {}
 
   /**
    * {@inheritDoc}
@@ -244,6 +242,7 @@ public class FSKDBViewNodeModel
 
     synchronized (getLock()) {
       FSKDBViewRepresentation representation = getViewRepresentation();
+      FSKDBViewValue fskdbViewValue = getViewValue();
       representation.setRemoteRepositoryURL(m_repositoryLocationSettings.getStringValue());
       representation.setMaxSelectionNumber(
           ((SettingsModelIntegerBounded) m_maxSelectionNumberSettings).getIntValue());
@@ -254,7 +253,7 @@ public class FSKDBViewNodeModel
         JSONDataTable jsonTable =
             JSONDataTable.newBuilder().setDataTable((DataTable) outputPort).build(exec);
         representation.setTable(jsonTable);
-      } else if (representation.getTable() == null) {
+      } else if (fskdbViewValue.getTable() == null) {
 
         // construct a BufferedDataTable from the input object.
         BufferedDataTable table = (BufferedDataTable) inPort;
@@ -299,7 +298,7 @@ public class FSKDBViewNodeModel
       DataCell jsonCell = new StringCell(jsonRow);
       BooleanCell booleanCell = BooleanCell.FALSE;
       if (selectionList != null && selectionList.contains(rowKey.toString())) {
-          booleanCell = BooleanCell.TRUE;
+        booleanCell = BooleanCell.TRUE;
       }
 
       DataRow convertedRow = new DefaultRow(rowKey, new DataCell[] {jsonCell, booleanCell});

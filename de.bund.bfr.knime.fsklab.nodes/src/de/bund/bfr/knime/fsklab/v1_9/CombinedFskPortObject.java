@@ -482,8 +482,9 @@ public class CombinedFskPortObject extends FskPortObject {
           }
           entry = in.getNextEntry();
           entryName = entry.getName();
-
+          boolean entryRecoverd = false;
           if (entryName.startsWith(JOINED_WORKSPACE + level)) {
+            entryRecoverd = true;
             Files.copy(in, workspacePath, StandardCopyOption.REPLACE_EXISTING);
             entry = in.getNextEntry();
             entryName = entry.getName();
@@ -494,8 +495,11 @@ public class CombinedFskPortObject extends FskPortObject {
               } catch (ClassNotFoundException e) {
                 e.printStackTrace();
               }
+            }else {
+              entryRecoverd = false;
             }
           } else if (entryName.startsWith(JOINED_SIMULATION + level)) {
+            entryRecoverd = true;
             try {
               ObjectInputStream ois = new ObjectInputStream(in);
               simulations = ((List<FskSimulation>) ois.readObject());
@@ -503,7 +507,8 @@ public class CombinedFskPortObject extends FskPortObject {
               e.printStackTrace();
             }
           }
-          entry = in.getNextEntry();
+          if(entryRecoverd)
+            entry = in.getNextEntry();
           entryName = entry.getName();
           if (entryName.equals("modelType" + level)) {
             // deserialize new models
