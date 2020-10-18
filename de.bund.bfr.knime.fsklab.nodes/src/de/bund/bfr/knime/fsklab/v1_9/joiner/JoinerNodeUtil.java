@@ -11,7 +11,6 @@ import java.util.stream.Stream;
 import org.knime.core.node.ExecutionContext;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
 import de.bund.bfr.knime.fsklab.nodes.ScriptHandler;
 import de.bund.bfr.knime.fsklab.v1_9.CombinedFskPortObject;
@@ -22,28 +21,38 @@ import de.bund.bfr.metadata.swagger.Parameter;
 import metadata.SwaggerUtil;
 
 public class JoinerNodeUtil {
-
-
-
   /**
+   * A helper method for extracting the root model parameter names. the method will iterate
+   * recursively over the children models to extract the orginal name of the parameters without
+   * suffix
    * 
-   * @param originalOutputParameters map that contains the globally unique parameter names and links
-   *        them to the local names of the parameters in the actual scripts (e.g. var12 = var)
-   * @param suffix Can be JoinerNodeModel.SUFFIX_FIRST ("1") or SUFFIX_SECOND ("2")
-   * @return mapping of original parameter names for one of the two models in a combined FSK object
+   * @param portObject, the current model to search for parameters original name in.
+   * @param toplevelOutputParameters the parameters with suffix.
+   * @param originalNamesMap the map to be return.
+   * @return a LinkedHashMap holds the root model parameter names as keys with their original names
+   *         without suffix as values.
    */
-  public static LinkedHashMap<String, String> getOriginalParameterNames(
-      LinkedHashMap<String, String> originalOutputParameters, String suffix, int depth) {
-
-    LinkedHashMap<String, String> originalNamesMap = new LinkedHashMap<String, String>();
-
-    // create a mapping for the output parameters so that the true (original) parameter name is
-    // preserved
-    // original parameter name maps to the current (local) parameter (from the script)
-    for (Map.Entry<String, String> pair : originalOutputParameters.entrySet()) {
-      if (pair.getValue().endsWith(suffix)) {
-        originalNamesMap.put(pair.getKey(),
-            pair.getValue().substring(0, pair.getValue().length() - depth));
+  public static LinkedHashMap<String, String> getTopLevelParameterNames(FskPortObject portObject,
+      LinkedHashMap<String, String> toplevelOutputParameters,
+      LinkedHashMap<String, String> originalNamesMap) {
+    if (originalNamesMap == null) {
+      originalNamesMap = new LinkedHashMap<String, String>();
+    }
+    if (portObject instanceof CombinedFskPortObject) {
+      originalNamesMap =
+          getTopLevelParameterNames(((CombinedFskPortObject) portObject).getFirstFskPortObject(),
+              toplevelOutputParameters, originalNamesMap);
+      originalNamesMap =
+          getTopLevelParameterNames(((CombinedFskPortObject) portObject).getSecondFskPortObject(),
+              toplevelOutputParameters, originalNamesMap);
+    } else {
+      List<Parameter> listOfParameter = SwaggerUtil.getParameter(portObject.modelMetadata);
+      for (Parameter param : listOfParameter) {
+        for (Map.Entry<String, String> pair : toplevelOutputParameters.entrySet()) {
+          if (pair.getKey().startsWith(param.getId())) {
+            originalNamesMap.put(param.getId(), pair.getKey());
+          }
+        }
       }
     }
 
@@ -51,28 +60,47 @@ public class JoinerNodeUtil {
   }
 
   /**
+   * A helper method for extracting the root model parameter names.
    * 
-   * @param originalOutputParameters map that contains the globally unique parameter names and links
-   *        them to the local names of the parameters in the actual scripts (e.g. var12 = var)
-   * @param depth represents the index of suffix, this helps to extract the parameters that belong
-   *        to the join level.
-   * @return mapping of original parameter names for one of the two models in a combined FSK object
+   * @param originalNamesMap the map that holds all parameters names and the names with suffix.
+   * @param portObject which we search for its parameters names.
+   * @return the map contains only the parameters information of the portObject
    */
-  public static LinkedHashMap<String, String> getOriginalParameterNameswithoutManipulation(
-      LinkedHashMap<String, String> originalOutputParameters, int depth) {
-
-    LinkedHashMap<String, String> originalNamesMap = new LinkedHashMap<String, String>();
-
-    // create a mapping for the output parameters so that the true (original) parameter name is
-    // preserved
-    // original parameter name maps to the current (local) parameter (from the script)
-    for (Map.Entry<String, String> pair : originalOutputParameters.entrySet()) {
-      if (pair.getValue().length() > depth) {
-        originalNamesMap.put(pair.getKey(), pair.getValue());
+  public static LinkedHashMap<String, String> getOriginalParameterNamesOfFSKObject(
+      LinkedHashMap<String, String> originalNamesMap, FskPortObject portObject) {
+    LinkedHashMap<String, String> localOriginalNamesMap = new LinkedHashMap<>();
+    List<Parameter> listOfParameter = SwaggerUtil.getParameter(portObject.modelMetadata);
+    for (Parameter param : listOfParameter) {
+      if (originalNamesMap.containsKey(param.getId())) {
+        localOriginalNamesMap.put(originalNamesMap.get(param.getId()), param.getId());
       }
     }
+    return localOriginalNamesMap;
+  }
 
-    return originalNamesMap;
+  /**
+   * 
+   * Create a simulation only for one model (first or second) in a combined object
+   * 
+   * 
+   * @param combinedSim Simulation containing parameters from the first AND the second model.
+   * @param suffix Can be JoinerNodeModel.SUFFIX_FIRST ("1") or SUFFIX_SECOND ("2")
+   * @return simulation containing only parameters from the first or second model in a combined FSK
+   *         object
+   */
+  public static FskSimulation makeIndividualSimulation(FskSimulation combinedSim,
+      LinkedHashMap<String, String> originalNamesMap, FskPortObject portObject) {
+    FskSimulation fskSimulation = new FskSimulation(combinedSim.getName());
+
+    List<Parameter> listOfParameter = SwaggerUtil.getParameter(portObject.modelMetadata);
+    combinedSim.getParameters().forEach((pId, pValue) -> {
+      for (Parameter param : listOfParameter) {
+        if (pId.equals(originalNamesMap.get(param.getId())))
+          fskSimulation.getParameters().put(param.getId(), pValue);
+      }
+    });
+
+    return fskSimulation;
   }
 
   /**
@@ -141,8 +169,8 @@ public class JoinerNodeUtil {
       addIdentifierToParametersForCombinedObject(
           ((CombinedFskPortObject) portObject).getSecondFskPortObject(),
           suffix + JoinerNodeModel.SUFFIX_SECOND);
-      portObject.modelMetadata =
-          ((CombinedFskPortObject) portObject).getSecondFskPortObject().modelMetadata;
+      // portObject.modelMetadata =
+      // ((CombinedFskPortObject) portObject).getSecondFskPortObject().modelMetadata;
     } else {
       addIdentifierToParameters(SwaggerUtil.getParameter(portObject.modelMetadata), suffix);
     }
@@ -293,10 +321,10 @@ public class JoinerNodeUtil {
 
           } // while
         } // for
-      removeJoinedParameters(relations,
-          ((CombinedFskPortObject) outfskPort).getFirstFskPortObject());
-      removeJoinedParameters(relations,
-          ((CombinedFskPortObject) outfskPort).getSecondFskPortObject());
+      // removeJoinedParameters(relations,
+      // ((CombinedFskPortObject) outfskPort).getFirstFskPortObject());
+      // removeJoinedParameters(relations,
+      // ((CombinedFskPortObject) outfskPort).getSecondFskPortObject());
     }
   }// resolveParameters
 

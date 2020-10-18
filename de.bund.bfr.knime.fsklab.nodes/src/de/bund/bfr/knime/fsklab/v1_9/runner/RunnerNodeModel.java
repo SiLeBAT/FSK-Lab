@@ -56,7 +56,6 @@ import de.bund.bfr.knime.fsklab.v1_9.FskPortObject;
 import de.bund.bfr.knime.fsklab.v1_9.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.v1_9.FskSimulation;
 import de.bund.bfr.knime.fsklab.v1_9.JoinRelation;
-import de.bund.bfr.knime.fsklab.v1_9.joiner.JoinerNodeModel;
 import de.bund.bfr.knime.fsklab.v1_9.joiner.JoinerNodeUtil;
 import de.bund.bfr.metadata.swagger.Parameter;
 import metadata.SwaggerUtil;
@@ -133,10 +132,10 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
   protected PortObject[] execute(PortObject[] inData, ExecutionContext exec) throws Exception {
 
     this.setInternalPortObjects(inData);
-    
+
     FskPortObject fskObj = (FskPortObject) inData[0];
-//    this.fskObj = fskObj;
-    
+    // this.fskObj = fskObj;
+
     final List<FskSimulation> simulation = fskObj.simulations;
     if (StringUtils.isNotBlank(nodeSettings.simulation)) {
       FskPortObject fskObjk = fskObj;
@@ -147,14 +146,17 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
 
     try (ScriptHandler handler = ScriptHandler
         .createHandler(SwaggerUtil.getLanguageWrittenIn(fskObj.modelMetadata), fskObj.packages)) {
-      LinkedHashMap<String,String> originalOutputParameters = new LinkedHashMap<String,String>();
+      LinkedHashMap<String, String> originalOutputParameters = new LinkedHashMap<String, String>();
       List<Parameter> p = SwaggerUtil.getParameter(fskObj.modelMetadata);
-      p.forEach(item -> originalOutputParameters.put(item.getId(), item.getId() ));
-      runFskPortObject(handler, fskObj, originalOutputParameters, exec , 1);
+      p.forEach(item -> originalOutputParameters.put(item.getId(), item.getId()));
+      LinkedHashMap<String, String> originalNamesMap =
+          JoinerNodeUtil.getTopLevelParameterNames(fskObj, originalOutputParameters, null);
+      FskSimulation combinedSim = fskObj.simulations.get(fskObj.selectedSimulationIndex);
+      runFskPortObject(handler, fskObj, originalNamesMap, combinedSim, exec);
     } catch (Exception e) {
       e.printStackTrace();
     }
-    
+
     try (FileInputStream fis = new FileInputStream(internalSettings.imageFile)) {
       final SvgImageContent content = new SvgImageContent(fis);
       ImagePortObject imgObj = new ImagePortObject(content, SVG_SPEC);
@@ -189,65 +191,58 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
     return embedFSKObject;
   }
 
-  //TODO: make a method that just runs a simulation of a portObject runSimulation(fskObj, simulation)
-  public FskPortObject runFskPortObject(ScriptHandler handler, FskPortObject fskObj, LinkedHashMap<String,String> originalOutputParameters,
-      ExecutionContext exec, int depth) throws Exception {
+  // TODO: make a method that just runs a simulation of a portObject runSimulation(fskObj,
+  // simulation)
+  public FskPortObject runFskPortObject(ScriptHandler handler, FskPortObject fskObj,
+      LinkedHashMap<String, String> originalOutputParameters, FskSimulation combinedSim,
+      ExecutionContext exec) throws Exception {
     LOGGER.info("Running Model: " + fskObj);
-    
-    
+
+
 
     if (fskObj instanceof CombinedFskPortObject) {
-      
-      CombinedFskPortObject comFskObj = (CombinedFskPortObject) fskObj;
-      
-      
-      
-      
-      //TODO: What happens if the user adds a parameter during joining process?? ¯\(°_o)/¯
-      
-      
-      // prepareSimulation 1    *******
-      FskSimulation fskSimOriginal  = comFskObj.simulations.get(comFskObj.selectedSimulationIndex);
-      FskSimulation fskSimulationFirst = JoinerNodeUtil.makeIndividualSimulation(fskSimOriginal, JoinerNodeModel.SUFFIX_FIRST);
-      
-      // get local parameters to store  
-      List<Parameter> p = SwaggerUtil.getParameter(fskObj.modelMetadata);
-      p.forEach(item -> originalOutputParameters.put(item.getId(), item.getId() ));
-      
-      FskPortObject firstFskObj = comFskObj.getFirstFskPortObject();
-      LinkedHashMap<String,String> oopFirst;
-      if(firstFskObj instanceof CombinedFskPortObject) {
-        oopFirst = JoinerNodeUtil.getOriginalParameterNameswithoutManipulation(originalOutputParameters, depth);
-      }else {
-        // create a mapping for the output parameters so that the true (original) parameter name is preserved but links      
-        oopFirst = JoinerNodeUtil.getOriginalParameterNames(originalOutputParameters, JoinerNodeModel.SUFFIX_FIRST, depth);
-      }
-      
-      // if 1 is combined, go deeper
-      
-      if (firstFskObj instanceof CombinedFskPortObject) {
-      
-        firstFskObj = stepIntoSubModel(firstFskObj, fskSimulationFirst, oopFirst, handler, exec, ++depth);
-        --depth;
-      }
-      
-      
-      
-      
 
-      // TODO: prepare files          *******
+      CombinedFskPortObject comFskObj = (CombinedFskPortObject) fskObj;
+
+
+
+      // TODO: What happens if the user adds a parameter during joining process?? ¯\(°_o)/¯
+      FskSimulation fskSimulationFirst = null;
+
+      // get local parameters to store
+      // List<Parameter> p = SwaggerUtil.getParameter(fskObj.modelMetadata);
+      // p.forEach(item -> originalOutputParameters.put(item.getId(), item.getId() ));
+
+      FskPortObject firstFskObj = comFskObj.getFirstFskPortObject();
+      LinkedHashMap<String, String> oopFirst = new LinkedHashMap<>();
+      if (!(firstFskObj instanceof CombinedFskPortObject)) {
+        // create a mapping for the output parameters so that the true (original) parameter name is
+        // preserved but links
+        oopFirst = JoinerNodeUtil.getOriginalParameterNamesOfFSKObject(originalOutputParameters,
+            firstFskObj);
+        // prepareSimulation 1 *******
+        fskSimulationFirst = JoinerNodeUtil.makeIndividualSimulation(combinedSim,
+            originalOutputParameters, firstFskObj);
+      } else {
+        firstFskObj = stepIntoSubModel(firstFskObj, fskSimulationFirst, originalOutputParameters,
+            combinedSim, handler, exec);
+      }
+
+
+
+      // TODO: prepare files *******
       ExecutionContext context = exec.createSubExecutionContext(1.0);
       // make a map of file name and its last modification date to observe any changes which
       // means file overwriting or generating new one
-      
+
       Optional<Path> workingDirectory1;
       if (firstFskObj.getEnvironmentManager().isPresent()) {
         workingDirectory1 = firstFskObj.getEnvironmentManager().get().getEnvironment();
       } else {
         workingDirectory1 = Optional.empty();
       }
-      
-      
+
+
       // Copy generated resources of the combined model to working directory of first model
       if (comFskObj.getGeneratedResourcesDirectory().isPresent()) {
         File combinedModelGeneratedResourcesDir = comFskObj.getGeneratedResourcesDirectory().get();
@@ -257,18 +252,18 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
           FileUtil.copy(sourceFile, targetFile, context);
         }
       }
-      
-      // execute 1              *******
-      
+
+      // execute 1 *******
+
       // run the first model!
       LOGGER.info("Running Snippet of first Model: " + firstFskObj.toString());
-      
+
       if (!(firstFskObj instanceof CombinedFskPortObject)) {
         firstFskObj = runSnippet(handler, firstFskObj, fskSimulationFirst, context);
         // save output from simulation by using current output name (with suffixes)
         // save is done by running the command in R
-        JoinerNodeUtil.saveOutputVariable( oopFirst ,handler, exec);
-        
+        JoinerNodeUtil.saveOutputVariable(oopFirst, handler, exec);
+
         // Copy generated resources from first model to the combined model generated resources
         if (firstFskObj.getGeneratedResourcesDirectory().isPresent()) {
           File firstModelGeneratedResourcesDir = firstFskObj.getGeneratedResourcesDirectory().get();
@@ -286,30 +281,35 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
           FileUtil.copyDir(firstModelGeneratedResourcesDir, combinedModelGeneratedResourcesDir);
         }
       }
-        
-      
-      // prepareSimulation 2    *******
 
-      
+
+      // prepareSimulation 2 *******
+
+
       FskPortObject secondFskObj = comFskObj.getSecondFskPortObject();
 
-      FskSimulation fskSimulationSecond = JoinerNodeUtil.makeIndividualSimulation(fskSimOriginal, JoinerNodeModel.SUFFIX_SECOND);
+      FskSimulation fskSimulationSecond = JoinerNodeUtil.makeIndividualSimulation(combinedSim,
+          originalOutputParameters, secondFskObj);
 
-      // create a mapping for the output parameters so that the true (original) parameter name is preserved but links
+      // create a mapping for the output parameters so that the true (original) parameter name is
+      // preserved but links
       // to the current parameter (from the script)
-      LinkedHashMap<String,String> oopSecond = JoinerNodeUtil.getOriginalParameterNames(originalOutputParameters, JoinerNodeModel.SUFFIX_SECOND, depth);
-    
-      
+
+
+
       // apply join command
-      applyJoinCommandToSimulation(comFskObj, fskSimulationSecond, originalOutputParameters, depth);
-    
+      Map<String, String> mapInversed = originalOutputParameters.entrySet().stream()
+          .collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
+      applyJoinCommandToSimulation(comFskObj, fskSimulationSecond, mapInversed);
+
       Optional<Path> workingDirectory2;
       if (comFskObj.getSecondFskPortObject().getEnvironmentManager().isPresent()) {
-        workingDirectory2 = comFskObj.getSecondFskPortObject().getEnvironmentManager().get().getEnvironment();
+        workingDirectory2 =
+            comFskObj.getSecondFskPortObject().getEnvironmentManager().get().getEnvironment();
       } else {
         workingDirectory2 = Optional.empty();
       }
-        
+
       // Copy generated resources in the first model to the working directory of the second model
       // TODO: Big error still not solved: What if workingDirectory2 is empty??
       if (firstFskObj.getGeneratedResourcesDirectory().isPresent()) {
@@ -319,36 +319,39 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
           FileUtil.copy(sourceFile, targetFile, context);
         }
       }
-   
-      // execute 2              ******* 
-        
+
+      // execute 2 *******
+
 
       LOGGER.info("Running Snippet of second Model: " + secondFskObj);
       // apply join command for complex join
+      LinkedHashMap<String, String> oopSecond = new LinkedHashMap<>();
       if (secondFskObj instanceof CombinedFskPortObject) {
-//      
-        secondFskObj = stepIntoSubModel(secondFskObj, fskSimulationSecond, oopSecond, handler, exec, depth++);
-
-
+        //
+        secondFskObj = stepIntoSubModel(secondFskObj, fskSimulationSecond, originalOutputParameters,
+            combinedSim, handler, exec);
       } else {
-        
-         secondFskObj = runSnippet(handler, secondFskObj, fskSimulationSecond, context);
+        oopSecond = JoinerNodeUtil.getOriginalParameterNamesOfFSKObject(originalOutputParameters,
+            secondFskObj);
+        secondFskObj = runSnippet(handler, secondFskObj, fskSimulationSecond, context);
 
 
         // save output in the proper variable (with suffix)
         JoinerNodeUtil.saveOutputVariable(oopSecond, handler, exec);
-        
+
         // Copy generated resources from the second model to the combined model
         if (secondFskObj.getGeneratedResourcesDirectory().isPresent()) {
-          File secondModelGeneratedResourcesDir = secondFskObj.getGeneratedResourcesDirectory().get();
+          File secondModelGeneratedResourcesDir =
+              secondFskObj.getGeneratedResourcesDirectory().get();
 
           for (File sourceFile : secondModelGeneratedResourcesDir.listFiles()) {
-            File targetFile = new File(comFskObj.getGeneratedResourcesDirectory().get(), sourceFile.getName());
+            File targetFile =
+                new File(comFskObj.getGeneratedResourcesDirectory().get(), sourceFile.getName());
             FileUtil.copy(sourceFile, targetFile, context);
           }
         }
       }
-      
+
       comFskObj.setWorkspace(secondFskObj.getWorkspace());
       return comFskObj;
     } else {
@@ -375,57 +378,57 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
     }
   }
 
-  
-  private void applyJoinCommandToSimulation(CombinedFskPortObject fskObj, FskSimulation fskSimulation, LinkedHashMap<String, String> originalOutputParameters,int depth) {
-    
+
+  private void applyJoinCommandToSimulation(CombinedFskPortObject fskObj,
+      FskSimulation fskSimulation, Map<String, String> originalOutputParameters) {
+
     JoinRelation[] joinRelations = fskObj.getJoinerRelation();
+    FskPortObject seconFskPortObject = fskObj.getSecondFskPortObject();
 
     if (joinRelations != null) {
       // originalOutputParameters have the name of the actual, globally unique parameter name.
       // the parameter name is marked (currently with []) e.g. [output_var]
       // therefore, the join command is something like input_var = 3*[output_var]
       // the local parameter name needs to be replaced with the unique one
-      // 
-      for (JoinRelation joinRelation : joinRelations)
-        for(Map.Entry<String,String> pair : originalOutputParameters.entrySet()) {
-          if(joinRelation.getSourceParam().equals(pair.getKey())) {
-            
-            //replace join command with unique identifier of parameter
-            String command_new = joinRelation.getCommand().replaceAll("\\[([^<]*)\\]", pair.getKey());
-            String target = joinRelation.getTargetParam().substring(0, joinRelation.getTargetParam().length() - depth);
-            
-            
-            fskSimulation.getParameters().put(target, command_new);
+      //
 
+      for (JoinRelation joinRelation : joinRelations)
+        if (originalOutputParameters.containsKey(joinRelation.getSourceParam())) {
+          // replace join command with unique identifier of parameter
+          String command_new = joinRelation.getCommand().replaceAll("\\[([^<]*)\\]",
+              originalOutputParameters.get(joinRelation.getSourceParam()));
+          String target = "";
+          for (Parameter param : SwaggerUtil.getParameter(seconFskPortObject.modelMetadata)) {
+            if (joinRelation.getTargetParam().startsWith(param.getId())) {
+              fskSimulation.getParameters().put(param.getId(), command_new);
+            }
           }
         }
-      
     }
   }
-  
-  private FskPortObject stepIntoSubModel(FskPortObject fskObj,
-      FskSimulation fskSimulation,
-      LinkedHashMap<String, String> orignialParameters,
-      ScriptHandler handler,
-      final ExecutionContext exec ,int depth) {
-    
-    //carry correct simulation values
+
+  private FskPortObject stepIntoSubModel(FskPortObject fskObj, FskSimulation fskSimulation,
+      LinkedHashMap<String, String> orignialParameters, FskSimulation combinedSim,
+      ScriptHandler handler, final ExecutionContext exec) {
+
+    // carry correct simulation values
     int selectIndex = fskObj.selectedSimulationIndex;
     fskObj.selectedSimulationIndex = fskObj.simulations.size();
     fskObj.simulations.add(fskSimulation);
     try {
-      fskObj = runFskPortObject(handler, fskObj, orignialParameters, exec, depth);
+      fskObj = runFskPortObject(handler, fskObj, orignialParameters, combinedSim, exec);
     } catch (Exception e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
-    //restore original simulation (just so we don't mess with original models)
+    // restore original simulation (just so we don't mess with original models)
     fskObj.simulations.remove(fskSimulation);
     fskObj.selectedSimulationIndex = selectIndex;
-    
+
     return fskObj;
 
   }
+
   private FskPortObject runSnippet(ScriptHandler handler, final FskPortObject fskObj,
       final FskSimulation simulation, final ExecutionContext exec) throws Exception {
 
@@ -465,6 +468,6 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
 
   @Override
   public void setInternalPortObjects(PortObject[] portObjects) {
-    fskObj = (FskPortObject) portObjects[0];    
+    fskObj = (FskPortObject) portObjects[0];
   }
 }

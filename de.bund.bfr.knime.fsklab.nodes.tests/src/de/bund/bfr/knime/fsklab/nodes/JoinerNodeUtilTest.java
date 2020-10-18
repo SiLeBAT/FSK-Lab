@@ -17,56 +17,6 @@ import de.bund.bfr.metadata.swagger.Parameter;
 
 @SuppressWarnings("static-method")
 public class JoinerNodeUtilTest {
-
-  @Test
-  public void testGetOriginalParameterNames_CorrectOutputParameters_shouldReturnPresent() {
-
-    LinkedHashMap<String, String> originalOutputParams = new LinkedHashMap<>();
-    originalOutputParams.put("out112", "out11");
-    originalOutputParams.put("out121", "out12");
-
-    LinkedHashMap<String, String> first = JoinerNodeUtil
-        .getOriginalParameterNames(originalOutputParams, JoinerNodeModel.SUFFIX_FIRST,1);
-    LinkedHashMap<String, String> second = JoinerNodeUtil
-        .getOriginalParameterNames(originalOutputParams, JoinerNodeModel.SUFFIX_SECOND,1);
-
-    assertTrue(first.containsKey("out112"));
-    assertTrue(second.containsKey("out121"));
-
-  }
-
-  @Test
-  public void testGetOriginalParameterNames_WrongOutputParameters_shouldReturnNotPresent() {
-
-    LinkedHashMap<String, String> originalOutputParams = new LinkedHashMap<>();
-    originalOutputParams.put("out112", "out11");
-    originalOutputParams.put("out121", "out12");
-
-    LinkedHashMap<String, String> first = JoinerNodeUtil
-        .getOriginalParameterNames(originalOutputParams, JoinerNodeModel.SUFFIX_FIRST,1);
-    LinkedHashMap<String, String> second = JoinerNodeUtil
-        .getOriginalParameterNames(originalOutputParams, JoinerNodeModel.SUFFIX_SECOND,1);
-
-    assertFalse(first.containsKey("out121"));
-    assertFalse(second.containsKey("out112"));
-  }
-
-  @Test
-  public void testGetOriginalParameterNames_OutputParameters_shouldReturnEqual() {
-
-    LinkedHashMap<String, String> originalOutputParams = new LinkedHashMap<>();
-    originalOutputParams.put("out112", "out11");
-    originalOutputParams.put("out121", "out12");
-
-    LinkedHashMap<String, String> first = JoinerNodeUtil
-        .getOriginalParameterNames(originalOutputParams, JoinerNodeModel.SUFFIX_FIRST,1);
-    LinkedHashMap<String, String> second = JoinerNodeUtil
-        .getOriginalParameterNames(originalOutputParams, JoinerNodeModel.SUFFIX_SECOND,1);
-
-    assertEquals(first.get("out112"), "out1");
-    assertEquals(second.get("out121"), "out1");
-  }
-
   @Test
   public void testMakeIndividualSimulation_CombinedSim_ShouldReturnFirstPresent() {
     FskSimulation fskSimulation = new FskSimulation("sim");
