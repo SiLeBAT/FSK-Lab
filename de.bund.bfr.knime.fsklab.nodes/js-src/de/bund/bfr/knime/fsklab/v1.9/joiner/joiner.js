@@ -239,8 +239,12 @@ joiner = function () {
   
       
       // Highlight a cell when clicked
-      _paper.on('cell:pointerclick', highlight);
-  
+      //_paper.on('cell:pointerclick', highlight);
+      _paper.on('element:pointerdblclick', 
+          function(cellView, evt, x, y) { 
+              console.log(cellView,evt ); 
+          }
+      );
       // Pointer is released after pressing down a link
       _paper.on('link:pointerup', (event) => {
         if (event.model instanceof joint.dia.Link) {
@@ -269,7 +273,7 @@ joiner = function () {
         if(modelParameters){
           for (param of modelParameters) {
             if (! modelsPool[key]['modelParameterMap'][param.id]) {
-              let port = createPort(param.id, param.dataType);
+              let port = createPort(param);
               if (param.classification === "INPUT" || param.classification === "CONSTANT") {
                 port.group = "in";
                 modelsPool[key]['inputParameters'].push(port);
@@ -478,16 +482,16 @@ joiner = function () {
   
     /**
      * Create a JointJS port for a model parameter.
-     * @param {string} id Parameter id 
-     * @param {string} dataType Parameter data type 
+     * @param {Parameter} param 
      */
-    function createPort(id, dataType) {
+    function createPort(param) {
       return {
-        'id': id,
+        // id: 'abc', // generated if `id` value is not present
+        'id': param.id,
         'label': {
-          'markup': `<text class="label-text" fill="black"><title>${dataType}</title>${id}</text>`
+          'markup': `<text class="label-text" fill="black"><title>${param.dataType}</title>${param.id}</text>`
         },
-        'attrs': { 'font-size': 10 }
+        'markup': `<circle fill="#FF7979"  r="92.5" class="port-body"><title>Parameter ID: ` + param.id + `\nParameter Name: ` + param.name + `\nDescription: ` + param.description + `\nUnit: ` + param.unit + `\nDataType: ` + param.dataType + `\nSource: ` + param.source + `\nSubject: ` + param.subject + `\nDistribution: ` + param.distribution + `\nReference: ` + param.reference + `\nVariabilitySubject: ` + param.variabilitySubject + `\nMinValue: ` + param.minValue + `\nMaxValue: ` + param.maxValue + `\nError: ` + param.error + `\n</title></circle>`,
       };
     }
   
@@ -581,6 +585,7 @@ joiner = function () {
   
       // Add input parameter ports
       inputs.forEach(input => atomic.addPort(input));
+      
   
       // Add output parameter ports
       outputs.forEach(output => atomic.addPort(output));
