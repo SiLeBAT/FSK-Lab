@@ -45,6 +45,10 @@ final class JoinerViewRepresentation extends JSONViewContent {
   private static final String CFG_SECOND_MODEL_NAME = "secondModelName";
   private static final String CFG_THIRD_MODEL_NAME = "thirdModelName";
   private static final String CFG_FOURTH_MODEL_NAME = "fourthModelName";
+  private static final String CFG_FIRST_MODEL = "FirstModel";
+  private static final String CFG_SECOND_MODEL = "SecondModel";
+  private static final String CFG_THIRD_MODEL = "ThirdModel";
+  private static final String CFG_FOURTH_MODEL = "FourthModel";
   private static final ObjectMapper MAPPER = FskPlugin.getDefault().MAPPER104;
 
   private Parameter[] firstModelParameters;
@@ -56,6 +60,11 @@ final class JoinerViewRepresentation extends JSONViewContent {
   private String secondModelName;
   private String thirdModelName;
   private String fourthModelName;
+
+  public String[] firstModel;
+  public String[] secondModel;
+  public String[] thirdModel;
+  public String[] fourthModel;
 
   private String modelType;
 
@@ -174,6 +183,21 @@ final class JoinerViewRepresentation extends JSONViewContent {
     settings.addString(CFG_SECOND_MODEL_NAME, secondModelName);
     settings.addString(CFG_THIRD_MODEL_NAME, thirdModelName);
     settings.addString(CFG_FOURTH_MODEL_NAME, fourthModelName);
+    try {
+      String firstModelAsString = MAPPER.writeValueAsString(firstModel);
+      settings.addString(CFG_FIRST_MODEL, firstModelAsString);
+
+      String secondModelAsString = MAPPER.writeValueAsString(secondModel);
+      settings.addString(CFG_SECOND_MODEL, secondModelAsString);
+
+      String thirdModelAsString = MAPPER.writeValueAsString(thirdModel);
+      settings.addString(CFG_THIRD_MODEL, thirdModelAsString);
+
+      String fourthModelAsString = MAPPER.writeValueAsString(firstModel);
+      settings.addString(CFG_FOURTH_MODEL, fourthModelAsString);
+    } catch (JsonProcessingException err) {
+      // do nothing
+    }
   }
 
   @Override
@@ -219,6 +243,16 @@ final class JoinerViewRepresentation extends JSONViewContent {
     secondModelName = settings.getString(CFG_SECOND_MODEL_NAME);
     thirdModelName = settings.getString(CFG_THIRD_MODEL_NAME);
     fourthModelName = settings.getString(CFG_FOURTH_MODEL_NAME);
+
+    try {
+      firstModel = MAPPER.readValue(settings.getString(CFG_FIRST_MODEL), String[].class);
+      secondModel = MAPPER.readValue(settings.getString(CFG_SECOND_MODEL), String[].class);
+      thirdModel = MAPPER.readValue(settings.getString(CFG_THIRD_MODEL), String[].class);
+      fourthModel = MAPPER.readValue(settings.getString(CFG_FOURTH_MODEL), String[].class);
+    } catch (IOException err) {
+      // do nothing
+    }
+
   }
 
   @Override

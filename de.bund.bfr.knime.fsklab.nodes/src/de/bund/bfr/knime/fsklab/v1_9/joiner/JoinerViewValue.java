@@ -20,6 +20,7 @@ package de.bund.bfr.knime.fsklab.v1_9.joiner;
 
 import java.io.IOException;
 import java.util.Random;
+import org.apache.commons.lang3.StringUtils;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
@@ -28,11 +29,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.v1_9.JoinRelation;
+import de.bund.bfr.metadata.swagger.Parameter;
 
 class JoinerViewValue extends JSONViewContent {
 
   // Configuration keys
   private static final String CFG_MODEL_METADATA = "ModelMetaData";
+  private static final String CFG_FIRST_MODEL = "FirstModel";
+  private static final String CFG_SECOND_MODEL = "SecondModel";
+  private static final String CFG_THIRD_MODEL = "ThirdModel";
+  private static final String CFG_FOURTH_MODEL = "FourthModel";
   private static final String CFG_JOINER_RELATION = "joinRelation";
   private static final String CFG_JSON_REPRESENTATION = "JSONRepresentation";
   private static final String CFG_MODELSCRIPT_TREE = "ModelScriptTree";
@@ -42,17 +48,21 @@ class JoinerViewValue extends JSONViewContent {
   private final ObjectMapper MAPPER = FskPlugin.getDefault().MAPPER104;
 
   public String modelMetaData;
+  public String[] firstModel;
+  public String[] secondModel;
+  public String[] thirdModel;
+  public String[] fourthModel;
   public JoinRelation[] joinRelations;
   public String jsonRepresentation;
   public String svgRepresentation;
   public String modelScriptTree;
-  private String visualizationScript;
+  public String visualizationScript;
   public String different;
 
   public JoinerViewValue() {
     visualizationScript = "";
   }
-  
+
   @Override
   public void saveToNodeSettings(NodeSettingsWO settings) {
 
@@ -70,11 +80,26 @@ class JoinerViewValue extends JSONViewContent {
     settings.addString(CFG_JSON_REPRESENTATION, jsonRepresentation);
     settings.addString(CFG_MODELSCRIPT_TREE, modelScriptTree);
     settings.addString(CFG_MODEL_METADATA, modelMetaData);
+    try {
+      String firstModelAsString = MAPPER.writeValueAsString(firstModel);
+      settings.addString(CFG_FIRST_MODEL, firstModelAsString);
+
+      String secondModelAsString = MAPPER.writeValueAsString(secondModel);
+      settings.addString(CFG_SECOND_MODEL, secondModelAsString);
+
+      String thirdModelAsString = MAPPER.writeValueAsString(thirdModel);
+      settings.addString(CFG_THIRD_MODEL, thirdModelAsString);
+
+      String fourthModelAsString = MAPPER.writeValueAsString(firstModel);
+      settings.addString(CFG_FOURTH_MODEL, fourthModelAsString);
+    } catch (JsonProcessingException err) {
+      // do nothing
+    }
   }
 
   @Override
   public void loadFromNodeSettings(NodeSettingsRO settings) throws InvalidSettingsException {
-    
+
     // Read relations as string
     String relationsAsString = settings.getString(CFG_JOINER_RELATION);
     if (relationsAsString != null) {
@@ -84,10 +109,19 @@ class JoinerViewValue extends JSONViewContent {
         // do nothing
       }
     }
-    
+
     jsonRepresentation = settings.getString(CFG_JSON_REPRESENTATION);
     modelScriptTree = settings.getString(CFG_MODELSCRIPT_TREE);
     modelMetaData = settings.getString(CFG_MODEL_METADATA);
+    try {
+      firstModel = MAPPER.readValue(settings.getString(CFG_FIRST_MODEL), String[].class);
+      secondModel = MAPPER.readValue(settings.getString(CFG_SECOND_MODEL), String[].class);
+      thirdModel = MAPPER.readValue(settings.getString(CFG_THIRD_MODEL), String[].class);
+      fourthModel = MAPPER.readValue(settings.getString(CFG_FOURTH_MODEL), String[].class);
+    } catch (IOException err) {
+      // do nothing
+    }
+
     visualizationScript = settings.getString(CFG_ORIGINAL_VISUALIZATION_SCRIPT);
 
   }
@@ -107,12 +141,12 @@ class JoinerViewValue extends JSONViewContent {
   public int hashCode() {
     return pseudoIdentifier;
   }
-  
-  public String getVisualizationScript() {
-    return visualizationScript;
-  }
 
-  public void setVisualizationScript(String visualizationScript) {
-    this.visualizationScript = visualizationScript;
+  /**
+   * Utility check for checking quickly if this view value is empty. A view value with all its
+   * mandatory properties not set is considered empty.
+   */
+  public boolean isEmpty() {
+    return StringUtils.isEmpty(modelMetaData);
   }
 }

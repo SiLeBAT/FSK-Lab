@@ -19,3 +19,11 @@
 #viewContent {
     padding: 5px;
 }
+
+.html-element select,
+.html-element input,
+.html-element button {
+    /* Enable interacting with inputs only. */
+    pointer-events: all;
+}
+
