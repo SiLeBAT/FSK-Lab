@@ -245,7 +245,7 @@ public final class JoinerNodeModel
   }
 
   private FskPortObject mergeParameterForJoinedObject(CombinedFskPortObject portObject)
-      throws JsonProcessingException {
+      throws JsonProcessingException, IOException {
     FskPortObject first = portObject.getFirstFskPortObject();
     FskPortObject second = portObject.getSecondFskPortObject();
     if (first instanceof CombinedFskPortObject) {
@@ -772,7 +772,7 @@ public final class JoinerNodeModel
   }
 
   private static FskPortObject getFSKObjectFromStringArray(FskPortObject portObject, String[] model)
-      throws JsonMappingException, JsonProcessingException {
+      throws JsonMappingException, JsonProcessingException, IOException {
 
     portObject.modelMetadata =
         MAPPER.readValue(model[0], SwaggerUtil.modelClasses.get("GenericModel"));
