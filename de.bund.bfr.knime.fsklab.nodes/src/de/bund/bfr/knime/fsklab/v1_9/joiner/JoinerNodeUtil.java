@@ -9,6 +9,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.knime.core.node.ExecutionContext;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
 import de.bund.bfr.knime.fsklab.nodes.ScriptHandler;
 import de.bund.bfr.knime.fsklab.v1_9.CombinedFskPortObject;
@@ -19,32 +21,86 @@ import de.bund.bfr.metadata.swagger.Parameter;
 import metadata.SwaggerUtil;
 
 public class JoinerNodeUtil {
-
-
-
   /**
+   * A helper method for extracting the root model parameter names. the method will iterate
+   * recursively over the children models to extract the orginal name of the parameters without
+   * suffix
    * 
-   * @param originalOutputParameters map that contains the globally unique parameter names and links
-   *        them to the local names of the parameters in the actual scripts (e.g. var12 = var)
-   * @param suffix Can be JoinerNodeModel.SUFFIX_FIRST ("1") or SUFFIX_SECOND ("2")
-   * @return mapping of original parameter names for one of the two models in a combined FSK object
+   * @param portObject, the current model to search for parameters original name in.
+   * @param toplevelOutputParameters the parameters with suffix.
+   * @param originalNamesMap the map to be return.
+   * @return a LinkedHashMap holds the root model parameter names as keys with their original names
+   *         without suffix as values.
    */
-  public static LinkedHashMap<String, String> getOriginalParameterNames(
-      LinkedHashMap<String, String> originalOutputParameters, String suffix) {
-
-    LinkedHashMap<String, String> originalNamesMap = new LinkedHashMap<String, String>();
-
-    // create a mapping for the output parameters so that the true (original) parameter name is
-    // preserved
-    // original parameter name maps to the current (local) parameter (from the script)
-    for (Map.Entry<String, String> pair : originalOutputParameters.entrySet()) {
-      if (pair.getValue().endsWith(suffix)) {
-        originalNamesMap.put(pair.getKey(),
-            pair.getValue().substring(0, pair.getValue().length() - 1));
+  public static LinkedHashMap<String, String> getTopLevelParameterNames(FskPortObject portObject,
+      LinkedHashMap<String, String> toplevelOutputParameters,
+      LinkedHashMap<String, String> originalNamesMap) {
+    if (originalNamesMap == null) {
+      originalNamesMap = new LinkedHashMap<String, String>();
+    }
+    if (portObject instanceof CombinedFskPortObject) {
+      originalNamesMap =
+          getTopLevelParameterNames(((CombinedFskPortObject) portObject).getFirstFskPortObject(),
+              toplevelOutputParameters, originalNamesMap);
+      originalNamesMap =
+          getTopLevelParameterNames(((CombinedFskPortObject) portObject).getSecondFskPortObject(),
+              toplevelOutputParameters, originalNamesMap);
+    } else {
+      List<Parameter> listOfParameter = SwaggerUtil.getParameter(portObject.modelMetadata);
+      for (Parameter param : listOfParameter) {
+        for (Map.Entry<String, String> pair : toplevelOutputParameters.entrySet()) {
+          if (pair.getKey().startsWith(param.getId())) {
+            originalNamesMap.put(param.getId(), pair.getKey());
+          }
+        }
       }
     }
 
     return originalNamesMap;
+  }
+
+  /**
+   * A helper method for extracting the root model parameter names.
+   * 
+   * @param originalNamesMap the map that holds all parameters names and the names with suffix.
+   * @param portObject which we search for its parameters names.
+   * @return the map contains only the parameters information of the portObject
+   */
+  public static LinkedHashMap<String, String> getOriginalParameterNamesOfFSKObject(
+      LinkedHashMap<String, String> originalNamesMap, FskPortObject portObject) {
+    LinkedHashMap<String, String> localOriginalNamesMap = new LinkedHashMap<>();
+    List<Parameter> listOfParameter = SwaggerUtil.getParameter(portObject.modelMetadata);
+    for (Parameter param : listOfParameter) {
+      if (originalNamesMap.containsKey(param.getId())) {
+        localOriginalNamesMap.put(originalNamesMap.get(param.getId()), param.getId());
+      }
+    }
+    return localOriginalNamesMap;
+  }
+
+  /**
+   * 
+   * Create a simulation only for one model (first or second) in a combined object
+   * 
+   * 
+   * @param combinedSim Simulation containing parameters from the first AND the second model.
+   * @param suffix Can be JoinerNodeModel.SUFFIX_FIRST ("1") or SUFFIX_SECOND ("2")
+   * @return simulation containing only parameters from the first or second model in a combined FSK
+   *         object
+   */
+  public static FskSimulation makeIndividualSimulation(FskSimulation combinedSim,
+      LinkedHashMap<String, String> originalNamesMap, FskPortObject portObject) {
+    FskSimulation fskSimulation = new FskSimulation(combinedSim.getName());
+
+    List<Parameter> listOfParameter = SwaggerUtil.getParameter(portObject.modelMetadata);
+    combinedSim.getParameters().forEach((pId, pValue) -> {
+      for (Parameter param : listOfParameter) {
+        if (pId.equals(originalNamesMap.get(param.getId())))
+          fskSimulation.getParameters().put(param.getId(), pValue);
+      }
+    });
+
+    return fskSimulation;
   }
 
   /**
@@ -97,66 +153,70 @@ public class JoinerNodeUtil {
   }
 
   /**
+   * this method prepares the model parameters and the suffix to be add to the parameters ID
+   * 
+   * @param portObject the combined model.
+   * @param the suffix to be added.
+   * @throws JsonProcessingException
+   * @throws JsonMappingException
+   */
+  public static void addIdentifierToParametersForCombinedObject(FskPortObject portObject,
+      String suffix) throws JsonMappingException, JsonProcessingException {
+    if (portObject instanceof CombinedFskPortObject) {
+      addIdentifierToParametersForCombinedObject(
+          ((CombinedFskPortObject) portObject).getFirstFskPortObject(),
+          suffix + JoinerNodeModel.SUFFIX_FIRST);
+      addIdentifierToParametersForCombinedObject(
+          ((CombinedFskPortObject) portObject).getSecondFskPortObject(),
+          suffix + JoinerNodeModel.SUFFIX_SECOND);
+      // portObject.modelMetadata =
+      // ((CombinedFskPortObject) portObject).getSecondFskPortObject().modelMetadata;
+    } else {
+      addIdentifierToParameters(SwaggerUtil.getParameter(portObject.modelMetadata), suffix);
+    }
+  }
+
+
+  /**
    * Methods adds an identifier suffix to each parameter so it can be identified after the joining.
    * The suffix is currently a string in {"1","2"}, "1" meaning the parameter is from the first
    * model, "2" meaning it is from the second model
    * 
    * 
-   * @param firstModelParameters List of parameters from the first model to be joined. It gets the
-   *        JoinerNodeModel.SUFFIX_FIRST suffix.
-   * @param secondModelParameters List of parameters from the second model to be joined. It gets the
-   *        JoinerNodeModel.SUFFIX_SECOND suffix.
+   * @param modelParameters List of parameters from the model to be joined.
+   * @param currentSuffix the suffix to be add to the parameter ID.
    */
-  public static void addIdentifierToParameters(List<Parameter> firstModelParameters,
-      List<Parameter> secondModelParameters, List<Parameter> thirdModelParameters,
-      List<Parameter> fourthModelParameters) {
-    if (firstModelParameters != null)
-      firstModelParameters.forEach(it -> it.setId(it.getId() + JoinerNodeModel.SUFFIX_FIRST));
-    if (secondModelParameters != null)
-      secondModelParameters.forEach(it -> it.setId(it.getId() + JoinerNodeModel.SUFFIX_SECOND));
-    if (thirdModelParameters != null)
-      thirdModelParameters.forEach(it -> it.setId(it.getId() + JoinerNodeModel.SUFFIX_THIRD));
-    if (fourthModelParameters != null)
-      fourthModelParameters.forEach(it -> it.setId(it.getId() + JoinerNodeModel.SUFFIX_FOURTH));
-
-
+  public static void addIdentifierToParameters(List<Parameter> modelParameters,
+      String currentSuffix) {
+    if (modelParameters != null)
+      modelParameters.forEach(it -> it.setId(it.getId() + currentSuffix));
   }
+
 
   /**
    * This method sets the default values of a combined model. The values are taken from the
    * simulation settings of the individual models.
    * 
    * 
-   * @param first Simulation parameters from the first model to be joined.
-   * @param second Simulation parameters from the second model to be joined.
+   * @param simulation parameters from the second model to be joined.
    * @param parameters Simulation parameters with changed values based on the first and second
    *        simulations.
+   * @param index of the suffix to be cut out (length - index)
    */
-  public static void createDefaultParameterValues(FskSimulation first, FskSimulation second,
-      FskSimulation third, FskSimulation fourth, List<Parameter> parameters) {
+  public static void createDefaultParameterValues(FskSimulation simulation,
+      List<Parameter> parameters, int suffixIndex) {
 
     for (Parameter p : parameters) {
 
-      String p_id = p.getId(); // parameter id with suffix "1" or "2"
-      String p_id_trim = p_id.substring(0, p_id.length() - 1);
+      String p_id = p.getId();
+      String p_id_trim = p_id.substring(0, p_id.length() - suffixIndex);
 
-      if (p_id.endsWith("1") && first.getParameters().containsKey(p_id_trim)) {
-        p.setValue(first.getParameters().get(p_id_trim));
-      }
-
-      if (p_id.endsWith("2") && second.getParameters().containsKey(p_id_trim)) {
-        p.setValue(second.getParameters().get(p_id_trim));
-      }
-
-      if (p_id.endsWith("3") && third.getParameters().containsKey(p_id_trim)) {
-        p.setValue(third.getParameters().get(p_id_trim));
-      }
-
-      if (p_id.endsWith("4") && fourth.getParameters().containsKey(p_id_trim)) {
-        p.setValue(fourth.getParameters().get(p_id_trim));
+      if (simulation.getParameters().containsKey(p_id_trim)) {
+        p.setValue(simulation.getParameters().get(p_id_trim));
       }
     }
   }
+
 
   /**
    * This method creates a cross product of all simulations from the first and second models and
@@ -246,21 +306,26 @@ public class JoinerNodeUtil {
    * @param outfskPort The combined FSK PortObject with its List of parameters from the metadata
    */
   public static void removeJoinedParameters(JoinRelation[] relations, FskPortObject outfskPort) {
+    if (outfskPort instanceof CombinedFskPortObject) {
+      if (relations != null)
+        for (JoinRelation relation : relations) {
 
-    if (relations != null)
-      for (JoinRelation relation : relations) {
+          Iterator<Parameter> iter = SwaggerUtil.getParameter(outfskPort.modelMetadata).iterator();
+          while (iter.hasNext()) {
+            Parameter p = iter.next();
 
-        Iterator<Parameter> iter = SwaggerUtil.getParameter(outfskPort.modelMetadata).iterator();
-        while (iter.hasNext()) {
-          Parameter p = iter.next();
+            // remove input from second model
+            Boolean b2 = p.getId().equals(relation.getTargetParam());
+            if (b2)
+              iter.remove();
 
-          // remove input from second model
-          Boolean b2 = p.getId().equals(relation.getTargetParam());
-          if (b2)
-            iter.remove();
-
-        } // while
-      } // for
+          } // while
+        } // for
+      // removeJoinedParameters(relations,
+      // ((CombinedFskPortObject) outfskPort).getFirstFskPortObject());
+      // removeJoinedParameters(relations,
+      // ((CombinedFskPortObject) outfskPort).getSecondFskPortObject());
+    }
   }// resolveParameters
 
   /**
@@ -270,15 +335,12 @@ public class JoinerNodeUtil {
    * @return List of parameters from both models
    */
   public static List<Parameter> combineParameters(List<Parameter> firstParameterList,
-      List<Parameter> secondParameterList, List<Parameter> thirdParameterList,
-      List<Parameter> fourthParameterList) {
+      List<Parameter> secondParameterList) {
 
     // parameters
     List<Parameter> combinedList = Stream
         .of(Optional.ofNullable(firstParameterList).orElse(Collections.emptyList()),
-            Optional.ofNullable(secondParameterList).orElse(Collections.emptyList()),
-            Optional.ofNullable(thirdParameterList).orElse(Collections.emptyList()),
-            Optional.ofNullable(fourthParameterList).orElse(Collections.emptyList()))
+            Optional.ofNullable(secondParameterList).orElse(Collections.emptyList()))
         .flatMap(x -> x.stream()).collect(Collectors.toList());
 
     return combinedList;

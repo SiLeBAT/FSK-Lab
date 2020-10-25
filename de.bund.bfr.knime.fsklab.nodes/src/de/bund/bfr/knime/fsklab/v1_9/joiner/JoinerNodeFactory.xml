@@ -17,8 +17,8 @@
 	<ports>
 		<inPort name="FSK object" index="0">FSK object (optional)</inPort>
 		<inPort name="FSK object" index="1">FSK object (optional)</inPort>
-		<inPort name="FSK object" index="0">FSK object (optional)</inPort>
-		<inPort name="FSK object" index="1">FSK object (optional)</inPort>
+		<inPort name="FSK object" index="2">FSK object (optional)</inPort>
+		<inPort name="FSK object" index="3">FSK object (optional)</inPort>
 		<outPort name="Combined FSK object" index="0">Combined FSK object (optional)</outPort>
 		<outPort name="Joining Diagram" index="1">Joining Diagram (optional)</outPort>
 	</ports>

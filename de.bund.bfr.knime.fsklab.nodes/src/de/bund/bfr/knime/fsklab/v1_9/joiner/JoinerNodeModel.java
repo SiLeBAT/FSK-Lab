@@ -80,13 +80,13 @@ public final class JoinerNodeModel
   // public final static String SUFFIX = "_dup";
   public static final String SUFFIX_FIRST = "1";
   public static final String SUFFIX_SECOND = "2";
-  public static final String SUFFIX_THIRD = "3";
-  public static final String SUFFIX_FOURTH = "4";
   // public static final String SUFFIX = "_";
 
 
   Map<String, String> originals = new LinkedHashMap<String, String>();
 
+  private int inputModelNumber;
+  private CombinedFskPortObject outObj;
   private static final ObjectMapper MAPPER = FskPlugin.getDefault().MAPPER104;
 
   // Input and output port types
@@ -216,15 +216,21 @@ public final class JoinerNodeModel
     return new PortObjectSpec[] {CombinedFskPortObjectSpec.INSTANCE, imageSpec};
   }
 
-  private void loadFromPorts(JoinerViewValue joinerProxyValue) throws JsonProcessingException {
-
-    SwaggerUtil.setParameter(secondInputPort.modelMetadata, JoinerNodeUtil.combineParameters(
-        firstInputPort != null ? SwaggerUtil.getParameter(firstInputPort.modelMetadata) : null,
-        secondInputPort != null ? SwaggerUtil.getParameter(secondInputPort.modelMetadata) : null,
-        thirdInputPort != null ? SwaggerUtil.getParameter(thirdInputPort.modelMetadata) : null,
-        fourthInputPort != null ? SwaggerUtil.getParameter(fourthInputPort.modelMetadata) : null));
-
-    joinerProxyValue.modelMetaData = MAPPER.writeValueAsString(secondInputPort.modelMetadata);
+  private FskPortObject mergeParameterForJoinedObject(CombinedFskPortObject portObject)
+      throws JsonProcessingException {
+    FskPortObject first = portObject.getFirstFskPortObject();
+    FskPortObject second = portObject.getSecondFskPortObject();
+    if (first instanceof CombinedFskPortObject) {
+      first = mergeParameterForJoinedObject((CombinedFskPortObject) first);
+    }
+    if (second instanceof CombinedFskPortObject) {
+      second = mergeParameterForJoinedObject((CombinedFskPortObject) second);
+    }
+    SwaggerUtil.setParameter(second.modelMetadata,
+        JoinerNodeUtil.combineParameters(SwaggerUtil.getParameter(first.modelMetadata),
+            SwaggerUtil.getParameter(second.modelMetadata)));
+    // TODO join metadata instead of code here
+    return second;
   }
 
   @Override
@@ -409,7 +415,6 @@ public final class JoinerNodeModel
     try {
       fixNullPortsToDefault(portObjects);
     } catch (IOException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
     if (portObjects.length < 2) {
@@ -436,12 +441,8 @@ public final class JoinerNodeModel
         .addListener(new NodeRemovedListener(nodeWithId, buildContainerName()));
 
     setInternalPortObjects(inObjects);
-    JoinerNodeUtil.addIdentifierToParameters(
-        firstInputPort != null ? SwaggerUtil.getParameter(firstInputPort.modelMetadata) : null,
-        secondInputPort != null ? SwaggerUtil.getParameter(secondInputPort.modelMetadata) : null,
-        thirdInputPort != null ? SwaggerUtil.getParameter(thirdInputPort.modelMetadata) : null,
-        fourthInputPort != null ? SwaggerUtil.getParameter(fourthInputPort.modelMetadata) : null);
-
+    outObj = createCombinedFskPortObject();
+    JoinerNodeUtil.addIdentifierToParametersForCombinedObject(outObj, "");
     synchronized (getLock()) {
 
       JoinerViewValue value = getViewValue();
@@ -449,9 +450,9 @@ public final class JoinerNodeModel
         loadJsonSetting();
 
         if (value.modelMetaData == null && fixNullPortsToDefault(inObjects).length >= 2) {
-          loadFromPorts(value);
+          value.modelMetaData =
+              MAPPER.writeValueAsString(mergeParameterForJoinedObject(outObj).modelMetadata);
         }
-
         exec.setProgress(1);
       }
     }
@@ -460,8 +461,8 @@ public final class JoinerNodeModel
   private PortObject[] fixNullPortsToDefault(PortObject[] inObjects) throws IOException {
     PortObject[] inPorts =
         Arrays.stream(inObjects).filter(s -> (s != null)).toArray(PortObject[]::new);
-    int length = inPorts.length;
-    switch (length) {
+    inputModelNumber = inPorts.length;
+    switch (inputModelNumber) {
       case 1:
         firstInputPort = (FskPortObject) inPorts[0];
         secondInputPort = createEmptyFSKObject();
@@ -496,8 +497,46 @@ public final class JoinerNodeModel
     return inPorts;
   }
 
+  private static CombinedFskPortObject createSimpleCombinedFskPortObject(FskPortObject first,
+      FskPortObject second) throws IOException {
+    CombinedFskPortObject out =
+        new CombinedFskPortObject(Optional.empty(), new ArrayList<>(), first, second);
+    out.modelMetadata = MAPPER.readValue(MAPPER.writeValueAsString(second.modelMetadata),
+        SwaggerUtil.modelClasses.get(second.modelMetadata.getModelType()));
+    SwaggerUtil.setParameter(out.modelMetadata,
+        JoinerNodeUtil.combineParameters(SwaggerUtil.getParameter(first.modelMetadata),
+            SwaggerUtil.getParameter(second.modelMetadata)));
+    Set<String> packageSet = new HashSet<>();
+    packageSet.addAll(first.packages);
+    packageSet.addAll(second.packages);
+    out.packages.addAll(packageSet);
+    return out;
+  }
 
-  private FskPortObject createEmptyFSKObject() throws IOException {
+  private CombinedFskPortObject createCombinedFskPortObject() throws IOException {
+    CombinedFskPortObject outObj;
+    switch (inputModelNumber) {
+      case 1:
+      case 2:
+        outObj = createSimpleCombinedFskPortObject(firstInputPort, secondInputPort);
+        break;
+      case 3:
+        CombinedFskPortObject case3OutObj =
+            createSimpleCombinedFskPortObject(firstInputPort, secondInputPort);
+        outObj = createSimpleCombinedFskPortObject(case3OutObj, thirdInputPort);
+        break;
+      default:
+        CombinedFskPortObject defaultOutObj1 =
+            createSimpleCombinedFskPortObject(firstInputPort, secondInputPort);
+        CombinedFskPortObject defaultOutObj2 =
+            createSimpleCombinedFskPortObject(defaultOutObj1, thirdInputPort);
+        outObj = createSimpleCombinedFskPortObject(defaultOutObj2, fourthInputPort);
+        break;
+    }
+    return outObj;
+  }
+
+  private static FskPortObject createEmptyFSKObject() throws IOException {
 
     FskPortObject fskPortObject = new FskPortObject(Optional.empty(), "", Collections.emptyList());
     fskPortObject.setModel("");
@@ -509,12 +548,6 @@ public final class JoinerNodeModel
   @Override
   protected PortObject[] performExecuteCreatePortObjects(PortObject svgImageFromView,
       PortObject[] inObjects, ExecutionContext exec) throws Exception {
-    // TODO complex joined object to be created, the third and the fourth then with the second then
-    // with the first
-    // this is related to a task in line 583 related to packages, and the other on line 597 related
-    // to removing suffix.
-    CombinedFskPortObject outObj = new CombinedFskPortObject(Optional.empty(), new ArrayList<>(),
-        firstInputPort, secondInputPort);
 
     JoinRelation[] connections = new JoinRelation[0];
 
@@ -527,49 +560,24 @@ public final class JoinerNodeModel
       } else if (nodeSettings.connections != null) {
         connections = nodeSettings.connections;
       }
-      outObj.setJoinerRelation(connections);
 
+      // outObj.setJoinerRelation(connections);
+      setBackJoinConnection(outObj, connections);
       // Give CombinedModel some metadata (for now: from second portObject)
       // Consider Here that the model type is the same as the second model
       if (StringUtils.isNotEmpty(value.modelMetaData)) {
         outObj.modelMetadata = MAPPER.readValue(value.modelMetaData,
             SwaggerUtil.modelClasses.get(secondInputPort.modelMetadata.getModelType()));
 
-      } else {
-        outObj.modelMetadata = secondInputPort.modelMetadata;
       }
 
       // change default values for CombinedModel to those of the currently selected simulations
-      // (model1 & model2)
 
-
-
-      JoinerNodeUtil.createDefaultParameterValues(
-          firstInputPort.simulations.size() > 0
-              ? firstInputPort.simulations.get(firstInputPort.selectedSimulationIndex)
-              : null,
-          secondInputPort.simulations.size() > 0
-              ? secondInputPort.simulations.get(secondInputPort.selectedSimulationIndex)
-              : null,
-          thirdInputPort.simulations.size() > 0
-              ? thirdInputPort.simulations.get(thirdInputPort.selectedSimulationIndex)
-              : null,
-          fourthInputPort.simulations.size() > 0
-              ? fourthInputPort.simulations.get(fourthInputPort.selectedSimulationIndex)
-              : null,
-          SwaggerUtil.getParameter(outObj.modelMetadata));
-
+      createDefaultParameterValues(outObj, outObj, 0);
 
 
       // give the new combined model a name:
       // suggestion: model1.name + model2.name
-
-
-      Set<String> packageSet = new HashSet<>();
-      packageSet.addAll(firstInputPort.packages);
-      packageSet.addAll(secondInputPort.packages);
-      // TODO add packages to the corresponding joined Object
-      outObj.packages.addAll(packageSet);
 
       JoinerNodeUtil.removeJoinedParameters(connections, outObj);
 
@@ -583,12 +591,9 @@ public final class JoinerNodeModel
 
       // remove suffix from original parameters since they are needed with their original id for the
       // scripts
-      // TODO remove the suffix for complex joining for third and fourth model (recursion)
+      // remove the suffix for four models joining
       if (value.joinRelations != null) {
-        resetParameterIdToOriginal(
-            SwaggerUtil.getParameter(outObj.getFirstFskPortObject().modelMetadata));
-        resetParameterIdToOriginal(
-            SwaggerUtil.getParameter(outObj.getSecondFskPortObject().modelMetadata));
+        resetParameterId(outObj, 0);
       }
 
     }
@@ -596,12 +601,72 @@ public final class JoinerNodeModel
     return new PortObject[] {outObj, svgImageFromView};
   }
 
-  private void resetParameterIdToOriginal(List<Parameter> parameter) {
-
-    for (Parameter p : parameter) {
-      p.setId(p.getId().substring(0, p.getId().length() - 1));
+  /** A helper method to set the join information to the suitable level */
+  private static void setBackJoinConnection(FskPortObject outObj, JoinRelation[] connections) {
+    FskPortObject firstModel = ((CombinedFskPortObject) outObj).getFirstFskPortObject();
+    Set<JoinRelation> subConnections = new HashSet<>();
+    SwaggerUtil.getParameter(firstModel.modelMetadata).forEach((parameter) -> {
+      for (JoinRelation connection : connections) {
+        if (connection.getSourceParam().startsWith(parameter.getId())) {
+          subConnections.add(connection);
+        }
+      }
+    });
+    ((CombinedFskPortObject) outObj)
+        .setJoinerRelation(subConnections.stream().toArray(JoinRelation[]::new));
+    if (firstModel instanceof CombinedFskPortObject) {
+      setBackJoinConnection(firstModel, connections);
+    }
+    FskPortObject secondModel = ((CombinedFskPortObject) outObj).getSecondFskPortObject();
+    SwaggerUtil.getParameter(secondModel.modelMetadata).forEach((parameter) -> {
+      for (JoinRelation connection : connections) {
+        if (connection.getSourceParam().startsWith(parameter.getId())) {
+          subConnections.add(connection);
+        }
+      }
+    });
+    ((CombinedFskPortObject) outObj)
+        .setJoinerRelation(subConnections.stream().toArray(JoinRelation[]::new));
+    if (secondModel instanceof CombinedFskPortObject) {
+      setBackJoinConnection(secondModel, connections);
     }
 
+  }
+
+  private static void createDefaultParameterValues(FskPortObject outObj, FskPortObject subObj,
+      int suffixIndex) {
+    if (subObj instanceof CombinedFskPortObject) {
+      ++suffixIndex;
+      createDefaultParameterValues(outObj,
+          ((CombinedFskPortObject) subObj).getSecondFskPortObject(), suffixIndex);
+      createDefaultParameterValues(outObj, ((CombinedFskPortObject) subObj).getFirstFskPortObject(),
+          suffixIndex);
+
+
+    } else {
+      if (subObj.simulations.size() > 0) {
+        JoinerNodeUtil.createDefaultParameterValues(
+            subObj.simulations.get(subObj.selectedSimulationIndex),
+            SwaggerUtil.getParameter(subObj.modelMetadata), suffixIndex);
+      }
+    }
+  }
+
+  /** reset the parameters ID of all simple models to their original name without suffix */
+  private void resetParameterId(FskPortObject outObj1, int suffixIndex) {
+    if (outObj1 instanceof CombinedFskPortObject) {
+      ++suffixIndex;
+      resetParameterId(((CombinedFskPortObject) outObj1).getFirstFskPortObject(), suffixIndex);
+      resetParameterId(((CombinedFskPortObject) outObj1).getSecondFskPortObject(), suffixIndex);
+    } else {
+      resetParameterIdToOriginal(SwaggerUtil.getParameter(outObj1.modelMetadata), suffixIndex);
+    }
+  }
+
+  private void resetParameterIdToOriginal(List<Parameter> parameter, int suffixIndex) {
+    for (Parameter p : parameter) {
+      p.setId(p.getId().substring(0, p.getId().length() - suffixIndex));
+    }
   }
 
   @Override

@@ -25,8 +25,8 @@ fskdbview = function () {
         buttonColor: "rgb(83,121,166)",
         hoverColor: "rgb(130,162,200)",
     };
-    var _representation;
-    var _value;
+    let _representation;
+    let _value;
 
     view.init = function (representation, value) {
         _representation = representation;

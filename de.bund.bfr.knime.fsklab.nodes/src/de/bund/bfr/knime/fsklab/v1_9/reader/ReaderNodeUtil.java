@@ -42,18 +42,16 @@ public class ReaderNodeUtil {
     if (fskObj instanceof CombinedFskPortObject) {
 
       CombinedFskPortObject obj = (CombinedFskPortObject) fskObj;
-
-      // if children are combined models, update them first:
-      if (obj.getFirstFskPortObject() instanceof CombinedFskPortObject) {
-        updateSuffixes(obj.getFirstFskPortObject());
-      }
-      if (obj.getSecondFskPortObject() instanceof CombinedFskPortObject) {
-        updateSuffixes(obj.getSecondFskPortObject());
-      }
-
+      
       // check if model needs an update at all:
       if (modelNeedsUpdate(fskObj)) {
-
+        // if children are combined models, update them first:
+        if (obj.getFirstFskPortObject() instanceof CombinedFskPortObject) {
+          updateSuffixes(obj.getFirstFskPortObject());
+        }
+        if (obj.getSecondFskPortObject() instanceof CombinedFskPortObject) {
+          updateSuffixes(obj.getSecondFskPortObject());
+        }
         // Get the parameter names of from the first child model to help assigning the combined
         // model parameters.
         List<String> firstModelParameters =

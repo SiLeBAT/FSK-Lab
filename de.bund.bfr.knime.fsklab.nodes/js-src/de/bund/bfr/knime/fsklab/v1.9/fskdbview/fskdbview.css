@@ -2,110 +2,10 @@
 @import url(https://fonts.googleapis.com/icon?family=Material+Icons);
 
 body {
-    padding: 3%;
     background: #fff;
     margin: 0
 }
 
-
-/************************NAVIGATION BAR*********************/
-
-.topnav {
-    overflow: hidden;
-    border-radius: 5px;
-}
-
-.topnav h1 {
-    float: left;
-    color: white;
-    margin-left: 30px
-}
-
-.topnav .fa {
-    float: right;
-    margin-left: 10px;
-    color: white;
-}
-
-.topnav a {
-    float: right;
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-    font-size: 16px;
-    margin-top: 10px;
-    margin-right: 10px;
-    cursor: pointer;
-}
-
-.topnav a.Nav {
-    margin-top: 10px;
-    border-radius: 5px;
-}
-
-a.Nav:hover {
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-    transition: all .3s cubic-bezier(0.445, 0.05, 0.55, 0.95);
-}
-
-.topnav a:visited {
-    color: white;
-    text-decoration: none;
-}
-
-.topnav .icon {
-    display: none;
-}
-
-.sidenav {
-    height: 100%;
-    width: 0;
-    position: fixed;
-    z-index: 1;
-    top: 0;
-    right: 0;
-    overflow-x: hidden;
-    transition: 0.5s;
-    padding-top: 60px;
-}
-
-.sidenav a {
-    padding: 8px 8px 8px 32px;
-    text-decoration: none;
-    font-size: 16px;
-    color: white;
-    display: block;
-    transition: 0.3s;
-}
-
-.sidenav a.Nav {
-    border-radius: 5px;
-}
-
-.sidenav .fa {
-    float: right;
-    margin-left: 10px;
-    color: white;
-}
-
-.sidenav .closebtn {
-    position: absolute;
-    top: 0;
-    right: 25px;
-    font-size: 36px;
-    margin-left: 50px;
-    text-align: center;
-    background-color: transparent;
-    color: #ffffff
-}
-
-.sidenav .closebtn:hover {
-    color: #ffffff
-}
 
 
 /************************SEARCH BAR**************************/
@@ -194,7 +94,6 @@ select {
 
 #MainTable table {
     box-sizing: border-box;
-    -webkit-box-shadow: 0 0px 20px 0px rgba(0, 0, 0, 0.15);
 }
 
 #MainTable thead th {
@@ -306,7 +205,7 @@ th.actives.descending:after {
         display: none;
     }
     #MainTable {
-        height: 300px;
+        height: 450px;
     }
     #soft {
         width: 65px;
@@ -314,10 +213,7 @@ th.actives.descending:after {
     #haz {
         width: 100px;
     }
-    #cright,
-    #cleft {
-        width: 3%;
-    }
+    
     #col1 {
         width: 20%;
     }
@@ -340,7 +236,7 @@ th.actives.descending:after {
         display: none !important;
     }
     #MainTable {
-        height: auto;
+        height: 450px;
     }
     .navbar a {
         font-size: 15px;
@@ -382,7 +278,7 @@ th.actives.descending:after {
         display: block !important;
     }
     #MainTable {
-        height: auto;
+        height: 450px;
     }
     #soft {
         width: 65px;
@@ -420,33 +316,15 @@ th.actives.descending:after {
 }
 
 @media screen and (max-height: 450px) {
-    .sidenav {
-        padding-top: 15px;
-    }
-    .sidenav a {
-        font-size: 18px;
-    }
+    
 }
 
 @media screen and (max-width: 1320px) {
-    .topnav a {
-        display: none;
-    }
-    .topnav a.icon {
-        float: right;
-        display: block;
-        font-size: 36px;
-    }
-    .topnav a.icon:hover {
-        /*background-color: rgba(65, 128, 232, 0.74);*/
-        color: #f2f2f2;
-    }
+   
 }
 
 @media screen and (min-width: 1320px) {
-    .sidenav {
-        display: none;
-    }
+    
 }
 
 /* fallback */
