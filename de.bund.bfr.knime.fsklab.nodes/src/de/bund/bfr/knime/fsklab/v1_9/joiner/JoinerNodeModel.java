@@ -159,76 +159,85 @@ public final class JoinerNodeModel
         representation = createEmptyViewRepresentation();
       }
 
+      JoinerModelsData joinerModelsData = representation.joinerModelsData;
+
       // Set first model parameters
-      if (representation.getFirstModelParameters() == null && firstInputPort != null) {
+      if (joinerModelsData.firstModelParameters == null && firstInputPort != null) {
         List<Parameter> firstModelParams = SwaggerUtil.getParameter(firstInputPort.modelMetadata);
         if (firstModelParams != null && !firstModelParams.isEmpty()) {
-          representation.setFirstModelParameters(
-              firstModelParams.toArray(new Parameter[firstModelParams.size()]));
+          joinerModelsData.firstModelParameters =
+              firstModelParams.toArray(new Parameter[firstModelParams.size()]);
         }
       }
 
       // Set second model parameters
-      if (representation.getSecondModelParameters() == null && secondInputPort != null) {
+      if (joinerModelsData.secondModelParameters == null && secondInputPort != null) {
         List<Parameter> secondModelParams = SwaggerUtil.getParameter(secondInputPort.modelMetadata);
         if (secondModelParams != null && !secondModelParams.isEmpty()) {
-          representation.setSecondModelParameters(
-              secondModelParams.toArray(new Parameter[secondModelParams.size()]));
+          joinerModelsData.secondModelParameters =
+              secondModelParams.toArray(new Parameter[secondModelParams.size()]);
         }
       }
 
       // Set third model parameters
-      if (representation.getThirdModelParameters() == null && thirdInputPort != null) {
+      if (joinerModelsData.thirdModelParameters == null && thirdInputPort != null) {
         List<Parameter> thirdModelParams = SwaggerUtil.getParameter(thirdInputPort.modelMetadata);
         if (thirdModelParams != null && !thirdModelParams.isEmpty()) {
-          representation.setThirdModelParameters(
-              thirdModelParams.toArray(new Parameter[thirdModelParams.size()]));
+          joinerModelsData.thirdModelParameters =
+              thirdModelParams.toArray(new Parameter[thirdModelParams.size()]);
         }
       }
 
       // Set fourth model parameters
-      if (representation.getFourthModelParameters() == null && fourthInputPort != null) {
+      if (joinerModelsData.fourthModelParameters == null && fourthInputPort != null) {
         List<Parameter> fourthModelParams = SwaggerUtil.getParameter(fourthInputPort.modelMetadata);
         if (fourthModelParams != null && !fourthModelParams.isEmpty()) {
-          representation.setFourthModelParameters(
-              fourthModelParams.toArray(new Parameter[fourthModelParams.size()]));
+          joinerModelsData.fourthModelParameters =
+              fourthModelParams.toArray(new Parameter[fourthModelParams.size()]);
         }
       }
       if (firstInputPort != null) {
-        if (representation.getFirstModelName() == null) {
-          representation.setFirstModelName(SwaggerUtil.getModelName(firstInputPort.modelMetadata));
+        if (joinerModelsData.firstModelName == null) {
+          joinerModelsData.firstModelName = SwaggerUtil.getModelName(firstInputPort.modelMetadata);
+          joinerModelsData.firstModelType = firstInputPort.modelMetadata.getModelType();
         }
-        if (representation.firstModel == null) {
-          representation.firstModel = getFSKObjectAsStringArray(firstInputPort);
+        if (joinerModelsData.firstModel == null) {
+          joinerModelsData.firstModel = getFSKObjectAsStringArray(firstInputPort);
+          joinerModelsData.firstModelType = "GenericModel";
         }
       }
       if (secondInputPort != null) {
-        if (representation.getSecondModelName() == null) {
-          representation
-              .setSecondModelName(SwaggerUtil.getModelName(secondInputPort.modelMetadata));
+        if (joinerModelsData.secondModelName == null) {
+          joinerModelsData.secondModelName =
+              SwaggerUtil.getModelName(secondInputPort.modelMetadata);
           // TODO To be changed to a generic type
-          representation.setModelType(secondInputPort.modelMetadata.getModelType());
+          joinerModelsData.secondModelType = secondInputPort.modelMetadata.getModelType();
         }
-        if (representation.secondModel == null) {
-          representation.secondModel = getFSKObjectAsStringArray(secondInputPort);
+        if (joinerModelsData.secondModel == null) {
+          joinerModelsData.secondModel = getFSKObjectAsStringArray(secondInputPort);
+          joinerModelsData.secondModelType = "GenericModel";
         }
       }
 
       if (thirdInputPort != null) {
-        if (representation.getThirdModelName() == null) {
-          representation.setThirdModelName(SwaggerUtil.getModelName(thirdInputPort.modelMetadata));
+        if (joinerModelsData.thirdModelName == null) {
+          joinerModelsData.thirdModelName = SwaggerUtil.getModelName(thirdInputPort.modelMetadata);
+          joinerModelsData.thirdModelType = thirdInputPort.modelMetadata.getModelType();
         }
-        if (representation.thirdModel == null) {
-          representation.thirdModel = getFSKObjectAsStringArray(thirdInputPort);
+        if (joinerModelsData.thirdModel == null) {
+          joinerModelsData.thirdModel = getFSKObjectAsStringArray(thirdInputPort);
+          joinerModelsData.thirdModelType = "GenericModel";
         }
       }
       if (fourthInputPort != null) {
-        if (representation.getFourthModelName() == null) {
-          representation
-              .setFourthModelName(SwaggerUtil.getModelName(fourthInputPort.modelMetadata));
+        if (joinerModelsData.fourthModelName == null) {
+          joinerModelsData.fourthModelName =
+              SwaggerUtil.getModelName(fourthInputPort.modelMetadata);
+          joinerModelsData.fourthModelType = fourthInputPort.modelMetadata.getModelType();
         }
-        if (representation.fourthModel == null) {
-          representation.fourthModel = getFSKObjectAsStringArray(fourthInputPort);
+        if (joinerModelsData.fourthModel == null) {
+          joinerModelsData.fourthModel = getFSKObjectAsStringArray(fourthInputPort);
+          joinerModelsData.fourthModelType = "GenericModel";
         }
       }
     }
@@ -286,15 +295,7 @@ public final class JoinerNodeModel
     m_config.modelMetaData = value.modelMetaData;
     m_config.connections = value.joinRelations;
     m_config.jsonRepresentation = value.jsonRepresentation;
-    m_config.firstModelParameters = representation.getFirstModelParameters();
-    m_config.secondModelParameters = representation.getSecondModelParameters();
-    m_config.thirdModelParameters = representation.getThirdModelParameters();
-    m_config.fourthModelParameters = representation.getFourthModelParameters();
-
-    m_config.firstModelName = representation.getFirstModelName();
-    m_config.secondModelName = representation.getSecondModelName();
-    m_config.thirdModelName = representation.getThirdModelName();
-    m_config.fourthModelName = representation.getFourthModelName();
+    m_config.joinerModelsData = representation.joinerModelsData;
 
   }
 
@@ -303,15 +304,9 @@ public final class JoinerNodeModel
     value.joinRelations = m_config.connections;
     value.jsonRepresentation = m_config.jsonRepresentation;
     JoinerViewRepresentation representation = getViewRepresentation();
-    representation.setFirstModelParameters(m_config.firstModelParameters);
-    representation.setSecondModelParameters(m_config.secondModelParameters);
-    representation.setThirdModelParameters(m_config.thirdModelParameters);
-    representation.setFourthModelParameters(m_config.fourthModelParameters);
+    representation.joinerModelsData =
+        m_config.joinerModelsData != null ? m_config.joinerModelsData : new JoinerModelsData();
 
-    representation.setFirstModelName(m_config.firstModelName);
-    representation.setSecondModelName(m_config.secondModelName);
-    representation.setThirdModelName(m_config.thirdModelName);
-    representation.setFourthModelName(m_config.fourthModelName);
   }
 
 
@@ -358,21 +353,25 @@ public final class JoinerNodeModel
 
     if (flowVariables.containsKey("firstModelParameters.json")) {
       String parametersString = flowVariables.get("firstModelParameters.json").getStringValue();
-      m_config.firstModelParameters = MAPPER.readValue(parametersString, Parameter[].class);
+      m_config.joinerModelsData.firstModelParameters =
+          MAPPER.readValue(parametersString, Parameter[].class);
     } else {
       File configFile = new File(settingFolder, "firstModelParameters.json");
       if (configFile.exists()) {
-        m_config.firstModelParameters = MAPPER.readValue(configFile, Parameter[].class);
+        m_config.joinerModelsData.firstModelParameters =
+            MAPPER.readValue(configFile, Parameter[].class);
       }
     }
 
     if (flowVariables.containsKey("secondModelParameters.json")) {
       String parametersString = flowVariables.get("secondModelParameters.json").getStringValue();
-      m_config.secondModelParameters = MAPPER.readValue(parametersString, Parameter[].class);
+      m_config.joinerModelsData.secondModelParameters =
+          MAPPER.readValue(parametersString, Parameter[].class);
     } else {
       File configFile = new File(settingFolder, "secondModelParameters.json");
       if (configFile.exists()) {
-        m_config.secondModelParameters = MAPPER.readValue(configFile, Parameter[].class);
+        m_config.joinerModelsData.secondModelParameters =
+            MAPPER.readValue(configFile, Parameter[].class);
       }
     }
 
@@ -405,11 +404,15 @@ public final class JoinerNodeModel
     viewValue.modelMetaData = m_config.modelMetaData;
 
     JoinerViewRepresentation representation = getViewRepresentation();
-    if (m_config.firstModelParameters != null) {
-      representation.setFirstModelParameters(m_config.firstModelParameters);
+    if (m_config.joinerModelsData != null
+        && m_config.joinerModelsData.firstModelParameters != null) {
+      representation.joinerModelsData.firstModelParameters =
+          m_config.joinerModelsData.firstModelParameters;
     }
-    if (m_config.secondModelParameters != null) {
-      representation.setSecondModelParameters(m_config.secondModelParameters);
+    if (m_config.joinerModelsData != null
+        && m_config.joinerModelsData.secondModelParameters != null) {
+      representation.joinerModelsData.firstModelParameters =
+          m_config.joinerModelsData.secondModelParameters;
     }
   }
 
@@ -599,18 +602,23 @@ public final class JoinerNodeModel
       // outObj.modelMetadata = MAPPER.readValue(value.modelMetaData,
       // SwaggerUtil.modelClasses.get(firstInputPort.modelMetadata.getModelType()));
       // }
-      if (value.firstModel != null && value.firstModel.length > 0
-          && StringUtils.isNotEmpty(value.firstModel[0])) {
+      JoinerModelsData joinerModelsData = value.joinerModelsData;
+      if (joinerModelsData.firstModel != null && joinerModelsData.firstModel.length > 0
+          && StringUtils.isNotEmpty(joinerModelsData.firstModel[0])) {
         outObj.modelMetadata = MAPPER.readValue(value.modelMetaData,
             SwaggerUtil.modelClasses.get(firstInputPort.modelMetadata.getModelType()));
         FskPortObject jFirstInputPort = getFSKObjectFromStringArray(
-            new FskPortObject(Optional.empty(), "", Collections.emptyList()), value.firstModel);
+            new FskPortObject(Optional.empty(), "", Collections.emptyList()),
+            joinerModelsData.firstModel, joinerModelsData.firstModelType);
         FskPortObject jSecondInputPort = getFSKObjectFromStringArray(
-            new FskPortObject(Optional.empty(), "", Collections.emptyList()), value.secondModel);
+            new FskPortObject(Optional.empty(), "", Collections.emptyList()),
+            joinerModelsData.secondModel, joinerModelsData.secondModelType);
         FskPortObject jThirdInputPort = getFSKObjectFromStringArray(
-            new FskPortObject(Optional.empty(), "", Collections.emptyList()), value.thirdModel);
+            new FskPortObject(Optional.empty(), "", Collections.emptyList()),
+            joinerModelsData.thirdModel, joinerModelsData.thirdModelType);
         FskPortObject jFourthInputPort = getFSKObjectFromStringArray(
-            new FskPortObject(Optional.empty(), "", Collections.emptyList()), value.fourthModel);
+            new FskPortObject(Optional.empty(), "", Collections.emptyList()),
+            joinerModelsData.fourthModel, joinerModelsData.fourthModelType);
 
         fskID_to_fskObject.put(SwaggerUtil.getModelName(jFirstInputPort.modelMetadata),
             jFirstInputPort);
@@ -771,11 +779,10 @@ public final class JoinerNodeModel
         getObjectAsJSONString(portObject.simulations), getObjectAsJSONString(portObject.packages)};
   }
 
-  private static FskPortObject getFSKObjectFromStringArray(FskPortObject portObject, String[] model)
-      throws JsonMappingException, JsonProcessingException, IOException {
+  private static FskPortObject getFSKObjectFromStringArray(FskPortObject portObject, String[] model,
+      String modelType) throws JsonMappingException, JsonProcessingException, IOException {
 
-    portObject.modelMetadata =
-        MAPPER.readValue(model[0], SwaggerUtil.modelClasses.get("GenericModel"));
+    portObject.modelMetadata = MAPPER.readValue(model[0], SwaggerUtil.modelClasses.get(modelType));
     portObject.setModel(MAPPER.readValue(model[1], String.class));
     portObject.setViz(MAPPER.readValue(model[2], String.class));
     portObject.simulations.clear();
