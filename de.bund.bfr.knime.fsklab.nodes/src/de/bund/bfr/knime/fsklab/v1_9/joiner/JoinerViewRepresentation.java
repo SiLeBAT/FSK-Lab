@@ -19,7 +19,6 @@
 package de.bund.bfr.knime.fsklab.v1_9.joiner;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Objects;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
@@ -30,202 +29,43 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.FskPlugin;
-import de.bund.bfr.metadata.swagger.Parameter;
 
 
 @JsonAutoDetect
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 final class JoinerViewRepresentation extends JSONViewContent {
 
-  private static final String CFG_MODEL1_PARAMETERS = "params1";
-  private static final String CFG_MODEL2_PARAMETERS = "params2";
-  private static final String CFG_MODEL3_PARAMETERS = "params3";
-  private static final String CFG_MODEL4_PARAMETERS = "params4";
-  private static final String CFG_FIRST_MODEL_NAME = "firstModelName";
-  private static final String CFG_SECOND_MODEL_NAME = "secondModelName";
-  private static final String CFG_THIRD_MODEL_NAME = "thirdModelName";
-  private static final String CFG_FOURTH_MODEL_NAME = "fourthModelName";
+  private static final String CFG_MODELS_DATA = "JoinerModelsData";
   private static final ObjectMapper MAPPER = FskPlugin.getDefault().MAPPER104;
 
-  private Parameter[] firstModelParameters;
-  private Parameter[] secondModelParameters;
-  private Parameter[] thirdModelParameters;
-  private Parameter[] fourthModelParameters;
+  public String modelMetaData;
+  public JoinerModelsData joinerModelsData = new JoinerModelsData();
 
-  private String firstModelName;
-  private String secondModelName;
-  private String thirdModelName;
-  private String fourthModelName;
 
-  private String modelType;
-
-  public Parameter[] getFirstModelParameters() {
-    return firstModelParameters;
-  }
-
-  public void setFirstModelParameters(Parameter[] firstModelParameters) {
-    this.firstModelParameters = firstModelParameters;
-  }
-
-  public Parameter[] getSecondModelParameters() {
-    return secondModelParameters;
-  }
-
-  public void setSecondModelParameters(Parameter[] secondModelParameters) {
-    this.secondModelParameters = secondModelParameters;
-  }
-
-  public Parameter[] getThirdModelParameters() {
-    return thirdModelParameters;
-  }
-
-  public void setThirdModelParameters(Parameter[] thirdModelParameters) {
-    this.thirdModelParameters = thirdModelParameters;
-  }
-
-  public Parameter[] getFourthModelParameters() {
-    return fourthModelParameters;
-  }
-
-  public void setFourthModelParameters(Parameter[] fourthModelParameters) {
-    this.fourthModelParameters = fourthModelParameters;
-  }
-
-  public String getFirstModelName() {
-    return firstModelName;
-  }
-
-  public void setFirstModelName(String firstModelName) {
-    this.firstModelName = firstModelName;
-  }
-
-  public String getSecondModelName() {
-    return secondModelName;
-  }
-
-  public void setSecondModelName(String secondModelName) {
-    this.secondModelName = secondModelName;
-  }
-
-  public String getThirdModelName() {
-    return thirdModelName;
-  }
-
-  public void setThirdModelName(String thridModelName) {
-    this.thirdModelName = thridModelName;
-  }
-
-  public String getFourthModelName() {
-    return fourthModelName;
-  }
-
-  public void setFourthModelName(String fourthModelName) {
-    this.fourthModelName = fourthModelName;
-  }
-
-  public String getModelType() {
-    return modelType;
-  }
-
-  public void setModelType(String modelType) {
-    this.modelType = modelType;
-  }
 
   @Override
   public void saveToNodeSettings(NodeSettingsWO settings) {
-
-    if (firstModelParameters != null && firstModelParameters.length > 0) {
-      try {
-        String parametersAsString = MAPPER.writeValueAsString(firstModelParameters);
-        settings.addString(CFG_MODEL1_PARAMETERS, parametersAsString);
-      } catch (JsonProcessingException err) {
-        // do nothing
-      }
+    try {
+      String joinerModelsDataAsString = MAPPER.writeValueAsString(joinerModelsData);
+      settings.addString(CFG_MODELS_DATA, joinerModelsDataAsString);
+    } catch (JsonProcessingException err) {
+      // do nothing
     }
-
-    if (secondModelParameters != null && secondModelParameters.length > 0) {
-      try {
-        String parametersAsString = MAPPER.writeValueAsString(secondModelParameters);
-        settings.addString(CFG_MODEL2_PARAMETERS, parametersAsString);
-      } catch (JsonProcessingException err) {
-        // do nothing
-      }
-    }
-
-    if (thirdModelParameters != null && thirdModelParameters.length > 0) {
-      try {
-        String parametersAsString = MAPPER.writeValueAsString(thirdModelParameters);
-        settings.addString(CFG_MODEL3_PARAMETERS, parametersAsString);
-      } catch (JsonProcessingException err) {
-        // do nothing
-      }
-    }
-
-    if (fourthModelParameters != null && fourthModelParameters.length > 0) {
-      try {
-        String parametersAsString = MAPPER.writeValueAsString(fourthModelParameters);
-        settings.addString(CFG_MODEL4_PARAMETERS, parametersAsString);
-      } catch (JsonProcessingException err) {
-        // do nothing
-      }
-    }
-
-    settings.addString(CFG_FIRST_MODEL_NAME, firstModelName);
-    settings.addString(CFG_SECOND_MODEL_NAME, secondModelName);
-    settings.addString(CFG_THIRD_MODEL_NAME, thirdModelName);
-    settings.addString(CFG_FOURTH_MODEL_NAME, fourthModelName);
   }
 
   @Override
   public void loadFromNodeSettings(NodeSettingsRO settings) throws InvalidSettingsException {
-
-    if (settings.containsKey(CFG_MODEL1_PARAMETERS)) {
-      try {
-        firstModelParameters =
-            MAPPER.readValue(settings.getString(CFG_MODEL1_PARAMETERS), Parameter[].class);
-      } catch (IOException err) {
-        // do nothing
-      }
+    try {
+      joinerModelsData =
+          MAPPER.readValue(settings.getString(CFG_MODELS_DATA), JoinerModelsData.class);
+    } catch (IOException err) {
+      // do nothing
     }
-
-    if (settings.containsKey(CFG_MODEL2_PARAMETERS)) {
-      try {
-        secondModelParameters =
-            MAPPER.readValue(settings.getString(CFG_MODEL2_PARAMETERS), Parameter[].class);
-      } catch (IOException err) {
-        // do nothing
-      }
-    }
-
-    if (settings.containsKey(CFG_MODEL3_PARAMETERS)) {
-      try {
-        thirdModelParameters =
-            MAPPER.readValue(settings.getString(CFG_MODEL3_PARAMETERS), Parameter[].class);
-      } catch (IOException err) {
-        // do nothing
-      }
-    }
-
-    if (settings.containsKey(CFG_MODEL4_PARAMETERS)) {
-      try {
-        fourthModelParameters =
-            MAPPER.readValue(settings.getString(CFG_MODEL4_PARAMETERS), Parameter[].class);
-      } catch (IOException err) {
-        // do nothing
-      }
-    }
-
-    firstModelName = settings.getString(CFG_FIRST_MODEL_NAME);
-    secondModelName = settings.getString(CFG_SECOND_MODEL_NAME);
-    thirdModelName = settings.getString(CFG_THIRD_MODEL_NAME);
-    fourthModelName = settings.getString(CFG_FOURTH_MODEL_NAME);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(firstModelParameters, secondModelParameters, thirdModelParameters,
-        fourthModelParameters, firstModelName, secondModelName, thirdModelName, fourthModelName,
-        modelType);
+    return Objects.hash(joinerModelsData);
   }
 
   @Override
@@ -241,13 +81,6 @@ final class JoinerViewRepresentation extends JSONViewContent {
     }
 
     JoinerViewRepresentation other = (JoinerViewRepresentation) obj;
-    return Arrays.deepEquals(firstModelParameters, other.firstModelParameters)
-        && Arrays.deepEquals(secondModelParameters, other.secondModelParameters)
-        && Arrays.deepEquals(thirdModelParameters, other.thirdModelParameters)
-        && Arrays.deepEquals(fourthModelParameters, other.fourthModelParameters)
-        && firstModelName.equals(other.firstModelName)
-        && secondModelName.equals(other.secondModelName)
-        && thirdModelName.equals(other.thirdModelName)
-        && fourthModelName.equals(other.fourthModelName) && modelType.equals(other.modelType);
+    return joinerModelsData.equals(other.joinerModelsData);
   }
 }

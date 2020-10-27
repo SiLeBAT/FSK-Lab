@@ -20,6 +20,7 @@ package de.bund.bfr.knime.fsklab.v1_9.joiner;
 
 import java.io.IOException;
 import java.util.Random;
+import org.apache.commons.lang3.StringUtils;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
@@ -33,6 +34,7 @@ class JoinerViewValue extends JSONViewContent {
 
   // Configuration keys
   private static final String CFG_MODEL_METADATA = "ModelMetaData";
+  private static final String CFG_MODELS_DATA = "JoinerModelsData";
   private static final String CFG_JOINER_RELATION = "joinRelation";
   private static final String CFG_JSON_REPRESENTATION = "JSONRepresentation";
   private static final String CFG_MODELSCRIPT_TREE = "ModelScriptTree";
@@ -42,17 +44,18 @@ class JoinerViewValue extends JSONViewContent {
   private final ObjectMapper MAPPER = FskPlugin.getDefault().MAPPER104;
 
   public String modelMetaData;
+  public JoinerModelsData joinerModelsData = new JoinerModelsData();
   public JoinRelation[] joinRelations;
   public String jsonRepresentation;
   public String svgRepresentation;
   public String modelScriptTree;
-  private String visualizationScript;
+  public String visualizationScript;
   public String different;
 
   public JoinerViewValue() {
     visualizationScript = "";
   }
-  
+
   @Override
   public void saveToNodeSettings(NodeSettingsWO settings) {
 
@@ -61,6 +64,9 @@ class JoinerViewValue extends JSONViewContent {
       try {
         String relationsAsString = MAPPER.writeValueAsString(joinRelations);
         settings.addString(CFG_JOINER_RELATION, relationsAsString);
+
+        String joinerModelsDataAsString = MAPPER.writeValueAsString(joinerModelsData);
+        settings.addString(CFG_MODELS_DATA, joinerModelsDataAsString);
       } catch (JsonProcessingException err) {
         // do nothing
       }
@@ -70,21 +76,24 @@ class JoinerViewValue extends JSONViewContent {
     settings.addString(CFG_JSON_REPRESENTATION, jsonRepresentation);
     settings.addString(CFG_MODELSCRIPT_TREE, modelScriptTree);
     settings.addString(CFG_MODEL_METADATA, modelMetaData);
+
   }
 
   @Override
   public void loadFromNodeSettings(NodeSettingsRO settings) throws InvalidSettingsException {
-    
+
     // Read relations as string
     String relationsAsString = settings.getString(CFG_JOINER_RELATION);
     if (relationsAsString != null) {
       try {
         joinRelations = MAPPER.readValue(relationsAsString, JoinRelation[].class);
+        joinerModelsData =
+            MAPPER.readValue(settings.getString(CFG_MODELS_DATA), JoinerModelsData.class);
       } catch (IOException err) {
         // do nothing
       }
     }
-    
+
     jsonRepresentation = settings.getString(CFG_JSON_REPRESENTATION);
     modelScriptTree = settings.getString(CFG_MODELSCRIPT_TREE);
     modelMetaData = settings.getString(CFG_MODEL_METADATA);
@@ -107,12 +116,12 @@ class JoinerViewValue extends JSONViewContent {
   public int hashCode() {
     return pseudoIdentifier;
   }
-  
-  public String getVisualizationScript() {
-    return visualizationScript;
-  }
 
-  public void setVisualizationScript(String visualizationScript) {
-    this.visualizationScript = visualizationScript;
+  /**
+   * Utility check for checking quickly if this view value is empty. A view value with all its
+   * mandatory properties not set is considered empty.
+   */
+  public boolean isEmpty() {
+    return StringUtils.isEmpty(modelMetaData);
   }
 }

@@ -19,6 +19,11 @@ public class FskSimulation implements Serializable {
     params = new LinkedHashMap<>();
   }
 
+  public FskSimulation() {
+    this.name = "";
+    params = new LinkedHashMap<>();
+  }
+
   public String getName() {
     return name;
   }
