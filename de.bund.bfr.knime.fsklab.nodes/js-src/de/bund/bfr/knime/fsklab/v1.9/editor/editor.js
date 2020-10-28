@@ -126,9 +126,7 @@ fskeditorjs = function () {
         <li role="presentation">
           <a id="readme-tab" href="#readme" aria-controls="readme" role="tab" data-toggle="tab">README</a>
         </li>
-        <li role="presentation">
-          <a id="meee-tab" href="#meeee"  onClick="knimeService.log('hereis editor');knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c215846d9' , [{data:'meta',seta:'geta'}],{elements:[]})" role="tab" >Meeee</a>
-        </li>
+        
       </ul>
     </div>
   </nav>
