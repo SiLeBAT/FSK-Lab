@@ -31,11 +31,32 @@ joiner = function () {
   }
   let paperWidth;
   window.joinRelationsMap = {};
+  let poolSize = 0;
+  var selectionChanged = function (modelMetaData) {
+    console.log('in joiner', modelMetaData);
+    //extractAndCreateUI(JSON.stringify(modelMetaData.changeSet.added[0]));
 
+    if (poolSize == 0) {
+      let selectedModel = modelMetaData.changeSet.added[0][0];
+      editModelsPool('firstModel', selectedModel.modelMath.parameter, selectedModel.generalInformation.name, selectedModel, selectedModel.modelType);
+    } else if (poolSize == 1) {
+      let selectedModel = modelMetaData.changeSet.added[0][1];
+      editModelsPool('secondModel', selectedModel.modelMath.parameter, selectedModel.generalInformation.name, selectedModel, selectedModel.modelType);
+    } else if (poolSize == 2) {
+      let selectedModel = modelMetaData.changeSet.added[0][2];
+      editModelsPool('thirdModel', selectedModel.modelMath.parameter, selectedModel.generalInformation.name, selectedModel, selectedModel.modelType);
+    } else {
+      let selectedModel = modelMetaData.changeSet.added[0][3];
+      editModelsPool('fourthModel', selectedModel.modelMath.parameter, selectedModel.generalInformation.name, selectedModel, selectedModel.modelType);
+    }
+    poolSize++;
+  }
   view.init = function (representation, value) {
     _value = value;
     _joinerModelsData = representation.joinerModelsData;
-
+    console.log(_value);
+    //subscribe to events emitted by FSK DB View
+    knimeService.subscribeToSelection('b800db46-4e25-4f77-bcc6-db0c21joiner', selectionChanged);
     if (value.modelMetaData) {
       _metadata = JSON.parse(value.modelMetaData);
     } else {
@@ -65,17 +86,40 @@ joiner = function () {
     _paper.scaleContentToFit();
     window.toogle = true;
   }
+  function isValidModel(model) {
+    return Object.keys(model).length !== 0 ;
+  }
 
   view.getComponentValue = function () {
+    /* uncompleted work
+    if (!isValidModel(_value.joinerModelsData)) {
+      _value.joinerModelsData = {
+        firstModel: [],
+        secondModel: [],
+        thirdModel: [],
+        fourthModel: [],
+        firstModelType: "",
+        secondModelType:"",
+        thirdModelType:"",
+        fourthModelType:""
+      }
+    }
+    console.log(modelsPool.firstModel,isValidModel(modelsPool.firstModel));
+    
+    _value.joinerModelsData.firstModel = isValidModel(modelsPool.firstModel) ? [JSON.stringify(modelsPool.firstModel['metadata']),"","","[{}]","[]"] : {};
+    _value.joinerModelsData.secondModel = isValidModel(modelsPool.secondModel) ? [JSON.stringify(modelsPool.secondModel['metadata']),"","","[{}]","[]"] : {};
+    _value.joinerModelsData.thirdModel = isValidModel(modelsPool.thirdModel) ? [JSON.stringify(modelsPool.thirdModel['metadata']),"","","[{}]","[]"] : {};
+    _value.joinerModelsData.fourthModel = isValidModel(modelsPool.fourthModel) ? [JSON.stringify(modelsPool.fourthModel['metadata']),"","","[{}]","[]"] : {};
+    _value.joinerModelsData.firstModelType = isValidModel(modelsPool.firstModel) ? modelsPool.firstModel['modelType'] : "GenericModel";
+    _value.joinerModelsData.secondModelType = isValidModel(modelsPool.secondModel) ? modelsPool.secondModel['modelType'] : "GenericModel";
+    _value.joinerModelsData.thirdModelType = isValidModel(modelsPool.thirdModel) ? modelsPool.thirdModel['modelType'] : "GenericModel";
+    _value.joinerModelsData.fourthModelType = isValidModel(modelsPool.fourthModel) ? modelsPool.fourthModel['modelType'] : "GenericModel";
+    */
+    _value.firstModel = modelsPool.firstModel['metadata'];
+    _value.secondModel = modelsPool.secondModel['metadata'];
+    _value.thirdModel = modelsPool.thirdModel['metadata'];
+    _value.fourthModel = modelsPool.fourthModel['metadata'];
 
-    _value.joinerModelsData.firstModel = modelsPool.firstModel['metadata'];
-    _value.joinerModelsData.secondModel = modelsPool.secondModel['metadata'];
-    _value.joinerModelsData.thirdModel = modelsPool.thirdModel['metadata'];
-    _value.joinerModelsData.fourthModel = modelsPool.fourthModel['metadata'];
-    _value.joinerModelsData.firstModelType = modelsPool.firstModel['modelType'];
-    _value.joinerModelsData.secondModelType = modelsPool.secondModel['modelType'];
-    _value.joinerModelsData.thirdModelType = modelsPool.thirdModel['modelType'];
-    _value.joinerModelsData.fourthModelType = modelsPool.fourthModel['modelType'];
     return _value;
   };
 

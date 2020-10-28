@@ -18,22 +18,29 @@ fskeditorjs = function () {
   var _readmeCodeMirror;
 
   let handler;
-
+  var selectionChanged = function (modelMetaData) {	
+    console.log('in editor',modelMetaData);
+    extractAndCreateUI(JSON.stringify(modelMetaData.changeSet.added[0]));
+  }
   view.init = function (representation, value) {
-
+    //subscribe to events emitted by FSK DB View
+    knimeService.subscribeToSelection('b800db46-4e25-4f77-bcc6-db0c215846e1', selectionChanged);
     fskutil = new fskutil();
-
     _rep = representation;
     _val = value;
-
-    if (!value.modelMetaData || value.modelMetaData == "null" || value.modelMetaData == "") {
+    extractAndCreateUI(value.modelMetaData);
+    
+  }
+  function extractAndCreateUI(modelMetaData){
+    if (!modelMetaData || modelMetaData == "null" || modelMetaData == "") {
       _metadata.generalInformation = {};
       _metadata.generalInformation.modelCategory = {};
       _metadata.scope = {};
       _metadata.modelMath = {};
       _metadata.dataBackground = {}
     } else {
-      let metaData = JSON.parse(value.modelMetaData);
+      let recievedObject = modelMetaData instanceof Object? modelMetaData: JSON.parse(modelMetaData);
+      let metaData = Array.isArray(recievedObject)?recievedObject[0]:recievedObject;
 
       if (!metaData.generalInformation) {
         _metadata.generalInformation = { modelCategory: {} };
@@ -65,7 +72,6 @@ fskeditorjs = function () {
 
     createUI();
   }
-
   view.getComponentValue = () => {
 
     _metadata = handler.metaData;
@@ -119,6 +125,9 @@ fskeditorjs = function () {
         </li>
         <li role="presentation">
           <a id="readme-tab" href="#readme" aria-controls="readme" role="tab" data-toggle="tab">README</a>
+        </li>
+        <li role="presentation">
+          <a id="meee-tab" href="#meeee"  onClick="knimeService.log('hereis editor');knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c215846d9' , [{data:'meta',seta:'geta'}],{elements:[]})" role="tab" >Meeee</a>
         </li>
       </ul>
     </div>

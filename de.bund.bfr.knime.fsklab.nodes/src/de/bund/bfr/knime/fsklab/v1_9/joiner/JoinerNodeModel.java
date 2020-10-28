@@ -290,12 +290,10 @@ public final class JoinerNodeModel
 
   private void copyValueToConfig() {
     JoinerViewValue value = getViewValue();
-    JoinerViewRepresentation representation = getViewRepresentation();
-
     m_config.modelMetaData = value.modelMetaData;
     m_config.connections = value.joinRelations;
     m_config.jsonRepresentation = value.jsonRepresentation;
-    m_config.joinerModelsData = representation.joinerModelsData;
+    m_config.joinerModelsData = value.joinerModelsData;
 
   }
 
@@ -306,6 +304,7 @@ public final class JoinerNodeModel
     JoinerViewRepresentation representation = getViewRepresentation();
     representation.joinerModelsData =
         m_config.joinerModelsData != null ? m_config.joinerModelsData : new JoinerModelsData();
+    value.joinerModelsData = representation.joinerModelsData;
 
   }
 
