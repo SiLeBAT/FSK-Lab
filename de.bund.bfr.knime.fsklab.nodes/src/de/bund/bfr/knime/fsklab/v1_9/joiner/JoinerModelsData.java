@@ -1,6 +1,8 @@
 package de.bund.bfr.knime.fsklab.v1_9.joiner;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import de.bund.bfr.metadata.swagger.Parameter;
 
@@ -23,12 +25,13 @@ public class JoinerModelsData {
   public String[] secondModel;
   public String[] thirdModel;
   public String[] fourthModel;
+  public Map <String, Map<String,String>> modelsParamsOriginalNames = new HashMap<>();
 
   @Override
   public int hashCode() {
     return Objects.hash(firstModelParameters, secondModelParameters, thirdModelParameters,
         fourthModelParameters, firstModelName, secondModelName, thirdModelName, fourthModelName,
-        firstModelType, secondModelType, thirdModelType, fourthModelType);
+        firstModelType, secondModelType, thirdModelType, fourthModelType,modelsParamsOriginalNames);
   }
 
   @Override
@@ -55,6 +58,7 @@ public class JoinerModelsData {
         && firstModelType.equals(other.firstModelType)
         && secondModelType.equals(other.secondModelType)
         && thirdModelType.equals(other.thirdModelType)
-        && fourthModelType.equals(other.fourthModelType);
+        && fourthModelType.equals(other.fourthModelType)
+        && modelsParamsOriginalNames.equals(other.modelsParamsOriginalNames);
   }
 }

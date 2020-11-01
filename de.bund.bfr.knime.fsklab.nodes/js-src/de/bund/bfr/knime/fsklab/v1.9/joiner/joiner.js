@@ -11,6 +11,8 @@ joiner = function () {
   let _value;
   let _joinerModelsData;
   let _modelScriptTree;
+  let _modelsParamsOriginalNames;
+
 
   /** JointJS graph. */
   let _graph;
@@ -32,29 +34,94 @@ joiner = function () {
   let paperWidth;
   window.joinRelationsMap = {};
   let poolSize = 0;
-  var selectionChanged = function (modelMetaData) {
-    console.log('in joiner', modelMetaData);
-    //extractAndCreateUI(JSON.stringify(modelMetaData.changeSet.added[0]));
+  let addSuffixToParameters = function (_modelcolection) {
 
+    switch (_modelcolection.length) {
+      case 1:
+        $.each(_modelcolection[0].modelMath.parameter, function (_index, param) {
+          param.id = param.id + "1";
+        });
+        break;
+      case 2:
+        $.each(_modelcolection[0].modelMath.parameter, function (_index, param) {
+          param.id = param.id + "1";
+        });
+        $.each(_modelcolection[1].modelMath.parameter, function (_index, param) {
+          param.id = param.id + "2"
+        });
+        break;
+
+      case 3:
+        $.each(_modelcolection[0].modelMath.parameter, function (_index, param) {
+          param.id = param.id + "11"
+        });
+        $.each(_modelcolection[1].modelMath.parameter, function (_index, param) {
+          param.id = param.id + "12"
+        });
+        $.each(_modelcolection[2].modelMath.parameter, function (_index, param) {
+          param.id = param.id + "2"
+        });
+        break;
+
+      case 4:
+        $.each(_modelcolection[0].modelMath.parameter, function (_index, param) {
+          param.id = param.id + "111"
+        });
+        $.each(_modelcolection[1].modelMath.parameter, function (_index, param) {
+          param.id = param.id + "112"
+        });
+        $.each(_modelcolection[2].modelMath.parameter, function (_index, param) {
+          param.id = param.id + "12"
+        });
+        $.each(_modelcolection[3].modelMath.parameter, function (_index, param) {
+          param.id = param.id + "2"
+        });
+        break;
+    }
+
+    return _modelcolection;
+  }
+  let buildOldNewParamName = function (newParamsx, oldParamsx) {
+    let oldNewParamNames = {};
+    $.each(oldParamsx, function (_ind1, oldParam) {
+      $.each(newParamsx, function (_ind1, newParam) {
+        if (newParam.id.startsWith(oldParam.id)) {
+          oldNewParamNames[newParam.id] = oldParam.id
+        }
+
+      });
+    });
+
+    return oldNewParamNames;
+  }
+  let selectionChanged = function (modelMetaData) {
+    let _modelColectionSuffixed = addSuffixToParameters(JSON.parse(JSON.stringify(modelMetaData.changeSet.added[0])));
     if (poolSize == 0) {
       let selectedModel = modelMetaData.changeSet.added[0][0];
-      editModelsPool('firstModel', selectedModel.modelMath.parameter, selectedModel.generalInformation.name, selectedModel, selectedModel.modelType);
+      _modelsParamsOriginalNames[selectedModel.generalInformation.name] = buildOldNewParamName(_modelColectionSuffixed[0].modelMath.parameter, selectedModel.modelMath.parameter);
+      editModelsPool('firstModel', _modelColectionSuffixed[0].modelMath.parameter, selectedModel.generalInformation.name, _modelColectionSuffixed[0], selectedModel.modelType);
     } else if (poolSize == 1) {
       let selectedModel = modelMetaData.changeSet.added[0][1];
-      editModelsPool('secondModel', selectedModel.modelMath.parameter, selectedModel.generalInformation.name, selectedModel, selectedModel.modelType);
+      console.log(_modelColectionSuffixed[1].modelMath.parameter, selectedModel.modelMath.parameter);
+      _modelsParamsOriginalNames[selectedModel.generalInformation.name] = buildOldNewParamName(_modelColectionSuffixed[1].modelMath.parameter, selectedModel.modelMath.parameter);
+      editModelsPool('secondModel', _modelColectionSuffixed[1].modelMath.parameter, selectedModel.generalInformation.name, _modelColectionSuffixed[1], selectedModel.modelType);
     } else if (poolSize == 2) {
       let selectedModel = modelMetaData.changeSet.added[0][2];
-      editModelsPool('thirdModel', selectedModel.modelMath.parameter, selectedModel.generalInformation.name, selectedModel, selectedModel.modelType);
+      _modelsParamsOriginalNames[selectedModel.generalInformation.name] = buildOldNewParamName(_modelColectionSuffixed[2].modelMath.parameter, selectedModel.modelMath.parameter);
+      editModelsPool('thirdModel', _modelColectionSuffixed[2].modelMath.parameter, selectedModel.generalInformation.name, _modelColectionSuffixed[2], selectedModel.modelType);
     } else {
       let selectedModel = modelMetaData.changeSet.added[0][3];
-      editModelsPool('fourthModel', selectedModel.modelMath.parameter, selectedModel.generalInformation.name, selectedModel, selectedModel.modelType);
+      _modelsParamsOriginalNames[selectedModel.generalInformation.name] = buildOldNewParamName(_modelColectionSuffixed[3].modelMath.parameter, selectedModel.modelMath.parameter);
+      editModelsPool('fourthModel', _modelColectionSuffixed[3].modelMath.parameter, selectedModel.generalInformation.name, _modelColectionSuffixed[3], selectedModel.modelType);
     }
+    console.log('_modelsParamsOriginalNames', _modelsParamsOriginalNames);
     poolSize++;
   }
   view.init = function (representation, value) {
     _value = value;
     _joinerModelsData = representation.joinerModelsData;
-    console.log(_value);
+    _modelsParamsOriginalNames = _joinerModelsData.modelsParamsOriginalNames;
+    //console.log(_joinerModelsData);
     //subscribe to events emitted by FSK DB View
     knimeService.subscribeToSelection('b800db46-4e25-4f77-bcc6-db0c21joiner', selectionChanged);
     if (value.modelMetaData) {
@@ -87,7 +154,7 @@ joiner = function () {
     window.toogle = true;
   }
   function isValidModel(model) {
-    return Object.keys(model).length !== 0 ;
+    return Object.keys(model).length !== 0;
   }
 
   view.getComponentValue = function () {
@@ -104,7 +171,7 @@ joiner = function () {
         fourthModelType:""
       }
     }
-    console.log(modelsPool.firstModel,isValidModel(modelsPool.firstModel));
+    //console.log(modelsPool.firstModel,isValidModel(modelsPool.firstModel));
     
     _value.joinerModelsData.firstModel = isValidModel(modelsPool.firstModel) ? [JSON.stringify(modelsPool.firstModel['metadata']),"","","[{}]","[]"] : {};
     _value.joinerModelsData.secondModel = isValidModel(modelsPool.secondModel) ? [JSON.stringify(modelsPool.secondModel['metadata']),"","","[{}]","[]"] : {};
@@ -115,23 +182,19 @@ joiner = function () {
     _value.joinerModelsData.thirdModelType = isValidModel(modelsPool.thirdModel) ? modelsPool.thirdModel['modelType'] : "GenericModel";
     _value.joinerModelsData.fourthModelType = isValidModel(modelsPool.fourthModel) ? modelsPool.fourthModel['modelType'] : "GenericModel";
     */
-    _value.firstModel = modelsPool.firstModel['metadata'];
-    _value.secondModel = modelsPool.secondModel['metadata'];
-    _value.thirdModel = modelsPool.thirdModel['metadata'];
-    _value.fourthModel = modelsPool.fourthModel['metadata'];
-
+    _value.joinerModelsData.firstModel = modelsPool.firstModel['metadata'];
+    _value.joinerModelsData.secondModel = modelsPool.secondModel['metadata'];
+    _value.joinerModelsData.thirdModel = modelsPool.thirdModel['metadata'];
+    _value.joinerModelsData.fourthModel = modelsPool.fourthModel['metadata'];
+    _value.joinerModelsData.firstModelType = modelsPool.firstModel['modelType'];
+    _value.joinerModelsData.secondModelType = modelsPool.secondModel['modelType'];
+    _value.joinerModelsData.thirdModelType = modelsPool.thirdModel['modelType'];
+    _value.joinerModelsData.fourthModelType = modelsPool.fourthModel['modelType'];
     return _value;
   };
 
   view.getSVG = function () {
-    let emptySVG = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1"
-                            viewBox="0 0 500 500" width="500" height="500" id="starter_svg">
-  
-                            <!-- Place your SVG elements here... -->
-  
-                        </svg>`;
-    if (!_paper) return (new XMLSerializer()).serializeToString(emptySVG);
+    if (!_paper) return null;
     _paper.svg.setAttribute("width", $('#viewContent').width());
     _paper.svg.setAttribute("height", 500);
     return (new XMLSerializer()).serializeToString(_paper.svg);
@@ -145,6 +208,12 @@ joiner = function () {
     modelsPool[key]['outputParameters'] = [];
     modelsPool[key]['portMap'] = {};
     modelsPool[key]['modelParameterMap'] = {};
+    let orginalParamsWithoutSuffix = _modelsParamsOriginalNames[modelName];
+    console.log(orginalParamsWithoutSuffix);
+    $.each(modelParameters, function (index, param) {
+      console.log(param.id, orginalParamsWithoutSuffix[param.id]);
+      param['idmask'] = orginalParamsWithoutSuffix[param.id];
+    })
     modelsPool[key]['modelParameters'] = modelParameters;
     if (modelParameters) {
       for (param of modelParameters) {
@@ -170,7 +239,7 @@ joiner = function () {
       width: 150,
       height: modelHeight
     });
-
+    //console.log(modelsPool[key]['inputParameters']);
     modelsPool[key]['modelToJoin'] = createAtomic(paperWidth - (250 * (4 - (Object.keys(modelsPool).indexOf(key)))), 60, 150,
       modelHeight, modelNameWrap, modelsPool[key]['inputParameters'],
       modelsPool[key]['outputParameters'], key);
@@ -260,6 +329,7 @@ joiner = function () {
       window.toogle = true;
     }).on('change', function () {
       if (window.toogle) {
+
         window.toogle = false;
         let newValueText = this.value;
         let oldValue = JSON.parse(JSON.stringify(modelsPool[previous]));
@@ -271,13 +341,30 @@ joiner = function () {
         let newSuffix;
         switch (previous) {
           case "firstModel":
-            oldSuffix = 3;
+            if (poolSize == 2) {
+              oldSuffix = 1;
+            } else if (poolSize == 3) {
+              oldSuffix = 2;
+            } else {
+              oldSuffix = 3;
+            }
+
             break;
           case "secondModel":
-            oldSuffix = 3;
+            if (poolSize == 2) {
+              oldSuffix = 1;
+            } else if (poolSize == 3) {
+              oldSuffix = 2;
+            } else {
+              oldSuffix = 3;
+            }
             break;
           case "thirdModel":
-            oldSuffix = 2;
+            if (poolSize == 3) {
+              oldSuffix = 1;
+            } else {
+              oldSuffix = 2;
+            }
             break;
           case "fourthModel":
             oldSuffix = 1;
@@ -286,23 +373,40 @@ joiner = function () {
         }
         switch (newValueText) {
           case "firstModel":
-            newSuffix = 3;
+            if (poolSize == 2) {
+              newSuffix = 1;
+            } else if (poolSize == 3) {
+              newSuffix = 2;
+            } else {
+              newSuffix = 3;
+            }
             break;
           case "secondModel":
-            newSuffix = 3;
+            if (poolSize == 2) {
+              newSuffix = 1;
+            } else if (poolSize == 3) {
+              newSuffix = 2;
+            } else {
+              newSuffix = 3;
+            }
             break;
           case "thirdModel":
-            newSuffix = 2;
+            if (poolSize == 3) {
+              newSuffix = 1;
+            } else {
+              newSuffix = 2;
+            }
             break;
-          case "firstModel":
+          case "fourthModel":
             newSuffix = 1;
             break;
 
         }
         oldParams = modelsPool[previous]['modelParameters'];
         newParams = modelsPool[newValueText]['modelParameters'];
-        preapareParametersForReorder(newParams, newSuffix, oldParams, oldSuffix);
         let tempModelName = modelsPool[previous]['modelName'];
+        preapareParametersForReorder(modelsPool[previous]['modelName'], modelsPool[newValueText]['modelName'], newParams, newSuffix, oldParams, oldSuffix);
+
         modelsPool[previous] = newValue;
         modelsPool[previous]['modelName'] = modelsPool[newValueText]['modelName'];
         modelsPool[newValueText]['modelName'] = tempModelName;
@@ -311,22 +415,32 @@ joiner = function () {
         editModelsPool(previous, newParams, modelsPool[previous]['modelName'], modelsPool[previous]['metadata'], modelsPool[previous]['modelType'])
         editModelsPool(newValueText, oldParams, modelsPool[newValueText]['modelName'], modelsPool[newValueText]['metadata'], modelsPool[newValueText]['modelType']);
       }
+
       $("#" + newValueText + ' option').filter(function () {
         return $(this).text() == previous;
       }).prop('selected', 'selected');
       $("#" + newValueText).prop('id', 'med');
       $("#" + previous).prop('id', newValueText);
       $("#med").prop('id', previous);
+
     });
   }
-  function preapareParametersForReorder(newParams, newSuffix, oldParams, oldSuffix) {
-    newSuffix = newParams[0].id.substring(newParams[0].id.length - newSuffix, newParams[0].id.length);
-    oldSuffix = oldParams[0].id.substring(oldParams[0].id.length - oldSuffix, oldParams[0].id.length);
+  function preapareParametersForReorder(oldModelName, newMmodelName, newParams, newSuffix, oldParams, oldSuffix) {
+
+    let newSuffixx = newParams[0].id.substring(newParams[0].id.length - newSuffix, newParams[0].id.length);
+    let oldSuffixx = oldParams[0].id.substring(oldParams[0].id.length - oldSuffix, oldParams[0].id.length);
     for (param of oldParams) {
-      param.id = param.id.replace(oldSuffix, newSuffix);
+      let originalName = _modelsParamsOriginalNames[oldModelName][param.id];
+      delete _modelsParamsOriginalNames[oldModelName][param.id];
+      param.id = param.id.replace(oldSuffixx, newSuffixx);
+      _modelsParamsOriginalNames[oldModelName][param.id] = originalName
+
     }
     for (param of newParams) {
-      param.id = param.id.replace(newSuffix, oldSuffix);
+      let originalName = _modelsParamsOriginalNames[newMmodelName][param.id];
+      delete _modelsParamsOriginalNames[oldModelName][param.id];
+      param.id = param.id.replace(newSuffixx, oldSuffixx);
+      _modelsParamsOriginalNames[newMmodelName][param.id] = originalName
     }
   }
   function drawWorkflow() {
@@ -502,23 +616,42 @@ joiner = function () {
     //_paper.on("link:pointerclick", updateForm);
 
     _paper.on('link:connect', function (linkView, evt, elementViewDisconnected, magnet, arrowhead) {
+      console.log(_modelsParamsOriginalNames);
       sModel = linkView.model.attributes.source;
       tModel = linkView.model.attributes.target;
       sourcePort = linkView.model.attributes.source.port;
       targetPort = linkView.model.attributes.target.port;
+      let sourceMask;
+      let targetMask;
+      let sourceMaskSuffix;
+      let targetMaskSuffix;
+      let commandMask;
+      //let keys = Object.keys(_modelsParamsOriginalNames);
+      for (key in _modelsParamsOriginalNames) {
+        if (_modelsParamsOriginalNames[key][sourcePort])
+          sourceMask = _modelsParamsOriginalNames[key][sourcePort];
+        sourceMaskSuffix = sourceMask;
+
+        if (_modelsParamsOriginalNames[key][targetPort]) {
+          targetMask = _modelsParamsOriginalNames[key][targetPort];
+          targetMaskSuffix = targetMask;
+          commandMask = "[" + targetMask + "]";
+        }
+      }
       if (!targetPort) {
         return;
       }
 
-      highlight(linkView);
+      //highlight(linkView);
 
       // Update form
-      document.getElementById("source").value = sourcePort;
-      document.getElementById("target").value = targetPort;
+      document.getElementById("source").value = sourceMaskSuffix;
+      document.getElementById("target").value = targetMaskSuffix;
 
       let command = document.getElementById("Command");
-      command.value = "[" + sourcePort + "]";
-      command.onkeyup = () => window.sJoinRealtion.command = command.value;
+      command.value = commandMask;
+
+      command.onkeyup = () => window.sJoinRealtion.command = command.value.replace(sourceMask, sourcePort);
 
       command.onblur = () => {
         if (_modelScriptTree) {
@@ -533,7 +666,7 @@ joiner = function () {
         window.sJoinRealtion = {
           sourceParam: sourcePort,
           targetParam: targetPort,
-          command: command.value,//sourcePort
+          command: "[" + sourcePort + "]",//sourcePort
           sourceModel: sModel,
           targetModel: tModel
         };
@@ -624,9 +757,9 @@ joiner = function () {
       // id: 'abc', // generated if `id` value is not present
       'id': param.id,
       'label': {
-        'markup': `<text class="label-text" fill="black"><title>${param.dataType}</title>${param.id}</text>`
+        'markup': `<text class="label-text" fill="black"><title>${param.dataType}</title>${param.idmask}</text>`
       },
-      'markup': `<circle fill="#FF7979"  r="92.5" class="port-body"><title>Parameter ID: ` + param.id + `\nParameter Name: ` + param.name + `\nDescription: ` + param.description + `\nUnit: ` + param.unit + `\nDataType: ` + param.dataType + `\nSource: ` + param.source + `\nSubject: ` + param.subject + `\nDistribution: ` + param.distribution + `\nReference: ` + param.reference + `\nVariabilitySubject: ` + param.variabilitySubject + `\nMinValue: ` + param.minValue + `\nMaxValue: ` + param.maxValue + `\nError: ` + param.error + `\n</title></circle>`,
+      'markup': `<circle fill="#FF7979"  r="92.5" class="port-body"><title>Parameter ID: ` + param.idmask + `\nParameter Name: ` + param.name + `\nDescription: ` + param.description + `\nUnit: ` + param.unit + `\nDataType: ` + param.dataType + `\nSource: ` + param.source + `\nSubject: ` + param.subject + `\nDistribution: ` + param.distribution + `\nReference: ` + param.reference + `\nVariabilitySubject: ` + param.variabilitySubject + `\nMinValue: ` + param.minValue + `\nMaxValue: ` + param.maxValue + `\nError: ` + param.error + `\n</title></circle>`,
     };
   }
 
@@ -637,18 +770,34 @@ joiner = function () {
     let sourcePort = evt.model.get("source").port;
     let targetPort = evt.model.get("target").port;
 
+    let sourceMask;
+    let targetMask;
+    let sourceMaskSuffix;
+    let targetMaskSuffix;
+    //let keys = Object.keys(_modelsParamsOriginalNames);
+    for (key in _modelsParamsOriginalNames) {
+      if (_modelsParamsOriginalNames[key][sourcePort])
+        sourceMask = _modelsParamsOriginalNames[key][sourcePort];
+      sourceMaskSuffix = sourceMask;
+
+      if (_modelsParamsOriginalNames[key][targetPort]) {
+        targetMask = _modelsParamsOriginalNames[key][targetPort];
+        targetMaskSuffix = targetMask;
+      }
+    }
+
     window.sJoinRealtion = window.joinRelationsMap[sourcePort + "," + targetPort];
 
-    document.getElementById("source").value = sourcePort;
-    document.getElementById("target").value = targetPort;
+    document.getElementById("source").value = sourceMaskSuffix;
+    document.getElementById("target").value = targetMaskSuffix;
 
     let commandLanguage = document.getElementById("commandLanguage");
     commandLanguage.value = window.sJoinRealtion.language_written_in;
     commandLanguage.onchange = () => window.sJoinRealtion.language_written_in = commandLanguage.value;
 
     let commandTextArea = document.getElementById("Command");
-    commandTextArea.value = window.sJoinRealtion.command;
-    commandTextArea.onkeyup = () => window.sJoinRealtion.command = commandTextArea.value;
+    commandTextArea.value = window.sJoinRealtion.command.replace(sourcePort, sourceMask);
+    commandTextArea.onkeyup = () => window.sJoinRealtion.command = commandTextArea.value.replace(sourceMask, sourcePort);;
   }
 
   /** Create model to join.
