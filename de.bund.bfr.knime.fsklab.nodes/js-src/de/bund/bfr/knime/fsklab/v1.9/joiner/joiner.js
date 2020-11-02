@@ -102,7 +102,6 @@ joiner = function () {
       editModelsPool('firstModel', _modelColectionSuffixed[0].modelMath.parameter, selectedModel.generalInformation.name, _modelColectionSuffixed[0], selectedModel.modelType);
     } else if (poolSize == 1) {
       let selectedModel = modelMetaData.changeSet.added[0][1];
-      console.log(_modelColectionSuffixed[1].modelMath.parameter, selectedModel.modelMath.parameter);
       _modelsParamsOriginalNames[selectedModel.generalInformation.name] = buildOldNewParamName(_modelColectionSuffixed[1].modelMath.parameter, selectedModel.modelMath.parameter);
       editModelsPool('secondModel', _modelColectionSuffixed[1].modelMath.parameter, selectedModel.generalInformation.name, _modelColectionSuffixed[1], selectedModel.modelType);
     } else if (poolSize == 2) {
@@ -114,14 +113,12 @@ joiner = function () {
       _modelsParamsOriginalNames[selectedModel.generalInformation.name] = buildOldNewParamName(_modelColectionSuffixed[3].modelMath.parameter, selectedModel.modelMath.parameter);
       editModelsPool('fourthModel', _modelColectionSuffixed[3].modelMath.parameter, selectedModel.generalInformation.name, _modelColectionSuffixed[3], selectedModel.modelType);
     }
-    console.log('_modelsParamsOriginalNames', _modelsParamsOriginalNames);
     poolSize++;
   }
   view.init = function (representation, value) {
     _value = value;
     _joinerModelsData = representation.joinerModelsData;
     _modelsParamsOriginalNames = _joinerModelsData.modelsParamsOriginalNames;
-    //console.log(_joinerModelsData);
     //subscribe to events emitted by FSK DB View
     knimeService.subscribeToSelection('b800db46-4e25-4f77-bcc6-db0c21joiner', selectionChanged);
     if (value.modelMetaData) {
@@ -158,30 +155,6 @@ joiner = function () {
   }
 
   view.getComponentValue = function () {
-    /* uncompleted work
-    if (!isValidModel(_value.joinerModelsData)) {
-      _value.joinerModelsData = {
-        firstModel: [],
-        secondModel: [],
-        thirdModel: [],
-        fourthModel: [],
-        firstModelType: "",
-        secondModelType:"",
-        thirdModelType:"",
-        fourthModelType:""
-      }
-    }
-    //console.log(modelsPool.firstModel,isValidModel(modelsPool.firstModel));
-    
-    _value.joinerModelsData.firstModel = isValidModel(modelsPool.firstModel) ? [JSON.stringify(modelsPool.firstModel['metadata']),"","","[{}]","[]"] : {};
-    _value.joinerModelsData.secondModel = isValidModel(modelsPool.secondModel) ? [JSON.stringify(modelsPool.secondModel['metadata']),"","","[{}]","[]"] : {};
-    _value.joinerModelsData.thirdModel = isValidModel(modelsPool.thirdModel) ? [JSON.stringify(modelsPool.thirdModel['metadata']),"","","[{}]","[]"] : {};
-    _value.joinerModelsData.fourthModel = isValidModel(modelsPool.fourthModel) ? [JSON.stringify(modelsPool.fourthModel['metadata']),"","","[{}]","[]"] : {};
-    _value.joinerModelsData.firstModelType = isValidModel(modelsPool.firstModel) ? modelsPool.firstModel['modelType'] : "GenericModel";
-    _value.joinerModelsData.secondModelType = isValidModel(modelsPool.secondModel) ? modelsPool.secondModel['modelType'] : "GenericModel";
-    _value.joinerModelsData.thirdModelType = isValidModel(modelsPool.thirdModel) ? modelsPool.thirdModel['modelType'] : "GenericModel";
-    _value.joinerModelsData.fourthModelType = isValidModel(modelsPool.fourthModel) ? modelsPool.fourthModel['modelType'] : "GenericModel";
-    */
     _value.joinerModelsData.firstModel = modelsPool.firstModel['metadata'];
     _value.joinerModelsData.secondModel = modelsPool.secondModel['metadata'];
     _value.joinerModelsData.thirdModel = modelsPool.thirdModel['metadata'];
@@ -209,9 +182,7 @@ joiner = function () {
     modelsPool[key]['portMap'] = {};
     modelsPool[key]['modelParameterMap'] = {};
     let orginalParamsWithoutSuffix = _modelsParamsOriginalNames[modelName];
-    console.log(orginalParamsWithoutSuffix);
     $.each(modelParameters, function (index, param) {
-      console.log(param.id, orginalParamsWithoutSuffix[param.id]);
       param['idmask'] = orginalParamsWithoutSuffix[param.id];
     })
     modelsPool[key]['modelParameters'] = modelParameters;
@@ -239,7 +210,6 @@ joiner = function () {
       width: 150,
       height: modelHeight
     });
-    //console.log(modelsPool[key]['inputParameters']);
     modelsPool[key]['modelToJoin'] = createAtomic(paperWidth - (250 * (4 - (Object.keys(modelsPool).indexOf(key)))), 60, 150,
       modelHeight, modelNameWrap, modelsPool[key]['inputParameters'],
       modelsPool[key]['outputParameters'], key);
@@ -616,7 +586,6 @@ joiner = function () {
     //_paper.on("link:pointerclick", updateForm);
 
     _paper.on('link:connect', function (linkView, evt, elementViewDisconnected, magnet, arrowhead) {
-      console.log(_modelsParamsOriginalNames);
       sModel = linkView.model.attributes.source;
       tModel = linkView.model.attributes.target;
       sourcePort = linkView.model.attributes.source.port;

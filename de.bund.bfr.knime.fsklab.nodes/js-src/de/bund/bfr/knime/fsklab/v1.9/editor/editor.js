@@ -19,7 +19,6 @@ fskeditorjs = function () {
 
   let handler;
   var selectionChanged = function (modelMetaData) {	
-    console.log('in editor',modelMetaData);
     extractAndCreateUI(JSON.stringify(modelMetaData.changeSet.added[0]));
   }
   view.init = function (representation, value) {
@@ -39,8 +38,8 @@ fskeditorjs = function () {
       _metadata.modelMath = {};
       _metadata.dataBackground = {}
     } else {
-      let recievedObject = modelMetaData instanceof Object? modelMetaData: JSON.parse(modelMetaData);
-      let metaData = Array.isArray(recievedObject)?recievedObject[0]:recievedObject;
+      let receivedObject = modelMetaData instanceof Object? modelMetaData: JSON.parse(modelMetaData);
+      let metaData = Array.isArray(receivedObject) ? receivedObject[0] : receivedObject;
 
       if (!metaData.generalInformation) {
         _metadata.generalInformation = { modelCategory: {} };

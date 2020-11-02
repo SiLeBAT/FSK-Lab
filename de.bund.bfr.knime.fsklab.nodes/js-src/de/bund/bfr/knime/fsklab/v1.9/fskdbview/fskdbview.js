@@ -28,7 +28,7 @@ fskdbview = function () {
     let _representation;
     let _value;
     var selectionChanged = function (data) {	
-        console.log('in Table view',data);
+        //TODO Update the modelspool with changes from editor and joiner
     }
     view.init = function (representation, value) {
         
@@ -822,7 +822,8 @@ fskdbview = function () {
 
     function editModel(event) {
         // emit selection event
-        knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c215846e1' , [_representation.metadata[event.target.id.replace("opener", "")]],{elements:[]})
+        let selectedModel = _representation.metadata[event.target.id.replace("opener", "")];
+        knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c215846e1' , [selectedModel],{elements:[]})
     }
 
     async function getImage(identifier) {
