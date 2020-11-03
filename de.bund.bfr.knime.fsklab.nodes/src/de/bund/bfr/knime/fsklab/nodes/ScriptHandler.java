@@ -359,6 +359,7 @@ public abstract class ScriptHandler implements AutoCloseable {
       
       fskPortObject.setGeneratedResourcesDirectory(newResourcesDirectory);
     } catch (Exception e) {
+      e.printStackTrace();
     }
   }
 }
