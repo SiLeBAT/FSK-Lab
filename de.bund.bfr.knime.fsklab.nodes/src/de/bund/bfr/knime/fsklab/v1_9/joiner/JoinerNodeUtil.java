@@ -1,6 +1,7 @@
 package de.bund.bfr.knime.fsklab.v1_9.joiner;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -161,18 +162,29 @@ public class JoinerNodeUtil {
    * @throws JsonMappingException
    */
   public static void addIdentifierToParametersForCombinedObject(FskPortObject portObject,
-      String suffix) throws JsonMappingException, JsonProcessingException {
+      String suffix, final Map<String, List<String>> unModifiedParamsNames, Map<String, Map<String,String>> old_new_pramsMap ) throws JsonMappingException, JsonProcessingException {
     if (portObject instanceof CombinedFskPortObject) {
       addIdentifierToParametersForCombinedObject(
           ((CombinedFskPortObject) portObject).getFirstFskPortObject(),
-          suffix + JoinerNodeModel.SUFFIX_FIRST);
+          suffix + JoinerNodeModel.SUFFIX_FIRST, unModifiedParamsNames, old_new_pramsMap);
       addIdentifierToParametersForCombinedObject(
           ((CombinedFskPortObject) portObject).getSecondFskPortObject(),
-          suffix + JoinerNodeModel.SUFFIX_SECOND);
+          suffix + JoinerNodeModel.SUFFIX_SECOND, unModifiedParamsNames, old_new_pramsMap);
       // portObject.modelMetadata =
       // ((CombinedFskPortObject) portObject).getSecondFskPortObject().modelMetadata;
     } else {
       addIdentifierToParameters(SwaggerUtil.getParameter(portObject.modelMetadata), suffix);
+      String modelName = SwaggerUtil.getModelName(portObject.modelMetadata);
+      List<String> originalParameterNames = unModifiedParamsNames.get(modelName);
+      Map<String,String> tempMap = new HashMap<>();
+      SwaggerUtil.getParameter(portObject.modelMetadata).stream().forEach(param -> {
+        for(String paramName : originalParameterNames) {
+          if(param.getId().startsWith(paramName)) {
+            tempMap.put(param.getId(), paramName);
+          }
+        }
+      });
+      old_new_pramsMap.put(modelName, tempMap);
     }
   }
 

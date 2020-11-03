@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.knime.base.data.xml.SvgCell;
@@ -85,7 +86,7 @@ public final class JoinerNodeModel
   public static final String SUFFIX_SECOND = "2";
   // public static final String SUFFIX = "_";
   private Map<String, FskPortObject> fskID_to_fskObject = new HashMap<>();
-
+  private Map<String, Map<String, String>> modelsParamsOriginalNames = new HashMap<>();
 
   Map<String, String> originals = new LinkedHashMap<String, String>();
 
@@ -241,7 +242,7 @@ public final class JoinerNodeModel
         }
       }
     }
-
+    representation.joinerModelsData.modelsParamsOriginalNames = this.modelsParamsOriginalNames;
     return representation;
   }
 
@@ -281,7 +282,6 @@ public final class JoinerNodeModel
     createEmptyViewValue();
     setViewRepresentation(null);
 
-
     firstInputPort = null;
     secondInputPort = null;
     thirdInputPort = null;
@@ -290,12 +290,10 @@ public final class JoinerNodeModel
 
   private void copyValueToConfig() {
     JoinerViewValue value = getViewValue();
-    JoinerViewRepresentation representation = getViewRepresentation();
-
     m_config.modelMetaData = value.modelMetaData;
     m_config.connections = value.joinRelations;
     m_config.jsonRepresentation = value.jsonRepresentation;
-    m_config.joinerModelsData = representation.joinerModelsData;
+    m_config.joinerModelsData = value.joinerModelsData;
 
   }
 
@@ -306,6 +304,7 @@ public final class JoinerNodeModel
     JoinerViewRepresentation representation = getViewRepresentation();
     representation.joinerModelsData =
         m_config.joinerModelsData != null ? m_config.joinerModelsData : new JoinerModelsData();
+    value.joinerModelsData = representation.joinerModelsData;
 
   }
 
@@ -460,6 +459,30 @@ public final class JoinerNodeModel
     return nodeContainer.getName() + " (#" + nodeContainer.getID().getIndex() + ") setting";
   }
 
+  private static Map<String, List<String>> getParameterMap(FskPortObject jFirstInputPort,
+      FskPortObject jSecondInputPort, FskPortObject jThirdInputPort,
+      FskPortObject jFourthInputPort) {
+    Map<String, List<String>> tempCopyOfParams = new HashMap<>();
+    String firstModelName = SwaggerUtil.getModelName(jFirstInputPort.modelMetadata);
+    String secondModelName = SwaggerUtil.getModelName(jSecondInputPort.modelMetadata);
+    String thirdModelName = SwaggerUtil.getModelName(jThirdInputPort.modelMetadata);
+    String fourthModelName = SwaggerUtil.getModelName(jFourthInputPort.modelMetadata);
+    if (StringUtils.isNotBlank(firstModelName))
+      tempCopyOfParams.put(firstModelName, SwaggerUtil.getParameter(jFirstInputPort.modelMetadata)
+          .stream().map(param -> param.getId()).collect(Collectors.toList()));
+    if (StringUtils.isNotBlank(secondModelName))
+      tempCopyOfParams.put(secondModelName, SwaggerUtil.getParameter(jSecondInputPort.modelMetadata)
+          .stream().map(param -> param.getId()).collect(Collectors.toList()));
+    if (StringUtils.isNotBlank(thirdModelName))
+      tempCopyOfParams.put(thirdModelName, SwaggerUtil.getParameter(jThirdInputPort.modelMetadata)
+          .stream().map(param -> param.getId()).collect(Collectors.toList()));
+    if (StringUtils.isNotBlank(fourthModelName))
+      tempCopyOfParams.put(fourthModelName, SwaggerUtil.getParameter(jFourthInputPort.modelMetadata)
+          .stream().map(param -> param.getId()).collect(Collectors.toList()));
+
+    return tempCopyOfParams;
+  }
+
   @Override
   protected void performExecuteCreateView(PortObject[] inObjects, ExecutionContext exec)
       throws Exception {
@@ -471,7 +494,10 @@ public final class JoinerNodeModel
     setInternalPortObjects(inObjects);
     outObj = createCombinedFskPortObject(firstInputPort, secondInputPort, thirdInputPort,
         fourthInputPort);
-    JoinerNodeUtil.addIdentifierToParametersForCombinedObject(outObj, "");
+    Map<String, List<String>> unModifiedParamsNames =
+        getParameterMap(firstInputPort, secondInputPort, thirdInputPort, fourthInputPort);
+    JoinerNodeUtil.addIdentifierToParametersForCombinedObject(outObj, "", unModifiedParamsNames,
+        modelsParamsOriginalNames);
     synchronized (getLock()) {
 
       JoinerViewValue value = getViewValue();
@@ -608,18 +634,37 @@ public final class JoinerNodeModel
         outObj.modelMetadata = MAPPER.readValue(value.modelMetaData,
             SwaggerUtil.modelClasses.get(firstInputPort.modelMetadata.getModelType()));
         FskPortObject jFirstInputPort = getFSKObjectFromStringArray(
-            new FskPortObject(Optional.empty(), "", Collections.emptyList()),
+            new FskPortObject(Optional.empty(), "", new ArrayList<String>()),
             joinerModelsData.firstModel, joinerModelsData.firstModelType);
-        FskPortObject jSecondInputPort = getFSKObjectFromStringArray(
-            new FskPortObject(Optional.empty(), "", Collections.emptyList()),
-            joinerModelsData.secondModel, joinerModelsData.secondModelType);
-        FskPortObject jThirdInputPort = getFSKObjectFromStringArray(
-            new FskPortObject(Optional.empty(), "", Collections.emptyList()),
-            joinerModelsData.thirdModel, joinerModelsData.thirdModelType);
-        FskPortObject jFourthInputPort = getFSKObjectFromStringArray(
-            new FskPortObject(Optional.empty(), "", Collections.emptyList()),
-            joinerModelsData.fourthModel, joinerModelsData.fourthModelType);
 
+        FskPortObject jSecondInputPort;
+        FskPortObject jThirdInputPort;
+        FskPortObject jFourthInputPort;
+        if (joinerModelsData.secondModel != null && joinerModelsData.secondModel.length > 0
+            && StringUtils.isNotEmpty(joinerModelsData.secondModel[0])) {
+          jSecondInputPort = getFSKObjectFromStringArray(
+              new FskPortObject(Optional.empty(), "", new ArrayList<String>()),
+              joinerModelsData.secondModel, joinerModelsData.secondModelType);
+        } else {
+          jSecondInputPort = createEmptyFSKObject();
+        }
+        if (joinerModelsData.thirdModel != null && joinerModelsData.thirdModel.length > 0
+            && StringUtils.isNotEmpty(joinerModelsData.thirdModel[0])) {
+          jThirdInputPort = getFSKObjectFromStringArray(
+              new FskPortObject(Optional.empty(), "", new ArrayList<String>()),
+              joinerModelsData.thirdModel, joinerModelsData.thirdModelType);
+        } else {
+          jThirdInputPort = createEmptyFSKObject();
+        }
+
+        if (joinerModelsData.fourthModel != null && joinerModelsData.fourthModel.length > 0
+            && StringUtils.isNotEmpty(joinerModelsData.fourthModel[0])) {
+          jFourthInputPort = getFSKObjectFromStringArray(
+              new FskPortObject(Optional.empty(), "", new ArrayList<String>()),
+              joinerModelsData.fourthModel, joinerModelsData.fourthModelType);
+        } else {
+          jFourthInputPort = createEmptyFSKObject();
+        }
         fskID_to_fskObject.put(SwaggerUtil.getModelName(jFirstInputPort.modelMetadata),
             jFirstInputPort);
         fskID_to_fskObject.put(SwaggerUtil.getModelName(jSecondInputPort.modelMetadata),
@@ -631,7 +676,11 @@ public final class JoinerNodeModel
         resetParameterIdForObjectsFromJSON(outObj, 0);
         outObj = createCombinedFskPortObject(jFirstInputPort, jSecondInputPort, jThirdInputPort,
             jFourthInputPort);
-        JoinerNodeUtil.addIdentifierToParametersForCombinedObject(outObj, "");
+        Map<String, List<String>> unModifiedParamsNames =
+            getParameterMap(jFirstInputPort, jSecondInputPort, jThirdInputPort, jFourthInputPort);
+
+        JoinerNodeUtil.addIdentifierToParametersForCombinedObject(outObj, "", unModifiedParamsNames,
+            modelsParamsOriginalNames);
         mergeParameterForJoinedObject(outObj);
 
 
@@ -789,6 +838,7 @@ public final class JoinerNodeModel
     portObject.packages.clear();
     portObject.simulations
         .addAll(MAPPER.readValue(model[3], new TypeReference<List<FskSimulation>>() {}));
+
     portObject.packages.addAll(MAPPER.readValue(model[4], new TypeReference<List<String>>() {}));
 
     return portObject;

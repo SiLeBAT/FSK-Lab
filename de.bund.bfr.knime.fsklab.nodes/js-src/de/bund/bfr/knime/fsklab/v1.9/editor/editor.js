@@ -18,22 +18,28 @@ fskeditorjs = function () {
   var _readmeCodeMirror;
 
   let handler;
-
+  var selectionChanged = function (modelMetaData) {	
+    extractAndCreateUI(JSON.stringify(modelMetaData.changeSet.added[0]));
+  }
   view.init = function (representation, value) {
-
+    //subscribe to events emitted by FSK DB View
+    knimeService.subscribeToSelection('b800db46-4e25-4f77-bcc6-db0c215846e1', selectionChanged);
     fskutil = new fskutil();
-
     _rep = representation;
     _val = value;
-
-    if (!value.modelMetaData || value.modelMetaData == "null" || value.modelMetaData == "") {
+    extractAndCreateUI(value.modelMetaData);
+    
+  }
+  function extractAndCreateUI(modelMetaData){
+    if (!modelMetaData || modelMetaData == "null" || modelMetaData == "") {
       _metadata.generalInformation = {};
       _metadata.generalInformation.modelCategory = {};
       _metadata.scope = {};
       _metadata.modelMath = {};
       _metadata.dataBackground = {}
     } else {
-      let metaData = JSON.parse(value.modelMetaData);
+      let receivedObject = modelMetaData instanceof Object? modelMetaData: JSON.parse(modelMetaData);
+      let metaData = Array.isArray(receivedObject) ? receivedObject[0] : receivedObject;
 
       if (!metaData.generalInformation) {
         _metadata.generalInformation = { modelCategory: {} };
@@ -65,7 +71,6 @@ fskeditorjs = function () {
 
     createUI();
   }
-
   view.getComponentValue = () => {
 
     _metadata = handler.metaData;
@@ -120,6 +125,7 @@ fskeditorjs = function () {
         <li role="presentation">
           <a id="readme-tab" href="#readme" aria-controls="readme" role="tab" data-toggle="tab">README</a>
         </li>
+        
       </ul>
     </div>
   </nav>

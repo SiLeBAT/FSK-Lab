@@ -27,10 +27,16 @@ fskdbview = function () {
     };
     let _representation;
     let _value;
-
+    var selectionChanged = function (data) {	
+        //TODO Update the modelspool with changes from editor and joiner
+    }
     view.init = function (representation, value) {
+        
         _representation = representation;
         _value = value;
+        parent.tableID = _representation.tableID;
+        //subscribe to events emitted by editor
+        knimeService.subscribeToSelection('b800db46-4e25-4f77-bcc6-db0c215846d9', selectionChanged);
         _endpoint = _representation.remoteRepositoryURL ? _representation.remoteRepositoryURL : "https://knime.bfr.berlin/backend/";
         _globalVars = {
             metadataEndpoint: _endpoint + "metadata",
@@ -388,10 +394,6 @@ fskdbview = function () {
                                         <td>
                                           <button type="button" class="btn btn-primary detailsButton"
                                             id="opener${i}">Edit</button>
-                                          <br>
-                                          <br>
-                                          ${url ? `<a class="btn btn-primary downloadButton" href="${url}" download>Download</a>` : ""}
-                                          
                                           <div id="wrapper${i}"></div>
                                         </td>
                                       </tr>`);
@@ -492,6 +494,8 @@ fskdbview = function () {
                     // save selected model
                     window.selectedModels.push(_representation.metadata[selectedBox]);
                     _value.selection.push(_representation.table.rows[selectedBox].rowKey);
+                    // emit selection event                    
+                    knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c21joiner' , [window.selectedModels],{elements:[]})  
                 } else {
                     this.checked = false;
                     $(this).closest("tr").css("background-color", "transparent");
@@ -501,6 +505,7 @@ fskdbview = function () {
                         let currentModelId = getData(value, "generalInformation", "identifier");
                         return selectedModelID != currentModelId;
                     });
+                    
                     _value.selection = _value.selection.filter(function (value, index, arr) {
                         return value != selectedBox;
                     });
@@ -758,7 +763,6 @@ fskdbview = function () {
             // Remove asc or desc from all other headers
             header.siblings().removeClass('ascending descending');
             if (compare.hasOwnProperty(order)) { // If compare object has method
-                console.log(column);
                 rows.sort(function (a, b) { // Call sort() on rows array
                     a = $(a).find('td').eq(column).text().toLowerCase(); // Get text of column in row a
                     b = $(b).find('td').eq(column).text().toLowerCase(); // Get text of column in row b
@@ -817,7 +821,9 @@ fskdbview = function () {
     }
 
     function editModel(event) {
-        //TODO emit the event to the editor 
+        // emit selection event
+        let selectedModel = _representation.metadata[event.target.id.replace("opener", "")];
+        knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c215846e1' , [selectedModel],{elements:[]})
     }
 
     async function getImage(identifier) {
