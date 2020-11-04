@@ -156,6 +156,40 @@ class WriterNodeModel extends NoInternalsModel {
     return new PortObjectSpec[] {};
   }
 
+  /*
+   * add resource files to archive
+   */
+  private static void addResourcesToArchive(List<Path> resources, CombineArchive archive,
+      String filePrefix, Map<String, URI> URIS) throws Exception {
+    for (final Path resourcePath : resources) {
+
+      final String filenameString = filePrefix + resourcePath.getFileName().toString();
+      final File resourceFile = resourcePath.toFile();
+
+      if (FilenameUtils.isExtension(filenameString, "txt")) {
+        archive.addEntry(resourceFile, filenameString, URIS.get("plain"));
+      } else if (FilenameUtils.isExtension(filenameString, "RData")) {
+        archive.addEntry(resourceFile, filenameString, URIS.get("rdata"));
+      } else if (FilenameUtils.isExtension(filenameString, "csv")) {
+        archive.addEntry(resourceFile, filenameString, URIS.get("csv"));
+      } else if (FilenameUtils.isExtension(filenameString, "jpeg")) {
+        archive.addEntry(resourceFile, filenameString, URIS.get("jpeg"));
+      } else if (FilenameUtils.isExtension(filenameString, "bmp")) {
+        archive.addEntry(resourceFile, filenameString, URIS.get("bmp"));
+      } else if (FilenameUtils.isExtension(filenameString, "png")) {
+        archive.addEntry(resourceFile, filenameString, URIS.get("png"));
+      } else if (FilenameUtils.isExtension(filenameString, "tiff")) {
+        archive.addEntry(resourceFile, filenameString, URIS.get("tiff"));
+      } else if (FilenameUtils.isExtension(filenameString, "xlsx")) {
+        archive.addEntry(resourceFile, filenameString, URIS.get("xlsx"));
+      }
+      // ADD additional resource files that the model script might need
+      else if (FilenameUtils.isExtension(filenameString, scriptHandler.getFileExtension())) {
+      archive.addEntry(resourceFile, filenameString, FSKML.getURIS(1, 0, 12).get(scriptHandler.getFileExtension()));
+      }
+    }
+  }
+  
   public static void writeFSKObject(FskPortObject fskObj, CombineArchive archive, String filePrefix,
       Map<String, URI> URIS) throws Exception {
 
@@ -165,7 +199,7 @@ class WriterNodeModel extends NoInternalsModel {
     // Adds model metadata
     addMetaData(archive, fskObj.modelMetadata, filePrefix + "metaData.json");
 
-    // If the model has an associated working directory with resources these resources
+ // If the model has an associated working directory with resources these resources
     // need to be saved into the archive.
     if (fskObj.getEnvironmentManager().isPresent()) {
       Optional<Path> workingDirectory = fskObj.getEnvironmentManager().get().getEnvironment();
@@ -173,43 +207,18 @@ class WriterNodeModel extends NoInternalsModel {
         // Adds resources
         
         List<Path> resources = Files.list(workingDirectory.get()).collect(Collectors.toList());
-
-        // Add generated resources
-        fskObj.getGeneratedResourcesDirectory().ifPresent(directory -> {
-          for (File generatedResource : directory.listFiles()) {
-            resources.add(generatedResource.toPath());
-          }
-        });
+        addResourcesToArchive(resources, archive, filePrefix, URIS);
         
-        for (final Path resourcePath : resources) {
-
-          final String filenameString = filePrefix + resourcePath.getFileName().toString();
-          final File resourceFile = resourcePath.toFile();
-
-          if (FilenameUtils.isExtension(filenameString, "txt")) {
-            archive.addEntry(resourceFile, filenameString, URIS.get("plain"));
-          } else if (FilenameUtils.isExtension(filenameString, "RData")) {
-            archive.addEntry(resourceFile, filenameString, URIS.get("rdata"));
-          } else if (FilenameUtils.isExtension(filenameString, "csv")) {
-            archive.addEntry(resourceFile, filenameString, URIS.get("csv"));
-          } else if (FilenameUtils.isExtension(filenameString, "jpeg")) {
-            archive.addEntry(resourceFile, filenameString, URIS.get("jpeg"));
-          } else if (FilenameUtils.isExtension(filenameString, "bmp")) {
-            archive.addEntry(resourceFile, filenameString, URIS.get("bmp"));
-          } else if (FilenameUtils.isExtension(filenameString, "png")) {
-            archive.addEntry(resourceFile, filenameString, URIS.get("png"));
-          } else if (FilenameUtils.isExtension(filenameString, "tiff")) {
-            archive.addEntry(resourceFile, filenameString, URIS.get("tiff"));
-          } else if (FilenameUtils.isExtension(filenameString, "xlsx")) {
-            archive.addEntry(resourceFile, filenameString, URIS.get("xlsx"));
-          }
-          // ADD additional resource files that the model script might need
-          else if (FilenameUtils.isExtension(filenameString, scriptHandler.getFileExtension())) {
-          archive.addEntry(resourceFile, filenameString, FSKML.getURIS(1, 0, 12).get(scriptHandler.getFileExtension()));
-          }
-        }
       }
     }
+    
+    // Add generated resources
+    if (fskObj.getGeneratedResourcesDirectory().isPresent()) {
+      Path workingDirectory = fskObj.getGeneratedResourcesDirectory().get().toPath();
+      List<Path> resources = Files.list(workingDirectory).collect(Collectors.toList());
+      addResourcesToArchive(resources, archive, filePrefix, URIS);
+    }
+
     // Adds model script
     final ArchiveEntry modelEntry =
         addRScript(archive, fskObj.getModel(), filePrefix + "model." + scriptHandler.getFileExtension());
