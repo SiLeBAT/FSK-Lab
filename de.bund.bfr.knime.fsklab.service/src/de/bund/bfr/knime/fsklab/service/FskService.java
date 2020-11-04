@@ -126,7 +126,7 @@ public class FskService implements Runnable {
       return;
     }
 
-    port(9999);
+    port(0);
 
     // Enable CORS
     options("/*", (request, response) -> {
