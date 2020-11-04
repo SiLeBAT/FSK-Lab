@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -438,7 +437,7 @@ public class FskService implements Runnable {
         Statement statement = initialConnection.createStatement();
 
         File file = getResource(bundle, "data/initialdata/" + filename);
-        for (String line : FileUtils.readLines(file, StandardCharsets.UTF_8)) {
+        for (String line : FileUtils.readLines(file, "UTF-8")) {
           statement.execute(line);
         }
       } catch (IOException | SQLException | URISyntaxException e) {
