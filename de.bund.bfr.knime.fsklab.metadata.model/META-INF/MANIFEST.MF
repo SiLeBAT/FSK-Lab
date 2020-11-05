@@ -7,7 +7,8 @@ Bundle-ClassPath: .,
  libs/emfjson-jackson-1.0.0-rc.1.jar,
  libs/swagger-annotations-1.5.15.jar,
  libs/threetenbp-1.3.5.jar,
- libs/jackson-datatype-threetenbp-2.8.4.jar
+ libs/jackson-datatype-threetenbp-2.8.4.jar,
+ libs/snakeyaml-1.27.jar
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8

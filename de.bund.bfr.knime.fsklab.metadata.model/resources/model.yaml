@@ -1,0 +1,1536 @@
+swagger: "2.0"
+info:
+  description: TODO
+  version: 1.0.4
+  title: RAKIP Generic model
+host: TODO
+paths: {}
+definitions:
+  Assay:
+    type: object
+    required:
+     - name
+    properties:
+      name:
+        type: string
+        description: A name given to the assay
+      description:
+        type: string
+        description: General description of the assay. Corresponds to the Protocol REF in ISA
+      moisturePercentage:
+        type: string
+        description: Percentage of moisture in the original sample
+      fatPercentage:
+        type: string
+        description: Percentage of fat in the original sample
+      detectionLimit:
+        type: string
+        description: Limit of detection reported in the unit specified by the variable 'Hazard unit'
+      quantificationLimit:
+        type: string
+        description: Limit of quantification reported in the unit specified by the variable 'Hazard unit'
+      leftCensoredData:
+        type: string
+        description: Percentage of measures equal to LOQ and/or LOD
+      contaminationRange:
+        type: string
+        description: Range of result of the analytical measure reported in the unit specified by the variable 'Hazard unit' before censored data treatment
+      uncertaintyValue:
+        type: string
+        description: Indicate the expanded uncertainty (usually 95% confidence interval) value associated with the measurement expressed in the unit reported in the field 'Hazard unit'
+
+  Contact:
+    type: object
+    properties:
+      title:
+        type: string
+      familyName:
+        type: string
+      givenName:
+        type: string
+      email:
+        type: string
+        format: email
+      telephone:
+        type: string
+      streetAddress:
+        type: string
+      country:
+        type: string
+      zipCode:
+        type: string
+      region:
+        type: string
+      timeZone:
+        type: string
+      gender:
+        type: string
+      note:
+        type: string
+      organization:
+        type: string
+    required:
+     - email
+
+  Hazard:
+    type: object
+    required:
+    - name
+    properties:
+      type:
+        type: string
+        description: General classification of the hazard for which the model or data applies
+      name:
+        type: string
+        description: Name of the hazard (agent, contaminant, chemical) for which the data or model applies
+      description:
+        type: string
+        description: Description of the hazard for which the model or data applies
+      unit:
+        type: string
+        description: Unit of the hazard for which the model or data applies
+      adverseEffect:
+        type: string
+        description: Adverse effect induced by hazard about morbidity, mortality, and etcetera
+      sourceOfContamination:
+        type: string
+        description: Origin of the contamination, source
+      benchmarkDose:
+        type: string
+        description: A dose or concentration that produces a predetermined change in response rate of an adverse effect (called the benchmark response or BMR) compared to background
+      maximumResidueLimit:
+        type: string
+        description: International regulations and permissible maximum residue levels in food and drinking water
+      noObservedAdverseAffectLevel:
+        type: string      
+        description: Level of exposure of an organism, found by experiment or observation, at which there is no biologically or statistically significant increase in the frequency or severity of any adverse effects in the exposed population when compared to its appropriate control
+      lowestObservedAdverseAffectLevel:
+        type: string
+        description: Lowest concentration or amount of a substance found by experiment or observation that causes an adverse alteration of morphology, function, capacity, growth, development, or lifespan of a target organism distinguished from normal organisms of the same species under defined conditions of exposure
+      acceptableOperatorsExposureLevel:
+        type: string
+        description: Maximum amount of active substance to which the operator may be exposed without any adverse health effects. The AOEL is expressed as milligrams of the chemical per kilogram body weight of the operator
+      acuteReferenceDose:
+        type: string
+        description: An estimate (with uncertainty spanning perhaps an order of magnitude) of a daily oral exposure for an acute duration (24 hours or less) to the human population (including sensitive subgroups) that is likely to be without an appreciable risk of deleterious effects during a lifetime
+      acceptableDailyIntake:
+        type: string
+        description: Measure of amount of a specific substance in food or in drinking water tahta can be ingested (orally) on a daily basis over a lifetime without an appreciable health risk
+      indSum:
+        type: string
+        description: Define if the parameter reported is an individual residue/analyte, a summed residue definition or part of a sum a summed residue definition
+
+  Laboratory:
+    type: object
+    required:
+    - accreditation
+    properties:
+      accreditation:
+        type: array
+        items:
+          type: string
+          description: The laboratory accreditation to ISO/IEC 17025
+      name:
+        type: string
+        description: Laboratory code (National laboratory code if available) or Laboratory name 
+      country:
+        type: string
+        description: Country where the laboratory is placed. (ISO 3166-1-alpha-2)
+
+  ModelEquation:
+    type: object
+    required:
+    - name
+    - modelEquation
+    properties:
+      name:
+        type: string
+        description: A name given to the model equation
+      modelEquationClass:
+        type: string
+        description: Information on that helps to categorize model equations
+      reference:
+        type: array
+        items:
+          $ref: '#/definitions/Reference'
+          description: Information on the source, where the equation has been extracted from
+      modelEquation:
+        type: string
+        description: The pointer to the file that holds the software code (e.g. R-script)
+      modelHypothesis:
+        type: array
+        items:
+          type: string
+          description: Description of the hypothesis of the model
+
+  ModelCategory:
+    type: object
+    required:
+    - modelClass
+    properties:
+      modelClass:
+        type: string
+        description: Type of model according to RAKIP classification
+      modelSubClass:
+        type: array
+        items:
+          type: string
+          description: Sub-cassification of the model given the Model Class
+      modelClassComment:
+        type: string
+        description: Empty
+      basicProcess:
+        type: array
+        items:
+          type: string
+          description: Defines the impact of the process on the hazard (so far only valid for process models and predictive models)
+
+  Parameter:
+    type: object
+    required:
+    - id
+    - classification
+    - name
+    - unit
+    - dataType
+    properties:
+      id:
+        type: string
+        description: An unambiguous ID given to each of the parameters - preferably autogenerated by a software tool and compatible with SBML ID requirements, only letters from A to Z, numbers and '_'
+      classification:
+        type: string
+        description: General classification of the parameter (e.g. Input, Constant, Output...)
+        enum:
+         - CONSTANT
+         - INPUT
+         - OUTPUT
+      name:
+        type: string
+        description: A name given to the parameter
+      description:
+        type: string
+        description: General description of the parameter
+      unit:
+        type: string
+        description: Unit of the parameter
+      unitCategory:
+        type: string
+        description: Empty
+      dataType:
+        type: string
+        description: Information on the data format of the parameter, e.g. if it the input parameter is a file location or a date or a number. This is important for software tools interpreting the metadata and generate user interfaces for parameter input.
+        enum:
+         - INTEGER
+         - DOUBLE
+         - NUMBER
+         - DATE
+         - FILE
+         - BOOLEAN
+         - VECTOROFNUMBERS
+         - VECTOROFSTRINGS
+         - MATRIXOFNUMBERS
+         - MATRIXOFSTRINGS
+         - OBJECT
+         - STRING
+      source:
+        type: string
+        description: Information on the type of knowledge used to define the parameter value
+      subject:
+        type: string
+        description: Scope of the parameter, e.g. if it refers to an animal, a batch of animals, a batch of products, a carcass, a carcass skin etc
+      distribution:
+        type: string
+        description: Distribution describing the parameter variabilty. If no distribution selected this means the value provided in "Parameter value" is a point estimate. In case a distribution is selected the value provided in "Parameter value" is a string that the model code can parse in order to sample from the named distribution
+      value:
+        type: string
+        description: A default value for the parameter. This is mandatory (needs to be provided) for all parameters of type 'Input'
+      reference:
+        $ref: '#/definitions/Reference'
+        description: Information on the source, where the value of the parameter has been extracted from - if available. The format should use that used in other "Reference" metadata. Preferably DOI.     
+      variabilitySubject:
+        type: string
+        description: Information 'per what' the variability is described. It can be variability between broiler in a flock,  variability between all meat packages sold, variability between days, etc.
+      minValue:
+        type: string
+        description: Numerical value of the minimum limit of the parameter that determines the range of applicability for which the model applies
+      maxValue:
+        type: string
+        description: Numerical value of the maximum limit of the parameter that determines the range of applicability for which the model applies
+      error:
+        type: string
+        description: Error of the parameter value
+
+  PopulationGroup:
+    type: object
+    required:
+     - name
+    properties:
+      name:
+        type: string
+        description: Name of the population for which the model or data applies
+      targetPopulation:
+        type: string
+        description: Population of individual that we are interested in describing and making statistical inferences about
+      populationSpan:
+        type: array
+        items:
+          type: string
+          description: Temporal information on the exposure duration
+      populationDescription:
+        type: array
+        items:
+          type: string
+          description: Description of the population for which the model applies (demographic and socio-economic characteristics for example). Background information that are needed in the data analysis phase, size of household, education level, employment status, professional category, ethnicity, etc.
+      populationAge:
+        type: array
+        items:
+          type: string
+          description: Description of the range of age or group of age
+      populationGender:
+        type: string
+        description: Description of the percentage of gender
+      bmi:
+        type: array
+        items:
+          type: string
+          description: Description of the range of BMI or class of BMI or BMI mean
+      specialDietGroups:
+        type: array
+        items:
+          type: string
+          description: Description of sub-population with special diets (vegetarians, diabetics, group following special ethnic diets)
+      patternConsumption:
+        type: array
+        items:
+          type: string
+          description: Description of the consumption of different food items, frequency, portion size
+      region:
+        type: array
+        items:
+          type: string
+          description: Spatial information (area) on which the population group of the model or data applies
+      country:
+        type: array
+        items:
+          type: string
+          description: Country on which the population group of the model or data applies
+      populationRiskFactor:
+        type: array
+        items:
+          type: string
+          description: Population risk factor that may influence the outcomes of the study, confounder should be included
+      season:
+        type: array
+        items:
+          type: string
+          description: Distribution of surveyed people according to the season (influence consumption pattern)
+  
+  QualityMeasures:
+    type: object
+    properties:
+      sse:
+        type: number
+        description: Statistical values calculated to describe the performance of the model fitting procedure
+      mse:
+        type: number
+        description: Statistical values calculated to describe the performance of the model fitting procedure
+      rmse:
+        type: number
+        description: Statistical values calculated to describe the performance of the model fitting procedure
+      rsquared:
+        type: number
+        description: Statistical values calculated to describe the performance of the model fitting procedure
+      aic:
+        type: number
+        description: Statistical values calculated to describe the performance of the model fitting procedure
+      bic:
+        type: number
+        description: Statistical values calculated to describe the performance of the model fitting procedure
+      sensitivityAnalysis:
+        type: string
+        description: Description of the results of an sensitivity analysis, i.e. how independence assumptions are met or how variables will affect the output of model
+  Reference:
+    type: object
+    required:
+    - isReferenceDescription
+    - doi
+    - title
+    properties:
+      isReferenceDescription:
+        type: boolean
+        description: Indicates whether this specific publication serves as the reference description for the model. There has to be at least one reference where this field is set to 'True'
+      publicationType:
+        description: The type of publication, e.g. Report, Journal article, Book, Online database, ... 
+        type: string
+        enum:
+         - ABST
+         - ADVS
+         - AGGR
+         - ANCIENT
+         - ART
+         - BILL
+         - BLOG
+         - BOOK
+         - CASE
+         - CHAP
+         - CHART
+         - CLSWK
+         - COMP
+         - CONF
+         - CPAPER
+         - CTLG
+         - DATA
+         - DBASE
+         - DICT
+         - EBOOK
+         - ECHAP
+         - EDBOOK
+         - EJOUR
+         - ELECT
+         - ENCYC
+         - EQUA
+         - FIGURE
+         - GEN
+         - GOVDOC
+         - GRANT
+         - HEAR
+         - ICOMM
+         - INPR
+         - JOUR
+         - JFULL
+         - LEGAL
+         - MANSCPT
+         - MAP
+         - MGZN
+         - MPCT
+         - MULTI
+         - MUSIC
+         - NEW
+         - PAMP
+         - PAT
+         - PCOMM
+         - RPRT
+         - SER
+         - SLIDE
+         - SOUND
+         - STAND
+         - STAT
+         - THES
+         - UNPB
+         - VIDEO
+      date:
+        type: string
+        format: date
+        description: Temporal information on the publication date
+      pmid:
+        type: string
+        description: The PubMed ID related to this publication
+      doi:
+        type: string
+        description: The DOI related to this publication
+      authorList:
+        type: string
+        description: Name and surname of the authors who contributed to this publication
+      title:
+        type: string
+        description: Title of the publication in which the model or the data has been described
+      abstract:
+        type: string
+        description: Abstract of the publication in which the model or the data has been described 
+      journal:
+        type: string
+        description: Data on the details of the journal in which the model or the data has been described
+      volume:
+        type: string
+        description: Data on the details of the journal in which the model or the data has been described
+      issue:
+        type: string
+        description: Data on the details of the journal in which the model or the data has been described
+      status:
+        type: string
+        description: The status of this publication, e.g. Published, Submitted, etc.
+      website:
+        type: string
+        description: A link to the publication website (different from DOI)
+      comment:
+        type: string
+        description: Further comments related to the reference description, e.g. which section in there describes the specific model or which figure in there can be reproduced with the visualization script
+
+  Study:
+    type: object
+    required:
+     - title
+    properties:
+      identifier:
+        type: string
+        description: A user defined identifier for the study
+      title:
+        type: string
+        description: A title for the Study
+      description:
+        type: string
+        description: A brief description of the study aims
+      designType:
+        type: string
+        description: The type of study design being employed
+      assayMeasurementType:
+        type: string
+        description: The measurement being observed in this assay
+      assayTechnologyType:
+        type: string
+        description: The technology being employed to observe this measurement
+      assayTechnologyPlatform:
+        type: string
+        description: The technology platform used
+      accreditationProcedureForTheAssayTechnology:
+        type: string
+        description: Accreditation procedure for the analytical method used
+      protocolName:
+        type: string
+        description: The name of the protocol, e.g.Extraction Protocol
+      protocolType:
+        type: string
+        description: The type of the protocol, preferably coming from an Ontology, e.g. Extraction Protocol
+      protocolDescription:
+        type: string
+        description: A description of the Protocol
+      protocolURI:
+        type: string
+        description: A URI to link out to a publication, web page, etc. describing the protocol.
+      protocolVersion:
+        type: string
+        description: The version of the protocol used, where applicable
+      protocolParametersName:
+        type: string
+        description: The parameters used when executing this protocol
+      protocolComponentsName:
+        type: string
+        description: The components used when carrying out this protocol
+      protocolComponentsType:
+        type: string
+        description: Description
+
+  StudySample:
+    type: object
+    required:
+     - sampleName
+     - protocolOfSampleCollection
+     - samplingPlan
+     - samplingWeight
+     - samplingSize
+    properties:
+      sampleName:
+        type: string
+        description: An unambiguous ID given to the samples used in the assay
+      protocolOfSampleCollection:
+        type: string
+        description: Additional protocol for sample and sample collection. Corresponds to the Protocol REF in ISA
+      samplingStrategy:
+        type: string
+        description: Sampling strategy (ref. EUROSTAT - Typology of sampling strategy, version of July 2009)
+      typeOfSamplingProgram:
+        type: string
+        description: Indicate the type of programm for which the samples have been collected
+      samplingMethod:
+        type: string
+        description: Sampling method used to take the sample
+      samplingPlan:
+        type: string
+        description: Description of data collection technique (stratified or complex sampling (several stages))
+      samplingWeight:
+        type: string
+        description: Description of the method employed to compute sampling weight (nonresponse-adjusted weight)
+      samplingSize:
+        type: string
+        description: Number of units, full participants, partial participants, eligibles, not eligible, unresolved (eligibility status not resolved)…
+      lotSizeUnit:
+        type: string
+        description: Unit in which the lot size is expressed
+      samplingPoint:
+        type: string
+        description: Point in the food chain where the sample was taken. (Doc. ESTAT/F5/ES/155 “Data dictionary of activities of the establishments”)
+
+  Exposure:
+    type: object
+    required:
+    - type
+    properties:
+      treatment:
+        description: Description of the mathematical method to replace left-censored data (recommandation of WHO (2013), distribution or others)
+        type: array
+        items:
+          type: string
+      contamination:
+        description: Description of the range of of the level of contamination after left censored data treatment
+        type: array
+        items:
+          type: string
+      type:
+        description: Description of the type of exposure
+        type: string
+      scenario:
+        type: array
+        description: Description of the different scenarii used in exposure assessment
+        items:
+          type: string
+      uncertaintyEstimation:
+        description: Analysis to estimate uncertainty
+        type: string
+
+  Product:
+    type: object
+    required:
+    - name
+    - unit
+    properties:
+      name:
+        type: string
+        description: The product, matrix or environment (e.g food product, lab media, soil etc.) for which the model or data applies
+      description:
+        type: string
+        description: Detailed description of the product, matrix or environment for which the model or data applies
+      unit:
+        type: string
+        description: Unit of the product, matrix or environment for which the model or data applies
+      method:
+        type: array
+        description: Type of production for the product/ matrix
+        items:
+          type: string
+      packaging:
+        type: array
+        description: Describe container or wrapper that holds the product/matrix. Common type of packaging (paper or plastic bags, boxes, tinplate or aluminium cans, plastic trays, plastic bottles, glass bottles or jars)
+        items:
+          type: string
+      treatment:
+        type: array
+        description: Used to characterise a product/matrix based on the treatment or processes applied to the product or any indexed ingredient
+        items:
+          type: string
+      originCountry:
+        type: string
+        description: Country of origin of the food/product (ISO 3166-1-alpha-2 country code)
+      originArea:
+        type: string
+        description: Area of origin of the food/product (Nomenclature of territorial units for statistics – NUTS – coding system valid only for EEA and Switzerland)
+      fisheriesArea:
+        type: string
+        description: Fisheries or aquaculture area specifying the origin of the sample (FAO Fisheries areas)
+      productionDate:
+        type: string
+        description: Date of production of food/product
+        format: date
+      expiryDate:
+        type: string
+        description: Date of expiry of food/product
+        format: date
+
+  DietaryAssessmentMethod:
+    type: object
+    required:
+    - collectionTool
+    - numberOfNonConsecutiveOneDay
+    - numberOfFoodItems
+    - recordTypes
+    - foodDescriptors
+    properties:
+      collectionTool:
+        type: string
+        description: Food diaries, interview, 24-hour recall interview, food propensy questionnaire, portion size measurement aids, eating outside questionnaire
+      numberOfNonConsecutiveOneDay:
+        type: string
+        description: Number of non-consecutive one-day recorded
+      softwareTool:
+        type: string
+        description: Name of the software used to collect the data
+      numberOfFoodItems:
+        type: array
+        description: Number of food items
+        items:
+          type: string
+      recordTypes:
+        type: array
+        description: Consumption occasion, mean of consumption, quantified and described as eaten, recipes for self-made
+        items:
+          type: string
+      foodDescriptors:
+        type: array
+        description: Description using FoodEx2 facet
+        items:
+          type: string
+
+  Model:
+    type: object
+    discriminator: modelType
+    properties:
+      modelType:
+        type: string
+    required:
+    - modelType
+
+  GenericModelScope:
+    type: object
+    properties:
+      product:
+        type: array
+        items:
+          $ref: '#/definitions/Product'
+      hazard:
+        type: array
+        items:
+          $ref: '#/definitions/Hazard'
+      populationGroup:
+        type: array
+        items:
+          $ref: '#/definitions/PopulationGroup'
+      generalComment:
+        type: string
+      temporalInformation:
+        type: string
+        description: General comments on the scope of the study, data or model 
+      spatialInformation:
+        type: array
+        description: Spatial information (area) on which the model or data applies
+        items:
+          type: string
+
+  GenericModelDataBackground:
+    type: object
+    required:
+    - study
+    properties:
+      study:
+        $ref: '#/definitions/Study'
+      studySample:
+        type: array
+        items:
+          $ref: '#/definitions/StudySample'
+      dietaryAssessmentMethod:
+        type: array
+        items:
+          $ref: '#/definitions/DietaryAssessmentMethod'
+      laboratory:
+        type: array
+        items:
+          $ref: '#/definitions/Laboratory'
+      assay:
+        type: array
+        items:
+          $ref: '#/definitions/Assay'
+
+  GenericModelModelMath:
+    type: object
+    required:
+    - parameter
+    properties:
+      parameter:
+        type: array
+        items:
+          $ref: '#/definitions/Parameter'
+      qualityMeasures:
+        type: array
+        items:
+          $ref: '#/definitions/QualityMeasures'
+      modelEquation:
+        type: array
+        items:
+          $ref: '#/definitions/ModelEquation'
+      fittingProcedure:
+        type: string
+        description: Procedure used to fit the data to the model equation 
+      exposure:
+        type: array
+        items:
+          $ref: '#/definitions/Exposure'
+      event:
+        type: array
+        description: Definition of time-dependent parameter changes
+        items:
+          type: string
+
+  GenericModel:
+    type: object
+    allOf:
+    - $ref: '#/definitions/Model'
+    - type: object
+      properties:
+        generalInformation:
+          type: object
+          required:
+          - name
+          - identifier
+          - creationDate
+          - rights
+          - reference
+          properties:
+            name:
+              type: string
+              description: A name given to the model or data
+            source:
+              type: string
+              description: A source from which the model/data is derived
+            identifier:
+              type: string
+              description: An unambiguous ID given to the model or data. This can also be created automatically by a software tool
+            author:
+              type: array
+              description: Person(s) who generated the model code or generated the data set originally
+              items:
+                $ref: '#/definitions/Contact'
+            creator:
+              type: array
+              description: The person(s) that created this FSK file including all metadata
+              items:
+                $ref: '#/definitions/Contact'
+            creationDate:
+              type: string
+              description: Creation date/time of the FSK file
+              format: date
+            modificationDate:
+              type: array
+              description: Date/time of the last version of the FSK file
+              items:
+                type: string
+                format: date
+            rights:
+              type: string
+              description: Rights granted for usage, distribution and modification of this FSK file
+            availability:
+              type: string
+              description: Availability of data or model, i.e. if the annotated model code / data is included in this FSK file
+            url:
+              type: string
+              description: Web address referencing the resource location (data for example)
+              format: uri
+            format:
+              type: string
+              description: File extension of the model or data file (including version number of format if applicable)
+            reference:
+              type: array
+              items:
+                $ref: '#/definitions/Reference'
+            language:
+              type: string
+              description: A language of the resource (some data or reports can be available in French language for example)
+            software:
+              type: string
+              description: The program or software language in which the model has been implemented
+            languageWrittenIn:
+              type: string
+              description: Software language used to write the model, e.g. R or MatLab
+            modelCategory:
+              $ref: '#/definitions/ModelCategory'
+            status:
+              type: string
+              description: The curation status of the model
+            objective:
+              type: string
+              description: Objective of the model or data
+            description:
+              type: string
+              description: General description of the study, data or model
+        scope:
+          $ref: '#/definitions/GenericModelScope'
+        dataBackground:
+          $ref: '#/definitions/GenericModelDataBackground'
+        modelMath:
+          $ref: '#/definitions/GenericModelModelMath'
+
+  DataModel:
+    type: object
+    allOf:
+    - $ref: '#/definitions/Model'
+    - type: object
+      properties:
+        generalInformation:
+          type: object
+          required:
+          - name
+          - identifier
+          - creationDate
+          - rights
+          - reference
+          properties:
+            name:
+              type: string
+            source:
+              type: string
+            identifier:
+              type: string
+            author:
+              type: array
+              items:
+                $ref: '#/definitions/Contact'
+            creator:
+              type: array
+              items:
+                $ref: '#/definitions/Contact'
+            creationDate:
+              type: string
+              format: date
+            modificationDate:
+              type: array
+              items:
+                type: string
+                format: date
+            rights:
+              type: string
+            availability:
+              type: string
+            url:
+              type: string
+              format: uri
+            format:
+              type: string
+            reference:
+              type: array
+              items:
+                $ref: '#/definitions/Reference'
+            language:
+              type: string
+            status:
+              type: string
+            objective:
+              type: string
+            description:
+              type: string
+        scope:
+          $ref: '#/definitions/GenericModelScope'
+        dataBackground:
+          $ref: '#/definitions/GenericModelDataBackground'
+        modelMath:
+          type: object
+          required:
+          - parameter
+          properties:
+            parameter:
+              type: array
+              items:
+                $ref: '#/definitions/Parameter'
+  
+  PredictiveModelGeneralInformation:
+    type: object
+    required:
+    - name
+    - identifier
+    - creationDate
+    - rights
+    - reference
+    - languageWrittenIn
+    properties:
+      name:
+        type: string
+      source:
+        type: string
+      identifier:
+        type: string
+      author:
+        type: array
+        items:
+          $ref: '#/definitions/Contact'
+      creator:
+        type: array
+        items:
+          $ref: '#/definitions/Contact'
+      creationDate:
+        type: string
+        format: date
+      modificationDate:
+        type: array
+        items:
+          type: string
+          format: date
+      rights:
+        type: string
+      availability:
+        type: string
+      url:
+        type: string
+        format: uri
+      format:
+        type: string
+      reference:
+        type: array
+        items:
+          $ref: '#/definitions/Reference'
+      language:
+        type: string
+      software:
+        type: string
+      languageWrittenIn:
+        type: string
+      modelCategory:
+        $ref: '#/definitions/ModelCategory'
+      status:
+        type: string
+      objective:
+        type: string
+      description:
+          type: string
+
+  PredictiveModelDataBackground:
+    type: object
+    required:
+    - study
+    properties:
+      study:
+        $ref: '#/definitions/Study'
+      studySample:
+        type: array
+        items:
+          $ref: '#/definitions/StudySample'
+      laboratory:
+        type: array
+        items:
+          $ref: '#/definitions/Laboratory'
+      assay:
+        type: array
+        items:
+          $ref: '#/definitions/Assay'
+
+  PredictiveModelModelMath:
+    type: object
+    required:
+    - parameter
+    properties:
+      parameter:
+        type: array
+        items:
+          $ref: '#/definitions/Parameter'
+      qualityMeasures:
+        type: array
+        items:
+          $ref: '#/definitions/QualityMeasures'
+      modelEquation:
+        type: array
+        items:
+          $ref: '#/definitions/ModelEquation'
+      fittingProcedure:
+        type: string
+      event:
+        type: array
+        items:
+          type: string
+
+  PredictiveModel:
+    type: object
+    allOf:
+    - $ref: '#/definitions/Model'
+    - type: object
+      properties:
+        generalInformation:
+          $ref: '#/definitions/PredictiveModelGeneralInformation'
+        scope:
+          type: object
+          required:
+          - product
+          - hazard
+          properties:
+            product:
+              type: array
+              items:
+                type: object
+                required:
+                - name
+                - unit
+                properties:
+                  name:
+                    type: string
+                  description:
+                    type: string
+                  unit:
+                    type: string
+                  method:
+                    type: array
+                    items:
+                      type: string
+                  packaging:
+                    type: array
+                    items:
+                      type: string
+                  treatment:
+                    type: array
+                    items:
+                      type: string
+                  originCountry:
+                    type: string
+                  originArea:
+                    type: string
+                  fisheriesArea:
+                    type: string
+                  productionDate:
+                    type: string
+                    format: date
+                  expiryDate:
+                    type: string
+                    format: date
+            hazard:
+              type: array
+              items:
+                $ref: '#/definitions/Hazard'
+            generalComment:
+              type: string
+            temporalInformation:
+              type: string
+            spatialInformation:
+              type: array
+              items:
+                type: string
+        dataBackground:
+          $ref: '#/definitions/PredictiveModelDataBackground'
+        modelMath:
+          $ref: '#/definitions/PredictiveModelModelMath'
+
+  OtherModel:
+    type: object
+    allOf:
+    - $ref: '#/definitions/Model'
+    - type: object
+      properties:
+        generalInformation:
+          type: object
+          required:
+          - name
+          - identifier
+          - creationDate
+          - rights
+          - reference
+          - languageWrittenIn
+          properties:
+            name:
+              type: string
+            source:
+              type: string
+            identifier:
+              type: string
+            author:
+              type: array
+              items:
+                $ref: '#/definitions/Contact'
+            creator:
+              type: array
+              items:
+                $ref: '#/definitions/Contact'
+            creationDate:
+              type: string
+              format: date
+            modificationDate:
+              type: array
+              items:
+                type: string
+                format: date
+            rights:
+              type: string
+            availability:
+              type: string
+            url:
+              type: string
+              format: uri
+            format:
+              type: string
+            reference:
+              type: array
+              items:
+                $ref: '#/definitions/Reference'
+            language:
+              type: string
+            software:
+              type: string
+            languageWrittenIn:
+              type: string
+            modelCategory:
+              $ref: '#/definitions/ModelCategory'
+            status:
+              type: string
+            objective:
+              type: string
+            description:
+              type: string
+        scope:
+          type: object
+          properties:
+            product:
+              type: array
+              items:
+                $ref: '#/definitions/Product'
+            hazard:
+              type: array
+              items:
+                $ref: '#/definitions/Hazard'
+            populationGroup:
+              type: array
+              items:
+                $ref: '#/definitions/PopulationGroup'
+            generalComment:
+              type: string
+            temporalInformation:
+              type: string
+            spatialInformation:
+              type: array
+              items:
+                type: string
+        dataBackground:
+          type: object
+          required:
+          - study
+          properties:
+            study:
+              $ref: '#/definitions/Study'
+            studySample:
+              type: array
+              items:
+                $ref: '#/definitions/StudySample'
+            laboratory:
+              type: array
+              items:
+                $ref: '#/definitions/Laboratory'
+            assay:
+              type: array
+              items:
+                $ref: '#/definitions/Assay'
+        modelMath:
+          type: object
+          required:
+          - parameter
+          properties:
+            parameter:
+              type: array
+              items:
+                $ref: '#/definitions/Parameter'
+            qualityMeasures:
+              type: array
+              items:
+                $ref: '#/definitions/QualityMeasures'
+            modelEquation:
+              type: array
+              items:
+                $ref: '#/definitions/ModelEquation'
+            fittingProcedure:
+              type: string
+            event:
+              type: array
+              items:
+                type: string
+
+  ExposureModelScope:
+    type: object
+    required:
+    - product
+    - hazard
+    - populationGroup
+    properties:
+      product:
+        type: array
+        items:
+          $ref: '#/definitions/Product'
+      hazard:
+        type: array
+        items:
+          $ref: '#/definitions/Hazard'
+      populationGroup:
+        type: array
+        items:
+          $ref: '#/definitions/PopulationGroup'
+      generalComment:
+        type: string
+      temporalInformation:
+        type: string
+      spatialInformation:
+        type: array
+        items:
+          type: string
+
+  ExposureModel:
+    type: object
+    allOf:
+    - $ref: '#/definitions/Model'
+    - type: object
+      properties:
+        generalInformation:
+          $ref: '#/definitions/PredictiveModelGeneralInformation'
+        scope:
+          $ref: '#/definitions/ExposureModelScope'
+        dataBackground:
+          $ref: '#/definitions/GenericModelDataBackground'
+        modelMath:
+          $ref: '#/definitions/GenericModelModelMath'
+
+  ToxicologicalModel:
+    type: object
+    allOf:
+    - $ref: '#/definitions/Model'
+    - type: object
+      properties:
+        generalInformation:
+          $ref: '#/definitions/PredictiveModelGeneralInformation'
+        scope:
+          type: object
+          properties:
+            hazard:
+              type: array
+              items:
+                $ref: '#/definitions/Hazard'
+            populationGroup:
+              type: array
+              items:
+                $ref: '#/definitions/PopulationGroup'
+            generalComment:
+              type: string
+            temporalInformation:
+              type: string
+            spatialInformation:
+              type: array
+              items:
+                type: string
+        dataBackground:
+          $ref: '#/definitions/PredictiveModelDataBackground'
+        modelMath:
+          $ref: '#/definitions/GenericModelModelMath'
+
+  DoseResponseModel:
+    type: object
+    allOf:
+    - $ref: '#/definitions/Model'
+    - type: object
+      properties:
+        generalInformation:
+          type: object
+          required:
+          - modelName
+          - identifier
+          - creator
+          - creationDate
+          - rights
+          - reference
+          - languageWrittenIn
+          properties:
+            modelName:
+              type: string
+            source:
+              type: string
+            identifier:
+              type: string
+            author:
+              type: array
+              items:
+                $ref: '#/definitions/Contact'
+            creator:
+              type: array
+              items:
+                $ref: '#/definitions/Contact'
+            creationDate:
+              type: string
+              format: date
+            modificationDate:
+              type: array
+              items:
+                type: string
+                format: date
+            rights:
+              type: string
+            availability:
+              type: string
+            url:
+              type: string
+            format:
+              type: string
+            reference:
+              type: array
+              items:
+                $ref: '#/definitions/Reference'
+            language:
+              type: string
+            software:
+              type: string
+            languageWrittenIn:
+              type: string
+            modelCategory:
+              $ref: '#/definitions/ModelCategory'
+            status:
+              type: string
+            objective:
+              type: string
+            description:
+              type: string
+        scope:
+          type: object
+          required:
+          - hazard
+          - populationGroup
+          properties:
+            hazard:
+              type: array
+              items:
+                $ref: '#/definitions/Hazard'
+            populationGroup:
+              type: array
+              items:
+                $ref: '#/definitions/PopulationGroup'
+            generalComment:
+              type: string
+            temporalInformation:
+              type: string
+            spatialInformation:
+              type: string
+        dataBackground:
+          $ref: '#/definitions/PredictiveModelDataBackground'
+        modelMath:
+          type: object
+          required:
+          - parameter
+          properties:
+            parameter:
+              type: array
+              items:
+                $ref: '#/definitions/Parameter'
+            qualityMeasures:
+              type: array
+              items:
+                $ref: '#/definitions/QualityMeasures'
+            modelEquation:
+              type: array
+              items:
+                $ref: '#/definitions/ModelEquation'
+            fittingProcedure:
+              type: string
+            exposure:
+              $ref: '#/definitions/Exposure'
+            event:
+              type: array
+              items:
+                type: string
+
+  ProcessModel:
+    type: object
+    allOf:
+    - $ref: '#/definitions/Model'
+    - type: object
+      properties:
+        generalInformation:
+          $ref: '#/definitions/PredictiveModelGeneralInformation'
+        scope:
+          type: object
+          required:
+          - product
+          - hazard
+          properties:
+            product:
+              type: array
+              items:
+                $ref: '#/definitions/Product'
+            hazard:
+              type: array
+              items:
+                $ref: '#/definitions/Hazard'
+            generalComment:
+              type: string
+            temporalInformation:
+              type: string
+            spatialInformation:
+              type: array
+              items:
+                type: string
+        dataBackground:
+          $ref: '#/definitions/PredictiveModelDataBackground'
+        modelMath:
+          $ref: '#/definitions/PredictiveModelModelMath'
+
+  ConsumptionModel:
+    type: object
+    allOf:
+    - $ref: '#/definitions/Model'
+    - type: object
+      properties:
+        generalInformation:
+          $ref: '#/definitions/PredictiveModelGeneralInformation'
+        scope:
+          type: object
+          required:
+          - product
+          - populationGroup
+          properties:
+            product:
+              type: array
+              items:
+                $ref: '#/definitions/Product'
+            populationGroup:
+              type: array
+              items:
+                $ref: '#/definitions/PopulationGroup'
+            generalComment:
+              type: string
+            temporalInformation:
+              type: string
+            spatialInformation:
+              type: array
+              items:
+                type: string
+        dataBackground:
+          $ref: '#/definitions/GenericModelDataBackground'
+        modelMath:
+          $ref: '#/definitions/PredictiveModelModelMath'
+
+  HealthModel:
+    type: object
+    allOf:
+    - $ref: '#/definitions/Model'
+    - type: object
+      properties:
+        generalInformation:
+          $ref: '#/definitions/PredictiveModelGeneralInformation'
+        scope:
+          type: object
+          required:
+          - hazard
+          - populationGroup
+          properties:
+            hazard:
+              type: array
+              items:
+                $ref: '#/definitions/Hazard'
+            populationGroup:
+              type: array
+              items:
+                $ref: '#/definitions/PopulationGroup'
+            generalComment:
+              type: string
+            temporalInformation:
+              type: string
+            spatialInformation:
+              type: array
+              items:
+                type: string
+        dataBackground:
+          $ref: '#/definitions/PredictiveModelDataBackground'
+        modelMath:
+          $ref: '#/definitions/GenericModelModelMath'
+
+  RiskModel:
+    type: object
+    allOf:
+    - $ref: '#/definitions/Model'
+    - type: object
+      properties:
+        generalInformation:
+          $ref: '#/definitions/PredictiveModelGeneralInformation'
+        scope:
+          $ref: '#/definitions/ExposureModelScope'
+        dataBackground:
+          $ref: '#/definitions/GenericModelDataBackground'
+        modelMath:
+          $ref: '#/definitions/GenericModelModelMath'
+
+  QraModel:
+    type: object
+    allOf:
+    - $ref: '#/definitions/Model'
+    - type: object
+      properties:
+        generalInformation:
+          $ref: '#/definitions/PredictiveModelGeneralInformation' 
+        scope:
+          $ref: '#/definitions/ExposureModelScope'
+        dataBackground:
+          $ref: '#/definitions/GenericModelDataBackground'
+        modelMath:
+          $ref: '#/definitions/GenericModelModelMath'
