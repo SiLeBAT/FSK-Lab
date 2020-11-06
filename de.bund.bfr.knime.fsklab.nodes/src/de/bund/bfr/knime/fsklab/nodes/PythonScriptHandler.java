@@ -55,7 +55,7 @@ public class PythonScriptHandler extends ScriptHandler {
       std_out += output[0] + "\n";
     if (!output[1].isEmpty())
       std_err += output[1] + "\n";
-    return output;
+    return output[0].replaceAll("[\\[\\]\\'\\n]", "").split(","); // remove these characters: [ ' \n 
   }
 
   @Override
