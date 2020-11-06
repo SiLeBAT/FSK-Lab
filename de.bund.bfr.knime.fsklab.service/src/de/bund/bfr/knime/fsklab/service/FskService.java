@@ -106,6 +106,8 @@ import spark.ResponseTransformer;
 
 public class FskService implements Runnable {
 
+  private static final String MIME_JSON = "application/json";
+  
   private static final NodeLogger LOGGER = NodeLogger.getLogger(FskService.class);
 
   private static final JsonTransformer jsonTransformer = new JsonTransformer();
@@ -148,7 +150,7 @@ public class FskService implements Runnable {
 
     get("getById/:vocabulary/:id", (req, res) -> {
       try (Connection connection = DriverManager.getConnection("jdbc:h2:~/.fsk/vocabularies")) {
-        res.type("application/json");
+        res.type(MIME_JSON);
         BasicRepository<?> repository = getRepository(req.params(":vocabulary"), connection);
         int id = Integer.parseInt(req.params(":id"));
         return repository.getById(id);
@@ -157,7 +159,7 @@ public class FskService implements Runnable {
 
     get("/getAll/:vocabulary", (req, res) -> {
       try (Connection connection = DriverManager.getConnection("jdbc:h2:~/.fsk/vocabularies")) {
-        res.type("application/json");
+        res.type(MIME_JSON);
         BasicRepository<?> repository = getRepository(req.params(":vocabulary"), connection);
         return repository.getAll();
       }
@@ -165,7 +167,7 @@ public class FskService implements Runnable {
 
     get("/getAllNames/:vocabulary", (req, res) -> {
       try (Connection connection = DriverManager.getConnection("jdbc:h2:~/.fsk/vocabularies")) {
-        res.type("application/json");
+        res.type(MIME_JSON);
         BasicRepository<?> repository = getRepository(req.params(":vocabulary"), connection);
         return repository.getAllNames();
       }
@@ -176,7 +178,7 @@ public class FskService implements Runnable {
       String inputMetadata = req.body();
       // System.out.println(inputMetadata);
 
-      res.type("application/json");
+      res.type(MIME_JSON);
       res.status(200);
 
       return convertMetadata(inputMetadata, req.params(":targetModelClass"));
