@@ -146,7 +146,7 @@ public class FskService implements Runnable {
     before((request, response) -> response.header("Access-Control-Allow-Origin", "*"));
 
     get("getById/:vocabulary/:id", (req, res) -> {
-      try (Connection connection = DriverManager.getConnection("jdbc:h2:~/.fsk/vocabularies")) {
+      try (Connection connection = DriverManager.getConnection("jdbc:h2:~/.fsk/vocabularies", "fsk", "fsk")) {
         res.type("application/json");
         BasicRepository<?> repository = getRepository(req.params(":vocabulary"), connection);
         int id = Integer.parseInt(req.params(":id"));
@@ -155,7 +155,7 @@ public class FskService implements Runnable {
     }, jsonTransformer);
 
     get("/getAll/:vocabulary", (req, res) -> {
-      try (Connection connection = DriverManager.getConnection("jdbc:h2:~/.fsk/vocabularies")) {
+      try (Connection connection = DriverManager.getConnection("jdbc:h2:~/.fsk/vocabularies", "fsk", "fsk")) {
         res.type("application/json");
         BasicRepository<?> repository = getRepository(req.params(":vocabulary"), connection);
         return repository.getAll();
@@ -163,7 +163,7 @@ public class FskService implements Runnable {
     }, jsonTransformer);
 
     get("/getAllNames/:vocabulary", (req, res) -> {
-      try (Connection connection = DriverManager.getConnection("jdbc:h2:~/.fsk/vocabularies")) {
+      try (Connection connection = DriverManager.getConnection("jdbc:h2:~/.fsk/vocabularies", "fsk", "fsk")) {
         res.type("application/json");
         BasicRepository<?> repository = getRepository(req.params(":vocabulary"), connection);
         return repository.getAllNames();
@@ -397,6 +397,8 @@ public class FskService implements Runnable {
     fastImportProperties.put("CACHE_SIZE", 65536);
     fastImportProperties.put("LOCK_MODE", 0);
     fastImportProperties.put("UNDO_LOG", 0);
+    fastImportProperties.put("user", "fsk");
+    fastImportProperties.put("password", "fsk");
 
     Class.forName("org.h2.Driver");
     DeleteDbFiles.execute("~/.fsk", "vocabularies", true); // Delete DB if it exists
