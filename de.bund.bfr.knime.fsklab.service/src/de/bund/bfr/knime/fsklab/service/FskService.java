@@ -3,6 +3,7 @@ package de.bund.bfr.knime.fsklab.service;
 import static spark.Spark.awaitInitialization;
 import static spark.Spark.before;
 import static spark.Spark.get;
+import static spark.Spark.post;
 import static spark.Spark.options;
 import static spark.Spark.port;
 import java.io.File;
@@ -179,6 +180,17 @@ public class FskService implements Runnable {
       res.status(200);
 
       return convertMetadata(inputMetadata, req.params(":targetModelClass"));
+    }, jsonTransformer);
+    
+    post("joinMetadata", (req, res) -> {
+      // String body = req.body();
+      // Do nothing with body yet
+      // The body keeps two JSON models in an array.
+      
+      res.type("application/json");
+      res.status(200);
+      
+      return new GenericModel();
     }, jsonTransformer);
 
     // After initializing the service, get the randomly picked port by Spark.
