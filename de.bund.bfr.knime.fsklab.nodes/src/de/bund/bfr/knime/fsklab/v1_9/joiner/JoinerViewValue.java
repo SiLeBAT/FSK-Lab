@@ -19,6 +19,7 @@
 package de.bund.bfr.knime.fsklab.v1_9.joiner;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Random;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
@@ -28,6 +29,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.v1_9.JoinRelation;
+import de.bund.bfr.metadata.swagger.Parameter;
 
 class JoinerViewValue extends JSONViewContent {
 
@@ -114,5 +116,34 @@ class JoinerViewValue extends JSONViewContent {
 
   public void setVisualizationScript(String visualizationScript) {
     this.visualizationScript = visualizationScript;
+  }
+
+  /**
+   * a helper method for migrating parameter id in workflows written in older version
+   * 
+   * @param newFirstModelParameters new parameters with suffix
+   * @param newSecondModelParameters new parameters with suffix
+   */
+  void updateParameters(List<Parameter> newFirstModelParameters,
+      List<Parameter> newSecondModelParameters) {
+    if (joinRelations != null) {
+      newFirstModelParameters.stream().forEach(newParam -> {
+        for (JoinRelation relation : joinRelations) {
+          if (newParam.getId().startsWith(relation.getSourceParam())) {
+            relation.setCommand(
+                relation.getCommand().replaceAll(relation.getSourceParam(), newParam.getId()));
+            relation.setSourceParam(newParam.getId());
+          }
+        }
+      });
+
+      newSecondModelParameters.stream().forEach(newParam -> {
+        for (JoinRelation relation : joinRelations) {
+          if (newParam.getId().startsWith(relation.getTargetParam())) {
+            relation.setTargetParam(newParam.getId());
+          }
+        }
+      });
+    }
   }
 }

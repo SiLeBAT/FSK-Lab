@@ -1,5 +1,6 @@
 package de.bund.bfr.knime.fsklab.v1_9.joiner;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -109,8 +110,38 @@ public class JoinerNodeUtil {
   }
 
   /**
-   * This method sets the default values of a combined model. The values are taken from the simulation settings 
-   * of the individual models.
+   * A helper method to check if the parameters have a SUFFIX_FIRST or SUFFIX_SECOND which means in
+   * the case of false that the workflow needs upgrade.
+   * 
+   * @param params the parameters to be tested
+   * @return
+   */
+  public static boolean parametersNeedUpdate(List<Parameter> params) {
+    boolean needsUpdate = false;
+    if(params!=null && params.size()>0) {
+        String firstID = params.get(0).getId();
+        char lastChar = firstID.charAt(firstID.length()-1);
+        
+        for (Parameter param : params) {
+          String paramID = param.getId();
+          char currectLastChar = paramID.charAt(paramID.length()-1);
+          if(currectLastChar == lastChar) {
+            if (!(paramID.endsWith(JoinerNodeModel.SUFFIX_FIRST)
+                || (paramID.endsWith(JoinerNodeModel.SUFFIX_SECOND)))) {
+              needsUpdate = true;
+            }
+          }else {
+            needsUpdate = false;
+            break;
+          }
+        }
+    }
+    return needsUpdate;
+  }
+
+  /**
+   * This method sets the default values of a combined model. The values are taken from the
+   * simulation settings of the individual models.
    * 
    * 
    * @param first Simulation parameters from the first model to be joined.

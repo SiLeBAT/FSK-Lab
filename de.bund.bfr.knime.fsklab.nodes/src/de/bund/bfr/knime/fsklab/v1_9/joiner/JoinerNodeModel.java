@@ -127,8 +127,7 @@ public final class JoinerNodeModel
   }
 
   @Override
-  public void saveCurrentValue(NodeSettingsWO content) {
-  }
+  public void saveCurrentValue(NodeSettingsWO content) {}
 
   @Override
   public JoinerViewValue getViewValue() {
@@ -326,8 +325,7 @@ public final class JoinerNodeModel
   }
 
   @Override
-  protected void useCurrentValueAsDefault() {
-  }
+  protected void useCurrentValueAsDefault() {}
 
   protected void loadJsonSetting() throws IOException, CanceledExecutionException {
 
@@ -406,12 +404,13 @@ public final class JoinerNodeModel
         visualizationScript = null;
       }
     }
-
+    List<Parameter> newFirstModelParameters =
+        SwaggerUtil.getParameter(firstInputPort.modelMetadata);
+    List<Parameter> newSecondModelParameters =
+        SwaggerUtil.getParameter(secondInputPort.modelMetadata);
     JoinerViewValue viewValue = getViewValue();
     viewValue.joinRelations = nodeSettings.connections;
-    viewValue.modelMetaData = nodeSettings.modelMetaData;
     viewValue.modelScriptTree = sourceTree;
-
     JoinerViewRepresentation representation = getViewRepresentation();
     if (nodeSettings.firstModelParameters != null) {
       representation.setFirstModelParameters(nodeSettings.firstModelParameters);
@@ -419,7 +418,17 @@ public final class JoinerNodeModel
     if (nodeSettings.secondModelParameters != null) {
       representation.setSecondModelParameters(nodeSettings.secondModelParameters);
     }
+
+
+    if (!JoinerNodeUtil.parametersNeedUpdate(newFirstModelParameters)) {
+      representation.updateParameters(newFirstModelParameters, newSecondModelParameters);
+      viewValue.updateParameters(newFirstModelParameters, newSecondModelParameters);
+    } else {
+      viewValue.modelMetaData = nodeSettings.modelMetaData;
+    }
+
     representation.setSecondModelViz(visualizationScript);
+
   }
 
   @Override
@@ -506,8 +515,7 @@ public final class JoinerNodeModel
   }
 
   @Override
-  protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
-  }
+  protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {}
 
   @Override
   public PortObject[] getInternalPortObjects() {
@@ -522,8 +530,7 @@ public final class JoinerNodeModel
     }
   }
 
-  public void setHideInWizard(boolean hide) {
-  }
+  public void setHideInWizard(boolean hide) {}
 
 
   /** @return string with node name and id with format "{name} (#{id}) setting". */

@@ -239,5 +239,26 @@ public class JoinerNodeUtilTest {
 
 		
 	}
+	
+	
+	@Test
+    public void test_ParametersNeedsUpdate() {
+  
+      List<Parameter> falseGroup = new ArrayList<>();
+      List<Parameter> trueGroup = new ArrayList<>();
+      List<Parameter> semiTrueGroup = new ArrayList<>();
+  
+      falseGroup.add(new Parameter().id("log10_D1"));
+      trueGroup.add(new Parameter().id("log10_D"));
+      
+      semiTrueGroup.add(new Parameter().id("log10_D1"));
+      semiTrueGroup.add(new Parameter().id("log10_D"));
+      semiTrueGroup.add(new Parameter().id("log10_D1"));
+      
+      assertFalse(JoinerNodeUtil.parametersNeedUpdate(falseGroup));
+      assertTrue(JoinerNodeUtil.parametersNeedUpdate(trueGroup));
+      assertFalse(JoinerNodeUtil.parametersNeedUpdate(semiTrueGroup));
+  
+    }
 
 }
