@@ -88,6 +88,7 @@ public class ConversionUtils {
         (Map<String, Object>) targetTopComponents.get(MODEL_MATH));
 
     ObjectNode convertedMetadata = MAPPER.createObjectNode();
+    convertedMetadata.put("modelType", targetClass);
     convertedMetadata.set(GENERAL_INFORMATION, generalInformationNode);
     convertedMetadata.set(SCOPE, scopeNode);
     convertedMetadata.set(DATA_BACKGROUND, backgroundNode);
@@ -136,7 +137,7 @@ public class ConversionUtils {
 
     if (property.containsKey("$ref")) {
       String reference =
-          StringUtils.substringAfter((String) property.get("$ref"), "#/getDefinitions/");
+          StringUtils.substringAfter((String) property.get("$ref"), "#/definitions/");
       if (definitions.containsKey(reference)) {
         return getProperties((Map<String, Object>) definitions.get(reference));
       }

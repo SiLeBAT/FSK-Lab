@@ -5,6 +5,7 @@ import static spark.Spark.before;
 import static spark.Spark.get;
 import static spark.Spark.options;
 import static spark.Spark.port;
+import static spark.Spark.post;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -140,8 +141,9 @@ public class FskService implements Runnable {
     }, jsonTransformer);
 
     // input metadata as body parameter
-    get("convertMetadata/:targetModelClass", (req, res) -> {
-      
+    post("convertMetadata/:targetModelClass", (req, res) -> {
+      res.type("application/json");
+    	
       try {
         JsonNode inputMetadata = MAPPER.readTree(req.body());
         String targetClass = req.params("targetModelClass");

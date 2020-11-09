@@ -1,7 +1,11 @@
 package metadata;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.File;
+
 import org.junit.Test;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -18,6 +22,8 @@ public class ConversionUtilsTest {
     JsonNode inputMetadata = mapper.readTree(new File("files/metadata.json"));
 
     // It passes if no exceptions are thrown
-    utils.convertModel(inputMetadata, "processModel");
+    JsonNode convertedMetadata = utils.convertModel(inputMetadata, "processModel");
+    
+    assertEquals("processModel", convertedMetadata.get("modelType").asText());
   }
 }
