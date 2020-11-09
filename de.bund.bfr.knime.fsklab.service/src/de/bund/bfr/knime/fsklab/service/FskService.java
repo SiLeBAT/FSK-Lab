@@ -3,6 +3,7 @@ package de.bund.bfr.knime.fsklab.service;
 import static spark.Spark.awaitInitialization;
 import static spark.Spark.before;
 import static spark.Spark.get;
+import static spark.Spark.post;
 import static spark.Spark.options;
 import static spark.Spark.port;
 import static spark.Spark.post;
@@ -11,6 +12,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -73,6 +75,8 @@ import spark.ResponseTransformer;
 
 public class FskService implements Runnable {
 
+  private static final String MIME_JSON = "application/json";
+  
   private static final NodeLogger LOGGER = NodeLogger.getLogger(FskService.class);
 
   private static final JsonTransformer jsonTransformer = new JsonTransformer();
@@ -117,7 +121,7 @@ public class FskService implements Runnable {
 
     get("getById/:vocabulary/:id", (req, res) -> {
       try (Connection connection = DriverManager.getConnection("jdbc:h2:~/.fsk/vocabularies")) {
-        res.type("application/json");
+        res.type(MIME_JSON);
         BasicRepository<?> repository = getRepository(req.params(":vocabulary"), connection);
         int id = Integer.parseInt(req.params(":id"));
         return repository.getById(id);
@@ -126,7 +130,7 @@ public class FskService implements Runnable {
 
     get("/getAll/:vocabulary", (req, res) -> {
       try (Connection connection = DriverManager.getConnection("jdbc:h2:~/.fsk/vocabularies")) {
-        res.type("application/json");
+        res.type(MIME_JSON);
         BasicRepository<?> repository = getRepository(req.params(":vocabulary"), connection);
         return repository.getAll();
       }
@@ -134,7 +138,7 @@ public class FskService implements Runnable {
 
     get("/getAllNames/:vocabulary", (req, res) -> {
       try (Connection connection = DriverManager.getConnection("jdbc:h2:~/.fsk/vocabularies")) {
-        res.type("application/json");
+        res.type(MIME_JSON);
         BasicRepository<?> repository = getRepository(req.params(":vocabulary"), connection);
         return repository.getAllNames();
       }
@@ -155,6 +159,17 @@ public class FskService implements Runnable {
         res.status(400);
         return err;
       }
+    }, jsonTransformer);
+    
+    post("joinMetadata", (req, res) -> {
+      // String body = req.body();
+      // Do nothing with body yet
+      // The body keeps two JSON models in an array.
+      
+      res.type("application/json");
+      res.status(200);
+      
+      return new GenericModel();
     }, jsonTransformer);
 
     // After initializing the service, get the randomly picked port by Spark.
@@ -280,7 +295,7 @@ public class FskService implements Runnable {
 
     try {
       File file = getResource(bundle, "data/tables.sql");
-      String script = FileUtils.readFileToString(file, "UTF-8");
+      String script = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
 
       Statement statement = initialConnection.createStatement();
       statement.execute(script);
@@ -307,7 +322,7 @@ public class FskService implements Runnable {
         Statement statement = initialConnection.createStatement();
 
         File file = getResource(bundle, "data/initialdata/" + filename);
-        for (String line : FileUtils.readLines(file, "UTF-8")) {
+        for (String line : FileUtils.readLines(file, StandardCharsets.UTF_8)) {
           statement.execute(line);
         }
       } catch (IOException | SQLException | URISyntaxException e) {
