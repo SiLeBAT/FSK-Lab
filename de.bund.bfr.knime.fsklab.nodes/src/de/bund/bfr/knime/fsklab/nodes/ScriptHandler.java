@@ -146,9 +146,9 @@ public abstract class ScriptHandler implements AutoCloseable {
     }
     
     // delete working directory
-//    if (fskObj.getEnvironmentManager().isPresent() && workingDirectory.isPresent()) {
-//      fskObj.getEnvironmentManager().get().deleteEnvironment(workingDirectory.get());
-//    }
+    if (fskObj.getEnvironmentManager().isPresent() && workingDirectory.isPresent()) {
+      fskObj.getEnvironmentManager().get().deleteEnvironment(workingDirectory.get());
+    }
   
   }
 
