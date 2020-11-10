@@ -25,43 +25,10 @@ import org.eclipse.core.runtime.Platform;
 import org.h2.tools.DeleteDbFiles;
 import org.knime.core.node.NodeLogger;
 import org.osgi.framework.Bundle;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
-import de.bund.bfr.metadata.swagger.ConsumptionModel;
-import de.bund.bfr.metadata.swagger.ConsumptionModelScope;
-import de.bund.bfr.metadata.swagger.DataModel;
-import de.bund.bfr.metadata.swagger.DataModelGeneralInformation;
-import de.bund.bfr.metadata.swagger.DataModelModelMath;
-import de.bund.bfr.metadata.swagger.DoseResponseModel;
-import de.bund.bfr.metadata.swagger.DoseResponseModelGeneralInformation;
-import de.bund.bfr.metadata.swagger.DoseResponseModelModelMath;
-import de.bund.bfr.metadata.swagger.DoseResponseModelScope;
-import de.bund.bfr.metadata.swagger.ExposureModel;
-import de.bund.bfr.metadata.swagger.ExposureModelScope;
 import de.bund.bfr.metadata.swagger.GenericModel;
-import de.bund.bfr.metadata.swagger.GenericModelDataBackground;
-import de.bund.bfr.metadata.swagger.GenericModelGeneralInformation;
-import de.bund.bfr.metadata.swagger.GenericModelModelMath;
-import de.bund.bfr.metadata.swagger.GenericModelScope;
-import de.bund.bfr.metadata.swagger.HealthModel;
-import de.bund.bfr.metadata.swagger.HealthModelScope;
-import de.bund.bfr.metadata.swagger.Model;
-import de.bund.bfr.metadata.swagger.ModelCategory;
-import de.bund.bfr.metadata.swagger.OtherModel;
-import de.bund.bfr.metadata.swagger.OtherModelDataBackground;
-import de.bund.bfr.metadata.swagger.OtherModelGeneralInformation;
-import de.bund.bfr.metadata.swagger.OtherModelModelMath;
-import de.bund.bfr.metadata.swagger.OtherModelScope;
-import de.bund.bfr.metadata.swagger.PredictiveModel;
-import de.bund.bfr.metadata.swagger.PredictiveModelDataBackground;
-import de.bund.bfr.metadata.swagger.PredictiveModelGeneralInformation;
-import de.bund.bfr.metadata.swagger.PredictiveModelModelMath;
-import de.bund.bfr.metadata.swagger.PredictiveModelScope;
-import de.bund.bfr.metadata.swagger.ProcessModel;
-import de.bund.bfr.metadata.swagger.ProcessModelScope;
-import de.bund.bfr.metadata.swagger.QraModel;
-import de.bund.bfr.metadata.swagger.RiskModel;
-import de.bund.bfr.metadata.swagger.ToxicologicalModel;
-import de.bund.bfr.metadata.swagger.ToxicologicalModelScope;
 import de.bund.bfr.rakip.vocabularies.data.AccreditationProcedureRepository;
 import de.bund.bfr.rakip.vocabularies.data.AvailabilityRepository;
 import de.bund.bfr.rakip.vocabularies.data.BasicProcessRepository;
@@ -103,6 +70,7 @@ import de.bund.bfr.rakip.vocabularies.data.StatusRepository;
 import de.bund.bfr.rakip.vocabularies.data.TechnologyTypeRepository;
 import de.bund.bfr.rakip.vocabularies.data.UnitCategoryRepository;
 import de.bund.bfr.rakip.vocabularies.data.UnitRepository;
+import metadata.ConversionUtils;
 import spark.ResponseTransformer;
 
 public class FskService implements Runnable {
@@ -112,6 +80,8 @@ public class FskService implements Runnable {
   private static final NodeLogger LOGGER = NodeLogger.getLogger(FskService.class);
 
   private static final JsonTransformer jsonTransformer = new JsonTransformer();
+  private static final ObjectMapper MAPPER = new ObjectMapper();
+  private final ConversionUtils utils = new ConversionUtils();
 
   private int port;
 
@@ -175,14 +145,20 @@ public class FskService implements Runnable {
     }, jsonTransformer);
 
     // input metadata as body parameter
-    get("convertMetadata/:targetModelClass", (req, res) -> {
-      String inputMetadata = req.body();
-      // System.out.println(inputMetadata);
-
-      res.type(MIME_JSON);
-      res.status(200);
-
-      return convertMetadata(inputMetadata, req.params(":targetModelClass"));
+    post("convertMetadata/:targetModelClass", (req, res) -> {
+      res.type("application/json");
+    	
+      try {
+        JsonNode inputMetadata = MAPPER.readTree(req.body());
+        String targetClass = req.params("targetModelClass");
+        JsonNode convertedMetadata = utils.convertModel(inputMetadata, targetClass);
+       
+        res.status(200);
+        return convertedMetadata;
+      } catch (Exception err) {
+        res.status(400);
+        return err;
+      }
     }, jsonTransformer);
     
     post("joinMetadata", (req, res) -> {
@@ -300,110 +276,6 @@ public class FskService implements Runnable {
     return null;
   }
 
-  /**
-   * Convert model metadata to a different model class.
-   * 
-   * @param originalMetadata Original metadata
-   * @param targetModelClass String representation of the target model class.
-   * @return Model or null if targetModelClass is not valid
-   */
-  private Model convertMetadata(String originalMetadata, String targetModelClass) {
-    switch (targetModelClass) {
-      case "genericModel":
-        return new GenericModel()
-            .generalInformation(new GenericModelGeneralInformation()
-                .modelCategory(new ModelCategory().modelClass("Generic model")))
-            .scope(new GenericModelScope()).dataBackground(new GenericModelDataBackground())
-            .modelMath(new GenericModelModelMath()).modelType("genericModel");
-      case "dataModel":
-        return new DataModel()
-            .generalInformation(new DataModelGeneralInformation())
-            .scope(new GenericModelScope())
-            .dataBackground(new GenericModelDataBackground())
-            .modelMath(new DataModelModelMath())
-            .modelType("dataModel");
-      case "consumptionModel":
-        return new ConsumptionModel()
-            .generalInformation(new PredictiveModelGeneralInformation()
-                .modelCategory(new ModelCategory().modelClass("Consumption model")))
-            .scope(new ConsumptionModelScope()).dataBackground(new GenericModelDataBackground())
-            .modelMath(new PredictiveModelModelMath()).modelType("consumptionModel");
-      case "doseResponseModel":
-        return new DoseResponseModel()
-            .generalInformation(new DoseResponseModelGeneralInformation()
-                .modelCategory(new ModelCategory().modelClass("Dose-response model")))
-            .scope(new DoseResponseModelScope())
-            .dataBackground(new PredictiveModelDataBackground())
-            .modelMath(new DoseResponseModelModelMath())
-            .modelType("doseResponseModel");
-      case "exposureModel":
-        return new ExposureModel()
-            .generalInformation(new PredictiveModelGeneralInformation()
-                .modelCategory(new ModelCategory().modelClass("Exposure model")))
-            .scope(new ExposureModelScope())
-            .dataBackground(new GenericModelDataBackground())
-            .modelMath(new GenericModelModelMath())
-            .modelType("exposureModel");
-      case "healthModel":
-        return new HealthModel()
-            .generalInformation(new PredictiveModelGeneralInformation()
-                .modelCategory(new ModelCategory().modelClass("Health metrics model")))
-            .scope(new HealthModelScope())
-            .dataBackground(new PredictiveModelDataBackground())
-            .modelMath(new GenericModelModelMath())
-            .modelType("healthModel");
-      case "otherModel":
-        return new OtherModel()
-            .generalInformation(new OtherModelGeneralInformation()
-                .modelCategory(new ModelCategory().modelClass("Other empirical model")))
-            .scope(new OtherModelScope())
-            .dataBackground(new OtherModelDataBackground())
-            .modelMath(new OtherModelModelMath())
-            .modelType("otherModel");
-      case "predictiveModel":
-        return new PredictiveModel()
-            .generalInformation(new PredictiveModelGeneralInformation()
-                .modelCategory(new ModelCategory().modelClass("Predictive model")))
-            .scope(new PredictiveModelScope())
-            .dataBackground(new PredictiveModelDataBackground())
-            .modelMath(new PredictiveModelModelMath())
-            .modelType("predictiveModel");
-      case "processModel":
-        return new ProcessModel()
-            .generalInformation(new PredictiveModelGeneralInformation()
-                .modelCategory(new ModelCategory().modelClass("Process model")))
-            .scope(new ProcessModelScope())
-            .dataBackground(new PredictiveModelDataBackground())
-            .modelMath(new PredictiveModelModelMath())
-            .modelType("processModel");
-      case "qraModel":
-        return new QraModel()
-            .generalInformation(new PredictiveModelGeneralInformation()
-                .modelCategory(new ModelCategory().modelClass("Quantitative risk assessment")))
-            .scope(new ExposureModelScope())
-            .dataBackground(new GenericModelDataBackground())
-            .modelMath(new GenericModelModelMath())
-            .modelType("qraModel");
-      case "riskModel":
-        return new RiskModel()
-            .generalInformation(new PredictiveModelGeneralInformation()
-                .modelCategory(new ModelCategory().modelClass("Risk characterization model")))
-            .scope(new ExposureModelScope())
-            .dataBackground(new GenericModelDataBackground())
-            .modelMath(new GenericModelModelMath())
-            .modelType("riskModel");
-      case "toxicologicalModel":
-        return new ToxicologicalModel()
-            .generalInformation(new PredictiveModelGeneralInformation()
-                .modelCategory(new ModelCategory().modelClass("Toxicological reference value")))
-            .scope(new ToxicologicalModelScope())
-            .dataBackground(new PredictiveModelDataBackground())
-            .modelMath(new GenericModelModelMath())
-            .modelType("toxicologicalModel");
-      default:
-        return null;
-    }
-  }
 
   private void initDatabase() throws SQLException, ClassNotFoundException {
 
