@@ -420,7 +420,7 @@ public final class JoinerNodeModel
     }
 
 
-    if (!JoinerNodeUtil.parametersNeedUpdate(newFirstModelParameters)) {
+    if (!JoinerNodeUtil.parametersNeedUpdate(newFirstModelParameters, JoinerNodeModel.SUFFIX_FIRST, JoinerNodeModel.SUFFIX_SECOND)) {
       representation.updateParameters(newFirstModelParameters, newSecondModelParameters);
       viewValue.updateParameters(newFirstModelParameters, newSecondModelParameters);
     } else {

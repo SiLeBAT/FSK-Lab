@@ -243,21 +243,30 @@ public class JoinerNodeUtilTest {
 	
 	@Test
     public void test_ParametersNeedsUpdate() {
-  
+      
       List<Parameter> falseGroup = new ArrayList<>();
       List<Parameter> trueGroup = new ArrayList<>();
       List<Parameter> semiTrueGroup = new ArrayList<>();
+      List<Parameter> anotherGroup = new ArrayList<>();
   
       falseGroup.add(new Parameter().id("log10_D1"));
+      falseGroup.add(new Parameter().id("sigma1"));
+      
       trueGroup.add(new Parameter().id("log10_D"));
+      trueGroup.add(new Parameter().id("sigma"));
       
       semiTrueGroup.add(new Parameter().id("log10_D1"));
       semiTrueGroup.add(new Parameter().id("log10_D"));
       semiTrueGroup.add(new Parameter().id("log10_D1"));
       
-      assertFalse(JoinerNodeUtil.parametersNeedUpdate(falseGroup));
-      assertTrue(JoinerNodeUtil.parametersNeedUpdate(trueGroup));
-      assertFalse(JoinerNodeUtil.parametersNeedUpdate(semiTrueGroup));
+      anotherGroup.add(new Parameter().id("log10_D"));
+      anotherGroup.add(new Parameter().id("log10_D"));
+      anotherGroup.add(new Parameter().id("dog"));
+      
+      assertFalse(JoinerNodeUtil.parametersNeedUpdate(falseGroup, JoinerNodeModel.SUFFIX_FIRST, JoinerNodeModel.SUFFIX_SECOND));
+      assertTrue(JoinerNodeUtil.parametersNeedUpdate(trueGroup, JoinerNodeModel.SUFFIX_FIRST, JoinerNodeModel.SUFFIX_SECOND));
+      assertFalse(JoinerNodeUtil.parametersNeedUpdate(semiTrueGroup, JoinerNodeModel.SUFFIX_FIRST, JoinerNodeModel.SUFFIX_SECOND));
+      assertFalse(JoinerNodeUtil.parametersNeedUpdate(semiTrueGroup, JoinerNodeModel.SUFFIX_FIRST, JoinerNodeModel.SUFFIX_SECOND));
   
     }
 
