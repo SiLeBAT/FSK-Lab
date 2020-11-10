@@ -28,35 +28,48 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 @JsonAutoDetect
 public class JoinRelation {
 
-	private String sourceParam;
-	private String targetParam;
-	private String command;
-	private String language_written_in;
-	
-	public JoinRelation() {
-		this("", "", "", "");
-	}
-	
-	public JoinRelation(String sourceParam, String targetParam, String command, String languageWrittenIn) {
-		this.sourceParam = sourceParam;
-		this.targetParam = targetParam;
-		this.command = command;
-		this.language_written_in = languageWrittenIn;
-	}
+  private String sourceParam;
+  private String targetParam;
+  private String command;
+  private String language_written_in;
 
-	public String getLanguage_written_in() {
-		return language_written_in;
-	}
+  public JoinRelation() {
+    this("", "", "", "");
+  }
 
-	public String getCommand() {
-		return command;
-	}
+  public JoinRelation(String sourceParam, String targetParam, String command,
+      String languageWrittenIn) {
+    this.sourceParam = sourceParam;
+    this.targetParam = targetParam;
+    this.command = command;
+    this.language_written_in = languageWrittenIn;
+  }
 
-	public String getSourceParam() {
-		return sourceParam;
-	}
+  public String getLanguage_written_in() {
+    return language_written_in;
+  }
 
-	public String getTargetParam() {
-		return targetParam;
-	}
+  public String getCommand() {
+    return command;
+  }
+
+  public String getSourceParam() {
+    return sourceParam;
+  }
+
+  public String getTargetParam() {
+    return targetParam;
+  }
+
+  public void setSourceParam(String sourceParam) {
+    this.sourceParam = sourceParam;
+  }
+
+  public void setTargetParam(String targetParam) {
+    this.targetParam = targetParam;
+  }
+
+  public void setCommand(String command) {
+    this.command = command;
+  }
 }

@@ -1,5 +1,6 @@
 package de.bund.bfr.knime.fsklab.v1_9.joiner;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -14,6 +15,7 @@ import de.bund.bfr.knime.fsklab.v1_9.FskPortObject;
 import de.bund.bfr.knime.fsklab.v1_9.FskSimulation;
 import de.bund.bfr.knime.fsklab.v1_9.JoinRelation;
 import de.bund.bfr.metadata.swagger.Parameter;
+import freemarker.template.utility.CollectionUtils;
 import metadata.SwaggerUtil;
 
 public class JoinerNodeUtil {
@@ -109,13 +111,48 @@ public class JoinerNodeUtil {
   }
 
   /**
-   * This method sets the default values of a combined model. The values are taken from the simulation settings 
-   * of the individual models.
+   * A helper method to check if the parameters have a SUFFIX_FIRST or SUFFIX_SECOND which means in
+   * the case of false that the workflow needs upgrade.
+   * 
+   * @param params the parameters to be tested
+   * @return
+   */
+  public static boolean parametersNeedUpdate(List<Parameter> params, String firstSuffix,
+      String secondSuffix) {
+    boolean needsUpdate = false;
+
+    if (params != null && !params.isEmpty()) {
+      String firstID = params.get(0).getId();
+      char lastChar = firstID.charAt(firstID.length() - 1);
+      if (!(firstID.endsWith(firstSuffix) || (firstID.endsWith(secondSuffix)))) {
+        needsUpdate = true;
+      } else {
+        for (Parameter param : params.subList(1, params.size())) {
+          String paramID = param.getId();
+          char currectLastChar = paramID.charAt(paramID.length() - 1);
+          if (currectLastChar == lastChar) {
+            if (!(paramID.endsWith(firstSuffix) || (paramID.endsWith(secondSuffix)))) {
+              needsUpdate = true;
+            }
+          } else {
+            needsUpdate = false;
+            break;
+          }
+        }
+      }
+    }
+    return needsUpdate;
+  }
+
+  /**
+   * This method sets the default values of a combined model. The values are taken from the
+   * simulation settings of the individual models.
    * 
    * 
    * @param first Simulation parameters from the first model to be joined.
    * @param second Simulation parameters from the second model to be joined.
-   * @param parameters Simulation parameters with changed values based on the first and second simulations.
+   * @param parameters Simulation parameters with changed values based on the first and second
+   *        simulations.
    */
   public static void createDefaultParameterValues(FskSimulation first, FskSimulation second, List<Parameter> parameters ) {
 
