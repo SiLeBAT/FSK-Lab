@@ -228,17 +228,7 @@ class ReaderNodeModel extends NoInternalsModel {
         modelFolders = Arrays.asList("/");
       }
 
-      // 4. Create working directory for the model read inside the workflow folder.
-      // E.g.: ..\InitializeParentsAnimals\FSKXReader021_workingDirectory
-      // where ..\InitializeParentsAnimals is the relative path to the workflow.
-      // FSKXReader021 is the name with id of the node container after removing whitespaces.
-      NodeContext nodeContext = NodeContext.getContext();
-      WorkflowContext workflowContext = nodeContext.getWorkflowManager().getContext();
-      File workingDirectory = new File(workflowContext.getCurrentLocation(),
-          nodeContext.getNodeContainer().getNameWithID().toString().replaceAll("\\W", "")
-          .replace(" ", "") + "_workingDirectory");
-
-      fskObj = readFskPortObject(archive, modelFolders, 0, workingDirectory);
+      fskObj = readFskPortObject(archive, modelFolders, 0);
     }
 
     // ADD PARAMETER SUFFIXES to 1.7.2 version models (combined)
@@ -256,18 +246,8 @@ class ReaderNodeModel extends NoInternalsModel {
   }
 
   private FskPortObject readFskPortObject(CombineArchive archive, List<String> ListOfPaths,
-      int readLevel, File currentWorkingDirectory) throws Exception {
+      int readLevel) throws Exception {
     Map<String, URI> URIS = FSKML.getURIS(1, 0, 12);
-    // each sub Model has it's own working directory to avoid resource conflict.
-    // get current node's and workflow's context
-
-
-    // get the location of the current Workflow to create the working directory in it and use the
-    // name with current reader node id for the prefix of the working directory name
-
-    if (!currentWorkingDirectory.exists()) {
-      currentWorkingDirectory.mkdir();
-    }
 
     Model model = new Model();
 
@@ -284,10 +264,8 @@ class ReaderNodeModel extends NoInternalsModel {
       }
 
       // invoke this mothod recursively to get the sub model using the corresponding path group
-      FskPortObject firstFskPortObject = readFskPortObject(archive, firstGroup, ++readLevel,
-          new File(currentWorkingDirectory, "sub" + readLevel));
-      FskPortObject secondFskPortObject = readFskPortObject(archive, secondGroup, ++readLevel,
-          new File(currentWorkingDirectory, "sub" + readLevel));
+      FskPortObject firstFskPortObject = readFskPortObject(archive, firstGroup, ++readLevel);
+      FskPortObject secondFskPortObject = readFskPortObject(archive, secondGroup, ++readLevel);
       String tempString = firstelement.substring(0, firstelement.length() - 2);
       String parentPath = tempString.substring(0, tempString.lastIndexOf('/'));
 
@@ -302,6 +280,24 @@ class ReaderNodeModel extends NoInternalsModel {
 
         if (metadataEntry.isPresent()) {
           model = readMetadata(metadataEntry.get());
+        }
+      }
+
+      // Get workspace
+      URI rdataUri = URIS.get("rdata");
+      File workspace = null; // null if missing
+
+      Optional<ArchiveEntry> workspaceEntry = archive.getEntriesWithFormat(rdataUri).stream()
+          .filter(entry -> entry.getEntityPath().startsWith(parentPath))
+          .filter(entry -> StringUtils.countMatches(entry.getEntityPath(),"/")
+              == StringUtils.countMatches(parentPath, "/") + 1)
+          .findAny();
+      if (workspaceEntry.isPresent()) {
+        ArchiveEntry entry = workspaceEntry.get();
+        FskMetaDataObject fmdo = new FskMetaDataObject(entry.getDescriptions().get(0));
+        if (fmdo.getResourceType() == ResourceType.workspace) {
+            workspace = FileUtil.createTempFile("workspace", ".RData");
+            entry.extractFile(workspace);
         }
       }
 
@@ -425,6 +421,10 @@ class ReaderNodeModel extends NoInternalsModel {
         SimulationSettings simulationSettings = readSimulationSettings(simulationsEntry.get());
         topfskObj.selectedSimulationIndex = simulationSettings.selectedSimulationIndex;
         topfskObj.simulations.addAll(simulationSettings.simulations);
+      }
+      
+      if (workspace != null) {
+        topfskObj.setWorkspace(workspace.toPath());
       }
 
       topfskObj.setJoinerRelation(connectionList.toArray(new JoinRelation[connectionList.size()]));
