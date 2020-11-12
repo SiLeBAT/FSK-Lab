@@ -57,20 +57,10 @@ public abstract class ScriptHandler implements AutoCloseable {
       workingDirectory = Optional.empty();
     }
 
-    // if environment is present, copy the files from resourceFiles to wd of environment
     if (workingDirectory.isPresent()) {
-      
-      if(fskObj.getGeneratedResourcesDirectory().isPresent()) {
-        FileUtil.copyDir(fskObj.getGeneratedResourcesDirectory().get(), workingDirectory.get().toFile());  
-      }
       setWorkingDirectory(workingDirectory.get(), exec);
-      
     }else {
       workingDirectory = Optional.of(Files.createTempDirectory("workingDirectory"));
-      if(fskObj.getGeneratedResourcesDirectory().isPresent()) {
-        FileUtil.copyDir(fskObj.getGeneratedResourcesDirectory().get(), workingDirectory.get().toFile());  
-      }
-      
       setWorkingDirectory(workingDirectory.get(), exec);
     }
     
@@ -146,7 +136,7 @@ public abstract class ScriptHandler implements AutoCloseable {
     }
     
     // delete working directory
-    if (fskObj.getEnvironmentManager().isPresent() && workingDirectory.isPresent()) {
+    if (workingDirectory.isPresent()) {
       fskObj.getEnvironmentManager().get().deleteEnvironment(workingDirectory.get());
     }
   
@@ -329,15 +319,13 @@ public abstract class ScriptHandler implements AutoCloseable {
   
   private void saveGeneratedResources(FskPortObject fskPortObject, File workingDirectory, ExecutionContext exec) {
 
-    // Delete previous resources if they exist (but keep the folder)
+    // Delete previous resources if they exist
     fskPortObject.getGeneratedResourcesDirectory().ifPresent(directory -> {
       if (directory.exists()) {
-        final File[] files = directory.listFiles();
-        for (File f: files) {
-          f.delete();
-        }
-       }
+        FileUtil.deleteRecursively(directory);
+      }
     });
+
     List<Parameter> parameterMetadata = SwaggerUtil.getParameter(fskPortObject.modelMetadata);
 
     if (parameterMetadata == null) {
@@ -355,26 +343,16 @@ public abstract class ScriptHandler implements AutoCloseable {
     try {
       String[] filenames = runScript(command, exec, true);
 
-      File newResourcesDirectory;
-      if (fskPortObject.getGeneratedResourcesDirectory().isPresent()) {
-        newResourcesDirectory = fskPortObject.getGeneratedResourcesDirectory().get();
-      } else {
-        newResourcesDirectory = FileUtil.createTempDir("generatedResources");
-        fskPortObject.setGeneratedResourcesDirectory(newResourcesDirectory);
-      }
-     
-      
       // Copy every resource from the working directory
-      
+      File newResourcesDirectory = FileUtil.createTempDir("generatedResources");
       for (String filename : filenames) {
         File sourceFile = new File(workingDirectory, filename);
         File targetFile = new File(newResourcesDirectory, filename);
         FileUtil.copy(sourceFile, targetFile, exec);
       }
       
-      
+      fskPortObject.setGeneratedResourcesDirectory(newResourcesDirectory);
     } catch (Exception e) {
-      e.printStackTrace();
     }
   }
 }
