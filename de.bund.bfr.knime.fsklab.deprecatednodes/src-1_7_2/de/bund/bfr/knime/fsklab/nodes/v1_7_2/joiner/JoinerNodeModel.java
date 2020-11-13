@@ -23,7 +23,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -35,6 +34,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
@@ -42,7 +42,9 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonReader;
 import javax.json.JsonValue;
+
 import org.apache.commons.lang3.StringUtils;
+import org.emfjson.jackson.module.EMFModule;
 import org.knime.base.data.xml.SvgCell;
 import org.knime.base.data.xml.SvgImageContent;
 import org.knime.core.node.CanceledExecutionException;
@@ -63,10 +65,15 @@ import org.knime.core.node.workflow.WorkflowEvent;
 import org.knime.core.node.workflow.WorkflowListener;
 import org.knime.core.util.FileUtil;
 import org.knime.js.core.node.AbstractWizardNodeModel;
+
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.threetenbp.ThreeTenModule;
+
 import de.bund.bfr.knime.fsklab.CombinedFskPortObject;
 import de.bund.bfr.knime.fsklab.CombinedFskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.FskPortObject;
@@ -74,8 +81,8 @@ import de.bund.bfr.knime.fsklab.FskSimulation;
 import de.bund.bfr.knime.fsklab.JoinRelation;
 import de.bund.bfr.knime.fsklab.nodes.JoinerNodeFactory;
 import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
-import de.bund.bfr.metadata.swagger.Model;
 import de.bund.bfr.metadata.swagger.Parameter;
+import metadata.EmfMetadataModule;
 import metadata.SwaggerUtil;
 
 
@@ -93,6 +100,7 @@ public final class JoinerNodeModel extends
   private static final PortType[] OUT_TYPES = {CombinedFskPortObject.TYPE, ImagePortObject.TYPE};
   private static final String VIEW_NAME = new JoinerNodeFactory().getInteractiveViewName();
   private static final ObjectMapper MAPPER = new ObjectMapper();
+  
   
   String nodeWithId;
   String nodeName;
@@ -153,6 +161,11 @@ public final class JoinerNodeModel extends
   @Override
   protected PortObject[] performExecute(PortObject[] inObjects, ExecutionContext exec)
       throws Exception {
+
+	  MAPPER.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
+	  MAPPER.enable(JsonParser.Feature.ALLOW_SINGLE_QUOTES);
+	  MAPPER.registerModule(new ThreeTenModule());
+	  
     nodeWithId = NodeContext.getContext().getNodeContainer().getNameWithID();
     nodeName = NodeContext.getContext().getNodeContainer().getName();
     nodeId = NodeContext.getContext().getNodeContainer().getID().toString().split(":")[1];
@@ -336,12 +349,18 @@ public final class JoinerNodeModel extends
           jR.setLanguage_written_in(sourceTargetRelation.getString("language_written_in"));
         }
         if (sourceTargetRelation.containsKey("sourceParam")) {
-          jR.setSourceParam(getObjectFromJson(sourceTargetRelation.get("sourceParam").toString(),
-              Parameter.class));
+        	Parameter source =new Parameter();
+        	source.setId(sourceTargetRelation.get("sourceParam").toString());
+        	jR.setSourceParam(source);
+//          jR.setSourceParam(getObjectFromJson(sourceTargetRelation.get("sourceParam").toString(),
+//              Parameter.class));
         }
         if (sourceTargetRelation.containsKey("targetParam")) {
-          jR.setTargetParam(getObjectFromJson(sourceTargetRelation.get("targetParam").toString(),
-              Parameter.class));
+        	Parameter target =new Parameter();
+        	target.setId(sourceTargetRelation.get("targetParam").toString());
+        	jR.setTargetParam(target);
+//          jR.setTargetParam(getObjectFromJson(sourceTargetRelation.get("targetParam").toString(),
+//              Parameter.class));
         }
 
 
