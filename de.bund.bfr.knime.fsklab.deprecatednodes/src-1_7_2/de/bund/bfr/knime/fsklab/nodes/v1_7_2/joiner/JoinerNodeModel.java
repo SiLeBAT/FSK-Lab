@@ -44,7 +44,6 @@ import javax.json.JsonReader;
 import javax.json.JsonValue;
 
 import org.apache.commons.lang3.StringUtils;
-import org.emfjson.jackson.module.EMFModule;
 import org.knime.base.data.xml.SvgCell;
 import org.knime.base.data.xml.SvgImageContent;
 import org.knime.core.node.CanceledExecutionException;
@@ -82,7 +81,6 @@ import de.bund.bfr.knime.fsklab.JoinRelation;
 import de.bund.bfr.knime.fsklab.nodes.JoinerNodeFactory;
 import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
 import de.bund.bfr.metadata.swagger.Parameter;
-import metadata.EmfMetadataModule;
 import metadata.SwaggerUtil;
 
 
