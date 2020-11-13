@@ -347,20 +347,26 @@ public final class JoinerNodeModel extends
           jR.setLanguage_written_in(sourceTargetRelation.getString("language_written_in"));
         }
         if (sourceTargetRelation.containsKey("sourceParam")) {
-        	Parameter source =new Parameter();
-        	source.setId(sourceTargetRelation.get("sourceParam").toString());
-        	jR.setSourceParam(source);
-//          jR.setSourceParam(getObjectFromJson(sourceTargetRelation.get("sourceParam").toString(),
-//              Parameter.class));
+        	try {
+        		jR.setSourceParam(getObjectFromJson(sourceTargetRelation.get("sourceParam").toString(),
+        	              Parameter.class));
+        	}catch(Exception e) {
+        		Parameter source =new Parameter();
+            	source.setId(sourceTargetRelation.get("sourceParam").toString());
+            	jR.setSourceParam(source);
+        	}
         }
         if (sourceTargetRelation.containsKey("targetParam")) {
-        	Parameter target =new Parameter();
-        	target.setId(sourceTargetRelation.get("targetParam").toString());
-        	jR.setTargetParam(target);
-//          jR.setTargetParam(getObjectFromJson(sourceTargetRelation.get("targetParam").toString(),
-//              Parameter.class));
+        	
+        	try {
+                jR.setTargetParam(getObjectFromJson(sourceTargetRelation.get("targetParam").toString(),
+                        Parameter.class));
+        	}catch(Exception e) {
+            	Parameter target =new Parameter();
+            	target.setId(sourceTargetRelation.get("targetParam").toString());
+            	jR.setTargetParam(target);
+        	}
         }
-
 
         joinerRelation.add(jR);
 
