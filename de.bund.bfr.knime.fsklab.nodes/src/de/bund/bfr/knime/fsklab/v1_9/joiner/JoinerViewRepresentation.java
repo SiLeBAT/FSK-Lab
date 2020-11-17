@@ -20,6 +20,7 @@ package de.bund.bfr.knime.fsklab.v1_9.joiner;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
@@ -214,7 +215,31 @@ final class JoinerViewRepresentation extends JSONViewContent {
         && firstModelViz.equals(other.firstModelViz)
         && secondModelName.equals(other.secondModelName)
         && secondModelScript.equals(other.secondModelScript)
-        && secondModelViz.equals(other.secondModelViz)
-        && modelType.equals(other.modelType);
+        && secondModelViz.equals(other.secondModelViz) && modelType.equals(other.modelType);
+  }
+
+  /**
+   * a helper method for migrating parameter id in workflows written in older version
+   * 
+   * @param newFirstModelParameters new parameters with suffix
+   * @param newSecondModelParameters new parameters with suffix
+   */
+  void updateParameters(List<Parameter> newFirstModelParameters,
+      List<Parameter> newSecondModelParameters) {
+    newFirstModelParameters.stream().forEach(newParam -> {
+      for (Parameter paramTobeMigrated : firstModelParameters) {
+        if (newParam.getId().startsWith(paramTobeMigrated.getId())) {
+          paramTobeMigrated.setId(newParam.getId());
+        }
+      }
+    });
+
+    newSecondModelParameters.stream().forEach(newParam -> {
+      for (Parameter paramTobeMigrated : secondModelParameters) {
+        if (newParam.getId().startsWith(paramTobeMigrated.getId())) {
+          paramTobeMigrated.setId(newParam.getId());
+        }
+      }
+    });
   }
 }
