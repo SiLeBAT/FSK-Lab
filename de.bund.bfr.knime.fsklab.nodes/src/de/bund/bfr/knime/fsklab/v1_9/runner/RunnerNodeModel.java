@@ -299,7 +299,12 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
 
       // apply join command
       Map<String, String> mapInversed = originalOutputParameters.entrySet().stream()
-          .collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
+          .collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey,
+              //choose the second value in the case of key duplication 
+              (value1, value2) -> {
+                return value2;
+            }));
+      
       applyJoinCommandToSimulation(comFskObj, fskSimulationSecond, mapInversed);
 
       Optional<Path> workingDirectory2;
