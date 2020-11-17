@@ -40,6 +40,10 @@ deploy:
   script: bash bintray_development.sh
   on: development
 - provider: script
+  skip_cleanup: true
+  script: bash bintray_2.0.0-rc2.sh
+  on: release_4_withAhmadsJoinerFixes
+- provider: script
   skip_cleanup: true # to upload artifacts created during the build
   script: bash bintray_nightly.sh
   on: 
