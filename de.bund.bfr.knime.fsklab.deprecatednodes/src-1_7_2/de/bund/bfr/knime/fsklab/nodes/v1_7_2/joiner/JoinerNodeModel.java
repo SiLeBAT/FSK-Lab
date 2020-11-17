@@ -99,8 +99,8 @@ public final class JoinerNodeModel extends
   private static final PortType[] OUT_TYPES = {CombinedFskPortObject.TYPE, ImagePortObject.TYPE};
   private static final String VIEW_NAME = new JoinerNodeFactory().getInteractiveViewName();
   private static final ObjectMapper MAPPER = new ObjectMapper();
-  
-  
+
+
   String nodeWithId;
   String nodeName;
   String nodeId;
@@ -161,11 +161,11 @@ public final class JoinerNodeModel extends
   protected PortObject[] performExecute(PortObject[] inObjects, ExecutionContext exec)
       throws Exception {
 
-	  MAPPER.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
-	  MAPPER.enable(JsonParser.Feature.ALLOW_SINGLE_QUOTES);
-	  MAPPER.registerModule(new ThreeTenModule());
-	  MAPPER.registerModule(new JavaTimeModule());
-	  
+    MAPPER.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
+    MAPPER.enable(JsonParser.Feature.ALLOW_SINGLE_QUOTES);
+    MAPPER.registerModule(new ThreeTenModule());
+    MAPPER.registerModule(new JavaTimeModule());
+
     nodeWithId = NodeContext.getContext().getNodeContainer().getNameWithID();
     nodeName = NodeContext.getContext().getNodeContainer().getName();
     nodeId = NodeContext.getContext().getNodeContainer().getID().toString().split(":")[1];
@@ -179,7 +179,7 @@ public final class JoinerNodeModel extends
     // Clone input object
     synchronized (getLock()) {
       JoinerViewValue joinerProxyValue = getViewValue();
-      
+
       // If not executed
       if (joinerProxyValue.modelMetaData == null) {
         joinerProxyValue.modelScriptTree = buildModelscriptAsTree(inObj1, inObj2);
@@ -253,7 +253,8 @@ public final class JoinerNodeModel extends
         creatRelationList(nodeSettings.joinScript, joinerProxyValue, joinerRelation);
       }
       // Consider Here that the model type is the same as the second model
-      outObj.modelMetadata = getObjectFromJson(joinerProxyValue.modelMetaData,SwaggerUtil.modelClasses.get(inObj2.modelMetadata.getModelType()));
+      outObj.modelMetadata = getObjectFromJson(joinerProxyValue.modelMetaData,
+          SwaggerUtil.modelClasses.get(inObj2.modelMetadata.getModelType()));
       joinerProxyValue.modelType = inObj2.modelMetadata.getModelType();
       if (StringUtils.isNotEmpty(joinerProxyValue.modelScriptTree)) {
         JsonArray scriptTree = getScriptArray(joinerProxyValue.modelScriptTree);
@@ -333,7 +334,8 @@ public final class JoinerNodeModel extends
   }
 
   private void creatRelationList(String relation, JoinerViewValue joinerProxyValue,
-      List<JoinRelation> joinerRelation) throws InvalidSettingsException, JsonParseException, JsonMappingException, IOException {
+      List<JoinRelation> joinerRelation)
+      throws InvalidSettingsException, JsonParseException, JsonMappingException, IOException {
     if (StringUtils.isNotBlank(relation)) {
       joinerProxyValue.joinRelations = relation;
       JsonReader jsonReader = Json.createReader(new StringReader(relation));
@@ -349,25 +351,25 @@ public final class JoinerNodeModel extends
           jR.setLanguage_written_in(sourceTargetRelation.getString("language_written_in"));
         }
         if (sourceTargetRelation.containsKey("sourceParam")) {
-        	try {
-        		jR.setSourceParam(getObjectFromJson(sourceTargetRelation.get("sourceParam").toString(),
-        	              Parameter.class));
-        	}catch(Exception e) {
-        		Parameter source =new Parameter();
-            	source.setId(sourceTargetRelation.get("sourceParam").toString());
-            	jR.setSourceParam(source);
-        	}
+          try {
+            jR.setSourceParam(getObjectFromJson(sourceTargetRelation.get("sourceParam").toString(),
+                Parameter.class));
+          } catch (Exception e) {
+            Parameter source = new Parameter();
+            source.setId(sourceTargetRelation.get("sourceParam").toString());
+            jR.setSourceParam(source);
+          }
         }
         if (sourceTargetRelation.containsKey("targetParam")) {
-        	
-        	try {
-                jR.setTargetParam(getObjectFromJson(sourceTargetRelation.get("targetParam").toString(),
-                        Parameter.class));
-        	}catch(Exception e) {
-            	Parameter target =new Parameter();
-            	target.setId(sourceTargetRelation.get("targetParam").toString());
-            	jR.setTargetParam(target);
-        	}
+
+          try {
+            jR.setTargetParam(getObjectFromJson(sourceTargetRelation.get("targetParam").toString(),
+                Parameter.class));
+          } catch (Exception e) {
+            Parameter target = new Parameter();
+            target.setId(sourceTargetRelation.get("targetParam").toString());
+            jR.setTargetParam(target);
+          }
         }
 
         joinerRelation.add(jR);
@@ -536,10 +538,11 @@ public final class JoinerNodeModel extends
     File directory =
         NodeContext.getContext().getWorkflowManager().getContext().getCurrentLocation();
     String name = NodeContext.getContext().getNodeContainer().getName();
-    // Dirty workaround. KNIME adds (deprecated) for these nodes. The old folder does not have it and are ignored.
+    // Dirty workaround. KNIME adds (deprecated) for these nodes. The old folder does not have it
+    // and are ignored.
     // For now, (deprecated) is removed from the name so the old folders can be loaded.
     name = StringUtils.remove(name, " (deprecated)");
-    
+
     String id = NodeContext.getContext().getNodeContainer().getID().toString().split(":")[1];
     String containerName = name + " (#" + id + ") setting";
 
@@ -549,12 +552,31 @@ public final class JoinerNodeModel extends
     nodeSettings.joinScript = NodeUtils.readConfigString(settingFolder, "JoinRelations.json");
     nodeSettings.modelMetaData = NodeUtils.readConfigString(settingFolder, "modelMetaData.json");
 
-    nodeSettings.modelMath1 = NodeUtils.readConfigString(settingFolder, "modelMath1.json");
-    nodeSettings.modelMath2 = NodeUtils.readConfigString(settingFolder, "modelMath2.json");
+    File configFile = new File(settingFolder, "firstModelParameters.json");
+    if (!configFile.exists()) {
+      nodeSettings.modelMath1 = NodeUtils.readConfigString(settingFolder, "modelMath1.json");
+    } else {
+      String params = NodeUtils.readConfigString(settingFolder, "firstModelParameters.json");
+      if (!params.replaceAll("\\r\\n|\\r|\\n", "").startsWith("{parameter")) {
+        params = "{\"parameter\" : " + params + "}";
+      }
+      nodeSettings.modelMath1 = params;
+    }
+    configFile = new File(settingFolder, "secondModelParameters.json");
+    if (!configFile.exists()) {
+      nodeSettings.modelMath2 = NodeUtils.readConfigString(settingFolder, "modelMath2.json");
+    } else {
+      String params = NodeUtils.readConfigString(settingFolder, "secondModelParameters.json");
+      if (!params.replaceAll("\\r\\n|\\r|\\n", "").startsWith("{parameter")) {
+        params = "{\"parameter\" : " + params + "}";
+      }
+      nodeSettings.modelMath2 = params;
+    }
     String sourceTree = NodeUtils.readConfigString(settingFolder, "sourceTree.json");
     String visualizationScript = NodeUtils.readConfigString(settingFolder, "visualization.txt");
 
     JoinerViewValue viewValue = getViewValue();
+    
     viewValue.joinRelations = nodeSettings.joinScript;
     viewValue.modelMetaData = nodeSettings.modelMetaData;
 
@@ -572,10 +594,11 @@ public final class JoinerNodeModel extends
     File directory =
         NodeContext.getContext().getWorkflowManager().getContext().getCurrentLocation();
     String name = NodeContext.getContext().getNodeContainer().getName();
-    // Dirty workaround. KNIME adds (deprecated) for these nodes. The old folder does not have it and are ignored.
+    // Dirty workaround. KNIME adds (deprecated) for these nodes. The old folder does not have it
+    // and are ignored.
     // For now, (deprecated) is removed from the name so the old folders can be loaded.
     name = StringUtils.remove(name, " (deprecated)");
-    
+
     String id = NodeContext.getContext().getNodeContainer().getID().toString().split(":")[1];
     String containerName = name + " (#" + id + ") setting";
 

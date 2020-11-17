@@ -495,7 +495,7 @@ joiner = function() {
 			$.each(_viewValue.joinRelations,function(index,value){
 				if(value ){
 					console.log('val',value);
-					window.joinRelationsMap[value.sourceParam.id+","+value.targetParam.id] = value ;	
+					window.joinRelationsMap[(value.sourceParam.id ? value.sourceParam.id : value.sourceParam) +","+ (value.targetParam.id?value.targetParam.id:value.targetParam)] = value ;	
 				}
 				 
 			})
