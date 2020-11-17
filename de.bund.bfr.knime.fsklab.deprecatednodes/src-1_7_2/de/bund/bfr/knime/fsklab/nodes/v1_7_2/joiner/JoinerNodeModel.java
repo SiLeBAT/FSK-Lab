@@ -71,6 +71,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.threetenbp.ThreeTenModule;
 
 import de.bund.bfr.knime.fsklab.CombinedFskPortObject;
@@ -163,6 +164,7 @@ public final class JoinerNodeModel extends
 	  MAPPER.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
 	  MAPPER.enable(JsonParser.Feature.ALLOW_SINGLE_QUOTES);
 	  MAPPER.registerModule(new ThreeTenModule());
+	  MAPPER.registerModule(new JavaTimeModule());
 	  
     nodeWithId = NodeContext.getContext().getNodeContainer().getNameWithID();
     nodeName = NodeContext.getContext().getNodeContainer().getName();
