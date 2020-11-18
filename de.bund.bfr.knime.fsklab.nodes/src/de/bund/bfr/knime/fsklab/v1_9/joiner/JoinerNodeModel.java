@@ -600,7 +600,7 @@ public final class JoinerNodeModel
 
   private static FskPortObject createEmptyFSKObject() throws IOException {
     
-    FskPortObject fskPortObject = new FskPortObject(Optional.of(new FilesEnvironmentManager(new String[0])), "", Collections.emptyList());
+    FskPortObject fskPortObject = new FskPortObject(Optional.empty(), "", Collections.emptyList());
     fskPortObject.setModel("");
     fskPortObject.setViz("");
     fskPortObject.modelMetadata = NodeUtils.initializeModel(ModelType.genericModel);
@@ -843,9 +843,9 @@ public final class JoinerNodeModel
       String modelType) throws JsonMappingException, JsonProcessingException, IOException {
 
     portObject.modelMetadata = MAPPER.readValue(model[0], SwaggerUtil.modelClasses.get(modelType));
-    if(!StringUtils.isEmpty(model[1]))
+    if(StringUtils.isNotEmpty(model[1]))
       portObject.setModel(MAPPER.readValue(model[1], String.class));
-    if(!StringUtils.isEmpty(model[2]))
+    if(StringUtils.isNotEmpty(model[2]))
       portObject.setViz(MAPPER.readValue(model[2], String.class));
     portObject.simulations.clear();
     portObject.packages.clear();
