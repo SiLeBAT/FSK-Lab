@@ -68,6 +68,7 @@ import org.knime.core.node.workflow.NodeContext;
 import org.knime.js.core.node.AbstractSVGWizardNodeModel;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.nodes.NodeRemovedListener;
@@ -359,7 +360,7 @@ public final class JoinerNodeModel
       }catch(Exception ex) {
         OldJoinerRelation[] oldRelations= MAPPER.readValue(connectionString, OldJoinerRelation[].class);
         Function<OldJoinerRelation, JoinRelation> funcMigrateJoinerRelation= (OldJoinerRelation e)-> {return e.getNewJoinRelation();};
-        nodeSettings.connections  = Arrays.asList(oldRelations).stream().map(funcMigrateJoinerRelation
+        nodeSettings.connections  = Arrays.stream(oldRelations).map(funcMigrateJoinerRelation
         ).collect(Collectors.toList()).toArray(new JoinRelation[oldRelations.length]);
       }
     } else {
@@ -371,7 +372,7 @@ public final class JoinerNodeModel
           OldJoinerRelation[] oldRelations =
               MAPPER.readValue(configFile, OldJoinerRelation[].class);
           nodeSettings.connections =
-              Arrays.asList(oldRelations).stream().map((OldJoinerRelation e) -> {
+              Arrays.stream(oldRelations).map((OldJoinerRelation e) -> {
                 return e.getNewJoinRelation();
               }).collect(Collectors.toList()).toArray(new JoinRelation[oldRelations.length]);
         }
@@ -386,7 +387,7 @@ public final class JoinerNodeModel
         nodeSettings.modelMetaData = FileUtils.readFileToString(configFile, StandardCharsets.UTF_8);
       }
     }
-    List <Parameter> firstParams = new ArrayList<Parameter>();
+    List <Parameter> firstParams = new ArrayList<>();
     if (flowVariables.containsKey("firstModelParameters.json")) {
       String parametersString = flowVariables.get("firstModelParameters.json").getStringValue();
       nodeSettings.firstModelParameters = MAPPER.readValue(parametersString, Parameter[].class);
@@ -476,11 +477,8 @@ public final class JoinerNodeModel
    */
   private static List<Parameter> getModelParametersfromOldFile(File configFile)
       throws FileNotFoundException, IOException, ParseException {
-    JSONParser parser = new JSONParser();
-    Object obj = parser.parse(new FileReader(configFile));
-    JSONObject jsonObject = (JSONObject) obj;
-    JSONArray parameterList = (JSONArray) jsonObject.get("parameter");
-    return MAPPER.readValue(parameterList.toJSONString(), new TypeReference<List<Parameter>>() {});
+    JsonNode nodes = MAPPER.readTree(configFile);
+    return new ArrayList<>(Arrays.asList(MAPPER.treeToValue(nodes.get("parameter") , Parameter[].class)));
   }
 
   @Override
