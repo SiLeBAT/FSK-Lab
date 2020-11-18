@@ -468,7 +468,6 @@ public final class JoinerNodeModel
     }
 
     representation.setSecondModelViz(visualizationScript);
-
   }
 
   /*
