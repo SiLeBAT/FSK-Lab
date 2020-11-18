@@ -175,9 +175,9 @@ public class JSSimulatorNodeModel
         loadJsonSetting();
         final List<JSSimulation> simulations = inObj.simulations.stream()
             .map(it -> toJSSimulation(it, parameters)).collect(Collectors.toList());
-
+        val.simulations = simulations;
         if (val.modelMath == null) {
-          val.simulations = simulations;
+          
           val.modelMath = FromOjectToJSON(SwaggerUtil.getModelMath(inObj.modelMetadata));
         }
         port = inObj;
@@ -264,7 +264,7 @@ public class JSSimulatorNodeModel
           index++;
 
         });
-
+        
         for (int i = 0; i < properInputParam.size(); i++) {
           final String paramName = properInputParam.get(i).getId();
           final String paramValue = jsSimulation.values.get(indexes.get(i));
