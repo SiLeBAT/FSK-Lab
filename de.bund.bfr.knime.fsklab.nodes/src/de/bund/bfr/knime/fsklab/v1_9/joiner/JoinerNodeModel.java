@@ -58,7 +58,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.nodes.NodeRemovedListener;
 import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
-import de.bund.bfr.knime.fsklab.nodes.environment.FilesEnvironmentManager;
+import de.bund.bfr.knime.fsklab.nodes.environment.EnvironmentManager;
 import de.bund.bfr.knime.fsklab.v1_9.CombinedFskPortObject;
 import de.bund.bfr.knime.fsklab.v1_9.CombinedFskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.v1_9.FskPortObject;
@@ -636,8 +636,7 @@ public final class JoinerNodeModel
           && StringUtils.isNotEmpty(joinerModelsData.firstModel[0])) {
         
         
-        FskPortObject jFirstInputPort = getFSKObjectFromStringArray(
-            new FskPortObject(firstInputPort.getEnvironmentManager(), "", new ArrayList<String>()),
+        FskPortObject jFirstInputPort = getFSKObjectFromStringArray(firstInputPort.getEnvironmentManager(),
             joinerModelsData.firstModel, joinerModelsData.firstModelType);
 
         FskPortObject jSecondInputPort;
@@ -645,16 +644,14 @@ public final class JoinerNodeModel
         FskPortObject jFourthInputPort;
         if (joinerModelsData.secondModel != null && joinerModelsData.secondModel.length > 0
             && StringUtils.isNotEmpty(joinerModelsData.secondModel[0])) {
-          jSecondInputPort = getFSKObjectFromStringArray(
-              new FskPortObject(secondInputPort.getEnvironmentManager(), "", new ArrayList<String>()),
+          jSecondInputPort = getFSKObjectFromStringArray(secondInputPort.getEnvironmentManager(),
               joinerModelsData.secondModel, joinerModelsData.secondModelType);
         } else {
           jSecondInputPort = createEmptyFSKObject();
         }
         if (joinerModelsData.thirdModel != null && joinerModelsData.thirdModel.length > 0
             && StringUtils.isNotEmpty(joinerModelsData.thirdModel[0])) {
-          jThirdInputPort = getFSKObjectFromStringArray(
-              new FskPortObject(thirdInputPort.getEnvironmentManager(), "", new ArrayList<String>()),
+          jThirdInputPort = getFSKObjectFromStringArray(thirdInputPort.getEnvironmentManager(),
               joinerModelsData.thirdModel, joinerModelsData.thirdModelType);
         } else {
           jThirdInputPort = createEmptyFSKObject();
@@ -662,8 +659,7 @@ public final class JoinerNodeModel
 
         if (joinerModelsData.fourthModel != null && joinerModelsData.fourthModel.length > 0
             && StringUtils.isNotEmpty(joinerModelsData.fourthModel[0])) {
-          jFourthInputPort = getFSKObjectFromStringArray(
-              new FskPortObject(fourthInputPort.getEnvironmentManager(), "", new ArrayList<String>()),
+          jFourthInputPort = getFSKObjectFromStringArray(fourthInputPort.getEnvironmentManager(),
               joinerModelsData.fourthModel, joinerModelsData.fourthModelType);
         } else {
           jFourthInputPort = createEmptyFSKObject();
@@ -839,9 +835,9 @@ public final class JoinerNodeModel
         getObjectAsJSONString(portObject.simulations), getObjectAsJSONString(portObject.packages)};
   }
 
-  private static FskPortObject getFSKObjectFromStringArray(FskPortObject portObject, String[] model,
+  private static FskPortObject getFSKObjectFromStringArray(Optional<EnvironmentManager> manager, String[] model,
       String modelType) throws JsonMappingException, JsonProcessingException, IOException {
-
+    FskPortObject portObject = new FskPortObject(manager, "", MAPPER.readValue(model[4], new TypeReference<List<String>>() {}));
     portObject.modelMetadata = MAPPER.readValue(model[0], SwaggerUtil.modelClasses.get(modelType));
     if(StringUtils.isNotEmpty(model[1]))
       portObject.setModel(MAPPER.readValue(model[1], String.class));
@@ -851,8 +847,6 @@ public final class JoinerNodeModel
     portObject.packages.clear();
     portObject.simulations
         .addAll(MAPPER.readValue(model[3], new TypeReference<List<FskSimulation>>() {}));
-
-    portObject.packages.addAll(MAPPER.readValue(model[4], new TypeReference<List<String>>() {}));
 
     return portObject;
   }
