@@ -684,6 +684,7 @@ public final class JoinerNodeModel
         }
         if(!value.joinerModelsData.interactiveMode)
           resetParameterIdForObjectsFromJSON(outObj, 0);
+
         outObj = createCombinedFskPortObject(jFirstInputPort, jSecondInputPort, jThirdInputPort,
             jFourthInputPort);
         Map<String, List<String>> unModifiedParamsNames =

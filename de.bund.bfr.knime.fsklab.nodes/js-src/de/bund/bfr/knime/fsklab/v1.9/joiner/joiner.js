@@ -25,6 +25,7 @@ joiner = function () {
   let _firstModelParameterMap = {};
   let _secondModelParameterMap = {};
   let _modelColectionWithoutSuffixedmap = {};
+
   let modelsPool = {
     firstModel: {},
     secondModel: {},
@@ -105,6 +106,7 @@ joiner = function () {
 
       editModelsPool(keys[index], _modelColectionSuffixed[index].modelMath.parameter, selectedModel.generalInformation.name, _modelColectionSuffixed[index], selectedModel.modelType , 
                     JSON.stringify(modelMetaData.changeSet.added[0][index]['modelscript']), JSON.stringify(modelMetaData.changeSet.added[0][index]['visualization']));
+
     });
     
     poolSize++;
@@ -195,6 +197,7 @@ joiner = function () {
           delete relation.sourceModel;
           delete relation.targetModel;
         });
+
 
         }catch (err){console.log(err);}
       } else {
