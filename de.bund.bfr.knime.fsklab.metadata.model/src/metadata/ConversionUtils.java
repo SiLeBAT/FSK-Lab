@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.yaml.snakeyaml.Yaml;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 @SuppressWarnings("unchecked")
@@ -30,6 +31,11 @@ public class ConversionUtils {
   private static final String SCOPE = "scope";
   private static final String DATA_BACKGROUND = "dataBackground";
   private static final String MODEL_MATH = "modelMath";
+  
+  // Swagger tags
+  private static final String PROPERTIES = "properties";
+  private static final String TYPE = "type";
+  private static final String REF = "$ref";
 
   public ConversionUtils() {
 
@@ -58,18 +64,20 @@ public class ConversionUtils {
   }
 
   public JsonNode convertModel(JsonNode originalMetadata, String targetClass) {
-    
+
     String originalClass = originalMetadata.get("modelType").textValue();
     Map<String, Object> originalModelClass = (Map<String, Object>) modelMapping.get(originalClass);
     Map<String, Object> targetModelClass = (Map<String, Object>) modelMapping.get(targetClass);
 
+    // Every model class is an Swagger object with properties (2nd object of allOf):
+    // GENERAL_INFORMATION, SCOPE, DATA_BACKGROUND and MODEL_MATH
     List<Object> allOf = (List<Object>) originalModelClass.get("allOf");
     Map<String, Object> originalTopComponents =
-        (Map<String, Object>) ((Map<String, Object>) allOf.get(1)).get("properties");
+        (Map<String, Object>) ((Map<String, Object>) allOf.get(1)).get(PROPERTIES);
 
     allOf = (List<Object>) targetModelClass.get("allOf");
     Map<String, Object> targetTopComponents =
-        (Map<String, Object>) ((Map<String, Object>) allOf.get(1)).get("properties");
+        (Map<String, Object>) ((Map<String, Object>) allOf.get(1)).get(PROPERTIES);
 
     JsonNode generalInformationNode = convert(originalMetadata.get(GENERAL_INFORMATION),
         (Map<String, Object>) originalTopComponents.get(GENERAL_INFORMATION),
@@ -117,12 +125,25 @@ public class ConversionUtils {
       Map<String, Object> originalProp = (Map<String, Object>) originalProperties.get(key);
       Map<String, Object> targetProp = (Map<String, Object>) targetProperties.get(key);
 
-      if (originalProp.containsKey("type") && targetProp.containsKey("type")) {
-        String originalPropType = (String) originalProp.get("type");
-        String targetPropType = (String) targetProp.get("type");
+      if (originalProp.containsKey(TYPE) && targetProp.containsKey(TYPE)) {
+        String originalPropType = (String) originalProp.get(TYPE);
+        String targetPropType = (String) targetProp.get(TYPE);
+
         if (originalPropType.equals(targetPropType)) {
-          node.set(key, originalMetadata.get(key));
+          if (originalPropType.equals("string") || originalPropType.equals("number")) {
+            node.set(key, field.getValue());
+          } else if (originalPropType.equals("array")) {
+            ArrayNode convertedProperty = MAPPER.createArrayNode();
+            for (JsonNode child: field.getValue()) {
+              JsonNode convertedChild = convert(child, originalProp, targetProp);
+              convertedProperty.add(convertedChild);
+            }
+            node.set(key, convertedProperty);
+          }
         }
+      } else if (originalProp.containsKey(REF) && targetProp.containsKey(REF)) {
+        JsonNode convertChild = convert(field.getValue(), originalProp, targetProp);
+        node.set(key, convertChild);
       }
     }
 
@@ -131,13 +152,17 @@ public class ConversionUtils {
 
   private Map<String, Object> getProperties(Map<String, Object> property) {
 
-    if (property.containsKey("type") && property.get("type").equals("object")) {
-      return (Map<String, Object>) property.get("properties");
+    if (property.containsKey(TYPE)) {
+      if (property.get(TYPE).equals("object")) {
+        return (Map<String, Object>) property.get(PROPERTIES);
+      } else if (property.get(TYPE).equals("array") && property.containsKey("items")) {
+        return getProperties((Map<String, Object>) property.get("items"));
+      }
     }
 
-    if (property.containsKey("$ref")) {
+    if (property.containsKey(REF)) {
       String reference =
-          StringUtils.substringAfter((String) property.get("$ref"), "#/definitions/");
+          StringUtils.substringAfter((String) property.get(REF), "#/definitions/");
       if (definitions.containsKey(reference)) {
         return getProperties((Map<String, Object>) definitions.get(reference));
       }
