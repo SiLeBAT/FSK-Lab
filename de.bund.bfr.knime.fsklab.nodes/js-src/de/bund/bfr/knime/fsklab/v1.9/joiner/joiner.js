@@ -24,7 +24,7 @@ joiner = function () {
 
   let _firstModelParameterMap = {};
   let _secondModelParameterMap = {};
-
+  let _modelColectionWithoutSuffixedmap = {};
   let modelsPool = {
     firstModel: {},
     secondModel: {},
@@ -95,29 +95,24 @@ joiner = function () {
     return oldNewParamNames;
   }
   let selectionChanged = function (modelMetaData) {
-    let _modelColectionSuffixed = addSuffixToParameters(JSON.parse(JSON.stringify(modelMetaData.changeSet.added[0])));
-    if (poolSize == 0) {
-      let selectedModel = modelMetaData.changeSet.added[0][0];
-      _modelsParamsOriginalNames[selectedModel.generalInformation.name] = buildOldNewParamName(_modelColectionSuffixed[0].modelMath.parameter, selectedModel.modelMath.parameter);
-      editModelsPool('firstModel', _modelColectionSuffixed[0].modelMath.parameter, selectedModel.generalInformation.name, _modelColectionSuffixed[0], selectedModel.modelType);
-    } else if (poolSize == 1) {
-      let selectedModel = modelMetaData.changeSet.added[0][1];
-      _modelsParamsOriginalNames[selectedModel.generalInformation.name] = buildOldNewParamName(_modelColectionSuffixed[1].modelMath.parameter, selectedModel.modelMath.parameter);
-      editModelsPool('secondModel', _modelColectionSuffixed[1].modelMath.parameter, selectedModel.generalInformation.name, _modelColectionSuffixed[1], selectedModel.modelType);
-    } else if (poolSize == 2) {
-      let selectedModel = modelMetaData.changeSet.added[0][2];
-      _modelsParamsOriginalNames[selectedModel.generalInformation.name] = buildOldNewParamName(_modelColectionSuffixed[2].modelMath.parameter, selectedModel.modelMath.parameter);
-      editModelsPool('thirdModel', _modelColectionSuffixed[2].modelMath.parameter, selectedModel.generalInformation.name, _modelColectionSuffixed[2], selectedModel.modelType);
-    } else {
-      let selectedModel = modelMetaData.changeSet.added[0][3];
-      _modelsParamsOriginalNames[selectedModel.generalInformation.name] = buildOldNewParamName(_modelColectionSuffixed[3].modelMath.parameter, selectedModel.modelMath.parameter);
-      editModelsPool('fourthModel', _modelColectionSuffixed[3].modelMath.parameter, selectedModel.generalInformation.name, _modelColectionSuffixed[3], selectedModel.modelType);
-    }
+    let _modelColectionSuffixed =  addSuffixToParameters(JSON.parse(JSON.stringify(modelMetaData.changeSet.added[0])));
+    let keys = ['firstModel','secondModel','thirdModel','fourthModel']; 
+    $.each(_modelColectionSuffixed,function(index,selectedModel){
+      _modelsParamsOriginalNames[selectedModel.generalInformation.name] = buildOldNewParamName(_modelColectionSuffixed[index].modelMath.parameter, modelMetaData.changeSet.added[0][index].modelMath.parameter);
+      _modelColectionWithoutSuffixedmap[selectedModel.generalInformation.name] = modelMetaData.changeSet.added[0][index].modelMath.parameter;
+      delete _modelColectionSuffixed[index]['modelscript'];
+      delete _modelColectionSuffixed[index]['visualization'];
+
+      editModelsPool(keys[index], _modelColectionSuffixed[index].modelMath.parameter, selectedModel.generalInformation.name, _modelColectionSuffixed[index], selectedModel.modelType , 
+                    JSON.stringify(modelMetaData.changeSet.added[0][index]['modelscript']), JSON.stringify(modelMetaData.changeSet.added[0][index]['visualization']));
+    });
+    
     poolSize++;
   }
   view.init = function (representation, value) {
     _value = value;
     _joinerModelsData = representation.joinerModelsData;
+    _representation = representation;
     _modelsParamsOriginalNames = _joinerModelsData.modelsParamsOriginalNames;
     //subscribe to events emitted by FSK DB View
     knimeService.subscribeToSelection('b800db46-4e25-4f77-bcc6-db0c21joiner', selectionChanged);
@@ -155,14 +150,63 @@ joiner = function () {
   }
 
   view.getComponentValue = function () {
-    _value.joinerModelsData.firstModel = modelsPool.firstModel['metadata'];
-    _value.joinerModelsData.secondModel = modelsPool.secondModel['metadata'];
-    _value.joinerModelsData.thirdModel = modelsPool.thirdModel['metadata'];
-    _value.joinerModelsData.fourthModel = modelsPool.fourthModel['metadata'];
-    _value.joinerModelsData.firstModelType = modelsPool.firstModel['modelType'];
-    _value.joinerModelsData.secondModelType = modelsPool.secondModel['modelType'];
-    _value.joinerModelsData.thirdModelType = modelsPool.thirdModel['modelType'];
-    _value.joinerModelsData.fourthModelType = modelsPool.fourthModel['modelType'];
+    if (!isValidModel(_value.joinerModelsData)) {
+      _value.joinerModelsData = {
+        firstModel: [],
+        secondModel: [],
+        thirdModel: [],
+        fourthModel: [],
+        firstModelType: "",
+        secondModelType: "",
+        thirdModelType: "",
+        fourthModelType: ""
+      }
+    }
+
+    if (parent.tableID) {
+      try {
+        modelsPool.firstModel['metadata']['modelMath']['parameter'] = _modelColectionWithoutSuffixedmap[modelsPool.firstModel['modelName']];
+        modelsPool.secondModel['metadata']['modelMath']['parameter'] = _modelColectionWithoutSuffixedmap[modelsPool.secondModel['modelName']];
+        modelsPool.thirdModel['metadata']['modelMath']['parameter'] = _modelColectionWithoutSuffixedmap[modelsPool.thirdModel['modelName']];
+        modelsPool.fourthModel['metadata']['modelMath']['parameter'] = _modelColectionWithoutSuffixedmap[modelsPool.fourthModel['modelName']];
+        
+
+        _value.joinerModelsData.firstModel = [JSON.stringify(modelsPool.firstModel['metadata']), modelsPool.firstModel['modelScript'], modelsPool.firstModel['vis'], "[{}]", "[]"];
+        _value.joinerModelsData.secondModel = [JSON.stringify(modelsPool.secondModel['metadata']), modelsPool.secondModel['modelScript'], modelsPool.secondModel['vis'], "[{}]", "[]"];
+        _value.joinerModelsData.thirdModel = [JSON.stringify(modelsPool.thirdModel['metadata']), modelsPool.thirdModel['modelScript'], modelsPool.thirdModel['vis'], "[{}]", "[]"];
+        _value.joinerModelsData.fourthModel = [JSON.stringify(modelsPool.fourthModel['metadata']), modelsPool.fourthModel['modelScript'], modelsPool.fourthModel['vis'], "[{}]", "[]"];
+        
+        _value.joinerModelsData.interactiveMode = true;
+        
+        _value.joinerModelsData.firstModelType = modelsPool.firstModel['modelType'];
+        _value.joinerModelsData.secondModelType = modelsPool.secondModel['modelType'];
+        _value.joinerModelsData.thirdModelType = modelsPool.thirdModel['modelType'];
+        _value.joinerModelsData.fourthModelType = modelsPool.fourthModel['modelType'];
+
+    
+
+
+        _value.joinerModelsData.firstModelName = modelsPool.firstModel['modelName'];
+        _value.joinerModelsData.secondModelName = modelsPool.secondModel['modelName'];
+        _value.joinerModelsData.thirdModelName = modelsPool.thirdModel['modelName'];
+        _value.joinerModelsData.fourthModelName = modelsPool.fourthModel['modelName'];
+
+        _value.joinRelations.forEach((relation) => {
+          delete relation.sourceModel;
+          delete relation.targetModel;
+        });
+
+        }catch (err){console.log(err);}
+      } else {
+      _value.joinerModelsData.firstModel = modelsPool.firstModel['metadata'];
+      _value.joinerModelsData.secondModel = modelsPool.secondModel['metadata'];
+      _value.joinerModelsData.thirdModel = modelsPool.thirdModel['metadata'];
+      _value.joinerModelsData.fourthModel = modelsPool.fourthModel['metadata'];
+      _value.joinerModelsData.firstModelType = modelsPool.firstModel['modelType'];
+      _value.joinerModelsData.secondModelType = modelsPool.secondModel['modelType'];
+      _value.joinerModelsData.thirdModelType = modelsPool.thirdModel['modelType'];
+      _value.joinerModelsData.fourthModelType = modelsPool.fourthModel['modelType'];
+    }
     return _value;
   };
 
@@ -173,7 +217,9 @@ joiner = function () {
     return (new XMLSerializer()).serializeToString(_paper.svg);
   };
 
-  function editModelsPool(key, modelParameters, modelName, individualMetadata, modelType) {
+  function editModelsPool(key, modelParameters, modelName, individualMetadata, modelType, modelScript, vis) {
+    modelsPool[key]['modelScript'] = modelScript;
+    modelsPool[key]['vis'] = vis;
     modelsPool[key]['modelName'] = modelName;
     modelsPool[key]['modelType'] = modelType;
     modelsPool[key]['metadata'] = individualMetadata
@@ -220,6 +266,7 @@ joiner = function () {
         _graph.addCell(modelsPool[value]['modelToJoin']);
     })
     graphJSON = _graph.toJSON();
+    _value.jsonRepresentation = JSON.stringify(graphJSON);
     reoderTool();
   }
 
@@ -640,7 +687,7 @@ joiner = function () {
           targetModel: tModel
         };
 
-        if (_metadata.generalInformation.languageWrittenIn.length > 0) {
+        if (_metadata.generalInformation.languageWrittenIn && _metadata.generalInformation.languageWrittenIn.length > 0) {
           window.sJoinRealtion.language_written_in = _metadata.generalInformation.languageWrittenIn;
           $('#commandLanguage').val(_metadata.generalInformation.languageWrittenIn);
         }

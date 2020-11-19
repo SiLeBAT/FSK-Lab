@@ -58,6 +58,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.nodes.NodeRemovedListener;
 import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
+import de.bund.bfr.knime.fsklab.nodes.environment.EnvironmentManager;
 import de.bund.bfr.knime.fsklab.v1_9.CombinedFskPortObject;
 import de.bund.bfr.knime.fsklab.v1_9.CombinedFskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.v1_9.FskPortObject;
@@ -242,7 +243,9 @@ public final class JoinerNodeModel
         }
       }
     }
-    representation.joinerModelsData.modelsParamsOriginalNames = this.modelsParamsOriginalNames;
+    if(!modelsParamsOriginalNames.containsKey(null)) {
+      representation.joinerModelsData.modelsParamsOriginalNames = this.modelsParamsOriginalNames;
+    }
     return representation;
   }
 
@@ -399,8 +402,10 @@ public final class JoinerNodeModel
     }
 
     JoinerViewValue viewValue = getViewValue();
-    viewValue.joinRelations = m_config.connections;
-    viewValue.modelMetaData = m_config.modelMetaData;
+    if(m_config.connections != null)
+      viewValue.joinRelations = m_config.connections;
+    if(m_config.modelMetaData != null)
+      viewValue.modelMetaData = m_config.modelMetaData;
 
     JoinerViewRepresentation representation = getViewRepresentation();
     if (m_config.joinerModelsData != null
@@ -596,7 +601,7 @@ public final class JoinerNodeModel
   }
 
   private static FskPortObject createEmptyFSKObject() throws IOException {
-
+    
     FskPortObject fskPortObject = new FskPortObject(Optional.empty(), "", Collections.emptyList());
     fskPortObject.setModel("");
     fskPortObject.setViz("");
@@ -631,10 +636,9 @@ public final class JoinerNodeModel
       JoinerModelsData joinerModelsData = value.joinerModelsData;
       if (joinerModelsData.firstModel != null && joinerModelsData.firstModel.length > 0
           && StringUtils.isNotEmpty(joinerModelsData.firstModel[0])) {
-        outObj.modelMetadata = MAPPER.readValue(value.modelMetaData,
-            SwaggerUtil.modelClasses.get(firstInputPort.modelMetadata.getModelType()));
-        FskPortObject jFirstInputPort = getFSKObjectFromStringArray(
-            new FskPortObject(Optional.empty(), "", new ArrayList<String>()),
+        
+        
+        FskPortObject jFirstInputPort = getFSKObjectFromStringArray(firstInputPort.getEnvironmentManager(),
             joinerModelsData.firstModel, joinerModelsData.firstModelType);
 
         FskPortObject jSecondInputPort;
@@ -642,16 +646,14 @@ public final class JoinerNodeModel
         FskPortObject jFourthInputPort;
         if (joinerModelsData.secondModel != null && joinerModelsData.secondModel.length > 0
             && StringUtils.isNotEmpty(joinerModelsData.secondModel[0])) {
-          jSecondInputPort = getFSKObjectFromStringArray(
-              new FskPortObject(Optional.empty(), "", new ArrayList<String>()),
+          jSecondInputPort = getFSKObjectFromStringArray(secondInputPort.getEnvironmentManager(),
               joinerModelsData.secondModel, joinerModelsData.secondModelType);
         } else {
           jSecondInputPort = createEmptyFSKObject();
         }
         if (joinerModelsData.thirdModel != null && joinerModelsData.thirdModel.length > 0
             && StringUtils.isNotEmpty(joinerModelsData.thirdModel[0])) {
-          jThirdInputPort = getFSKObjectFromStringArray(
-              new FskPortObject(Optional.empty(), "", new ArrayList<String>()),
+          jThirdInputPort = getFSKObjectFromStringArray(thirdInputPort.getEnvironmentManager(),
               joinerModelsData.thirdModel, joinerModelsData.thirdModelType);
         } else {
           jThirdInputPort = createEmptyFSKObject();
@@ -659,8 +661,7 @@ public final class JoinerNodeModel
 
         if (joinerModelsData.fourthModel != null && joinerModelsData.fourthModel.length > 0
             && StringUtils.isNotEmpty(joinerModelsData.fourthModel[0])) {
-          jFourthInputPort = getFSKObjectFromStringArray(
-              new FskPortObject(Optional.empty(), "", new ArrayList<String>()),
+          jFourthInputPort = getFSKObjectFromStringArray(fourthInputPort.getEnvironmentManager(),
               joinerModelsData.fourthModel, joinerModelsData.fourthModelType);
         } else {
           jFourthInputPort = createEmptyFSKObject();
@@ -673,7 +674,16 @@ public final class JoinerNodeModel
             jThirdInputPort);
         fskID_to_fskObject.put(SwaggerUtil.getModelName(jFourthInputPort.modelMetadata),
             jFourthInputPort);
-        resetParameterIdForObjectsFromJSON(outObj, 0);
+        
+        outObj = createCombinedFskPortObject(jFirstInputPort, jSecondInputPort, jThirdInputPort, jFourthInputPort);
+        if(value.modelMetaData != null) {
+          outObj.modelMetadata = MAPPER.readValue(value.modelMetaData,
+            SwaggerUtil.modelClasses.get(firstInputPort.modelMetadata.getModelType()));
+        }else {
+          outObj.modelMetadata = jFirstInputPort.modelMetadata;
+        }
+        if(!value.joinerModelsData.interactiveMode)
+          resetParameterIdForObjectsFromJSON(outObj, 0);
         outObj = createCombinedFskPortObject(jFirstInputPort, jSecondInputPort, jThirdInputPort,
             jFourthInputPort);
         Map<String, List<String>> unModifiedParamsNames =
@@ -682,8 +692,6 @@ public final class JoinerNodeModel
         JoinerNodeUtil.addIdentifierToParametersForCombinedObject(outObj, "", unModifiedParamsNames,
             modelsParamsOriginalNames);
         mergeParameterForJoinedObject(outObj);
-
-
 
       }
 
@@ -828,18 +836,18 @@ public final class JoinerNodeModel
         getObjectAsJSONString(portObject.simulations), getObjectAsJSONString(portObject.packages)};
   }
 
-  private static FskPortObject getFSKObjectFromStringArray(FskPortObject portObject, String[] model,
+  private static FskPortObject getFSKObjectFromStringArray(Optional<EnvironmentManager> manager, String[] model,
       String modelType) throws JsonMappingException, JsonProcessingException, IOException {
-
+    FskPortObject portObject = new FskPortObject(manager, "", MAPPER.readValue(model[4], new TypeReference<List<String>>() {}));
     portObject.modelMetadata = MAPPER.readValue(model[0], SwaggerUtil.modelClasses.get(modelType));
-    portObject.setModel(MAPPER.readValue(model[1], String.class));
-    portObject.setViz(MAPPER.readValue(model[2], String.class));
+    if(StringUtils.isNotEmpty(model[1]))
+      portObject.setModel(MAPPER.readValue(model[1], String.class));
+    if(StringUtils.isNotEmpty(model[2]))
+      portObject.setViz(MAPPER.readValue(model[2], String.class));
     portObject.simulations.clear();
     portObject.packages.clear();
     portObject.simulations
         .addAll(MAPPER.readValue(model[3], new TypeReference<List<FskSimulation>>() {}));
-
-    portObject.packages.addAll(MAPPER.readValue(model[4], new TypeReference<List<String>>() {}));
 
     return portObject;
   }

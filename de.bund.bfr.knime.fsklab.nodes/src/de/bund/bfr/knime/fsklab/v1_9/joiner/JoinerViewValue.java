@@ -122,6 +122,6 @@ class JoinerViewValue extends JSONViewContent {
    * mandatory properties not set is considered empty.
    */
   public boolean isEmpty() {
-    return StringUtils.isEmpty(modelMetaData);
+    return StringUtils.isEmpty(modelMetaData) && StringUtils.isBlank(joinerModelsData.firstModelName) ;
   }
 }
