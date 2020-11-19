@@ -19,6 +19,7 @@
 package de.bund.bfr.knime.fsklab.v1_9.joiner;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
@@ -32,6 +33,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
@@ -41,6 +44,7 @@ import javax.json.JsonReader;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.ArrayUtils;
+import org.json.simple.parser.ParseException;
 import org.knime.base.data.xml.SvgCell;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
@@ -59,6 +63,7 @@ import org.knime.core.node.workflow.NodeContainer;
 import org.knime.core.node.workflow.NodeContext;
 import org.knime.js.core.node.AbstractSVGWizardNodeModel;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.nodes.NodeRemovedListener;
@@ -66,6 +71,7 @@ import de.bund.bfr.knime.fsklab.v1_9.CombinedFskPortObject;
 import de.bund.bfr.knime.fsklab.v1_9.CombinedFskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.v1_9.FskPortObject;
 import de.bund.bfr.knime.fsklab.v1_9.JoinRelation;
+import de.bund.bfr.knime.fsklab.v1_9.OldJoinerRelation;
 import de.bund.bfr.metadata.swagger.Parameter;
 import metadata.SwaggerUtil;
 
@@ -327,7 +333,7 @@ public final class JoinerNodeModel
   @Override
   protected void useCurrentValueAsDefault() {}
 
-  protected void loadJsonSetting() throws IOException, CanceledExecutionException {
+  protected void loadJsonSetting() throws IOException, CanceledExecutionException, ParseException {
 
     File directory =
         NodeContext.getContext().getWorkflowManager().getContext().getCurrentLocation();
@@ -344,11 +350,27 @@ public final class JoinerNodeModel
 
     if (flowVariables.containsKey("JoinRelations.json")) {
       String connectionString = flowVariables.get("JoinRelations.json").getStringValue();
-      nodeSettings.connections = MAPPER.readValue(connectionString, JoinRelation[].class);
+      try {
+        nodeSettings.connections = MAPPER.readValue(connectionString, JoinRelation[].class);
+      }catch(Exception ex) {
+        OldJoinerRelation[] oldRelations= MAPPER.readValue(connectionString, OldJoinerRelation[].class);
+        Function<OldJoinerRelation, JoinRelation> funcMigrateJoinerRelation= (OldJoinerRelation e)-> {return e.getNewJoinRelation();};
+        nodeSettings.connections  = Arrays.stream(oldRelations).map(funcMigrateJoinerRelation
+        ).collect(Collectors.toList()).toArray(new JoinRelation[oldRelations.length]);
+      }
     } else {
       File configFile = new File(settingFolder, "JoinRelations.json");
       if (configFile.exists()) {
-        nodeSettings.connections = MAPPER.readValue(configFile, JoinRelation[].class);
+        try {
+          nodeSettings.connections = MAPPER.readValue(configFile, JoinRelation[].class);
+        } catch (Exception ex) {
+          OldJoinerRelation[] oldRelations =
+              MAPPER.readValue(configFile, OldJoinerRelation[].class);
+          nodeSettings.connections =
+              Arrays.stream(oldRelations).map((OldJoinerRelation e) -> {
+                return e.getNewJoinRelation();
+              }).collect(Collectors.toList()).toArray(new JoinRelation[oldRelations.length]);
+        }
       }
     }
 
@@ -360,7 +382,7 @@ public final class JoinerNodeModel
         nodeSettings.modelMetaData = FileUtils.readFileToString(configFile, StandardCharsets.UTF_8);
       }
     }
-
+    List <Parameter> firstParams = new ArrayList<>();
     if (flowVariables.containsKey("firstModelParameters.json")) {
       String parametersString = flowVariables.get("firstModelParameters.json").getStringValue();
       nodeSettings.firstModelParameters = MAPPER.readValue(parametersString, Parameter[].class);
@@ -368,6 +390,11 @@ public final class JoinerNodeModel
       File configFile = new File(settingFolder, "firstModelParameters.json");
       if (configFile.exists()) {
         nodeSettings.firstModelParameters = MAPPER.readValue(configFile, Parameter[].class);
+      }
+      configFile = new File(settingFolder, "modelMath1.json");
+      if (configFile.exists()) {
+        firstParams = getModelParametersfromOldFile(configFile);
+        nodeSettings.firstModelParameters = firstParams.toArray(new Parameter[firstParams.size()]);
       }
     }
 
@@ -378,6 +405,12 @@ public final class JoinerNodeModel
       File configFile = new File(settingFolder, "secondModelParameters.json");
       if (configFile.exists()) {
         nodeSettings.secondModelParameters = MAPPER.readValue(configFile, Parameter[].class);
+      }
+      configFile = new File(settingFolder, "modelMath2.json");
+      if (configFile.exists()) {
+        List <Parameter> secondParams = getModelParametersfromOldFile(configFile);
+        secondParams.removeAll(firstParams);
+        nodeSettings.secondModelParameters = secondParams.toArray(new Parameter[secondParams.size()]);
       }
     }
 
@@ -404,10 +437,7 @@ public final class JoinerNodeModel
         visualizationScript = null;
       }
     }
-    List<Parameter> newFirstModelParameters =
-        SwaggerUtil.getParameter(firstInputPort.modelMetadata);
-    List<Parameter> newSecondModelParameters =
-        SwaggerUtil.getParameter(secondInputPort.modelMetadata);
+    
     JoinerViewValue viewValue = getViewValue();
     viewValue.joinRelations = nodeSettings.connections;
     viewValue.modelScriptTree = sourceTree;
@@ -418,17 +448,31 @@ public final class JoinerNodeModel
     if (nodeSettings.secondModelParameters != null) {
       representation.setSecondModelParameters(nodeSettings.secondModelParameters);
     }
-
-
-    if (!JoinerNodeUtil.parametersNeedUpdate(newFirstModelParameters, JoinerNodeModel.SUFFIX_FIRST, JoinerNodeModel.SUFFIX_SECOND)) {
-      representation.updateParameters(newFirstModelParameters, newSecondModelParameters);
-      viewValue.updateParameters(newFirstModelParameters, newSecondModelParameters);
-    } else {
-      viewValue.modelMetaData = nodeSettings.modelMetaData;
+    if (firstInputPort != null) {
+      List<Parameter> newFirstModelParameters =
+          SwaggerUtil.getParameter(firstInputPort.modelMetadata);
+      List<Parameter> newSecondModelParameters =
+          SwaggerUtil.getParameter(secondInputPort.modelMetadata);
+      if (!JoinerNodeUtil.parametersNeedUpdate(newFirstModelParameters,
+          JoinerNodeModel.SUFFIX_FIRST, JoinerNodeModel.SUFFIX_SECOND)) {
+        representation.updateParameters(newFirstModelParameters, newSecondModelParameters);
+        viewValue.updateParameters(newFirstModelParameters, newSecondModelParameters);
+      } else {
+        viewValue.modelMetaData = nodeSettings.modelMetaData;
+      }
     }
 
     representation.setSecondModelViz(visualizationScript);
+  }
 
+  /*
+   * A migration method, takes an old setting file and extract the data inside as list of
+   * de.bund.bfr.metadata.swagger.parameter
+   */
+  private static List<Parameter> getModelParametersfromOldFile(File configFile)
+      throws FileNotFoundException, IOException, ParseException {
+    JsonNode nodes = MAPPER.readTree(configFile);
+    return new ArrayList<>(Arrays.asList(MAPPER.treeToValue(nodes.get("parameter") , Parameter[].class)));
   }
 
   @Override
@@ -510,6 +554,8 @@ public final class JoinerNodeModel
     try {
       loadJsonSetting();
     } catch (IOException | CanceledExecutionException e) {
+      e.printStackTrace();
+    } catch (ParseException e) {
       e.printStackTrace();
     }
   }
