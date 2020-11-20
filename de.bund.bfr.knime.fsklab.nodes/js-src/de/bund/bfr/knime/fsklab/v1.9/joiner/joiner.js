@@ -24,7 +24,8 @@ joiner = function () {
 
   let _firstModelParameterMap = {};
   let _secondModelParameterMap = {};
-  let _modelColectionSuffixedmap = {};
+  let _modelColectionWithoutSuffixedmap = {};
+
   let modelsPool = {
     firstModel: {},
     secondModel: {},
@@ -95,12 +96,17 @@ joiner = function () {
     return oldNewParamNames;
   }
   let selectionChanged = function (modelMetaData) {
-    
     let _modelColectionSuffixed =  addSuffixToParameters(JSON.parse(JSON.stringify(modelMetaData.changeSet.added[0])));
     let keys = ['firstModel','secondModel','thirdModel','fourthModel']; 
     $.each(_modelColectionSuffixed,function(index,selectedModel){
       _modelsParamsOriginalNames[selectedModel.generalInformation.name] = buildOldNewParamName(_modelColectionSuffixed[index].modelMath.parameter, modelMetaData.changeSet.added[0][index].modelMath.parameter);
-      editModelsPool(keys[index], _modelColectionSuffixed[index].modelMath.parameter, selectedModel.generalInformation.name, _modelColectionSuffixed[index], selectedModel.modelType);
+      _modelColectionWithoutSuffixedmap[selectedModel.generalInformation.name] = modelMetaData.changeSet.added[0][index].modelMath.parameter;
+      delete _modelColectionSuffixed[index]['modelscript'];
+      delete _modelColectionSuffixed[index]['visualization'];
+
+      editModelsPool(keys[index], _modelColectionSuffixed[index].modelMath.parameter, selectedModel.generalInformation.name, _modelColectionSuffixed[index], selectedModel.modelType , 
+                    JSON.stringify(modelMetaData.changeSet.added[0][index]['modelscript']), JSON.stringify(modelMetaData.changeSet.added[0][index]['visualization']));
+
     });
     
     poolSize++;
@@ -160,34 +166,37 @@ joiner = function () {
     }
 
     if (parent.tableID) {
-        try{
-        modelsPool.firstModel['metadata']['modelMath']['parameter'].forEach(param => { delete param['idmask']; })
+      try {
+        modelsPool.firstModel['metadata']['modelMath']['parameter'] = _modelColectionWithoutSuffixedmap[modelsPool.firstModel['modelName']];
+        modelsPool.secondModel['metadata']['modelMath']['parameter'] = _modelColectionWithoutSuffixedmap[modelsPool.secondModel['modelName']];
+        modelsPool.thirdModel['metadata']['modelMath']['parameter'] = _modelColectionWithoutSuffixedmap[modelsPool.thirdModel['modelName']];
+        modelsPool.fourthModel['metadata']['modelMath']['parameter'] = _modelColectionWithoutSuffixedmap[modelsPool.fourthModel['modelName']];
         
-        modelsPool.secondModel['metadata']['modelMath']['parameter'].forEach(param => { delete param['idmask']; })
 
-        modelsPool.thirdModel['metadata']['modelMath']['parameter'].forEach(param => { delete param['idmask']; })
+        _value.joinerModelsData.firstModel = [JSON.stringify(modelsPool.firstModel['metadata']), modelsPool.firstModel['modelScript'], modelsPool.firstModel['vis'], "[{}]", "[]"];
+        _value.joinerModelsData.secondModel = [JSON.stringify(modelsPool.secondModel['metadata']), modelsPool.secondModel['modelScript'], modelsPool.secondModel['vis'], "[{}]", "[]"];
+        _value.joinerModelsData.thirdModel = [JSON.stringify(modelsPool.thirdModel['metadata']), modelsPool.thirdModel['modelScript'], modelsPool.thirdModel['vis'], "[{}]", "[]"];
+        _value.joinerModelsData.fourthModel = [JSON.stringify(modelsPool.fourthModel['metadata']), modelsPool.fourthModel['modelScript'], modelsPool.fourthModel['vis'], "[{}]", "[]"];
+        
+        _value.joinerModelsData.interactiveMode = true;
+        
+        _value.joinerModelsData.firstModelType = modelsPool.firstModel['modelType'];
+        _value.joinerModelsData.secondModelType = modelsPool.secondModel['modelType'];
+        _value.joinerModelsData.thirdModelType = modelsPool.thirdModel['modelType'];
+        _value.joinerModelsData.fourthModelType = modelsPool.fourthModel['modelType'];
 
-        modelsPool.fourthModel['metadata']['modelMath']['parameter'].forEach(param => { delete param['idmask']; })
+    
 
-        _value.joinerModelsData.firstModel = [JSON.stringify(modelsPool.firstModel['metadata']), "", "", "[{}]", "[]"] ;
-        _value.joinerModelsData.secondModel =  [JSON.stringify(modelsPool.secondModel['metadata']), "", "", "[{}]", "[]"];
-        _value.joinerModelsData.thirdModel = [JSON.stringify(modelsPool.thirdModel['metadata']), "", "", "[{}]", "[]"];
-        _value.joinerModelsData.fourthModel = [JSON.stringify(modelsPool.fourthModel['metadata']), "", "", "[{}]", "[]"] ;
 
-        _value.joinerModelsData.firstModelType = modelsPool.firstModel['modelType'] ;
-        _value.joinerModelsData.secondModelType =  modelsPool.secondModel['modelType'] ;
-        _value.joinerModelsData.thirdModelType =  modelsPool.thirdModel['modelType'] ;
-        _value.joinerModelsData.fourthModelType =  modelsPool.fourthModel['modelType'] ;
-
-        _value.joinerModelsData.firstModelName =  modelsPool.firstModel['modelName'] ;
-        _value.joinerModelsData.secondModelName = modelsPool.secondModel['modelName'] ;
+        _value.joinerModelsData.firstModelName = modelsPool.firstModel['modelName'];
+        _value.joinerModelsData.secondModelName = modelsPool.secondModel['modelName'];
         _value.joinerModelsData.thirdModelName = modelsPool.thirdModel['modelName'];
-        _value.joinerModelsData.fourthModelName =  modelsPool.fourthModel['modelName'] ;
-       
-       /* _value.joinerModelsData.firstModelParameters  = modelsPool.firstModel['inputParameters'] ? modelsPool.firstModel['inputParameters'].concat(modelsPool.firstModel['outputParameters']) : [] ;
-        _value.joinerModelsData.secondModelParameters = modelsPool.secondModel['inputParameters']? modelsPool.secondModel['inputParameters'].concat(modelsPool.secondModel['outputParameters']):[] ;
-        _value.joinerModelsData.thirdModelParameters  = modelsPool.thirdModel['inputParameters']? modelsPool.thirdModel['inputParameters'].concat(modelsPool.thirdModel['outputParameters']):[] ;
-        _value.joinerModelsData.fourthModelParameters = modelsPool.fourthModel['inputParameters']? modelsPool.fourthModel['inputParameters'].concat(modelsPool.fourthModel['outputParameters']):[] ;*/
+        _value.joinerModelsData.fourthModelName = modelsPool.fourthModel['modelName'];
+
+        _value.joinRelations.forEach((relation) => {
+          delete relation.sourceModel;
+          delete relation.targetModel;
+        });
 
 
         }catch (err){console.log(err);}
@@ -211,7 +220,9 @@ joiner = function () {
     return (new XMLSerializer()).serializeToString(_paper.svg);
   };
 
-  function editModelsPool(key, modelParameters, modelName, individualMetadata, modelType) {
+  function editModelsPool(key, modelParameters, modelName, individualMetadata, modelType, modelScript, vis) {
+    modelsPool[key]['modelScript'] = modelScript;
+    modelsPool[key]['vis'] = vis;
     modelsPool[key]['modelName'] = modelName;
     modelsPool[key]['modelType'] = modelType;
     modelsPool[key]['metadata'] = individualMetadata
@@ -258,6 +269,7 @@ joiner = function () {
         _graph.addCell(modelsPool[value]['modelToJoin']);
     })
     graphJSON = _graph.toJSON();
+    _value.jsonRepresentation = JSON.stringify(graphJSON);
     reoderTool();
   }
 

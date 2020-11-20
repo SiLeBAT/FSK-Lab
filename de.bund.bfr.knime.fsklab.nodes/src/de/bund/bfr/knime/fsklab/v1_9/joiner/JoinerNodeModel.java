@@ -402,8 +402,10 @@ public final class JoinerNodeModel
     }
 
     JoinerViewValue viewValue = getViewValue();
-    viewValue.joinRelations = m_config.connections;
-    viewValue.modelMetaData = m_config.modelMetaData;
+    if(m_config.connections != null)
+      viewValue.joinRelations = m_config.connections;
+    if(m_config.modelMetaData != null)
+      viewValue.modelMetaData = m_config.modelMetaData;
 
     JoinerViewRepresentation representation = getViewRepresentation();
     if (m_config.joinerModelsData != null
@@ -680,7 +682,9 @@ public final class JoinerNodeModel
         }else {
           outObj.modelMetadata = jFirstInputPort.modelMetadata;
         }
-        resetParameterIdForObjectsFromJSON(outObj, 0);
+        if(!value.joinerModelsData.interactiveMode)
+          resetParameterIdForObjectsFromJSON(outObj, 0);
+
         outObj = createCombinedFskPortObject(jFirstInputPort, jSecondInputPort, jThirdInputPort,
             jFourthInputPort);
         Map<String, List<String>> unModifiedParamsNames =
@@ -689,8 +693,6 @@ public final class JoinerNodeModel
         JoinerNodeUtil.addIdentifierToParametersForCombinedObject(outObj, "", unModifiedParamsNames,
             modelsParamsOriginalNames);
         mergeParameterForJoinedObject(outObj);
-
-
 
       }
 
