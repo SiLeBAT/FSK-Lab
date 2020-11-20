@@ -27,6 +27,8 @@ import org.knime.core.data.DataTableSpec;
 import org.knime.core.data.DataTableSpecCreator;
 import org.knime.core.data.RowKey;
 import org.knime.core.data.def.DefaultRow;
+import org.knime.core.data.def.StringCell;
+import org.knime.core.data.def.StringCell.StringCellFactory;
 import org.knime.core.data.json.JSONCell;
 import org.knime.core.data.json.JSONCellFactory;
 import org.knime.core.node.BufferedDataContainer;
@@ -74,8 +76,8 @@ public class FSK2MetadataNodeModel extends StatelessModel {
     final DataCell scopeCell = createJSONCell(scope);
     final DataCell dbCell = createJSONCell(dataBackground);
     final DataCell mathCell = createJSONCell(modelMath);
-    final DataCell scriptCell = createJSONCell(inObj.getModel());
-    final DataCell visCell = createJSONCell(inObj.getViz());
+    final DataCell scriptCell = StringCellFactory.create(inObj.getModel());
+    final DataCell visCell = StringCellFactory.create(inObj.getViz());
 
     // Create and add row to container
     final DefaultRow row =
@@ -117,9 +119,9 @@ public class FSK2MetadataNodeModel extends StatelessModel {
     final DataColumnSpec modelMathSpec =
         new DataColumnSpecCreator("modelMath", JSONCell.TYPE).createSpec();
     final DataColumnSpec scriptSpec =
-        new DataColumnSpecCreator("modelscript", JSONCell.TYPE).createSpec();
+        new DataColumnSpecCreator("modelscript", StringCell.TYPE).createSpec();
     final DataColumnSpec visSpec =
-        new DataColumnSpecCreator("visualization", JSONCell.TYPE).createSpec();
+        new DataColumnSpecCreator("visualization", StringCell.TYPE).createSpec();
 
     // table spec
     final DataTableSpecCreator tableSpec = new DataTableSpecCreator()
