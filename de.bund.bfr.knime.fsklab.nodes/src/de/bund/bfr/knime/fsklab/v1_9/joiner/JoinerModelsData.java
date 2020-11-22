@@ -26,6 +26,7 @@ public class JoinerModelsData {
   public String[] thirdModel;
   public String[] fourthModel;
   public boolean interactiveMode = false;
+  public int numberOfModels = 0;
   public Map <String, Map<String,String>> modelsParamsOriginalNames = new HashMap<>();
 
   @Override
