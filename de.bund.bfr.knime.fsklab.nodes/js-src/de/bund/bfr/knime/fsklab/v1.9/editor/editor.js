@@ -41,7 +41,7 @@ fskeditorjs = function () {
     let _metadatax = JSON.parse(JSON.stringify(handler.metaData));
     _metadatax.Location =_location;
     _metadatax.modelscript= _modelCodeMirror ? _modelCodeMirror.getValue() : _val.modelScript;
-    _metadatax.visualizationScript = _visualizationCodeMirror ? _visualizationCodeMirror.getValue() : _val.visualizationScript;
+    _metadatax.visualization = _visualizationCodeMirror ? _visualizationCodeMirror.getValue() : _val.visualizationScript;
     //let metaDataString = JSON.stringify(_metadatax);
     knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c21EditorSaved' , [_metadatax],{elements:[]}) 
   }
