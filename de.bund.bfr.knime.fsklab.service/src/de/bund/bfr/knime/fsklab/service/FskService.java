@@ -3,9 +3,10 @@ package de.bund.bfr.knime.fsklab.service;
 import static spark.Spark.awaitInitialization;
 import static spark.Spark.before;
 import static spark.Spark.get;
-import static spark.Spark.post;
 import static spark.Spark.options;
 import static spark.Spark.port;
+import static spark.Spark.post;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -19,16 +20,18 @@ import java.sql.Statement;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
+
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
 import org.h2.tools.DeleteDbFiles;
 import org.knime.core.node.NodeLogger;
 import org.osgi.framework.Bundle;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
-import de.bund.bfr.metadata.swagger.GenericModel;
+
 import de.bund.bfr.rakip.vocabularies.data.AccreditationProcedureRepository;
 import de.bund.bfr.rakip.vocabularies.data.AvailabilityRepository;
 import de.bund.bfr.rakip.vocabularies.data.BasicProcessRepository;
@@ -161,15 +164,21 @@ public class FskService implements Runnable {
       }
     }, jsonTransformer);
     
-    post("joinMetadata", (req, res) -> {
-      // String body = req.body();
-      // Do nothing with body yet
+    post("joinMetadata", (req, res) -> { 
       // The body keeps two JSON models in an array.
-      
       res.type("application/json");
-      res.status(200);
       
-      return new GenericModel();
+      try {
+	  	JsonNode models = MAPPER.readTree(req.body());
+	  	JsonNode firstModel = models.get(0);
+	  	JsonNode secondModel = models.get(1);
+	  	JsonNode joinedModel = utils.joinModels(firstModel, secondModel, "genericModel");
+	  	res.status(200);
+	  	return joinedModel;
+      } catch (Exception err) {
+    	res.status(400);
+    	return err;
+      }
     }, jsonTransformer);
 
     // After initializing the service, get the randomly picked port by Spark.

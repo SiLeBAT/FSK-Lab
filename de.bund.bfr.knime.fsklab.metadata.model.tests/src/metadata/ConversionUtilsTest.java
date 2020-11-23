@@ -163,4 +163,17 @@ public class ConversionUtilsTest {
     
     assertEquals("qraModel", convertedMetadata.get("modelType").asText());
   }
+  
+  @Test
+  public void testJoin() throws JsonProcessingException, IOException  {
+    ConversionUtils utils = new ConversionUtils();
+
+    // Example data
+    JsonNode inputMetadata = MAPPER.readTree(new File("files/metadata.json"));
+
+    // It passes if no exceptions are thrown
+    JsonNode joined = utils.joinModels(inputMetadata, inputMetadata, "genericModel");
+    
+    assertEquals("genericModel", joined.get("modelType").asText());
+  }
 }
