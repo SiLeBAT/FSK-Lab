@@ -17,6 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+
 @SuppressWarnings("unchecked")
 public class ConversionUtils {
 
@@ -172,6 +173,10 @@ public class ConversionUtils {
 				continue;
 			}
 
+			if (field.getValue().isNull()) {
+				continue;
+			}
+
 			Map<String, Object> originalProp = (Map<String, Object>) originalProperties.get(key);
 			Map<String, Object> targetProp = (Map<String, Object>) targetProperties.get(key);
 
@@ -185,8 +190,10 @@ public class ConversionUtils {
 					} else if (originalPropType.equals("array")) {
 						ArrayNode convertedProperty = MAPPER.createArrayNode();
 						for (JsonNode child : field.getValue()) {
-							JsonNode convertedChild = convert(child, originalProp, targetProp);
-							convertedProperty.add(convertedChild);
+							if (!child.isNull()) {
+								JsonNode convertedChild = convert(child, originalProp, targetProp);
+								convertedProperty.add(convertedChild);								
+							}
 						}
 						node.set(key, convertedProperty);
 					}
@@ -228,26 +235,25 @@ public class ConversionUtils {
 					}
 				} else if (targetPropertyType.equals("array")) {
 					ArrayNode joinedArray = MAPPER.createArrayNode();
-					
+
 					if (metadataA.has(key)) {
 						for (JsonNode child : metadataA.get(key)) {
 							JsonNode convertedChild = convert(child, propA, targetProp);
 							joinedArray.add(convertedChild);
-						}						
+						}
 					}
 
 					if (metadataB.has(key)) {
 						for (JsonNode child : metadataB.get(key)) {
 							JsonNode convertedChild = convert(child, propB, targetProp);
 							joinedArray.add(convertedChild);
-						}						
+						}
 					}
-					
+
 					node.set(key, joinedArray);
 				}
 			} else if (targetProp.containsKey(REF) && propA.containsKey(REF) && propB.containsKey(REF)) {
-				JsonNode joinedChild = join(
-						metadataA.get(key), propA, metadataB.get(key), propB, targetProp);
+				JsonNode joinedChild = join(metadataA.get(key), propA, metadataB.get(key), propB, targetProp);
 				node.set(key, joinedChild);
 			}
 
@@ -266,12 +272,14 @@ public class ConversionUtils {
 	private static String combineStringProperties(String key, Map<String, Object> propA, JsonNode metadataA,
 			Map<String, Object> propB, JsonNode metadataB) {
 		String modelAValue = "";
-		if (!propA.isEmpty() && ((String) propA.get(TYPE)).equals("string") && metadataA.has(key)) {
+		if (!propA.isEmpty() && ((String) propA.get(TYPE)).equals("string") && metadataA.has(key)
+				&& !metadataA.get(key).isNull()) {
 			modelAValue = metadataA.get(key).asText();
 		}
 
 		String modelBValue = "";
-		if (!propB.isEmpty() && ((String) propB.get(TYPE)).equals("string") && metadataB.has(key)) {
+		if (!propB.isEmpty() && ((String) propB.get(TYPE)).equals("string") && metadataB.has(key)
+				&& !metadataB.get(key).isNull()) {
 			modelBValue = metadataB.get(key).asText();
 		}
 
