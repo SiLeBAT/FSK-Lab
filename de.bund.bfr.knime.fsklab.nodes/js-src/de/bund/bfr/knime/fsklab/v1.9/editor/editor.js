@@ -16,14 +16,40 @@ fskeditorjs = function () {
   var _modelCodeMirror;
   var _visualizationCodeMirror;
   var _readmeCodeMirror;
+  var _location;
 
   let handler;
-  var selectionChanged = function (modelMetaData) {	
-    extractAndCreateUI(JSON.stringify(modelMetaData.changeSet.added[0]));
+  let selectionChanged = function (modelMetaData) {	
+    let selectedModel = modelMetaData.changeSet.added[0];
+    _location = selectedModel.Location;
+    extractAndCreateUI(JSON.stringify(selectedModel));
+    $('#modelScriptArea').val(selectedModel.modelscript);
+    _modelCodeMirror.refresh();
+    $('#visualizationScriptArea').val(selectedModel.visualization);
+    _visualizationCodeMirror.refresh()
+
+    if(parent.tableID){
+      $('#saveButton').show();
+    }
+  }
+  let initiated = function(event){
+    if(parent.tableID){
+      $('#saveButton').show();
+    }
+  }
+  window.doSave = function(){
+    let _metadatax = JSON.parse(JSON.stringify(handler.metaData));
+    _metadatax.Location =_location;
+    _metadatax.modelscript= _modelCodeMirror ? _modelCodeMirror.getValue() : _val.modelScript;
+    _metadatax.visualization = _visualizationCodeMirror ? _visualizationCodeMirror.getValue() : _val.visualizationScript;
+    //let metaDataString = JSON.stringify(_metadatax);
+    knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c21EditorSaved' , [_metadatax],{elements:[]}) 
   }
   view.init = function (representation, value) {
     //subscribe to events emitted by FSK DB View
     knimeService.subscribeToSelection('b800db46-4e25-4f77-bcc6-db0c215846e1', selectionChanged);
+    knimeService.subscribeToSelection('b800db46-4e25-4f77-bcc6-db0c21GlobalInit', initiated);
+    
     fskutil = new fskutil();
     _rep = representation;
     _val = value;
@@ -109,9 +135,17 @@ fskeditorjs = function () {
     ];
 
     let bodyContent = `
-<div class="container-fluid">
-  <nav class="navbar navbar-default">
-    <div class="navbar-collapse collapse">
+     <nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button id="saveButton" class="btn btn-primary float-left" type="button" onclick="window.doSave();">Save</button>
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav" id="viewTab">
         ${handler.menus}
         <li role="presentation">
@@ -125,15 +159,15 @@ fskeditorjs = function () {
         <li role="presentation">
           <a id="readme-tab" href="#readme" aria-controls="readme" role="tab" data-toggle="tab">README</a>
         </li>
-        
       </ul>
+      
     </div>
-  </nav>
-  <div class="tab-content" id="viewContent">
+    <div class="tab-content" id="viewContent">
     ${panelsById.map(entry => `<div role="tabpanel" class="tab-pane"
     id="${entry.id}">${entry.panel}</div>`).join("")}
   </div>
-</div>`;
+  </div>
+</nav> `;
 
     document.createElement('body');
     $('body').html(bodyContent);
@@ -200,6 +234,7 @@ fskeditorjs = function () {
       _readmeCodeMirror.refresh();
       _readmeCodeMirror.focus();
     });
+    $('#saveButton').hide();
   }
 
   // Create a CodeMirror for a given text area

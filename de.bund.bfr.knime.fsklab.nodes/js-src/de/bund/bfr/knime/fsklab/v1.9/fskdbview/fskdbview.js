@@ -27,16 +27,29 @@ fskdbview = function () {
     };
     let _representation;
     let _value;
-    var selectionChanged = function (data) {	
-        //TODO Update the modelspool with changes from editor and joiner
-    }
-    view.init = function (representation, value) {
+    var selectionEdited = function (modelMetaDatax) {
+        console.log(modelMetaDatax);
+        let edittedModelId = modelMetaDatax.changeSet.added[0].generalInformation.name;
         
+        let modelIndex = -1;
+
+        $.each(window.selectedModels,function(index,model){
+                if(model.generalInformation.name === edittedModelId){
+                    modelIndex = index;
+                }
+        });
+        window.selectedModels[modelIndex]=modelMetaDatax.changeSet.added[0];
+        knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c21joiner' , [window.selectedModels],{elements:[]});
+    }
+                               
+    view.init = function (representation, value) { 
         _representation = representation;
+        knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c21GlobalInit' , [{"tableID":_representation.tableID}],{elements:[]})
         _value = value;
         parent.tableID = _representation.tableID;
         //subscribe to events emitted by editor
-        knimeService.subscribeToSelection('b800db46-4e25-4f77-bcc6-db0c215846d9', selectionChanged);
+        knimeService.subscribeToSelection('b800db46-4e25-4f77-bcc6-db0c21EditorSaved', selectionEdited);
+
         _endpoint = _representation.remoteRepositoryURL ? _representation.remoteRepositoryURL : "https://knime.bfr.berlin/backend/";
         _globalVars = {
             metadataEndpoint: _endpoint + "metadata",
