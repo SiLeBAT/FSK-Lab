@@ -16,12 +16,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.datatype.threetenbp.ThreeTenModule;
 
 
 @SuppressWarnings("unchecked")
 public class ConversionUtils {
 
-	private static final ObjectMapper MAPPER = new ObjectMapper();
+	private static final ObjectMapper MAPPER = new ObjectMapper()
+			.registerModule(new ThreeTenModule());
 
 	/** Definitions in Swagger YAML. */
 	private final Map<String, Object> definitions;
