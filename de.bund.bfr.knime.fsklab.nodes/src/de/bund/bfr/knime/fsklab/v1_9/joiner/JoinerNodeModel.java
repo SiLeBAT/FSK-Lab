@@ -846,9 +846,9 @@ public final class JoinerNodeModel
 
   private static FskPortObject getFSKObjectFromStringArray(Optional<EnvironmentManager> manager,
       String[] model, String modelType)
-      throws JsonMappingException, JsonProcessingException, IOException {
+      throws IOException {
     FskPortObject portObject;
-    if (!(manager.isPresent()) && StringUtils.isNotBlank(model[5]))
+    if (!manager.isPresent() && StringUtils.isNotBlank(model[5]))
       portObject = new FskPortObject(
           Optional.of(new ExistingEnvironmentManager(MAPPER.readValue(model[5], String.class))), "",
           MAPPER.readValue(model[4], new TypeReference<List<String>>() {}));
