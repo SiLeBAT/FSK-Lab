@@ -19,6 +19,7 @@
 package de.bund.bfr.knime.fsklab.v1_9.fsk2metadata;
 
 import java.io.IOException;
+import java.util.Optional;
 import javax.json.JsonValue;
 import org.knime.core.data.DataCell;
 import org.knime.core.data.DataColumnSpec;
@@ -42,6 +43,7 @@ import org.knime.core.node.port.PortType;
 import org.knime.json.util.JSONUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.FskPlugin;
+import de.bund.bfr.knime.fsklab.nodes.environment.EnvironmentManager;
 import de.bund.bfr.knime.fsklab.v1_9.FskPortObject;
 import metadata.SwaggerUtil;
 
@@ -78,8 +80,14 @@ public class FSK2MetadataNodeModel extends StatelessModel {
     final DataCell mathCell = createJSONCell(modelMath);
     final DataCell scriptCell = StringCellFactory.create(inObj.getModel());
     final DataCell visCell = StringCellFactory.create(inObj.getViz());
-    final DataCell pathCell = StringCellFactory
-        .create(inObj.getEnvironmentManager().get().getEnvironment().get().toString());
+    Optional<EnvironmentManager> manager = inObj.getEnvironmentManager();
+    final DataCell pathCell =
+        manager.isPresent()
+            ? manager.get().getEnvironment().isPresent()
+                ? StringCellFactory.create(manager.get().getEnvironment().get().toString())
+                : StringCellFactory.create("")
+            : StringCellFactory.create("");
+    StringCellFactory.create(inObj.getEnvironmentManager().get().getEnvironment().get().toString());
     final DataCell simulationCell = createJSONCell(inObj.simulations);
 
     // Create and add row to container
