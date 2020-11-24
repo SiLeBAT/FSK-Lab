@@ -64,6 +64,9 @@ public class ConversionUtils {
 		modelMapping.put("healthModel", definitions.get("HealthModel"));
 		modelMapping.put("riskModel", definitions.get("RiskModel"));
 		modelMapping.put("qraModel", definitions.get("QraModel"));
+		
+		// TODO: workaround for old models
+		modelMapping.put("GenericModel", definitions.get("GenericModel"));
 	}
 
 	public JsonNode convertModel(JsonNode originalMetadata, String targetClass) {
@@ -190,12 +193,16 @@ public class ConversionUtils {
 					} else if (originalPropType.equals("array")) {
 						ArrayNode convertedProperty = MAPPER.createArrayNode();
 						for (JsonNode child : field.getValue()) {
-							if (!child.isNull()) {
-								JsonNode convertedChild = convert(child, originalProp, targetProp);
-								convertedProperty.add(convertedChild);								
-							}
+		                    if (child.isTextual()) {
+		                      convertedProperty.add(child.asText());
+		                    } else if (child.isObject()) {
+		                      JsonNode convertedChild = convert(child, originalProp, targetProp);
+		                      convertedProperty.add(convertedChild);
+		                    }
 						}
-						node.set(key, convertedProperty);
+						if (convertedProperty.size() > 0) {
+						  node.set(key, convertedProperty);
+						}
 					}
 				}
 			} else if (originalProp.containsKey(REF) && targetProp.containsKey(REF)) {
@@ -238,19 +245,28 @@ public class ConversionUtils {
 
 					if (metadataA.has(key)) {
 						for (JsonNode child : metadataA.get(key)) {
+						  if (child.isTextual()) {
+						    joinedArray.add(child.asText());
+						  } else if (child.isObject()) {
 							JsonNode convertedChild = convert(child, propA, targetProp);
 							joinedArray.add(convertedChild);
+						  }
 						}
 					}
 
 					if (metadataB.has(key)) {
 						for (JsonNode child : metadataB.get(key)) {
-							JsonNode convertedChild = convert(child, propB, targetProp);
-							joinedArray.add(convertedChild);
+							if (child.isTextual()) {
+							  joinedArray.add(child.asText());
+							} else if (child.isObject()) {
+							  JsonNode convertedChild = convert(child, propB, targetProp);
+							  joinedArray.add(convertedChild);
+							}
 						}
 					}
-
-					node.set(key, joinedArray);
+					if (joinedArray.size() > 0) {
+		                 node.set(key, joinedArray);
+					}
 				}
 			} else if (targetProp.containsKey(REF) && propA.containsKey(REF) && propB.containsKey(REF)) {
 				JsonNode joinedChild = join(metadataA.get(key), propA, metadataB.get(key), propB, targetProp);
