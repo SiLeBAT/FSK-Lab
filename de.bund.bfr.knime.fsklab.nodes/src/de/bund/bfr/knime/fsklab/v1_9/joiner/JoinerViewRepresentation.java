@@ -40,9 +40,23 @@ final class JoinerViewRepresentation extends JSONViewContent {
 
   public String modelMetaData;
   public JoinerModelsData joinerModelsData = new JoinerModelsData();
-
-
-
+  /**
+   * Port number where FSK-Service is running.
+   * 
+   * <p>
+   * The service port number is to not be saved to settings as it depends on the computer. The same
+   * port cannot be available in the future. So it is assigned during runtime by the node model.
+   * </p>
+   */
+  private int servicePort;
+  
+  public int getServicePort() {
+    return servicePort;
+  }
+  
+  public void setServicePort(int servicePort) {
+    this.servicePort = servicePort;
+  }
   @Override
   public void saveToNodeSettings(NodeSettingsWO settings) {
     try {
