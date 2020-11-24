@@ -29,10 +29,10 @@ import org.knime.core.node.NodeLogger;
 import org.osgi.framework.Bundle;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.threetenbp.ThreeTenModule;
-import com.google.gson.Gson;
 
 import de.bund.bfr.metadata.swagger.GenericModel;
 import de.bund.bfr.rakip.vocabularies.data.AccreditationProcedureRepository;
@@ -86,8 +86,7 @@ public class FskService implements Runnable {
 	private static final NodeLogger LOGGER = NodeLogger.getLogger(FskService.class);
 
 	private static final JsonTransformer jsonTransformer = new JsonTransformer();
-	private static final ObjectMapper MAPPER = new ObjectMapper().registerModule(new ThreeTenModule())
-			.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
 	private final ConversionUtils utils = new ConversionUtils();
 
 	private int port;
@@ -156,7 +155,7 @@ public class FskService implements Runnable {
 			res.type("application/json");
 
 			try {
-				JsonNode inputMetadata = MAPPER.readTree(req.body());
+				JsonNode inputMetadata = jsonTransformer.MAPPER.readTree(req.body());
 				String targetClass = req.params("targetModelClass");
 				JsonNode convertedMetadata = utils.convertModel(inputMetadata, targetClass);
 
@@ -173,12 +172,12 @@ public class FskService implements Runnable {
 			res.type("application/json");
 
 			try {
-				JsonNode models = MAPPER.readTree(req.body());
+				JsonNode models = jsonTransformer.MAPPER.readTree(req.body());
 				JsonNode firstModel = models.get(0);
 				JsonNode secondModel = models.get(1);
 				JsonNode joinedModel = utils.joinModels(firstModel, secondModel, "genericModel");
 				res.status(200);
-				return MAPPER.treeToValue(joinedModel, GenericModel.class);
+				return jsonTransformer.MAPPER.treeToValue(joinedModel, GenericModel.class);
 			} catch (Exception err) {
 				res.status(400);
 				return err;
@@ -192,11 +191,16 @@ public class FskService implements Runnable {
 
 	private static class JsonTransformer implements ResponseTransformer {
 
-		private Gson gson = new Gson();
+		ObjectMapper MAPPER = new ObjectMapper().registerModule(new ThreeTenModule())
+				.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
 		@Override
 		public String render(Object model) {
-			return gson.toJson(model);
+			try {
+			    return MAPPER.writeValueAsString(model);
+			} catch (JsonProcessingException err) {
+				return "";
+			}
 		}
 	}
 
