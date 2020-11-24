@@ -87,7 +87,6 @@ public class FSK2MetadataNodeModel extends StatelessModel {
                 ? StringCellFactory.create(manager.get().getEnvironment().get().toString())
                 : StringCellFactory.create("")
             : StringCellFactory.create("");
-    StringCellFactory.create(inObj.getEnvironmentManager().get().getEnvironment().get().toString());
     final DataCell simulationCell = createJSONCell(inObj.simulations);
 
     // Create and add row to container
