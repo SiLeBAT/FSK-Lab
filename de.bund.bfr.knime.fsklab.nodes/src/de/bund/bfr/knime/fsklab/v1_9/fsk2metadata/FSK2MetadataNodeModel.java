@@ -19,6 +19,7 @@
 package de.bund.bfr.knime.fsklab.v1_9.fsk2metadata;
 
 import java.io.IOException;
+import java.util.Optional;
 import javax.json.JsonValue;
 import org.knime.core.data.DataCell;
 import org.knime.core.data.DataColumnSpec;
@@ -42,6 +43,7 @@ import org.knime.core.node.port.PortType;
 import org.knime.json.util.JSONUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.FskPlugin;
+import de.bund.bfr.knime.fsklab.nodes.environment.EnvironmentManager;
 import de.bund.bfr.knime.fsklab.v1_9.FskPortObject;
 import metadata.SwaggerUtil;
 
@@ -78,10 +80,18 @@ public class FSK2MetadataNodeModel extends StatelessModel {
     final DataCell mathCell = createJSONCell(modelMath);
     final DataCell scriptCell = StringCellFactory.create(inObj.getModel());
     final DataCell visCell = StringCellFactory.create(inObj.getViz());
+    Optional<EnvironmentManager> manager = inObj.getEnvironmentManager();
+    final DataCell pathCell =
+        manager.isPresent()
+            ? manager.get().getEnvironment().isPresent()
+                ? StringCellFactory.create(manager.get().getEnvironment().get().toString())
+                : StringCellFactory.create("")
+            : StringCellFactory.create("");
+    final DataCell simulationCell = createJSONCell(inObj.simulations);
 
     // Create and add row to container
-    final DefaultRow row =
-        new DefaultRow(RowKey.createRowKey(0L), giCell, scopeCell, dbCell, mathCell, scriptCell, visCell);
+    final DefaultRow row = new DefaultRow(RowKey.createRowKey(0L), giCell, scopeCell, dbCell,
+        mathCell, scriptCell, visCell, pathCell, simulationCell);
     container.addRowToTable(row);
 
     container.close();
@@ -122,10 +132,15 @@ public class FSK2MetadataNodeModel extends StatelessModel {
         new DataColumnSpecCreator("modelscript", StringCell.TYPE).createSpec();
     final DataColumnSpec visSpec =
         new DataColumnSpecCreator("visualization", StringCell.TYPE).createSpec();
+    final DataColumnSpec locationSpec =
+        new DataColumnSpecCreator("Location", StringCell.TYPE).createSpec();
+    final DataColumnSpec simulationSpec =
+        new DataColumnSpecCreator("simulation", JSONCell.TYPE).createSpec();
 
     // table spec
-    final DataTableSpecCreator tableSpec = new DataTableSpecCreator()
-        .addColumns(generalInformationSpec, scopeSpec, dataBackgroundSpec, modelMathSpec, scriptSpec, visSpec);
+    final DataTableSpecCreator tableSpec =
+        new DataTableSpecCreator().addColumns(generalInformationSpec, scopeSpec, dataBackgroundSpec,
+            modelMathSpec, scriptSpec, visSpec, locationSpec, simulationSpec);
     return new DataTableSpec[] {tableSpec.createSpec()};
   }
 }
