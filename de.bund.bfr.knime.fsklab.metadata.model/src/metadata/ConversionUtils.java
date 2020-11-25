@@ -237,11 +237,18 @@ public class ConversionUtils {
 			if (targetProp.containsKey(TYPE)) {
 				String targetPropertyType = (String) targetProp.get(TYPE);
 				if (targetPropertyType.equals("string")) {
-
-					String newValue = combineStringProperties(key, propA, metadataA, propB, metadataB);
-					if (!newValue.isEmpty()) {
-						node.put(key, newValue);
+					if (targetProp.containsKey("format") && targetProp.get("format").equals("date")) {
+						JsonNode newValue = combineDateProperties(key, propA, metadataA, propB, metadataB);
+						if (newValue != null) {
+							node.set(key, newValue);
+						}
+					} else {
+						String newValue = combineStringProperties(key, propA, metadataA, propB, metadataB);
+						if (!newValue.isEmpty()) {
+							node.put(key, newValue);
+						}
 					}
+
 				} else if (targetPropertyType.equals("array")) {
 					ArrayNode joinedArray = MAPPER.createArrayNode();
 
@@ -306,6 +313,22 @@ public class ConversionUtils {
 		} else {
 			return "";
 		}
+	}
+	
+	private static JsonNode combineDateProperties(String key, Map<String, Object> propA, JsonNode metadataA,
+			Map<String, Object> propB, JsonNode metadataB) {
+		
+		if (!propA.isEmpty() && ((String) propA.get(TYPE)).equals("string") && ((String) propA.get("format")).equals("date")
+				&& metadataA.has(key) && !metadataA.get(key).isNull()) {
+			return metadataA.get(key);
+		}
+		
+		if (!propB.isEmpty() && ((String) propB.get(TYPE)).equals("string") && ((String) propB.get("format")).equals("date")
+				&& metadataB.has(key) && !metadataB.get(key).isNull()) {
+			return metadataA.get(key);
+		}
+		
+		return null;
 	}
 
 	private Map<String, Object> getProperties(Map<String, Object> property) {
