@@ -16,11 +16,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.datatype.threetenbp.ThreeTenModule;
+
 
 @SuppressWarnings("unchecked")
 public class ConversionUtils {
 
-	private static final ObjectMapper MAPPER = new ObjectMapper();
+	private static final ObjectMapper MAPPER = new ObjectMapper()
+			.registerModule(new ThreeTenModule());
 
 	/** Definitions in Swagger YAML. */
 	private final Map<String, Object> definitions;
@@ -63,6 +66,9 @@ public class ConversionUtils {
 		modelMapping.put("healthModel", definitions.get("HealthModel"));
 		modelMapping.put("riskModel", definitions.get("RiskModel"));
 		modelMapping.put("qraModel", definitions.get("QraModel"));
+		
+		// TODO: workaround for old models
+		modelMapping.put("GenericModel", definitions.get("GenericModel"));
 	}
 
 	public JsonNode convertModel(JsonNode originalMetadata, String targetClass) {
@@ -172,6 +178,10 @@ public class ConversionUtils {
 				continue;
 			}
 
+			if (field.getValue().isNull()) {
+				continue;
+			}
+
 			Map<String, Object> originalProp = (Map<String, Object>) originalProperties.get(key);
 			Map<String, Object> targetProp = (Map<String, Object>) targetProperties.get(key);
 
@@ -185,10 +195,16 @@ public class ConversionUtils {
 					} else if (originalPropType.equals("array")) {
 						ArrayNode convertedProperty = MAPPER.createArrayNode();
 						for (JsonNode child : field.getValue()) {
-							JsonNode convertedChild = convert(child, originalProp, targetProp);
-							convertedProperty.add(convertedChild);
+		                    if (child.isTextual()) {
+		                      convertedProperty.add(child.asText());
+		                    } else if (child.isObject()) {
+		                      JsonNode convertedChild = convert(child, originalProp, targetProp);
+		                      convertedProperty.add(convertedChild);
+		                    }
 						}
-						node.set(key, convertedProperty);
+						if (convertedProperty.size() > 0) {
+						  node.set(key, convertedProperty);
+						}
 					}
 				}
 			} else if (originalProp.containsKey(REF) && targetProp.containsKey(REF)) {
@@ -221,33 +237,48 @@ public class ConversionUtils {
 			if (targetProp.containsKey(TYPE)) {
 				String targetPropertyType = (String) targetProp.get(TYPE);
 				if (targetPropertyType.equals("string")) {
-
-					String newValue = combineStringProperties(key, propA, metadataA, propB, metadataB);
-					if (!newValue.isEmpty()) {
-						node.put(key, newValue);
+					if (targetProp.containsKey("format") && targetProp.get("format").equals("date")) {
+						JsonNode newValue = combineDateProperties(key, propA, metadataA, propB, metadataB);
+						if (newValue != null) {
+							node.set(key, newValue);
+						}
+					} else {
+						String newValue = combineStringProperties(key, propA, metadataA, propB, metadataB);
+						if (!newValue.isEmpty()) {
+							node.put(key, newValue);
+						}
 					}
+
 				} else if (targetPropertyType.equals("array")) {
 					ArrayNode joinedArray = MAPPER.createArrayNode();
-					
+
 					if (metadataA.has(key)) {
 						for (JsonNode child : metadataA.get(key)) {
+						  if (child.isTextual()) {
+						    joinedArray.add(child.asText());
+						  } else if (child.isObject()) {
 							JsonNode convertedChild = convert(child, propA, targetProp);
 							joinedArray.add(convertedChild);
-						}						
+						  }
+						}
 					}
 
 					if (metadataB.has(key)) {
 						for (JsonNode child : metadataB.get(key)) {
-							JsonNode convertedChild = convert(child, propB, targetProp);
-							joinedArray.add(convertedChild);
-						}						
+							if (child.isTextual()) {
+							  joinedArray.add(child.asText());
+							} else if (child.isObject()) {
+							  JsonNode convertedChild = convert(child, propB, targetProp);
+							  joinedArray.add(convertedChild);
+							}
+						}
 					}
-					
-					node.set(key, joinedArray);
+					if (joinedArray.size() > 0) {
+		                 node.set(key, joinedArray);
+					}
 				}
 			} else if (targetProp.containsKey(REF) && propA.containsKey(REF) && propB.containsKey(REF)) {
-				JsonNode joinedChild = join(
-						metadataA.get(key), propA, metadataB.get(key), propB, targetProp);
+				JsonNode joinedChild = join(metadataA.get(key), propA, metadataB.get(key), propB, targetProp);
 				node.set(key, joinedChild);
 			}
 
@@ -266,12 +297,14 @@ public class ConversionUtils {
 	private static String combineStringProperties(String key, Map<String, Object> propA, JsonNode metadataA,
 			Map<String, Object> propB, JsonNode metadataB) {
 		String modelAValue = "";
-		if (!propA.isEmpty() && ((String) propA.get(TYPE)).equals("string") && metadataA.has(key)) {
+		if (!propA.isEmpty() && ((String) propA.get(TYPE)).equals("string") && metadataA.has(key)
+				&& !metadataA.get(key).isNull()) {
 			modelAValue = metadataA.get(key).asText();
 		}
 
 		String modelBValue = "";
-		if (!propB.isEmpty() && ((String) propB.get(TYPE)).equals("string") && metadataB.has(key)) {
+		if (!propB.isEmpty() && ((String) propB.get(TYPE)).equals("string") && metadataB.has(key)
+				&& !metadataB.get(key).isNull()) {
 			modelBValue = metadataB.get(key).asText();
 		}
 
@@ -280,6 +313,22 @@ public class ConversionUtils {
 		} else {
 			return "";
 		}
+	}
+	
+	private static JsonNode combineDateProperties(String key, Map<String, Object> propA, JsonNode metadataA,
+			Map<String, Object> propB, JsonNode metadataB) {
+		
+		if (!propA.isEmpty() && ((String) propA.get(TYPE)).equals("string") && ((String) propA.get("format")).equals("date")
+				&& metadataA.has(key) && !metadataA.get(key).isNull()) {
+			return metadataA.get(key);
+		}
+		
+		if (!propB.isEmpty() && ((String) propB.get(TYPE)).equals("string") && ((String) propB.get("format")).equals("date")
+				&& metadataB.has(key) && !metadataB.get(key).isNull()) {
+			return metadataA.get(key);
+		}
+		
+		return null;
 	}
 
 	private Map<String, Object> getProperties(Map<String, Object> property) {

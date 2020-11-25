@@ -28,10 +28,13 @@ import org.h2.tools.DeleteDbFiles;
 import org.knime.core.node.NodeLogger;
 import org.osgi.framework.Bundle;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
+import com.fasterxml.jackson.datatype.threetenbp.ThreeTenModule;
 
+import de.bund.bfr.metadata.swagger.GenericModel;
 import de.bund.bfr.rakip.vocabularies.data.AccreditationProcedureRepository;
 import de.bund.bfr.rakip.vocabularies.data.AvailabilityRepository;
 import de.bund.bfr.rakip.vocabularies.data.BasicProcessRepository;
@@ -78,275 +81,277 @@ import spark.ResponseTransformer;
 
 public class FskService implements Runnable {
 
-  private static final String MIME_JSON = "application/json";
-  
-  private static final NodeLogger LOGGER = NodeLogger.getLogger(FskService.class);
+	private static final String MIME_JSON = "application/json";
 
-  private static final JsonTransformer jsonTransformer = new JsonTransformer();
-  private static final ObjectMapper MAPPER = new ObjectMapper();
-  private final ConversionUtils utils = new ConversionUtils();
+	private static final NodeLogger LOGGER = NodeLogger.getLogger(FskService.class);
 
-  private int port;
+	private static final JsonTransformer jsonTransformer = new JsonTransformer();
 
-  public int getPort() {
-    return port;
-  }
+	private final ConversionUtils utils = new ConversionUtils();
 
-  @Override
-  public void run() {
+	private int port;
 
-    try {
-      initDatabase();
-    } catch (SQLException | ClassNotFoundException e1) {
-      LOGGER.error("Initializing DB", e1);
-      return;
-    }
+	public int getPort() {
+		return port;
+	}
 
-    port(0);
+	@Override
+	public void run() {
 
-    // Enable CORS
-    options("/*", (request, response) -> {
+		try {
+			initDatabase();
+		} catch (SQLException | ClassNotFoundException e1) {
+			LOGGER.error("Initializing DB", e1);
+			return;
+		}
 
-      String accessControlRequestHeaders = request.headers("Access-Control-Request-Headers");
-      if (accessControlRequestHeaders != null) {
-        response.header("Access-Control-Allow-Headers", accessControlRequestHeaders);
-      }
+		port(0);
 
-      String accessControlRequestMethod = request.headers("Access-Control-Request-Method");
-      if (accessControlRequestMethod != null) {
-        response.header("Access-Control-Allow-Methods", accessControlRequestMethod);
-      }
+		// Enable CORS
+		options("/*", (request, response) -> {
 
-      return "OK";
-    });
+			String accessControlRequestHeaders = request.headers("Access-Control-Request-Headers");
+			if (accessControlRequestHeaders != null) {
+				response.header("Access-Control-Allow-Headers", accessControlRequestHeaders);
+			}
 
-    before((request, response) -> response.header("Access-Control-Allow-Origin", "*"));
+			String accessControlRequestMethod = request.headers("Access-Control-Request-Method");
+			if (accessControlRequestMethod != null) {
+				response.header("Access-Control-Allow-Methods", accessControlRequestMethod);
+			}
 
-    get("getById/:vocabulary/:id", (req, res) -> {
-      try (Connection connection = DriverManager.getConnection("jdbc:h2:~/.fsk/vocabularies")) {
-        res.type(MIME_JSON);
-        BasicRepository<?> repository = getRepository(req.params(":vocabulary"), connection);
-        int id = Integer.parseInt(req.params(":id"));
-        return repository.getById(id);
-      }
-    }, jsonTransformer);
+			return "OK";
+		});
 
-    get("/getAll/:vocabulary", (req, res) -> {
-      try (Connection connection = DriverManager.getConnection("jdbc:h2:~/.fsk/vocabularies")) {
-        res.type(MIME_JSON);
-        BasicRepository<?> repository = getRepository(req.params(":vocabulary"), connection);
-        return repository.getAll();
-      }
-    }, jsonTransformer);
+		before((request, response) -> response.header("Access-Control-Allow-Origin", "*"));
 
-    get("/getAllNames/:vocabulary", (req, res) -> {
-      try (Connection connection = DriverManager.getConnection("jdbc:h2:~/.fsk/vocabularies")) {
-        res.type(MIME_JSON);
-        BasicRepository<?> repository = getRepository(req.params(":vocabulary"), connection);
-        return repository.getAllNames();
-      }
-    }, jsonTransformer);
+		get("getById/:vocabulary/:id", (req, res) -> {
+			try (Connection connection = DriverManager.getConnection("jdbc:h2:~/.fsk/vocabularies")) {
+				res.type(MIME_JSON);
+				BasicRepository<?> repository = getRepository(req.params(":vocabulary"), connection);
+				int id = Integer.parseInt(req.params(":id"));
+				return repository.getById(id);
+			}
+		}, jsonTransformer);
 
-    // input metadata as body parameter
-    post("convertMetadata/:targetModelClass", (req, res) -> {
-      res.type("application/json");
-    	
-      try {
-        JsonNode inputMetadata = MAPPER.readTree(req.body());
-        String targetClass = req.params("targetModelClass");
-        JsonNode convertedMetadata = utils.convertModel(inputMetadata, targetClass);
-       
-        res.status(200);
-        return convertedMetadata;
-      } catch (Exception err) {
-        res.status(400);
-        return err;
-      }
-    }, jsonTransformer);
-    
-    post("joinMetadata", (req, res) -> { 
-      // The body keeps two JSON models in an array.
-      res.type("application/json");
-      
-      try {
-	  	JsonNode models = MAPPER.readTree(req.body());
-	  	JsonNode firstModel = models.get(0);
-	  	JsonNode secondModel = models.get(1);
-	  	JsonNode joinedModel = utils.joinModels(firstModel, secondModel, "genericModel");
-	  	res.status(200);
-	  	return joinedModel;
-      } catch (Exception err) {
-    	res.status(400);
-    	return err;
-      }
-    }, jsonTransformer);
+		get("/getAll/:vocabulary", (req, res) -> {
+			try (Connection connection = DriverManager.getConnection("jdbc:h2:~/.fsk/vocabularies")) {
+				res.type(MIME_JSON);
+				BasicRepository<?> repository = getRepository(req.params(":vocabulary"), connection);
+				return repository.getAll();
+			}
+		}, jsonTransformer);
 
-    // After initializing the service, get the randomly picked port by Spark.
-    awaitInitialization();
-    port = port();
-  }
+		get("/getAllNames/:vocabulary", (req, res) -> {
+			try (Connection connection = DriverManager.getConnection("jdbc:h2:~/.fsk/vocabularies")) {
+				res.type(MIME_JSON);
+				BasicRepository<?> repository = getRepository(req.params(":vocabulary"), connection);
+				return repository.getAllNames();
+			}
+		}, jsonTransformer);
 
-  private static class JsonTransformer implements ResponseTransformer {
+		// input metadata as body parameter
+		post("convertMetadata/:targetModelClass", (req, res) -> {
+			res.type("application/json");
 
-    private Gson gson = new Gson();
+			try {
+				JsonNode inputMetadata = jsonTransformer.MAPPER.readTree(req.body());
+				String targetClass = req.params("targetModelClass");
+				JsonNode convertedMetadata = utils.convertModel(inputMetadata, targetClass);
 
-    @Override
-    public String render(Object model) {
-      return gson.toJson(model);
-    }
-  }
+				res.status(200);
+				return convertedMetadata;
+			} catch (Exception err) {
+				res.status(400);
+				return err;
+			}
+		}, jsonTransformer);
 
-  private BasicRepository<?> getRepository(String vocabulary, Connection connection) {
-    switch (vocabulary) {
-      case "accreditation_procedure":
-        return new AccreditationProcedureRepository(connection);
-      case "availability":
-        return new AvailabilityRepository(connection);
-      case "basic_process":
-        return new BasicProcessRepository(connection);
-      case "collection_tool":
-        return new CollectionToolRepository(connection);
-      case "country":
-        return new CountryRepository(connection);
-      case "fish_area":
-        return new FishAreaRepository(connection);
-      case "format":
-        return new FormatRepository(connection);
-      case "hazard":
-        return new HazardRepository(connection);
-      case "hazard_type":
-        return new HazardTypeRepository(connection);
-      case "ind_sum":
-        return new IndSumRepository(connection);
-      case "laboratory_accreditation":
-        return new LaboratoryAccreditationRepository(connection);
-      case "language":
-        return new LanguageRepository(connection);
-      case "language_written_in":
-        return new LanguageWrittenInRepository(connection);
-      case "model_class":
-        return new ModelClassRepository(connection);
-      case "model_equation_class":
-        return new ModelEquationClassRepository(connection);
-      case "model_subclass":
-        return new ModelSubclassRepository(connection);
-      case "packaging":
-        return new PackagingRepository(connection);
-      case "parameter_classification":
-        return new ParameterClassificationRepository(connection);
-      case "parameter_datatype":
-        return new ParameterDatatypeRepository(connection);
-      case "parameter_distribution":
-        return new ParameterDistributionRepository(connection);
-      case "parameter_source":
-        return new ParameterSourceRepository(connection);
-      case "parameter_subject":
-        return new ParameterSubjectRepository(connection);
-      case "population":
-        return new PopulationRepository(connection);
-      case "product_matrix":
-        return new ProductMatrixRepository(connection);
-      case "product_treatment":
-        return new ProductTreatmentRepository(connection);
-      case "production_method":
-        return new ProductionMethodRepository(connection);
-      case "publication_status":
-        return new PublicationStatusRepository(connection);
-      case "publication_type":
-        return new PublicationTypeRepository(connection);
-      case "region":
-        return new RegionRepository(connection);
-      case "right":
-        return new RightRepository(connection);
-      case "sampling_method":
-        return new SamplingMethodRepository(connection);
-      case "sampling_point":
-        return new SamplingPointRepository(connection);
-      case "sampling_program":
-        return new SamplingProgramRepository(connection);
-      case "sampling_strategy":
-        return new SamplingStrategyRepository(connection);
-      case "software":
-        return new SoftwareRepository(connection);
-      case "source":
-        return new SourceRepository(connection);
-      case "status":
-        return new StatusRepository(connection);
-      case "unit":
-        return new UnitRepository(connection);
-      case "unit_category":
-        return new UnitCategoryRepository(connection);
-      case "technology_type":
-        return new TechnologyTypeRepository(connection);
-      default:
-        break;
-    }
+		post("joinMetadata", (req, res) -> {
+			// The body keeps two JSON models in an array.
+			res.type("application/json");
 
-    return null;
-  }
+			try {
+				JsonNode models = jsonTransformer.MAPPER.readTree(req.body());
+				JsonNode firstModel = models.get(0);
+				JsonNode secondModel = models.get(1);
+				JsonNode joinedModel = utils.joinModels(firstModel, secondModel, "genericModel");
+				res.status(200);
+				return jsonTransformer.MAPPER.treeToValue(joinedModel, GenericModel.class);
+			} catch (Exception err) {
+				res.status(400);
+				return err;
+			}
+		}, jsonTransformer);
 
+		// After initializing the service, get the randomly picked port by Spark.
+		awaitInitialization();
+		port = port();
+	}
 
-  private void initDatabase() throws SQLException, ClassNotFoundException {
+	private static class JsonTransformer implements ResponseTransformer {
 
-    final Properties fastImportProperties = new Properties();
-    fastImportProperties.put("LOG", 0);
-    fastImportProperties.put("CACHE_SIZE", 65536);
-    fastImportProperties.put("LOCK_MODE", 0);
-    fastImportProperties.put("UNDO_LOG", 0);
+		ObjectMapper MAPPER = new ObjectMapper().registerModule(new ThreeTenModule())
+				.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
-    Class.forName("org.h2.Driver");
-    DeleteDbFiles.execute("~/.fsk", "vocabularies", true); // Delete DB if it exists
-    final Connection initialConnection =
-        DriverManager.getConnection("jdbc:h2:~/.fsk/vocabularies", fastImportProperties);
+		@Override
+		public String render(Object model) {
+			try {
+			    return MAPPER.writeValueAsString(model);
+			} catch (JsonProcessingException err) {
+				return "";
+			}
+		}
+	}
 
-    // Load tables
-    Bundle bundle = Platform.getBundle("de.bund.bfr.knime.fsklab.service");
+	private BasicRepository<?> getRepository(String vocabulary, Connection connection) {
+		switch (vocabulary) {
+		case "accreditation_procedure":
+			return new AccreditationProcedureRepository(connection);
+		case "availability":
+			return new AvailabilityRepository(connection);
+		case "basic_process":
+			return new BasicProcessRepository(connection);
+		case "collection_tool":
+			return new CollectionToolRepository(connection);
+		case "country":
+			return new CountryRepository(connection);
+		case "fish_area":
+			return new FishAreaRepository(connection);
+		case "format":
+			return new FormatRepository(connection);
+		case "hazard":
+			return new HazardRepository(connection);
+		case "hazard_type":
+			return new HazardTypeRepository(connection);
+		case "ind_sum":
+			return new IndSumRepository(connection);
+		case "laboratory_accreditation":
+			return new LaboratoryAccreditationRepository(connection);
+		case "language":
+			return new LanguageRepository(connection);
+		case "language_written_in":
+			return new LanguageWrittenInRepository(connection);
+		case "model_class":
+			return new ModelClassRepository(connection);
+		case "model_equation_class":
+			return new ModelEquationClassRepository(connection);
+		case "model_subclass":
+			return new ModelSubclassRepository(connection);
+		case "packaging":
+			return new PackagingRepository(connection);
+		case "parameter_classification":
+			return new ParameterClassificationRepository(connection);
+		case "parameter_datatype":
+			return new ParameterDatatypeRepository(connection);
+		case "parameter_distribution":
+			return new ParameterDistributionRepository(connection);
+		case "parameter_source":
+			return new ParameterSourceRepository(connection);
+		case "parameter_subject":
+			return new ParameterSubjectRepository(connection);
+		case "population":
+			return new PopulationRepository(connection);
+		case "product_matrix":
+			return new ProductMatrixRepository(connection);
+		case "product_treatment":
+			return new ProductTreatmentRepository(connection);
+		case "production_method":
+			return new ProductionMethodRepository(connection);
+		case "publication_status":
+			return new PublicationStatusRepository(connection);
+		case "publication_type":
+			return new PublicationTypeRepository(connection);
+		case "region":
+			return new RegionRepository(connection);
+		case "right":
+			return new RightRepository(connection);
+		case "sampling_method":
+			return new SamplingMethodRepository(connection);
+		case "sampling_point":
+			return new SamplingPointRepository(connection);
+		case "sampling_program":
+			return new SamplingProgramRepository(connection);
+		case "sampling_strategy":
+			return new SamplingStrategyRepository(connection);
+		case "software":
+			return new SoftwareRepository(connection);
+		case "source":
+			return new SourceRepository(connection);
+		case "status":
+			return new StatusRepository(connection);
+		case "unit":
+			return new UnitRepository(connection);
+		case "unit_category":
+			return new UnitCategoryRepository(connection);
+		case "technology_type":
+			return new TechnologyTypeRepository(connection);
+		default:
+			break;
+		}
 
-    try {
-      File file = getResource(bundle, "data/tables.sql");
-      String script = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
+		return null;
+	}
 
-      Statement statement = initialConnection.createStatement();
-      statement.execute(script);
-    } catch (IOException | SQLException | URISyntaxException e) {
-      e.printStackTrace();
-      LOGGER.error("Fail to create DB", e);
-    }
+	private void initDatabase() throws SQLException, ClassNotFoundException {
 
-    // Insert data
-    List<String> filenames = Arrays.asList("accreditation_procedure.sql", "availability.sql",
-        "collection_tool.sql", "country.sql", "fish_area.sql", "format.sql", "hazard_type.sql",
-        "hazard.sql", "ind_sum.sql", "laboratory_accreditation.sql", "language_written_in.sql",
-        "language.sql", "model_class.sql", "model_equation_class.sql", "packaging.sql",
-        "parameter_classification.sql", "parameter_datatype.sql", "parameter_distribution.sql",
-        "parameter_source.sql", "parameter_subject.sql", "population.sql", "prodmeth.sql",
-        "prodTreat.sql", "product_matrix.sql", "publication_status.sql", "publication_type.sql",
-        "region.sql", "rights.sql", "sampling_method.sql", "sampling_point.sql",
-        "sampling_program.sql", "sampling_strategy.sql", "software.sql", "sources.sql",
-        "status.sql", "technology_type.sql", "unit.sql");
+		final Properties fastImportProperties = new Properties();
+		fastImportProperties.put("LOG", 0);
+		fastImportProperties.put("CACHE_SIZE", 65536);
+		fastImportProperties.put("LOCK_MODE", 0);
+		fastImportProperties.put("UNDO_LOG", 0);
 
-    for (String filename : filenames) {
+		Class.forName("org.h2.Driver");
+		DeleteDbFiles.execute("~/.fsk", "vocabularies", true); // Delete DB if it exists
+		final Connection initialConnection = DriverManager.getConnection("jdbc:h2:~/.fsk/vocabularies",
+				fastImportProperties);
 
-      try {
-        Statement statement = initialConnection.createStatement();
+		// Load tables
+		Bundle bundle = Platform.getBundle("de.bund.bfr.knime.fsklab.service");
 
-        File file = getResource(bundle, "data/initialdata/" + filename);
-        for (String line : FileUtils.readLines(file, StandardCharsets.UTF_8)) {
-          statement.execute(line);
-        }
-      } catch (IOException | SQLException | URISyntaxException e) {
-        e.printStackTrace();
-      }
-    }
+		try {
+			File file = getResource(bundle, "data/tables.sql");
+			String script = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
 
-    initialConnection.close();
-  }
+			Statement statement = initialConnection.createStatement();
+			statement.execute(script);
+		} catch (IOException | SQLException | URISyntaxException e) {
+			e.printStackTrace();
+			LOGGER.error("Fail to create DB", e);
+		}
 
-  private static File getResource(final Bundle bundle, final String path)
-      throws IOException, URISyntaxException {
-    URL fileURL = bundle.getEntry(path);
-    URL resolvedFileURL = FileLocator.toFileURL(fileURL);
-    URI resolvedURI = new URI(resolvedFileURL.getProtocol(), resolvedFileURL.getPath(), null);
-    return new File(resolvedURI);
-  }
+		// Insert data
+		List<String> filenames = Arrays.asList("accreditation_procedure.sql", "availability.sql", "collection_tool.sql",
+				"country.sql", "fish_area.sql", "format.sql", "hazard_type.sql", "hazard.sql", "ind_sum.sql",
+				"laboratory_accreditation.sql", "language_written_in.sql", "language.sql", "model_class.sql",
+				"model_equation_class.sql", "packaging.sql", "parameter_classification.sql", "parameter_datatype.sql",
+				"parameter_distribution.sql", "parameter_source.sql", "parameter_subject.sql", "population.sql",
+				"prodmeth.sql", "prodTreat.sql", "product_matrix.sql", "publication_status.sql", "publication_type.sql",
+				"region.sql", "rights.sql", "sampling_method.sql", "sampling_point.sql", "sampling_program.sql",
+				"sampling_strategy.sql", "software.sql", "sources.sql", "status.sql", "technology_type.sql",
+				"unit.sql");
+
+		for (String filename : filenames) {
+
+			try {
+				Statement statement = initialConnection.createStatement();
+
+				File file = getResource(bundle, "data/initialdata/" + filename);
+				for (String line : FileUtils.readLines(file, StandardCharsets.UTF_8)) {
+					statement.execute(line);
+				}
+			} catch (IOException | SQLException | URISyntaxException e) {
+				e.printStackTrace();
+			}
+		}
+
+		initialConnection.close();
+	}
+
+	private static File getResource(final Bundle bundle, final String path) throws IOException, URISyntaxException {
+		URL fileURL = bundle.getEntry(path);
+		URL resolvedFileURL = FileLocator.toFileURL(fileURL);
+		URI resolvedURI = new URI(resolvedFileURL.getProtocol(), resolvedFileURL.getPath(), null);
+		return new File(resolvedURI);
+	}
 }
