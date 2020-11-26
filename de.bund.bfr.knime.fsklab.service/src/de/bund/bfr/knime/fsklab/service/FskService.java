@@ -179,7 +179,7 @@ public class FskService implements Runnable {
 				res.status(200);
 				return jsonTransformer.MAPPER.treeToValue(joinedModel, GenericModel.class);
 			} catch (Exception err) {
-				res.status(400);
+				res.status(500);
 				return err;
 			}
 		}, jsonTransformer);
