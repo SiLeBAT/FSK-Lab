@@ -18,6 +18,7 @@
         <module>de.bund.bfr.knime.r.x64.feature</module>
         <module>de.bund.bfr.knime.r.x86.feature</module>
         <module>de.bund.bfr.knime.foodprocess.feature</module>
+        <module>de.bund.bfr.knime.fsklab.legacy.feature</module>
     </modules>
 </project>
 
