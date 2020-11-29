@@ -135,7 +135,7 @@ fskeditorjs = function () {
     ];
 
     let bodyContent = `
-     <nav class="navbar navbar-default" >
+     <nav class="navbar navbar-default">
   <div class="container-fluid">
     <div class="navbar-header">
       <button id="saveButton" class="btn btn-primary float-left" type="button" onclick="window.doSave();">Save</button>
