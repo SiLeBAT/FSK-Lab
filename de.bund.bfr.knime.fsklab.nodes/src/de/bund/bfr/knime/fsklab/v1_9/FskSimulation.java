@@ -35,6 +35,13 @@ public class FskSimulation implements Serializable {
   public LinkedHashMap<String, String> getParameters() {
     return params;
   }
+  
+  public LinkedHashMap<String, String> getParams() {
+    return params;
+  }
+  public void setParams(LinkedHashMap<String, String> params) {
+    this.params = params;
+  }
 
   @Override
   public String toString() {
