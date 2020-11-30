@@ -356,7 +356,7 @@ public final class JoinerNodeModel extends
                 Parameter.class));
           } catch (Exception e) {
             Parameter source = new Parameter();
-            source.setId(sourceTargetRelation.get("sourceParam").toString());
+            source.setId(sourceTargetRelation.get("sourceParam").toString().replaceAll("\"", ""));
             jR.setSourceParam(source);
           }
         }
@@ -367,11 +367,11 @@ public final class JoinerNodeModel extends
                 Parameter.class));
           } catch (Exception e) {
             Parameter target = new Parameter();
-            target.setId(sourceTargetRelation.get("targetParam").toString());
+            target.setId(sourceTargetRelation.get("targetParam").toString().replaceAll("\"", ""));
             jR.setTargetParam(target);
           }
         }
-
+        
         joinerRelation.add(jR);
 
       }
