@@ -12,6 +12,9 @@ joiner = function () {
   let _joinerModelsData;
   let _modelScriptTree;
   let _modelsParamsOriginalNames;
+  let _simulationMap={};
+  let _finalsimulationList = [];
+  let _ignoreSelectSimulation;
 
 
   /** JointJS graph. */
@@ -103,13 +106,18 @@ joiner = function () {
       delete _modelColectionSuffixed[index]['modelscript'];
       delete _modelColectionSuffixed[index]['visualization'];
       delete _modelColectionSuffixed[index]['Location'];
+      delete _modelColectionSuffixed[index]['simulation'];
 
-      editModelsPool(keys[index], _modelColectionSuffixed[index].modelMath.parameter, selectedModel.generalInformation.name, _modelColectionSuffixed[index], selectedModel.modelType , 
-                    JSON.stringify(modelMetaData.changeSet.added[0][index]['modelscript']), JSON.stringify(modelMetaData.changeSet.added[0][index]['visualization']),JSON.stringify(modelMetaData.changeSet.added[0][index]['Location']));
+      editModelsPool(keys[index], _modelColectionSuffixed[index].modelMath.parameter, selectedModel.generalInformation.name, _modelColectionSuffixed[index], selectedModel.modelType 
+                    ,JSON.stringify(modelMetaData.changeSet.added[0][index]['modelscript'])
+                    ,JSON.stringify(modelMetaData.changeSet.added[0][index]['visualization'])
+                    ,JSON.stringify(modelMetaData.changeSet.added[0][index]['Location'])
+                    ,modelMetaData.changeSet.added[0][index]['simulation']);
 
     });
     
     poolSize++;
+    _paper.scaleContentToFit();
   }
   view.init = function (representation, value) {
     _value = value;
@@ -169,9 +177,10 @@ joiner = function () {
     if (parent.tableID) {
       _value.joinerModelsData.numberOfModels = 0;
       try {
+        console.log(_finalsimulationList);
         if (isValidModel(modelsPool.firstModel)) {
           modelsPool.firstModel['metadata']['modelMath']['parameter'] = _modelColectionWithoutSuffixedmap[modelsPool.firstModel['modelName']];
-          _value.joinerModelsData.firstModel = [JSON.stringify(modelsPool.firstModel['metadata']), modelsPool.firstModel['modelScript'], modelsPool.firstModel['vis'], "[{}]", "[]", modelsPool.firstModel['Location']];
+          _value.joinerModelsData.firstModel = [JSON.stringify(modelsPool.firstModel['metadata']), modelsPool.firstModel['modelScript'], modelsPool.firstModel['vis'], JSON.stringify(modelsPool.firstModel['simulation']), "[]", modelsPool.firstModel['Location']];
           _value.joinerModelsData.firstModelType = modelsPool.firstModel['modelType'];
           _value.joinerModelsData.firstModelName = modelsPool.firstModel['modelName'];
           _value.joinerModelsData.numberOfModels++;
@@ -180,7 +189,7 @@ joiner = function () {
 
         if (isValidModel(modelsPool.secondModel)) {
           modelsPool.secondModel['metadata']['modelMath']['parameter'] = _modelColectionWithoutSuffixedmap[modelsPool.secondModel['modelName']];
-          _value.joinerModelsData.secondModel = [JSON.stringify(modelsPool.secondModel['metadata']), modelsPool.secondModel['modelScript'], modelsPool.secondModel['vis'], "[{}]", "[]", modelsPool.secondModel['Location']];
+          _value.joinerModelsData.secondModel = [JSON.stringify(modelsPool.secondModel['metadata']), modelsPool.secondModel['modelScript'], modelsPool.secondModel['vis'], JSON.stringify(modelsPool.secondModel['simulation']), "[]", modelsPool.secondModel['Location']];
           _value.joinerModelsData.secondModelType = modelsPool.secondModel['modelType'];
           _value.joinerModelsData.secondModelName = modelsPool.secondModel['modelName'];
           _value.joinerModelsData.numberOfModels++;
@@ -188,7 +197,7 @@ joiner = function () {
 
         if (isValidModel(modelsPool.thirdModel)) {
           modelsPool.thirdModel['metadata']['modelMath']['parameter'] = _modelColectionWithoutSuffixedmap[modelsPool.thirdModel['modelName']];
-          _value.joinerModelsData.thirdModel = [JSON.stringify(modelsPool.thirdModel['metadata']), modelsPool.thirdModel['modelScript'], modelsPool.thirdModel['vis'], "[{}]", "[]", modelsPool.thirdModel['Location']];
+          _value.joinerModelsData.thirdModel = [JSON.stringify(modelsPool.thirdModel['metadata']), modelsPool.thirdModel['modelScript'], modelsPool.thirdModel['vis'], JSON.stringify(modelsPool.thirdModel['simulation']), "[]", modelsPool.thirdModel['Location']];
           _value.joinerModelsData.thirdModelType = modelsPool.thirdModel['modelType'];
           _value.joinerModelsData.thirdModelName = modelsPool.thirdModel['modelName'];
           _value.joinerModelsData.numberOfModels++;
@@ -196,14 +205,14 @@ joiner = function () {
 
         if (isValidModel(modelsPool.fourthModel)) {
           modelsPool.fourthModel['metadata']['modelMath']['parameter'] = _modelColectionWithoutSuffixedmap[modelsPool.fourthModel['modelName']];
-          _value.joinerModelsData.fourthModel = [JSON.stringify(modelsPool.fourthModel['metadata']), modelsPool.fourthModel['modelScript'], modelsPool.fourthModel['vis'], "[{}]", "[]"], modelsPool.fourthModel['Location'];
+          _value.joinerModelsData.fourthModel = [JSON.stringify(modelsPool.fourthModel['metadata']), modelsPool.fourthModel['modelScript'], modelsPool.fourthModel['vis'], JSON.stringify(modelsPool.fourthModel['simulation']), "[]"], modelsPool.fourthModel['Location'];
           _value.joinerModelsData.fourthModelType = modelsPool.fourthModel['modelType'];
           _value.joinerModelsData.fourthModelName = modelsPool.fourthModel['modelName'];
           _value.joinerModelsData.numberOfModels++;
         }
         
         _value.joinerModelsData.interactiveMode = true;
-         
+        _value.joinerModelsData.joinedSimulation = _finalsimulationList;
         
         fetch("http://localhost:"+_representation.servicePort+"/joinMetadata", {
           method: "post",
@@ -257,8 +266,12 @@ joiner = function () {
     return (new XMLSerializer()).serializeToString(_paper.svg);
   };
 
-  function editModelsPool(key, modelParameters, modelName, individualMetadata, modelType, modelScript, vis, Location) {
+  function editModelsPool(key, modelParameters, modelName, individualMetadata, modelType, modelScript, vis, Location, simulation) {
+    _simulationMap[modelName] = { "selectedSimulation": "defaultSimulation", "simulationList":simulation };
+    
+    updatesFinalSimulation();
     modelsPool[key]['modelScript'] = modelScript;
+    modelsPool[key]['simulation'] = simulation;
     modelsPool[key]['vis'] = vis;
     modelsPool[key]['Location'] = Location;
     modelsPool[key]['modelName'] = modelName;
@@ -297,9 +310,9 @@ joiner = function () {
       width: 150,
       height: modelHeight
     });
-    modelsPool[key]['modelToJoin'] = createAtomic(paperWidth - (250 * (4 - (Object.keys(modelsPool).indexOf(key)))), 60, 150,
+    modelsPool[key]['modelToJoin'] = createAtomic(paperWidth - (250 * (4 - (Object.keys(modelsPool).indexOf(key)))), 60, 175,
       modelHeight, modelNameWrap, modelsPool[key]['inputParameters'],
-      modelsPool[key]['outputParameters'], key);
+      modelsPool[key]['outputParameters'], key, modelsPool[key]['simulation']);
 
     _graph.clear();
     $.each(Object.keys(modelsPool), function (index, value) {
@@ -309,6 +322,124 @@ joiner = function () {
     graphJSON = _graph.toJSON();
     _value.jsonRepresentation = JSON.stringify(graphJSON);
     reoderTool();
+  }
+  /**
+   * take a model's orginalParamsWithoutSuffix and replace keys and values in that map
+   * @param {*} modelName 
+   */
+  function reverseParameterMap(modelName){
+    let orginalParamsWithoutSuffix = _modelsParamsOriginalNames[modelName];
+    let reversedModelsParamsOriginalNames = {};
+    $.each(Object.keys(orginalParamsWithoutSuffix), function (index, key) {
+      reversedModelsParamsOriginalNames[orginalParamsWithoutSuffix[key]] = key;
+    })
+    return reversedModelsParamsOriginalNames;
+  }
+  /**
+   * Afunction to generate the list of simulation for the joined Object
+   * @param {*} selectedSimulationName wich could be an 'All' which means mearge all simulation from all models.
+   */
+  function updatesFinalSimulation(selectedSimulationName) {
+    _finalsimulationList=[];
+    let tespSimulationArray = [];
+    if(_ignoreSelectSimulation)
+      return;
+    if (selectedSimulationName == 'All') {
+      _ignoreSelectSimulation = true;
+      let tempSimulationInfo1 = {};
+      let firstModelName = modelsPool.firstModel['modelName'];
+      let reversedModelsParamsOriginalNames1 =  reverseParameterMap(firstModelName);
+      $.each(_simulationMap[modelsPool.firstModel['modelName']]['simulationList'], function (ind2, firtModelSimulationInfo) {
+          if(isValidModel(modelsPool.secondModel)){
+            $.each(Object.keys(firtModelSimulationInfo["parameters"]), function (ind3, key3) {
+              tempSimulationInfo1[reversedModelsParamsOriginalNames1[key3]] = firtModelSimulationInfo["parameters"][key3];
+            })
+            let tempSimulationInfo2 = {};
+            let secondModelName = modelsPool.secondModel['modelName'];
+            let reversedModelsParamsOriginalNames2 =  reverseParameterMap(secondModelName);
+            $.each(_simulationMap[modelsPool.secondModel['modelName']]['simulationList'], function (ind2,secondModelSimulationInfo) {
+              if(isValidModel(modelsPool.thirdModel)){
+                $.each(Object.keys(secondModelSimulationInfo["parameters"]), function (ind3, key3) {
+                  tempSimulationInfo2[reversedModelsParamsOriginalNames2[key3]] = secondModelSimulationInfo["parameters"][key3];
+                })
+                let tempSimulationInfo3 = {};
+                let thirdModelName = modelsPool.thirdModel['modelName'];
+                let reversedModelsParamsOriginalNames3 =  reverseParameterMap(thirdModelName);
+                $.each(_simulationMap[modelsPool.thirdModel['modelName']]['simulationList'], function (ind2, thirdModelSimulationInfo) {
+                  if (isValidModel(modelsPool.fourthModel)) {
+                    $.each(Object.keys(thirdModelSimulationInfo["parameters"]), function (ind3, key3) {
+                      tempSimulationInfo3[reversedModelsParamsOriginalNames3[key3]] =thirdModelSimulationInfo["parameters"][key3];
+                    })
+                    let tempSimulationInfo4 = {};
+                    let fourthModelName = modelsPool.fourthModel['modelName'];
+                    let reversedModelsParamsOriginalNames4 = reverseParameterMap(fourthModelName);
+                    $.each(_simulationMap[modelsPool.fourthModel['modelName']]['simulationList'], function (ind2,fourthModelSimulationInfo) {
+                        $.each(Object.keys(fourthModelSimulationInfo["parameters"]), function (ind3, key3) {
+                          tempSimulationInfo4[reversedModelsParamsOriginalNames4[key3]] = fourthModelSimulationInfo["parameters"][key3];
+                        })
+                        Object.assign(tespSimulationArray, tempSimulationInfo1, tempSimulationInfo2, tempSimulationInfo3, tempSimulationInfo4)
+                        _finalsimulationList.push({ 'name': firtModelSimulationInfo['name']+'-'+ secondModelSimulationInfo['name']+'-'+ thirdModelSimulationInfo['name']+'-'+ fourthModelSimulationInfo['name'], 'params': Object.assign({}, tespSimulationArray) });
+                    });
+                    
+
+                  }else{
+                    $.each(Object.keys(thirdModelSimulationInfo["parameters"]), function (ind3, key3) {
+                      tempSimulationInfo3[reversedModelsParamsOriginalNames3[key3]] =thirdModelSimulationInfo["parameters"][key3];
+                    })
+                    Object.assign(tespSimulationArray, tempSimulationInfo1, tempSimulationInfo2, tempSimulationInfo3);
+                    _finalsimulationList.push({ 'name': firtModelSimulationInfo['name']+'-'+ secondModelSimulationInfo['name']+'-'+ thirdModelSimulationInfo['name'], 'params': Object.assign({}, tespSimulationArray) });
+                  }
+                   
+
+                });
+              } else {
+                $.each(Object.keys(secondModelSimulationInfo["parameters"]), function (ind3, key3) {
+                  tempSimulationInfo2[reversedModelsParamsOriginalNames[key3]] = secondModelSimulationInfo["parameters"][key3];
+                })
+                Object.assign(tespSimulationArray, tempSimulationInfo1, tempSimulationInfo2);
+                _finalsimulationList.push({ 'name': firtModelSimulationInfo['name']+'-'+ secondModelSimulationInfo['name'], 'params': Object.assign({}, tespSimulationArray) });
+              }
+              
+            });
+          }else{
+            $.each(Object.keys(firtModelSimulationInfo["parameters"]), function (ind3, key3) {
+              tempSimulationInfo1[reversedModelsParamsOriginalNames[key3]] = firtModelSimulationInfo["parameters"][key3];
+            })
+            Object.assign(tespSimulationArray, tempSimulationInfo1);
+            _finalsimulationList.push({ 'name': firtModelSimulationInfo['name'], 'params': Object.assign({}, tespSimulationArray) });
+          }
+          
+      });
+     
+      
+    }
+    else {
+      _ignoreSelectSimulation = false;
+      $.each(Object.keys(_simulationMap), function (ind1, modelName) {
+        let selectedSimName = _simulationMap[modelName]['selectedSimulation'];
+        if (selectedSimulationName != 'All') {
+          let orginalParamsWithoutSuffix = _modelsParamsOriginalNames[modelName];
+          let reversedModelsParamsOriginalNames = {};
+          $.each(Object.keys(orginalParamsWithoutSuffix), function (index, key) {
+            reversedModelsParamsOriginalNames[orginalParamsWithoutSuffix[key]] = key;
+          })
+          let tempSimulationInfo = {};
+          $.each(_simulationMap[modelName]['simulationList'], function (ind2, simulationInfo) {
+            if (simulationInfo['name'] == selectedSimName) {
+              $.each(Object.keys(simulationInfo["parameters"]), function (ind3, key3) {
+                tempSimulationInfo[reversedModelsParamsOriginalNames[key3]] = simulationInfo["parameters"][key3];
+              })
+              Object.assign(tespSimulationArray, tempSimulationInfo);
+            }
+
+          });
+          _finalsimulationList = [{ 'name': 'defaultSimulation', 'params': Object.assign({}, tespSimulationArray) }];
+        }
+
+      });
+    }
+
+
   }
 
   function createBody() {
@@ -374,9 +505,40 @@ joiner = function () {
 
 
   }
-
+  function updateSimulationMap(modelName,selectedSimulationName){
+     _simulationMap[modelName]["selectedSimulation"] = selectedSimulationName ;
+  }
   function reoderTool() {
-
+    $('.selectSimulation').on('mousedown click', function (evt) {
+      evt.stopPropagation();
+    });
+    var previous;
+    $('.selectSimulation').on('change', function () {
+      
+      let testArray = this.value.split('---');
+      let modelName = testArray[0];
+      let selectedSimulationName = testArray[1];
+      updateSimulationMap(modelName,selectedSimulationName);
+      updatesFinalSimulation(selectedSimulationName);
+      if (selectedSimulationName == 'All') {
+        $.each(Object.keys(_simulationMap), function (ind1, modelNamex) {
+          valueToBeSelected = modelNamex + '---All';
+          console.log($(`option[value='${valueToBeSelected}']`));
+          $(`option[value='${valueToBeSelected}']`).attr('selected', 'selected');
+        });
+      }else{
+        $.each(Object.keys(_simulationMap), function (ind1, modelNamex) {
+          valueToBeSelected = modelNamex + '---defaultSimulation';
+          valueToBeDeSelected = modelNamex + '---All';
+          
+          if($(`option[value='${valueToBeDeSelected}']`).attr('selected') == 'selected' && modelName != modelNamex ){
+            $('#'+modelNamex+'_select').val(valueToBeSelected);
+            console.log($('#'+modelNamex+'_select'))
+            //$(`option[value='${valueToBeSelected}']`).attr('selected', 'selected');
+          }
+        });
+      }
+    });
     $('.selectForOrder').on('mousedown click', function (evt) {
       evt.stopPropagation();
     });
@@ -867,13 +1029,20 @@ joiner = function () {
    * @param {array} inputs Array of input parameter ports
    * @param {array} inputs Array of output parameter ports
   */
-  function createAtomic(x, y, width, height, modelName, inputs, outputs, modelIndex) {
+  function createAtomic(x, y, width, height, modelName, inputs, outputs, modelIndex,simulations) {
+    let simulationoption = ``;
+    simulations.forEach(sim => {
+      simulationoption += `<option value ="${modelName}---${sim.name}">${sim.name}</option>`;
+    })
+    simulationoption += `<option value ="${modelName}---All">All Simulation</option>`;
     let atomic = new joint.shapes.devs.Atomic({
       markup: `<g>
                       <rect class="body" stroke-width="0" rx="5px" ry="5px"></rect>
                       <text class="label" y="0.8em" xml:space="preserve" font-size="14" text-anchor="middle" font-family="Arial, helvetica, sans-serif">
                         <tspan id="v-18" dy="0em" x="0" class="v-line"></tspan>
                       </text>
+                      
+
                       <foreignObject  x="20" y="20" width="${width}" height="${height + 30}" >
                       <!--
                         In the context of SVG embedded in an HTML document, the XHTML 
@@ -881,8 +1050,11 @@ joiner = function () {
                         context of an SVG document
                       -->
                       <div class="html-element" style="position: absolute;
-                      right: 35px;
+                      right: 25px;
                       bottom: 25px;" xmlns="http://www.w3.org/1999/xhtml">
+                        <select id = '${modelName}_select' class = 'selectSimulation'>
+                        ${simulationoption}
+                        </select>
                         <select id = '${modelIndex}' class = 'selectForOrder'>
                           <option value ="firstModel" `+ (modelIndex == "firstModel" ? `selected="selected"` : ``) + `>firstModel</option>
                           <option value ="secondModel" `+ (modelIndex == "secondModel" ? `selected="selected"` : ``) + `>secondModel</option>

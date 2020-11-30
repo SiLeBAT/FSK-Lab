@@ -53,7 +53,6 @@ import org.knime.core.node.workflow.NodeContext;
 import org.knime.js.core.node.AbstractSVGWizardNodeModel;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.nodes.NodeRemovedListener;
@@ -716,7 +715,11 @@ public final class JoinerNodeModel
 
 
       // Create default simulation out of parameters metadata
-      JoinerNodeUtil.createDefaultSimulation(outObj);
+      if(!joinerModelsData.joinedSimulation.isEmpty()) {
+        outObj.simulations.addAll(joinerModelsData.joinedSimulation);
+      }else {
+        JoinerNodeUtil.createDefaultSimulation(outObj);
+      }
 
 
       // add all possible simulations to combined object

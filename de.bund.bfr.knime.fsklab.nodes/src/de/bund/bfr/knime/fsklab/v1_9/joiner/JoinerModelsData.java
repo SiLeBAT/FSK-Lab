@@ -1,9 +1,12 @@
 package de.bund.bfr.knime.fsklab.v1_9.joiner;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import de.bund.bfr.knime.fsklab.v1_9.FskSimulation;
 import de.bund.bfr.metadata.swagger.Parameter;
 
 public class JoinerModelsData {
@@ -27,6 +30,7 @@ public class JoinerModelsData {
   public String[] fourthModel;
   public boolean interactiveMode = false;
   public int numberOfModels = 0;
+  public List<FskSimulation> joinedSimulation = new ArrayList<>();
   public Map <String, Map<String,String>> modelsParamsOriginalNames = new HashMap<>();
 
   @Override
