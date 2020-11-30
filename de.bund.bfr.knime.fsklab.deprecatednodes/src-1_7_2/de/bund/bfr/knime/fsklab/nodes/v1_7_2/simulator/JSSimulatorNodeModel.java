@@ -175,6 +175,7 @@ public class JSSimulatorNodeModel
         loadJsonSetting();
         final List<JSSimulation> simulations = inObj.simulations.stream()
             .map(it -> toJSSimulation(it, parameters)).collect(Collectors.toList());
+        val.selectedSimulationIndex = inObj.selectedSimulationIndex;
         val.simulations = simulations;
         if (val.modelMath == null) {
           
