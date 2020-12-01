@@ -899,27 +899,7 @@ fskdbview = function () {
         });
         return uuid;
     }
-    async function postTableBuilt(j) {
-        console.log(j);
-        for (index = 0; index <j.length; index++) {
-            let row = JSON.parse(j[index].data);
-            try {
-                const modelscript = await fetch(_globalVars.modelscriptEndpoint + index);
-                modelscript.text().then(function (data) {
-                    row['modelscript'] = data; // this will be a string
-                });
-                const visualizationscript = await fetch(_globalVars.visualizationscriptEndpoint + index);
-                visualizationscript.text().then(function (data) {
-                    row['visualization'] = data; // this will be a string
-                });
-                
-            } catch (err) {
-                console.log(err);
-            }
-        }
-        
-        _representation.metadata = j; 
-    }
+   
     async function getMetadata() {
         if (_representation.table && _representation.table.rows && _representation.table.rows.length > 0) {
             const j = [];
