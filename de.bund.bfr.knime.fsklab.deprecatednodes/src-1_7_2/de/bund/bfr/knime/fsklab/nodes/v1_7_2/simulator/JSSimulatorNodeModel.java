@@ -173,9 +173,15 @@ public class JSSimulatorNodeModel
         final List<Parameter> parameters = SwaggerUtil.getParameter(inObj.modelMetadata);
 
         loadJsonSetting();
-        final List<JSSimulation> simulations = inObj.simulations.stream()
-            .map(it -> toJSSimulation(it, parameters)).collect(Collectors.toList());
-        val.simulations = simulations;
+       
+        // if value is still null after loading from setting, take simulations from port
+        if(val.simulations == null) {
+        	 final List<JSSimulation> simulations = inObj.simulations.stream()
+        	            .map(it -> toJSSimulation(it, parameters)).collect(Collectors.toList());
+            val.selectedSimulationIndex = inObj.selectedSimulationIndex;
+            val.simulations = simulations;
+        }
+    
         if (val.modelMath == null) {
           
           val.modelMath = FromOjectToJSON(SwaggerUtil.getModelMath(inObj.modelMetadata));
