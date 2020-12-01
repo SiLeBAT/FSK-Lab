@@ -246,8 +246,9 @@ public class FSKDBViewNodeModel
       representation.setRemoteRepositoryURL(m_repositoryLocationSettings.getStringValue());
       representation.setMaxSelectionNumber(
           ((SettingsModelIntegerBounded) m_maxSelectionNumberSettings).getIntValue());
-
-      if (inPort == null && representation.getTable() == null) {
+      if (fskdbViewValue.getTable() != null) {
+        outputPort = convertJSONTableToBufferedDataTable(exec);
+      } else if (inPort == null && representation.getTable() == null) {
         // if the optional input port is not provided then
         outputPort = createEmptyTable(exec);
         JSONDataTable jsonTable =
@@ -265,8 +266,6 @@ public class FSKDBViewNodeModel
         representation.setTableID(connectedNodeId);
 
         outputPort = inPort;
-      } else {
-        outputPort = convertJSONTableToBufferedDataTable(exec);
       }
     }
     return new PortObject[] {outputPort};
