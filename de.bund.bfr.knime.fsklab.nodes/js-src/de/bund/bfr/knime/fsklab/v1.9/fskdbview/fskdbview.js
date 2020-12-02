@@ -17,9 +17,8 @@ fskdbview = function () {
     let _softwareSet = new Set();
     let _environmentSet = new Set();
     let _hazardSet = new Set();
-
+    let _lazySriptsfetching = false;
     let _cache = [];
-
     let _viewsetting = {
         mainColor: "rgb(55,96,146)",
         buttonColor: "rgb(83,121,166)",
@@ -54,7 +53,10 @@ fskdbview = function () {
         _globalVars = {
             metadataEndpoint: _endpoint + "metadata",
             imageEndpoint: _endpoint + "image/",
-            downloadEndpoint: _endpoint + "download/"
+            downloadEndpoint: _endpoint + "download/",
+            modelscriptEndpoint: _endpoint + "modelscript/",
+            visualizationscriptEndpoint: _endpoint + "visualizationscript/",
+            simulationsEndpoint: _endpoint + "simulations/"
         }
         createUI();
     };
@@ -504,11 +506,34 @@ fskdbview = function () {
                     }
                     this.checked = true;
                     $(this).closest("tr").css("background-color", "#e1e3e8");
-                    // save selected model
-                    window.selectedModels.push(_representation.metadata[selectedBox]);
-                    _value.selection.push(_representation.table.rows[selectedBox].rowKey);
-                    // emit selection event                    
-                    knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c21joiner' , [window.selectedModels],{elements:[]})  
+                    //fetch scripts
+                    if(_lazySriptsfetching){
+                        const modelscript =  fetch(_globalVars.modelscriptEndpoint + selectedBox);
+                        console.log(modelscript);
+                        modelscript.then(function(response) {
+                            return response.text();
+                        }).then(function(data) {
+                            _representation.metadata[selectedBox]['modelscript'] = data; // this will be a string
+                            const visualizationscript =  fetch(_globalVars.visualizationscriptEndpoint + selectedBox);
+                            visualizationscript.then(function(responsevis) {
+                                return responsevis.text();
+                            }).then(function(datavis) {
+                                _representation.metadata[selectedBox]['visualization'] = datavis; // this will be a string
+                                // save selected model
+                                window.selectedModels.push(_representation.metadata[selectedBox]);
+                                _value.selection.push(_representation.table.rows[selectedBox].rowKey);
+                                // emit selection event
+                                knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c21joiner' , [window.selectedModels],{elements:[]})  
+                            });
+                        });
+                        
+                    }else{
+                        // save selected model
+                        window.selectedModels.push(_representation.metadata[selectedBox]);
+                        _value.selection.push(_representation.table.rows[selectedBox].rowKey);
+                        // emit selection event
+                        knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c21joiner' , [window.selectedModels],{elements:[]})  
+                    }
                 } else {
                     this.checked = false;
                     $(this).closest("tr").css("background-color", "transparent");
@@ -834,9 +859,29 @@ fskdbview = function () {
     }
 
     function editModel(event) {
+        let modelIndex = event.target.id.replace("opener", "");
         // emit selection event
-        let selectedModel = _representation.metadata[event.target.id.replace("opener", "")];
-        knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c215846e1' , [selectedModel],{elements:[]})
+        let selectedModel = _representation.metadata[modelIndex];
+        //fetch scripts
+        if(_lazySriptsfetching){
+            const modelscript =  fetch(_globalVars.modelscriptEndpoint + modelIndex);
+            modelscript.then(function(response) {
+                return response.text();
+            }).then(function(data) {
+                selectedModel['modelscript'] = data; // this will be a string
+                const visualizationscript =  fetch(_globalVars.visualizationscriptEndpoint + modelIndex);
+                visualizationscript.then(function(responsevis) {
+                    return responsevis.text();
+                }).then(function(datavis) {
+                    selectedModel['visualization'] = datavis; // this will be a string
+                    knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c215846e1' , [selectedModel],{elements:[]}) 
+                });
+            });
+            
+        }else{
+            knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c215846e1' , [selectedModel],{elements:[]})
+        }
+        
     }
 
     async function getImage(identifier) {
@@ -845,7 +890,16 @@ fskdbview = function () {
         const j = await rep.blob();
         return j;
     }
-
+    async function create_UUID(){
+        var dt = new Date().getTime();
+        var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            var r = (dt + Math.random()*16)%16 | 0;
+            dt = Math.floor(dt/16);
+            return (c=='x' ? r :(r&0x3|0x8)).toString(16);
+        });
+        return uuid;
+    }
+   
     async function getMetadata() {
         if (_representation.table && _representation.table.rows && _representation.table.rows.length > 0) {
             const j = [];
@@ -858,18 +912,35 @@ fskdbview = function () {
             });
             return j;
         } else {
+            parent.tableID = await create_UUID();
+            _representation.tableID = parent.tableID;
             const rep = await fetch(_globalVars.metadataEndpoint);
             const j = await rep.json();
-            $.each(j, function (index, row) {
+            
+            for (index = 0; index < j.length; index++) {
+                let row = j[index];
+                try {
+                    _lazySriptsfetching = true;
+                    const simulations = await fetch(_globalVars.simulationsEndpoint + index);
+                    simulations.json().then(function(data) {
+                        row['simulation'] = data; // this will be a JSON
+                    });
+                    
+                } catch (err) {
+                    console.log(err);
+                }
+
                 if (_representation.table && _representation.table.rows) {
                     _representation.table.rows.push({
                         data: [
                             JSON.stringify(row)
                         ],
-                        rowKey: 'Row1#' + index
+                        rowKey: 'Row'+index+'#'
                     });
                 }
-            })
+            }
+            //postTableBuilt(_representation.table.rows);
+            console.log(parent.tableID);
             return j;
         }
     }
