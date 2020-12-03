@@ -6,7 +6,6 @@ import static spark.Spark.get;
 import static spark.Spark.options;
 import static spark.Spark.port;
 import static spark.Spark.post;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -20,21 +19,18 @@ import java.sql.Statement;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
-
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
 import org.h2.tools.DeleteDbFiles;
 import org.knime.core.node.NodeLogger;
 import org.osgi.framework.Bundle;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.threetenbp.ThreeTenModule;
-
-import de.bund.bfr.metadata.swagger.GenericModel;
+import de.bund.bfr.metadata.swagger.Model;
 import de.bund.bfr.rakip.vocabularies.data.AccreditationProcedureRepository;
 import de.bund.bfr.rakip.vocabularies.data.AvailabilityRepository;
 import de.bund.bfr.rakip.vocabularies.data.BasicProcessRepository;
@@ -77,6 +73,7 @@ import de.bund.bfr.rakip.vocabularies.data.TechnologyTypeRepository;
 import de.bund.bfr.rakip.vocabularies.data.UnitCategoryRepository;
 import de.bund.bfr.rakip.vocabularies.data.UnitRepository;
 import metadata.ConversionUtils;
+import metadata.ConversionUtils.ModelClass;
 import spark.ResponseTransformer;
 
 public class FskService implements Runnable {
@@ -156,9 +153,8 @@ public class FskService implements Runnable {
 
 			try {
 				JsonNode inputMetadata = jsonTransformer.MAPPER.readTree(req.body());
-				String targetClass = req.params("targetModelClass");
-				JsonNode convertedMetadata = utils.convertModel(inputMetadata, targetClass);
-
+				ModelClass targetClass = ModelClass.valueOf(req.params("targetModelClass"));
+				Model convertedMetadata = utils.convertModel(inputMetadata, targetClass);
 				res.status(200);
 				return convertedMetadata;
 			} catch (Exception err) {
@@ -175,9 +171,9 @@ public class FskService implements Runnable {
 				JsonNode models = jsonTransformer.MAPPER.readTree(req.body());
 				JsonNode firstModel = models.get(0);
 				JsonNode secondModel = models.get(1);
-				JsonNode joinedModel = utils.joinModels(firstModel, secondModel, "genericModel");
+				Model joinedModel = utils.joinModels(firstModel, secondModel, ModelClass.genericModel);
 				res.status(200);
-				return jsonTransformer.MAPPER.treeToValue(joinedModel, GenericModel.class);
+				return joinedModel;
 			} catch (Exception err) {
 				res.status(500);
 				return err;
