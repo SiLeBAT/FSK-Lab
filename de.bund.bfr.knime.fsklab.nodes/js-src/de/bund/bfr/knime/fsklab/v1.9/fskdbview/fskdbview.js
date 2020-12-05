@@ -9,6 +9,7 @@ fskdbview = function () {
         return jQuery(a).text().toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
     };
     window.selectedModels = [];
+    window.downloadURs = [];
     let _endpoint;
     let _globalVars = {};
 
@@ -38,7 +39,7 @@ fskdbview = function () {
                 }
         });
         window.selectedModels[modelIndex]=modelMetaDatax.changeSet.added[0];
-        knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c21joiner' , [window.selectedModels],{elements:[]});
+        knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c21joiner' , [window.selectedModels,],{elements:[]});
     }
                                
     view.init = function (representation, value) { 
@@ -523,7 +524,8 @@ fskdbview = function () {
                                 window.selectedModels.push(_representation.metadata[selectedBox]);
                                 _value.selection.push(_representation.table.rows[selectedBox].rowKey);
                                 // emit selection event
-                                knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c21joiner' , [window.selectedModels],{elements:[]})  
+                                window.downloadURs.push(_globalVars.downloadEndpoint+selectedBox);
+                                knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c21joiner' , [window.selectedModels,window.downloadURs],{elements:[]})  
                             });
                         });
                         
