@@ -7,10 +7,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.apache.commons.io.FileUtils;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.util.FileUtil;
-import org.knime.python2.kernel.PythonKernelOptions.PythonVersionOption;
 import de.bund.bfr.knime.fsklab.nodes.plot.ModelPlotter;
 import de.bund.bfr.knime.fsklab.v1_9.FskPortObject;
 import de.bund.bfr.knime.fsklab.v1_9.FskSimulation;
@@ -63,8 +63,17 @@ public abstract class ScriptHandler implements AutoCloseable {
       workingDirectory = Optional.of(Files.createTempDirectory("workingDirectory"));
       setWorkingDirectory(workingDirectory.get(), exec);
     }
+    // copy generated resource files (if present) into workingdirectory, then delete them
+    if(fskObj.getGeneratedResourcesDirectory().isPresent()) {
+      File generatedResourceDir = fskObj.getGeneratedResourcesDirectory().get();
+      for (File sourceFile : generatedResourceDir.listFiles()) {
+        File targetFile = new File(workingDirectory.get().toString(), sourceFile.getName());
+        FileUtil.copy(sourceFile, targetFile, exec);
+      }
+      FileUtils.deleteQuietly(generatedResourceDir);
+    }
     
-
+    
     // START RUNNING MODEL
     exec.setProgress(0.1, "Setting up output capturing");
     setupOutputCapturing(exec);
@@ -136,7 +145,7 @@ public abstract class ScriptHandler implements AutoCloseable {
     }
     
     // delete working directory
-    if (workingDirectory.isPresent()) {
+    if (fskObj.getEnvironmentManager().isPresent() && workingDirectory.isPresent()) {
       fskObj.getEnvironmentManager().get().deleteEnvironment(workingDirectory.get());
     }
   
