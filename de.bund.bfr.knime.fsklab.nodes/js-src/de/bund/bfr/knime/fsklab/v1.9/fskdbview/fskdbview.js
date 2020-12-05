@@ -39,7 +39,7 @@ fskdbview = function () {
                 }
         });
         window.selectedModels[modelIndex]=modelMetaDatax.changeSet.added[0];
-        knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c21joiner' , [window.selectedModels,],{elements:[]});
+        knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c21joiner' , [window.selectedModels],{elements:[]});
     }
                                
     view.init = function (representation, value) { 
