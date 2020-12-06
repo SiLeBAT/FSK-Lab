@@ -865,7 +865,7 @@ public final class JoinerNodeModel
       String[] model, String modelType) throws IOException {
     FskPortObject portObject = null;
     if (StringUtils.isNotEmpty(model[6])) {
-      String fileZip = System.getProperty("user.home") + model[7] + ".fskx";
+      String fileZip = System.getProperty("user.home") +File.separator+ model[7] + ".fskx";
       downloadFile(new URL(model[6]), fileZip);
       try {
         portObject = ReaderNodeUtil.readArchive(new File(fileZip));

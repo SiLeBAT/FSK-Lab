@@ -98,7 +98,7 @@ joiner = function () {
     return oldNewParamNames;
   }
   let selectionChanged = function (modelMetaData) {
-    console.log(modelMetaData);
+    poolSize++;
     let _modelColectionSuffixed =  addSuffixToParameters(JSON.parse(JSON.stringify(modelMetaData.changeSet.added[0])));
     let keys = ['firstModel','secondModel','thirdModel','fourthModel']; 
     $.each(_modelColectionSuffixed,function(index,selectedModel){
@@ -118,7 +118,7 @@ joiner = function () {
 
     });
     
-    poolSize++;
+    
     _paper.scaleContentToFit();
   }
   view.init = function (representation, value) {
@@ -270,7 +270,7 @@ joiner = function () {
 
   function editModelsPool(key, modelParameters, modelName, individualMetadata, modelType, modelScript, vis, Location, simulation, downloadURL) {
     _simulationMap[modelName] = { "selectedSimulation": "defaultSimulation", "simulationList":simulation };
-    
+    console.log(_simulationMap[modelName]);
     updatesFinalSimulation();
     modelsPool[key]['modelScript'] = modelScript;
     modelsPool[key]['simulation'] = simulation;
@@ -381,7 +381,7 @@ joiner = function () {
                           tempSimulationInfo4[reversedModelsParamsOriginalNames4[key3]] = fourthModelSimulationInfo["parameters"][key3];
                         })
                         Object.assign(tespSimulationArray, tempSimulationInfo1, tempSimulationInfo2, tempSimulationInfo3, tempSimulationInfo4)
-                        _finalsimulationList.push({ 'name': firtModelSimulationInfo['name']+'-'+ secondModelSimulationInfo['name']+'-'+ thirdModelSimulationInfo['name']+'-'+ fourthModelSimulationInfo['name'], 'params': Object.assign({}, tespSimulationArray) });
+                        _finalsimulationList.push({ 'name': firtModelSimulationInfo['name']+'_'+ secondModelSimulationInfo['name']+'_'+ thirdModelSimulationInfo['name']+'_'+ fourthModelSimulationInfo['name'], 'params': Object.assign({}, tespSimulationArray) });
                     });
                     
 
@@ -390,7 +390,7 @@ joiner = function () {
                       tempSimulationInfo3[reversedModelsParamsOriginalNames3[key3]] =thirdModelSimulationInfo["parameters"][key3];
                     })
                     Object.assign(tespSimulationArray, tempSimulationInfo1, tempSimulationInfo2, tempSimulationInfo3);
-                    _finalsimulationList.push({ 'name': firtModelSimulationInfo['name']+'-'+ secondModelSimulationInfo['name']+'-'+ thirdModelSimulationInfo['name'], 'params': Object.assign({}, tespSimulationArray) });
+                    _finalsimulationList.push({ 'name': firtModelSimulationInfo['name']+'_'+ secondModelSimulationInfo['name']+'_'+ thirdModelSimulationInfo['name'], 'params': Object.assign({}, tespSimulationArray) });
                   }
                    
 
@@ -400,7 +400,7 @@ joiner = function () {
                   tempSimulationInfo2[reversedModelsParamsOriginalNames[key3]] = secondModelSimulationInfo["parameters"][key3];
                 })
                 Object.assign(tespSimulationArray, tempSimulationInfo1, tempSimulationInfo2);
-                _finalsimulationList.push({ 'name': firtModelSimulationInfo['name']+'-'+ secondModelSimulationInfo['name'], 'params': Object.assign({}, tespSimulationArray) });
+                _finalsimulationList.push({ 'name': firtModelSimulationInfo['name']+'_'+ secondModelSimulationInfo['name'], 'params': Object.assign({}, tespSimulationArray) });
               }
               
             });
@@ -635,16 +635,28 @@ joiner = function () {
         modelsPool[newValueText]['modelName'] = tempModelName;
         modelsPool[newValueText] = oldValue;
 
-        editModelsPool(previous, newParams, modelsPool[previous]['modelName'], modelsPool[previous]['metadata'], modelsPool[previous]['modelType'])
-        editModelsPool(newValueText, oldParams, modelsPool[newValueText]['modelName'], modelsPool[newValueText]['metadata'], modelsPool[newValueText]['modelType']);
-      }
+        editModelsPool(previous, newParams, modelsPool[previous]['modelName'], modelsPool[previous]['metadata'], modelsPool[previous]['modelType'],
+                      modelsPool[previous]['modelScript']
+                      ,modelsPool[previous]['vis']
+                      ,''
+                      ,modelsPool[previous]['simulation']
+                      ,'');
 
-      $("#" + newValueText + ' option').filter(function () {
-        return $(this).text() == previous;
-      }).prop('selected', 'selected');
-      $("#" + newValueText).prop('id', 'med');
-      $("#" + previous).prop('id', newValueText);
-      $("#med").prop('id', previous);
+        editModelsPool(newValueText, oldParams, modelsPool[newValueText]['modelName'], modelsPool[newValueText]['metadata'], modelsPool[newValueText]['modelType'],
+                      modelsPool[newValueText]['modelScript']
+                      ,modelsPool[newValueText]['vis']
+                      ,''
+                      ,modelsPool[newValueText]['simulation']
+                      ,'');
+      }
+      try{
+        $("#" + newValueText + ' option').filter(function () {
+          return $(this).text() == previous;
+        }).prop('selected', 'selected');
+        $("#" + newValueText).prop('id', 'med');
+        $("#" + previous).prop('id', newValueText);
+        $("#med").prop('id', previous);
+      }catch(err){}
 
     });
   }
@@ -1054,6 +1066,9 @@ joiner = function () {
   */
   function createAtomic(x, y, width, height, modelName, inputs, outputs, modelIndex,simulations) {
     let simulationoption = ``;
+    console.log(poolSize);
+    let disabled = 'disabled="disabled"';
+    let nothing = '';
     simulations.forEach(sim => {
       simulationoption += `<option value ="${modelName}---${sim.name}">${sim.name}</option>`;
     })
@@ -1079,10 +1094,10 @@ joiner = function () {
                         ${simulationoption}
                         </select>
                         <select id = '${modelIndex}' class = 'selectForOrder'>
-                          <option value ="firstModel" `+ (modelIndex == "firstModel" ? `selected="selected"` : ``) + `>firstModel</option>
-                          <option value ="secondModel" `+ (modelIndex == "secondModel" ? `selected="selected"` : ``) + `>secondModel</option>
-                          <option value ="thirdModel" `+ (modelIndex == "thirdModel" ? `selected="selected"` : ``) + `>thirdModel</option>
-                          <option value ="fourthModel" `+ (modelIndex == "fourthModel" ? `selected="selected"` : ``) + `>fourthModel</option>
+                          <option ${poolSize<=0?disabled : nothing}  value ="firstModel" `+ (modelIndex == "firstModel" ? `selected="selected"` : ``) + `>firstModel</option>
+                          <option ${poolSize<=1?disabled : nothing} value ="secondModel" `+ (modelIndex == "secondModel" ? `selected="selected"` : ``) + `>secondModel</option>
+                          <option ${poolSize<=2?disabled : nothing} value ="thirdModel" `+ (modelIndex == "thirdModel" ? `selected="selected"` : ``) + `>thirdModel</option>
+                          <option ${poolSize<=3?disabled : nothing} value ="fourthModel" `+ (modelIndex == "fourthModel" ? `selected="selected"` : ``) + `>fourthModel</option>
                         </select>
                       </div>
                     </foreignObject>
