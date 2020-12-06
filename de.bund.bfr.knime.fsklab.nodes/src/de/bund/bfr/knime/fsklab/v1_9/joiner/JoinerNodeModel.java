@@ -34,10 +34,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.zip.ZipEntry;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.knime.base.data.xml.SvgCell;
@@ -688,17 +686,20 @@ public final class JoinerNodeModel
 
         outObj = createCombinedFskPortObject(jFirstInputPort, jSecondInputPort, jThirdInputPort,
             jFourthInputPort);
+       
+        if (!value.joinerModelsData.interactiveMode)
+          resetParameterIdForObjectsFromJSON(outObj, 0);
+
+        outObj = createCombinedFskPortObject(jFirstInputPort, jSecondInputPort, jThirdInputPort,
+            jFourthInputPort);
+        
         if (value.modelMetaData != null) {
           outObj.modelMetadata = MAPPER.readValue(value.modelMetaData,
               SwaggerUtil.modelClasses.get(firstInputPort.modelMetadata.getModelType()));
         } else {
           outObj.modelMetadata = jFirstInputPort.modelMetadata;
         }
-        if (!value.joinerModelsData.interactiveMode)
-          resetParameterIdForObjectsFromJSON(outObj, 0);
-
-        outObj = createCombinedFskPortObject(jFirstInputPort, jSecondInputPort, jThirdInputPort,
-            jFourthInputPort);
+        
         Map<String, List<String>> unModifiedParamsNames =
             getParameterMap(jFirstInputPort, jSecondInputPort, jThirdInputPort, jFourthInputPort);
 

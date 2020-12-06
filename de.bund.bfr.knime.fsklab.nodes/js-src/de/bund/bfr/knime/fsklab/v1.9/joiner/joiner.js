@@ -179,7 +179,6 @@ joiner = function () {
     if (parent.tableID) {
       _value.joinerModelsData.numberOfModels = 0;
       try {
-        console.log(_finalsimulationList);
         if (isValidModel(modelsPool.firstModel)) {
           modelsPool.firstModel['metadata']['modelMath']['parameter'] = _modelColectionWithoutSuffixedmap[modelsPool.firstModel['modelName']];
           _value.joinerModelsData.firstModel = [JSON.stringify(modelsPool.firstModel['metadata']), modelsPool.firstModel['modelScript'], modelsPool.firstModel['vis'], JSON.stringify(modelsPool.firstModel['simulation']), "[]", modelsPool.firstModel['Location'],modelsPool.firstModel['downloadURL'],modelsPool.firstModel['modelName']];
@@ -215,31 +214,75 @@ joiner = function () {
         
         _value.joinerModelsData.interactiveMode = true;
         _value.joinerModelsData.joinedSimulation = _finalsimulationList;
-        
-        fetch("http://localhost:"+_representation.servicePort+"/joinMetadata", {
-          method: "post",
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          },
+        if (modelsPool.firstModel['metadata'] && modelsPool.secondModel['metadata']) {
+          fetch("http://localhost:" + _representation.servicePort + "/joinMetadata", {
+            method: "post",
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
 
-          //make sure to serialize your JSON body
-          body: JSON.stringify([
-           modelsPool.firstModel['metadata'],
-           modelsPool.secondModel['metadata']
-          ])
-        })
-        .then((response) => response.text())
-        .then((responseText) => {
-          console.log(responseText);
-        })
-        .catch((error) => {
-            console.error(error);
-        });
+            //make sure to serialize your JSON body
+            body: JSON.stringify([
+              modelsPool.firstModel['metadata'],
+              modelsPool.secondModel['metadata']
+            ])
+          })
+            .then((response) => response.json())
+            .then((responseText) => {
+              if (modelsPool.thirdModel['metadata']) {
+                fetch("http://localhost:" + _representation.servicePort + "/joinMetadata", {
+                  method: "post",
+                  headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                  },
 
+                  //make sure to serialize your JSON body
+                  body: JSON.stringify([
+                    responseText,
+                    modelsPool.thirdModel['metadata']
+                  ])
+                })
+                  .then((response) => response.json())
+                  .then((responseText) => {
+                    if (modelsPool.fourthModel['metadata']) {
+                        fetch("http://localhost:" + _representation.servicePort + "/joinMetadata", {
+                          method: "post",
+                          headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                          },
 
-
-        
+                          //make sure to serialize your JSON body
+                          body: JSON.stringify([
+                            responseText,
+                            modelsPool.fourthModel['metadata']
+                          ])
+                        })
+                        .then((response) => response.json())
+                        .then((responseText) => {
+                          _value.modelMetaData = JSON.stringify(responseText);
+                        })
+                        .catch((error) => {
+                          console.error(error);
+                        });
+                    } else {
+                     _value.modelMetaData = JSON.stringify(responseText);
+                    }
+                  })
+                  .catch((error) => {
+                    console.error(error);
+                  });
+              }
+              else {
+                 _value.modelMetaData = JSON.stringify(responseText);
+              }
+            })
+            .catch((error) => {
+              console.error(error);
+            });
+        }
 
         _value.joinRelations.forEach((relation) => {
           delete relation.sourceModel;
@@ -270,7 +313,6 @@ joiner = function () {
 
   function editModelsPool(key, modelParameters, modelName, individualMetadata, modelType, modelScript, vis, Location, simulation, downloadURL) {
     _simulationMap[modelName] = { "selectedSimulation": "defaultSimulation", "simulationList":simulation };
-    console.log(_simulationMap[modelName]);
     updatesFinalSimulation();
     modelsPool[key]['modelScript'] = modelScript;
     modelsPool[key]['simulation'] = simulation;
@@ -526,7 +568,6 @@ joiner = function () {
       if (selectedSimulationName == 'All') {
         $.each(Object.keys(_simulationMap), function (ind1, modelNamex) {
           valueToBeSelected = modelNamex + '---All';
-          console.log($(`option[value='${valueToBeSelected}']`));
           $(`option[value='${valueToBeSelected}']`).attr('selected', 'selected');
         });
       }else{
@@ -536,7 +577,6 @@ joiner = function () {
           
           if($(`option[value='${valueToBeDeSelected}']`).attr('selected') == 'selected' && modelName != modelNamex ){
             $('#'+modelNamex+'_select').val(valueToBeSelected);
-            console.log($('#'+modelNamex+'_select'))
             //$(`option[value='${valueToBeSelected}']`).attr('selected', 'selected');
           }
         });
@@ -1066,7 +1106,6 @@ joiner = function () {
   */
   function createAtomic(x, y, width, height, modelName, inputs, outputs, modelIndex,simulations) {
     let simulationoption = ``;
-    console.log(poolSize);
     let disabled = 'disabled="disabled"';
     let nothing = '';
     simulations.forEach(sim => {
