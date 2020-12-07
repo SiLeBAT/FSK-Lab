@@ -1,6 +1,6 @@
 package metadata;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import java.io.File;
 import java.io.IOException;
 import org.junit.BeforeClass;
@@ -8,6 +8,9 @@ import org.junit.Test;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.threetenbp.ThreeTenModule;
+import de.bund.bfr.metadata.swagger.Model;
+import metadata.ConversionUtils.ModelClass;
 
 @SuppressWarnings("static-method")
 public class ConversionUtilsTest {
@@ -16,7 +19,7 @@ public class ConversionUtilsTest {
   
   @BeforeClass
   public static void doSetup() {
-    MAPPER = new ObjectMapper();
+    MAPPER = new ObjectMapper().registerModule(new ThreeTenModule());
   }
 
   @Test
@@ -27,9 +30,8 @@ public class ConversionUtilsTest {
     JsonNode inputMetadata = MAPPER.readTree(new File("files/metadata.json"));
 
     // It passes if no exceptions are thrown
-    JsonNode convertedMetadata = utils.convertModel(inputMetadata, "genericModel");
-    
-    assertEquals("genericModel", convertedMetadata.get("modelType").asText());
+    Model convertedModel = utils.convertModel(inputMetadata, ModelClass.genericModel);
+    assertEquals("genericModel", convertedModel.getModelType());
   }
   
   @Test
@@ -40,11 +42,9 @@ public class ConversionUtilsTest {
     JsonNode inputMetadata = MAPPER.readTree(new File("files/metadata.json"));
 
     // It passes if no exceptions are thrown
-    JsonNode convertedMetadata = utils.convertModel(inputMetadata, "dataModel");
-    
-    assertEquals("dataModel", convertedMetadata.get("modelType").asText());
+    Model convertedModel = utils.convertModel(inputMetadata, ModelClass.dataModel);
+    assertEquals("dataModel", convertedModel.getModelType());
   }
-  
   
   @Test
   public void testConvertModel_genericModel_toPredictiveModel() throws JsonProcessingException, IOException {
@@ -54,9 +54,8 @@ public class ConversionUtilsTest {
     JsonNode inputMetadata = MAPPER.readTree(new File("files/metadata.json"));
 
     // It passes if no exceptions are thrown
-    JsonNode convertedMetadata = utils.convertModel(inputMetadata, "predictiveModel");
-    
-    assertEquals("predictiveModel", convertedMetadata.get("modelType").asText());
+    Model convertedModel = utils.convertModel(inputMetadata, ModelClass.predictiveModel);
+    assertEquals("predictiveModel", convertedModel.getModelType());
   }
   
   @Test
@@ -67,9 +66,8 @@ public class ConversionUtilsTest {
     JsonNode inputMetadata = MAPPER.readTree(new File("files/metadata.json"));
 
     // It passes if no exceptions are thrown
-    JsonNode convertedMetadata = utils.convertModel(inputMetadata, "otherModel");
-    
-    assertEquals("otherModel", convertedMetadata.get("modelType").asText());
+    Model convertedModel = utils.convertModel(inputMetadata, ModelClass.otherModel);
+    assertEquals("otherModel", convertedModel.getModelType());
   }
   
   @Test
@@ -80,9 +78,8 @@ public class ConversionUtilsTest {
     JsonNode inputMetadata = MAPPER.readTree(new File("files/metadata.json"));
 
     // It passes if no exceptions are thrown
-    JsonNode convertedMetadata = utils.convertModel(inputMetadata, "exposureModel");
-    
-    assertEquals("exposureModel", convertedMetadata.get("modelType").asText());
+    Model convertedModel = utils.convertModel(inputMetadata, ModelClass.exposureModel);
+    assertEquals("exposureModel", convertedModel.getModelType());
   }
   
   @Test
@@ -93,11 +90,9 @@ public class ConversionUtilsTest {
     JsonNode inputMetadata = MAPPER.readTree(new File("files/metadata.json"));
 
     // It passes if no exceptions are thrown
-    JsonNode convertedMetadata = utils.convertModel(inputMetadata, "toxicologicalModel");
-    
-    assertEquals("toxicologicalModel", convertedMetadata.get("modelType").asText());
+    Model convertedModel = utils.convertModel(inputMetadata, ModelClass.toxicologicalModel);
+    assertEquals("toxicologicalModel", convertedModel.getModelType());
   }
-  
   
   @Test
   public void testConvertModel_genericModel_toProcessModel() throws JsonProcessingException, IOException {
@@ -107,9 +102,8 @@ public class ConversionUtilsTest {
     JsonNode inputMetadata = MAPPER.readTree(new File("files/metadata.json"));
 
     // It passes if no exceptions are thrown
-    JsonNode convertedMetadata = utils.convertModel(inputMetadata, "processModel");
-    
-    assertEquals("processModel", convertedMetadata.get("modelType").asText());
+    Model convertedModel = utils.convertModel(inputMetadata, ModelClass.processModel);
+    assertEquals("processModel", convertedModel.getModelType());
   }
   
   @Test
@@ -120,9 +114,8 @@ public class ConversionUtilsTest {
     JsonNode inputMetadata = MAPPER.readTree(new File("files/metadata.json"));
 
     // It passes if no exceptions are thrown
-    JsonNode convertedMetadata = utils.convertModel(inputMetadata, "consumptionModel");
-    
-    assertEquals("consumptionModel", convertedMetadata.get("modelType").asText());
+    Model convertedModel = utils.convertModel(inputMetadata, ModelClass.consumptionModel);
+    assertEquals("consumptionModel", convertedModel.getModelType());
   }
   
   @Test
@@ -133,9 +126,8 @@ public class ConversionUtilsTest {
     JsonNode inputMetadata = MAPPER.readTree(new File("files/metadata.json"));
 
     // It passes if no exceptions are thrown
-    JsonNode convertedMetadata = utils.convertModel(inputMetadata, "healthModel");
-    
-    assertEquals("healthModel", convertedMetadata.get("modelType").asText());
+    Model convertedModel = utils.convertModel(inputMetadata, ModelClass.healthModel);
+    assertEquals("healthModel", convertedModel.getModelType());
   }
   
   @Test
@@ -146,9 +138,8 @@ public class ConversionUtilsTest {
     JsonNode inputMetadata = MAPPER.readTree(new File("files/metadata.json"));
 
     // It passes if no exceptions are thrown
-    JsonNode convertedMetadata = utils.convertModel(inputMetadata, "riskModel");
-    
-    assertEquals("riskModel", convertedMetadata.get("modelType").asText());
+    Model convertedModel = utils.convertModel(inputMetadata, ModelClass.riskModel);
+    assertEquals("riskModel", convertedModel.getModelType());
   }
   
   @Test
@@ -159,9 +150,8 @@ public class ConversionUtilsTest {
     JsonNode inputMetadata = MAPPER.readTree(new File("files/metadata.json"));
 
     // It passes if no exceptions are thrown
-    JsonNode convertedMetadata = utils.convertModel(inputMetadata, "qraModel");
-    
-    assertEquals("qraModel", convertedMetadata.get("modelType").asText());
+    Model convertedModel = utils.convertModel(inputMetadata, ModelClass.qraModel);
+    assertEquals("qraModel", convertedModel.getModelType());
   }
   
   @Test
@@ -172,8 +162,7 @@ public class ConversionUtilsTest {
     JsonNode inputMetadata = MAPPER.readTree(new File("files/metadata.json"));
 
     // It passes if no exceptions are thrown
-    JsonNode joined = utils.joinModels(inputMetadata, inputMetadata, "genericModel");
-    
-    assertEquals("genericModel", joined.get("modelType").asText());
+    Model joined = utils.joinModels(inputMetadata, inputMetadata, ModelClass.genericModel);
+    assertEquals("genericModel", joined.getModelType());
   }
 }

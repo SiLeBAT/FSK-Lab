@@ -3,20 +3,31 @@ package metadata;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
 import org.apache.commons.lang3.StringUtils;
 import org.yaml.snakeyaml.Yaml;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.datatype.threetenbp.ThreeTenModule;
+import de.bund.bfr.metadata.swagger.ConsumptionModel;
+import de.bund.bfr.metadata.swagger.DataModel;
+import de.bund.bfr.metadata.swagger.DoseResponseModel;
+import de.bund.bfr.metadata.swagger.ExposureModel;
+import de.bund.bfr.metadata.swagger.GenericModel;
+import de.bund.bfr.metadata.swagger.HealthModel;
+import de.bund.bfr.metadata.swagger.Model;
+import de.bund.bfr.metadata.swagger.OtherModel;
+import de.bund.bfr.metadata.swagger.PredictiveModel;
+import de.bund.bfr.metadata.swagger.ProcessModel;
+import de.bund.bfr.metadata.swagger.QraModel;
+import de.bund.bfr.metadata.swagger.RiskModel;
+import de.bund.bfr.metadata.swagger.ToxicologicalModel;
 
 
 @SuppressWarnings("unchecked")
@@ -26,10 +37,42 @@ public class ConversionUtils {
 			.registerModule(new ThreeTenModule());
 
 	/** Definitions in Swagger YAML. */
-	private final Map<String, Object> definitions;
-
-	/** Mapping of model keys to Swagger definitions. */
-	private final Map<String, Object> modelMapping;
+	private static final Map<String, Object> definitions;
+	static {
+	     Yaml yaml = new Yaml();
+	     try (InputStream stream = ConversionUtils.class.getClassLoader().getResourceAsStream("model.yaml")) {
+	       Map<String, Object> yamlContent = yaml.load(stream);
+	       definitions = (Map<String, Object>) yamlContent.get("definitions");
+	     } catch (IOException err) {
+	       throw new IllegalArgumentException(err);
+	     }
+	}
+	
+    public enum ModelClass {
+      genericModel(GenericModel.class, definitions.get("GenericModel")),
+      dataModel(DataModel.class, definitions.get("DataModel")),
+      predictiveModel(PredictiveModel.class, definitions.get("PredictiveModel")),
+      otherModel(OtherModel.class, definitions.get("OtherModel")),
+      exposureModel(ExposureModel.class, definitions.get("ExposureModel")),
+      toxicologicalModel(ToxicologicalModel.class, definitions.get("ToxicologicalModel")),
+      doseResponseModel(DoseResponseModel.class, definitions.get("DoseResponseModel")),
+      processModel(ProcessModel.class, definitions.get("ProcessModel")),
+      consumptionModel(ConsumptionModel.class, definitions.get("ConsumptionModel")),
+      healthModel(HealthModel.class, definitions.get("HealthModel")),
+      riskModel(RiskModel.class, definitions.get("RiskModel")),
+      qraModel(QraModel.class, definitions.get("QraModel")),
+      
+      // TODO: workaround for old models
+      GenericModel(GenericModel.class, definitions.get("GenericModel"));
+      
+      public final Class<? extends Model> javaClass;
+      public final Map<String, Object> swaggerDefinition;
+      
+      private ModelClass(Class<? extends Model> javaClass, Object swaggerDefinition) {
+        this.javaClass = javaClass;
+        this.swaggerDefinition = (Map<String, Object>) swaggerDefinition;
+      }
+    }
 
 	// Top components keys
 	private static final String GENERAL_INFORMATION = "generalInformation";
@@ -44,38 +87,15 @@ public class ConversionUtils {
 
 	public ConversionUtils() {
 
-		Yaml yaml = new Yaml();
-		try (InputStream stream = getClass().getClassLoader().getResourceAsStream("model.yaml")) {
-			Map<String, Object> yamlContent = yaml.load(stream);
-			definitions = (Map<String, Object>) yamlContent.get("definitions");
-		} catch (IOException err) {
-			throw new IllegalArgumentException(err);
-		}
-
-		// Initialize model mapping
-		modelMapping = new HashMap<>();
-		modelMapping.put("genericModel", definitions.get("GenericModel"));
-		modelMapping.put("dataModel", definitions.get("DataModel"));
-		modelMapping.put("predictiveModel", definitions.get("PredictiveModel"));
-		modelMapping.put("otherModel", definitions.get("OtherModel"));
-		modelMapping.put("exposureModel", definitions.get("ExposureModel"));
-		modelMapping.put("toxicologicalModel", definitions.get("ToxicologicalModel"));
-		modelMapping.put("doseResponseModel", definitions.get("DoseResponseModel"));
-		modelMapping.put("processModel", definitions.get("ProcessModel"));
-		modelMapping.put("consumptionModel", definitions.get("ConsumptionModel"));
-		modelMapping.put("healthModel", definitions.get("HealthModel"));
-		modelMapping.put("riskModel", definitions.get("RiskModel"));
-		modelMapping.put("qraModel", definitions.get("QraModel"));
-		
 		// TODO: workaround for old models
-		modelMapping.put("GenericModel", definitions.get("GenericModel"));
+		// modelMapping.put("GenericModel", definitions.get("GenericModel"));
 	}
 
-	public JsonNode convertModel(JsonNode originalMetadata, String targetClass) {
+	public Model convertModel(JsonNode originalMetadata, ModelClass targetClass) throws JsonProcessingException {
 
 		String originalClass = originalMetadata.get("modelType").textValue();
-		Map<String, Object> originalModelClass = (Map<String, Object>) modelMapping.get(originalClass);
-		Map<String, Object> targetModelClass = (Map<String, Object>) modelMapping.get(targetClass);
+		Map<String, Object> originalModelClass = ModelClass.valueOf(originalClass).swaggerDefinition;
+		Map<String, Object> targetModelClass = targetClass.swaggerDefinition;
 
 		// Every model class is an Swagger object with properties (2nd object of allOf):
 		// GENERAL_INFORMATION, SCOPE, DATA_BACKGROUND and MODEL_MATH
@@ -104,24 +124,24 @@ public class ConversionUtils {
 				(Map<String, Object>) targetTopComponents.get(MODEL_MATH));
 
 		ObjectNode convertedMetadata = MAPPER.createObjectNode();
-		convertedMetadata.put("modelType", targetClass);
+		convertedMetadata.put("modelType", targetClass.name());
 		convertedMetadata.set(GENERAL_INFORMATION, generalInformationNode);
 		convertedMetadata.set(SCOPE, scopeNode);
 		convertedMetadata.set(DATA_BACKGROUND, backgroundNode);
 		convertedMetadata.set(MODEL_MATH, mathNode);
-
-		return convertedMetadata;
+		
+		return MAPPER.treeToValue(convertedMetadata, targetClass.javaClass);
 	}
 
-	public JsonNode joinModels(JsonNode modelA, JsonNode modelB, String targetModelType) {
+	public Model joinModels(JsonNode modelA, JsonNode modelB, ModelClass targetModelType) throws JsonProcessingException {
 
 		String modelAType = modelA.get("modelType").textValue();
-		Map<String, Object> modelAClass = (Map<String, Object>) modelMapping.get(modelAType);
+		Map<String, Object> modelAClass = ModelClass.valueOf(modelAType).swaggerDefinition;
 
 		String modelBType = modelB.get("modelType").textValue();
-		Map<String, Object> modelBClass = (Map<String, Object>) modelMapping.get(modelBType);
+		Map<String, Object> modelBClass = ModelClass.valueOf(modelBType).swaggerDefinition;
 
-		Map<String, Object> targetModelClass = (Map<String, Object>) modelMapping.get(targetModelType);
+		Map<String, Object> targetModelClass = targetModelType.swaggerDefinition;
 
 		// Get top components
 		List<Object> allOf = (List<Object>) modelAClass.get("allOf");
@@ -152,13 +172,13 @@ public class ConversionUtils {
 				(Map<String, Object>) targetTopComponents.get(MODEL_MATH));
 
 		ObjectNode joinedNode = MAPPER.createObjectNode();
-		joinedNode.put("modelType", targetModelType);
+		joinedNode.put("modelType", targetModelType.name());
 		joinedNode.set(GENERAL_INFORMATION, generalInformationNode);
 		joinedNode.set(SCOPE, scopeNode);
 		joinedNode.set(DATA_BACKGROUND, backgroundNode);
 		joinedNode.set(MODEL_MATH, mathNode);
 
-		return joinedNode;
+		return MAPPER.treeToValue(joinedNode, targetModelType.javaClass);
 	}
 
 	private JsonNode convert(JsonNode originalMetadata, Map<String, Object> originalClass,
