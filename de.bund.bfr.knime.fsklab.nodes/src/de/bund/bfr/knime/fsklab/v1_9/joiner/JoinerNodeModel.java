@@ -855,13 +855,21 @@ public final class JoinerNodeModel
         "", ""};
   }
 
-  @SuppressWarnings("resource")
+  
   private static void downloadFile(URL url, String fileName) throws IOException {
     ReadableByteChannel readableByteChannel = Channels.newChannel(url.openStream());
-    FileOutputStream fileOutputStream = new FileOutputStream(fileName);
-    fileOutputStream.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
+    try(FileOutputStream fileOutputStream = new FileOutputStream(fileName)){
+      fileOutputStream.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
+    }
   }
-
+  /**
+   * 
+   * @param manager
+   * @param model array of strings [Metadata JSON string, Model script, Model visualization script, Simulation list, Libraries, Environment location, File download's URL, Model Name  ]
+   * @param modelType used to deserialize the model metadata
+   * @return
+   * @throws IOException
+   */
   private static FskPortObject getFSKObjectFromStringArray(Optional<EnvironmentManager> manager,
       String[] model, String modelType) throws IOException {
     FskPortObject portObject = null;
@@ -885,7 +893,6 @@ public final class JoinerNodeModel
             MAPPER.readValue(model[4], new TypeReference<List<String>>() {}));
       }
       portObject.simulations.clear();
-      // portObject.packages.clear();
       portObject.simulations
           .addAll(MAPPER.readValue(model[3], new TypeReference<List<FskSimulation>>() {}));
     }
