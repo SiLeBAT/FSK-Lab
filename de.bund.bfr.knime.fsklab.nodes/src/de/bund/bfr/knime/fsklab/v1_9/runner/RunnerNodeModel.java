@@ -431,6 +431,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
 
       for (final String line : output) {
         if (line.startsWith(ScriptExecutor.ERROR_PREFIX)) {
+          LOGGER.error(line);
           throw new RException(line, null);
         }
        
@@ -438,6 +439,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
       }
       // error output message for python:
       if (handler instanceof PythonScriptHandler  ) {
+        LOGGER.error(handler.getStdErr());
         throw new Exception(handler.getStdErr(),null);
       }
     }
