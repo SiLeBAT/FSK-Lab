@@ -382,7 +382,7 @@ joiner = function () {
   }
   /**
    * Afunction to generate the list of simulation for the joined Object
-   * @param {*} selectedSimulationName wich could be an 'All' which means mearge all simulation from all models.
+   * @param {*} selectedSimulationName which could be an 'All' which means cross-merge all simulation from all models.
    */
   function updatesFinalSimulation(selectedSimulationName) {
     _finalsimulationList=[];

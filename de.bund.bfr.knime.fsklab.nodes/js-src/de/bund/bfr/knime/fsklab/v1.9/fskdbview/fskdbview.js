@@ -39,7 +39,7 @@ fskdbview = function () {
                 }
         });
         window.selectedModels[modelIndex]=modelMetaDatax.changeSet.added[0];
-        knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c21joiner' , [window.selectedModels],{elements:[]});
+        knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c21joiner' , [window.selectedModels, window.downloadURs],{elements:[]});
     }
                                
     view.init = function (representation, value) { 
@@ -510,7 +510,6 @@ fskdbview = function () {
                     //fetch scripts
                     if(_lazySriptsfetching){
                         const modelscript =  fetch(_globalVars.modelscriptEndpoint + selectedBox);
-                        console.log(modelscript);
                         modelscript.then(function(response) {
                             return response.text();
                         }).then(function(data) {
@@ -876,6 +875,7 @@ fskdbview = function () {
                     return responsevis.text();
                 }).then(function(datavis) {
                     selectedModel['visualization'] = datavis; // this will be a string
+                    window.downloadURs.push(_globalVars.downloadEndpoint+modelIndex);
                     knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c215846e1' , [selectedModel],{elements:[]}) 
                 });
             });
@@ -942,7 +942,6 @@ fskdbview = function () {
                 }
             }
             //postTableBuilt(_representation.table.rows);
-            console.log(parent.tableID);
             return j;
         }
     }
