@@ -21,7 +21,6 @@ package de.bund.bfr.knime.fsklab.v1_9.runner;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -48,6 +47,7 @@ import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.image.ImagePortObject;
 import org.knime.core.node.port.image.ImagePortObjectSpec;
 import org.knime.core.util.FileUtil;
+import de.bund.bfr.knime.fsklab.nodes.PythonScriptHandler;
 import de.bund.bfr.knime.fsklab.nodes.ScriptHandler;
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
 import de.bund.bfr.knime.fsklab.r.client.ScriptExecutor;
@@ -431,8 +431,16 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
 
       for (final String line : output) {
         if (line.startsWith(ScriptExecutor.ERROR_PREFIX)) {
+          LOGGER.error(line);
           throw new RException(line, null);
         }
+       
+        
+      }
+      // error output message for python:
+      if (handler instanceof PythonScriptHandler  ) {
+        LOGGER.error(handler.getStdErr());
+        throw new Exception(handler.getStdErr(),null);
       }
     }
 

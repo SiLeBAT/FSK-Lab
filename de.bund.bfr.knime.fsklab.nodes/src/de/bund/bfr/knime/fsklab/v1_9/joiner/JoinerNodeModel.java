@@ -441,6 +441,7 @@ public final class JoinerNodeModel
     JoinerViewValue viewValue = getViewValue();
     viewValue.joinRelations = nodeSettings.connections;
     viewValue.modelScriptTree = sourceTree;
+    viewValue.modelMetaData = nodeSettings.modelMetaData;
     JoinerViewRepresentation representation = getViewRepresentation();
     if (nodeSettings.firstModelParameters != null) {
       representation.setFirstModelParameters(nodeSettings.firstModelParameters);
