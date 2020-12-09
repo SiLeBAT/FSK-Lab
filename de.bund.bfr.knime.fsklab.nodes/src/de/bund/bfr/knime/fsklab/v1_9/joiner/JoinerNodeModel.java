@@ -54,6 +54,8 @@ import org.knime.core.node.web.ValidationError;
 import org.knime.core.node.workflow.FlowVariable;
 import org.knime.core.node.workflow.NodeContainer;
 import org.knime.core.node.workflow.NodeContext;
+import org.knime.core.node.workflow.WorkflowContext;
+import org.knime.core.node.workflow.WorkflowManager;
 import org.knime.js.core.node.AbstractSVGWizardNodeModel;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -855,12 +857,30 @@ public final class JoinerNodeModel
         "", ""};
   }
 
-  
+  /**
+   * 
+   * @param url of the remote resource to be downloaded.
+   * @param fileName the name of the file to be created.
+   * @throws IOException
+   */
   private static void downloadFile(URL url, String fileName) throws IOException {
     ReadableByteChannel readableByteChannel = Channels.newChannel(url.openStream());
     try(FileOutputStream fileOutputStream = new FileOutputStream(fileName)){
       fileOutputStream.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
     }
+  }
+  
+  /**
+   * 
+   * @return the path to .fsk folder in the hosting workflow and create it if not exist.
+   */
+  private static String getFSKDirectoryPath() {
+    WorkflowContext workflowContext = NodeContext.getContext().getWorkflowManager().getContext();
+    File fskWorkingDirectory =
+        new File(workflowContext.getCurrentLocation(),".fsk");
+    if(!fskWorkingDirectory.exists())
+      fskWorkingDirectory.mkdir();
+    return fskWorkingDirectory.getAbsolutePath();
   }
   /**
    * 
@@ -874,8 +894,11 @@ public final class JoinerNodeModel
       String[] model, String modelType) throws IOException {
     FskPortObject portObject = null;
     if (StringUtils.isNotEmpty(model[6])) {
-      String fileZip = System.getProperty("user.home") +File.separator+ model[7] + ".fskx";
-      downloadFile(new URL(model[6]), fileZip);
+      String fileZip = getFSKDirectoryPath() +File.separator+ model[7] + ".fskx";
+      File f = new File(fileZip);
+      if(!f.exists()) { 
+        downloadFile(new URL(model[6]), fileZip);
+      }
       try {
         portObject = ReaderNodeUtil.readArchive(new File(fileZip));
       } catch (Exception e) {

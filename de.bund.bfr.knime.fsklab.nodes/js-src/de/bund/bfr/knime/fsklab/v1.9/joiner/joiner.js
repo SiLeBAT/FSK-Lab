@@ -97,9 +97,18 @@ joiner = function () {
 
     return oldNewParamNames;
   }
+  function cleanUp(){
+    modelsPool = {
+      firstModel: {},
+      secondModel: {},
+      thirdModel: {},
+      fourthModel: {}
+    }
+  }
   let selectionChanged = function (modelMetaData) {
-    poolSize++;
+    cleanUp();
     let _modelColectionSuffixed =  addSuffixToParameters(JSON.parse(JSON.stringify(modelMetaData.changeSet.added[0])));
+    poolSize =_modelColectionSuffixed.length;
     let keys = ['firstModel','secondModel','thirdModel','fourthModel']; 
     $.each(_modelColectionSuffixed,function(index,selectedModel){
       _modelsParamsOriginalNames[selectedModel.generalInformation.name] = buildOldNewParamName(_modelColectionSuffixed[index].modelMath.parameter, modelMetaData.changeSet.added[0][index].modelMath.parameter);
@@ -108,7 +117,7 @@ joiner = function () {
       delete _modelColectionSuffixed[index]['visualization'];
       delete _modelColectionSuffixed[index]['Location'];
       delete _modelColectionSuffixed[index]['simulation'];
-
+      console.log(_modelColectionSuffixed);
       editModelsPool(keys[index], _modelColectionSuffixed[index].modelMath.parameter, selectedModel.generalInformation.name, _modelColectionSuffixed[index], selectedModel.modelType 
                     ,JSON.stringify(modelMetaData.changeSet.added[0][index]['modelscript'])
                     ,JSON.stringify(modelMetaData.changeSet.added[0][index]['visualization'])
