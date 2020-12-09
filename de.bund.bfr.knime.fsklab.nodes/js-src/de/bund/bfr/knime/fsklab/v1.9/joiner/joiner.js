@@ -117,7 +117,6 @@ joiner = function () {
       delete _modelColectionSuffixed[index]['visualization'];
       delete _modelColectionSuffixed[index]['Location'];
       delete _modelColectionSuffixed[index]['simulation'];
-      console.log(_modelColectionSuffixed);
       editModelsPool(keys[index], _modelColectionSuffixed[index].modelMath.parameter, selectedModel.generalInformation.name, _modelColectionSuffixed[index], selectedModel.modelType 
                     ,JSON.stringify(modelMetaData.changeSet.added[0][index]['modelscript'])
                     ,JSON.stringify(modelMetaData.changeSet.added[0][index]['visualization'])
