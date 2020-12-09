@@ -19,7 +19,11 @@
 package de.bund.bfr.knime.fsklab.v1_9.joiner;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -65,6 +69,7 @@ import de.bund.bfr.knime.fsklab.v1_9.FskPortObject;
 import de.bund.bfr.knime.fsklab.v1_9.FskSimulation;
 import de.bund.bfr.knime.fsklab.v1_9.JoinRelation;
 import de.bund.bfr.knime.fsklab.v1_9.editor.FSKEditorJSNodeDialog.ModelType;
+import de.bund.bfr.knime.fsklab.v1_9.reader.ReaderNodeUtil;
 import de.bund.bfr.metadata.swagger.Parameter;
 import metadata.SwaggerUtil;
 
@@ -681,17 +686,20 @@ public final class JoinerNodeModel
 
         outObj = createCombinedFskPortObject(jFirstInputPort, jSecondInputPort, jThirdInputPort,
             jFourthInputPort);
+       
+        if (!value.joinerModelsData.interactiveMode)
+          resetParameterIdForObjectsFromJSON(outObj, 0);
+
+        outObj = createCombinedFskPortObject(jFirstInputPort, jSecondInputPort, jThirdInputPort,
+            jFourthInputPort);
+        
         if (value.modelMetaData != null) {
           outObj.modelMetadata = MAPPER.readValue(value.modelMetaData,
               SwaggerUtil.modelClasses.get(firstInputPort.modelMetadata.getModelType()));
         } else {
           outObj.modelMetadata = jFirstInputPort.modelMetadata;
         }
-        if (!value.joinerModelsData.interactiveMode)
-          resetParameterIdForObjectsFromJSON(outObj, 0);
-
-        outObj = createCombinedFskPortObject(jFirstInputPort, jSecondInputPort, jThirdInputPort,
-            jFourthInputPort);
+        
         Map<String, List<String>> unModifiedParamsNames =
             getParameterMap(jFirstInputPort, jSecondInputPort, jThirdInputPort, jFourthInputPort);
 
@@ -844,21 +852,49 @@ public final class JoinerNodeModel
     return new String[] {getObjectAsJSONString(portObject.modelMetadata),
         getObjectAsJSONString(portObject.getModel()), getObjectAsJSONString(portObject.getViz()),
         getObjectAsJSONString(portObject.simulations), getObjectAsJSONString(portObject.packages),
-        ""};
+        "", ""};
   }
 
+  
+  private static void downloadFile(URL url, String fileName) throws IOException {
+    ReadableByteChannel readableByteChannel = Channels.newChannel(url.openStream());
+    try(FileOutputStream fileOutputStream = new FileOutputStream(fileName)){
+      fileOutputStream.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
+    }
+  }
+  /**
+   * 
+   * @param manager
+   * @param model array of strings [Metadata JSON string, Model script, Model visualization script, Simulation list, Libraries, Environment location, File download's URL, Model Name  ]
+   * @param modelType used to deserialize the model metadata
+   * @return
+   * @throws IOException
+   */
   private static FskPortObject getFSKObjectFromStringArray(Optional<EnvironmentManager> manager,
-      String[] model, String modelType)
-      throws IOException {
-    FskPortObject portObject;
-    if (!manager.isPresent() && StringUtils.isNotBlank(model[5]))
-      portObject = new FskPortObject(
-          Optional.of(new ExistingEnvironmentManager(MAPPER.readValue(model[5], String.class))), "",
-          MAPPER.readValue(model[4], new TypeReference<List<String>>() {}));
+      String[] model, String modelType) throws IOException {
+    FskPortObject portObject = null;
+    if (StringUtils.isNotEmpty(model[6])) {
+      String fileZip = System.getProperty("user.home") +File.separator+ model[7] + ".fskx";
+      downloadFile(new URL(model[6]), fileZip);
+      try {
+        portObject = ReaderNodeUtil.readArchive(new File(fileZip));
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
+    if (portObject == null) {
+      if (!manager.isPresent() && StringUtils.isNotBlank(model[5]))
+        portObject = new FskPortObject(
+            Optional.of(new ExistingEnvironmentManager(MAPPER.readValue(model[5], String.class))),
+            "", MAPPER.readValue(model[4], new TypeReference<List<String>>() {}));
 
-    else {
-      portObject = new FskPortObject(manager, "",
-          MAPPER.readValue(model[4], new TypeReference<List<String>>() {}));
+      else {
+        portObject = new FskPortObject(manager, "",
+            MAPPER.readValue(model[4], new TypeReference<List<String>>() {}));
+      }
+      portObject.simulations.clear();
+      portObject.simulations
+          .addAll(MAPPER.readValue(model[3], new TypeReference<List<FskSimulation>>() {}));
     }
 
 
@@ -868,10 +904,7 @@ public final class JoinerNodeModel
     if (StringUtils.isNotEmpty(model[2]))
       portObject.setViz(MAPPER.readValue(model[2], String.class));
 
-    portObject.simulations.clear();
-    portObject.packages.clear();
-    portObject.simulations
-        .addAll(MAPPER.readValue(model[3], new TypeReference<List<FskSimulation>>() {}));
+
 
     return portObject;
   }

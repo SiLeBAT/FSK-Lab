@@ -17,11 +17,13 @@ fskeditorjs = function () {
   var _visualizationCodeMirror;
   var _readmeCodeMirror;
   var _location;
+  var _simulation;
 
   let handler;
   let selectionChanged = function (modelMetaData) {	
     let selectedModel = modelMetaData.changeSet.added[0];
     _location = selectedModel.Location;
+    _simulation = selectedModel.simulation;
     extractAndCreateUI(JSON.stringify(selectedModel));
     $('#modelScriptArea').val(selectedModel.modelscript);
     _modelCodeMirror.refresh();
@@ -39,7 +41,17 @@ fskeditorjs = function () {
   }
   window.doSave = function(){
     let _metadatax = JSON.parse(JSON.stringify(handler.metaData));
+    _metadatax.modelMath.parameter.forEach(param => {
+      if(param.classification != "OUTPUT"){ 
+        _simulation.forEach(simulation => {
+            if(Object.keys(simulation.parameters).indexOf(param.id) < 0){
+              simulation.parameters[param.id] = param.value;
+            }
+        });
+      }
+    });
     _metadatax.Location =_location;
+    _metadatax.simulation =_simulation;
     _metadatax.modelscript= _modelCodeMirror ? _modelCodeMirror.getValue() : _val.modelScript;
     _metadatax.visualization = _visualizationCodeMirror ? _visualizationCodeMirror.getValue() : _val.visualizationScript;
     //let metaDataString = JSON.stringify(_metadatax);

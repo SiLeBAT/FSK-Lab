@@ -401,8 +401,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
         if (originalOutputParameters.containsKey(joinRelation.getSourceParam())) {
           // replace join command with unique identifier of parameter
           String command_new = joinRelation.getCommand().replaceAll("\\[([^<]*)\\]",
-              originalOutputParameters.get(joinRelation.getSourceParam()));
-          String target = "";
+              joinRelation.getSourceParam());
           for (Parameter param : SwaggerUtil.getParameter(seconFskPortObject.modelMetadata)) {
             if (joinRelation.getTargetParam().startsWith(param.getId())) {
               fskSimulation.getParameters().put(param.getId(), command_new);
