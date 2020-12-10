@@ -55,6 +55,7 @@ import org.knime.core.node.workflow.FlowVariable;
 import org.knime.core.node.workflow.NodeContainer;
 import org.knime.core.node.workflow.NodeContext;
 import org.knime.core.node.workflow.WorkflowContext;
+import org.knime.core.util.FileUtil;
 import org.knime.js.core.node.AbstractSVGWizardNodeModel;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -871,18 +872,6 @@ public final class JoinerNodeModel
   
   /**
    * 
-   * @return the path to .fsk folder in the hosting workflow and create it if not exist.
-   */
-  private static String getFSKDirectoryPath() {
-    WorkflowContext workflowContext = NodeContext.getContext().getWorkflowManager().getContext();
-    File fskWorkingDirectory =
-        new File(workflowContext.getCurrentLocation(),".fsk");
-    if(!fskWorkingDirectory.exists())
-      fskWorkingDirectory.mkdir();
-    return fskWorkingDirectory.getAbsolutePath();
-  }
-  /**
-   * 
    * @param manager
    * @param model array of strings [Metadata JSON string, Model script, Model visualization script, Simulation list, Libraries, Environment location, File download's URL, Model Name  ]
    * @param modelType used to deserialize the model metadata
@@ -893,7 +882,7 @@ public final class JoinerNodeModel
       String[] model, String modelType) throws IOException {
     FskPortObject portObject = null;
     if (StringUtils.isNotEmpty(model[6])) {
-      String fileZip = getFSKDirectoryPath() +File.separator+ model[7] + ".fskx";
+      String fileZip = FileUtil.getWorkflowTempDir() +File.separator+ model[7] + ".fskx";
       File f = new File(fileZip);
       if(!f.exists()) { 
         downloadFile(new URL(model[6]), fileZip);
