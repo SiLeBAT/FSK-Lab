@@ -548,7 +548,8 @@ fskdbview = function () {
                     _value.selection = _value.selection.filter(function (value, index, arr) {
                         return value != selectedBox;
                     });
-                };
+                    knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c21joiner' , [window.selectedModels,window.downloadURs],{elements:[]});
+                }
 
             });
         });
