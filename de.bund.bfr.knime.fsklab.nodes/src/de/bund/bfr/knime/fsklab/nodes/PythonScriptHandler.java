@@ -25,6 +25,11 @@ public class PythonScriptHandler extends ScriptHandler {
 
     PythonKernelOptions m_kernelOptions = new PythonKernelOptions();
     controller = new PythonKernel(m_kernelOptions);
+    
+    // set up backend (rendering engine) for matplotlib for image handling:
+    controller.execute("import matplotlib");
+    controller.execute("matplotlib.use('Agg')");
+    
     // Currently only PythonPlotter is assigned as it is the only available for Python
     this.plotter = new PythonPlotter(controller);
   }
