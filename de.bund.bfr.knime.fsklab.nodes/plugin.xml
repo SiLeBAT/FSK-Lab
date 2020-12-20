@@ -121,7 +121,8 @@
        <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/v1.9/simulator/jssimulator.js" type="JAVASCRIPT" />
        <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/v1.9/simulator/jssimulator.css" type="CSS" />
 
-       <webDependency webResourceBundleID="bootstrap_3.3.6"></webDependency>
+       <webDependency webResourceBundleID="jQuery_3.3.1" />
+	   <webDependency webResourceBundleID="app_1.0.0" />
      </webResourceBundle>
      
 	 <!-- JS and CSS for editor -->
@@ -178,8 +179,8 @@
          relativePathTarget="js-src/de/bund/bfr/knime/fsklab/v1.9/fskdbview" />	   
 	   <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/v1.9/fskdbview/fskdbview.css" type="CSS" />
 	   <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/v1.9/fskdbview/fskdbview.js" type="JAVASCRIPT" />
-	   
-       <webDependency webResourceBundleID="bootstrap_3.3.6"/>
+	   <webDependency webResourceBundleID="jQuery_3.3.1" />
+	   <webDependency webResourceBundleID="app_1.0.0" />
 	 </webResourceBundle>
 
   </extension>
