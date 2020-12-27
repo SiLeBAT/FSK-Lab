@@ -15042,6 +15042,7 @@ form {
   display: none; }
 
 .table .td-actions {
+  position: relative;
   position: sticky;
   right: 0;
   width: 3.75rem;
@@ -15177,13 +15178,19 @@ form {
   left: 0; }
 
 .modal-details .tab-pane {
-  overflow: auto; }
+  overflow: auto;
+  -webkit-overflow-scrolling: touch; }
 
 .modal-details .panel-plot {
   padding: 1.5rem 1.25rem; }
   @media (max-width: 767.98px) {
     .modal-details .panel-plot {
       padding: 1rem 1rem; } }
+  .modal-details .panel-plot .figure {
+    width: 100%; }
+    .modal-details .panel-plot .figure img,
+    .modal-details .panel-plot .figure svg {
+      max-width: 100%; }
 
 @media (min-width: 576px) {
   .modal-sim .modal-content {
@@ -15259,7 +15266,8 @@ form {
               flex: 1 0 0; } }
   .modal-sim .sim-execution .tab-content,
   .modal-sim .sim-params .tab-content {
-    overflow-y: auto; }
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch; }
 
 @media (max-width: 575.98px) {
   .modal-sim .sim-param-actions {

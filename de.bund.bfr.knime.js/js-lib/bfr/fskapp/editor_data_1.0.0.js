@@ -10,7 +10,7 @@ const ui = {
         "label": "Source",
         "type": "text",
         "description": "A source from which the model/data is derived",
-        "vocabulary": "Source"
+        "vocabulary": "source"
     }, {
         "id": "identifier",
         "label": "Identifier",
@@ -21,26 +21,26 @@ const ui = {
         "id": "creationDate",
         "label": "Creation date",
         "type": "date",
-        "description": "Creation date/time of the FSK file",
+        "description": "Creation date/time of the FSKX file",
         "required": true
     }, {
         "id": "modificationDate",
         "label": "Modification date",
         "type": "date-array",
-        "description": "Date/time of the last version of the FSK file"
+        "description": "Date/time of the last version of the FSKX file"
     }, {
         "id": "rights",
         "label": "Rights",
         "type": "text",
-        "description": "Rights granted for usage, distribution and modification of this FSK file",
-        "vocabulary": "Rights",
+        "description": "Rights granted for usage, distribution and modification of this FSKX file",
+        "vocabulary": "right",
         "required": true
     }, {
         "id": "availability",
         "label": "Availability",
         "type": "text",
         "description": "Availability of data or model, i.e. if the annotated model code / data is included in this FSK file",
-        "vocabulary": "Availability"
+        "vocabulary": "availability"
     }, {
         "id": "url",
         "label": "URL",
@@ -51,40 +51,40 @@ const ui = {
         "label": "Format",
         "type": "text",
         "description": "File extension of the model or data file (including version number of format if applicable)",
-        "vocabulary": "Format"
+        "vocabulary": "format"
     }, {
         "id": "language",
         "label": "Language",
         "type": "text",
         "description": "A language of the resource (some data or reports can be available in French language for example)",
-        "vocabulary": "Language"
+        "vocabulary": "language"
     }, {
         "id": "software",
         "label": "Software",
         "type": "text",
         "description": "The program or software language in which the model has been implemented",
-        "vocabulary": "Software"
+        "vocabulary": "software"
     }, {
         "id": "languageWrittenIn",
         "label": "Language written in",
         "type": "text",
         "description": "Software language used to write the model, e.g. R or MatLab",
-        "vocabulary": "Language_written_in"
+        "vocabulary": "language_written_in"
     }, {
         "id": "status",
         "label": "Status",
         "type": "text",
         "description": "The curation status of the model",
-        "vocabulary": "Status"
+        "vocabulary": "status"
     }, {
         "id": "objective",
         "label": "Objective",
-        "type": "text",
+        "type": "long-text",
         "description": "Objective of the model or data"
     }, {
         "id": "description",
         "label": "Description",
-        "type": "text",
+        "type": "long-text",
         "description": "General description of the study, data or model"
     }],
     "modelCategory": [{
@@ -92,25 +92,25 @@ const ui = {
         "label": "Model class",
         "type": "enum",
         "description": "Type of model according to RAKIP classification",
-        "vocabulary": "Model_Class",
+        "vocabulary": "model_class",
         "required": true
     }, {
         "id": "modelClassComment",
         "label": "Comment",
-        "type": "text",
+        "type": "long-text",
         "description": ""
     }, {
         "id": "modelSubClass",
         "label": "Subclass",
         "type": "text-array",
         "description": "Sub-cassification of the model given the Model Class",
-        "vocabulary": "Model_Sub_Class"
+        "vocabulary": "model_subclass"
     }, {
         "id": "basicProcess",
         "label": "Basic process",
         "type": "text-array",
         "description": "Defines the impact of the process on the hazard (so far only valid for process models and predictive models)",
-        "vocabulary": "Basic_process"
+        "vocabulary": "basic_process"
     }],
     "contact": [{
         "id": "title",
@@ -120,17 +120,17 @@ const ui = {
     }, {
         "id": "familyName",
         "label": "Family name",
-        "type": "text",
+        "type": "long-text",
         "description": "Family name or surname."
     }, {
         "id": "givenName",
         "label": "Given name",
-        "type": "text",
+        "type": "long-text",
         "description": "Given name"
     }, {
         "id": "email",
         "label": "Email",
-        "type": "text",
+        "type": "email",
         "description": "The address for eletronic mail communication.",
         "required": true
     }, {
@@ -148,7 +148,7 @@ const ui = {
         "label": "Country",
         "type": "text",
         "description": "Full name of the country in English",
-        "vocabulary": "Country"
+        "vocabulary": "country"
     }, {
         "id": "zipCode",
         "label": "Zip code",
@@ -159,7 +159,7 @@ const ui = {
         "label": "Region",
         "type": "text",
         "description": "State or province",
-        "vocabulary": "Region"
+        "vocabulary": "region"
     }, {
         "id": "timeZone",
         "label": "Timezone",
@@ -173,12 +173,12 @@ const ui = {
     }, {
         "id": "note",
         "label": "Note",
-        "type": "text",
+        "type": "long-text",
         "description": "Supplemental information or a comment"
     }, {
         "id": "organization",
         "label": "Organization",
-        "type": "text",
+        "type": "long-text",
         "description": "Organization information"
     }],
     "reference": [
@@ -193,7 +193,7 @@ const ui = {
             "label": "Type",
             "type": "text",
             "description": "The type of publication, e.g. Report, Journal article, Book, Online database, ...",
-            "vocabulary": "Publication_Type"
+            "vocabulary": "publication_type"
         }, {
             "id": "date",
             "label": "Date",
@@ -207,29 +207,29 @@ const ui = {
         }, {
             "id": "doi",
             "label": "DOI",
-            "type": "text",
+            "type": "long-text",
             "description": "DOI related to this publication",
             "required": true
         }, {
             "id": "authorList",
             "label": "Author list",
-            "type": "text",
+            "type": "long-text",
             "description": "Name and surname of the authors who contributed to this publication"
         }, {
             "id": "title",
             "label": "Title",
-            "type": "text",
+            "type": "long-text",
             "description": "Title of the publication in which the model or the data has been described",
             "required": true
         }, {
             "id": "abstract",
             "label": "Abstract",
-            "type": "text",
+            "type": "long-text",
             "description": "Abstract of the publication in which the model or the data has been described"
         }, {
             "id": "journal",
             "label": "Journal",
-            "type": "text",
+            "type": "long-text",
             "description": "Data on the details of the journal in which the model or the data has been described"
         }, {
             "id": "volume",
@@ -246,7 +246,7 @@ const ui = {
             "label": "Status",
             "type": "text",
             "description": "The status of this publication, e.g. Published, Submitted, etc.",
-            "vocabulary": "Publication_Status"
+            "vocabulary": "publication_status"
         }, {
             "id": "website",
             "label": "Website",
@@ -255,14 +255,14 @@ const ui = {
         }, {
             "id": "comment",
             "label": "Comment",
-            "type": "text",
+            "type": "long-text",
             "description": "Further comments related to the reference description, e.g. which section in there describes the specific model or which figure in there can be reproduced with the visualization script"
         }
     ],
     "scope": [{
         "id": "generalComment",
         "label": "General comment",
-        "type": "text",
+        "type": "long-text",
         "description": "General comments on the scope of the study, data or model",
     }, {
         "id": "spatialInformation",
@@ -276,56 +276,56 @@ const ui = {
             "label": "Name",
             "type": "text",
             "description": "The product, matrix or environment (e.g food product, lab media, soil etc.) for which the model or data applies",
-            "vocabulary": "Product_matrix_name",
+            "vocabulary": "product_matrix",
             "required": true
         }, {
             "id": "description",
             "label": "Description",
-            "type": "text",
+            "type": "long-text",
             "description": "Detailed description of the product, matrix or environment for which the model or data applies"
         }, {
             "id": "unit",
             "label": "Unit",
             "type": "text",
             "description": "Unit of the product, matrix or environment for which the model or data applies",
-            "vocabulary": "Parameter_unit",
+            "vocabulary": "unit",
             "required": true
         }, {
             "id": "method",
             "label": "Method",
             "type": "text-array",
             "description": "Type of production for the product/ matrix",
-            "vocabulary": "Method_of_production"
+            "vocabulary": "production_method"
         }, {
             "id": "packaging",
             "label": "Packaging",
             "type": "text-array",
             "description": "Describe container or wrapper that holds the product/matrix. Common type of packaging (paper or plastic bags, boxes, tinplate or aluminium cans, plastic trays, plastic bottles, glass bottles or jars)",
-            "vocabulary": "Packaging"
+            "vocabulary": "packaging"
         }, {
             "id": "treatment",
             "label": "Treatment",
             "type": "text-array",
             "description": "Used to characterise a product/matrix based on the treatment or processes applied to the product or any indexed ingredient",
-            "vocabulary": "Product_treatment"
+            "vocabulary": "product_treatment"
         }, {
             "id": "originCountry",
             "label": "Origin country",
             "type": "text",
             "description": "Country of origin of the food/product (ISO 3166-1-alpha-2 country code)",
-            "vocabulary": "Country"
+            "vocabulary": "country"
         }, {
             "id": "originArea",
             "label": "Origin area",
             "type": "text",
-            "description": "Area of origin of the food/product (Nomenclature of territorial units for statistics – NUTS – coding system valid only for EEA and Switzerland)",
-            "vocabulary": "Area_of_origin"
+            "description": "Area of origin of the food/product (Nomenclature of territorial units for statistics – NUTS – coding system valid only for EEA and Switzerland).",
+            "vocabulary": "region"
         }, {
             "id": "fisheriesArea",
             "label": "Fisheries area",
             "type": "text",
             "description": "Fisheries or aquaculture area specifying the origin of the sample (FAO Fisheries areas)",
-            "vocabulary": "Fisheries_area"
+            "vocabulary": "fish_area"
         }, {
             "id": "productionDate",
             "label": "Production date",
@@ -344,25 +344,25 @@ const ui = {
             "label": "Type",
             "type": "text",
             "description": "General classification of the hazard for which the model or data applies",
-            "vocabulary": "Hazard_type"
+            "vocabulary": "hazard_type"
         }, {
             "id": "name",
             "label": "Name",
             "type": "text",
             "description": "Name of the hazard (agent, contaminant, chemical) for which the data or model applies",
-            "vocabulary": "Hazard_name",
+            "vocabulary": "hazard",
             "required": true
         }, {
             "id": "description",
             "label": "Description",
-            "type": "text",
+            "type": "long-text",
             "description": "Description of the hazard for which the model or data applies"
         }, {
             "id": "unit",
             "label": "Unit",
             "type": "text",
             "description": "Unit of the hazard for which the model or data applies",
-            "vocabulary": "Parameter_unit"
+            "vocabulary": "unit"
         }, {
             "id": "adverseEffect",
             "label": "Adverse effect",
@@ -413,7 +413,7 @@ const ui = {
             "label": "Ind sum",
             "type": "text",
             "description": "Define if the parameter reported is an individual residue/analyte, a summed residue definition or part of a sum a summed residue definition",
-            "vocabulary": "Hazard_ind_sum"
+            "vocabulary": "ind_sum"
         }],
     "populationGroup": [{
         "id": "name",
@@ -461,13 +461,13 @@ const ui = {
         "label": "Region",
         "type": "text-array",
         "description": "Spatial information (area) on which the population group of the model or data applies",
-        "vocabulary": "Region"
+        "vocabulary": "region"
     }, {
         "id": "country",
         "label": "Country",
         "type": "text-array",
         "description": "Country on which the population group of the model or data applies",
-        "vocabulary": "Country"
+        "vocabulary": "country"
     }, {
         "id": "populationRiskFactor",
         "label": "Risk factor",
@@ -488,12 +488,12 @@ const ui = {
     }, {
         "id": "title",
         "label": "Title",
-        "type": "text",
+        "type": "long-text",
         "description": "A title for the Study"
     }, {
         "id": "description",
         "label": "Description",
-        "type": "text",
+        "type": "long-text",
         "description": "A brief description of the study aims"
     }, {
         "id": "designType",
@@ -510,7 +510,7 @@ const ui = {
         "label": "Technology type",
         "type": "text",
         "description": "The technology being employed to observe this measurement",
-        "vocabulary": "Study_Assay_Technology_Type"
+        "vocabulary": "technology_type"
     }, {
         "id": "assayTechnologyPlatform",
         "label": "Technology platform",
@@ -521,7 +521,7 @@ const ui = {
         "label": "Accreditation procedure",
         "type": "text",
         "description": "Accreditation procedure for the analytical method used",
-        "vocabulary": "Accreditation_procedure_Ass_Tec"
+        "vocabulary": "accreditation_procedure"
     }, {
         "id": "protocolName",
         "label": "Protocol name",
@@ -530,7 +530,7 @@ const ui = {
     }, {
         "id": "protocolDescription",
         "label": "Protocol description",
-        "type": "text",
+        "type": "long-text",
         "description": "A description of the Protocol"
     }, {
         "id": "protocolURI",
@@ -575,19 +575,19 @@ const ui = {
         "label": "Sampling strategy",
         "type": "text",
         "description": "Sampling strategy (ref. EUROSTAT - Typology of sampling strategy, version of July 2009)",
-        "vocabulary": "Sampling_strategy"
+        "vocabulary": "sampling_strategy"
     }, {
         "id": "typeOfSamplingProgram",
         "label": "Sampling program",
         "type": "text",
         "description": "Indicate the type of programm for which the samples have been collected",
-        "vocabulary": "Type_of_sampling_program"
+        "vocabulary": "sampling_program"
     }, {
         "id": "samplingMethod",
         "label": "Sampling method",
         "type": "text",
         "description": "Sampling method used to take the sample",
-        "vocabulary": "Sampling_method"
+        "vocabulary": "sampling_method"
     }, {
         "id": "samplingPlan",
         "label": "Sampling plan",
@@ -608,22 +608,22 @@ const ui = {
         "required": true
     }, {
         "id": "lotSizeUnit",
-        "label": "Size unit",
+        "label": "Lot size unit",
         "type": "text",
         "description": "Unit in which the lot size is expressed"
     }, {
         "id": "samplingPoint",
         "label": "Sampling point",
         "type": "text",
-        "description": "Point in the food chain where the sample was taken. (Doc. ESTAT/F5/ES/155 “Data dictionary of activities of the establishments”)",
-        "vocabulary": "Sampling_point"
+        "description": "Point in the food chain where the sample was taken. (Doc. ESTAT/F5/ES/155 “Data dictionary of activities of the establishments”).",
+        "vocabulary": "sampling_point"
     }],
     "dietaryAssessmentMethod": [{
         "id": "collectionTool",
         "label": "Collection tool",
         "type": "text",
         "description": "Food diaries, interview, 24-hour recall interview, food propensy questionnaire, portion size measurement aids, eating outside questionnaire",
-        "vocabulary": "Method_tool_to_collect_data",
+        "vocabulary": "collection_tool",
         "required": true
     }, {
         "id": "numberOfNonConsecutiveOneDay",
@@ -665,13 +665,13 @@ const ui = {
         "label": "Country",
         "type": "text",
         "description": "Country where the laboratory is placed. (ISO 3166-1-alpha-2)",
-        "vocabulary": "Country"
+        "vocabulary": "country"
     }, {
         "id": "accreditation",
         "label": "Accreditation",
         "type": "text-array",
         "description": "The laboratory accreditation to ISO/IEC 17025",
-        "vocabulary": "Laboratory_accreditation",
+        "vocabulary": "laboratory_accreditation",
         "required": true
     }],
     "assay": [{
@@ -683,7 +683,7 @@ const ui = {
     }, {
         "id": "description",
         "label": "Description",
-        "type": "text",
+        "type": "long-text",
         "description": "General description of the assay. Corresponds to the Protocol REF in ISA"
     }, {
         "id": "moisturePercentage",
@@ -707,7 +707,7 @@ const ui = {
         "description": "Limit of quantification reported in the unit specified by the variable 'Hazard unit'"
     }, {
         "id": "leftCensoredData",
-        "label": "Censored data",
+        "label": "Left-censored data",
         "type": "text",
         "description": "Percentage of measures equal to LOQ and/or LOD"
     }, {
@@ -741,9 +741,9 @@ const ui = {
     }, {
         "id": "classification",
         "label": "Classification",
-        "type": "text",
+        "type": "enum",
         "description": "General classification of the parameter (e.g. Input, Constant, Output...)",
-        "vocabulary": "Parameter_classification",
+        "vocabulary": "parameter_classification",
         "required": true
     }, {
         "id": "name",
@@ -761,46 +761,51 @@ const ui = {
         "label": "Unit",
         "type": "text",
         "description": "Unit of the parameter",
-        "vocabulary": "Parameter_unit",
+        "vocabulary": "unit",
         "required": true
     }, {
         "id": "unitCategory",
         "label": "Unit category",
         "type": "text",
         "description": "",
-        "vocabulary": "Parameter_unit_category"
+        "vocabulary": "unit_category"
     }, {
         "id": "dataType",
         "label": "Data type",
-        "type": "text",
+        "type": "enum",
         "description": "Information on the data format of the parameter, e.g. if it the input parameter is a file location or a date or a number. This is important for software tools interpreting the metadata and generate user interfaces for parameter input.",
-        "vocabulary": "Parameter_data_type",
+        "vocabulary": "parameter_datatype",
         "required": true
     }, {
         "id": "source",
         "label": "Source",
         "type": "text",
         "description": "Information on the type of knowledge used to define the parameter value",
-        "vocabulary": "Parameter_source"
+        "vocabulary": "parameter_source"
     }, {
         "id": "subject",
         "label": "Subject",
         "type": "text",
         "description": "Scope of the parameter, e.g. if it refers to an animal, a batch of animals, a batch of products, a carcass, a carcass skin etc",
-        "vocabulary": "Parameter_subject"
+        "vocabulary": "parameter_subject"
     }, {
         "id": "distribution",
         "label": "Distribution",
         "type": "text",
         "description": 'Distribution describing the parameter variabilty. If no distribution selected this means the value provided in "Parameter value" is a point estimate. In case a distribution is selected the value provided in "Parameter value" is a string that the model code can parse in order to sample from the named distribution',
-        "vocabulary": "Parameter_distribution"
+        "vocabulary": "parameter_distribution"
     }, {
         "id": "value",
         "label": "Value",
         "type": "text",
         "description": "A default value for the parameter. This is mandatory (needs to be provided) for all parameters of type 'Input'"
     },
-    // TODO: reference
+    {
+        "id": "reference",
+        "label": "Reference",
+        "type": "text",
+        "description": ""
+    },
     {
         "id": "variabilitySubject",
         "label": "Variability subject",
@@ -826,32 +831,32 @@ const ui = {
         "id": "sse",
         "label": "SSE",
         "type": "number",
-        "description": "Statistical values calculated to describe the performance of the model fitting procedure"
+        "description": "Sum of squared estimate of errors"
     }, {
         "id": "mse",
         "label": "MSE",
         "type": "number",
-        "description": "Statistical values calculated to describe the performance of the model fitting procedure"
+        "description": "Mean squared error"
     }, {
         "id": "rmse",
         "label": "RMSE",
         "type": "number",
-        "description": "Statistical values calculated to describe the performance of the model fitting procedure"
+        "description": "Root-mean-square error"
     }, {
         "id": "rsquared",
         "label": "R squared",
         "type": "number",
-        "description": "Statistical values calculated to describe the performance of the model fitting procedure"
+        "description": "Coefficient of determination"
     }, {
         "id": "aic",
         "label": "AIC",
         "type": "number",
-        "description": "Statistical values calculated to describe the performance of the model fitting procedure"
+        "description": "Akaike information criterion"
     }, {
         "id": "bic",
         "label": "BIC",
         "type": "number",
-        "description": "Statistical values calculated to describe the performance of the model fitting procedure"
+        "description": "Bayesian information criterion"
     }, {
         "id": "sensitivityAnalysis",
         "label": "Sensitivity analysis",
@@ -917,13 +922,13 @@ const _genericModelScope = {
         {
             id: "generalComment",
             label: "General comment",
-            type: "text",
+            type: "long-text",
             description: "General comments on the scope of the study, data or model"
         },
         {
             id: "temporalInformation",
             label: "Temporal information",
-            type: "text",
+            type: "long-text",
             description: "Spatial information (area) on which the model or data applies"
         },
         {
@@ -944,13 +949,13 @@ const _exposureModelScope = {
         {
             id: "generalComment",
             label: "General comment",
-            type: "text",
+            type: "long-text",
             description: "General comments on the scope of the study, data or model"
         },
         {
             id: "temporalInformation",
             label: "Temporal information",
-            type: "text",
+            type: "long-text",
             description: "Spatial information (area) on which the model or data applies"
         },
         {
@@ -1109,13 +1114,13 @@ const _predictiveModelGeneralInformation = {
         {
             "id": "objective",
             "label": "Objective",
-            "type": "text",
+            "type": "long-text",
             "description": "Objective of the model or data"
         },
         {
             "id": "description",
             "label": "Description",
-            "type": "text",
+            "type": "long-text",
             "description": "General description of the study, data or model"
         }
     ],
@@ -1209,12 +1214,12 @@ const schemas = {
             }, {
                 "id": "objective",
                 "label": "Objective",
-                "type": "text",
+                "type": "long-text",
                 "description": "Objective of the model or data"
             }, {
                 "id": "description",
                 "label": "Description",
-                "type": "text",
+                "type": "long-text",
                 "description": "General description of the study, data or model"
             }
         ],
@@ -1304,13 +1309,13 @@ const schemas = {
             {
                 "id": "objective",
                 "label": "Objective",
-                "type": "text",
+                "type": "long-text",
                 "description": "Objective of the model or data"
             },
             {
                 "id": "description",
                 "label": "Description",
-                "type": "text",
+                "type": "long-text",
                 "description": "General description of the study, data or model"
             }
         ],
@@ -1422,11 +1427,11 @@ const schemas = {
                 "vocabulary": "Language"
             },
             {
-                id: "software",
-                label: "Software",
-                type: "text",
-                description: "The program in which the model has been implemented",
-                vocabulary: "Software"
+                "id": "software",
+                "label": "Software",
+                "type": "text",
+                "description": "The program in which the model has been implemented",
+                "vocabulary": "Software"
             },
             {
                 "id": "languageWrittenIn",
@@ -1445,13 +1450,13 @@ const schemas = {
             {
                 "id": "objective",
                 "label": "Objective",
-                "type": "text",
+                "type": "long-text",
                 "description": "Objective of the model or data"
             },
             {
                 "id": "description",
                 "label": "Description",
-                "type": "text",
+                "type": "long-text",
                 "description": "General description of the study, data or model"
             }
         ],

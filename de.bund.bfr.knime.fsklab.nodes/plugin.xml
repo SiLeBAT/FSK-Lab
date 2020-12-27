@@ -141,14 +141,16 @@
        <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/v1.9/editor/editor.css" type="CSS" />
 
        <webDependency webResourceBundleID="codemirror_5.49.2"></webDependency>
-       <webDependency webResourceBundleID="bootstrap_3.3.6"></webDependency>
+       <webDependency webResourceBundleID="jQuery_3.3.1" />
+	   <webDependency webResourceBundleID="app_1.0.0" />
+	   <!--webDependency webResourceBundleID="bootstrap_3.3.6"></webDependency-->
        <webDependency webResourceBundleID="bootstrap3_typeahead_4.0.2"></webDependency>
        <webDependency webResourceBundleID="datepicker_1.9.0"></webDependency>
        <webDependency webResourceBundleID="RequireJS_2.3.3"></webDependency>
        <webDependency webResourceBundleID="knimeserviceConditionalLoad_1.0"></webDependency>
        
-       <webDependency webResourceBundleID="FskMetadata_1.0.0"></webDependency>
-       <webDependency webResourceBundleID="FskUtil_1.0.0"></webDependency>
+       <!--webDependency webResourceBundleID="FskMetadata_1.0.0"></webDependency>
+       <webDependency webResourceBundleID="FskUtil_1.0.0"></webDependency-->
      </webResourceBundle>
      
      <!-- JS and CSS code for Fsk Joiner node -->	 

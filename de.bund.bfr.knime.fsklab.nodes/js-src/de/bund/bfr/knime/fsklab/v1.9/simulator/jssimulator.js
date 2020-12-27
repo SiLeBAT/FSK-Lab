@@ -11,9 +11,10 @@ simulator = function() {
 	view.init = function(representation, value) {
 		_rep = representation;
 	    _val = value;
-	    let _container = $(`<div class="simulationsDiv"></div>`);
+	    let _container = $(`<div class="simulationsDiv modal-sim"></div>`);
 	    document.createElement('body');
-		$('body').html(_container);
+	    $('body').html(_container);
+		
 	   _modelSim = new APPSimulation( {
 			data 		: {},
 			id 			: 'mtModelSim',

@@ -12,7 +12,7 @@ fskeditorjs = function () {
     dataBackground: {},
     modelMath: {}
   };
-
+  let _modalDetails;
   var _modelCodeMirror;
   var _visualizationCodeMirror;
   var _readmeCodeMirror;
@@ -62,9 +62,10 @@ fskeditorjs = function () {
     knimeService.subscribeToSelection('b800db46-4e25-4f77-bcc6-db0c215846e1', selectionChanged);
     knimeService.subscribeToSelection('b800db46-4e25-4f77-bcc6-db0c21GlobalInit', initiated);
     
-    fskutil = new fskutil();
+    
     _rep = representation;
     _val = value;
+    //fskutil = new fskutil();
     extractAndCreateUI(value.modelMetaData);
     
   }
@@ -90,7 +91,7 @@ fskeditorjs = function () {
       _metadata.modelMath = metaData.modelMath ? metaData.modelMath : {};
       _metadata.modelType = metaData.modelType;
     }
-
+    /*
     switch (_metadata.modelType) {
       case "genericModel": handler = new fskutil.GenericModel(_metadata, _rep.servicePort); break;
       case "dataModel": handler = new fskutil.DataModel(_metadata, _rep.servicePort); break;
@@ -108,10 +109,21 @@ fskeditorjs = function () {
     }
 
     createUI();
+    */
+    window.port = _rep.servicePort;
+    let _testContainer = $(`<div class="card card-table-main overflow-hidden"></div>`);
+    $('body').html(_testContainer);
+    _modalDetails = new APPMTEditableDetails( {
+                        data 		  : {},
+                        id 			  : 'mtModalDetails',
+                        classes 	: 'modal-details',
+                        type 		  : 'mtDetails'
+                      }, _testContainer );
+    _modalDetails._createModelMetadataContent();
+    _modalDetails._updateContent(_metadata, 0);
   }
   view.getComponentValue = () => {
-
-    _metadata = handler.metaData;
+    _metadata = _modalDetails._modelHandler.metaData;
     let metaDataString = JSON.stringify(_metadata);
 
     // If the code mirrors are not created yet, use the original scripts.
@@ -147,8 +159,7 @@ fskeditorjs = function () {
     ];
 
     let bodyContent = `
-     <nav class="navbar navbar-default">
-  <div class="container-fluid">
+  <div class="editorDiv">
     <div class="navbar-header">
       <button id="saveButton" class="btn btn-primary float-left" type="button" onclick="window.doSave();">Save</button>
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
@@ -178,14 +189,13 @@ fskeditorjs = function () {
     ${panelsById.map(entry => `<div role="tabpanel" class="tab-pane"
     id="${entry.id}">${entry.panel}</div>`).join("")}
   </div>
-  </div>
-</nav> `;
+  </div> `;
 
     document.createElement('body');
     $('body').html(bodyContent);
 
     // Add dialogs
-    const container = document.getElementsByClassName("container-fluid")[0];
+    const container = document.getElementsByClassName("editorDiv")[0];
     // Object.values(handler.dialogs).forEach(dialog => container.appendChild(dialog.modal));
 
     const viewContent = document.getElementById("viewContent");

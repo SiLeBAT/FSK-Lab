@@ -11698,6 +11698,8 @@ S2.define('jquery.select2',[
 
 'use strict';
 
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
@@ -11739,11 +11741,13 @@ var ModelHandler = function () {
 		this._schema = {};
 		this._menu = [];
 		this._img = img;
+		this.panels = {};
 	}
 
 	_createClass(ModelHandler, [{
 		key: '_create',
 		value: function _create() {
+			console.log('here to be', this._metadata.generalInformation);
 			this._panels = {
 				generalInformation: {
 					type: 'simple',
@@ -11853,12 +11857,17 @@ var ModelHandler = function () {
 var GenericModel = function (_ModelHandler) {
 	_inherits(GenericModel, _ModelHandler);
 
-	function GenericModel(metadata, img) {
+	function GenericModel(metadata, img, state) {
 		_classCallCheck(this, GenericModel);
 
 		var _this = _possibleConstructorReturn(this, (GenericModel.__proto__ || Object.getPrototypeOf(GenericModel)).call(this, metadata, img));
 
 		_this._schema = schemas.genericModel;
+		console.log(state);
+		if (state) {
+			_this.panels = _this._createPanels();
+			console.log('logggg', _this.panels);
+		}
 		_this._menu = [{
 			label: "General information",
 			submenus: [{
@@ -11936,6 +11945,91 @@ var GenericModel = function (_ModelHandler) {
 		_get(GenericModel.prototype.__proto__ || Object.getPrototypeOf(GenericModel.prototype), '_create', _this).call(_this);
 		return _this;
 	}
+
+	_createClass(GenericModel, [{
+		key: 'validate',
+
+
+		// Validate this.panels and return boolean
+		value: function validate() {
+			var isValid = true;
+			if (!this.panels.generalInformation.validate()) isValid = false;
+			if (!this.panels.modelCategory.validate()) isValid = false;
+			if (!this.panels.scopeGeneral.validate()) isValid = false;
+			if (!this.panels.study.validate()) isValid = false;
+			return isValid;
+		}
+	}, {
+		key: '_createPanels',
+		value: function _createPanels() {
+			var port = window.port || -1;
+			var schema = schemas.genericModel;
+			return {
+				generalInformation: new FormPanel("General", schema.generalInformation, this._metadata.generalInformation, port),
+				modelCategory: new FormPanel("Model category", schema.modelCategory, this._metadata.generalInformation.modelCategory, port),
+				author: new TablePanel("Author", schema.contact, this._metadata.generalInformation.author, port),
+				creator: new TablePanel("Creator", schema.contact, this._metadata.generalInformation.creator, port),
+				reference: new TablePanel("Reference", schema.reference, this._metadata.generalInformation.reference, port),
+				scopeGeneral: new FormPanel("General", schema.scope, this._metadata.scope, port),
+				product: new TablePanel("Product", schema.product, this._metadata.scope.product, port),
+				hazard: new TablePanel("Hazard", schema.hazard, this._metadata.scope.hazard, port),
+				population: new TablePanel("Population", schema.populationGroup, this._metadata.scope.populationGroup, port),
+				study: new FormPanel("Study", schema.study, this._metadata.dataBackground.study, port),
+				studySample: new TablePanel("Study sample", schema.studySample, this._metadata.dataBackground.studySample, port),
+				dietaryAssessmentMethod: new TablePanel("Dietary assessment method", schema.dietaryAssessmentMethod, this._metadata.dataBackground.dietaryAssessmentMethod, port),
+				laboratory: new TablePanel("Laboratory", schema.laboratory, this._metadata.dataBackground.laboratory, port),
+				assay: new TablePanel("Assay", schema.assay, this._metadata.dataBackground.assay, port),
+				modelMath: new FormPanel("Model math", schema.modelMath, this._metadata.modelMath, port),
+				parameter: new TablePanel("Parameter", schema.parameter, this._metadata.modelMath.parameter, port),
+				qualityMeasures: new TablePanel("Quality measures", schema.qualityMeasures, this._metadata.modelMath.qualityMeasures, port),
+				modelEquation: new TablePanel("Model equation", schema.modelEquation, this._metadata.modelMath.modelEquation, port),
+				exposure: new TablePanel("Exposure", schema.exposure, this._metadata.modelMath.exposure, port)
+			};
+		}
+	}, {
+		key: 'metaData',
+		get: function get() {
+			try {
+				// generalInformation
+				this._metadata.generalInformation = this.panels.generalInformation.data;
+				this._metadata.generalInformation.modelCategory = this.panels.modelCategory.data;
+				this._metadata.generalInformation.author = this.panels.author.data;
+				this._metadata.generalInformation.creator = this.panels.creator.data;
+				this._metadata.generalInformation.reference = this.panels.reference.data;
+
+				// Scope
+				this._metadata.scope = this.panels.scopeGeneral.data;
+				this._metadata.scope.product = this.panels.product.data;
+				this._metadata.scope.hazard = this.panels.hazard.data;
+				this._metadata.scope.populationGroup = this.panels.population.data;
+
+				// Data background
+				this._metadata.dataBackground.study = this.panels.study.data;
+				this._metadata.dataBackground.studySample = this.panels.studySample.data;
+				this._metadata.dataBackground.dietaryAssessmentMethod = this.panels.dietaryAssessmentMethod.data;
+				this._metadata.dataBackground.laboratory = this.panels.laboratory.data;
+				this._metadata.dataBackground.assay = this.panels.assay.data;
+
+				// Model math
+				this._metadata.modelMath = this.panels.modelMath.data;
+				this._metadata.modelMath.parameter = this.panels.parameter.data;
+				this._metadata.modelMath.parameter.forEach(function (param) {
+					return delete param.reference;
+				});
+
+				this._metadata.modelMath.qualityMeasures = this.panels.qualityMeasures.data;
+				this._metadata.modelMath.modelEquation = this.panels.modelEquation.data;
+				this._metadata.modelMath.exposure = this.panels.exposure.data;
+
+				this._metadata.modelType = "genericModel";
+
+				this._metadata = metadataFix(this._metadata);
+			} catch (error) {
+				console.log(error);
+			}
+			return this._metadata;
+		}
+	}]);
 
 	return GenericModel;
 }(ModelHandler);
@@ -12896,6 +12990,100 @@ var QraModel = function (_ModelHandler12) {
 
 	return QraModel;
 }(ModelHandler);
+/** Temporary workaround for some metadata glitches. */
+
+
+var metadataFix = function metadataFix(metadata) {
+	// Ignore temporarily publication type
+	// TODO: publicationType takes the abbreviation instead of the full string
+	// used in the Reference dialog. Since KNIME runs getComponentValue twice,
+	// the value cannot be converted here. The 1st call to getComponentValue
+	// would get the abbreviation but the 2nd call would corrupt it. The HTML
+	// select should instead use the full string as label and the abreviation
+	// as value.
+	metadata.generalInformation.reference.forEach(function (ref) {
+		return delete ref.publicationType;
+	});
+
+	/* TODO: Ignore temporarily reference.
+ The reference property is of type Reference in the schema. Unfortunately,
+ nested dialogs are not supported in Bootstrap, so the type is changed
+ in the UI schema to text. Since the text type cannot be deserialized to
+ Reference, the values are discarded temporarily here.*/
+	metadata.modelMath.parameter.forEach(function (param) {
+		return delete param.reference;
+	});
+
+	return metadata;
+};
+/**
+ * 
+ * @param {*} name 
+ * @param {*} isMandatory 
+ * @param {*} description 
+ */
+var createLabel = function createLabel(name, isMandatory, description) {
+	var label = document.createElement("label");
+	label.classList.add("col-sm-2", "control-label");
+	label.title = description;
+	label.setAttribute("data-toggle", "tooltip");
+	label.textContent = name + (isMandatory ? "*" : "");
+
+	$(label).tooltip(); // Enable Bootstrap tooltip
+
+	return label;
+};
+
+/**
+ * Create a Bootstrap dropdown menu.
+ * @param {string} name Menu name 
+ * @param {array} submenus Array of hashes of id and name of the submenus.
+ */
+var createSubMenu = function createSubMenu(name, submenus) {
+	return '<li class="dropdown">\n\t<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button"\n\t\taria-haspopup="true" aria-expanded="false">' + name + '<span class="caret"></a>\n\t<ul class="dropdown-menu">\n\t' + submenus.map(function (entry) {
+		return '<li><a href="#' + entry.id + '" aria-controls="#' + entry.id + '"\n\t\trole="button" data-toggle="tab">' + entry.label + '</a></li>';
+	}).join("") + '\n\t</ul>\n\t</li>';
+};
+
+/**
+ * Add controlled vocabulary to an input.
+ * @param {Element} input Input element
+ * @param {Array} vocabulary String array with vocabulary terms.
+ */
+var addControlledVocabulary = function addControlledVocabulary(input, vocabulary, port) {
+	if (port >= 0) {
+		fetch('http://localhost:' + port + '/getAllNames/' + vocabulary).then(function (response) {
+			return response.json();
+		}).then(function (data) {
+			$(input).typeahead({
+				source: data,
+				autoSelect: true,
+				fitToElement: true,
+				showHintOnFocus: true
+			});
+		});
+	}
+};
+
+/**
+ * Create an horizontal form for a metadata property. Missing values with
+ * *null* or *undefined* are replaced with an empty string.
+ * 
+ * @param {object} prop Metadata property. It can be of type: text, number,
+ *  url, data, boolean, text-array and date-array.
+ * @param {string} value Input value. It can be *null* or *undefined* for
+ *  missing values.
+ * 
+ * @returns InputForm or ArrayForm for the supported type. If wrong type
+ *  it returns undefined.
+ */
+var createForm = function createForm(prop, value, port) {
+	var isMandatory = prop.required ? prop.required : false;
+
+	if (prop.type === "text" || prop.type === "number" || prop.type === "url" || prop.type === "date" || prop.type === "email") return new InputForm(prop.label, isMandatory, prop.type, prop.description, value ? value : "", port, prop.vocabulary);else if (prop.type === "long-text") {
+		return new TextareaForm(prop.label, isMandatory, prop.description, value ? value : "");
+	} else if (prop.type === "enum") return new SelectForm(prop.label, isMandatory, prop.description, value, port, prop.vocabulary);else if (prop.type === "boolean") return new InputForm(prop.label, false, "checkbox", prop.description, value, port);else if (prop.type === "text-array") return new ArrayForm(prop.label, isMandatory, prop.type, value ? value : [], prop.description, port, prop.vocabulary);else if (prop.type === "date-array") return new ArrayForm(prop.label, isMandatory, prop.type, value ? value : [], prop.description, port, prop.vocabulary);
+};
 
 /**
  * LOG
@@ -12922,7 +13110,21 @@ var _log = function _log(log, style) {
 		}
 	}
 };
+/**
+ * 
+ */
+var _createParamMetadataList = function _createParamMetadataList(helperText) {
+	var O = undefined;
 
+	// create table
+	var $table = $('<table class="table table-sm table-hover table-params-metadata"></table>');
+	// create rows
+	if (helperText) {
+		var $row = $('<tr></tr>').appendTo($table);
+		$row.append('<td>' + helperText + '</td>'); // value
+	}
+	return $table;
+};
 /** 
   * is undefined
   */
@@ -13424,36 +13626,8 @@ var APPModalMTDetails = function (_APPModal) {
 			// modal head default
 			O._createModalHead();
 
-			// modal nav with tabs & search
-			O._$modalNav = $('<div class="modal-body modal-nav"></div>').appendTo(O._$modalContent);
-
-			O._navId = O._id + 'Nav';
-			if (!O._$navBar) {
-				O._$navBar = $('<nav class="navbar navbar-expand-sm row justify-content-start justify-content-md-between"></nav>').appendTo(O._$modalNav);
-
-				// nav toggle
-				var $navToggle = $('<button class="action action-pure mt-1 mb-1" type="button" data-toggle="collapse" aria-expanded="false" aria-label="Toggle navigation"><i class="feather icon-list"></i></button>').appendTo(O._$navBar).attr('data-target', '#' + O._navId).attr('aria-controls', O._navId).wrap('<div class="col-auto navbar-toggler order-1 modal-nav-toggler"></div>');
-
-				// divider
-				O._$navBar.append('<div class="col-divider order-2 d-block d-sm-none d-md-block"></div>');
-
-				// nav search
-				O._$navBar._$search = $('<input class="form-control form-control-plaintext search-input" type="search" placeholder="Search Details" aria-label="Search Details" />').appendTo(O._$navBar).attr('id', O._id + 'NavSearch').wrap('<div class="col col-xxs-auto order-2 modal-nav-search"></div>').wrap('<div class="search"></div>');
-
-				// TO DO
-				// search functionality
-
-
-				// nav tabs
-				O._$navBar._$nav = $('<ul class="nav nav-pointer pt-1 pt-md-0"></ul>').appendTo(O._$navBar).wrap('<div class="col-12 col-md-auto order-3 order-md-1 modal-nav-menu order-4"></div>').wrap('<div class="collapse navbar-collapse" id="' + O._navId + '"></div>');
-			}
-
-			// modal body
-			O._createModalBody();
-			O._$modalBody.addClass('p-0 modal-table');
-
-			// content container
-			O._$modalTabContent = $('<div class="tab-content h-100"></div>').appendTo(O._$modalBody);
+			O.ModelMTPanel = new APPMTEditableDetails(O.opts, O._$modalContent);
+			O.ModelMTPanel._createModelMetadataContent();
 		}
 
 		/**
@@ -13480,12 +13654,414 @@ var APPModalMTDetails = function (_APPModal) {
 			if (O._modelMetadata.generalInformation && O._modelMetadata.generalInformation.name) {
 				O._setTitle(O._modelMetadata.generalInformation.name);
 			}
+			await O.ModelMTPanel._updateContent(O._modelMetadata, O._modelId);
+			O._loader._setState(false); // set loader
+		}
+	}]);
+
+	return APPModalMTDetails;
+}(APPModal);
+
+var AdvancedTable = function () {
+	function AdvancedTable(data, formData, dialog, panel) {
+		var _this14 = this;
+
+		_classCallCheck(this, AdvancedTable);
+
+		this.formData = formData;
+		this.dialog = dialog;
+		this.panel = panel;
+
+		this.table = document.createElement("table");
+		this.table.className = "table";
+
+		// Apply striped rows if table has over 10 rows.
+		if (data && data.length > 10) {
+			this.table.classList.add("table-striped");
+		}
+
+		// Create headers (1 extra columns at the end for buttons)
+		var head = document.createElement("thead");
+		head.innerHTML = '<tr>\n        ' + this.formData.map(function (prop) {
+			return '<th>' + prop.label + '</th>';
+		}).join("") + '\n        <th></th>\n      </tr>';
+
+		this.body = document.createElement("tbody");
+		this.table.appendChild(head);
+		this.table.appendChild(this.body);
+
+		if (data) {
+			data.forEach(function (entry) {
+				return _this14.add(entry);
+			});
+		}
+	}
+
+	/**
+  * Create a new row with new metadata from a dialog.
+  * 
+  * @param {Object} data JSON object with new metadata.
+  */
+
+
+	_createClass(AdvancedTable, [{
+		key: 'add',
+		value: function add(data) {
+			var _this15 = this;
+
+			// Add new row (Order is fixed by formData)
+			var newRow = document.createElement("tr");
+
+			this.formData.forEach(function (prop) {
+				// Get value for the current property
+				var value = data[prop.id] ? data[prop.id] : "";
+
+				var cell = document.createElement("td");
+				if (prop.type === "boolean" && value) {
+					cell.innerHTML = '<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>';
+				} else {
+					cell.title = value; // Set the whole value as tooltip
+					cell.textContent = value.length > 20 ? value.substring(0, 24) + "..." : value;
+				}
+				newRow.appendChild(cell);
+			});
+
+			var editButton = document.createElement("button");
+			editButton.classList.add("btn", "btn-primary", "btn-sm");
+			editButton.innerHTML = '<i class="glyphicon glyphicon-edit"></i>';
+			editButton.title = "Edit";
+			editButton.onclick = function (e) {
+
+				// Get current row (button > btn-group > td > tr). It starts at 1
+				// (it counts the header)
+				var rowIndex = e.currentTarget.parentNode.parentNode.parentNode.rowIndex - 1;
+
+				// Update inputs in dialog
+				var originalData = _this15.panel.data[rowIndex];
+				for (var prop in originalData) {
+					_this15.dialog.inputs[prop].value = originalData[prop];
+				}
+
+				_this15.dialog.editedRow = rowIndex;
+				$(_this15.dialog.modal).modal('show');
+			};
+
+			// Remove button
+			var removeButton = document.createElement("button");
+			removeButton.classList.add("btn", "btn-warning", "btn-sm");
+			removeButton.innerHTML = '<i class="glyphicon glyphicon-remove"></i>';
+			removeButton.onclick = function (e) {
+				// Get current row (button > btn-group > td > tr). It starts at 1
+				// (it counts the header)
+				var rowIndex = e.currentTarget.parentNode.parentNode.parentNode.rowIndex - 1;
+				_this15.panel.remove(rowIndex);
+			};
+
+			removeButton.title = "Remove";
+
+			var btnGroup = document.createElement("div");
+			btnGroup.className = "btn-group";
+			btnGroup.setAttribute("role", "group");
+			btnGroup.appendChild(editButton);
+			btnGroup.appendChild(removeButton);
+
+			var buttonCell = document.createElement("td");
+			buttonCell.appendChild(btnGroup);
+			newRow.appendChild(buttonCell);
+
+			this.body.appendChild(newRow);
+		}
+	}, {
+		key: 'edit',
+		value: function edit(rowNumber, data) {
+			var row = this.body.childNodes[rowNumber];
+
+			for (var i = 0; i < this.formData.length; i++) {
+				var prop = this.formData[i];
+				var cell = row.childNodes[i];
+
+				var value = data[prop.id];
+				cell.title = value;
+				cell.textContent = value.length > 25 ? value.substring(0, 24) : value;
+			}
+		}
+
+		/**
+   * Remove row at the given index.
+   */
+
+	}, {
+		key: 'remove',
+		value: function remove(index) {
+			this.body.removeChild(this.body.childNodes[index]);
+		}
+
+		/**
+   * Remove every row in the table.
+   */
+
+	}, {
+		key: 'trash',
+		value: function trash() {
+			this.body.innerHTML = "";
+		}
+	}]);
+
+	return AdvancedTable;
+}();
+/**
+ * Create a div to edit string arrays.
+ * 
+ * ```
+ * <div class="panel panel-default">
+ *   <div class="panel-heading clearfix">
+ *     <h4 class="panel-title pull-left" style="padding-top:7.5px;">Title</h4>
+ *     <div class="input-group">
+ *       <p class="pull-right" /> <!-- gutter -->
+ *       <div class="input-group-btn">
+ *         <button type="button" class="btn btn-default" data-toggle="modal" data-target="#">
+ *           <i class="glyphicon glyphicon-plus"></i>
+ *         </button>
+ *         <button class="btn btn-default"><i class="glyphicon glyphicon-remove"></i></button>
+ *         <button class="btn btn-default"><i class="glyphicon glyphicon-trash"></i></button>
+ *       </div>
+ *      </div>
+ *    </div>
+ *   <table id="${table}" class="table"></table>
+ * </div>
+ * ```
+ */
+
+
+var ArrayForm = function () {
+	function ArrayForm(name, mandatory, type, value, helperText, vocabulary, port) {
+		_classCallCheck(this, ArrayForm);
+
+		this.group = document.createElement("div");
+		this.simpleTable = new SimpleTable(type, value, vocabulary, port);
+		this._create(name, mandatory, helperText);
+	}
+
+	_createClass(ArrayForm, [{
+		key: '_create',
+		value: function _create(name, mandatory, helperText) {
+			var _this16 = this;
+
+			if (name) {
+
+				// formgroup
+				var $formGroup = $('<div class="form-group row"></div>');
+				// .appendTo( O._$simForm );
+
+				// label
+				var $label = $('<label class="col-form-label col-form-label-sm col-9 col-xs-3 order-1 sim-param-label"></label>').attr('for', 'input_' + name).appendTo($formGroup);
+				$label.text(name + (mandatory ? "*" : ""));
+
+				// field
+				var $field = $('<div class="col-12 col-xs-7 col-md-6 order-3 order-xs-2 sim-param-field"></div>').appendTo($formGroup);
+
+				// actions
+				var $actions = $('<div class="col-3 col-xs-auto order-2 order-xs-3 sim-param-actions"></div>').appendTo($formGroup);
+
+				// create param metadata action
+				if (helperText) {
+					// action metadata list
+					var $actionMetadata = $('<button class="action action-pure float-right" type="button"><i class="feather icon-info"></i></button>').attr('data-toggle', 'collapse').attr('data-target', '#paramMetadata_' + name).attr('aria-expanded', false).attr('aria-controls', 'paramMetadata_' + name).attr('title', 'Show Metadata').appendTo($actions);
+				}
+
+				// create actions            
+				var header = $('<div class="card-header"></div>');
+
+				// Create card in group
+				var panelDiv = document.createElement("div");
+				panelDiv.classList.add("card");
+				header.appendTo($(panelDiv));
+				panelDiv.appendChild(this.simpleTable.table);
+
+				_$actionTrash = $('<button type="button" class="action action-pure float-right"><i class="feather icon-trash-2"></i></button>').attr('id', 'simActionRemove').attr('data-tooltip', '').attr('title', 'Trash').appendTo(header).on('click', function (event) {
+					_this16.simpleTable.trash();
+				});
+
+				// remove
+				_$actionRemove = $('<button type="button" class="action action-pure float-right"><i class="feather icon-delete"></i></button>').attr('id', 'simActionRemove').attr('data-tooltip', '').attr('title', 'Remove').appendTo(header).on('click', function (event) {
+					_this16.simpleTable.remove();
+				});
+
+				// add
+				_$actionAdd = $('<button type="button" class="action action-pure float-right"><i class="feather icon-plus"></i></button>').attr('id', 'simActionAdd').attr('data-tooltip', '').attr('title', 'Add').appendTo(header).on('click', function (event) {
+					_this16.simpleTable.add();
+				});
+
+				$(panelDiv).appendTo($field);
+
+				// create validation container
+				$('<div class="validation-message mt-1"></div>').appendTo($field);
+
+				// create param metadata list
+				if (helperText) {
+					// metadata table
+					var $metadataContainer = $('<div class="collapse param-metadata"></div>').attr('id', 'paramMetadata_' + name).attr('aria-expanded', false).appendTo($field);
+
+					$metadataContainer.append(_createParamMetadataList(helperText));
+				}
+
+				this.group = $formGroup;
+			}
+		}
+	}, {
+		key: 'clear',
+		value: function clear() {
+			this.simpleTable.trash();
+		}
+
+		/**
+   * @returns {boolean} If the input is valid.
+   */
+
+	}, {
+		key: 'validate',
+		value: function validate() {
+			// TODO: Implement validate in ArrayForm
+			return true;
+		}
+	}, {
+		key: 'value',
+		get: function get() {
+			return this.simpleTable.value;
+		},
+		set: function set(newValue) {
+			var _this17 = this;
+
+			this.simpleTable.trash();
+			newValue.forEach(function (item) {
+				return _this17.simpleTable._createRow(item);
+			});
+		}
+	}]);
+
+	return ArrayForm;
+}();
+/*
+
+version: 1.0.0
+author: Ahmad Swaid
+date: 17.12.2020
+
+*/
+
+var APPMTEditableDetails = function () {
+	function APPMTEditableDetails(settings, $container) {
+		_classCallCheck(this, APPMTEditableDetails);
+
+		var O = this;
+		// defaults maintable simulations modal
+		O._$modalContent = $container;
+		O._opts = $.extend(true, {}, {
+			classes: '',
+			data: null,
+			on: {
+				afterInit: null, // function
+				show: function show(O, event) {
+					O._updateModal(event);
+				}, // function
+				hide: null // function
+			}
+		}, settings);
+		O._create();
+	}
+
+	_createClass(APPMTEditableDetails, [{
+		key: '_create',
+
+		/**
+   * CREATE
+   * calls super class and sets _metadata
+   */
+
+		value: function _create() {
+			var O = this;
+			_log('MODAL DETAILS / _create', 'primary');
+
+			O._metadata = O.opts.data;
+		}
+		/**
+   * CREATE MODAL
+   * creates basic modal components: header and blank body
+   */
+
+	}, {
+		key: '_createModelMetadataContent',
+		value: function _createModelMetadataContent() {
+			var O = this;
+			_log('MODAL DETAILS / _createModelMetadataContent');
+			// modal nav with tabs & search
+			O._$modalNav = $('<div class="card-header"></div>').appendTo(O._$modalContent);
+
+			O._navId = O._id + 'Nav';
+			if (!O._$navBar) {
+				O._$navBar = $('<nav class="navbar navbar-expand-sm row justify-content-start justify-content-md-between"></nav>').appendTo(O._$modalNav);
+
+				// nav toggle
+				var $navToggle = $('<button class="action action-pure mt-1 mb-1" type="button" data-toggle="collapse" aria-expanded="false" aria-label="Toggle navigation"><i class="feather icon-list"></i></button>').appendTo(O._$navBar).attr('data-target', '#' + O._navId).attr('aria-controls', O._navId).wrap('<div class="col-auto navbar-toggler order-1 modal-nav-toggler"></div>');
+
+				// divider
+				O._$navBar.append('<div class="col-divider order-2 d-block d-sm-none d-md-block"></div>');
+
+				// nav search
+				/*O._$navBar._$search = $('<input class="form-control form-control-plaintext search-input" type="search" placeholder="Search Details" aria-label="Search Details" />')
+        .appendTo(O._$navBar)
+        .attr('id', O._id + 'NavSearch')
+        .wrap('<div class="col col-xxs-auto order-2 modal-nav-search"></div>')
+        .wrap('<div class="search"></div>');
+    */
+
+				// TO DO
+				// search functionality
+
+
+				// nav tabs
+				O._$navBar._$nav = $('<ul class="nav nav-pointer pt-1 pt-md-0"></ul>').appendTo(O._$navBar).wrap('<div class="col-12 col-md-auto order-3 order-md-1 modal-nav-menu order-4"></div>').wrap('<div class="collapse navbar-collapse" id="' + O._navId + '"></div>');
+			}
+
+			// modal body
+			O._createModalBody();
+			O._$modalBody.addClass('p-0 modal-table');
+
+			// content container
+			O._$modalTabContent = $('<div class="tab-content h-100"></div>').appendTo(O._$modalBody);
+		}
+
+		/**
+  * CREATE MODAL
+  * creates basic modal components: header and blank body
+  */
+
+	}, {
+		key: '_createModalBody',
+		value: function _createModalBody() {
+			var O = this;
+			_log('MODAL / _createBody');
+
+			O._$modalBody = $('<div class="modal-body"></div>').appendTo(O._$modalContent);
+		}
+
+		/**
+  * BUILD PANEL
+  * build PANEL content
+  * @param {event} event 
+  */
+
+	}, {
+		key: '_updateContent',
+		value: async function _updateContent(_modelMetadata, _modelId) {
+			var O = this;
+			_log('PANEL MetaData / _updateContent');
+
 			// clear tab-panes
 			O._$modalTabContent.html('');
 
 			// get appropiate modelMetadata modelHandler for the model type.
-			O._modelHandler = await O._getModelHandler(O._modelMetadata);
-
+			O._modelHandler = await O._getModelHandler(_modelMetadata);
 			// populate nav
 			O._populateModalNav(O._modelHandler, O._$navBar._$nav);
 
@@ -13495,8 +14071,6 @@ var APPModalMTDetails = function (_APPModal) {
 			// activate first pane
 			O._$navBar._$nav.find('.nav-link').first().addClass('active');
 			O._$modalTabContent.find('.tab-pane').first().addClass('active');
-
-			O._loader._setState(false); // set loader
 		}
 
 		/**
@@ -13543,7 +14117,7 @@ var APPModalMTDetails = function (_APPModal) {
 			_log(modelHandler);
 
 			// create panels
-			if (modelHandler && modelHandler._menu && modelHandler._panels) {
+			if (modelHandler && modelHandler._menu && modelHandler.panels) {
 				// get each menus id
 				$.each(modelHandler._menu, function (i, menuMeta) {
 					// dropdown nav item 
@@ -13551,16 +14125,23 @@ var APPModalMTDetails = function (_APPModal) {
 						// iterate over submenus
 						$.each(menuMeta.submenus, function (j, submenuMeta) {
 							// panel meta data exists in handler
-							if (submenuMeta.id in modelHandler._panels) {
-								O._createPanel(submenuMeta, modelHandler).appendTo(O._$modalTabContent);
+							console.log(submenuMeta.id);
+							if (submenuMeta.id in modelHandler.panels) {
+								console.log(modelHandler.panels[submenuMeta.id]);
+								O._preparePanel(submenuMeta, modelHandler, $(modelHandler.panels[submenuMeta.id].panel)).appendTo(O._$modalTabContent);
 							}
 						});
 					}
 					// single nav item ? create panel
 					else {
 							if (menuMeta.id) {
-								if (menuMeta.id in modelHandler._panels) {
-									O._createPanel(menuMeta, modelHandler).appendTo(O._$modalTabContent);
+								console.log(menuMeta.id);
+								if (menuMeta.id in modelHandler.panels) {
+									console.log(modelHandler.panels[menuMeta.id]);
+									//$(modelHandler.panels[menuMeta.id].panel).appendTo(O._$modalTabContent);
+									O._preparePanel(submenuMeta, modelHandler, $(modelHandler.panels[menuMeta.id].panel)).appendTo(O._$modalTabContent);
+									//O._createPanel(menuMeta, modelHandler)
+									//    .appendTo(O._$modalTabContent);
 								}
 							}
 						}
@@ -13617,171 +14198,15 @@ var APPModalMTDetails = function (_APPModal) {
    */
 
 	}, {
-		key: '_createPanel',
-		value: function _createPanel(menu, modelHandler) {
+		key: '_preparePanel',
+		value: function _preparePanel(menu, modelHandler, handlerPanel) {
 			var O = this;
 			_log('MODAL DETAILS / _createPanel: ' + menu.id);
 
 			var $panel = null;
 			if (modelHandler && menu.id) {
-
-				var panelMeta = modelHandler._panels[menu.id];
-				// panel type
-				if (panelMeta.type) {
-					// complex
-					if (panelMeta.type == 'complex') {
-						$panel = O._createComplexPanel(menu, modelHandler);
-					}
-					// simple
-					else if (panelMeta.type == 'simple') {
-							$panel = O._createSimplePanel(menu, modelHandler);
-						}
-						// plot
-						else if (panelMeta.type == 'plot') {
-								$panel = O._createPlotPanel(menu, modelHandler);
-							}
-				}
+				$panel = O._createPanelPan(menu, modelHandler, handlerPanel);
 			}
-
-			return $panel;
-		}
-
-		/**
-   * CREATE SIMPLE PANEL
-   * create simple tab-pane for specific menu
-   * table has property, value cols
-   * @param {array} menu
-   * @param {object} modelHandler: object of type Model
-   */
-
-	}, {
-		key: '_createSimplePanel',
-		value: function _createSimplePanel(menu, modelHandler) {
-			var O = this;
-			_log('MODAL DETAILS / _createSimplePanel: ' + menu.id);
-
-			// tab-pane
-			var $panel = $('<div class="tab-pane h-100" role="tabpanel"></div>').attr('id', menu.id);
-
-			if (modelHandler && menu.id) {
-				// get panel meta
-				var panelMeta = modelHandler._panels[menu.id];
-
-				// title
-				$panel.append('<div class="panel-heading">' + menu.label + '</div>');
-
-				// table settings
-				var tableSettings = {
-					cols: [{
-						label: 'Property',
-						field: 'property',
-						classes: {
-							th: null,
-							td: 'td-label min-200'
-						},
-						sortable: true,
-						switchable: false
-					}, {
-						label: 'Value',
-						field: 'value',
-						sortable: false,
-						switchable: false
-					}],
-					tableData: [],
-					responsive: true,
-					showToggle: true
-				};
-
-				// set table row data
-				if (panelMeta.metadata && panelMeta.schema) {
-					$.each(panelMeta.schema, function (j, prop) {
-						var rowData = {
-							cells: []
-						};
-						// cell 1 label
-						rowData.cells.push(prop.label);
-						// cell 2 val
-						var data = panelMeta.metadata[prop.id];
-						data = _checkUndefinedContent(data);
-						rowData.cells.push(data);
-
-						tableSettings.tableData.push(rowData);
-					});
-				}
-
-				// create table
-				var panelTable = new APPTable(tableSettings, $panel);
-				$panel.data('table', panelTable);
-			};
-
-			return $panel;
-		}
-
-		/**
-   * CREATE COMPLEX PANEL
-   * create complex tab-pane for specific menu
-   * table has in metadata and schema defined cols
-   * @param {array} menu
-   * @param {object} modelHandler: object of class Model
-   */
-
-	}, {
-		key: '_createComplexPanel',
-		value: function _createComplexPanel(menu, modelHandler) {
-			var O = this;
-			_log('MODAL DETAILS / _createComplexPanel: ' + menu.id);
-
-			// tab-pane
-			var $panel = $('<div class="tab-pane h-100" role="tabpanel"></div>').attr('id', menu.id);
-
-			if (modelHandler && menu.id) {
-				// get panel meta
-				var panelMeta = modelHandler._panels[menu.id];
-
-				// title
-				$panel.append('<div class="panel-heading">' + menu.label + '</div>');
-
-				// table settings
-				var tableSettings = {
-					cols: [],
-					tableData: [],
-					responsive: true,
-					showToggle: true
-				};
-
-				// set table cols
-				$.each(panelMeta.schema, function (i, prop) {
-					tableSettings.cols.push({
-						label: prop.label,
-						field: prop.id,
-						sortable: true,
-						switchable: true
-					});
-				});
-
-				// set table row data
-				if (panelMeta.metadata && panelMeta.schema) {
-					$.each(panelMeta.metadata, function (i, item) {
-						// row each item
-						var rowData = {
-							cells: []
-						};
-						// cells
-						$.each(panelMeta.schema, function (j, prop) {
-							var data = item[prop.id];
-							data = _checkUndefinedContent(data);
-							// cell each prop
-							rowData.cells.push(data);
-						});
-
-						tableSettings.tableData.push(rowData);
-					});
-				}
-
-				// create table
-				var panelTable = new APPTable(tableSettings, $panel);
-				$panel.data('table', panelTable);
-			};
 			return $panel;
 		}
 
@@ -13793,22 +14218,21 @@ var APPModalMTDetails = function (_APPModal) {
    */
 
 	}, {
-		key: '_createPlotPanel',
-		value: function _createPlotPanel(menu, modelHandler) {
+		key: '_createPanelPan',
+		value: function _createPanelPan(menu, modelHandler, handlerPanel) {
 			var O = this;
 			_log('MODAL DETAILS / _createPlotPanel');
 
 			// tab-pane
 			var $panel = $('<div class="tab-pane h-100" role="tabpanel"></div>').attr('id', menu.id);
 
-			if (modelHandler && menu.id && modelHandler._img) {
+			if (modelHandler && menu.id) {
 				// get panel meta
 				var panelMeta = modelHandler._panels[menu.id];
 
 				// title
 				$panel.append('<div class="panel-heading">' + menu.label + '</div>');
-
-				var $plot = $('<figure class="figure"><img src="' + modelHandler._img + '" /></figure>').appendTo($panel).wrap('<div class="panel-plot"></div>');
+				handlerPanel.appendTo($panel);
 			}
 
 			return $panel;
@@ -13825,17 +14249,18 @@ var APPModalMTDetails = function (_APPModal) {
 		value: async function _getModelHandler(modelMetadata) {
 			var O = this;
 			_log('MODAL DETAILS / _getModelHandler');
+			console.log(modelMetadata);
 
 			var modelHandler = null;
 
 			if (modelMetadata) {
 
 				// get plot image
-				var imgUrl = await _fetchData._blob(window._endpoints.image, modelMetadata.generalInformation.identifier); // O._app._getImage( modelMetadata.generalInformation.identifier );
-
+				var imgUrl = void 0;
 				// get appropiate modelMetadata modelHandler for the model type.
+
 				if (modelMetadata.modelType === 'genericModel') {
-					modelHandler = new GenericModel(modelMetadata, imgUrl);
+					modelHandler = new GenericModel(modelMetadata, imgUrl, true);
 				} else if (modelMetadata.modelType === 'dataModel') {
 					modelHandler = new DataModel(modelMetadata, imgUrl);
 				} else if (modelMetadata.modelType === 'predictiveModel') {
@@ -13859,16 +14284,1085 @@ var APPModalMTDetails = function (_APPModal) {
 				} else if (modelMetadata.modelType === 'qraModel') {
 					modelHandler = new QraModel(modelMetadata, imgUrl);
 				} else {
-					modelHandler = new GenericModel(modelMetadata, imgUrl);
+					modelHandler = new GenericModel(modelMetadata, imgUrl, true);
 				}
 			}
 
 			return modelHandler;
 		}
+	}, {
+		key: 'opts',
+		get: function get() {
+			return this._opts;
+		},
+		set: function set(settings) {
+			this._opts = $.extend(true, {}, this.opts, settings);
+		}
 	}]);
 
-	return APPModalMTDetails;
-}(APPModal);
+	return APPMTEditableDetails;
+}();
+
+/**
+ * Create a Bootstrap 3 modal dialog.
+ */
+
+
+var Dialog = function () {
+
+	/**
+  * Create a Bootstrap 3 modal dialog.
+  * 
+  * ```
+  * <div class="modal-fade">
+  *   <div class="modal-dialog" role="document">
+  *     <div class="modal-content">
+  *       <div class="modal-header">
+  *         <button>
+  *           <span>
+  *         </button>
+  *         <h4 class="modal-title">title</h4>
+  *       </div>
+  *       <div class="modal-body">
+  *         <form>...</form>
+  *       </div>
+  *       <div class="modal-footer">
+  *         <button type="button">Close</button>
+  *         <button type="button">Save changes</button>
+  *       </div>
+  *     </div>
+  *   </div>
+  * </div>
+  * ```
+  * 
+  * @param {id} id Dialog id
+  * @param {title} title Dialog title
+  * @param {formData} formData Object with form data
+  */
+	function Dialog(id, title, formData, port) {
+		_classCallCheck(this, Dialog);
+
+		this.inputs = {}; // Hash of inputs by id
+
+		// Index of the row currently edited. It is -1 if no row is being edited.
+		// This is the case of when a new row is added.
+		this.editedRow = -1;
+
+		this.modal = document.createElement("div");
+		this.create(id, title, formData, port);
+	}
+
+	_createClass(Dialog, [{
+		key: 'create',
+		value: function create(id, title, formData, port) {
+			var _this18 = this;
+
+			// modal body
+			var form = $('<form class="form-striped"></form>');
+			formData.forEach(function (prop) {
+				var inputForm = createForm(prop, null, port);
+				if (inputForm) {
+					$(inputForm.group).appendTo(form);
+					_this18.inputs[prop.id] = inputForm;
+				}
+			});
+
+			var modalBody = $('<div class="modal-body p-0 sim-params"></div>');
+			var modalinnerBody = $('<div class="tab-content h-100"></div>');
+			form.appendTo(modalinnerBody);
+			modalinnerBody.appendTo(modalBody);
+
+			// modal action
+			// nav
+			_$modalNav = $('<div class="modal-body sim-select"></div>');
+
+			// navbar
+			_$navBar = $('<nav class="navbar sim-select">').appendTo(_$modalNav).wrap('<form></form>');
+
+			// sim select label
+			_$simSelectLabel = $('<label class="col-4 col-md-3 sim-select-label" >' + title.replace("Add", "") + '</label>').appendTo(_$navBar);
+
+			// sim select actions
+			_$dialogActions = $('<div class="col-8"></div>').appendTo(_$navBar);
+
+			var $actionGroup1 = $('<div class="col-12"></div>').appendTo(_$dialogActions);
+
+			closeButton = $('<button type="button" class="btn btn-icon btn-outline-light"><i class="feather icon-x"></i></button>').attr('id', 'simActionclose').attr('data-tooltip', '').attr('title', 'close').attr('data-dismiss', 'modal').appendTo($actionGroup1);
+			// col divider
+			$('<div class="col-divider ml-auto ml-xs-0"></div>').appendTo($actionGroup1);
+			saveButton = $('<button type="button" class="btn btn-icon btn-outline-light"><i class="feather icon-save"></i></button>').attr('id', 'save').attr('data-tooltip', '').attr('title', 'Save changes').appendTo($actionGroup1).on('click', function (event) {
+				// Validate inputs and stop saving if errors are found.
+				var hasError = false;
+				Object.values(_this18.inputs).forEach(function (input) {
+					if (!input.validate()) hasError = true;
+				});
+				if (hasError) return;
+
+				$(_this18.modal).modal('hide');
+
+				// Retrieve data and clear inputs
+				var data = {};
+				for (var inputId in _this18.inputs) {
+					var currentInput = _this18.inputs[inputId];
+					data[inputId] = currentInput.value; // Save input value
+					currentInput.clear(); // Clear input
+				}
+
+				if (_this18.editedRow != -1) {
+					_this18.panel.save(_this18.editedRow, data);
+					_this18.editedRow = -1;
+					Object.values(_this18.inputs).forEach(function (input) {
+						return input.clear();
+					}); // Clear inputs
+				} else {
+					_this18.panel.add(data);
+				}
+			});
+			$actionGroup1.wrapInner('<div class="row justify-content-end align-items-center"></div>');
+
+			var content = document.createElement("div");
+			content.classList.add("modal-content");
+			content.innerHTML = '<div class="modal-header">\n                                <h1 class="modal-title">' + title + '</h1>\n                                <button type="button" class="action action-pure action-lg ml-2" data-dismiss="modal" aria-label="Close"><i class="feather icon-x"></i></button>\n                                </div>';
+
+			_$navBar.appendTo($(content));
+			modalBody.appendTo($(content));
+
+			var modalDialog = document.createElement("div");
+			modalDialog.classList.add("modal-dialog", "modal-xl");
+			modalDialog.setAttribute("role", "document");
+			modalDialog.appendChild(content);
+
+			this.modal.classList.add("modal", "fade", "modal-sim");
+			this.modal.id = id;
+			this.modal.tabIndex = -1;
+			this.modal.setAttribute("role", "dialog");
+			this.modal.appendChild(modalDialog);
+		}
+	}]);
+
+	return Dialog;
+}();
+/**
+ * Simple panel for non nested data like General information, study, etc.
+ */
+
+
+var FormPanel = function () {
+	function FormPanel(title, formData, data, port) {
+		_classCallCheck(this, FormPanel);
+
+		_log('FormPanel /' + title, 'primary');
+		this.panel = $('<div class="panel-body"></div>');
+		this.inputs = {};
+
+		this._create(title, formData, data, port);
+	}
+
+	/**
+  * ```
+  * <div class="panel panel-default">
+  *   <div class="panel-heading">
+  *     <h3 class="panel-title">Some title</h3>
+  *   </div>
+  *   <div class="panel-body">
+  *     <form></form>
+  *   </div>
+  * </div>
+  * ```
+  * @param {*} title 
+  * @param {*} formData 
+  */
+
+
+	_createClass(FormPanel, [{
+		key: '_create',
+		value: function _create(title, formData, data, port) {
+			var _this19 = this;
+
+			var form = $('<form class="form-striped"></form>');
+			formData.forEach(function (prop) {
+				var inputForm = createForm(prop, data ? data[prop.id] : null, port);
+				if (inputForm) {
+					$(inputForm.group).appendTo(form);
+					_this19.inputs[prop.id] = inputForm;
+				}
+			});
+			form.appendTo(this.panel);
+		}
+	}, {
+		key: 'validate',
+		value: function validate() {
+			var isValid = true;
+			Object.values(this.inputs).forEach(function (input) {
+				if (!input.validate()) isValid = false;
+			});
+			return isValid;
+		}
+	}, {
+		key: 'data',
+		get: function get() {
+			var data = {};
+			Object.entries(this.inputs).forEach(function (_ref) {
+				var _ref2 = _slicedToArray(_ref, 2),
+				    id = _ref2[0],
+				    input = _ref2[1];
+
+				return data[id] = input.value;
+			});
+			return data;
+		}
+	}]);
+
+	return FormPanel;
+}();
+/**
+ * Bootstrap 3 form-group for an input.
+ */
+
+
+var InputForm = function () {
+
+	/**
+  * Create a Bootstrap 3 form-group.
+  * 
+  * ```
+  * <div class="form-group row">
+  *   <label>name</label>
+  *   <div class="col-sm-10">
+  *     <input type="text">
+  *   </div>
+  * </div>`;
+  * ```
+  * 
+  * If type === checkbox
+  * ```
+  * <div class="form-group row">
+  *   <label >name</label>
+  *   <div class="col-sm-10">
+  *     <input class="form-check-input" type="checkbox" checked="">
+        *	 </div>
+    * </div>
+  * ```
+  * 
+  * @param {string} name Property name
+  * @param {boolean} mandatory `true` if mandatory, `false` if optional.
+  * @param {string} type Property type: text, url, checkbox, etc.
+  * @param {string} helperText Tooltip
+  * @param {string} value Initial value of the property.
+  * @param {Array} vocabulary Vocabulary name.
+  */
+	function InputForm(name, mandatory, type, helperText, value, port) {
+		var vocabulary = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : null;
+
+		_classCallCheck(this, InputForm);
+
+		this.name = name;
+		this.mandatory = mandatory;
+		this.type = type;
+		this.helperText = helperText;
+
+		this.group = null;
+		this._create(name, mandatory, type, helperText, value, vocabulary, port);
+	}
+
+	/**
+  * @param {string} name Property name
+  * @param {boolean} mandatory `true` if mandatory, `false` if optional.
+  * @param {string} type Property type: text, url, checkbox, etc.
+  * @param {string} helperText Tooltip
+  * @param {string} value Initial value of the property.
+  * @param {Array} vocabulary Vocabulary name.
+  */
+
+
+	_createClass(InputForm, [{
+		key: '_create',
+		value: function _create(name, mandatory, type, helperText, value, vocabulary, port) {
+			this._createFormField(name, mandatory, type, helperText, value, vocabulary, port);
+
+			// Create input
+			/*this.input.className = type === "checkbox" ? "form-check-input" : "form-control";
+   this.input.type = type;
+    if (type === "date" && typeof (value) != "string") {
+       let day = ("" + value[2]).length > 1 ? ("" + value[2]) : ("0" + value[2]);
+       let month = ("" + value[1]).length > 1 ? ("" + value[1]) : ("0" + value[1]);
+       this.input.value = value[0] + "-" + month + "-" + day;
+   } else {
+       this.input.value = value;
+   }
+    this.input.title = helperText;
+    // Create div for input
+   let inputDiv = document.createElement("div");
+   inputDiv.classList.add("col-sm-10");
+   inputDiv.appendChild(this.input);
+   if (mandatory) {
+       this.helpBlock = document.createElement("span");
+       this.helpBlock.className = "help-block";
+       this.helpBlock.style.display = "none";
+       this.helpBlock.textContent = `${name} is a required property`;
+       inputDiv.appendChild(this.helpBlock);
+   }
+   
+   // Add autocomplete to input with vocabulary
+   if (vocabulary) {
+       addControlledVocabulary(this.input, vocabulary, port);
+   }
+    // Collect everything into group
+   this.group.classList.add("form-group", "row");
+   this.group.appendChild(createLabel(name, mandatory, helperText));
+   this.group.appendChild(inputDiv);*/
+		}
+		/**
+   * CREATE FORM FIELD
+   * create field as form group
+   * @param {array} param
+   */
+
+	}, {
+		key: '_createFormField',
+		value: function _createFormField(name, mandatory, type, helperText, value, vocabulary, port) {
+			var O = this;
+			_log('PANEL SIM / _createFormField');
+			_log(name);
+
+			if (name) {
+
+				// formgroup
+				var $formGroup = $('<div class="form-group row"></div>');
+				// .appendTo( O._$simForm );
+
+				// label
+				var $label = $('<label class="col-form-label col-form-label-sm col-9 col-xs-3 order-1 sim-param-label"></label>').attr('for', 'input_' + name).appendTo($formGroup);
+				$label.text(name + (mandatory ? "*" : ""));
+
+				// field
+				var $field = $('<div class="col-12 col-xs-7 col-md-6 order-3 order-xs-2 sim-param-field"></div>').appendTo($formGroup);
+
+				// actions
+				var $actions = $('<div class="col-3 col-xs-auto order-2 order-xs-3 sim-param-actions"></div>').appendTo($formGroup);
+
+				// input item
+				this.input = null;
+
+				// create param metadata action
+				if (helperText) {
+					// action metadata list
+					var $actionMetadata = $('<button class="action action-pure float-right" type="button"><i class="feather icon-info"></i></button>').attr('data-toggle', 'collapse').attr('data-target', '#metadata_' + name).attr('aria-expanded', false).attr('aria-controls', 'metadata_' + name).attr('title', 'Show Metadata').appendTo($actions);
+				}
+
+				if (type) {
+
+					// numeric
+					if (type == 'number') {
+
+						var $inputGroup = $('<div class="input-group input-group-sm"></div>').appendTo($field);
+
+						this.input = $('<input type="text" />').attr('id', 'input_' + name)
+						//.data( 'param-input', param ) 
+						.attr('aria-invalid', false).appendTo($inputGroup);
+
+						// touchspin
+						this.input.addClass('form-control form-control-sm').attr('data-touchspin', '');
+						// add unit postfix to touchspin
+
+						this.input.attr('data-touchspin-postfix', type);
+					}
+					// string or others
+					//<input class="custom-control-input" type="checkbox" id="switchExample1" name="switchExample1" checked />
+					else if (type == 'boolean') {
+							this.input = $('<input type="checkbox" class="form-control form-control-sm" />').attr('id', 'input_' + name).appendTo($field);
+						}
+						// string or others
+						else {
+								this.input = $('<input type="text" class="form-control form-control-sm" />').attr('id', 'input_' + name).appendTo($field);
+							}
+				}
+				if (type === "date" && typeof value != "string") {
+					var day = ("" + value[2]).length > 1 ? "" + value[2] : "0" + value[2];
+					var month = ("" + value[1]).length > 1 ? "" + value[1] : "0" + value[1];
+					this.input.val(value[0] + "-" + month + "-" + day);
+				} else {
+					this.input.val(value);
+				}
+
+				// create validation container
+				this.input.$validationContainer = $('<div class="validation-message mt-1"></div>').appendTo($field);
+
+				// create  metadata list
+				if (helperText) {
+					// metadata table
+					var $metadataContainer = $('<div class="collapse param-metadata"></div>').attr('id', 'metadata_' + name).attr('aria-expanded', false).appendTo($field);
+
+					$metadataContainer.append(_createParamMetadataList(helperText));
+				}
+
+				this.group = $formGroup;
+			}
+		}
+	}, {
+		key: 'clear',
+		value: function clear() {
+			this.input.val("");
+
+			if (this.input.$validationContainer) {
+				this.input.$validationContainer.css("display", "none");
+			}
+
+			// Remove validation classes
+			this.group.removeClass("has-success has-error");
+		}
+
+		/**
+   * @returns {boolean} If the input is valid.
+   */
+
+	}, {
+		key: 'validate',
+		value: function validate() {
+			var O = this;
+			_log('PANEL SIM / _validateSimForm');
+
+			var validationErrors = [];
+			// remove error classes
+			this.input.find('.has-error').removeClass('has-error');
+			this.input.find('.is-invalid').removeClass('is-invalid');
+			this.input.find('.validation-message').empty();
+
+			var isValid = void 0;
+			if (!this.mandatory) {
+				isValid = true;
+			} else {
+				isValid = this.input.val() ? true : false;
+				if (!isValid) this.input.$validationContainer.text("This is required");
+				// if email input is empty, reset the default error message
+				if (!isValid && this.input.type === "email") {
+					this.input.$validationContainer.text("Email is a required property");
+				}
+				// check if mail has correct structure
+				if (isValid && this.input.type === "email") {
+
+					var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\ ".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+					isValid = re.test(this.input.value);
+					this.input.$validationContainer.text("This is required");
+				}
+			}
+
+			if (!isValid) {
+				this.input.$validationContainer.html("This is required");
+				this.input.parents('.form-group').addClass('has-error');
+				this.input.$validationContainer.addClass('is-invalid');
+				this.input.$validationContainer.css("display", "block");
+			}
+
+			return isValid;
+		}
+	}, {
+		key: 'value',
+		get: function get() {
+			return this.type !== "checkbox" ? this.input.val() : this.input.checked;
+		},
+		set: function set(newValue) {
+			this.input.val(newValue);
+		}
+	}]);
+
+	return InputForm;
+}();
+/**
+ * Bootstrap 3 form with a select.
+ */
+
+
+var SelectForm = function () {
+
+	/**
+  * Create a Bootstrap 3 form-group with a select.
+  * 
+  * ```
+  * <div class="form-group row">
+  *   <label>name</label>
+  *   <select class="form-control">
+  *     <option>1</option>
+  *     <option>2</option>
+  *   </select>
+  * </div>```
+  * <select id="select2ExampleS2" class="form-control form-control-sm" style="width: 100%;" data-sel2 data-placeholder="Select…">
+ *									<option value="1">Option 1</option>
+ *									<option value="2">Option 2</option>
+ *									<option value="3">Option 3 with very long title lorem ipsum dolor sit amet</option>
+ *								</select>
+  */
+	function SelectForm(name, mandatory, helperText, value, port) {
+		var vocabulary = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : null;
+
+		_classCallCheck(this, SelectForm);
+
+		this.group = document.createElement("div");
+
+		this._create(name, mandatory, helperText, value, vocabulary, port);
+	}
+
+	_createClass(SelectForm, [{
+		key: '_create',
+		value: function _create(name, mandatory, helperText, value, vocabulary, port) {
+			var _this20 = this;
+
+			var O = this;
+			// formgroup
+			var $formGroup = $('<div class="form-group row"></div>');
+
+			// label
+			var $label = $('<label class="col-form-label col-form-label-sm col-9 col-xs-3 order-1 sim-param-label"></label>').attr('for', 'selectInput_' + name).appendTo($formGroup);
+			$label.text(name + (mandatory ? "*" : ""));
+
+			// field
+			var $field = $('<div class="col-12 col-xs-7 col-md-6 order-3 order-xs-2 "></div>').appendTo($formGroup);
+
+			// actions
+			var $actions = $('<div class="col-3 col-xs-auto order-2 order-xs-3 sim-param-actions"></div>').appendTo($formGroup);
+
+			// input item
+			this.input = null;
+
+			// create param metadata action
+			if (helperText) {
+				// action metadata list
+				var $actionMetadata = $('<button class="action action-pure float-right" type="button"><i class="feather icon-info"></i></button>').attr('data-toggle', 'collapse').attr('data-target', '#paramMetadata_' + name).attr('aria-expanded', false).attr('aria-controls', 'paramMetadata_' + name).attr('title', 'Show Metadata').appendTo($actions);
+			}
+
+			this.input = $('<select class="form-control form-control-sm" style="width: 100%;" data-sel2 data-placeholder="Select…"/>').attr('id', 'selectInput_' + name).appendTo($field);
+			this.input.val(value);
+			// Add options from vocabulary. The option matching value is selected.
+			if (port >= 0) {
+				fetch('http://localhost:' + port + '/getAllNames/' + vocabulary).then(function (response) {
+					return response.json();
+				}).then(function (data) {
+					//console.log('data',data);
+					_this20.input.append(data.map(function (item) {
+						return '<option>' + item + '</option>';
+					}).join(""));
+					//console.log($(this.select));
+				});
+			}
+
+			// create validation container
+			this.input.$validationContainer = $('<div class="validation-message mt-1"></div>').appendTo($field);
+
+			// create param metadata list
+			if (helperText) {
+				// metadata table
+				var $metadataContainer = $('<div class="collapse param-metadata"></div>').attr('id', 'paramMetadata_' + name).attr('aria-expanded', false).appendTo($field);
+
+				$metadataContainer.append(_createParamMetadataList(helperText));
+			}
+			this.group = $formGroup;
+		}
+	}, {
+		key: 'clear',
+		value: function clear() {
+			this.input.val('');
+		}
+
+		/**
+   * @returns {boolean} If the input is valid.
+   */
+
+	}, {
+		key: 'validate',
+		value: function validate() {
+
+			var isValid = void 0;
+			this.input.find('.has-error').removeClass('has-error');
+			this.input.find('.is-invalid').removeClass('is-invalid');
+			this.input.find('.validation-message').empty();
+			if (!this.mandatory) {
+				isValid = true;
+			} else {
+				isValid = this.input.value ? true : false;
+			}
+
+			if (!isValid) {
+				this.input.$validationContainer.text('This is required');
+				this.input.parents('.form-group').addClass('has-error');
+				this.input.addClass('is-invalid');
+				this.input.$validationContainer.css("display", "block");
+			}
+			return isValid;
+		}
+	}, {
+		key: 'value',
+		get: function get() {
+			return this.input.val();
+		},
+		set: function set(newValue) {
+			this.select.val(newValue);
+		}
+	}]);
+
+	return SelectForm;
+}();
+
+var SimpleTable = function () {
+	function SimpleTable(type, data, vocabulary, port) {
+		var _this21 = this;
+
+		_classCallCheck(this, SimpleTable);
+
+		this.type = type === "text-array" ? "text" : "date";
+		this.vocabulary = vocabulary;
+		this.port = port;
+
+		this.table = document.createElement("table");
+		this.table.className = "table";
+		this.table.innerHTML = '<thead><thead>';
+
+		this.body = document.createElement("tbody");
+		this.table.appendChild(this.body);
+
+		data.forEach(function (value) {
+			return _this21._createRow(value);
+		});
+	}
+
+	/**
+  * Create new row to enter data if the last row value is not empty.
+  */
+
+
+	_createClass(SimpleTable, [{
+		key: 'add',
+		value: function add() {
+			// If it has no rows or the last row value is not empty
+			if (!this.body.lastChild || this.body.lastChild.lastChild.firstChild.value) {
+				this._createRow();
+			}
+		}
+	}, {
+		key: 'remove',
+		value: function remove() {
+			var _this22 = this;
+
+			// Find checked rows and delete them
+			Array.from(this.body.children).forEach(function (row) {
+				// Get checkbox (tr > td > input)
+				var checkbox = row.firstChild.firstChild;
+				if (checkbox.checked) {
+					_this22.body.removeChild(row);
+				}
+			});
+		}
+
+		/**
+   * Remove every row in the table
+   */
+
+	}, {
+		key: 'trash',
+		value: function trash() {
+			this.body.innerHTML = "";
+		}
+	}, {
+		key: '_createRow',
+		value: function _createRow() {
+			var _this23 = this;
+
+			var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
+
+			var input = document.createElement("input");
+			input.type = this.type;
+			input.className = "form-control";
+			input.value = value;
+
+			// Add autocomplete to input with vocabulary
+			if (this.vocabulary) {
+				addControlledVocabulary(input, this.vocabulary, this.port);
+			}
+
+			// If enter is pressed when the input if focused, lose focus and add a
+			// new row (like clicking the add button). The new input from calling add
+			// is focused.
+			input.addEventListener("keyup", function (event) {
+				if (event.key === "Enter") {
+					input.blur();
+					_this23.add();
+				}
+			});
+
+			// Create cell with input
+			var inputCell = document.createElement("td");
+			inputCell.appendChild(input);
+
+			// Create row with checkbox and input
+			var newRow = document.createElement("tr");
+			newRow.innerHTML = '<td><input type="checkbox"></td>';
+			newRow.appendChild(inputCell);
+
+			// Add row
+			this.body.appendChild(newRow);
+
+			input.focus(); // Focus the new input      
+		}
+	}, {
+		key: 'value',
+		get: function get() {
+			var data = [];
+			this.body.childNodes.forEach(function (tr) {
+				var inputCell = tr.lastChild; // 2nd cell (with input)
+				var input = inputCell.firstChild; // <input>
+				data.push(input.value);
+			});
+
+			return data;
+		}
+	}]);
+
+	return SimpleTable;
+}();
+/**
+ * Create a Bootstrap 3 panel with controls in the heading and a table as body.
+ * 
+ * ```
+ * <div class="panel panel-default">
+ *   <div class="panel-heading clearfix">
+ *     <h4 class="panel-title pull-left" style="padding-top:7.5px;">${title}</h4>
+ *     <div class="input-group">
+ *       <p class="pull-right" /> <!-- gutter -->
+ *       <div class="input-group-btn">
+ *         <button type="button" class="btn btn-default" data-toggle="modal" data-target="#${dialog}">
+ *           <i class="glyphicon glyphicon-plus"></i>
+ *         </button>
+ *         <button class="btn btn-default"><i class="glyphicon glyphicon-remove"></i></button>
+ *         <button class="btn btn-default"><i class="glyphicon glyphicon-trash"></i></button>
+ *       </div>
+ *     </div>
+ *   </div>
+ *   <table class="table">
+ *     <tr>
+ *       <th><input type="checkbox"></th>
+ *     </tr>
+ *   </table>
+ * </div>`
+ * ```
+ */
+
+
+var TablePanel = function () {
+
+	/**
+  * Create a TablePanel.
+  * 
+  * @param {string} title Panel title.
+  * @param {object} formData Related data from the UI schema.
+  * @param {object} data Initial data of the table.
+  */
+	function TablePanel(title, formData, data, port) {
+		_classCallCheck(this, TablePanel);
+
+		this.panel = document.createElement("div");
+
+		// Register this panel in dialog (TODO: this should be done in Dialog's constr)
+		// this.dialog = dialog;
+		this.dialog = new Dialog(title + "Dialog", "Add " + title, formData, port);
+		this.dialog.panel = this;
+		this.tablePanel = this._createComplexPanel(data, formData, title, this.dialog);
+		this.table = this.tablePanel.find("table.table-striped");
+		this.data = data ? data : []; // Initialize null or undefined data
+		this._create(title, this.dialog, formData);
+	}
+
+	/**
+  * Create UI of the TablePanel.
+  * 
+  * @param {string} title Panel title.  
+  * @param {Dialog} dialog Reference to Dialog object. This Dialog is later
+  *   used for adding new entries and editing existing ones. 
+  * @param {object} formData Related data from the UI schema.
+  */
+
+
+	_createClass(TablePanel, [{
+		key: '_create',
+		value: function _create(title, dialog, formData) {
+			// panel
+			this.panel.classList.add("panel", "panel-default");
+			this.tablePanel.appendTo($(this.panel));
+		}
+		/**
+   * CREATE COMPLEX PANEL
+   * create complex tab-pane for specific menu
+   * table has in metadata and schema defined cols
+   * @param {array} menu
+   * @param {object} modelHandler: object of class Model
+   */
+
+	}, {
+		key: '_createComplexPanel',
+		value: function _createComplexPanel(data, formData, title, dialog) {
+			var _this24 = this;
+
+			var O = this;
+
+			// tab-pane
+			var $panel = $('<div class="tab-pane h-100" role="tabpanel"></div>').attr('id', 'table' + title);
+			// Add button
+			var addButton = $('<button class="btn btn-outline-secondary btn-sm btn-icon" type="button"><i class="feather icon-plus"></i></button>').attr('aria-label', "Add a " + title).attr('title', "Add a " + title);
+			addButton.on('click', function (event) {
+				Object.values(dialog.inputs).forEach(function (input) {
+					return input.clear();
+				});
+				$(dialog.modal).modal('show');
+			});
+
+			var removeAllButton = $('<button class="btn btn-outline-secondary btn-sm btn-icon" type="button"><i class="feather icon-trash"></i></button>').attr('aria-label', 'Remove all ' + title + '(s)').attr('title', 'Remove all ' + title + '(s)');
+			removeAllButton.on('click', function (event) {
+				_this24.removeAll();
+			});
+
+			// table settings
+			var tableSettings = {
+				cols: [],
+				tableData: [],
+				responsive: true,
+				showToggle: true,
+				rowActions: [{
+					type: 'link',
+					idPrefix: 'mtActionMerge_',
+					icon: 'icon-trash',
+					title: 'Trash',
+					on: {
+						click: function click(O, $action, rowIndex, rowData) {
+							_log('on > clicktrash', 'hook'); // example hook output
+							_log(O);
+							_log($action);
+							_log(rowIndex);
+							_log(rowData);
+							_this24.remove(rowIndex);
+						}
+					}
+				}, {
+					type: 'link',
+					idPrefix: 'mtActionEdit_',
+					icon: 'icon-edit-2',
+					title: 'Edit',
+					on: {
+						click: function click(O, $action, rowIndex, rowData) {
+							_log('on > clickEdit', 'hook'); // example hook output
+							_log(O);
+							_log($action);
+							_log(rowIndex);
+							_log(rowData);
+							_this24.edit(rowIndex, rowData, dialog);
+						}
+					}
+				}],
+				editableToolbarbuttons: [addButton, removeAllButton]
+			};
+
+			// set table cols
+			$.each(formData, function (i, prop) {
+				tableSettings.cols.push({
+					label: prop.label,
+					field: prop.id,
+					sortable: true,
+					switchable: true
+				});
+			});
+
+			// set table row data
+			$.each(data, function (i, item) {
+				// row each item
+				var rowData = {
+					cells: []
+				};
+				// cells
+				$.each(formData, function (j, prop) {
+					var data = item[prop.id];
+					data = _checkUndefinedContent(data);
+					// cell each prop
+					rowData.cells.push(data);
+				});
+
+				tableSettings.tableData.push(rowData);
+			});
+			// create table
+			this.panelTable = new APPTable(tableSettings, $panel);
+			$panel.data('table', this.panelTable);
+
+			return $panel;
+		}
+	}, {
+		key: 'add',
+		value: function add(data) {
+			this.data.push(data); // add data
+			this.panelTable.addRow(this.data.length - 1, data);
+		}
+	}, {
+		key: 'edit',
+		value: function edit(index, originalData, dialog) {
+			var keys = [];
+			$.each(this.panelTable.opts.cols, function (index, key) {
+				keys.push(key.field);
+			});
+			for (indexx in keys) {
+				dialog.inputs[keys[indexx]].input.val(originalData.cells[indexx]);
+			}
+
+			dialog.editedRow = index;
+			$(dialog.modal).modal('show');
+		}
+	}, {
+		key: 'save',
+		value: function save(index, originalData) {
+			this.data.splice(index, 1);
+			var row = $(this.panelTable._$tbody).find('tr').eq(index);
+			row.find('td').each(function () {
+				$(this).html(originalData[$(this).attr('data-id')]);
+			});
+			this.data.push(originalData); // add data
+		}
+	}, {
+		key: 'remove',
+		value: function remove(index) {
+
+			$(this.panelTable._$tbody).find('tr').eq(index).remove();;
+
+			this.data.splice(index, 1);
+
+			$.each($(this.panelTable._$tbody).find('tr'), function (rowindex, row) {
+				$(row).attr('data-row-id', rowindex);
+			});
+			console.log(index);
+		}
+	}, {
+		key: 'removeAll',
+		value: function removeAll() {
+			this.data = []; // Clear data
+			this.panelTable._clear(); // Empty table
+		}
+	}]);
+
+	return TablePanel;
+}();
+/**
+ * Create a Bootstrap 3 form-group for a textarea. 
+ */
+
+
+var TextareaForm = function () {
+
+	/**
+  * Create a Bootstrap 3 form-group.
+  * 
+  * ```
+  * <div class="form-group row">
+  *   <label>name</label>
+  *   <textarea class="form-control" rows="3"></textarea>
+  * </div>
+  * ```
+  */
+
+	function TextareaForm(name, mandatory, helperText, value) {
+		_classCallCheck(this, TextareaForm);
+
+		this.name = name;
+		this.mandatory = mandatory;
+		this.helperText = helperText;
+
+		this.textarea = $('<textarea row="6" class="form-control form-control-sm" />').attr('id', 'area_' + name);
+		this._create(name, mandatory, helperText, value);
+	}
+
+	/**
+  * @param {string} name Property name
+  * @param {boolean} mandatory `true` if mandatory, `false` if optional.
+  * @param {string} helperText Tooltip
+  * @param {string} value Initial value of the property.
+  */
+
+
+	_createClass(TextareaForm, [{
+		key: '_create',
+		value: function _create(name, mandatory, helperText, value) {
+			var O = this;
+			// formgroup
+			var $formGroup = $('<div class="form-group row"></div>');
+
+			// label
+			var $label = $('<label class="col-form-label col-form-label-sm col-9 col-xs-3 order-1 sim-param-label"></label>').attr('for', 'areaInput_' + name).appendTo($formGroup);
+			$label.text(name + (mandatory ? "*" : ""));
+
+			// field
+			var $field = $('<div class="col-12 col-xs-7 col-md-6 order-3 order-xs-2 "></div>').appendTo($formGroup);
+
+			// actions
+			var $actions = $('<div class="col-3 col-xs-auto order-2 order-xs-3 sim-param-actions"></div>').appendTo($formGroup);
+
+			// input item
+			this.input = null;
+
+			// create param metadata action
+			if (helperText) {
+				// action metadata list
+				var $actionMetadata = $('<button class="action action-pure float-right" type="button"><i class="feather icon-info"></i></button>').attr('data-toggle', 'collapse').attr('data-target', '#paramMetadata_' + name).attr('aria-expanded', false).attr('aria-controls', 'paramMetadata_' + name).attr('title', 'Show Metadata').appendTo($actions);
+			}
+
+			this.input = $('<textarea type="text" row="6" class="form-control" />').attr('id', 'areaInput_' + name).appendTo($field);
+			this.input.val(value);
+
+			// create validation container
+			this.input.$validationContainer = $('<div class="validation-message mt-1"></div>').appendTo($field);
+
+			// create param metadata list
+			if (helperText) {
+				// metadata table
+				var $metadataContainer = $('<div class="collapse param-metadata"></div>').attr('id', 'paramMetadata_' + name).attr('aria-expanded', false).appendTo($field);
+
+				$metadataContainer.append(_createParamMetadataList(helperText));
+			}
+			this.group = $formGroup;
+		}
+	}, {
+		key: 'clear',
+		value: function clear() {
+			this.input.value = "";
+		}
+
+		/**
+   * @return {boolean} If the textarea is valid.
+   */
+
+	}, {
+		key: 'validate',
+		value: function validate() {
+			var isValid = void 0;
+			this.input.find('.has-error').removeClass('has-error');
+			this.input.find('.is-invalid').removeClass('is-invalid');
+			this.input.find('.validation-message').empty();
+			if (!this.mandatory) {
+				isValid = true;
+			} else {
+				isValid = this.textarea.value ? true : false;
+			}
+			if (!isValid) {
+				this.input.$validationContainer.text('This is required');
+				this.input.parents('.form-group').addClass('has-error');
+				this.input.addClass('is-invalid');
+				this.input.$validationContainer.css("display", "block");
+			}
+			return isValid;
+		}
+	}, {
+		key: 'value',
+		get: function get() {
+			return this.input.value;
+		},
+		set: function set(newValue) {
+			this.input.value = newValue;
+		}
+	}]);
+
+	return TextareaForm;
+}();
 /*
 
 version: 1.0.0
@@ -14446,7 +15940,7 @@ var APPSimulation = function () {
 	}, {
 		key: '_updateSimForm',
 		value: function _updateSimForm(simIndex) {
-			var _this15 = this;
+			var _this26 = this;
 
 			var O = this;
 			_log('PANEL SIM / _updateSimForm: ' + simIndex);
@@ -14505,7 +15999,7 @@ var APPSimulation = function () {
 
 							// check opt for custom update function 
 							if (field.param._on && field.param._on.update && $.isFunction(field.param._on.update)) {
-								field.param._on.update.call(_this15, O);
+								field.param._on.update.call(_this26, O);
 							}
 						}
 
@@ -14825,7 +16319,6 @@ var APPSimulation = function () {
 		value: async function _updateContent(_modelMetadata, _modelId, _simulations) {
 			var O = this;
 			_log('PANEL SIM / _updateContent');
-			_log(event);
 			O._setState('params'); // reset state to form params when opening PANEL
 
 			O._modelMetadata = _modelMetadata;
@@ -14962,6 +16455,512 @@ var APPSimulation = function () {
 /*
 
 version: 1.0.0
+author: Ahmad Swaid
+date: 17.12.2020
+
+*/
+
+var APPMTDetails = function () {
+	function APPMTDetails(settings, $container) {
+		_classCallCheck(this, APPMTDetails);
+
+		var O = this;
+		// defaults maintable simulations modal
+		O._$modalContent = $container;
+		O._opts = $.extend(true, {}, {
+			classes: '',
+			data: null,
+			on: {
+				afterInit: null, // function
+				show: function show(O, event) {
+					O._updateModal(event);
+				}, // function
+				hide: null // function
+			}
+		}, settings);
+		O._create();
+	}
+
+	_createClass(APPMTDetails, [{
+		key: '_create',
+
+		/**
+   * CREATE
+   * calls super class and sets _metadata
+   */
+
+		value: function _create() {
+			var O = this;
+			_log('MODAL DETAILS / _create', 'primary');
+
+			O._metadata = O.opts.data;
+		}
+		/**
+   * CREATE MODAL
+   * creates basic modal components: header and blank body
+   */
+
+	}, {
+		key: '_createModelMetadataContent',
+		value: function _createModelMetadataContent() {
+			var O = this;
+			_log('MODAL DETAILS / _createModelMetadataContent');
+			// modal nav with tabs & search
+			O._$modalNav = $('<div class="modal-body modal-nav"></div>').appendTo(O._$modalContent);
+
+			O._navId = O._id + 'Nav';
+			if (!O._$navBar) {
+				O._$navBar = $('<nav class="navbar navbar-expand-sm row justify-content-start justify-content-md-between"></nav>').appendTo(O._$modalNav);
+
+				// nav toggle
+				var $navToggle = $('<button class="action action-pure mt-1 mb-1" type="button" data-toggle="collapse" aria-expanded="false" aria-label="Toggle navigation"><i class="feather icon-list"></i></button>').appendTo(O._$navBar).attr('data-target', '#' + O._navId).attr('aria-controls', O._navId).wrap('<div class="col-auto navbar-toggler order-1 modal-nav-toggler"></div>');
+
+				// divider
+				O._$navBar.append('<div class="col-divider order-2 d-block d-sm-none d-md-block"></div>');
+
+				// nav search
+				O._$navBar._$search = $('<input class="form-control form-control-plaintext search-input" type="search" placeholder="Search Details" aria-label="Search Details" />').appendTo(O._$navBar).attr('id', O._id + 'NavSearch').wrap('<div class="col col-xxs-auto order-2 modal-nav-search"></div>').wrap('<div class="search"></div>');
+
+				// TO DO
+				// search functionality
+
+
+				// nav tabs
+				O._$navBar._$nav = $('<ul class="nav nav-pointer pt-1 pt-md-0"></ul>').appendTo(O._$navBar).wrap('<div class="col-12 col-md-auto order-3 order-md-1 modal-nav-menu order-4"></div>').wrap('<div class="collapse navbar-collapse" id="' + O._navId + '"></div>');
+			}
+
+			// modal body
+			O._createModalBody();
+			O._$modalBody.addClass('p-0 modal-table');
+
+			// content container
+			O._$modalTabContent = $('<div class="tab-content h-100"></div>').appendTo(O._$modalBody);
+		}
+
+		/**
+  * CREATE MODAL
+  * creates basic modal components: header and blank body
+  */
+
+	}, {
+		key: '_createModalBody',
+		value: function _createModalBody() {
+			var O = this;
+			_log('MODAL / _createBody');
+
+			O._$modalBody = $('<div class="modal-body"></div>').appendTo(O._$modalContent);
+		}
+
+		/**
+  * BUILD PANEL
+  * build PANEL content
+  * @param {event} event 
+  */
+
+	}, {
+		key: '_updateContent',
+		value: async function _updateContent(_modelMetadata, _modelId) {
+			var O = this;
+			_log('PANEL MetaData / _updateContent');
+
+			// clear tab-panes
+			O._$modalTabContent.html('');
+
+			// get appropiate modelMetadata modelHandler for the model type.
+			O._modelHandler = await O._getModelHandler(_modelMetadata);
+			// populate nav
+			O._populateModalNav(O._modelHandler, O._$navBar._$nav);
+
+			// populate panel
+			O._populateModalPanel(O._modelHandler);
+
+			// activate first pane
+			O._$navBar._$nav.find('.nav-link').first().addClass('active');
+			O._$modalTabContent.find('.tab-pane').first().addClass('active');
+		}
+
+		/**
+   * POPULATE MODAL MENU
+   * @param {object} Model
+   */
+
+	}, {
+		key: '_populateModalNav',
+		value: function _populateModalNav(modelHandler) {
+			var O = this;
+			_log('MODAL DETAILS / _populateModalNav');
+			_log(modelHandler);
+
+			// clear nav
+			O._$navBar._$nav.html('');
+
+			// create nav items
+			if (modelHandler && modelHandler._menu) {
+
+				$.each(modelHandler._menu, function (i, menuMeta) {
+
+					var $navItem = null;
+
+					if (menuMeta.submenus && menuMeta.submenus.length > 0) {
+						$navItem = O._createNavItemDropdown(menuMeta).appendTo(O._$navBar._$nav);
+					} else {
+						var _$navItem2 = O._createNavItem(menuMeta).appendTo(O._$navBar._$nav);
+					}
+				});
+			}
+		}
+
+		/**
+   * POPULATE MODAL PANEL
+   * @param {object} Model
+   */
+
+	}, {
+		key: '_populateModalPanel',
+		value: function _populateModalPanel(modelHandler) {
+			var O = this;
+			_log('MODAL DETAILS / _populateModalPanel');
+			_log(modelHandler);
+
+			// create panels
+			if (modelHandler && modelHandler._menu && modelHandler._panels) {
+				// get each menus id
+				$.each(modelHandler._menu, function (i, menuMeta) {
+					// dropdown nav item 
+					if (menuMeta.submenus && menuMeta.submenus.length > 0) {
+						// iterate over submenus
+						$.each(menuMeta.submenus, function (j, submenuMeta) {
+							// panel meta data exists in handler
+							if (submenuMeta.id in modelHandler._panels) {
+								O._createPanel(submenuMeta, modelHandler).appendTo(O._$modalTabContent);
+							}
+						});
+					}
+					// single nav item ? create panel
+					else {
+							if (menuMeta.id) {
+								if (menuMeta.id in modelHandler._panels) {
+									O._createPanel(menuMeta, modelHandler).appendTo(O._$modalTabContent);
+								}
+							}
+						}
+				});
+			}
+		}
+
+		/**
+   * CREATE NAV ITEM DROPDOWN
+   * @param {array} menuMeta: array of dropdown-items width 'id' and 'label'
+   */
+
+	}, {
+		key: '_createNavItemDropdown',
+		value: function _createNavItemDropdown(menuMeta) {
+			var O = this;
+			_log('MODAL DETAILS / _createTabNavItemDropdown: ' + menuMeta.label);
+
+			var $navItem = $('<li class="nav-item dropdown"></li>');
+
+			var $navLink = $('<a class="nav-link dropdown-toggle" role="button">' + menuMeta.label + '</a>').attr('href', '#').attr('aria-haspopup', true).attr('aria-expanded', false).attr('data-toggle', 'dropdown').appendTo($navItem);
+			var $dropdown = $('<div class="dropdown-menu"></div>').appendTo($navItem);
+
+			$.each(menuMeta.submenus, function (i, submenuMeta) {
+
+				var $dropdownItem = $('<a class="dropdown-item" role="button">' + submenuMeta.label + '</a>').attr('href', '#' + submenuMeta.id).attr('aria-controls', '#' + submenuMeta.id).attr('data-toggle', 'tab').appendTo($dropdown);
+			});
+
+			return $navItem;
+		}
+
+		/**
+   * CREATE NAV ITEM
+   * @param {array} menuMeta
+   */
+
+	}, {
+		key: '_createNavItem',
+		value: function _createNavItem(menuMeta) {
+			var O = this;
+			_log('MODAL DETAILS / _createNavItem: ' + menuMeta.label);
+
+			var $navItem = $('<li class="nav-item"></li>');
+			var $navLink = $('<a class="nav-link" role="button">' + menuMeta.label + '</a>').attr('href', '#' + menuMeta.id).attr('aria-controls', '#' + menuMeta.id).attr('data-toggle', 'tab').appendTo($navItem);
+
+			return $navItem;
+		}
+
+		/**
+   * CREATE PANEL
+   * create tab-pane for specific menu by selecting type and calling specific creation (simple, complex, plot)
+   * @param {array} menu
+   * @param {object} modelHandler: object of type Model
+   */
+
+	}, {
+		key: '_createPanel',
+		value: function _createPanel(menu, modelHandler) {
+			var O = this;
+			_log('MODAL DETAILS / _createPanel: ' + menu.id);
+
+			var $panel = null;
+			if (modelHandler && menu.id) {
+
+				var panelMeta = modelHandler._panels[menu.id];
+				// panel type
+				if (panelMeta.type) {
+					// complex
+					if (panelMeta.type == 'complex') {
+						$panel = O._createComplexPanel(menu, modelHandler);
+					}
+					// simple
+					else if (panelMeta.type == 'simple') {
+							$panel = O._createSimplePanel(menu, modelHandler);
+						}
+						// plot
+						else if (panelMeta.type == 'plot') {
+								$panel = O._createPlotPanel(menu, modelHandler);
+							}
+				}
+			}
+
+			return $panel;
+		}
+
+		/**
+   * CREATE SIMPLE PANEL
+   * create simple tab-pane for specific menu
+   * table has property, value cols
+   * @param {array} menu
+   * @param {object} modelHandler: object of type Model
+   */
+
+	}, {
+		key: '_createSimplePanel',
+		value: function _createSimplePanel(menu, modelHandler) {
+			var O = this;
+			_log('MODAL DETAILS / _createSimplePanel: ' + menu.id);
+
+			// tab-pane
+			var $panel = $('<div class="tab-pane h-100" role="tabpanel"></div>').attr('id', menu.id);
+
+			if (modelHandler && menu.id) {
+				// get panel meta
+				var panelMeta = modelHandler._panels[menu.id];
+
+				// title
+				$panel.append('<div class="panel-heading">' + menu.label + '</div>');
+
+				// table settings
+				var tableSettings = {
+					cols: [{
+						label: 'Property',
+						field: 'property',
+						classes: {
+							th: null,
+							td: 'td-label min-200'
+						},
+						sortable: true,
+						switchable: false
+					}, {
+						label: 'Value',
+						field: 'value',
+						sortable: false,
+						switchable: false
+					}],
+					tableData: [],
+					responsive: true,
+					showToggle: true
+				};
+
+				// set table row data
+				if (panelMeta.metadata && panelMeta.schema) {
+					$.each(panelMeta.schema, function (j, prop) {
+						var rowData = {
+							cells: []
+						};
+						// cell 1 label
+						rowData.cells.push(prop.label);
+						// cell 2 val
+						var data = panelMeta.metadata[prop.id];
+						data = _checkUndefinedContent(data);
+						rowData.cells.push(data);
+
+						tableSettings.tableData.push(rowData);
+					});
+				}
+
+				// create table
+				var panelTable = new APPTable(tableSettings, $panel);
+				$panel.data('table', panelTable);
+			};
+
+			return $panel;
+		}
+
+		/**
+   * CREATE COMPLEX PANEL
+   * create complex tab-pane for specific menu
+   * table has in metadata and schema defined cols
+   * @param {array} menu
+   * @param {object} modelHandler: object of class Model
+   */
+
+	}, {
+		key: '_createComplexPanel',
+		value: function _createComplexPanel(menu, modelHandler) {
+			var O = this;
+			_log('MODAL DETAILS / _createComplexPanel: ' + menu.id);
+
+			// tab-pane
+			var $panel = $('<div class="tab-pane h-100" role="tabpanel"></div>').attr('id', menu.id);
+
+			if (modelHandler && menu.id) {
+				// get panel meta
+				var panelMeta = modelHandler._panels[menu.id];
+
+				// title
+				$panel.append('<div class="panel-heading">' + menu.label + '</div>');
+
+				// table settings
+				var tableSettings = {
+					cols: [],
+					tableData: [],
+					responsive: true,
+					showToggle: true
+				};
+
+				// set table cols
+				$.each(panelMeta.schema, function (i, prop) {
+					tableSettings.cols.push({
+						label: prop.label,
+						field: prop.id,
+						sortable: true,
+						switchable: true
+					});
+				});
+
+				// set table row data
+				if (panelMeta.metadata && panelMeta.schema) {
+					$.each(panelMeta.metadata, function (i, item) {
+						// row each item
+						var rowData = {
+							cells: []
+						};
+						// cells
+						$.each(panelMeta.schema, function (j, prop) {
+							var data = item[prop.id];
+							data = _checkUndefinedContent(data);
+							// cell each prop
+							rowData.cells.push(data);
+						});
+
+						tableSettings.tableData.push(rowData);
+					});
+				}
+
+				// create table
+				var panelTable = new APPTable(tableSettings, $panel);
+				$panel.data('table', panelTable);
+			};
+			return $panel;
+		}
+
+		/**
+   * CREATE PLOT PANEL
+   * create plot tab-pane for specific menu
+   * @param {array} menu
+   * @param {object} modelHandler: object of class Model
+   */
+
+	}, {
+		key: '_createPlotPanel',
+		value: function _createPlotPanel(menu, modelHandler) {
+			var O = this;
+			_log('MODAL DETAILS / _createPlotPanel');
+
+			// tab-pane
+			var $panel = $('<div class="tab-pane h-100" role="tabpanel"></div>').attr('id', menu.id);
+
+			if (modelHandler && menu.id && modelHandler._img) {
+				// get panel meta
+				var panelMeta = modelHandler._panels[menu.id];
+
+				// title
+				$panel.append('<div class="panel-heading">' + menu.label + '</div>');
+
+				var $plot = $('<figure class="figure"><img src="' + modelHandler._img + '" /></figure>').appendTo($panel).wrap('<div class="panel-plot"></div>');
+			}
+
+			return $panel;
+		}
+
+		/**
+   * GET MODEL HANDLER
+   * returns model handler of class Model
+   * @param {array} modelMetadata: metadata for specific id
+   */
+
+	}, {
+		key: '_getModelHandler',
+		value: async function _getModelHandler(modelMetadata) {
+			var O = this;
+			_log('MODAL DETAILS / _getModelHandler');
+			console.log(modelMetadata);
+
+			var modelHandler = null;
+
+			if (modelMetadata) {
+
+				// get plot image
+				var imgUrl = void 0;
+				// get appropiate modelMetadata modelHandler for the model type.
+
+				if (modelMetadata.modelType === 'genericModel') {
+					modelHandler = new GenericModel(modelMetadata, imgUrl, false);
+				} else if (modelMetadata.modelType === 'dataModel') {
+					modelHandler = new DataModel(modelMetadata, imgUrl);
+				} else if (modelMetadata.modelType === 'predictiveModel') {
+					modelHandler = new PredictiveModel(modelMetadata, imgUrl);
+				} else if (modelMetadata.modelType === 'otherModel') {
+					modelHandler = new OtherModel(modelMetadata, imgUrl);
+				} else if (modelMetadata.modelType === 'toxicologicalModel') {
+					modelHandler = new ToxicologicalModel(modelMetadata, imgUrl);
+				} else if (modelMetadata.modelType === 'doseResponseModel') {
+					modelHandler = new DoseResponseModel(modelMetadata, imgUrl);
+				} else if (modelMetadata.modelType === 'exposureModel') {
+					modelHandler = new ExposureModel(modelMetadata, imgUrl);
+				} else if (modelMetadata.modelType === 'processModel') {
+					modelHandler = new ProcessModel(modelMetadata, imgUrl);
+				} else if (modelMetadata.modelType === 'consumptionModel') {
+					modelHandler = new ConsumptionModel(modelMetadata, imgUrl);
+				} else if (modelMetadata.modelType === 'healthModel') {
+					modelHandler = new HealthModel(modelMetadata, imgUrl);
+				} else if (modelMetadata.modelType === 'riskModel') {
+					modelHandler = new RiskModel(modelMetadata, imgUrl);
+				} else if (modelMetadata.modelType === 'qraModel') {
+					modelHandler = new QraModel(modelMetadata, imgUrl);
+				} else {
+					modelHandler = new GenericModel(modelMetadata, imgUrl, false);
+				}
+			}
+
+			return modelHandler;
+		}
+	}, {
+		key: 'opts',
+		get: function get() {
+			return this._opts;
+		},
+		set: function set(settings) {
+			this._opts = $.extend(true, {}, this.opts, settings);
+		}
+	}]);
+
+	return APPMTDetails;
+}();
+/*
+
+version: 1.0.0
 author: sascha obermüller
 date: 07.12.2020
 
@@ -14974,6 +16973,7 @@ var APPTable = function () {
 		var O = this;
 		O._$container = $container;
 		O._$wrapper = null;
+		O.totalRows = 0;
 		// defaults
 		O._opts = $.extend(true, {}, {
 			attributes: {}, // attribute : value pairs for <table>
@@ -14986,9 +16986,10 @@ var APPTable = function () {
 				tbody: 'tRows'
 			},
 			responsive: true, // wrap table with .table-responsive
+			rowActions: [],
 			rowSelectable: false, // 'single', // 'multiple', //
 			showToggle: true, // show card view toggle
-			wrapper: 'none', // 'card'
+			wrapper: false, // 'card'
 			on: { // hooks/callbacks on specific events
 				afterInit: null,
 				afterPopulate: null,
@@ -14996,11 +16997,6 @@ var APPTable = function () {
 				deselectRow: null
 			}
 		}, settings);
-
-		// extend global _sorter funcs
-		if (O.opts._sorter) {
-			_sorter = $.extend(true, {}, O._opts.sorter, _sorter);
-		}
 
 		// basic init actions
 		O._create();
@@ -15012,14 +17008,121 @@ var APPTable = function () {
 	}
 
 	_createClass(APPTable, [{
-		key: '_create',
+		key: 'addRow',
+		value: function addRow(rowIndex, rowData, tableData) {
+			var O = this;
+			tableData = O._tableData;
+			// row
+			var $tr = $('<tr data-row-id="' + rowIndex + '"></tr>').appendTo(O._$tbody);
 
+			// rows selectable
+			if (O.opts.rowSelectable) {
 
+				// add selectable attribrutes
+				$tr.data('selectable', '');
+				$tr.data('selected', false);
+
+				// add row click actions
+				$tr.on('click', function (event) {
+					// activate row not on click on buttons, actions or links in the table
+					if (!$(event.target).is('a, button, .action') && !$(event.target).parent().is('a, button, .action')) {
+						// select row
+						O._handleRowSelect($tr);
+					}
+				});
+			}
+
+			// complete table data by adding row element to certain row data
+			tableData[rowIndex].el = $tr;
+
+			// create cols
+			$.each(O.opts.cols, function (j, col) {
+				console.log('col', col);
+				var data = void 0;
+				if (rowData.cells) data = rowData.cells[j];else data = rowData[col.field];
+				var $td = $('<td></td>').appendTo($tr);
+				col.classes && col.classes.td ? $td.addClass(col.classes.td) : null; // classes
+				col.collapsable ? $td.attr('data-td-collapse', col.collapsable) : null; // data collapsable
+				col.label ? $td.attr('data-label', col.label) : null; // add data-label for toggle view cards
+				col.field ? $td.attr('data-id', col.field) : null;
+
+				// td attributes
+				if (col.attributes && col.attributes.td) {
+					$.each(col.attributes.td, function (attr, val) {
+						attr && val ? $td.attr(attr, val) : '';
+					});
+				}
+
+				// check for function that format the data
+				if (col.formatter) {
+					if ($.isFunction(col.formatter)) {
+						data = col.formatter.call(O, data);
+					} else if (_formatter && _formatter.hasOwnProperty(col.formatter)) {
+						data = _formatter[col.formatter].call(O, data);
+					}
+				}
+				// fill td with data
+				$td.html(data);
+			});
+
+			// create row actions 
+			if (O.opts.rowActions && O.opts.rowActions.length > 0) {
+
+				// create action col
+				var $tdActions = $('<td class="td-actions"></td>').appendTo($tr);
+
+				// create row actions 
+				$.each(O.opts.rowActions, function (j, action) {
+
+					// create action element
+					var $action = $('<button class="action action-outline-secondary"></button>').attr('id', action.idPrefix + rowIndex);
+					// .appendTo( $tdActions );
+
+					// create action icon
+					$action.$icon = $('<i class="feather"></i>').appendTo($action);
+					// set icon by class
+					action.icon ? $action.$icon.addClass(action.icon) : null;
+
+					// set tooltip and title
+					if (action.title) {
+						$action.attr('data-tooltip', '').attr('aria-label', action.title).attr('title', action.title);
+					}
+
+					// action on click
+					if (action.on) {
+						if (action.on.click && $.isFunction(action.on.click)) {
+							// bind click action on action
+							$action.on('click', function (event) {
+								console.log('moooooooo', event);
+								actionIndex = $tr.attr('data-row-id');
+								action.on.click.call(O, O, $action, actionIndex, rowData);
+							});
+						}
+					}
+
+					// add action type specific attributes
+					if (action.type) {
+						// create modal action
+						if (action.type == 'modal') {
+							$action.attr('data-toggle', 'modal').attr('data-target', action.target).attr('data-modal-id', rowIndex);
+						}
+					}
+					// append to td
+					$action.appendTo($tdActions);
+				});
+
+				// wrap actions with inner container of td
+				$tdActions.wrapInner('<div class="td-actions-container"></div>');
+			}
+			O.totalRows = rowIndex;
+		}
 		/**
    * CREATE TABLE HEAD
    * @param
    */
 
+	}, {
+		key: '_create',
 		value: async function _create() {
 			var O = this;
 			_log('TABLE / _create', 'primary');
@@ -15108,7 +17211,6 @@ var APPTable = function () {
 					col.id ? $th.attr('id', col.id) : null; // id
 					col.classes && col.classes.th ? $th.addClass(col.classes.th) : null; // classes
 					col.field ? $th.attr('data-field', col.field) : null; // bs table / data-field identifier
-					col.switchable ? $th.attr('data-switchable', col.switchable) : null; // bs table / data-switchable
 
 					// add sort functionality
 					if (col.sortable) {
@@ -15169,6 +17271,11 @@ var APPTable = function () {
 						O._toggleTableView();
 					});
 				}
+				if (O._opts.editableToolbarbuttons) {
+					$.each(O._opts.editableToolbarbuttons, function (index, element) {
+						element.appendTo(O._$toolbar._$btnGroup);
+					});
+				}
 			}
 		}
 
@@ -15197,114 +17304,17 @@ var APPTable = function () {
 	}, {
 		key: '_populateTable',
 		value: function _populateTable(tableData) {
+			var _this27 = this;
+
 			var O = this;
 			_log('TABLE / _populateTable');
-
 			O._clear();
 
 			tableData = tableData || O._tableData;
 
 			// create rows
 			$.each(tableData, function (rowIndex, rowData) {
-				// row
-				var $tr = $('<tr data-row-id="' + rowIndex + '"></tr>').appendTo(O._$tbody);
-
-				// rows selectable
-				if (O.opts.rowSelectable) {
-
-					// add selectable attribrutes
-					$tr.data('selectable', '');
-					$tr.data('selected', false);
-
-					// add row click actions
-					$tr.on('click', function (event) {
-						// activate row not on click on buttons, actions or links in the table
-						if (!$(event.target).is('a, button, .action') && !$(event.target).parent().is('a, button, .action')) {
-							// select row
-							O._handleRowSelect($tr);
-						}
-					});
-				}
-
-				// complete table data by adding row element to certain row data
-				tableData[rowIndex].el = $tr;
-
-				// create cols
-				$.each(O.opts.cols, function (j, col) {
-
-					var data = rowData.cells[j];
-
-					var $td = $('<td></td>').appendTo($tr);
-					col.classes && col.classes.td ? $td.addClass(col.classes.td) : null; // classes
-					col.collapsable ? $td.attr('data-td-collapse', col.collapsable) : null; // data collapsable
-					col.label ? $td.attr('data-label', col.label) : null; // add data-label for toggle view cards
-
-					// td attributes
-					if (col.attributes && col.attributes.td) {
-						$.each(col.attributes.td, function (attr, val) {
-							attr && val ? $td.attr(attr, val) : '';
-						});
-					}
-
-					// check for function that format the data
-					if (col.formatter) {
-						if ($.isFunction(col.formatter)) {
-							data = col.formatter.call(O, data);
-						} else if (_formatter && _formatter.hasOwnProperty(col.formatter)) {
-							data = _formatter[col.formatter].call(O, data);
-						}
-					}
-					// fill td with data
-					$td.html(data);
-				});
-
-				// create row actions 
-				if (O.opts.rowActions && O.opts.rowActions.length > 0) {
-
-					// create action col
-					var $tdActions = $('<td class="td-actions"></td>').appendTo($tr);
-
-					// create row actions 
-					$.each(O.opts.rowActions, function (j, action) {
-
-						// create action element
-						var $action = $('<button class="action action-outline-secondary"></button>').attr('id', action.idPrefix + rowIndex);
-						// .appendTo( $tdActions );
-
-						// create action icon
-						$action.$icon = $('<i class="feather"></i>').appendTo($action);
-						// set icon by class
-						action.icon ? $action.$icon.addClass(action.icon) : null;
-
-						// set tooltip and title
-						if (action.title) {
-							$action.attr('data-tooltip', '').attr('aria-label', action.title).attr('title', action.title);
-						}
-
-						// action on click
-						if (action.on) {
-							if (action.on.click && $.isFunction(action.on.click)) {
-								// bind click action on action
-								$action.on('click', function (event) {
-									action.on.click.call(O, O, $action, rowIndex, rowData);
-								});
-							}
-						}
-
-						// add action type specific attributes
-						if (action.type) {
-							// create modal action
-							if (action.type == 'modal') {
-								$action.attr('data-toggle', 'modal').attr('data-target', action.target).attr('data-modal-id', rowIndex);
-							}
-						}
-						// append to td
-						$action.appendTo($tdActions);
-					});
-
-					// wrap actions with inner container of td
-					$tdActions.wrapInner('<div class="td-actions-container"></div>');
-				}
+				_this27.addRow(rowIndex, rowData, tableData);
 			});
 
 			// callback
@@ -15324,12 +17334,6 @@ var APPTable = function () {
 		value: function _updateOrder($th) {
 			var O = this;
 			_log('TABLE / _updateOrder');
-
-			// let table = $(".sortable"); // This sortable table
-			// let tbody = table.find("tbody"); // Store table body
-			// let rows = tbody.find("tr").toArray(); // Store array containing rows
-			// let header = $(idName); // Get the header
-			// let order = header.data("sort"); // Get data-sort attribute
 
 			var field = $th.data('field');
 			var $rows = O._$tbody.find('tr').toArray();
@@ -15639,11 +17643,10 @@ var APPTableMT = function (_APPTable) {
 				table: 'mtGrid',
 				thead: 'mtHead',
 				tbody: 'mtRows',
-				filter: 'mtFilter',
-				actionDetailPre: 'mtActionDetail',
-				actionSimPre: 'mtActionSim'
+				filter: 'mtFilter'
 			},
-			rowSelectable: 'multiple', // 'single', // false, //
+			rowActions: [],
+			rowSelectable: false, //'multiple', // 'single', // 
 			wrapper: 'card',
 			on: {
 				afterInit: null,
@@ -15941,11 +17944,6 @@ var APPTableMT = function (_APPTable) {
 		}
 
 		/**
-   * POPULATE TABLE
-   * @param {object} tableData: data object
-   */
-
-		/**
    * SET COUNTER
    * set main table result counter
    * @param {boolean} state: false=hide, true=show
@@ -16027,7 +18025,7 @@ var APPTableMT = function (_APPTable) {
 	}, {
 		key: '_updateFilter',
 		value: async function _updateFilter() {
-			var _this17 = this;
+			var _this29 = this;
 
 			var O = this;
 			_log('TABLE MAIN / _updateFilter');
@@ -16067,7 +18065,7 @@ var APPTableMT = function (_APPTable) {
 							if ($.isArray(facetValue) && facetValue.length > 0) {
 
 								// get according col index
-								var colIndex = _get(APPTableMT.prototype.__proto__ || Object.getPrototypeOf(APPTableMT.prototype), '_getColIndexByField', _this17).call(_this17, field);
+								var colIndex = _get(APPTableMT.prototype.__proto__ || Object.getPrototypeOf(APPTableMT.prototype), '_getColIndexByField', _this29).call(_this29, field);
 								var cellData = rowData.cells[colIndex];
 
 								if (cellData instanceof Set) {

@@ -78,6 +78,7 @@
 	   </webResource>
 
 	   <importResource relativePath="js-lib/bfr/fskapp/app_1.0.0.js" type="JAVASCRIPT"></importResource>
+	   <importResource relativePath="js-lib/bfr/fskapp/editor_data_1.0.0.js" type="JAVASCRIPT"></importResource>
 	   <importResource relativePath="js-lib/bfr/fskapp/css/styles.css" type="CSS"></importResource>
      </webResourceBundle>
    </extension>
