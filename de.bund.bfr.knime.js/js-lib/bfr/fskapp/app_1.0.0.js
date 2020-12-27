@@ -13080,7 +13080,7 @@ var addControlledVocabulary = function addControlledVocabulary(input, vocabulary
 var createForm = function createForm(prop, value, port) {
 	var isMandatory = prop.required ? prop.required : false;
 
-	if (prop.type === "text" || prop.type === "number" || prop.type === "url" || prop.type === "date" || prop.type === "email") return new InputForm(prop.label, isMandatory, prop.type, prop.description, value ? value : "", port, prop.vocabulary);else if (prop.type === "long-text") {
+	if (prop.type === "text" || prop.type === "number" || prop.type === "url" || prop.type === "date" || prop.type === "email") return new InputForm(prop.label, isMandatory, prop.type, prop.description, value ? value : "", port, prop.vocabulary, prop.sid);else if (prop.type === "long-text") {
 		return new TextareaForm(prop.label, isMandatory, prop.description, value ? value : "");
 	} else if (prop.type === "enum") return new SelectForm(prop.label, isMandatory, prop.description, value, port, prop.vocabulary);else if (prop.type === "boolean") return new InputForm(prop.label, false, "checkbox", prop.description, value, port);else if (prop.type === "text-array") return new ArrayForm(prop.label, isMandatory, prop.type, value ? value : [], prop.description, port, prop.vocabulary);else if (prop.type === "date-array") return new ArrayForm(prop.label, isMandatory, prop.type, value ? value : [], prop.description, port, prop.vocabulary);
 };
@@ -13838,6 +13838,7 @@ var ArrayForm = function () {
 		_classCallCheck(this, ArrayForm);
 
 		this.group = document.createElement("div");
+		this.mandatory = mandatory;
 		this.simpleTable = new SimpleTable(type, value, vocabulary, port);
 		this._create(name, mandatory, helperText);
 	}
@@ -13850,12 +13851,12 @@ var ArrayForm = function () {
 			if (name) {
 
 				// formgroup
-				var $formGroup = $('<div class="form-group row"></div>');
+				$formGroup = $('<div class="form-group row"></div>');
 				// .appendTo( O._$simForm );
 
 				// label
-				var $label = $('<label class="col-form-label col-form-label-sm col-9 col-xs-3 order-1 sim-param-label"></label>').attr('for', 'input_' + name).appendTo($formGroup);
-				$label.text(name + (mandatory ? "*" : ""));
+				var _$label = $('<label class="col-form-label col-form-label-sm col-9 col-xs-3 order-1 sim-param-label"></label>').attr('for', 'input_' + name).appendTo($formGroup);
+				_$label.text(name + (mandatory ? "*" : ""));
 
 				// field
 				var $field = $('<div class="col-12 col-xs-7 col-md-6 order-3 order-xs-2 sim-param-field"></div>').appendTo($formGroup);
@@ -13893,6 +13894,8 @@ var ArrayForm = function () {
 				});
 
 				$(panelDiv).appendTo($field);
+				// create validation container
+				this.$validationContainer = $('<div class="validation-message mt-1"></div>').appendTo($field);
 
 				// create validation container
 				$('<div class="validation-message mt-1"></div>').appendTo($field);
@@ -13915,14 +13918,23 @@ var ArrayForm = function () {
 		}
 
 		/**
-   * @returns {boolean} If the input is valid.
+   * @return {boolean} If the textarea is valid.
    */
 
 	}, {
 		key: 'validate',
 		value: function validate() {
-			// TODO: Implement validate in ArrayForm
-			return true;
+			var isValid = true;
+			if (this.mandatory) {
+				isValid = this.simpleTable.value.length > 0 ? true : false;
+			}
+			if (!isValid) {
+				this.$validationContainer.text('At least one row is required');
+				this.group.addClass('has-error');
+				this.group.addClass('is-invalid');
+				this.$validationContainer.css("display", "block");
+			}
+			return isValid;
 		}
 	}, {
 		key: 'value',
@@ -14005,7 +14017,7 @@ var APPMTEditableDetails = function () {
 				var $navToggle = $('<button class="action action-pure mt-1 mb-1" type="button" data-toggle="collapse" aria-expanded="false" aria-label="Toggle navigation"><i class="feather icon-list"></i></button>').appendTo(O._$navBar).attr('data-target', '#' + O._navId).attr('aria-controls', O._navId).wrap('<div class="col-auto navbar-toggler order-1 modal-nav-toggler"></div>');
 
 				// divider
-				O._$navBar.append('<div class="col-divider order-2 d-block d-sm-none d-md-block"></div>');
+				// O._$navBar.append('<div class="col-divider order-2 d-block d-sm-none d-md-block"></div>');
 
 				// nav search
 				/*O._$navBar._$search = $('<input class="form-control form-control-plaintext search-input" type="search" placeholder="Search Details" aria-label="Search Details" />')
@@ -14102,6 +14114,11 @@ var APPMTEditableDetails = function () {
 					}
 				});
 			}
+			//init collapsable td
+			$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+				var target = $(e.target).attr("href"); // activated tab
+				_appUI._initTdCollapse($('div' + target + '.tab-pane.h-100.active').find('table'));
+			});
 		}
 
 		/**
@@ -14379,10 +14396,10 @@ var Dialog = function () {
 			// navbar
 			_$navBar = $('<nav class="navbar sim-select">').appendTo(_$modalNav).wrap('<form></form>');
 
-			// sim select label
+			//  select label
 			_$simSelectLabel = $('<label class="col-4 col-md-3 sim-select-label" >' + title.replace("Add", "") + '</label>').appendTo(_$navBar);
 
-			// sim select actions
+			//  select actions
 			_$dialogActions = $('<div class="col-8"></div>').appendTo(_$navBar);
 
 			var $actionGroup1 = $('<div class="col-12"></div>').appendTo(_$dialogActions);
@@ -14553,6 +14570,7 @@ var InputForm = function () {
   */
 	function InputForm(name, mandatory, type, helperText, value, port) {
 		var vocabulary = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : null;
+		var sid = arguments[7];
 
 		_classCallCheck(this, InputForm);
 
@@ -14560,7 +14578,7 @@ var InputForm = function () {
 		this.mandatory = mandatory;
 		this.type = type;
 		this.helperText = helperText;
-
+		this.isSID = !_isNull(sid) && !_isUndefined(sid);
 		this.group = null;
 		this._create(name, mandatory, type, helperText, value, vocabulary, port);
 	}
@@ -14621,6 +14639,8 @@ var InputForm = function () {
 	}, {
 		key: '_createFormField',
 		value: function _createFormField(name, mandatory, type, helperText, value, vocabulary, port) {
+			var _this20 = this;
+
 			var O = this;
 			_log('PANEL SIM / _createFormField');
 			_log(name);
@@ -14628,18 +14648,18 @@ var InputForm = function () {
 			if (name) {
 
 				// formgroup
-				var $formGroup = $('<div class="form-group row"></div>');
+				var _$formGroup = $('<div class="form-group row"></div>');
 				// .appendTo( O._$simForm );
 
 				// label
-				var $label = $('<label class="col-form-label col-form-label-sm col-9 col-xs-3 order-1 sim-param-label"></label>').attr('for', 'input_' + name).appendTo($formGroup);
+				$label = $('<label class="col-form-label col-form-label-sm col-9 col-xs-3 order-1 sim-param-label"></label>').attr('for', 'input_' + name).appendTo(_$formGroup);
 				$label.text(name + (mandatory ? "*" : ""));
 
 				// field
-				var $field = $('<div class="col-12 col-xs-7 col-md-6 order-3 order-xs-2 sim-param-field"></div>').appendTo($formGroup);
+				var $field = $('<div class="col-12 col-xs-7 col-md-6 order-3 order-xs-2 sim-param-field"></div>').appendTo(_$formGroup);
 
 				// actions
-				var $actions = $('<div class="col-3 col-xs-auto order-2 order-xs-3 sim-param-actions"></div>').appendTo($formGroup);
+				var $actions = $('<div class="col-3 col-xs-auto order-2 order-xs-3 sim-param-actions"></div>').appendTo(_$formGroup);
 
 				// input item
 				this.input = null;
@@ -14684,7 +14704,9 @@ var InputForm = function () {
 				} else {
 					this.input.val(value);
 				}
-
+				this.input.on("blur", function () {
+					O.validate(_this20.value);
+				});
 				// create validation container
 				this.input.$validationContainer = $('<div class="validation-message mt-1"></div>').appendTo($field);
 
@@ -14696,7 +14718,7 @@ var InputForm = function () {
 					$metadataContainer.append(_createParamMetadataList(helperText));
 				}
 
-				this.group = $formGroup;
+				this.group = _$formGroup;
 			}
 		}
 	}, {
@@ -14728,12 +14750,20 @@ var InputForm = function () {
 			this.input.find('.is-invalid').removeClass('is-invalid');
 			this.input.find('.validation-message').empty();
 
-			var isValid = void 0;
+			var isValid = true;
 			if (!this.mandatory) {
 				isValid = true;
+			} else if (this.isSID) {
+				var fieldValue = this.input.val();
+				var idRegexp = /^[A-Za-z_^s]\w*$/;
+				// name fits regexp
+				if (!idRegexp.test(fieldValue)) {
+					this.input.$validationContainer.text('Parameter ID is not a valid (SId)');
+					isValid = false;
+				}
 			} else {
 				isValid = this.input.val() ? true : false;
-				if (!isValid) this.input.$validationContainer.text("This is required");
+				if (!isValid) this.input.$validationContainer.text("required");
 				// if email input is empty, reset the default error message
 				if (!isValid && this.input.type === "email") {
 					this.input.$validationContainer.text("Email is a required property");
@@ -14743,12 +14773,11 @@ var InputForm = function () {
 
 					var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\ ".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 					isValid = re.test(this.input.value);
-					this.input.$validationContainer.text("This is required");
+					this.input.$validationContainer.text("required");
 				}
 			}
 
 			if (!isValid) {
-				this.input.$validationContainer.html("This is required");
 				this.input.parents('.form-group').addClass('has-error');
 				this.input.$validationContainer.addClass('is-invalid');
 				this.input.$validationContainer.css("display", "block");
@@ -14805,7 +14834,7 @@ var SelectForm = function () {
 	_createClass(SelectForm, [{
 		key: '_create',
 		value: function _create(name, mandatory, helperText, value, vocabulary, port) {
-			var _this20 = this;
+			var _this21 = this;
 
 			var O = this;
 			// formgroup
@@ -14838,7 +14867,7 @@ var SelectForm = function () {
 					return response.json();
 				}).then(function (data) {
 					//console.log('data',data);
-					_this20.input.append(data.map(function (item) {
+					_this21.input.append(data.map(function (item) {
 						return '<option>' + item + '</option>';
 					}).join(""));
 					//console.log($(this.select));
@@ -14882,7 +14911,7 @@ var SelectForm = function () {
 			}
 
 			if (!isValid) {
-				this.input.$validationContainer.text('This is required');
+				this.input.$validationContainer.text('required');
 				this.input.parents('.form-group').addClass('has-error');
 				this.input.addClass('is-invalid');
 				this.input.$validationContainer.css("display", "block");
@@ -14904,7 +14933,7 @@ var SelectForm = function () {
 
 var SimpleTable = function () {
 	function SimpleTable(type, data, vocabulary, port) {
-		var _this21 = this;
+		var _this22 = this;
 
 		_classCallCheck(this, SimpleTable);
 
@@ -14920,7 +14949,7 @@ var SimpleTable = function () {
 		this.table.appendChild(this.body);
 
 		data.forEach(function (value) {
-			return _this21._createRow(value);
+			return _this22._createRow(value);
 		});
 	}
 
@@ -14940,14 +14969,14 @@ var SimpleTable = function () {
 	}, {
 		key: 'remove',
 		value: function remove() {
-			var _this22 = this;
+			var _this23 = this;
 
 			// Find checked rows and delete them
 			Array.from(this.body.children).forEach(function (row) {
 				// Get checkbox (tr > td > input)
 				var checkbox = row.firstChild.firstChild;
 				if (checkbox.checked) {
-					_this22.body.removeChild(row);
+					_this23.body.removeChild(row);
 				}
 			});
 		}
@@ -14964,7 +14993,7 @@ var SimpleTable = function () {
 	}, {
 		key: '_createRow',
 		value: function _createRow() {
-			var _this23 = this;
+			var _this24 = this;
 
 			var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
 
@@ -14984,7 +15013,7 @@ var SimpleTable = function () {
 			input.addEventListener("keyup", function (event) {
 				if (event.key === "Enter") {
 					input.blur();
-					_this23.add();
+					_this24.add();
 				}
 			});
 
@@ -15098,7 +15127,7 @@ var TablePanel = function () {
 	}, {
 		key: '_createComplexPanel',
 		value: function _createComplexPanel(data, formData, title, dialog) {
-			var _this24 = this;
+			var _this25 = this;
 
 			var O = this;
 
@@ -15115,7 +15144,7 @@ var TablePanel = function () {
 
 			var removeAllButton = $('<button class="btn btn-outline-secondary btn-sm btn-icon" type="button"><i class="feather icon-trash"></i></button>').attr('aria-label', 'Remove all ' + title + '(s)').attr('title', 'Remove all ' + title + '(s)');
 			removeAllButton.on('click', function (event) {
-				_this24.removeAll();
+				_this25.removeAll();
 			});
 
 			// table settings
@@ -15127,6 +15156,36 @@ var TablePanel = function () {
 				rowActions: [{
 					type: 'link',
 					idPrefix: 'mtActionMerge_',
+					icon: 'icon-arrow-up',
+					title: 'Move Up',
+					on: {
+						click: function click(O, $action, rowIndex, rowData) {
+							_log('on > clicktrash', 'hook'); // example hook output
+							_log(O);
+							_log($action);
+							_log(rowIndex);
+							_log(rowData);
+							_this25.moveTo(rowIndex, 'up');
+						}
+					}
+				}, {
+					type: 'link',
+					idPrefix: 'mtActionMerge_',
+					icon: 'icon-arrow-down',
+					title: 'Move down',
+					on: {
+						click: function click(O, $action, rowIndex, rowData) {
+							_log('on > clicktrash', 'hook'); // example hook output
+							_log(O);
+							_log($action);
+							_log(rowIndex);
+							_log(rowData);
+							_this25.moveTo(rowIndex, 'down');
+						}
+					}
+				}, {
+					type: 'link',
+					idPrefix: 'mtActionMerge_',
 					icon: 'icon-trash',
 					title: 'Trash',
 					on: {
@@ -15136,7 +15195,7 @@ var TablePanel = function () {
 							_log($action);
 							_log(rowIndex);
 							_log(rowData);
-							_this24.remove(rowIndex);
+							_this25.remove(rowIndex);
 						}
 					}
 				}, {
@@ -15151,7 +15210,7 @@ var TablePanel = function () {
 							_log($action);
 							_log(rowIndex);
 							_log(rowData);
-							_this24.edit(rowIndex, rowData, dialog);
+							_this25.edit(rowIndex, rowData, dialog);
 						}
 					}
 				}],
@@ -15187,14 +15246,14 @@ var TablePanel = function () {
 			// create table
 			this.panelTable = new APPTable(tableSettings, $panel);
 			$panel.data('table', this.panelTable);
-
 			return $panel;
 		}
 	}, {
 		key: 'add',
 		value: function add(data) {
+			this.panelTable._tableData.push(data); // add data
 			this.data.push(data); // add data
-			this.panelTable.addRow(this.data.length - 1, data);
+			this.panelTable.addRow(this.panelTable._tableData.length - 1, data);
 		}
 	}, {
 		key: 'edit',
@@ -15214,11 +15273,13 @@ var TablePanel = function () {
 		key: 'save',
 		value: function save(index, originalData) {
 			this.data.splice(index, 1);
+			this.panelTable._tableData.splice(index, 1);
 			var row = $(this.panelTable._$tbody).find('tr').eq(index);
 			row.find('td').each(function () {
 				$(this).html(originalData[$(this).attr('data-id')]);
 			});
 			this.data.push(originalData); // add data
+			this.panelTable._tableData.push(originalData);
 		}
 	}, {
 		key: 'remove',
@@ -15227,6 +15288,7 @@ var TablePanel = function () {
 			$(this.panelTable._$tbody).find('tr').eq(index).remove();;
 
 			this.data.splice(index, 1);
+			this.panelTable._tableData.splice(index, 1);
 
 			$.each($(this.panelTable._$tbody).find('tr'), function (rowindex, row) {
 				$(row).attr('data-row-id', rowindex);
@@ -15234,9 +15296,23 @@ var TablePanel = function () {
 			console.log(index);
 		}
 	}, {
+		key: 'moveTo',
+		value: function moveTo(index, command) {
+			var row = $(this.panelTable._$tbody).find('tr').eq(index);
+			if (command === 'up') {
+				row.insertBefore(row.prev());
+			} else if (command === 'down') {
+				row.insertAfter(row.next());
+			}
+			$.each($(this.panelTable._$tbody).find('tr'), function (rowindex, row) {
+				$(row).attr('data-row-id', rowindex);
+			});
+		}
+	}, {
 		key: 'removeAll',
 		value: function removeAll() {
 			this.data = []; // Clear data
+			this.panelTable._tableData = []; // Clear data
 			this.panelTable._clear(); // Empty table
 		}
 	}]);
@@ -15344,7 +15420,7 @@ var TextareaForm = function () {
 				isValid = this.textarea.value ? true : false;
 			}
 			if (!isValid) {
-				this.input.$validationContainer.text('This is required');
+				this.input.$validationContainer.text('required');
 				this.input.parents('.form-group').addClass('has-error');
 				this.input.addClass('is-invalid');
 				this.input.$validationContainer.css("display", "block");
@@ -15661,19 +15737,19 @@ var APPSimulation = function () {
 			if (param) {
 
 				// formgroup
-				var $formGroup = $('<div class="form-group row"></div>');
+				var _$formGroup2 = $('<div class="form-group row"></div>');
 				// .appendTo( O._$simForm );
 
 				// label
-				var $label = $('<label class="col-form-label col-form-label-sm col-9 col-xs-3 order-1 sim-param-label"></label>').attr('for', 'paramInput_' + param.id).appendTo($formGroup);
+				var _$label2 = $('<label class="col-form-label col-form-label-sm col-9 col-xs-3 order-1 sim-param-label"></label>').attr('for', 'paramInput_' + param.id).appendTo(_$formGroup2);
 				// set custom label or id
-				param._label ? $label.text(param._label) : $label.text(param.id);
+				param._label ? _$label2.text(param._label) : _$label2.text(param.id);
 
 				// field
-				var $field = $('<div class="col-12 col-xs-7 col-md-6 order-3 order-xs-2 sim-param-field"></div>').appendTo($formGroup);
+				var $field = $('<div class="col-12 col-xs-7 col-md-6 order-3 order-xs-2 sim-param-field"></div>').appendTo(_$formGroup2);
 
 				// actions
-				var $actions = $('<div class="col-3 col-xs-auto order-2 order-xs-3 sim-param-actions"></div>').appendTo($formGroup);
+				var $actions = $('<div class="col-3 col-xs-auto order-2 order-xs-3 sim-param-actions"></div>').appendTo(_$formGroup2);
 
 				// input item
 				var $input = null;
@@ -15799,7 +15875,7 @@ var APPSimulation = function () {
 					$metadataContainer.append(O._createParamMetadataList(param));
 				}
 
-				return $formGroup;
+				return _$formGroup2;
 			}
 
 			return null;
@@ -15892,8 +15968,8 @@ var APPSimulation = function () {
 
 					if (param.classification != 'OUTPUT') {
 
-						var $formGroup = O._createFormField(param);
-						$formGroup ? $formGroup.appendTo(O._$simForm) : null;
+						var _$formGroup3 = O._createFormField(param);
+						_$formGroup3 ? _$formGroup3.appendTo(O._$simForm) : null;
 					}
 				});
 
@@ -15940,7 +16016,7 @@ var APPSimulation = function () {
 	}, {
 		key: '_updateSimForm',
 		value: function _updateSimForm(simIndex) {
-			var _this26 = this;
+			var _this27 = this;
 
 			var O = this;
 			_log('PANEL SIM / _updateSimForm: ' + simIndex);
@@ -15999,7 +16075,7 @@ var APPSimulation = function () {
 
 							// check opt for custom update function 
 							if (field.param._on && field.param._on.update && $.isFunction(field.param._on.update)) {
-								field.param._on.update.call(_this26, O);
+								field.param._on.update.call(_this27, O);
 							}
 						}
 
@@ -17037,14 +17113,16 @@ var APPTable = function () {
 
 			// create cols
 			$.each(O.opts.cols, function (j, col) {
-				console.log('col', col);
 				var data = void 0;
 				if (rowData.cells) data = rowData.cells[j];else data = rowData[col.field];
 				var $td = $('<td></td>').appendTo($tr);
+				if (data.length > 60) {
+					col.collapsable = "true";
+				}
 				col.classes && col.classes.td ? $td.addClass(col.classes.td) : null; // classes
 				col.collapsable ? $td.attr('data-td-collapse', col.collapsable) : null; // data collapsable
 				col.label ? $td.attr('data-label', col.label) : null; // add data-label for toggle view cards
-				col.field ? $td.attr('data-id', col.field) : null;
+				col.id ? $td.attr('data-id', col.id) : null;
 
 				// td attributes
 				if (col.attributes && col.attributes.td) {
@@ -17304,7 +17382,7 @@ var APPTable = function () {
 	}, {
 		key: '_populateTable',
 		value: function _populateTable(tableData) {
-			var _this27 = this;
+			var _this28 = this;
 
 			var O = this;
 			_log('TABLE / _populateTable');
@@ -17314,7 +17392,7 @@ var APPTable = function () {
 
 			// create rows
 			$.each(tableData, function (rowIndex, rowData) {
-				_this27.addRow(rowIndex, rowData, tableData);
+				_this28.addRow(rowIndex, rowData, tableData);
 			});
 
 			// callback
@@ -18025,7 +18103,7 @@ var APPTableMT = function (_APPTable) {
 	}, {
 		key: '_updateFilter',
 		value: async function _updateFilter() {
-			var _this29 = this;
+			var _this30 = this;
 
 			var O = this;
 			_log('TABLE MAIN / _updateFilter');
@@ -18065,7 +18143,7 @@ var APPTableMT = function (_APPTable) {
 							if ($.isArray(facetValue) && facetValue.length > 0) {
 
 								// get according col index
-								var colIndex = _get(APPTableMT.prototype.__proto__ || Object.getPrototypeOf(APPTableMT.prototype), '_getColIndexByField', _this29).call(_this29, field);
+								var colIndex = _get(APPTableMT.prototype.__proto__ || Object.getPrototypeOf(APPTableMT.prototype), '_getColIndexByField', _this30).call(_this30, field);
 								var cellData = rowData.cells[colIndex];
 
 								if (cellData instanceof Set) {
@@ -18414,13 +18492,14 @@ var APPUI = function () {
 		value: function _initTdCollapse($table) {
 			var O = this;
 			_log('UI / _initTdCollapse');
-			// _log( $table );
+			console.log("tablooooooo ", $table);
 
 			var minH = 100;
 
 			var $tds = $table.find('td[data-td-collapse="true"]');
 
 			$tds.each(function (i, td) {
+
 				var $td = $(td); // td
 				$td.wrapInner('<div></div>');
 
@@ -18432,7 +18511,7 @@ var APPUI = function () {
 					$td.wrapInner('<div id="' + collapseId + '" class="collapse td-collapse"></div>');
 					// create toggle
 					var $collapseToggle = $('<a href="#" class="td-collapse-toggle collapsed" data-target="#' + collapseId + '" data-toggle="collapse" aria-expanded="false" aria-controls="' + collapseId + '"></a>').appendTo($td);
-
+					console.log('tablooooooo', $td);
 					// create collapse
 					$('#' + collapseId).collapse({
 						toggle: false
