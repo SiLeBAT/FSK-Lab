@@ -14117,7 +14117,11 @@ var APPMTEditableDetails = function () {
 			//init collapsable td
 			$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 				var target = $(e.target).attr("href"); // activated tab
-				_appUI._initTdCollapse($('div' + target + '.tab-pane.h-100.active').find('table'));
+				var targetTable = $('div' + target + '.tab-pane.h-100.active').find('table');
+				//if not initialized yet
+				if (targetTable.find('.td-collapse-toggle').length == 0) {
+					_appUI._initTdCollapse(targetTable);
+				}
 			});
 		}
 
@@ -14788,6 +14792,7 @@ var InputForm = function () {
 	}, {
 		key: 'value',
 		get: function get() {
+			console.log(this.input.val());
 			return this.type !== "checkbox" ? this.input.val() : this.input.checked;
 		},
 		set: function set(newValue) {
@@ -15251,6 +15256,7 @@ var TablePanel = function () {
 	}, {
 		key: 'add',
 		value: function add(data) {
+			console.log('save', this.panelTable._tableData, data);
 			this.panelTable._tableData.push(data); // add data
 			this.data.push(data); // add data
 			this.panelTable.addRow(this.panelTable._tableData.length - 1, data);
@@ -15400,7 +15406,7 @@ var TextareaForm = function () {
 	}, {
 		key: 'clear',
 		value: function clear() {
-			this.input.value = "";
+			this.input.val("");
 		}
 
 		/**
@@ -15417,7 +15423,7 @@ var TextareaForm = function () {
 			if (!this.mandatory) {
 				isValid = true;
 			} else {
-				isValid = this.textarea.value ? true : false;
+				isValid = this.input.val() ? true : false;
 			}
 			if (!isValid) {
 				this.input.$validationContainer.text('required');
@@ -15430,10 +15436,11 @@ var TextareaForm = function () {
 	}, {
 		key: 'value',
 		get: function get() {
-			return this.input.value;
+			console.log(this.input.val());
+			return this.input.val();
 		},
 		set: function set(newValue) {
-			this.input.value = newValue;
+			this.input.val(newValue);
 		}
 	}]);
 
@@ -18511,7 +18518,6 @@ var APPUI = function () {
 					$td.wrapInner('<div id="' + collapseId + '" class="collapse td-collapse"></div>');
 					// create toggle
 					var $collapseToggle = $('<a href="#" class="td-collapse-toggle collapsed" data-target="#' + collapseId + '" data-toggle="collapse" aria-expanded="false" aria-controls="' + collapseId + '"></a>').appendTo($td);
-					console.log('tablooooooo', $td);
 					// create collapse
 					$('#' + collapseId).collapse({
 						toggle: false
