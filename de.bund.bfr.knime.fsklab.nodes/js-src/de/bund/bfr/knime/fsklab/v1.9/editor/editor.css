@@ -10,6 +10,10 @@
     /* font-weight: bold; */
     color: #31708f;
 }
+.CodeMirror-lines {
+    cursor: text;
+    min-height: 300px;
+}
 
 #viewContent {
     padding: 5px;

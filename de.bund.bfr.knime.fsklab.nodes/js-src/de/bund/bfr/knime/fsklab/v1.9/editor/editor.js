@@ -69,7 +69,7 @@ fskeditorjs = function () {
     extractAndCreateUI(value.modelMetaData);
     
   }
-  function extractAndCreateUI(modelMetaData){
+  async function  extractAndCreateUI(modelMetaData){
     if (!modelMetaData || modelMetaData == "null" || modelMetaData == "") {
       _metadata.generalInformation = {};
       _metadata.generalInformation.modelCategory = {};
@@ -111,17 +111,21 @@ fskeditorjs = function () {
     createUI();
     */
     window.port = _rep.servicePort;
-    let _testContainer = $(`<div class="card card-table-main overflow-hidden"></div>`);
-    $('body').html(_testContainer);
+    let mainContainer = $(`<div class="card card-table-main overflow-hidden"></div>`);
+    $('body').html(mainContainer);
     _modalDetails = new APPMTEditableDetails( {
                         data 		  : {},
                         id 			  : 'mtModalDetails',
                         classes 	: 'modal-details',
                         type 		  : 'mtDetails'
-                      }, _testContainer );
+                        
+                      }, mainContainer );
     _modalDetails._createModelMetadataContent();
-    _modalDetails._updateContent(_metadata, 0);
+    await _modalDetails._updateContent(_metadata, 0);
+    createUI();
   }
+
+
   view.getComponentValue = () => {
     _metadata = _modalDetails._modelHandler.metaData;
     let metaDataString = JSON.stringify(_metadata);
@@ -150,50 +154,54 @@ fskeditorjs = function () {
   return view;
 
   /** UI code. */
-  function createUI() {
-
+  async function createUI() {
+    $('#modelScriptArea').val(_val.modelScript);
+    $('#visualizationScriptArea').val(_val.visualizationScript);
+    $('#readmeArea').val(_val.readme);
+    //console.log(_val.modelScript);
+    /*
     let panelsById = [
       { id: "modelScript", panel: `<textarea id="modelScriptArea">${_val.modelScript}</textarea>` },
       { id: "visualizationScript", panel: `<textarea id="visualizationScriptArea">${_val.visualizationScript}</textarea>` },
       { id: "readme", panel: `<textarea id="readmeArea" name="readmeArea">${_val.readme}</textarea>` }
     ];
+    
+          let bodyContent = `
+        <div class="editorDiv">
+          <div class="navbar-header">
+            <button id="saveButton" class="btn btn-primary float-left" type="button" onclick="window.doSave();">Save</button>
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+          </div>
+          <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav" id="viewTab">
+              ${handler.menus}
+              <li role="presentation">
+                <a id="modelScript-tab" href="#modelScript"
+                  aria-controls="modelScript" role="tab" data-toggle="tab">Model script</a>
+              </li>
+              <li role="presentation">
+                <a id="visualizationScript-tab" href="#visualizationScript"
+                  aria-controls="visualizationScript" role="tab" data-toggle="tab">Visualization script</a>
+              </li>
+              <li role="presentation">
+                <a id="readme-tab" href="#readme" aria-controls="readme" role="tab" data-toggle="tab">README</a>
+              </li>
+            </ul>
+            
+          </div>
+          <div class="tab-content" id="viewContent">
+          ${panelsById.map(entry => `<div role="tabpanel" class="tab-pane"
+          id="${entry.id}">${entry.panel}</div>`).join("")}
+        </div>
+        </div> `;
 
-    let bodyContent = `
-  <div class="editorDiv">
-    <div class="navbar-header">
-      <button id="saveButton" class="btn btn-primary float-left" type="button" onclick="window.doSave();">Save</button>
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-    </div>
-    <div class="collapse navbar-collapse" id="myNavbar">
-      <ul class="nav navbar-nav" id="viewTab">
-        ${handler.menus}
-        <li role="presentation">
-          <a id="modelScript-tab" href="#modelScript"
-            aria-controls="modelScript" role="tab" data-toggle="tab">Model script</a>
-        </li>
-        <li role="presentation">
-          <a id="visualizationScript-tab" href="#visualizationScript"
-            aria-controls="visualizationScript" role="tab" data-toggle="tab">Visualization script</a>
-        </li>
-        <li role="presentation">
-          <a id="readme-tab" href="#readme" aria-controls="readme" role="tab" data-toggle="tab">README</a>
-        </li>
-      </ul>
-      
-    </div>
-    <div class="tab-content" id="viewContent">
-    ${panelsById.map(entry => `<div role="tabpanel" class="tab-pane"
-    id="${entry.id}">${entry.panel}</div>`).join("")}
-  </div>
-  </div> `;
-
-    document.createElement('body');
-    $('body').html(bodyContent);
-
+          document.createElement('body');
+          $('body').html(bodyContent);
+   
     // Add dialogs
     const container = document.getElementsByClassName("editorDiv")[0];
     // Object.values(handler.dialogs).forEach(dialog => container.appendChild(dialog.modal));
@@ -217,7 +225,7 @@ fskeditorjs = function () {
 
     // Set the first tab (general information) as active
     document.getElementById("generalInformation").classList.add("active");
-
+    */
     // Create code mirrors for text areas with scripts and readme
     let require_config = {
       packages: [{
@@ -242,20 +250,21 @@ fskeditorjs = function () {
       (err) => console.log("knimeService failed to install " + err),
       require_config);
 
-    $('#modelScript-tab').on('shown.bs.tab', () => {
-      _modelCodeMirror.refresh(); 
-      _modelCodeMirror.focus();
-    });
-
-    $('#visualizationScript-tab').on('shown.bs.tab', () => {
-      _visualizationCodeMirror.refresh();
-      _visualizationCodeMirror.focus();
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        console.log(e);
+        if(e.currentTarget.text == 'Model Script'){
+          _modelCodeMirror.refresh(); 
+          _modelCodeMirror.focus();
+        }else if(e.currentTarget.text == 'Visualization Script'){
+          _visualizationCodeMirror.refresh();
+          _visualizationCodeMirror.focus();
+        }else if(e.currentTarget.text == 'Readme'){
+          _readmeCodeMirror.refresh();
+          _readmeCodeMirror.focus();
+        }
     });
     
-    $('#readme-tab').on('shown.bs.tab', () => {
-      _readmeCodeMirror.refresh();
-      _readmeCodeMirror.focus();
-    });
+
     $('#saveButton').hide();
   }
 

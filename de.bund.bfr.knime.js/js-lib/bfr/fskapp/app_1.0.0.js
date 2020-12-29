@@ -11846,6 +11846,15 @@ var ModelHandler = function () {
 				},
 				plot: {
 					type: 'plot'
+				},
+				modelScript: {
+					type: 'modelScript'
+				},
+				visualizationScript: {
+					type: 'visualizationScript'
+				},
+				readme: {
+					type: 'readme'
 				}
 			};
 		}
@@ -11863,10 +11872,8 @@ var GenericModel = function (_ModelHandler) {
 		var _this = _possibleConstructorReturn(this, (GenericModel.__proto__ || Object.getPrototypeOf(GenericModel)).call(this, metadata, img));
 
 		_this._schema = schemas.genericModel;
-		console.log(state);
 		if (state) {
 			_this.panels = _this._createPanels();
-			console.log('logggg', _this.panels);
 		}
 		_this._menu = [{
 			label: "General information",
@@ -11940,6 +11947,18 @@ var GenericModel = function (_ModelHandler) {
 		}, {
 			label: "Plot",
 			id: 'plot',
+			submenus: []
+		}, {
+			label: "Model Script",
+			id: 'modelScript',
+			submenus: []
+		}, {
+			label: "Visualization Script",
+			id: 'visualizationScript',
+			submenus: []
+		}, {
+			label: "Readme",
+			id: 'readme',
 			submenus: []
 		}];
 		_get(GenericModel.prototype.__proto__ || Object.getPrototypeOf(GenericModel.prototype), '_create', _this).call(_this);
@@ -12101,6 +12120,18 @@ var DataModel = function (_ModelHandler2) {
 			label: "Plot",
 			id: 'plot',
 			submenus: []
+		}, {
+			label: "Model Script",
+			id: 'modelScript',
+			submenus: []
+		}, {
+			label: "Visualization Script",
+			id: 'visualizationScript',
+			submenus: []
+		}, {
+			label: "Readme",
+			id: 'readme',
+			submenus: []
 		}];
 		_get(DataModel.prototype.__proto__ || Object.getPrototypeOf(DataModel.prototype), '_create', _this2).call(_this2);
 		return _this2;
@@ -12169,6 +12200,18 @@ var PredictiveModel = function (_ModelHandler3) {
 		}, {
 			label: "Plot",
 			id: 'plot',
+			submenus: []
+		}, {
+			label: "Model Script",
+			id: 'modelScript',
+			submenus: []
+		}, {
+			label: "Visualization Script",
+			id: 'visualizationScript',
+			submenus: []
+		}, {
+			label: "Readme",
+			id: 'readme',
 			submenus: []
 		}];
 		_get(PredictiveModel.prototype.__proto__ || Object.getPrototypeOf(PredictiveModel.prototype), '_create', _this3).call(_this3);
@@ -12254,6 +12297,18 @@ var OtherModel = function (_ModelHandler4) {
 			label: "Plot",
 			id: 'plot',
 			submenus: []
+		}, {
+			label: "Model Script",
+			id: 'modelScript',
+			submenus: []
+		}, {
+			label: "Visualization Script",
+			id: 'visualizationScript',
+			submenus: []
+		}, {
+			label: "Readme",
+			id: 'readme',
+			submenus: []
 		}];
 		_get(OtherModel.prototype.__proto__ || Object.getPrototypeOf(OtherModel.prototype), '_create', _this4).call(_this4);
 		return _this4;
@@ -12337,6 +12392,18 @@ var DoseResponseModel = function (_ModelHandler5) {
 		}, {
 			label: "Plot",
 			id: 'plot',
+			submenus: []
+		}, {
+			label: "Model Script",
+			id: 'modelScript',
+			submenus: []
+		}, {
+			label: "Visualization Script",
+			id: 'visualizationScript',
+			submenus: []
+		}, {
+			label: "Readme",
+			id: 'readme',
 			submenus: []
 		}];
 		// extend panels with specific data and schemas
@@ -12448,6 +12515,18 @@ var ToxicologicalModel = function (_ModelHandler6) {
 		}, {
 			label: "Plot",
 			id: 'plot',
+			submenus: []
+		}, {
+			label: "Model Script",
+			id: 'modelScript',
+			submenus: []
+		}, {
+			label: "Visualization Script",
+			id: 'visualizationScript',
+			submenus: []
+		}, {
+			label: "Readme",
+			id: 'readme',
 			submenus: []
 		}];
 
@@ -12567,6 +12646,18 @@ var ExposureModel = function (_ModelHandler7) {
 			label: "Plot",
 			id: 'plot',
 			submenus: []
+		}, {
+			label: "Model Script",
+			id: 'modelScript',
+			submenus: []
+		}, {
+			label: "Visualization Script",
+			id: 'visualizationScript',
+			submenus: []
+		}, {
+			label: "Readme",
+			id: 'readme',
+			submenus: []
 		}];
 		_get(ExposureModel.prototype.__proto__ || Object.getPrototypeOf(ExposureModel.prototype), '_create', _this7).call(_this7);
 		return _this7;
@@ -12641,6 +12732,18 @@ var ProcessModel = function (_ModelHandler8) {
 		}, {
 			label: "Plot",
 			id: 'plot',
+			submenus: []
+		}, {
+			label: "Model Script",
+			id: 'modelScript',
+			submenus: []
+		}, {
+			label: "Visualization Script",
+			id: 'visualizationScript',
+			submenus: []
+		}, {
+			label: "Readme",
+			id: 'readme',
 			submenus: []
 		}];
 		_get(ProcessModel.prototype.__proto__ || Object.getPrototypeOf(ProcessModel.prototype), '_create', _this8).call(_this8);
@@ -12719,6 +12822,18 @@ var ConsumptionModel = function (_ModelHandler9) {
 		}, {
 			label: "Plot",
 			id: 'plot',
+			submenus: []
+		}, {
+			label: "Model Script",
+			id: 'modelScript',
+			submenus: []
+		}, {
+			label: "Visualization Script",
+			id: 'visualizationScript',
+			submenus: []
+		}, {
+			label: "Readme",
+			id: 'readme',
 			submenus: []
 		}];
 		_get(ConsumptionModel.prototype.__proto__ || Object.getPrototypeOf(ConsumptionModel.prototype), '_create', _this9).call(_this9);
@@ -12803,6 +12918,18 @@ var HealthModel = function (_ModelHandler10) {
 		}, {
 			label: "Plot",
 			id: 'plot',
+			submenus: []
+		}, {
+			label: "Model Script",
+			id: 'modelScript',
+			submenus: []
+		}, {
+			label: "Visualization Script",
+			id: 'visualizationScript',
+			submenus: []
+		}, {
+			label: "Readme",
+			id: 'readme',
 			submenus: []
 		}];
 		return _this10;
@@ -12893,6 +13020,18 @@ var RiskModel = function (_ModelHandler11) {
 			label: "Plot",
 			id: 'plot',
 			submenus: []
+		}, {
+			label: "Model Script",
+			id: 'modelScript',
+			submenus: []
+		}, {
+			label: "Visualization Script",
+			id: 'visualizationScript',
+			submenus: []
+		}, {
+			label: "Readme",
+			id: 'readme',
+			submenus: []
 		}];
 		_get(RiskModel.prototype.__proto__ || Object.getPrototypeOf(RiskModel.prototype), '_create', _this11).call(_this11);
 		return _this11;
@@ -12982,6 +13121,18 @@ var QraModel = function (_ModelHandler12) {
 		}, {
 			label: "Plot",
 			id: 'plot',
+			submenus: []
+		}, {
+			label: "Model Script",
+			id: 'modelScript',
+			submenus: []
+		}, {
+			label: "Visualization Script",
+			id: 'visualizationScript',
+			submenus: []
+		}, {
+			label: "Readme",
+			id: 'readme',
 			submenus: []
 		}];
 		_get(QraModel.prototype.__proto__ || Object.getPrototypeOf(QraModel.prototype), '_create', _this12).call(_this12);
@@ -14104,7 +14255,7 @@ var APPMTEditableDetails = function () {
 			if (modelHandler && modelHandler._menu) {
 
 				$.each(modelHandler._menu, function (i, menuMeta) {
-
+					if (menuMeta.id == 'plot') return;
 					var $navItem = null;
 
 					if (menuMeta.submenus && menuMeta.submenus.length > 0) {
@@ -14118,7 +14269,7 @@ var APPMTEditableDetails = function () {
 			$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 				var target = $(e.target).attr("href"); // activated tab
 				var targetTable = $('div' + target + '.tab-pane.h-100.active').find('table');
-				//if not initialized yet
+				//if not initialized
 				if (targetTable.find('.td-collapse-toggle').length == 0) {
 					_appUI._initTdCollapse(targetTable);
 				}
@@ -14148,19 +14299,17 @@ var APPMTEditableDetails = function () {
 							// panel meta data exists in handler
 							console.log(submenuMeta.id);
 							if (submenuMeta.id in modelHandler.panels) {
-								console.log(modelHandler.panels[submenuMeta.id]);
 								O._preparePanel(submenuMeta, modelHandler, $(modelHandler.panels[submenuMeta.id].panel)).appendTo(O._$modalTabContent);
 							}
 						});
 					}
 					// single nav item ? create panel
 					else {
-							if (menuMeta.id) {
-								console.log(menuMeta.id);
-								if (menuMeta.id in modelHandler.panels) {
-									console.log(modelHandler.panels[menuMeta.id]);
-									//$(modelHandler.panels[menuMeta.id].panel).appendTo(O._$modalTabContent);
-									O._preparePanel(submenuMeta, modelHandler, $(modelHandler.panels[menuMeta.id].panel)).appendTo(O._$modalTabContent);
+							if (menuMeta.id && menuMeta.id != 'plot') {
+								console.log('menuMeta.id', menuMeta.id, menuMeta.id in modelHandler.panels);
+								if (menuMeta.id in modelHandler._panels) {
+									console.log('menuMeta.id', menuMeta.id);
+									O._preparePanel(menuMeta, modelHandler, $(modelHandler._panels[menuMeta.id].panel)).appendTo(O._$modalTabContent);
 									//O._createPanel(menuMeta, modelHandler)
 									//    .appendTo(O._$modalTabContent);
 								}
@@ -14226,7 +14375,23 @@ var APPMTEditableDetails = function () {
 
 			var $panel = null;
 			if (modelHandler && menu.id) {
-				$panel = O._createPanelPan(menu, modelHandler, handlerPanel);
+				var panelMeta = modelHandler._panels[menu.id];
+				if (panelMeta.type) {
+					// complex
+					if (panelMeta.type == 'modelScript') {
+						$panel = O._createScriptPanel(menu, modelHandler);
+					}
+					// simple
+					else if (panelMeta.type == 'visualizationScript') {
+							$panel = O._createScriptPanel(menu, modelHandler);
+						}
+						// plot
+						else if (panelMeta.type == 'readme') {
+								$panel = O._createScriptPanel(menu, modelHandler);
+							} else {
+								$panel = O._createPanelPan(menu, modelHandler, handlerPanel);
+							}
+				}
 			}
 			return $panel;
 		}
@@ -14254,6 +14419,35 @@ var APPMTEditableDetails = function () {
 				// title
 				$panel.append('<div class="panel-heading">' + menu.label + '</div>');
 				handlerPanel.appendTo($panel);
+			}
+
+			return $panel;
+		}
+
+		/**
+   * CREATE SCRIPT PANEL
+   * create SCRIPT tab-pane for specific menu
+   * @param {array} menu
+   * @param {object} modelHandler: object of class Model
+   */
+
+	}, {
+		key: '_createScriptPanel',
+		value: function _createScriptPanel(menu, modelHandler) {
+			var O = this;
+			_log('MODAL DETAILS / _createScriptPanel');
+
+			// tab-pane
+			var $panel = $('<div class="tab-pane h-100" role="tabpanel"></div>').attr('id', menu.id);
+
+			if (modelHandler && menu.id) {
+				// get panel meta
+				var panelMeta = modelHandler._panels[menu.id];
+
+				// title
+				$panel.append('<div class="panel-heading">' + menu.label + '</div>');
+
+				var $plot = $('<textarea row="6" class="form-control form-control-sm" />').attr('id', menu.id + 'Area').appendTo($panel);
 			}
 
 			return $panel;
@@ -17075,7 +17269,7 @@ var APPTable = function () {
 			wrapper: false, // 'card'
 			on: { // hooks/callbacks on specific events
 				afterInit: null,
-				afterPopulate: null,
+				//afterPopulate: null,
 				selectRow: null,
 				deselectRow: null
 			}
