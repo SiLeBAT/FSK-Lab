@@ -11747,7 +11747,6 @@ var ModelHandler = function () {
 	_createClass(ModelHandler, [{
 		key: '_create',
 		value: function _create() {
-			console.log('here to be', this._metadata.generalInformation);
 			this._panels = {
 				generalInformation: {
 					type: 'simple',
@@ -13202,10 +13201,13 @@ var createSubMenu = function createSubMenu(name, submenus) {
  * @param {Array} vocabulary String array with vocabulary terms.
  */
 var addControlledVocabulary = function addControlledVocabulary(input, vocabulary, port) {
+
 	if (port >= 0) {
+		//fetch(`http://localhost:${window.port}/getAllNames/${vocabulary}`)
 		fetch('http://localhost:' + port + '/getAllNames/' + vocabulary).then(function (response) {
 			return response.json();
 		}).then(function (data) {
+			console.log('http://localhost:' + port + '/getAllNames/' + vocabulary, data);
 			$(input).typeahead({
 				source: data,
 				autoSelect: true,
@@ -13264,7 +13266,7 @@ var _log = function _log(log, style) {
 /**
  * 
  */
-var _createParamMetadataList = function _createParamMetadataList(helperText) {
+var _createHelperMetadataText = function _createHelperMetadataText(helperText) {
 	var O = undefined;
 
 	// create table
@@ -13812,154 +13814,6 @@ var APPModalMTDetails = function (_APPModal) {
 
 	return APPModalMTDetails;
 }(APPModal);
-
-var AdvancedTable = function () {
-	function AdvancedTable(data, formData, dialog, panel) {
-		var _this14 = this;
-
-		_classCallCheck(this, AdvancedTable);
-
-		this.formData = formData;
-		this.dialog = dialog;
-		this.panel = panel;
-
-		this.table = document.createElement("table");
-		this.table.className = "table";
-
-		// Apply striped rows if table has over 10 rows.
-		if (data && data.length > 10) {
-			this.table.classList.add("table-striped");
-		}
-
-		// Create headers (1 extra columns at the end for buttons)
-		var head = document.createElement("thead");
-		head.innerHTML = '<tr>\n        ' + this.formData.map(function (prop) {
-			return '<th>' + prop.label + '</th>';
-		}).join("") + '\n        <th></th>\n      </tr>';
-
-		this.body = document.createElement("tbody");
-		this.table.appendChild(head);
-		this.table.appendChild(this.body);
-
-		if (data) {
-			data.forEach(function (entry) {
-				return _this14.add(entry);
-			});
-		}
-	}
-
-	/**
-  * Create a new row with new metadata from a dialog.
-  * 
-  * @param {Object} data JSON object with new metadata.
-  */
-
-
-	_createClass(AdvancedTable, [{
-		key: 'add',
-		value: function add(data) {
-			var _this15 = this;
-
-			// Add new row (Order is fixed by formData)
-			var newRow = document.createElement("tr");
-
-			this.formData.forEach(function (prop) {
-				// Get value for the current property
-				var value = data[prop.id] ? data[prop.id] : "";
-
-				var cell = document.createElement("td");
-				if (prop.type === "boolean" && value) {
-					cell.innerHTML = '<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>';
-				} else {
-					cell.title = value; // Set the whole value as tooltip
-					cell.textContent = value.length > 20 ? value.substring(0, 24) + "..." : value;
-				}
-				newRow.appendChild(cell);
-			});
-
-			var editButton = document.createElement("button");
-			editButton.classList.add("btn", "btn-primary", "btn-sm");
-			editButton.innerHTML = '<i class="glyphicon glyphicon-edit"></i>';
-			editButton.title = "Edit";
-			editButton.onclick = function (e) {
-
-				// Get current row (button > btn-group > td > tr). It starts at 1
-				// (it counts the header)
-				var rowIndex = e.currentTarget.parentNode.parentNode.parentNode.rowIndex - 1;
-
-				// Update inputs in dialog
-				var originalData = _this15.panel.data[rowIndex];
-				for (var prop in originalData) {
-					_this15.dialog.inputs[prop].value = originalData[prop];
-				}
-
-				_this15.dialog.editedRow = rowIndex;
-				$(_this15.dialog.modal).modal('show');
-			};
-
-			// Remove button
-			var removeButton = document.createElement("button");
-			removeButton.classList.add("btn", "btn-warning", "btn-sm");
-			removeButton.innerHTML = '<i class="glyphicon glyphicon-remove"></i>';
-			removeButton.onclick = function (e) {
-				// Get current row (button > btn-group > td > tr). It starts at 1
-				// (it counts the header)
-				var rowIndex = e.currentTarget.parentNode.parentNode.parentNode.rowIndex - 1;
-				_this15.panel.remove(rowIndex);
-			};
-
-			removeButton.title = "Remove";
-
-			var btnGroup = document.createElement("div");
-			btnGroup.className = "btn-group";
-			btnGroup.setAttribute("role", "group");
-			btnGroup.appendChild(editButton);
-			btnGroup.appendChild(removeButton);
-
-			var buttonCell = document.createElement("td");
-			buttonCell.appendChild(btnGroup);
-			newRow.appendChild(buttonCell);
-
-			this.body.appendChild(newRow);
-		}
-	}, {
-		key: 'edit',
-		value: function edit(rowNumber, data) {
-			var row = this.body.childNodes[rowNumber];
-
-			for (var i = 0; i < this.formData.length; i++) {
-				var prop = this.formData[i];
-				var cell = row.childNodes[i];
-
-				var value = data[prop.id];
-				cell.title = value;
-				cell.textContent = value.length > 25 ? value.substring(0, 24) : value;
-			}
-		}
-
-		/**
-   * Remove row at the given index.
-   */
-
-	}, {
-		key: 'remove',
-		value: function remove(index) {
-			this.body.removeChild(this.body.childNodes[index]);
-		}
-
-		/**
-   * Remove every row in the table.
-   */
-
-	}, {
-		key: 'trash',
-		value: function trash() {
-			this.body.innerHTML = "";
-		}
-	}]);
-
-	return AdvancedTable;
-}();
 /**
  * Create a div to edit string arrays.
  * 
@@ -13997,13 +13851,12 @@ var ArrayForm = function () {
 	_createClass(ArrayForm, [{
 		key: '_create',
 		value: function _create(name, mandatory, helperText) {
-			var _this16 = this;
+			var _this14 = this;
 
 			if (name) {
 
 				// formgroup
 				$formGroup = $('<div class="form-group row"></div>');
-				// .appendTo( O._$simForm );
 
 				// label
 				var _$label = $('<label class="col-form-label col-form-label-sm col-9 col-xs-3 order-1 sim-param-label"></label>').attr('for', 'input_' + name).appendTo($formGroup);
@@ -14031,32 +13884,30 @@ var ArrayForm = function () {
 				panelDiv.appendChild(this.simpleTable.table);
 
 				_$actionTrash = $('<button type="button" class="action action-pure float-right"><i class="feather icon-trash-2"></i></button>').attr('id', 'simActionRemove').attr('data-tooltip', '').attr('title', 'Trash').appendTo(header).on('click', function (event) {
-					_this16.simpleTable.trash();
+					_this14.simpleTable.trash();
 				});
 
 				// remove
 				_$actionRemove = $('<button type="button" class="action action-pure float-right"><i class="feather icon-delete"></i></button>').attr('id', 'simActionRemove').attr('data-tooltip', '').attr('title', 'Remove').appendTo(header).on('click', function (event) {
-					_this16.simpleTable.remove();
+					_this14.simpleTable.remove();
 				});
 
 				// add
-				_$actionAdd = $('<button type="button" class="action action-pure float-right"><i class="feather icon-plus"></i></button>').attr('id', 'simActionAdd').attr('data-tooltip', '').attr('title', 'Add').appendTo(header).on('click', function (event) {
-					_this16.simpleTable.add();
+				_$actionAdd = $('<button type="button" class="action action-pure float-right"><i class="feather icon-plus"></i></button>').attr('id', 'actionAdd').attr('data-tooltip', '').attr('title', 'Add').appendTo(header).on('click', function (event) {
+					_this14.simpleTable.add();
 				});
 
 				$(panelDiv).appendTo($field);
-				// create validation container
-				this.$validationContainer = $('<div class="validation-message mt-1"></div>').appendTo($field);
 
 				// create validation container
-				$('<div class="validation-message mt-1"></div>').appendTo($field);
+				this.$validationContainer = $('<div class="validation-message mt-1"></div>').appendTo($field);
 
 				// create param metadata list
 				if (helperText) {
 					// metadata table
 					var $metadataContainer = $('<div class="collapse param-metadata"></div>').attr('id', 'paramMetadata_' + name).attr('aria-expanded', false).appendTo($field);
 
-					$metadataContainer.append(_createParamMetadataList(helperText));
+					$metadataContainer.append(_createHelperMetadataText(helperText));
 				}
 
 				this.group = $formGroup;
@@ -14093,11 +13944,11 @@ var ArrayForm = function () {
 			return this.simpleTable.value;
 		},
 		set: function set(newValue) {
-			var _this17 = this;
+			var _this15 = this;
 
 			this.simpleTable.trash();
 			newValue.forEach(function (item) {
-				return _this17.simpleTable._createRow(item);
+				return _this15.simpleTable._createRow(item);
 			});
 		}
 	}]);
@@ -14117,7 +13968,7 @@ var APPMTEditableDetails = function () {
 		_classCallCheck(this, APPMTEditableDetails);
 
 		var O = this;
-		// defaults maintable simulations modal
+		// defaults maintable modal
 		O._$modalContent = $container;
 		O._opts = $.extend(true, {}, {
 			classes: '',
@@ -14211,7 +14062,8 @@ var APPMTEditableDetails = function () {
 		/**
   * BUILD PANEL
   * build PANEL content
-  * @param {event} event 
+  * @param {*} _modelMetadata 
+   * @param {*} _modelId 
   */
 
 	}, {
@@ -14238,7 +14090,7 @@ var APPMTEditableDetails = function () {
 
 		/**
    * POPULATE MODAL MENU
-   * @param {object} Model
+   * @param {*} modelHandler 
    */
 
 	}, {
@@ -14278,7 +14130,7 @@ var APPMTEditableDetails = function () {
 
 		/**
    * POPULATE MODAL PANEL
-   * @param {object} Model
+   * @param {object} modelHandler
    */
 
 	}, {
@@ -14365,6 +14217,7 @@ var APPMTEditableDetails = function () {
    * create tab-pane for specific menu by selecting type and calling specific creation (simple, complex, plot)
    * @param {array} menu
    * @param {object} modelHandler: object of type Model
+   * @param {object} handlerPanel: Panel to add elements to.
    */
 
 	}, {
@@ -14401,6 +14254,7 @@ var APPMTEditableDetails = function () {
    * create plot tab-pane for specific menu
    * @param {array} menu
    * @param {object} modelHandler: object of class Model
+   * @param {object} handlerPanel: Panel to add elements to.
    */
 
 	}, {
@@ -14570,7 +14424,7 @@ var Dialog = function () {
 	_createClass(Dialog, [{
 		key: 'create',
 		value: function create(id, title, formData, port) {
-			var _this18 = this;
+			var _this16 = this;
 
 			// modal body
 			var form = $('<form class="form-striped"></form>');
@@ -14578,7 +14432,7 @@ var Dialog = function () {
 				var inputForm = createForm(prop, null, port);
 				if (inputForm) {
 					$(inputForm.group).appendTo(form);
-					_this18.inputs[prop.id] = inputForm;
+					_this16.inputs[prop.id] = inputForm;
 				}
 			});
 
@@ -14595,7 +14449,7 @@ var Dialog = function () {
 			_$navBar = $('<nav class="navbar sim-select">').appendTo(_$modalNav).wrap('<form></form>');
 
 			//  select label
-			_$simSelectLabel = $('<label class="col-4 col-md-3 sim-select-label" >' + title.replace("Add", "") + '</label>').appendTo(_$navBar);
+			$('<label class="col-4 col-md-3 sim-select-label" >' + title.replace("Add", "") + '</label>').appendTo(_$navBar);
 
 			//  select actions
 			_$dialogActions = $('<div class="col-8"></div>').appendTo(_$navBar);
@@ -14608,29 +14462,29 @@ var Dialog = function () {
 			saveButton = $('<button type="button" class="btn btn-icon btn-outline-light"><i class="feather icon-save"></i></button>').attr('id', 'save').attr('data-tooltip', '').attr('title', 'Save changes').appendTo($actionGroup1).on('click', function (event) {
 				// Validate inputs and stop saving if errors are found.
 				var hasError = false;
-				Object.values(_this18.inputs).forEach(function (input) {
+				Object.values(_this16.inputs).forEach(function (input) {
 					if (!input.validate()) hasError = true;
 				});
 				if (hasError) return;
 
-				$(_this18.modal).modal('hide');
+				$(_this16.modal).modal('hide');
 
 				// Retrieve data and clear inputs
 				var data = {};
-				for (var inputId in _this18.inputs) {
-					var currentInput = _this18.inputs[inputId];
+				for (var inputId in _this16.inputs) {
+					var currentInput = _this16.inputs[inputId];
 					data[inputId] = currentInput.value; // Save input value
 					currentInput.clear(); // Clear input
 				}
 
-				if (_this18.editedRow != -1) {
-					_this18.panel.save(_this18.editedRow, data);
-					_this18.editedRow = -1;
-					Object.values(_this18.inputs).forEach(function (input) {
+				if (_this16.editedRow != -1) {
+					_this16.panel.save(_this16.editedRow, data);
+					_this16.editedRow = -1;
+					Object.values(_this16.inputs).forEach(function (input) {
 						return input.clear();
 					}); // Clear inputs
 				} else {
-					_this18.panel.add(data);
+					_this16.panel.add(data);
 				}
 			});
 			$actionGroup1.wrapInner('<div class="row justify-content-end align-items-center"></div>');
@@ -14692,14 +14546,14 @@ var FormPanel = function () {
 	_createClass(FormPanel, [{
 		key: '_create',
 		value: function _create(title, formData, data, port) {
-			var _this19 = this;
+			var _this17 = this;
 
 			var form = $('<form class="form-striped"></form>');
 			formData.forEach(function (prop) {
-				var inputForm = createForm(prop, data ? data[prop.id] : null, port);
+				var inputForm = createForm(prop, data ? data[prop.id] : null, port, title === "Parameter" ? true : false);
 				if (inputForm) {
 					$(inputForm.group).appendTo(form);
-					_this19.inputs[prop.id] = inputForm;
+					_this17.inputs[prop.id] = inputForm;
 				}
 			});
 			form.appendTo(this.panel);
@@ -14795,38 +14649,6 @@ var InputForm = function () {
 		key: '_create',
 		value: function _create(name, mandatory, type, helperText, value, vocabulary, port) {
 			this._createFormField(name, mandatory, type, helperText, value, vocabulary, port);
-
-			// Create input
-			/*this.input.className = type === "checkbox" ? "form-check-input" : "form-control";
-   this.input.type = type;
-    if (type === "date" && typeof (value) != "string") {
-       let day = ("" + value[2]).length > 1 ? ("" + value[2]) : ("0" + value[2]);
-       let month = ("" + value[1]).length > 1 ? ("" + value[1]) : ("0" + value[1]);
-       this.input.value = value[0] + "-" + month + "-" + day;
-   } else {
-       this.input.value = value;
-   }
-    this.input.title = helperText;
-    // Create div for input
-   let inputDiv = document.createElement("div");
-   inputDiv.classList.add("col-sm-10");
-   inputDiv.appendChild(this.input);
-   if (mandatory) {
-       this.helpBlock = document.createElement("span");
-       this.helpBlock.className = "help-block";
-       this.helpBlock.style.display = "none";
-       this.helpBlock.textContent = `${name} is a required property`;
-       inputDiv.appendChild(this.helpBlock);
-   }
-   
-   // Add autocomplete to input with vocabulary
-   if (vocabulary) {
-       addControlledVocabulary(this.input, vocabulary, port);
-   }
-    // Collect everything into group
-   this.group.classList.add("form-group", "row");
-   this.group.appendChild(createLabel(name, mandatory, helperText));
-   this.group.appendChild(inputDiv);*/
 		}
 		/**
    * CREATE FORM FIELD
@@ -14837,7 +14659,7 @@ var InputForm = function () {
 	}, {
 		key: '_createFormField',
 		value: function _createFormField(name, mandatory, type, helperText, value, vocabulary, port) {
-			var _this20 = this;
+			var _this18 = this;
 
 			var O = this;
 			_log('PANEL SIM / _createFormField');
@@ -14902,8 +14724,15 @@ var InputForm = function () {
 				} else {
 					this.input.val(value);
 				}
+				if (type === "date") {
+					this.input.attr('type', 'date');
+				}
+				// Add autocomplete to input with vocabulary
+				if (vocabulary) {
+					addControlledVocabulary(this.input, vocabulary, port);
+				}
 				this.input.on("blur", function () {
-					O.validate(_this20.value);
+					O.validate(_this18.value);
 				});
 				// create validation container
 				this.input.$validationContainer = $('<div class="validation-message mt-1"></div>').appendTo($field);
@@ -14913,7 +14742,7 @@ var InputForm = function () {
 					// metadata table
 					var $metadataContainer = $('<div class="collapse param-metadata"></div>').attr('id', 'metadata_' + name).attr('aria-expanded', false).appendTo($field);
 
-					$metadataContainer.append(_createParamMetadataList(helperText));
+					$metadataContainer.append(_createHelperMetadataText(helperText));
 				}
 
 				this.group = _$formGroup;
@@ -14940,13 +14769,14 @@ var InputForm = function () {
 		key: 'validate',
 		value: function validate() {
 			var O = this;
-			_log('PANEL SIM / _validateSimForm');
+			_log('PANEL  / _validateForm');
 
 			var validationErrors = [];
 			// remove error classes
 			this.input.find('.has-error').removeClass('has-error');
 			this.input.find('.is-invalid').removeClass('is-invalid');
 			this.input.find('.validation-message').empty();
+			this.input.$validationContainer.text('');
 
 			var isValid = true;
 			if (!this.mandatory) {
@@ -14962,16 +14792,11 @@ var InputForm = function () {
 			} else {
 				isValid = this.input.val() ? true : false;
 				if (!isValid) this.input.$validationContainer.text("required");
-				// if email input is empty, reset the default error message
-				if (!isValid && this.input.type === "email") {
-					this.input.$validationContainer.text("Email is a required property");
-				}
 				// check if mail has correct structure
-				if (isValid && this.input.type === "email") {
-
+				if (isValid && this.type === "email") {
 					var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\ ".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 					isValid = re.test(this.input.value);
-					this.input.$validationContainer.text("required");
+					this.input.$validationContainer.text("Not a valid email value");
 				}
 			}
 
@@ -15027,13 +14852,13 @@ var SelectForm = function () {
 
 		this.group = document.createElement("div");
 
-		this._create(name, mandatory, helperText, value, vocabulary, port);
+		this._create(name, mandatory, helperText, value, port, vocabulary);
 	}
 
 	_createClass(SelectForm, [{
 		key: '_create',
-		value: function _create(name, mandatory, helperText, value, vocabulary, port) {
-			var _this21 = this;
+		value: function _create(name, mandatory, helperText, value, port, vocabulary) {
+			var _this19 = this;
 
 			var O = this;
 			// formgroup
@@ -15065,11 +14890,9 @@ var SelectForm = function () {
 				fetch('http://localhost:' + port + '/getAllNames/' + vocabulary).then(function (response) {
 					return response.json();
 				}).then(function (data) {
-					//console.log('data',data);
-					_this21.input.append(data.map(function (item) {
+					_this19.input.append(data.map(function (item) {
 						return '<option>' + item + '</option>';
 					}).join(""));
-					//console.log($(this.select));
 				});
 			}
 
@@ -15081,7 +14904,7 @@ var SelectForm = function () {
 				// metadata table
 				var $metadataContainer = $('<div class="collapse param-metadata"></div>').attr('id', 'paramMetadata_' + name).attr('aria-expanded', false).appendTo($field);
 
-				$metadataContainer.append(_createParamMetadataList(helperText));
+				$metadataContainer.append(_createHelperMetadataText(helperText));
 			}
 			this.group = $formGroup;
 		}
@@ -15132,7 +14955,7 @@ var SelectForm = function () {
 
 var SimpleTable = function () {
 	function SimpleTable(type, data, vocabulary, port) {
-		var _this22 = this;
+		var _this20 = this;
 
 		_classCallCheck(this, SimpleTable);
 
@@ -15148,7 +14971,7 @@ var SimpleTable = function () {
 		this.table.appendChild(this.body);
 
 		data.forEach(function (value) {
-			return _this22._createRow(value);
+			return _this20._createRow(value);
 		});
 	}
 
@@ -15168,14 +14991,14 @@ var SimpleTable = function () {
 	}, {
 		key: 'remove',
 		value: function remove() {
-			var _this23 = this;
+			var _this21 = this;
 
 			// Find checked rows and delete them
 			Array.from(this.body.children).forEach(function (row) {
 				// Get checkbox (tr > td > input)
 				var checkbox = row.firstChild.firstChild;
 				if (checkbox.checked) {
-					_this23.body.removeChild(row);
+					_this21.body.removeChild(row);
 				}
 			});
 		}
@@ -15192,7 +15015,7 @@ var SimpleTable = function () {
 	}, {
 		key: '_createRow',
 		value: function _createRow() {
-			var _this24 = this;
+			var _this22 = this;
 
 			var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
 
@@ -15212,7 +15035,7 @@ var SimpleTable = function () {
 			input.addEventListener("keyup", function (event) {
 				if (event.key === "Enter") {
 					input.blur();
-					_this24.add();
+					_this22.add();
 				}
 			});
 
@@ -15326,7 +15149,7 @@ var TablePanel = function () {
 	}, {
 		key: '_createComplexPanel',
 		value: function _createComplexPanel(data, formData, title, dialog) {
-			var _this25 = this;
+			var _this23 = this;
 
 			var O = this;
 
@@ -15343,7 +15166,7 @@ var TablePanel = function () {
 
 			var removeAllButton = $('<button class="btn btn-outline-secondary btn-sm btn-icon" type="button"><i class="feather icon-trash"></i></button>').attr('aria-label', 'Remove all ' + title + '(s)').attr('title', 'Remove all ' + title + '(s)');
 			removeAllButton.on('click', function (event) {
-				_this25.removeAll();
+				_this23.removeAll();
 			});
 
 			// table settings
@@ -15364,7 +15187,7 @@ var TablePanel = function () {
 							_log($action);
 							_log(rowIndex);
 							_log(rowData);
-							_this25.moveTo(rowIndex, 'up');
+							_this23.moveTo(rowIndex, 'up');
 						}
 					}
 				}, {
@@ -15379,7 +15202,7 @@ var TablePanel = function () {
 							_log($action);
 							_log(rowIndex);
 							_log(rowData);
-							_this25.moveTo(rowIndex, 'down');
+							_this23.moveTo(rowIndex, 'down');
 						}
 					}
 				}, {
@@ -15394,7 +15217,7 @@ var TablePanel = function () {
 							_log($action);
 							_log(rowIndex);
 							_log(rowData);
-							_this25.remove(rowIndex);
+							_this23.remove(rowIndex);
 						}
 					}
 				}, {
@@ -15409,7 +15232,7 @@ var TablePanel = function () {
 							_log($action);
 							_log(rowIndex);
 							_log(rowData);
-							_this25.edit(rowIndex, rowData, dialog);
+							_this23.edit(rowIndex, rowData, dialog);
 						}
 					}
 				}],
@@ -15450,7 +15273,6 @@ var TablePanel = function () {
 	}, {
 		key: 'add',
 		value: function add(data) {
-			console.log('save', this.panelTable._tableData, data);
 			this.panelTable._tableData.push(data); // add data
 			this.data.push(data); // add data
 			this.panelTable.addRow(this.panelTable._tableData.length - 1, data);
@@ -15464,6 +15286,7 @@ var TablePanel = function () {
 			});
 			for (indexx in keys) {
 				dialog.inputs[keys[indexx]].input.val(originalData.cells[indexx]);
+				dialog.inputs[keys[indexx]].input.attr('data-id', keys[indexx]);
 			}
 
 			dialog.editedRow = index;
@@ -15476,6 +15299,7 @@ var TablePanel = function () {
 			this.panelTable._tableData.splice(index, 1);
 			var row = $(this.panelTable._$tbody).find('tr').eq(index);
 			row.find('td').each(function () {
+				console.log('beforebeforebeforebeforebefore', $(this), $(this).attr('data-id'), originalData[$(this).attr('data-id')]);
 				$(this).html(originalData[$(this).attr('data-id')]);
 			});
 			this.data.push(originalData); // add data
@@ -15593,7 +15417,7 @@ var TextareaForm = function () {
 				// metadata table
 				var $metadataContainer = $('<div class="collapse param-metadata"></div>').attr('id', 'paramMetadata_' + name).attr('aria-expanded', false).appendTo($field);
 
-				$metadataContainer.append(_createParamMetadataList(helperText));
+				$metadataContainer.append(_createHelperMetadataText(helperText));
 			}
 			this.group = $formGroup;
 		}
@@ -16217,7 +16041,7 @@ var APPSimulation = function () {
 	}, {
 		key: '_updateSimForm',
 		value: function _updateSimForm(simIndex) {
-			var _this27 = this;
+			var _this25 = this;
 
 			var O = this;
 			_log('PANEL SIM / _updateSimForm: ' + simIndex);
@@ -16276,7 +16100,7 @@ var APPSimulation = function () {
 
 							// check opt for custom update function 
 							if (field.param._on && field.param._on.update && $.isFunction(field.param._on.update)) {
-								field.param._on.update.call(_this27, O);
+								field.param._on.update.call(_this25, O);
 							}
 						}
 
@@ -17287,6 +17111,7 @@ var APPTable = function () {
 	_createClass(APPTable, [{
 		key: 'addRow',
 		value: function addRow(rowIndex, rowData, tableData) {
+
 			var O = this;
 			tableData = O._tableData;
 			// row
@@ -17310,20 +17135,20 @@ var APPTable = function () {
 			}
 
 			// complete table data by adding row element to certain row data
-			tableData[rowIndex].el = $tr;
+			//tableData[rowIndex].el = $tr;
 
 			// create cols
 			$.each(O.opts.cols, function (j, col) {
 				var data = void 0;
 				if (rowData.cells) data = rowData.cells[j];else data = rowData[col.field];
 				var $td = $('<td></td>').appendTo($tr);
-				if (data.length > 60) {
+				if (data && data.length > 60) {
 					col.collapsable = "true";
 				}
 				col.classes && col.classes.td ? $td.addClass(col.classes.td) : null; // classes
 				col.collapsable ? $td.attr('data-td-collapse', col.collapsable) : null; // data collapsable
 				col.label ? $td.attr('data-label', col.label) : null; // add data-label for toggle view cards
-				col.id ? $td.attr('data-id', col.id) : null;
+				col.field ? $td.attr('data-id', col.field) : null;
 
 				// td attributes
 				if (col.attributes && col.attributes.td) {
@@ -17340,10 +17165,10 @@ var APPTable = function () {
 						data = _formatter[col.formatter].call(O, data);
 					}
 				}
+
 				// fill td with data
 				$td.html(data);
 			});
-
 			// create row actions 
 			if (O.opts.rowActions && O.opts.rowActions.length > 0) {
 
@@ -17372,7 +17197,6 @@ var APPTable = function () {
 						if (action.on.click && $.isFunction(action.on.click)) {
 							// bind click action on action
 							$action.on('click', function (event) {
-								console.log('moooooooo', event);
 								actionIndex = $tr.attr('data-row-id');
 								action.on.click.call(O, O, $action, actionIndex, rowData);
 							});
@@ -17583,7 +17407,7 @@ var APPTable = function () {
 	}, {
 		key: '_populateTable',
 		value: function _populateTable(tableData) {
-			var _this28 = this;
+			var _this26 = this;
 
 			var O = this;
 			_log('TABLE / _populateTable');
@@ -17593,7 +17417,7 @@ var APPTable = function () {
 
 			// create rows
 			$.each(tableData, function (rowIndex, rowData) {
-				_this28.addRow(rowIndex, rowData, tableData);
+				_this26.addRow(rowIndex, rowData, tableData);
 			});
 
 			// callback
@@ -18304,7 +18128,7 @@ var APPTableMT = function (_APPTable) {
 	}, {
 		key: '_updateFilter',
 		value: async function _updateFilter() {
-			var _this30 = this;
+			var _this28 = this;
 
 			var O = this;
 			_log('TABLE MAIN / _updateFilter');
@@ -18344,7 +18168,7 @@ var APPTableMT = function (_APPTable) {
 							if ($.isArray(facetValue) && facetValue.length > 0) {
 
 								// get according col index
-								var colIndex = _get(APPTableMT.prototype.__proto__ || Object.getPrototypeOf(APPTableMT.prototype), '_getColIndexByField', _this30).call(_this30, field);
+								var colIndex = _get(APPTableMT.prototype.__proto__ || Object.getPrototypeOf(APPTableMT.prototype), '_getColIndexByField', _this28).call(_this28, field);
 								var cellData = rowData.cells[colIndex];
 
 								if (cellData instanceof Set) {
@@ -18693,7 +18517,6 @@ var APPUI = function () {
 		value: function _initTdCollapse($table) {
 			var O = this;
 			_log('UI / _initTdCollapse');
-			console.log("tablooooooo ", $table);
 
 			var minH = 100;
 

@@ -111,6 +111,7 @@ fskeditorjs = function () {
     createUI();
     */
     window.port = _rep.servicePort;
+    console.log('window.port',window.port);
     let mainContainer = $(`<div class="card card-table-main overflow-hidden"></div>`);
     $('body').html(mainContainer);
     _modalDetails = new APPMTEditableDetails( {
@@ -128,6 +129,7 @@ fskeditorjs = function () {
 
   view.getComponentValue = () => {
     _metadata = _modalDetails._modelHandler.metaData;
+    console.log(_metadata);
     let metaDataString = JSON.stringify(_metadata);
 
     // If the code mirrors are not created yet, use the original scripts.
