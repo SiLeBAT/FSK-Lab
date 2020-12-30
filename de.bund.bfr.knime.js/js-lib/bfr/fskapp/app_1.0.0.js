@@ -13207,7 +13207,6 @@ var addControlledVocabulary = function addControlledVocabulary(input, vocabulary
 		fetch('http://localhost:' + port + '/getAllNames/' + vocabulary).then(function (response) {
 			return response.json();
 		}).then(function (data) {
-			console.log('http://localhost:' + port + '/getAllNames/' + vocabulary, data);
 			$(input).typeahead({
 				source: data,
 				autoSelect: true,
@@ -14149,7 +14148,6 @@ var APPMTEditableDetails = function () {
 						// iterate over submenus
 						$.each(menuMeta.submenus, function (j, submenuMeta) {
 							// panel meta data exists in handler
-							console.log(submenuMeta.id);
 							if (submenuMeta.id in modelHandler.panels) {
 								O._preparePanel(submenuMeta, modelHandler, $(modelHandler.panels[submenuMeta.id].panel)).appendTo(O._$modalTabContent);
 							}
@@ -14158,9 +14156,7 @@ var APPMTEditableDetails = function () {
 					// single nav item ? create panel
 					else {
 							if (menuMeta.id && menuMeta.id != 'plot') {
-								console.log('menuMeta.id', menuMeta.id, menuMeta.id in modelHandler.panels);
 								if (menuMeta.id in modelHandler._panels) {
-									console.log('menuMeta.id', menuMeta.id);
 									O._preparePanel(menuMeta, modelHandler, $(modelHandler._panels[menuMeta.id].panel)).appendTo(O._$modalTabContent);
 									//O._createPanel(menuMeta, modelHandler)
 									//    .appendTo(O._$modalTabContent);
@@ -14318,7 +14314,6 @@ var APPMTEditableDetails = function () {
 		value: async function _getModelHandler(modelMetadata) {
 			var O = this;
 			_log('MODAL DETAILS / _getModelHandler');
-			console.log(modelMetadata);
 
 			var modelHandler = null;
 
@@ -14506,6 +14501,7 @@ var Dialog = function () {
 			this.modal.tabIndex = -1;
 			this.modal.setAttribute("role", "dialog");
 			this.modal.appendChild(modalDialog);
+			_appUI._initFormItems(form);
 		}
 	}]);
 
@@ -14557,6 +14553,8 @@ var FormPanel = function () {
 				}
 			});
 			form.appendTo(this.panel);
+			// init form items' functions: touchspin, range, select2 ...
+			_appUI._initFormItems(form);
 		}
 	}, {
 		key: 'validate',
@@ -14669,7 +14667,6 @@ var InputForm = function () {
 
 				// formgroup
 				var _$formGroup = $('<div class="form-group row"></div>');
-				// .appendTo( O._$simForm );
 
 				// label
 				$label = $('<label class="col-form-label col-form-label-sm col-9 col-xs-3 order-1 sim-param-label"></label>').attr('for', 'input_' + name).appendTo(_$formGroup);
@@ -14697,15 +14694,15 @@ var InputForm = function () {
 
 						var $inputGroup = $('<div class="input-group input-group-sm"></div>').appendTo($field);
 
-						this.input = $('<input type="text" />').attr('id', 'input_' + name)
-						//.data( 'param-input', param ) 
-						.attr('aria-invalid', false).appendTo($inputGroup);
+						this.input = $('<input type="text" />').attr('id', 'input_' + name).attr('aria-invalid', false).attr('data-min', parseFloat(Number.MIN_SAFE_INTEGER)) // min value
+						.attr('data-max', parseFloat(Number.MAX_SAFE_INTEGER)) // max value
+						.appendTo($inputGroup);
 
 						// touchspin
 						this.input.addClass('form-control form-control-sm').attr('data-touchspin', '');
-						// add unit postfix to touchspin
+						// add postfix to touchspin
 
-						this.input.attr('data-touchspin-postfix', type);
+						//this.input.attr( 'data-touchspin-postfix', type );
 					}
 					// string or others
 					//<input class="custom-control-input" type="checkbox" id="switchExample1" name="switchExample1" checked />
@@ -14725,7 +14722,8 @@ var InputForm = function () {
 					this.input.val(value);
 				}
 				if (type === "date") {
-					this.input.attr('type', 'date');
+					//this.input.attr('type','date');
+					this.input.attr('data-datepicker', '');
 				}
 				// Add autocomplete to input with vocabulary
 				if (vocabulary) {
@@ -14811,7 +14809,6 @@ var InputForm = function () {
 	}, {
 		key: 'value',
 		get: function get() {
-			console.log(this.input.val());
 			return this.type !== "checkbox" ? this.input.val() : this.input.checked;
 		},
 		set: function set(newValue) {
@@ -15273,9 +15270,10 @@ var TablePanel = function () {
 	}, {
 		key: 'add',
 		value: function add(data) {
+			data.el ? delete data.el : null;
 			this.panelTable._tableData.push(data); // add data
 			this.data.push(data); // add data
-			this.panelTable.addRow(this.panelTable._tableData.length - 1, data);
+			this.panelTable.addRow(this.panelTable._tableData.length - 1, data, false);
 		}
 	}, {
 		key: 'edit',
@@ -15285,8 +15283,7 @@ var TablePanel = function () {
 				keys.push(key.field);
 			});
 			for (indexx in keys) {
-				dialog.inputs[keys[indexx]].input.val(originalData.cells[indexx]);
-				dialog.inputs[keys[indexx]].input.attr('data-id', keys[indexx]);
+				dialog.inputs[keys[indexx]].input ? dialog.inputs[keys[indexx]].input.val(originalData.cells[indexx]) : null;
 			}
 
 			dialog.editedRow = index;
@@ -15295,11 +15292,11 @@ var TablePanel = function () {
 	}, {
 		key: 'save',
 		value: function save(index, originalData) {
+			originalData.el ? delete originalData.el : null;
 			this.data.splice(index, 1);
 			this.panelTable._tableData.splice(index, 1);
 			var row = $(this.panelTable._$tbody).find('tr').eq(index);
 			row.find('td').each(function () {
-				console.log('beforebeforebeforebeforebefore', $(this), $(this).attr('data-id'), originalData[$(this).attr('data-id')]);
 				$(this).html(originalData[$(this).attr('data-id')]);
 			});
 			this.data.push(originalData); // add data
@@ -15317,7 +15314,6 @@ var TablePanel = function () {
 			$.each($(this.panelTable._$tbody).find('tr'), function (rowindex, row) {
 				$(row).attr('data-row-id', rowindex);
 			});
-			console.log(index);
 		}
 	}, {
 		key: 'moveTo',
@@ -15454,7 +15450,6 @@ var TextareaForm = function () {
 	}, {
 		key: 'value',
 		get: function get() {
-			console.log(this.input.val());
 			return this.input.val();
 		},
 		set: function set(newValue) {
@@ -17006,7 +17001,6 @@ var APPMTDetails = function () {
 		value: async function _getModelHandler(modelMetadata) {
 			var O = this;
 			_log('MODAL DETAILS / _getModelHandler');
-			console.log(modelMetadata);
 
 			var modelHandler = null;
 
@@ -17093,7 +17087,7 @@ var APPTable = function () {
 			wrapper: false, // 'card'
 			on: { // hooks/callbacks on specific events
 				afterInit: null,
-				//afterPopulate: null,
+				afterPopulate: null,
 				selectRow: null,
 				deselectRow: null
 			}
@@ -17110,7 +17104,7 @@ var APPTable = function () {
 
 	_createClass(APPTable, [{
 		key: 'addRow',
-		value: function addRow(rowIndex, rowData, tableData) {
+		value: function addRow(rowIndex, rowData, tableData, isMainTable) {
 
 			var O = this;
 			tableData = O._tableData;
@@ -17135,7 +17129,7 @@ var APPTable = function () {
 			}
 
 			// complete table data by adding row element to certain row data
-			//tableData[rowIndex].el = $tr;
+			if (isMainTable) tableData[rowIndex].el = $tr;
 
 			// create cols
 			$.each(O.opts.cols, function (j, col) {
@@ -17417,7 +17411,7 @@ var APPTable = function () {
 
 			// create rows
 			$.each(tableData, function (rowIndex, rowData) {
-				_this26.addRow(rowIndex, rowData, tableData);
+				_this26.addRow(rowIndex, rowData, tableData, 'true');
 			});
 
 			// callback
