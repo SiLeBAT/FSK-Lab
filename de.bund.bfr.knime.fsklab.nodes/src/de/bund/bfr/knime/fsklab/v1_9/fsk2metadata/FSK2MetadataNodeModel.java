@@ -91,7 +91,7 @@ public class FSK2MetadataNodeModel extends StatelessModel {
 
     // Create and add row to container
     final DefaultRow row = new DefaultRow(RowKey.createRowKey(0L), giCell, scopeCell, dbCell,
-        mathCell, scriptCell, visCell, pathCell, simulationCell);
+        mathCell, scriptCell, visCell, simulationCell);
     container.addRowToTable(row);
 
     container.close();
@@ -132,15 +132,13 @@ public class FSK2MetadataNodeModel extends StatelessModel {
         new DataColumnSpecCreator("modelscript", StringCell.TYPE).createSpec();
     final DataColumnSpec visSpec =
         new DataColumnSpecCreator("visualization", StringCell.TYPE).createSpec();
-    final DataColumnSpec locationSpec =
-        new DataColumnSpecCreator("Location", StringCell.TYPE).createSpec();
     final DataColumnSpec simulationSpec =
         new DataColumnSpecCreator("simulation", JSONCell.TYPE).createSpec();
 
     // table spec
     final DataTableSpecCreator tableSpec =
         new DataTableSpecCreator().addColumns(generalInformationSpec, scopeSpec, dataBackgroundSpec,
-            modelMathSpec, scriptSpec, visSpec, locationSpec, simulationSpec);
+            modelMathSpec, scriptSpec, visSpec, simulationSpec);
     return new DataTableSpec[] {tableSpec.createSpec()};
   }
 }

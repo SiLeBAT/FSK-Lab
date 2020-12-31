@@ -17062,7 +17062,7 @@ date: 07.12.2020
 */
 
 var APPTable = function () {
-	function APPTable(settings, $container) {
+	function APPTable(settings, $container, metadata) {
 		_classCallCheck(this, APPTable);
 
 		var O = this;
@@ -17092,7 +17092,7 @@ var APPTable = function () {
 				deselectRow: null
 			}
 		}, settings);
-
+		O._metadata = metadata;
 		// basic init actions
 		O._create();
 
@@ -17730,7 +17730,7 @@ date: 06.12.2020
 var APPTableMT = function (_APPTable) {
 	_inherits(APPTableMT, _APPTable);
 
-	function APPTableMT(settings, $container) {
+	function APPTableMT(settings, $container, metadata) {
 		_classCallCheck(this, APPTableMT);
 
 		// defaults maintable
@@ -17752,8 +17752,7 @@ var APPTableMT = function (_APPTable) {
 				updateFilter: null
 			}
 		}, settings);
-
-		return _possibleConstructorReturn(this, (APPTableMT.__proto__ || Object.getPrototypeOf(APPTableMT)).call(this, tableSettings, $container));
+		return _possibleConstructorReturn(this, (APPTableMT.__proto__ || Object.getPrototypeOf(APPTableMT)).call(this, tableSettings, $container, metadata));
 	}
 
 	_createClass(APPTableMT, [{
@@ -17772,8 +17771,13 @@ var APPTableMT = function (_APPTable) {
 			O._loader = _appUI._createLoader({ classes: 'loader-page' }, O._$container);
 			O._loader._setState(true);
 
-			// get full metadata and create tabledata
-			await O._createData();
+			if (O._metadata) {
+				await O._prepareDataTable();
+			} else {
+				// get full metadata and create tabledata
+				await O._createData();
+				await O._prepareDataTable();
+			}
 
 			// set loader
 			O._loader._setState(false);
@@ -17851,6 +17855,13 @@ var APPTableMT = function (_APPTable) {
 			O._uploadDates = await _fetchData._array(window._endpoints.uploadDate, O._metadata.length); //O._app._getUploadDates( window._endpoints.uploadDate, O._metadata.length );
 			O._executionTimes = await _fetchData._array(window._endpoints.executionTime, O._metadata.length); //O._app._getExecutionTimes( window._endpoints.executionTime, O._metadata.length );
 
+
+			_log(O._tableData);
+		}
+	}, {
+		key: '_prepareDataTable',
+		value: async function _prepareDataTable() {
+			var O = this;
 			// prepare table data
 			O._tableData = [];
 
@@ -17903,8 +17914,6 @@ var APPTableMT = function (_APPTable) {
 			for (var i = 0; i < O._metadata.length; i++) {
 				_loop2(i);
 			}
-
-			_log(O._tableData);
 		}
 
 		/**
@@ -18992,10 +19001,11 @@ date: 04.12.2020
 */
 
 var APPLandingpage = function () {
-	function APPLandingpage(settings, $container) {
+	function APPLandingpage(settings, $container, metadata) {
 		_classCallCheck(this, APPLandingpage);
 
 		var O = this;
+		O._metadata = metadata;
 		O._$container = $container;
 		O._debug = true;
 		// defaults
@@ -19018,6 +19028,7 @@ var APPLandingpage = function () {
 
 		// basic init actions
 		O._create();
+
 		// callback
 		if ($.isFunction(O.opts.on.afterInit)) {
 			O.opts.on.afterInit.call(O);
@@ -19054,7 +19065,7 @@ var APPLandingpage = function () {
 						executionTimes: O._executionTimes
 					}
 				}, O.opts.mainTable);
-				O._mainTable = new APPTableMT(mtSettings, O._$container);
+				O._mainTable = new APPTableMT(mtSettings, O._$container, O._metadata);
 
 				// tooltips
 				_appUI._initTooltips();
