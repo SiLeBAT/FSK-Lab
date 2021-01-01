@@ -11712,6 +11712,42 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+var EventObserver = function () {
+	function EventObserver() {
+		_classCallCheck(this, EventObserver);
+
+		this.observers = []; //list of observed events (callback functions)
+	}
+
+	_createClass(EventObserver, [{
+		key: 'subscribe',
+		value: function subscribe(id, observer) {
+			//add new events
+			this.observers.push({
+				id: id,
+				callback: observer
+			}); //get list of observed events and push new item to array
+		}
+	}, {
+		key: 'unsubscribe',
+		value: function unsubscribe(observer) {
+			this.observers = this.observers.filter(function (subscriber) {
+				return subscriber !== observer;
+			}); //returns a new list with filtered entries
+		}
+	}, {
+		key: 'broadcast',
+		value: function broadcast(event) {
+			console.log("Sending event ", event);
+			this.observers.forEach(function (subscriber) {
+				subscriber.callback(event);
+			});
+		}
+	}]);
+
+	return EventObserver;
+}();
+
 var _endpoint = window._endpoint || 'https://knime.bfr.berlin/backend/'; //http://localhost:8080/' //'https://knime.bfr.berlin/landingpage/';
 window._endpoints = {
 	metadata: _endpoint + 'metadata/',
@@ -11725,6 +11761,7 @@ window._endpoints = {
 	filter: _endpoint + 'filter'
 };
 window._debug = true;
+window.editEventBus = new EventObserver();
 /*
 
 version: 1.0.0
@@ -14422,7 +14459,7 @@ var Dialog = function () {
 			var _this16 = this;
 
 			// modal body
-			var form = $('<form class="form-striped"></form>');
+			var form = $('<form class="form-striped" no-immidiate-submit></form>');
 			formData.forEach(function (prop) {
 				var inputForm = createForm(prop, null, port);
 				if (inputForm) {
@@ -14758,7 +14795,18 @@ var InputForm = function () {
 			// Remove validation classes
 			this.group.removeClass("has-success has-error");
 		}
+	}, {
+		key: 'onblurHandler',
+		value: function onblurHandler() {
 
+			var closestForm = this.input.closest("form");
+			var attr = closestForm.attr('no-immidiate-submit');
+			var can_emit_Event = (typeof attr === 'undefined' ? 'undefined' : _typeof(attr)) === (typeof undefined === 'undefined' ? 'undefined' : _typeof(undefined)) || attr === false;
+			_log(' onblurHandler' + can_emit_Event);
+			if (can_emit_Event) {
+				window.editEventBus.broadcast('MetadataChanged');
+			}
+		}
 		/**
    * @returns {boolean} If the input is valid.
    */
@@ -14802,6 +14850,8 @@ var InputForm = function () {
 				this.input.parents('.form-group').addClass('has-error');
 				this.input.$validationContainer.addClass('is-invalid');
 				this.input.$validationContainer.css("display", "block");
+			} else {
+				this.onblurHandler();
 			}
 
 			return isValid;
@@ -15179,7 +15229,7 @@ var TablePanel = function () {
 					title: 'Move Up',
 					on: {
 						click: function click(O, $action, rowIndex, rowData) {
-							_log('on > clicktrash', 'hook'); // example hook output
+							_log('on > clicktrash', 'hook');
 							_log(O);
 							_log($action);
 							_log(rowIndex);
@@ -15194,7 +15244,7 @@ var TablePanel = function () {
 					title: 'Move down',
 					on: {
 						click: function click(O, $action, rowIndex, rowData) {
-							_log('on > clicktrash', 'hook'); // example hook output
+							_log('on > clickMoveTO ', 'hook');
 							_log(O);
 							_log($action);
 							_log(rowIndex);
@@ -15209,7 +15259,7 @@ var TablePanel = function () {
 					title: 'Trash',
 					on: {
 						click: function click(O, $action, rowIndex, rowData) {
-							_log('on > clicktrash', 'hook'); // example hook output
+							_log('on > clicktrash', 'hook');
 							_log(O);
 							_log($action);
 							_log(rowIndex);
@@ -15224,7 +15274,7 @@ var TablePanel = function () {
 					title: 'Edit',
 					on: {
 						click: function click(O, $action, rowIndex, rowData) {
-							_log('on > clickEdit', 'hook'); // example hook output
+							_log('on > clickEdit', 'hook');
 							_log(O);
 							_log($action);
 							_log(rowIndex);
@@ -15274,6 +15324,7 @@ var TablePanel = function () {
 			this.panelTable._tableData.push(data); // add data
 			this.data.push(data); // add data
 			this.panelTable.addRow(this.panelTable._tableData.length - 1, data, false);
+			window.editEventBus.broadcast('MetadataChanged');
 		}
 	}, {
 		key: 'edit',
@@ -15283,11 +15334,12 @@ var TablePanel = function () {
 				keys.push(key.field);
 			});
 			for (indexx in keys) {
-				dialog.inputs[keys[indexx]].input ? dialog.inputs[keys[indexx]].input.val(originalData.cells[indexx]) : null;
+				dialog.inputs[keys[indexx]].input.val(originalData.cells[indexx]);
 			}
 
 			dialog.editedRow = index;
 			$(dialog.modal).modal('show');
+			window.editEventBus.broadcast('MetadataChanged');
 		}
 	}, {
 		key: 'save',
@@ -15301,6 +15353,7 @@ var TablePanel = function () {
 			});
 			this.data.push(originalData); // add data
 			this.panelTable._tableData.push(originalData);
+			window.editEventBus.broadcast('MetadataChanged');
 		}
 	}, {
 		key: 'remove',
@@ -15314,6 +15367,7 @@ var TablePanel = function () {
 			$.each($(this.panelTable._$tbody).find('tr'), function (rowindex, row) {
 				$(row).attr('data-row-id', rowindex);
 			});
+			window.editEventBus.broadcast('MetadataChanged');
 		}
 	}, {
 		key: 'moveTo',
@@ -15334,6 +15388,7 @@ var TablePanel = function () {
 			this.data = []; // Clear data
 			this.panelTable._tableData = []; // Clear data
 			this.panelTable._clear(); // Empty table
+			window.editEventBus.broadcast('MetadataChanged');
 		}
 	}]);
 

@@ -152,7 +152,7 @@ fskdbview = function () {
 						title 			: 'Edit',
 						on 				: {
 							click 			: ( O, $action, modelIndex, rowData ) => {
-								_log( 'on > clickEdit', 'hook' ); // example hook output
+								_log( 'on > clickEdit', 'hook' ); 
 								_log( O );
 								_log( $action );
 								_log( modelIndex );
@@ -172,6 +172,7 @@ fskdbview = function () {
                                         }).then(function(datavis) {
                                             selectedModel['visualization'] = datavis; // this will be a string
                                             window.downloadURs.push(_globalVars.downloadEndpoint+modelIndex);
+                                            console.log(selectedModel);
                                             knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c215846e1' , [selectedModel],{elements:[]}) 
                                         });
                                     });
@@ -267,11 +268,11 @@ fskdbview = function () {
 				],
 				on 				: {			
 					afterInit 		: ( O ) => {
-						_log( 'on > afterInit', 'hook' ); // example hook output
+						_log( 'on > afterInit', 'hook' ); 
 						_log( O );
 					},
 					afterPopulate 	: ( O, tableData ) => {
-						_log( 'on > afterPopulate', 'hook' ); // example hook output
+						_log( 'on > afterPopulate', 'hook' ); 
 						_log( O );
 						_log( tableData );
 					},
@@ -300,6 +301,7 @@ fskdbview = function () {
                                         _value.selection.push(_representation.table.rows[rowIndex].rowKey);
                                         // emit selection event
                                         window.downloadURs.push(_globalVars.downloadEndpoint+rowIndex);
+                                        console.log(window.selectedModels);
                                         knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c21joiner' , [window.selectedModels,window.downloadURs],{elements:[]})  
                                     });
                                 });
@@ -317,7 +319,7 @@ fskdbview = function () {
                         
 					},
 					deselectRow 	: ( O, rowIndex, rowData ) => {
-						_log( 'on > deselectRow', 'hook' ); // example hook output
+						_log( 'on > deselectRow', 'hook' ); 
 						_log( O );
 						_log( rowIndex );
                         _log( rowData );
@@ -337,7 +339,7 @@ fskdbview = function () {
                           
 					},
 					updateFilter 	: ( O, filtered ) => {
-						_log( 'on > updateFilter', 'hook' ); // example hook output
+						_log( 'on > updateFilter', 'hook' ); 
 						_log( O );
 						_log( filtered );
 					}
