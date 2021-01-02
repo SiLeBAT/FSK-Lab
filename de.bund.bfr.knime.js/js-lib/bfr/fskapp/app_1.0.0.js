@@ -14057,7 +14057,7 @@ var APPMTEditableDetails = function () {
 			var O = this;
 			_log('MODAL DETAILS / _createModelMetadataContent');
 			// modal nav with tabs & search
-			O._$modalNav = $('<div class="modal-body modal-nav card-header"></div>').appendTo(O._$modalContent);
+			O._$modalNav = $('<div class="modal-body modal-nav"></div>').appendTo(O._$modalContent);
 
 			O._navId = O._id + 'Nav';
 			if (!O._$navBar) {

@@ -174,7 +174,6 @@ fskdbview = function () {
                                         }).then(function(datavis) {
                                             selectedModel['visualization'] = datavis; // this will be a string
                                             window.downloadURs.push(window._endpoints.download+modelIndex);
-                                            console.log(selectedModel);
                                             knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c215846e1' , [selectedModel],{elements:[]}) 
                                         });
                                     });
@@ -303,13 +302,11 @@ fskdbview = function () {
                                         _value.selection.push(_representation.table.rows[rowIndex].rowKey);
                                         // emit selection event
                                         window.downloadURs.push(window._endpoints.download+rowIndex);
-                                        console.log(window.selectedModels);
                                         knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c21joiner' , [window.selectedModels,window.downloadURs],{elements:[]})  
                                     });
                                 });
                                 
                             }else{
-                                console.log(rowData);
                                 // save selected model
                                 window.selectedModels.push(rowData.modelMetadata);
                                 _value.selection.push(rowIndex);

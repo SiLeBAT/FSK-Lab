@@ -187,9 +187,6 @@ joiner = function () {
 
     if (parent.tableID) {
       _value.joinerModelsData.numberOfModels = 0;
-      console.log(modelsPool.firstModel['metadata']);
-      console.log(modelsPool.secondModel['metadata']);
-      console.log(modelsPool.thirdModel['metadata']);
       try {
         if (isValidModel(modelsPool.firstModel)) {
           modelsPool.firstModel['metadata']['modelMath']['parameter'] = _modelColectionWithoutSuffixedmap[modelsPool.firstModel['modelName']];

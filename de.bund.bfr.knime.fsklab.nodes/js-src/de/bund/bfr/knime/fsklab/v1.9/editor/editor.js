@@ -23,22 +23,11 @@ fskeditorjs = function () {
   let selectionChanged = function (modelMetaData) {	
     window._debug = false;
     let selectedModel = modelMetaData.changeSet.added[0];
-    console.log('selectedModel',selectedModel);
     _location = selectedModel.Location;
     _simulation = selectedModel.simulation;
     extractAndCreateUI(JSON.stringify(selectedModel), selectedModel.modelscript, selectedModel.visualization);
-
     _modelCodeMirror.setValue(selectedModel.modelscript);
-    setTimeout(function() {
-        _modelCodeMirror.refresh();
-    },1);
-
     _visualizationCodeMirror.setValue(selectedModel.visualization);
-    
-    setTimeout(function() {
-        console.log(_modelCodeMirror.getValue());
-        _visualizationCodeMirror.refresh()
-    },1);
 
   }
   let initiated = function(event){
@@ -129,7 +118,6 @@ fskeditorjs = function () {
     await _modalDetails._updateContent(_metadata, 0);
     window.editEventBus.subscribe('EditorJS',(event) =>{
       _metadata = _modalDetails._modelHandler.metaData;
-      console.log(_metadata);
       doSave(_metadata)
     });
     createUI(modelscript, visualization);
@@ -156,7 +144,6 @@ fskeditorjs = function () {
       validationErrors: [],
       modelType: _metadata.modelType
     };
-    console.log(metaDataString);
     
     return viewValue;
   };
@@ -197,11 +184,9 @@ fskeditorjs = function () {
       require_config);
 
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-        console.log(e);
         if(e.currentTarget.text == 'Model'){
           _modelCodeMirror.refresh(); 
           _modelCodeMirror.focus();
-          console.log(_modelCodeMirror.getValue());
         }else if(e.currentTarget.text == 'Visualization'){
           _visualizationCodeMirror.refresh();
           _visualizationCodeMirror.focus();
