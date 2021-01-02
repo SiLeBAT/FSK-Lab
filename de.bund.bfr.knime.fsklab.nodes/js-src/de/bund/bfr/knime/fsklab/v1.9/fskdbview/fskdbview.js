@@ -11,9 +11,8 @@ fskdbview = function () {
     window.selectedModels = [];
     let selectedModelIndex = -1;
     window.downloadURs = [];
-    let _endpoint;
+    window._endpoint;
     let _app;
-    let _globalVars = {};
 
     // These sets are used with the th-filters
     let _lazySriptsfetching = false;
@@ -37,15 +36,21 @@ fskdbview = function () {
         //subscribe to events emitted by editor
         knimeService.subscribeToSelection('b800db46-4e25-4f77-bcc6-db0c21EditorSaved', selectionEdited);
 
-        _endpoint = _representation.remoteRepositoryURL ? _representation.remoteRepositoryURL : "https://knime.bfr.berlin/backend/";
-        _globalVars = {
-            metadataEndpoint: _endpoint + "metadata",
-            imageEndpoint: _endpoint + "image/",
-            downloadEndpoint: _endpoint + "download/",
-            modelscriptEndpoint: _endpoint + "modelscript/",
-            visualizationscriptEndpoint: _endpoint + "visualizationscript/",
-            simulationsEndpoint: _endpoint + "simulations/"
-        }
+        window._endpoint = _representation.remoteRepositoryURL ? _representation.remoteRepositoryURL : "https://knime.bfr.berlin/backend/";
+        window._endpoints 	= {
+			metadata		: window._endpoint + 'metadata/',
+			image			: window._endpoint + 'image/',
+			download		: window._endpoint + 'download/',
+			uploadDate		: window._endpoint + 'uploadDate/',
+			executionTime	: window._endpoint + 'executionTime/',
+			simulations		: window._endpoint + 'simulations/',
+			execution 		: window._endpoint + 'execute/',
+			search 			: window._endpoint + 'search/',
+			filter 			: window._endpoint + 'filter',
+			modelscriptEndpoint: window._endpoint + "modelscript/",
+            visualizationscriptEndpoint: window._endpoint + "visualizationscript/",
+            simulationsEndpoint: window._endpoint + "simulations/"
+		};
         createDBViewUI();
     };
     
@@ -106,14 +111,14 @@ fskdbview = function () {
         } else {
             parent.tableID = await create_UUID();
             _representation.tableID = parent.tableID;
-            const rep = await fetch(_globalVars.metadataEndpoint);
+            const rep = await fetch(window._endpoints.metadata);
             const j = await rep.json();
             
             for (index = 0; index < j.length; index++) {
                 let row = j[index];
                 try {
                     _lazySriptsfetching = true;
-                    const simulations = await fetch(_globalVars.simulationsEndpoint + index);
+                    const simulations = await fetch(window._endpoints.simulationsEndpoint + index);
                     simulations.json().then(function(data) {
                         row['simulation'] = data; // this will be a JSON
                     });
@@ -158,17 +163,17 @@ fskdbview = function () {
                                 let selectedModel = rowData.modelMetadata;
                                 //fetch scripts
                                 if(_lazySriptsfetching){
-                                    const modelscript =  fetch(_globalVars.modelscriptEndpoint + modelIndex);
+                                    const modelscript =  fetch(window._endpoints.modelscriptEndpoint + modelIndex);
                                     modelscript.then(function(response) {
                                         return response.text();
                                     }).then(function(data) {
                                         selectedModel['modelscript'] = data; // this will be a string
-                                        const visualizationscript =  fetch(_globalVars.visualizationscriptEndpoint + modelIndex);
+                                        const visualizationscript =  fetch(window._endpoints.visualizationscriptEndpoint + modelIndex);
                                         visualizationscript.then(function(responsevis) {
                                             return responsevis.text();
                                         }).then(function(datavis) {
                                             selectedModel['visualization'] = datavis; // this will be a string
-                                            window.downloadURs.push(_globalVars.downloadEndpoint+modelIndex);
+                                            window.downloadURs.push(window._endpoints.download+modelIndex);
                                             console.log(selectedModel);
                                             knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c215846e1' , [selectedModel],{elements:[]}) 
                                         });
@@ -283,12 +288,12 @@ fskdbview = function () {
                             $(this).closest("tr").css("background-color", "#e1e3e8");
                             //fetch scripts
                             if(_lazySriptsfetching){
-                                const modelscript =  fetch(_globalVars.modelscriptEndpoint + rowIndex);
+                                const modelscript =  fetch(window._endpoints.modelscriptEndpoint + rowIndex);
                                 modelscript.then(function(response) {
                                     return response.text();
                                 }).then(function(data) {
                                     _representation.metadata[rowIndex]['modelscript'] = data; // this will be a string
-                                    const visualizationscript =  fetch(_globalVars.visualizationscriptEndpoint + rowIndex);
+                                    const visualizationscript =  fetch(window._endpoints.visualizationscriptEndpoint + rowIndex);
                                     visualizationscript.then(function(responsevis) {
                                         return responsevis.text();
                                     }).then(function(datavis) {
@@ -297,7 +302,7 @@ fskdbview = function () {
                                         window.selectedModels.push(_representation.metadata[rowIndex]);
                                         _value.selection.push(_representation.table.rows[rowIndex].rowKey);
                                         // emit selection event
-                                        window.downloadURs.push(_globalVars.downloadEndpoint+rowIndex);
+                                        window.downloadURs.push(window._endpoints.download+rowIndex);
                                         console.log(window.selectedModels);
                                         knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c21joiner' , [window.selectedModels,window.downloadURs],{elements:[]})  
                                     });

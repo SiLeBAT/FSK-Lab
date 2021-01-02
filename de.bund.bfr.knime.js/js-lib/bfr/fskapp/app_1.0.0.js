@@ -11712,18 +11712,27 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+/**
+ * The observer class maintains a list of its observers and notifies them automatically of any state changes,
+ * by calling one of their methods.
+ * version: 1.0.0
+ * author: Ahmad Swaid 
+ * date: 07.12.2020 
+ */
 var EventObserver = function () {
 	function EventObserver() {
 		_classCallCheck(this, EventObserver);
 
-		this.observers = []; //list of observed events (callback functions)
+		var O = this;
+		O.observers = []; //list of observed events (callback functions)
 	}
 
 	_createClass(EventObserver, [{
 		key: 'subscribe',
 		value: function subscribe(id, observer) {
+			var O = this;
 			//add new events
-			this.observers.push({
+			O.observers.push({
 				id: id,
 				callback: observer
 			}); //get list of observed events and push new item to array
@@ -11731,15 +11740,17 @@ var EventObserver = function () {
 	}, {
 		key: 'unsubscribe',
 		value: function unsubscribe(observer) {
-			this.observers = this.observers.filter(function (subscriber) {
+			var O = this;
+			O.observers = O.observers.filter(function (subscriber) {
 				return subscriber !== observer;
 			}); //returns a new list with filtered entries
 		}
 	}, {
 		key: 'broadcast',
 		value: function broadcast(event) {
+			var O = this;
 			_log("Sending event ", event);
-			this.observers.forEach(function (subscriber) {
+			O.observers.forEach(function (subscriber) {
 				subscriber.callback(event);
 			});
 		}
@@ -11985,11 +11996,11 @@ var GenericModel = function (_ModelHandler) {
 			id: 'plot',
 			submenus: []
 		}, {
-			label: "Model Script",
+			label: "Model",
 			id: 'modelScript',
 			submenus: []
 		}, {
-			label: "Visualization Script",
+			label: "Visualization",
 			id: 'visualizationScript',
 			submenus: []
 		}, {
@@ -12157,11 +12168,11 @@ var DataModel = function (_ModelHandler2) {
 			id: 'plot',
 			submenus: []
 		}, {
-			label: "Model Script",
+			label: "Model",
 			id: 'modelScript',
 			submenus: []
 		}, {
-			label: "Visualization Script",
+			label: "Visualization",
 			id: 'visualizationScript',
 			submenus: []
 		}, {
@@ -12238,11 +12249,11 @@ var PredictiveModel = function (_ModelHandler3) {
 			id: 'plot',
 			submenus: []
 		}, {
-			label: "Model Script",
+			label: "Model",
 			id: 'modelScript',
 			submenus: []
 		}, {
-			label: "Visualization Script",
+			label: "Visualization",
 			id: 'visualizationScript',
 			submenus: []
 		}, {
@@ -12334,11 +12345,11 @@ var OtherModel = function (_ModelHandler4) {
 			id: 'plot',
 			submenus: []
 		}, {
-			label: "Model Script",
+			label: "Model",
 			id: 'modelScript',
 			submenus: []
 		}, {
-			label: "Visualization Script",
+			label: "Visualization",
 			id: 'visualizationScript',
 			submenus: []
 		}, {
@@ -12430,11 +12441,11 @@ var DoseResponseModel = function (_ModelHandler5) {
 			id: 'plot',
 			submenus: []
 		}, {
-			label: "Model Script",
+			label: "Model",
 			id: 'modelScript',
 			submenus: []
 		}, {
-			label: "Visualization Script",
+			label: "Visualization",
 			id: 'visualizationScript',
 			submenus: []
 		}, {
@@ -12553,11 +12564,11 @@ var ToxicologicalModel = function (_ModelHandler6) {
 			id: 'plot',
 			submenus: []
 		}, {
-			label: "Model Script",
+			label: "Model",
 			id: 'modelScript',
 			submenus: []
 		}, {
-			label: "Visualization Script",
+			label: "Visualization",
 			id: 'visualizationScript',
 			submenus: []
 		}, {
@@ -12683,11 +12694,11 @@ var ExposureModel = function (_ModelHandler7) {
 			id: 'plot',
 			submenus: []
 		}, {
-			label: "Model Script",
+			label: "Model",
 			id: 'modelScript',
 			submenus: []
 		}, {
-			label: "Visualization Script",
+			label: "Visualization",
 			id: 'visualizationScript',
 			submenus: []
 		}, {
@@ -12770,11 +12781,11 @@ var ProcessModel = function (_ModelHandler8) {
 			id: 'plot',
 			submenus: []
 		}, {
-			label: "Model Script",
+			label: "Model",
 			id: 'modelScript',
 			submenus: []
 		}, {
-			label: "Visualization Script",
+			label: "Visualization",
 			id: 'visualizationScript',
 			submenus: []
 		}, {
@@ -12860,11 +12871,11 @@ var ConsumptionModel = function (_ModelHandler9) {
 			id: 'plot',
 			submenus: []
 		}, {
-			label: "Model Script",
+			label: "Model",
 			id: 'modelScript',
 			submenus: []
 		}, {
-			label: "Visualization Script",
+			label: "Visualization",
 			id: 'visualizationScript',
 			submenus: []
 		}, {
@@ -12956,11 +12967,11 @@ var HealthModel = function (_ModelHandler10) {
 			id: 'plot',
 			submenus: []
 		}, {
-			label: "Model Script",
+			label: "Model",
 			id: 'modelScript',
 			submenus: []
 		}, {
-			label: "Visualization Script",
+			label: "Visualization",
 			id: 'visualizationScript',
 			submenus: []
 		}, {
@@ -13057,11 +13068,11 @@ var RiskModel = function (_ModelHandler11) {
 			id: 'plot',
 			submenus: []
 		}, {
-			label: "Model Script",
+			label: "Model",
 			id: 'modelScript',
 			submenus: []
 		}, {
-			label: "Visualization Script",
+			label: "Visualization",
 			id: 'visualizationScript',
 			submenus: []
 		}, {
@@ -13159,11 +13170,11 @@ var QraModel = function (_ModelHandler12) {
 			id: 'plot',
 			submenus: []
 		}, {
-			label: "Model Script",
+			label: "Model",
 			id: 'modelScript',
 			submenus: []
 		}, {
-			label: "Visualization Script",
+			label: "Visualization",
 			id: 'visualizationScript',
 			submenus: []
 		}, {
@@ -13877,17 +13888,17 @@ var ArrayForm = function () {
 	function ArrayForm(name, mandatory, type, value, helperText, vocabulary, port) {
 		_classCallCheck(this, ArrayForm);
 
-		this.group = document.createElement("div");
-		this.mandatory = mandatory;
-		this.simpleTable = new SimpleTable(type, value, vocabulary, port);
-		this._create(name, mandatory, helperText);
+		var O = this;
+		O.group = document.createElement("div");
+		O.mandatory = mandatory;
+		O.simpleTable = new SimpleTable(type, value, vocabulary, port);
+		O._create(name, mandatory, helperText);
 	}
 
 	_createClass(ArrayForm, [{
 		key: '_create',
 		value: function _create(name, mandatory, helperText) {
-			var _this14 = this;
-
+			var O = this;
 			if (name) {
 
 				// formgroup
@@ -13916,26 +13927,26 @@ var ArrayForm = function () {
 				var panelDiv = document.createElement("div");
 				panelDiv.classList.add("card");
 				header.appendTo($(panelDiv));
-				panelDiv.appendChild(this.simpleTable.table);
+				panelDiv.appendChild(O.simpleTable.table);
 
 				_$actionTrash = $('<button type="button" class="action action-pure float-right"><i class="feather icon-trash-2"></i></button>').attr('id', 'simActionRemove').attr('data-tooltip', '').attr('title', 'Trash').appendTo(header).on('click', function (event) {
-					_this14.simpleTable.trash();
+					O.simpleTable.trash();
 				});
 
 				// remove
 				_$actionRemove = $('<button type="button" class="action action-pure float-right"><i class="feather icon-delete"></i></button>').attr('id', 'simActionRemove').attr('data-tooltip', '').attr('title', 'Remove').appendTo(header).on('click', function (event) {
-					_this14.simpleTable.remove();
+					O.simpleTable.remove();
 				});
 
 				// add
 				_$actionAdd = $('<button type="button" class="action action-pure float-right"><i class="feather icon-plus"></i></button>').attr('id', 'actionAdd').attr('data-tooltip', '').attr('title', 'Add').appendTo(header).on('click', function (event) {
-					_this14.simpleTable.add();
+					O.simpleTable.add();
 				});
 
 				$(panelDiv).appendTo($field);
 
 				// create validation container
-				this.$validationContainer = $('<div class="validation-message mt-1"></div>').appendTo($field);
+				O.$validationContainer = $('<div class="validation-message mt-1"></div>').appendTo($field);
 
 				// create param metadata list
 				if (helperText) {
@@ -13945,13 +13956,14 @@ var ArrayForm = function () {
 					$metadataContainer.append(_createHelperMetadataText(helperText));
 				}
 
-				this.group = $formGroup;
+				O.group = $formGroup;
 			}
 		}
 	}, {
 		key: 'clear',
 		value: function clear() {
-			this.simpleTable.trash();
+			var O = this;
+			O.simpleTable.trash();
 		}
 
 		/**
@@ -13961,29 +13973,30 @@ var ArrayForm = function () {
 	}, {
 		key: 'validate',
 		value: function validate() {
+			var O = this;
 			var isValid = true;
-			if (this.mandatory) {
-				isValid = this.simpleTable.value.length > 0 ? true : false;
+			if (O.mandatory) {
+				isValid = O.simpleTable.value.length > 0 ? true : false;
 			}
 			if (!isValid) {
-				this.$validationContainer.text('At least one row is required');
-				this.group.addClass('has-error');
-				this.group.addClass('is-invalid');
-				this.$validationContainer.css("display", "block");
+				O.$validationContainer.text('At least one row is required');
+				O.group.addClass('has-error');
+				O.group.addClass('is-invalid');
+				O.$validationContainer.css("display", "block");
 			}
 			return isValid;
 		}
 	}, {
 		key: 'value',
 		get: function get() {
-			return this.simpleTable.value;
+			var O = this;
+			return O.simpleTable.value;
 		},
 		set: function set(newValue) {
-			var _this15 = this;
-
-			this.simpleTable.trash();
+			var O = this;
+			O.simpleTable.trash();
 			newValue.forEach(function (item) {
-				return _this15.simpleTable._createRow(item);
+				return O.simpleTable._createRow(item);
 			});
 		}
 	}]);
@@ -14044,7 +14057,7 @@ var APPMTEditableDetails = function () {
 			var O = this;
 			_log('MODAL DETAILS / _createModelMetadataContent');
 			// modal nav with tabs & search
-			O._$modalNav = $('<div class="card-header"></div>').appendTo(O._$modalContent);
+			O._$modalNav = $('<div class="modal-body modal-nav card-header"></div>').appendTo(O._$modalContent);
 
 			O._navId = O._id + 'Nav';
 			if (!O._$navBar) {
@@ -14393,10 +14406,12 @@ var APPMTEditableDetails = function () {
 	}, {
 		key: 'opts',
 		get: function get() {
-			return this._opts;
+			var O = this;
+			return O._opts;
 		},
 		set: function set(settings) {
-			this._opts = $.extend(true, {}, this.opts, settings);
+			var O = this;
+			O._opts = $.extend(true, {}, O.opts, settings);
 		}
 	}]);
 
@@ -14442,28 +14457,28 @@ var Dialog = function () {
 	function Dialog(id, title, formData, port) {
 		_classCallCheck(this, Dialog);
 
-		this.inputs = {}; // Hash of inputs by id
+		var O = this;
+		O.inputs = {}; // Hash of inputs by id
 
 		// Index of the row currently edited. It is -1 if no row is being edited.
 		// This is the case of when a new row is added.
-		this.editedRow = -1;
+		O.editedRow = -1;
 
-		this.modal = document.createElement("div");
-		this.create(id, title, formData, port);
+		O.modal = document.createElement("div");
+		O.create(id, title, formData, port);
 	}
 
 	_createClass(Dialog, [{
 		key: 'create',
 		value: function create(id, title, formData, port) {
-			var _this16 = this;
-
+			var O = this;
 			// modal body
 			var form = $('<form class="form-striped" no-immidiate-submit></form>');
 			formData.forEach(function (prop) {
 				var inputForm = createForm(prop, null, port);
 				if (inputForm) {
 					$(inputForm.group).appendTo(form);
-					_this16.inputs[prop.id] = inputForm;
+					O.inputs[prop.id] = inputForm;
 				}
 			});
 
@@ -14493,29 +14508,29 @@ var Dialog = function () {
 			saveButton = $('<button type="button" class="btn btn-icon btn-outline-light"><i class="feather icon-save"></i></button>').attr('id', 'save').attr('data-tooltip', '').attr('title', 'Save changes').appendTo($actionGroup1).on('click', function (event) {
 				// Validate inputs and stop saving if errors are found.
 				var hasError = false;
-				Object.values(_this16.inputs).forEach(function (input) {
+				Object.values(O.inputs).forEach(function (input) {
 					if (!input.validate()) hasError = true;
 				});
 				if (hasError) return;
 
-				$(_this16.modal).modal('hide');
+				$(O.modal).modal('hide');
 
 				// Retrieve data and clear inputs
 				var data = {};
-				for (var inputId in _this16.inputs) {
-					var currentInput = _this16.inputs[inputId];
+				for (var inputId in O.inputs) {
+					var currentInput = O.inputs[inputId];
 					data[inputId] = currentInput.value; // Save input value
 					currentInput.clear(); // Clear input
 				}
 
-				if (_this16.editedRow != -1) {
-					_this16.panel.save(_this16.editedRow, data);
-					_this16.editedRow = -1;
-					Object.values(_this16.inputs).forEach(function (input) {
+				if (O.editedRow != -1) {
+					O.panel.save(O.editedRow, data);
+					O.editedRow = -1;
+					Object.values(O.inputs).forEach(function (input) {
 						return input.clear();
 					}); // Clear inputs
 				} else {
-					_this16.panel.add(data);
+					O.panel.add(data);
 				}
 			});
 			$actionGroup1.wrapInner('<div class="row justify-content-end align-items-center"></div>');
@@ -14532,11 +14547,11 @@ var Dialog = function () {
 			modalDialog.setAttribute("role", "document");
 			modalDialog.appendChild(content);
 
-			this.modal.classList.add("modal", "fade", "modal-sim");
-			this.modal.id = id;
-			this.modal.tabIndex = -1;
-			this.modal.setAttribute("role", "dialog");
-			this.modal.appendChild(modalDialog);
+			O.modal.classList.add("modal", "fade", "modal-sim");
+			O.modal.id = id;
+			O.modal.tabIndex = -1;
+			O.modal.setAttribute("role", "dialog");
+			O.modal.appendChild(modalDialog);
 			_appUI._initFormItems(form);
 		}
 	}]);
@@ -14553,10 +14568,11 @@ var FormPanel = function () {
 		_classCallCheck(this, FormPanel);
 
 		_log('FormPanel /' + title, 'primary');
-		this.panel = $('<div class="panel-body"></div>');
-		this.inputs = {};
+		var O = this;
+		O.panel = $('<div class="panel-body"></div>');
+		O.inputs = {};
 
-		this._create(title, formData, data, port);
+		O._create(title, formData, data, port);
 	}
 
 	/**
@@ -14578,25 +14594,25 @@ var FormPanel = function () {
 	_createClass(FormPanel, [{
 		key: '_create',
 		value: function _create(title, formData, data, port) {
-			var _this17 = this;
-
+			var O = this;
 			var form = $('<form class="form-striped"></form>');
 			formData.forEach(function (prop) {
 				var inputForm = createForm(prop, data ? data[prop.id] : null, port, title === "Parameter" ? true : false);
 				if (inputForm) {
 					$(inputForm.group).appendTo(form);
-					_this17.inputs[prop.id] = inputForm;
+					O.inputs[prop.id] = inputForm;
 				}
 			});
-			form.appendTo(this.panel);
+			form.appendTo(O.panel);
 			// init form items' functions: touchspin, range, select2 ...
 			_appUI._initFormItems(form);
 		}
 	}, {
 		key: 'validate',
 		value: function validate() {
+			var O = this;
 			var isValid = true;
-			Object.values(this.inputs).forEach(function (input) {
+			Object.values(O.inputs).forEach(function (input) {
 				if (!input.validate()) isValid = false;
 			});
 			return isValid;
@@ -14604,8 +14620,9 @@ var FormPanel = function () {
 	}, {
 		key: 'data',
 		get: function get() {
+			var O = this;
 			var data = {};
-			Object.entries(this.inputs).forEach(function (_ref) {
+			Object.entries(O.inputs).forEach(function (_ref) {
 				var _ref2 = _slicedToArray(_ref, 2),
 				    id = _ref2[0],
 				    input = _ref2[1];
@@ -14660,13 +14677,14 @@ var InputForm = function () {
 
 		_classCallCheck(this, InputForm);
 
-		this.name = name;
-		this.mandatory = mandatory;
-		this.type = type;
-		this.helperText = helperText;
-		this.isSID = !_isNull(sid) && !_isUndefined(sid);
-		this.group = null;
-		this._create(name, mandatory, type, helperText, value, vocabulary, port);
+		var O = this;
+		O.name = name;
+		O.mandatory = mandatory;
+		O.type = type;
+		O.helperText = helperText;
+		O.isSID = !_isNull(sid) && !_isUndefined(sid);
+		O.group = null;
+		O._create(name, mandatory, type, helperText, value, vocabulary, port);
 	}
 
 	/**
@@ -14682,7 +14700,8 @@ var InputForm = function () {
 	_createClass(InputForm, [{
 		key: '_create',
 		value: function _create(name, mandatory, type, helperText, value, vocabulary, port) {
-			this._createFormField(name, mandatory, type, helperText, value, vocabulary, port);
+			var O = this;
+			O._createFormField(name, mandatory, type, helperText, value, vocabulary, port);
 		}
 		/**
    * CREATE FORM FIELD
@@ -14693,8 +14712,6 @@ var InputForm = function () {
 	}, {
 		key: '_createFormField',
 		value: function _createFormField(name, mandatory, type, helperText, value, vocabulary, port) {
-			var _this18 = this;
-
 			var O = this;
 			_log('PANEL SIM / _createFormField');
 			_log(name);
@@ -14715,7 +14732,7 @@ var InputForm = function () {
 				var $actions = $('<div class="col-3 col-xs-auto order-2 order-xs-3 sim-param-actions"></div>').appendTo(_$formGroup);
 
 				// input item
-				this.input = null;
+				O.input = null;
 
 				// create param metadata action
 				if (helperText) {
@@ -14730,46 +14747,46 @@ var InputForm = function () {
 
 						var $inputGroup = $('<div class="input-group input-group-sm"></div>').appendTo($field);
 
-						this.input = $('<input type="text" />').attr('id', 'input_' + name).attr('aria-invalid', false).attr('data-min', parseFloat(Number.MIN_SAFE_INTEGER)) // min value
+						O.input = $('<input type="text" />').attr('id', 'input_' + name).attr('aria-invalid', false).attr('data-min', parseFloat(Number.MIN_SAFE_INTEGER)) // min value
 						.attr('data-max', parseFloat(Number.MAX_SAFE_INTEGER)) // max value
 						.appendTo($inputGroup);
 
 						// touchspin
-						this.input.addClass('form-control form-control-sm').attr('data-touchspin', '');
+						O.input.addClass('form-control form-control-sm').attr('data-touchspin', '');
 						// add postfix to touchspin
 
-						//this.input.attr( 'data-touchspin-postfix', type );
+						//O.input.attr( 'data-touchspin-postfix', type );
 					}
 					// string or others
 					//<input class="custom-control-input" type="checkbox" id="switchExample1" name="switchExample1" checked />
 					else if (type == 'boolean') {
-							this.input = $('<input type="checkbox" class="form-control form-control-sm" />').attr('id', 'input_' + name).appendTo($field);
+							O.input = $('<input type="checkbox" class="form-control form-control-sm" />').attr('id', 'input_' + name).appendTo($field);
 						}
 						// string or others
 						else {
-								this.input = $('<input type="text" class="form-control form-control-sm" />').attr('id', 'input_' + name).appendTo($field);
+								O.input = $('<input type="text" class="form-control form-control-sm" />').attr('id', 'input_' + name).appendTo($field);
 							}
 				}
 				if (type === "date" && typeof value != "string") {
 					var day = ("" + value[2]).length > 1 ? "" + value[2] : "0" + value[2];
 					var month = ("" + value[1]).length > 1 ? "" + value[1] : "0" + value[1];
-					this.input.val(value[0] + "-" + month + "-" + day);
+					O.input.val(value[0] + "-" + month + "-" + day);
 				} else {
-					this.input.val(value);
+					O.input.val(value);
 				}
 				if (type === "date") {
-					//this.input.attr('type','date');
-					this.input.attr('data-datepicker', '');
+					//O.input.attr('type','date');
+					O.input.attr('data-datepicker', '');
 				}
 				// Add autocomplete to input with vocabulary
 				if (vocabulary) {
-					addControlledVocabulary(this.input, vocabulary, port);
+					addControlledVocabulary(O.input, vocabulary, port);
 				}
-				this.input.on("blur", function () {
-					O.validate(_this18.value);
+				O.input.on("blur", function () {
+					O.validate(O.value);
 				});
 				// create validation container
-				this.input.$validationContainer = $('<div class="validation-message mt-1"></div>').appendTo($field);
+				O.input.$validationContainer = $('<div class="validation-message mt-1"></div>').appendTo($field);
 
 				// create  metadata list
 				if (helperText) {
@@ -14779,26 +14796,27 @@ var InputForm = function () {
 					$metadataContainer.append(_createHelperMetadataText(helperText));
 				}
 
-				this.group = _$formGroup;
+				O.group = _$formGroup;
 			}
 		}
 	}, {
 		key: 'clear',
 		value: function clear() {
-			this.input.val("");
+			var O = this;
+			O.input.val("");
 
-			if (this.input.$validationContainer) {
-				this.input.$validationContainer.css("display", "none");
+			if (O.input.$validationContainer) {
+				O.input.$validationContainer.css("display", "none");
 			}
 
 			// Remove validation classes
-			this.group.removeClass("has-success has-error");
+			O.group.removeClass("has-success has-error");
 		}
 	}, {
 		key: 'onblurHandler',
 		value: function onblurHandler() {
-
-			var closestForm = this.input.closest("form");
+			var O = this;
+			var closestForm = O.input.closest("form");
 			var attr = closestForm.attr('no-immidiate-submit');
 			var can_emit_Event = (typeof attr === 'undefined' ? 'undefined' : _typeof(attr)) === (typeof undefined === 'undefined' ? 'undefined' : _typeof(undefined)) || attr === false;
 			_log(' onblurHandler' + can_emit_Event);
@@ -14818,39 +14836,39 @@ var InputForm = function () {
 
 			var validationErrors = [];
 			// remove error classes
-			this.input.find('.has-error').removeClass('has-error');
-			this.input.find('.is-invalid').removeClass('is-invalid');
-			this.input.find('.validation-message').empty();
-			this.input.$validationContainer.text('');
+			O.input.find('.has-error').removeClass('has-error');
+			O.input.find('.is-invalid').removeClass('is-invalid');
+			O.input.find('.validation-message').empty();
+			O.input.$validationContainer.text('');
 
 			var isValid = true;
-			if (!this.mandatory) {
+			if (!O.mandatory) {
 				isValid = true;
-			} else if (this.isSID) {
-				var fieldValue = this.input.val();
+			} else if (O.isSID) {
+				var fieldValue = O.input.val();
 				var idRegexp = /^[A-Za-z_^s]\w*$/;
 				// name fits regexp
 				if (!idRegexp.test(fieldValue)) {
-					this.input.$validationContainer.text('Parameter ID is not a valid (SId)');
+					O.input.$validationContainer.text('Parameter ID is not a valid (SId)');
 					isValid = false;
 				}
 			} else {
-				isValid = this.input.val() ? true : false;
-				if (!isValid) this.input.$validationContainer.text("required");
+				isValid = O.input.val() ? true : false;
+				if (!isValid) O.input.$validationContainer.text("required");
 				// check if mail has correct structure
-				if (isValid && this.type === "email") {
+				if (isValid && O.type === "email") {
 					var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\ ".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-					isValid = re.test(this.input.value);
-					this.input.$validationContainer.text("Not a valid email value");
+					isValid = re.test(O.input.value);
+					O.input.$validationContainer.text("Not a valid email value");
 				}
 			}
 
 			if (!isValid) {
-				this.input.parents('.form-group').addClass('has-error');
-				this.input.$validationContainer.addClass('is-invalid');
-				this.input.$validationContainer.css("display", "block");
+				O.input.parents('.form-group').addClass('has-error');
+				O.input.$validationContainer.addClass('is-invalid');
+				O.input.$validationContainer.css("display", "block");
 			} else {
-				this.onblurHandler();
+				O.onblurHandler();
 			}
 
 			return isValid;
@@ -14858,10 +14876,12 @@ var InputForm = function () {
 	}, {
 		key: 'value',
 		get: function get() {
-			return this.type !== "checkbox" ? this.input.val() : this.input.checked;
+			var O = this;
+			return O.type !== "checkbox" ? O.input.val() : O.input.checked;
 		},
 		set: function set(newValue) {
-			this.input.val(newValue);
+			var O = this;
+			O.input.val(newValue);
 		}
 	}]);
 
@@ -14896,16 +14916,15 @@ var SelectForm = function () {
 
 		_classCallCheck(this, SelectForm);
 
-		this.group = document.createElement("div");
+		var O = this;
+		O.group = document.createElement("div");
 
-		this._create(name, mandatory, helperText, value, port, vocabulary);
+		O._create(name, mandatory, helperText, value, port, vocabulary);
 	}
 
 	_createClass(SelectForm, [{
 		key: '_create',
 		value: function _create(name, mandatory, helperText, value, port, vocabulary) {
-			var _this19 = this;
-
 			var O = this;
 			// formgroup
 			var $formGroup = $('<div class="form-group row"></div>');
@@ -14921,7 +14940,7 @@ var SelectForm = function () {
 			var $actions = $('<div class="col-3 col-xs-auto order-2 order-xs-3 sim-param-actions"></div>').appendTo($formGroup);
 
 			// input item
-			this.input = null;
+			O.input = null;
 
 			// create param metadata action
 			if (helperText) {
@@ -14929,21 +14948,21 @@ var SelectForm = function () {
 				var $actionMetadata = $('<button class="action action-pure float-right" type="button"><i class="feather icon-info"></i></button>').attr('data-toggle', 'collapse').attr('data-target', '#paramMetadata_' + name).attr('aria-expanded', false).attr('aria-controls', 'paramMetadata_' + name).attr('title', 'Show Metadata').appendTo($actions);
 			}
 
-			this.input = $('<select class="form-control form-control-sm" style="width: 100%;" data-sel2 data-placeholder="Select…"/>').attr('id', 'selectInput_' + name).appendTo($field);
-			this.input.val(value);
+			O.input = $('<select class="form-control form-control-sm" style="width: 100%;" data-sel2 data-placeholder="Select…"/>').attr('id', 'selectInput_' + name).appendTo($field);
+			O.input.val(value);
 			// Add options from vocabulary. The option matching value is selected.
 			if (port >= 0) {
 				fetch('http://localhost:' + port + '/getAllNames/' + vocabulary).then(function (response) {
 					return response.json();
 				}).then(function (data) {
-					_this19.input.append(data.map(function (item) {
+					O.input.append(data.map(function (item) {
 						return '<option>' + item + '</option>';
 					}).join(""));
 				});
 			}
 
 			// create validation container
-			this.input.$validationContainer = $('<div class="validation-message mt-1"></div>').appendTo($field);
+			O.input.$validationContainer = $('<div class="validation-message mt-1"></div>').appendTo($field);
 
 			// create param metadata list
 			if (helperText) {
@@ -14952,12 +14971,13 @@ var SelectForm = function () {
 
 				$metadataContainer.append(_createHelperMetadataText(helperText));
 			}
-			this.group = $formGroup;
+			O.group = $formGroup;
 		}
 	}, {
 		key: 'clear',
 		value: function clear() {
-			this.input.val('');
+			var O = this;
+			O.input.val('');
 		}
 
 		/**
@@ -14967,32 +14987,34 @@ var SelectForm = function () {
 	}, {
 		key: 'validate',
 		value: function validate() {
-
+			var O = this;
 			var isValid = void 0;
-			this.input.find('.has-error').removeClass('has-error');
-			this.input.find('.is-invalid').removeClass('is-invalid');
-			this.input.find('.validation-message').empty();
-			if (!this.mandatory) {
+			O.input.find('.has-error').removeClass('has-error');
+			O.input.find('.is-invalid').removeClass('is-invalid');
+			O.input.find('.validation-message').empty();
+			if (!O.mandatory) {
 				isValid = true;
 			} else {
-				isValid = this.input.value ? true : false;
+				isValid = O.input.value ? true : false;
 			}
 
 			if (!isValid) {
-				this.input.$validationContainer.text('required');
-				this.input.parents('.form-group').addClass('has-error');
-				this.input.addClass('is-invalid');
-				this.input.$validationContainer.css("display", "block");
+				O.input.$validationContainer.text('required');
+				O.input.parents('.form-group').addClass('has-error');
+				O.input.addClass('is-invalid');
+				O.input.$validationContainer.css("display", "block");
 			}
 			return isValid;
 		}
 	}, {
 		key: 'value',
 		get: function get() {
-			return this.input.val();
+			var O = this;
+			return O.input.val();
 		},
 		set: function set(newValue) {
-			this.select.val(newValue);
+			var O = this;
+			O.select.val(newValue);
 		}
 	}]);
 
@@ -15001,23 +15023,22 @@ var SelectForm = function () {
 
 var SimpleTable = function () {
 	function SimpleTable(type, data, vocabulary, port) {
-		var _this20 = this;
-
 		_classCallCheck(this, SimpleTable);
 
-		this.type = type === "text-array" ? "text" : "date";
-		this.vocabulary = vocabulary;
-		this.port = port;
+		var O = this;
+		O.type = type === "text-array" ? "text" : "date";
+		O.vocabulary = vocabulary;
+		O.port = port;
 
-		this.table = document.createElement("table");
-		this.table.className = "table";
-		this.table.innerHTML = '<thead><thead>';
+		O.table = document.createElement("table");
+		O.table.className = "table";
+		O.table.innerHTML = '<thead><thead>';
 
-		this.body = document.createElement("tbody");
-		this.table.appendChild(this.body);
+		O.body = document.createElement("tbody");
+		O.table.appendChild(O.body);
 
 		data.forEach(function (value) {
-			return _this20._createRow(value);
+			return O._createRow(value);
 		});
 	}
 
@@ -15029,22 +15050,22 @@ var SimpleTable = function () {
 	_createClass(SimpleTable, [{
 		key: 'add',
 		value: function add() {
+			var O = this;
 			// If it has no rows or the last row value is not empty
-			if (!this.body.lastChild || this.body.lastChild.lastChild.firstChild.value) {
-				this._createRow();
+			if (!O.body.lastChild || O.body.lastChild.lastChild.firstChild.value) {
+				O._createRow();
 			}
 		}
 	}, {
 		key: 'remove',
 		value: function remove() {
-			var _this21 = this;
-
+			var O = this;
 			// Find checked rows and delete them
-			Array.from(this.body.children).forEach(function (row) {
+			Array.from(O.body.children).forEach(function (row) {
 				// Get checkbox (tr > td > input)
 				var checkbox = row.firstChild.firstChild;
 				if (checkbox.checked) {
-					_this21.body.removeChild(row);
+					O.body.removeChild(row);
 				}
 			});
 		}
@@ -15056,23 +15077,23 @@ var SimpleTable = function () {
 	}, {
 		key: 'trash',
 		value: function trash() {
-			this.body.innerHTML = "";
+			var O = this;
+			O.body.innerHTML = "";
 		}
 	}, {
 		key: '_createRow',
 		value: function _createRow() {
-			var _this22 = this;
-
 			var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
 
+			var O = this;
 			var input = document.createElement("input");
-			input.type = this.type;
+			input.type = O.type;
 			input.className = "form-control";
 			input.value = value;
 
 			// Add autocomplete to input with vocabulary
-			if (this.vocabulary) {
-				addControlledVocabulary(input, this.vocabulary, this.port);
+			if (O.vocabulary) {
+				addControlledVocabulary(input, O.vocabulary, O.port);
 			}
 
 			// If enter is pressed when the input if focused, lose focus and add a
@@ -15081,7 +15102,7 @@ var SimpleTable = function () {
 			input.addEventListener("keyup", function (event) {
 				if (event.key === "Enter") {
 					input.blur();
-					_this22.add();
+					O.add();
 				}
 			});
 
@@ -15095,15 +15116,16 @@ var SimpleTable = function () {
 			newRow.appendChild(inputCell);
 
 			// Add row
-			this.body.appendChild(newRow);
+			O.body.appendChild(newRow);
 
 			input.focus(); // Focus the new input      
 		}
 	}, {
 		key: 'value',
 		get: function get() {
+			var O = this;
 			var data = [];
-			this.body.childNodes.forEach(function (tr) {
+			O.body.childNodes.forEach(function (tr) {
 				var inputCell = tr.lastChild; // 2nd cell (with input)
 				var input = inputCell.firstChild; // <input>
 				data.push(input.value);
@@ -15155,16 +15177,17 @@ var TablePanel = function () {
 	function TablePanel(title, formData, data, port) {
 		_classCallCheck(this, TablePanel);
 
-		this.panel = document.createElement("div");
+		var O = this;
+		O.panel = document.createElement("div");
 
 		// Register this panel in dialog (TODO: this should be done in Dialog's constr)
-		// this.dialog = dialog;
-		this.dialog = new Dialog(title + "Dialog", "Add " + title, formData, port);
-		this.dialog.panel = this;
-		this.tablePanel = this._createComplexPanel(data, formData, title, this.dialog);
-		this.table = this.tablePanel.find("table.table-striped");
-		this.data = data ? data : []; // Initialize null or undefined data
-		this._create(title, this.dialog, formData);
+		// O.dialog = dialog;
+		O.dialog = new Dialog(title + "Dialog", "Add " + title, formData, port);
+		O.dialog.panel = this;
+		O.tablePanel = O._createComplexPanel(data, formData, title, O.dialog);
+		O.table = O.tablePanel.find("table.table-striped");
+		O.data = data ? data : []; // Initialize null or undefined data
+		O._create(title, O.dialog, formData);
 	}
 
 	/**
@@ -15180,9 +15203,10 @@ var TablePanel = function () {
 	_createClass(TablePanel, [{
 		key: '_create',
 		value: function _create(title, dialog, formData) {
+			var O = this;
 			// panel
-			this.panel.classList.add("panel", "panel-default");
-			this.tablePanel.appendTo($(this.panel));
+			O.panel.classList.add("panel", "panel-default");
+			O.tablePanel.appendTo($(O.panel));
 		}
 		/**
    * CREATE COMPLEX PANEL
@@ -15195,8 +15219,6 @@ var TablePanel = function () {
 	}, {
 		key: '_createComplexPanel',
 		value: function _createComplexPanel(data, formData, title, dialog) {
-			var _this23 = this;
-
 			var O = this;
 
 			// tab-pane
@@ -15212,7 +15234,7 @@ var TablePanel = function () {
 
 			var removeAllButton = $('<button class="btn btn-outline-secondary btn-sm btn-icon" type="button"><i class="feather icon-trash"></i></button>').attr('aria-label', 'Remove all ' + title + '(s)').attr('title', 'Remove all ' + title + '(s)');
 			removeAllButton.on('click', function (event) {
-				_this23.removeAll();
+				O.removeAll();
 			});
 
 			// table settings
@@ -15227,13 +15249,13 @@ var TablePanel = function () {
 					icon: 'icon-arrow-up',
 					title: 'Move Up',
 					on: {
-						click: function click(O, $action, rowIndex, rowData) {
+						click: function click(o, $action, rowIndex, rowData) {
 							_log('on > clicktrash', 'hook');
-							_log(O);
+							_log(o);
 							_log($action);
 							_log(rowIndex);
 							_log(rowData);
-							_this23.moveTo(rowIndex, 'up');
+							O.moveTo(rowIndex, 'up');
 						}
 					}
 				}, {
@@ -15242,13 +15264,13 @@ var TablePanel = function () {
 					icon: 'icon-arrow-down',
 					title: 'Move down',
 					on: {
-						click: function click(O, $action, rowIndex, rowData) {
+						click: function click(o, $action, rowIndex, rowData) {
 							_log('on > clickMoveTO ', 'hook');
-							_log(O);
+							_log(o);
 							_log($action);
 							_log(rowIndex);
 							_log(rowData);
-							_this23.moveTo(rowIndex, 'down');
+							O.moveTo(rowIndex, 'down');
 						}
 					}
 				}, {
@@ -15257,13 +15279,13 @@ var TablePanel = function () {
 					icon: 'icon-trash',
 					title: 'Trash',
 					on: {
-						click: function click(O, $action, rowIndex, rowData) {
+						click: function click(o, $action, rowIndex, rowData) {
 							_log('on > clicktrash', 'hook');
-							_log(O);
+							_log(o);
 							_log($action);
 							_log(rowIndex);
 							_log(rowData);
-							_this23.remove(rowIndex);
+							O.remove(rowIndex);
 						}
 					}
 				}, {
@@ -15272,13 +15294,13 @@ var TablePanel = function () {
 					icon: 'icon-edit-2',
 					title: 'Edit',
 					on: {
-						click: function click(O, $action, rowIndex, rowData) {
+						click: function click(o, $action, rowIndex, rowData) {
 							_log('on > clickEdit', 'hook');
-							_log(O);
+							_log(o);
 							_log($action);
 							_log(rowIndex);
 							_log(rowData);
-							_this23.edit(rowIndex, rowData, dialog);
+							O.edit(rowIndex, rowData, dialog);
 						}
 					}
 				}],
@@ -15312,24 +15334,26 @@ var TablePanel = function () {
 				tableSettings.tableData.push(rowData);
 			});
 			// create table
-			this.panelTable = new APPTable(tableSettings, $panel);
-			$panel.data('table', this.panelTable);
+			O.panelTable = new APPTable(tableSettings, $panel);
+			$panel.data('table', O.panelTable);
 			return $panel;
 		}
 	}, {
 		key: 'add',
 		value: function add(data) {
+			var O = this;
 			data.el ? delete data.el : null;
-			this.panelTable._tableData.push(data); // add data
-			this.data.push(data); // add data
-			this.panelTable.addRow(this.panelTable._tableData.length - 1, data, false);
+			O.panelTable._tableData.push(data); // add data
+			O.data.push(data); // add data
+			O.panelTable.addRow(O.panelTable._tableData.length - 1, data, false);
 			window.editEventBus.broadcast('MetadataChanged');
 		}
 	}, {
 		key: 'edit',
 		value: function edit(index, originalData, dialog) {
+			var O = this;
 			var keys = [];
-			$.each(this.panelTable.opts.cols, function (index, key) {
+			$.each(O.panelTable.opts.cols, function (index, key) {
 				keys.push(key.field);
 			});
 			for (indexx in keys) {
@@ -15343,27 +15367,28 @@ var TablePanel = function () {
 	}, {
 		key: 'save',
 		value: function save(index, originalData) {
+			var O = this;
 			originalData.el ? delete originalData.el : null;
-			this.data.splice(index, 1);
-			this.panelTable._tableData.splice(index, 1);
-			var row = $(this.panelTable._$tbody).find('tr').eq(index);
+			O.data.splice(index, 1);
+			O.panelTable._tableData.splice(index, 1);
+			var row = $(O.panelTable._$tbody).find('tr').eq(index);
 			row.find('td').each(function () {
 				$(this).html(originalData[$(this).attr('data-id')]);
 			});
-			this.data.push(originalData); // add data
-			this.panelTable._tableData.push(originalData);
+			O.data.push(originalData); // add data
+			O.panelTable._tableData.push(originalData);
 			window.editEventBus.broadcast('MetadataChanged');
 		}
 	}, {
 		key: 'remove',
 		value: function remove(index) {
+			var O = this;
+			$(O.panelTable._$tbody).find('tr').eq(index).remove();;
 
-			$(this.panelTable._$tbody).find('tr').eq(index).remove();;
+			O.data.splice(index, 1);
+			O.panelTable._tableData.splice(index, 1);
 
-			this.data.splice(index, 1);
-			this.panelTable._tableData.splice(index, 1);
-
-			$.each($(this.panelTable._$tbody).find('tr'), function (rowindex, row) {
+			$.each($(O.panelTable._$tbody).find('tr'), function (rowindex, row) {
 				$(row).attr('data-row-id', rowindex);
 			});
 			window.editEventBus.broadcast('MetadataChanged');
@@ -15371,22 +15396,24 @@ var TablePanel = function () {
 	}, {
 		key: 'moveTo',
 		value: function moveTo(index, command) {
-			var row = $(this.panelTable._$tbody).find('tr').eq(index);
+			var O = this;
+			var row = $(O.panelTable._$tbody).find('tr').eq(index);
 			if (command === 'up') {
 				row.insertBefore(row.prev());
 			} else if (command === 'down') {
 				row.insertAfter(row.next());
 			}
-			$.each($(this.panelTable._$tbody).find('tr'), function (rowindex, row) {
+			$.each($(O.panelTable._$tbody).find('tr'), function (rowindex, row) {
 				$(row).attr('data-row-id', rowindex);
 			});
 		}
 	}, {
 		key: 'removeAll',
 		value: function removeAll() {
-			this.data = []; // Clear data
-			this.panelTable._tableData = []; // Clear data
-			this.panelTable._clear(); // Empty table
+			var O = this;
+			O.data = []; // Clear data
+			O.panelTable._tableData = []; // Clear data
+			O.panelTable._clear(); // Empty table
 			window.editEventBus.broadcast('MetadataChanged');
 		}
 	}]);
@@ -15414,12 +15441,13 @@ var TextareaForm = function () {
 	function TextareaForm(name, mandatory, helperText, value) {
 		_classCallCheck(this, TextareaForm);
 
-		this.name = name;
-		this.mandatory = mandatory;
-		this.helperText = helperText;
+		var O = this;
+		O.name = name;
+		O.mandatory = mandatory;
+		O.helperText = helperText;
 
-		this.textarea = $('<textarea row="6" class="form-control form-control-sm" />').attr('id', 'area_' + name);
-		this._create(name, mandatory, helperText, value);
+		O.textarea = $('<textarea row="6" class="form-control form-control-sm" />').attr('id', 'area_' + name);
+		O._create(name, mandatory, helperText, value);
 	}
 
 	/**
@@ -15448,7 +15476,7 @@ var TextareaForm = function () {
 			var $actions = $('<div class="col-3 col-xs-auto order-2 order-xs-3 sim-param-actions"></div>').appendTo($formGroup);
 
 			// input item
-			this.input = null;
+			O.input = null;
 
 			// create param metadata action
 			if (helperText) {
@@ -15456,11 +15484,11 @@ var TextareaForm = function () {
 				var $actionMetadata = $('<button class="action action-pure float-right" type="button"><i class="feather icon-info"></i></button>').attr('data-toggle', 'collapse').attr('data-target', '#paramMetadata_' + name).attr('aria-expanded', false).attr('aria-controls', 'paramMetadata_' + name).attr('title', 'Show Metadata').appendTo($actions);
 			}
 
-			this.input = $('<textarea type="text" row="6" class="form-control" />').attr('id', 'areaInput_' + name).appendTo($field);
-			this.input.val(value);
+			O.input = $('<textarea type="text" row="6" class="form-control" />').attr('id', 'areaInput_' + name).appendTo($field);
+			O.input.val(value);
 
 			// create validation container
-			this.input.$validationContainer = $('<div class="validation-message mt-1"></div>').appendTo($field);
+			O.input.$validationContainer = $('<div class="validation-message mt-1"></div>').appendTo($field);
 
 			// create param metadata list
 			if (helperText) {
@@ -15469,12 +15497,13 @@ var TextareaForm = function () {
 
 				$metadataContainer.append(_createHelperMetadataText(helperText));
 			}
-			this.group = $formGroup;
+			O.group = $formGroup;
 		}
 	}, {
 		key: 'clear',
 		value: function clear() {
-			this.input.val("");
+			var O = this;
+			O.input.val("");
 		}
 
 		/**
@@ -15484,30 +15513,33 @@ var TextareaForm = function () {
 	}, {
 		key: 'validate',
 		value: function validate() {
+			var O = this;
 			var isValid = void 0;
-			this.input.find('.has-error').removeClass('has-error');
-			this.input.find('.is-invalid').removeClass('is-invalid');
-			this.input.find('.validation-message').empty();
-			if (!this.mandatory) {
+			O.input.find('.has-error').removeClass('has-error');
+			O.input.find('.is-invalid').removeClass('is-invalid');
+			O.input.find('.validation-message').empty();
+			if (!O.mandatory) {
 				isValid = true;
 			} else {
-				isValid = this.input.val() ? true : false;
+				isValid = O.input.val() ? true : false;
 			}
 			if (!isValid) {
-				this.input.$validationContainer.text('required');
-				this.input.parents('.form-group').addClass('has-error');
-				this.input.addClass('is-invalid');
-				this.input.$validationContainer.css("display", "block");
+				O.input.$validationContainer.text('required');
+				O.input.parents('.form-group').addClass('has-error');
+				O.input.addClass('is-invalid');
+				O.input.$validationContainer.css("display", "block");
 			}
 			return isValid;
 		}
 	}, {
 		key: 'value',
 		get: function get() {
-			return this.input.val();
+			var O = this;
+			return O.input.val();
 		},
 		set: function set(newValue) {
-			this.input.val(newValue);
+			var O = this;
+			O.input.val(newValue);
 		}
 	}]);
 
@@ -16090,7 +16122,7 @@ var APPSimulation = function () {
 	}, {
 		key: '_updateSimForm',
 		value: function _updateSimForm(simIndex) {
-			var _this25 = this;
+			var _this15 = this;
 
 			var O = this;
 			_log('PANEL SIM / _updateSimForm: ' + simIndex);
@@ -16149,7 +16181,7 @@ var APPSimulation = function () {
 
 							// check opt for custom update function 
 							if (field.param._on && field.param._on.update && $.isFunction(field.param._on.update)) {
-								field.param._on.update.call(_this25, O);
+								field.param._on.update.call(_this15, O);
 							}
 						}
 
@@ -17064,7 +17096,7 @@ var APPMTDetails = function () {
 			if (modelMetadata) {
 
 				// get plot image
-				var imgUrl = await _fetchData._blob(_endpoints.image, modelMetadata.generalInformation.identifier); // O._app._getImage( modelMetadata.generalInformation.identifier );
+				var imgUrl = await _fetchData._blob(window._endpoints.image, modelMetadata.generalInformation.identifier); // O._app._getImage( modelMetadata.generalInformation.identifier );
 				// get appropiate modelMetadata modelHandler for the model type.
 
 				if (modelMetadata.modelType === 'genericModel') {
@@ -17458,7 +17490,7 @@ var APPTable = function () {
 	}, {
 		key: '_populateTable',
 		value: function _populateTable(tableData) {
-			var _this26 = this;
+			var _this16 = this;
 
 			var O = this;
 			_log('TABLE / _populateTable');
@@ -17468,7 +17500,7 @@ var APPTable = function () {
 
 			// create rows
 			$.each(tableData, function (rowIndex, rowData) {
-				_this26.addRow(rowIndex, rowData, tableData, 'true');
+				_this16.addRow(rowIndex, rowData, tableData, 'true');
 			});
 
 			// callback
@@ -18228,7 +18260,7 @@ var APPTableMT = function (_APPTable) {
 	}, {
 		key: '_updateFilter',
 		value: async function _updateFilter() {
-			var _this28 = this;
+			var _this18 = this;
 
 			var O = this;
 			_log('TABLE MAIN / _updateFilter');
@@ -18268,7 +18300,7 @@ var APPTableMT = function (_APPTable) {
 							if ($.isArray(facetValue) && facetValue.length > 0) {
 
 								// get according col index
-								var colIndex = _get(APPTableMT.prototype.__proto__ || Object.getPrototypeOf(APPTableMT.prototype), '_getColIndexByField', _this28).call(_this28, field);
+								var colIndex = _get(APPTableMT.prototype.__proto__ || Object.getPrototypeOf(APPTableMT.prototype), '_getColIndexByField', _this18).call(_this18, field);
 								var cellData = rowData.cells[colIndex];
 
 								if (cellData instanceof Set) {

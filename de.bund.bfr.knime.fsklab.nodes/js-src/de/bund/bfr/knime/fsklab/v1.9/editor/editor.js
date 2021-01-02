@@ -42,9 +42,9 @@ fskeditorjs = function () {
 
   }
   let initiated = function(event){
-    if(parent.tableID){
-      $('#saveButton').show();
-    }
+    //if(parent.tableID){
+    //  $('#saveButton').show();
+    //}
   }
   let doSave = function(_metadatax){
     _metadatax.modelMath.parameter.forEach(param => {
@@ -117,7 +117,7 @@ fskeditorjs = function () {
     */
     window.port = _rep.servicePort;
     console.log('window.port',window.port);
-    let mainContainer = $(`<div class="editorDiv"></div>`);
+    let mainContainer = $(`<div class="card"></div>`);
     $('body').html(mainContainer);
     _modalDetails = new APPMTEditableDetails( {
                         data 		  : {},
@@ -198,11 +198,11 @@ fskeditorjs = function () {
 
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
         console.log(e);
-        if(e.currentTarget.text == 'Model Script'){
+        if(e.currentTarget.text == 'Model'){
           _modelCodeMirror.refresh(); 
           _modelCodeMirror.focus();
           console.log(_modelCodeMirror.getValue());
-        }else if(e.currentTarget.text == 'Visualization Script'){
+        }else if(e.currentTarget.text == 'Visualization'){
           _visualizationCodeMirror.refresh();
           _visualizationCodeMirror.focus();
         }else if(e.currentTarget.text == 'Readme'){
