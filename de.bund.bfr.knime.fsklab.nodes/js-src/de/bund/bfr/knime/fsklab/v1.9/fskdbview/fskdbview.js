@@ -9,8 +9,10 @@ fskdbview = function () {
         return jQuery(a).text().toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
     };
     window.selectedModels = [];
+    let selectedModelIndex = -1;
     window.downloadURs = [];
     let _endpoint;
+    let _app;
     let _globalVars = {};
 
     // These sets are used with the th-filters
@@ -19,18 +21,12 @@ fskdbview = function () {
     let _representation;
     let _value;
     var selectionEdited = function (modelMetaDatax) {
-        console.log(modelMetaDatax);
-        let edittedModelId = modelMetaDatax.changeSet.added[0].generalInformation.name;
-        
-        let modelIndex = -1;
-
-        $.each(window.selectedModels,function(index,model){
-                if(model.generalInformation.name === edittedModelId){
-                    modelIndex = index;
-                }
-        });
-        window.selectedModels[modelIndex]=modelMetaDatax.changeSet.added[0];
-        knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c21joiner' , [window.selectedModels, window.downloadURs],{elements:[]});
+		if(window.selectedModels[selectedModelIndex]){        
+	        window.selectedModels[selectedModelIndex]=modelMetaDatax.changeSet.added[0];
+	        knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c21joiner' , [window.selectedModels, window.downloadURs],{elements:[]});
+        }
+        _app._mainTable._metadata[selectedModelIndex] = modelMetaDatax.changeSet.added[0];
+        _app._mainTable._refresh(selectedModelIndex, modelMetaDatax.changeSet.added[0]);
     }
                                
     view.init = function (representation, value) { 
@@ -157,6 +153,7 @@ fskdbview = function () {
 								_log( $action );
 								_log( modelIndex );
                                 _log( rowData );
+                                selectedModelIndex = modelIndex;
                                 // emit selection event
                                 let selectedModel = rowData.modelMetadata;
                                 //fetch scripts

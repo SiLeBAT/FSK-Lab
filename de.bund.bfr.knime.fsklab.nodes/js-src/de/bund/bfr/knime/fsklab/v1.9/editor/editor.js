@@ -23,7 +23,7 @@ fskeditorjs = function () {
   let selectionChanged = function (modelMetaData) {	
     window._debug = false;
     let selectedModel = modelMetaData.changeSet.added[0];
-    console.log('selectedModel',selectedModel.modelscript);
+    console.log('selectedModel',selectedModel);
     _location = selectedModel.Location;
     _simulation = selectedModel.simulation;
     extractAndCreateUI(JSON.stringify(selectedModel), selectedModel.modelscript, selectedModel.visualization);

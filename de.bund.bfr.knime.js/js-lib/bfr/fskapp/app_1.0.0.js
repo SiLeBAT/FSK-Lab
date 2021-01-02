@@ -11738,7 +11738,7 @@ var EventObserver = function () {
 	}, {
 		key: 'broadcast',
 		value: function broadcast(event) {
-			console.log("Sending event ", event);
+			_log("Sending event ", event);
 			this.observers.forEach(function (subscriber) {
 				subscriber.callback(event);
 			});
@@ -13814,8 +13814,7 @@ var APPModalMTDetails = function (_APPModal) {
 
 			// modal head default
 			O._createModalHead();
-
-			O.ModelMTPanel = new APPMTEditableDetails(O.opts, O._$modalContent);
+			O.ModelMTPanel = new APPMTDetails(O.opts, O._$modalContent);
 			O.ModelMTPanel._createModelMetadataContent();
 		}
 
@@ -16755,7 +16754,9 @@ var APPMTDetails = function () {
 					if (menuMeta.submenus && menuMeta.submenus.length > 0) {
 						$navItem = O._createNavItemDropdown(menuMeta).appendTo(O._$navBar._$nav);
 					} else {
-						var _$navItem2 = O._createNavItem(menuMeta).appendTo(O._$navBar._$nav);
+						if (menuMeta.id !== 'modelScript' && menuMeta.id !== 'visualizationScript' && menuMeta.id !== 'readme') {
+							var _$navItem2 = O._createNavItem(menuMeta).appendTo(O._$navBar._$nav);
+						}
 					}
 				});
 			}
@@ -16791,7 +16792,9 @@ var APPMTDetails = function () {
 					else {
 							if (menuMeta.id) {
 								if (menuMeta.id in modelHandler._panels) {
-									O._createPanel(menuMeta, modelHandler).appendTo(O._$modalTabContent);
+									if (menuMeta.id !== 'modelScript' && menuMeta.id !== 'visualizationScript' && menuMeta.id !== 'readme') {
+										O._createPanel(menuMeta, modelHandler).appendTo(O._$modalTabContent);
+									}
 								}
 							}
 						}
@@ -17031,7 +17034,6 @@ var APPMTDetails = function () {
 
 			// tab-pane
 			var $panel = $('<div class="tab-pane h-100" role="tabpanel"></div>').attr('id', menu.id);
-
 			if (modelHandler && menu.id && modelHandler._img) {
 				// get panel meta
 				var panelMeta = modelHandler._panels[menu.id];
@@ -17062,7 +17064,7 @@ var APPMTDetails = function () {
 			if (modelMetadata) {
 
 				// get plot image
-				var imgUrl = void 0;
+				var imgUrl = await _fetchData._blob(_endpoints.image, modelMetadata.generalInformation.identifier); // O._app._getImage( modelMetadata.generalInformation.identifier );
 				// get appropiate modelMetadata modelHandler for the model type.
 
 				if (modelMetadata.modelType === 'genericModel') {
@@ -17896,6 +17898,43 @@ var APPTableMT = function (_APPTable) {
 		}
 
 		/**
+   * _refresh
+   * _refresh the table after editing.
+   * @param {string} query
+   */
+
+	}, {
+		key: '_refresh',
+		value: async function _refresh(index, modelMetadata) {
+			var O = this;
+			var rowData = O._tableData[index];
+			rowData.modelMetadata = modelMetadata;
+			var modelName = O._getData(modelMetadata, 'generalInformation', 'name');
+			rowData.el.find('td[data-label="Model"]').html(modelName);
+			var software = O._getData(modelMetadata, 'generalInformation', 'software');
+			rowData.el.find('td[data-label="Software"]').html(software);
+			console.log('_refresh', rowData);
+			var environment = O._getScopeData(modelMetadata, 'scope', 'product', 'productName');
+			rowData.el.find('td[data-label="Environment"]').html(environment);
+			var hazard = O._getScopeData(modelMetadata, 'scope', 'hazard', 'hazardName');
+			rowData.el.find('td[data-label="Hazard"]').html(hazard);
+			var modelType = modelMetadata['modelType'];
+			rowData.el.find('td[data-label="Type"]').html(modelType);
+			// update sets
+			if (software) O._updateSet('software', software);
+			if (environment) {
+				environment.forEach(function (x) {
+					O._updateSet('environment', x);
+				});
+			}
+			if (hazard) {
+				hazard.forEach(function (x) {
+					O._updateSet('hazard', x);
+				});
+			}
+			if (modelType) O._updateSet('modelType', modelType);
+		}
+		/**
    * CREATE DATA
    * create tabledata
    */
@@ -17916,7 +17955,9 @@ var APPTableMT = function (_APPTable) {
 	}, {
 		key: '_prepareDataTable',
 		value: async function _prepareDataTable() {
+			_log('TABLE MAIN / _prepareDataTable', 'primary');
 			var O = this;
+			console.log(O._metadata);
 			// prepare table data
 			O._tableData = [];
 
@@ -17969,6 +18010,7 @@ var APPTableMT = function (_APPTable) {
 			for (var i = 0; i < O._metadata.length; i++) {
 				_loop2(i);
 			}
+			_log(O._tableData);
 		}
 
 		/**
@@ -18308,8 +18350,8 @@ var APPTableMT = function (_APPTable) {
 		key: '_updateSet',
 		value: function _updateSet(name, data) {
 			var O = this;
-			// _log( 'TABLE MT / _updateSet' );
-
+			_log('TABLE MT / _updateSet');
+			console.log(O._sets, name, data);
 			if (name) {
 				O._sets[name].add(data);
 			}
