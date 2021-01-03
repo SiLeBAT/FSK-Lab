@@ -13960,6 +13960,18 @@ var ArrayForm = function () {
 			}
 		}
 	}, {
+		key: 'onblurHandler',
+		value: function onblurHandler() {
+			var O = this;
+			var closestForm = O.input.closest("form");
+			var attr = closestForm.attr('no-immidiate-submit');
+			var can_emit_Event = (typeof attr === 'undefined' ? 'undefined' : _typeof(attr)) === (typeof undefined === 'undefined' ? 'undefined' : _typeof(undefined)) || attr === false;
+			_log(' onblurHandler' + can_emit_Event);
+			if (can_emit_Event) {
+				window.editEventBus.broadcast('MetadataChanged');
+			}
+		}
+	}, {
 		key: 'clear',
 		value: function clear() {
 			var O = this;
@@ -13983,6 +13995,8 @@ var ArrayForm = function () {
 				O.group.addClass('has-error');
 				O.group.addClass('is-invalid');
 				O.$validationContainer.css("display", "block");
+			} else {
+				O.onblurHandler();
 			}
 			return isValid;
 		}
@@ -14057,7 +14071,7 @@ var APPMTEditableDetails = function () {
 			var O = this;
 			_log('MODAL DETAILS / _createModelMetadataContent');
 			// modal nav with tabs & search
-			O._$modalNav = $('<div class="modal-body modal-nav"></div>').appendTo(O._$modalContent);
+			O._$modalNav = $('<div class="modal-body modal-nav card-header"></div>').appendTo(O._$modalContent);
 
 			O._navId = O._id + 'Nav';
 			if (!O._$navBar) {
@@ -14974,6 +14988,18 @@ var SelectForm = function () {
 			O.group = $formGroup;
 		}
 	}, {
+		key: 'onblurHandler',
+		value: function onblurHandler() {
+			var O = this;
+			var closestForm = O.input.closest("form");
+			var attr = closestForm.attr('no-immidiate-submit');
+			var can_emit_Event = (typeof attr === 'undefined' ? 'undefined' : _typeof(attr)) === (typeof undefined === 'undefined' ? 'undefined' : _typeof(undefined)) || attr === false;
+			_log(' onblurHandler' + can_emit_Event);
+			if (can_emit_Event) {
+				window.editEventBus.broadcast('MetadataChanged');
+			}
+		}
+	}, {
 		key: 'clear',
 		value: function clear() {
 			var O = this;
@@ -15003,6 +15029,8 @@ var SelectForm = function () {
 				O.input.parents('.form-group').addClass('has-error');
 				O.input.addClass('is-invalid');
 				O.input.$validationContainer.css("display", "block");
+			} else {
+				O.onblurHandler();
 			}
 			return isValid;
 		}
@@ -15010,7 +15038,7 @@ var SelectForm = function () {
 		key: 'value',
 		get: function get() {
 			var O = this;
-			return O.input.val();
+			return O.input.val() || O.input.find("option[data-select2-id]").text();
 		},
 		set: function set(newValue) {
 			var O = this;
@@ -15500,6 +15528,18 @@ var TextareaForm = function () {
 			O.group = $formGroup;
 		}
 	}, {
+		key: 'onblurHandler',
+		value: function onblurHandler() {
+			var O = this;
+			var closestForm = O.input.closest("form");
+			var attr = closestForm.attr('no-immidiate-submit');
+			var can_emit_Event = (typeof attr === 'undefined' ? 'undefined' : _typeof(attr)) === (typeof undefined === 'undefined' ? 'undefined' : _typeof(undefined)) || attr === false;
+			_log(' onblurHandler' + can_emit_Event);
+			if (can_emit_Event) {
+				window.editEventBus.broadcast('MetadataChanged');
+			}
+		}
+	}, {
 		key: 'clear',
 		value: function clear() {
 			var O = this;
@@ -15528,6 +15568,8 @@ var TextareaForm = function () {
 				O.input.parents('.form-group').addClass('has-error');
 				O.input.addClass('is-invalid');
 				O.input.$validationContainer.css("display", "block");
+			} else {
+				O.onblurHandler();
 			}
 			return isValid;
 		}
