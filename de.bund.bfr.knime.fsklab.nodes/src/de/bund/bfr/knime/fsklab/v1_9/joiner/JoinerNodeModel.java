@@ -872,7 +872,7 @@ public final class JoinerNodeModel
   /**
    * 
    * @param manager
-   * @param model array of strings [Metadata JSON string, Model script, Model visualization script, Simulation list, Libraries, Environment location, File download's URL, Model Name  ]
+   * @param model array of strings [Metadata JSON string, Model script, Model visualization script, Simulation list, Libraries, local file location, File download's URL, Model Name  ]
    * @param modelType used to deserialize the model metadata
    * @return
    * @throws IOException
@@ -892,16 +892,19 @@ public final class JoinerNodeModel
         e.printStackTrace();
       }
     }
-    if (portObject == null) {
-      if (!manager.isPresent() && StringUtils.isNotBlank(model[5]))
-        portObject = new FskPortObject(
-            Optional.of(new ExistingEnvironmentManager(MAPPER.readValue(model[5], String.class))),
-            "", MAPPER.readValue(model[4], new TypeReference<List<String>>() {}));
-
-      else {
-        portObject = new FskPortObject(manager, "",
-            MAPPER.readValue(model[4], new TypeReference<List<String>>() {}));
+    if(StringUtils.isNotEmpty(model[5])) {
+      String fileLocation = model[5].substring(1, model[5].length() - 1);
+      try {
+        portObject = ReaderNodeUtil.readArchive(new File(fileLocation));
+      } catch (Exception e) {
+        e.printStackTrace();
       }
+    }
+    
+    if (portObject == null) { 
+      portObject = new FskPortObject(manager, "",
+          MAPPER.readValue(model[4], new TypeReference<List<String>>() {}));
+      
       portObject.simulations.clear();
       portObject.simulations
           .addAll(MAPPER.readValue(model[3], new TypeReference<List<FskSimulation>>() {}));

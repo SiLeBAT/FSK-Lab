@@ -12,7 +12,7 @@ fskeditorjs = function () {
     dataBackground: {},
     modelMath: {}
   };
-
+  let _modalDetails;
   var _modelCodeMirror;
   var _visualizationCodeMirror;
   var _readmeCodeMirror;
@@ -21,26 +21,21 @@ fskeditorjs = function () {
 
   let handler;
   let selectionChanged = function (modelMetaData) {	
+    window._debug = false;
     let selectedModel = modelMetaData.changeSet.added[0];
     _location = selectedModel.Location;
     _simulation = selectedModel.simulation;
-    extractAndCreateUI(JSON.stringify(selectedModel));
-    $('#modelScriptArea').val(selectedModel.modelscript);
-    _modelCodeMirror.refresh();
-    $('#visualizationScriptArea').val(selectedModel.visualization);
-    _visualizationCodeMirror.refresh()
+    extractAndCreateUI(JSON.stringify(selectedModel), selectedModel.modelscript, selectedModel.visualization);
+    _modelCodeMirror.setValue(selectedModel.modelscript);
+    _visualizationCodeMirror.setValue(selectedModel.visualization);
 
-    if(parent.tableID){
-      $('#saveButton').show();
-    }
   }
   let initiated = function(event){
-    if(parent.tableID){
-      $('#saveButton').show();
-    }
+    //if(parent.tableID){
+    //  $('#saveButton').show();
+    //}
   }
-  window.doSave = function(){
-    let _metadatax = JSON.parse(JSON.stringify(handler.metaData));
+  let doSave = function(_metadatax){
     _metadatax.modelMath.parameter.forEach(param => {
       if(param.classification != "OUTPUT"){ 
         _simulation.forEach(simulation => {
@@ -54,7 +49,6 @@ fskeditorjs = function () {
     _metadatax.simulation =_simulation;
     _metadatax.modelscript= _modelCodeMirror ? _modelCodeMirror.getValue() : _val.modelScript;
     _metadatax.visualization = _visualizationCodeMirror ? _visualizationCodeMirror.getValue() : _val.visualizationScript;
-    //let metaDataString = JSON.stringify(_metadatax);
     knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c21EditorSaved' , [_metadatax],{elements:[]}) 
   }
   view.init = function (representation, value) {
@@ -62,13 +56,14 @@ fskeditorjs = function () {
     knimeService.subscribeToSelection('b800db46-4e25-4f77-bcc6-db0c215846e1', selectionChanged);
     knimeService.subscribeToSelection('b800db46-4e25-4f77-bcc6-db0c21GlobalInit', initiated);
     
-    fskutil = new fskutil();
+    
     _rep = representation;
     _val = value;
+    //fskutil = new fskutil();
     extractAndCreateUI(value.modelMetaData);
     
   }
-  function extractAndCreateUI(modelMetaData){
+  async function  extractAndCreateUI(modelMetaData, modelscript, visualization){
     if (!modelMetaData || modelMetaData == "null" || modelMetaData == "") {
       _metadata.generalInformation = {};
       _metadata.generalInformation.modelCategory = {};
@@ -90,7 +85,7 @@ fskeditorjs = function () {
       _metadata.modelMath = metaData.modelMath ? metaData.modelMath : {};
       _metadata.modelType = metaData.modelType;
     }
-
+    /*
     switch (_metadata.modelType) {
       case "genericModel": handler = new fskutil.GenericModel(_metadata, _rep.servicePort); break;
       case "dataModel": handler = new fskutil.DataModel(_metadata, _rep.servicePort); break;
@@ -108,10 +103,33 @@ fskeditorjs = function () {
     }
 
     createUI();
+    */
+    window.port = _rep.servicePort;
+    console.log('window.port',window.port);
+    let mainContainer = $(`<div class="card"></div>`);
+    $('body').html(mainContainer);
+    _modalDetails = new APPMTEditableDetails( {
+                        data 		  : {},
+                        id 			  : 'mtModalDetails',
+                        classes 	: 'modal-details',
+                        type 		  : 'mtDetails'
+                      }, mainContainer );
+    _modalDetails._createModelMetadataContent();
+    await _modalDetails._updateContent(_metadata, 0);
+    window.editEventBus.subscribe('EditorJS',(event) =>{
+      _metadata = _modalDetails._modelHandler.metaData;
+      doSave(_metadata)
+    });
+    createUI(modelscript, visualization);
   }
-  view.getComponentValue = () => {
 
-    _metadata = handler.metaData;
+
+  view.getComponentValue = () => {
+    _metadata = _modalDetails._modelHandler.metaData;
+    delete _metadata['simulation'];
+    delete _metadata['modelscript'];
+    delete _metadata['visualization'];
+    delete _metadata['Location'];
     let metaDataString = JSON.stringify(_metadata);
 
     // If the code mirrors are not created yet, use the original scripts.
@@ -126,7 +144,7 @@ fskeditorjs = function () {
       validationErrors: [],
       modelType: _metadata.modelType
     };
-
+    
     return viewValue;
   };
 
@@ -138,77 +156,10 @@ fskeditorjs = function () {
   return view;
 
   /** UI code. */
-  function createUI() {
-
-    let panelsById = [
-      { id: "modelScript", panel: `<textarea id="modelScriptArea">${_val.modelScript}</textarea>` },
-      { id: "visualizationScript", panel: `<textarea id="visualizationScriptArea">${_val.visualizationScript}</textarea>` },
-      { id: "readme", panel: `<textarea id="readmeArea" name="readmeArea">${_val.readme}</textarea>` }
-    ];
-
-    let bodyContent = `
-     <nav class="navbar navbar-default">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <button id="saveButton" class="btn btn-primary float-left" type="button" onclick="window.doSave();">Save</button>
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-    </div>
-    <div class="collapse navbar-collapse" id="myNavbar">
-      <ul class="nav navbar-nav" id="viewTab">
-        ${handler.menus}
-        <li role="presentation">
-          <a id="modelScript-tab" href="#modelScript"
-            aria-controls="modelScript" role="tab" data-toggle="tab">Model script</a>
-        </li>
-        <li role="presentation">
-          <a id="visualizationScript-tab" href="#visualizationScript"
-            aria-controls="visualizationScript" role="tab" data-toggle="tab">Visualization script</a>
-        </li>
-        <li role="presentation">
-          <a id="readme-tab" href="#readme" aria-controls="readme" role="tab" data-toggle="tab">README</a>
-        </li>
-      </ul>
-      
-    </div>
-    <div class="tab-content" id="viewContent">
-    ${panelsById.map(entry => `<div role="tabpanel" class="tab-pane"
-    id="${entry.id}">${entry.panel}</div>`).join("")}
-  </div>
-  </div>
-</nav> `;
-
-    document.createElement('body');
-    $('body').html(bodyContent);
-
-    // Add dialogs
-    const container = document.getElementsByClassName("container-fluid")[0];
-    // Object.values(handler.dialogs).forEach(dialog => container.appendChild(dialog.modal));
-
-    const viewContent = document.getElementById("viewContent");
-
-    Object.entries(handler.panels).forEach(([key, value]) => {
-      let tabPanel = document.createElement("div");
-      tabPanel.setAttribute("role", "tabpanel");
-      tabPanel.className = "tab-pane";
-      tabPanel.id = key;
-      tabPanel.appendChild(value.panel);
-
-      // Add dialog if fskutil.TablePanel
-      if (value.dialog) {
-        container.appendChild(value.dialog.modal);
-      }
-
-      viewContent.appendChild(tabPanel);
-    });
-
-    // Set the first tab (general information) as active
-    document.getElementById("generalInformation").classList.add("active");
-
-    // Create code mirrors for text areas with scripts and readme
+  async function createUI(modelscript, visualization) {
+    $('#modelScriptArea').val(modelscript || _val.modelScript);
+    $('#visualizationScriptArea').val(visualization || _val.visualizationScript);
+    $('#readmeArea').val(_val.readme);
     let require_config = {
       packages: [{
         name: "codemirror",
@@ -232,21 +183,20 @@ fskeditorjs = function () {
       (err) => console.log("knimeService failed to install " + err),
       require_config);
 
-    $('#modelScript-tab').on('shown.bs.tab', () => {
-      _modelCodeMirror.refresh(); 
-      _modelCodeMirror.focus();
-    });
-
-    $('#visualizationScript-tab').on('shown.bs.tab', () => {
-      _visualizationCodeMirror.refresh();
-      _visualizationCodeMirror.focus();
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        if(e.currentTarget.text == 'Model'){
+          _modelCodeMirror.refresh(); 
+          _modelCodeMirror.focus();
+        }else if(e.currentTarget.text == 'Visualization'){
+          _visualizationCodeMirror.refresh();
+          _visualizationCodeMirror.focus();
+        }else if(e.currentTarget.text == 'Readme'){
+          _readmeCodeMirror.refresh();
+          _readmeCodeMirror.focus();
+        }
     });
     
-    $('#readme-tab').on('shown.bs.tab', () => {
-      _readmeCodeMirror.refresh();
-      _readmeCodeMirror.focus();
-    });
-    $('#saveButton').hide();
+
   }
 
   // Create a CodeMirror for a given text area

@@ -110,6 +110,7 @@ joiner = function () {
     let _modelColectionSuffixed =  addSuffixToParameters(JSON.parse(JSON.stringify(modelMetaData.changeSet.added[0])));
     poolSize =_modelColectionSuffixed.length;
     let keys = ['firstModel','secondModel','thirdModel','fourthModel']; 
+    _graph.clear();
     $.each(_modelColectionSuffixed,function(index,selectedModel){
       _modelsParamsOriginalNames[selectedModel.generalInformation.name] = buildOldNewParamName(_modelColectionSuffixed[index].modelMath.parameter, modelMetaData.changeSet.added[0][index].modelMath.parameter);
       _modelColectionWithoutSuffixedmap[selectedModel.generalInformation.name] = modelMetaData.changeSet.added[0][index].modelMath.parameter;
@@ -367,7 +368,7 @@ joiner = function () {
       modelHeight, modelNameWrap, modelsPool[key]['inputParameters'],
       modelsPool[key]['outputParameters'], key, modelsPool[key]['simulation']);
 
-    _graph.clear();
+    //_graph.clear();
     $.each(Object.keys(modelsPool), function (index, value) {
       if (Object.keys(modelsPool[value]).length > 0)
         _graph.addCell(modelsPool[value]['modelToJoin']);
