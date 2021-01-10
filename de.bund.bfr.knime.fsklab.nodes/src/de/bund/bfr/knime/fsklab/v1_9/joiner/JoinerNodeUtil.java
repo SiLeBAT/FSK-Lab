@@ -162,32 +162,85 @@ public class JoinerNodeUtil {
    * @throws JsonMappingException
    */
   public static void addIdentifierToParametersForCombinedObject(FskPortObject portObject,
-      String suffix, final Map<String, List<String>> unModifiedParamsNames, Map<String, Map<String,String>> old_new_pramsMap ) throws JsonMappingException, JsonProcessingException {
+      String suffix, final Map<String, List<String>> unModifiedParamsNames,
+      Map<String, Map<String, String>> old_new_pramsMap)
+      throws JsonMappingException, JsonProcessingException {
     if (portObject instanceof CombinedFskPortObject) {
-      addIdentifierToParametersForCombinedObject(
-          ((CombinedFskPortObject) portObject).getFirstFskPortObject(),
-          suffix + JoinerNodeModel.SUFFIX_FIRST, unModifiedParamsNames, old_new_pramsMap);
-      addIdentifierToParametersForCombinedObject(
-          ((CombinedFskPortObject) portObject).getSecondFskPortObject(),
-          suffix + JoinerNodeModel.SUFFIX_SECOND, unModifiedParamsNames, old_new_pramsMap);
-      // portObject.modelMetadata =
-      // ((CombinedFskPortObject) portObject).getSecondFskPortObject().modelMetadata;
+      FskPortObject firstObject = ((CombinedFskPortObject) portObject).getFirstFskPortObject();
+      FskPortObject secondObject = ((CombinedFskPortObject) portObject).getSecondFskPortObject();
+      String firstModelName = SwaggerUtil
+          .getModelName(firstObject.modelMetadata);
+      String secondModelName = SwaggerUtil.getModelName(secondObject.modelMetadata);
+      
+      if (firstObject instanceof CombinedFskPortObject && !unModifiedParamsNames.containsKey(firstModelName)) {
+        addIdentifierToParametersForCombinedObject(firstObject,
+            suffix + JoinerNodeModel.SUFFIX_FIRST, unModifiedParamsNames, old_new_pramsMap);
+      } else {
+        addIdentifierToParametersAndStoreInMap(firstObject, suffix + JoinerNodeModel.SUFFIX_FIRST, unModifiedParamsNames, old_new_pramsMap);
+      }
+
+      if (secondObject instanceof CombinedFskPortObject && !unModifiedParamsNames.containsKey(secondModelName)) {
+        addIdentifierToParametersForCombinedObject(
+            secondObject,
+            suffix + JoinerNodeModel.SUFFIX_SECOND, unModifiedParamsNames, old_new_pramsMap);
+      } else {
+        addIdentifierToParametersAndStoreInMap(secondObject, suffix + JoinerNodeModel.SUFFIX_SECOND, unModifiedParamsNames, old_new_pramsMap);
+      }
     } else {
-      addIdentifierToParameters(SwaggerUtil.getParameter(portObject.modelMetadata), suffix);
-      String modelName = SwaggerUtil.getModelName(portObject.modelMetadata);
-      List<String> originalParameterNames = unModifiedParamsNames.get(modelName);
-      Map<String,String> tempMap = new HashMap<>();
-      SwaggerUtil.getParameter(portObject.modelMetadata).stream().forEach(param -> {
-        for(String paramName : originalParameterNames) {
-          if(param.getId().startsWith(paramName)) {
-            tempMap.put(param.getId(), paramName);
-          }
-        }
-      });
-      old_new_pramsMap.put(modelName, tempMap);
+      addIdentifierToParametersAndStoreInMap(portObject, suffix, unModifiedParamsNames, old_new_pramsMap);
     }
   }
 
+  private static void addIdentifierToParametersAndStoreInMap(FskPortObject portObject,
+      String suffix, final Map<String, List<String>> unModifiedParamsNames,
+      Map<String, Map<String, String>> old_new_pramsMap) {
+    addIdentifierToParameters(SwaggerUtil.getParameter(portObject.modelMetadata), suffix);
+    if(portObject instanceof CombinedFskPortObject && old_new_pramsMap != null && !old_new_pramsMap.isEmpty() ) {
+      String modelName = SwaggerUtil.getModelName(portObject.modelMetadata);
+      adaptRelationNames((CombinedFskPortObject)portObject, suffix, old_new_pramsMap.get(modelName));
+    }
+      
+    String modelName = SwaggerUtil.getModelName(portObject.modelMetadata);
+    List<String> originalParameterNames = unModifiedParamsNames.get(modelName);
+    Map<String, String> tempMap = new HashMap<>();
+    SwaggerUtil.getParameter(portObject.modelMetadata).stream().forEach(param -> {
+      for (String paramName : originalParameterNames) {
+        if (param.getId().startsWith(paramName)) {
+          tempMap.put(param.getId(), paramName);
+        }
+      }
+    });
+    old_new_pramsMap.put(modelName, tempMap);
+  }
+  private static void adaptRelationNames(CombinedFskPortObject portObject, String suffix, Map<String, String> old_new_pramsMap) {
+      Map<String, String> mapInversed = old_new_pramsMap.entrySet().stream()
+          .collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey,
+              //choose the second value in the case of key duplication 
+              (value1, value2) -> {
+                return value2;
+            }));
+      JoinRelation[] joinRelations = portObject.getJoinerRelation();
+      if (joinRelations != null) {
+          for (JoinRelation joinRelation : joinRelations){
+            String source = joinRelation.getSourceParam();
+            if(mapInversed.containsKey(source)) {
+              joinRelation.setSourceParam(mapInversed.get(source));
+              joinRelation.setCommand(joinRelation.getCommand().replace(source, mapInversed.get(source)));
+              String target = joinRelation.getTargetParam();
+              joinRelation.setTargetParam(target+suffix);
+            }
+          }
+      }
+      FskPortObject first = portObject.getFirstFskPortObject();
+      if(first instanceof CombinedFskPortObject && old_new_pramsMap != null && !old_new_pramsMap.isEmpty() ) {
+        adaptRelationNames((CombinedFskPortObject)first, suffix, old_new_pramsMap);
+      }
+      FskPortObject second = portObject.getSecondFskPortObject();
+      if(second instanceof CombinedFskPortObject && old_new_pramsMap != null && !old_new_pramsMap.isEmpty() ) {
+        adaptRelationNames((CombinedFskPortObject)second, suffix, old_new_pramsMap);
+      }
+    
+  }
 
   /**
    * Methods adds an identifier suffix to each parameter so it can be identified after the joining.

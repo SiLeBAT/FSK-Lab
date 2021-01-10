@@ -59,4 +59,16 @@ public class JoinRelation {
 	public String getTargetParam() {
 		return targetParam;
 	}
+
+	public void setSourceParam(String sourceParam) {
+	  this.sourceParam = sourceParam;
+	}
+
+	public void setTargetParam(String targetParam) {
+	  this.targetParam = targetParam;
+	}
+
+	public void setCommand(String command) {
+	  this.command = command;
+	}
 }

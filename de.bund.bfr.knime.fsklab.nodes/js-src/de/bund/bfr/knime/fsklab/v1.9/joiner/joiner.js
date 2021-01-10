@@ -368,7 +368,7 @@ joiner = function () {
       modelHeight, modelNameWrap, modelsPool[key]['inputParameters'],
       modelsPool[key]['outputParameters'], key, modelsPool[key]['simulation']);
 
-    //_graph.clear();
+    _graph.clear();
     $.each(Object.keys(modelsPool), function (index, value) {
       if (Object.keys(modelsPool[value]).length > 0)
         _graph.addCell(modelsPool[value]['modelToJoin']);
