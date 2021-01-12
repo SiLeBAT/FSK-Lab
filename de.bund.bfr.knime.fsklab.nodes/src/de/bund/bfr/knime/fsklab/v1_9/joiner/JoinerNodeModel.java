@@ -750,7 +750,7 @@ public final class JoinerNodeModel
       if (value.joinRelations != null) {
         resetParameterId(outObj, 0);
       }
-
+      svgImageFromView = createImagePortObjectFromView(value.svgRepresentation,"");
     }
 
     return new PortObject[] {outObj, svgImageFromView};
