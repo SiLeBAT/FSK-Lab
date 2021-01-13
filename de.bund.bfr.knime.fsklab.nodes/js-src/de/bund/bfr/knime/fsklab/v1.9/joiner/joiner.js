@@ -310,6 +310,7 @@ joiner = function () {
       _value.joinerModelsData.thirdModelType = modelsPool.thirdModel['modelType'];
       _value.joinerModelsData.fourthModelType = modelsPool.fourthModel['modelType'];
     }
+    _value.svgRepresentation = this.getSVG();
     return _value;
   };
 

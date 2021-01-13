@@ -18,9 +18,11 @@
  */
 package de.bund.bfr.knime.fsklab.v1_9.joiner;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
@@ -39,6 +41,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.knime.base.data.xml.SvgCell;
+import org.knime.base.data.xml.SvgImageContent;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
@@ -55,12 +58,11 @@ import org.knime.core.node.workflow.FlowVariable;
 import org.knime.core.node.workflow.NodeContainer;
 import org.knime.core.node.workflow.NodeContext;
 import org.knime.core.util.FileUtil;
-import org.knime.js.core.node.AbstractSVGWizardNodeModel;
+import org.knime.js.core.node.AbstractWizardNodeModel;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.FskPlugin;
-import de.bund.bfr.knime.fsklab.nodes.NodeRemovedListener;
 import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
 import de.bund.bfr.knime.fsklab.nodes.environment.EnvironmentManager;
 import de.bund.bfr.knime.fsklab.v1_9.CombinedFskPortObject;
@@ -78,7 +80,7 @@ import metadata.SwaggerUtil;
  * Fsk Joiner node model.
  */
 public final class JoinerNodeModel
-    extends AbstractSVGWizardNodeModel<JoinerViewRepresentation, JoinerViewValue>
+    extends AbstractWizardNodeModel<JoinerViewRepresentation, JoinerViewValue>
     implements PortObjectHolder {
 
   private final JoinerNodeSettings m_config = new JoinerNodeSettings();
@@ -497,36 +499,9 @@ public final class JoinerNodeModel
 
     return tempCopyOfParams;
   }
+  
 
-  @Override
-  protected void performExecuteCreateView(PortObject[] inObjects, ExecutionContext exec)
-      throws Exception {
-
-    final String nodeWithId = NodeContext.getContext().getNodeContainer().getNameWithID();
-    NodeContext.getContext().getWorkflowManager()
-        .addListener(new NodeRemovedListener(nodeWithId, buildContainerName()));
-
-    setInternalPortObjects(inObjects);
-    outObj = createCombinedFskPortObject(firstInputPort, secondInputPort, thirdInputPort,
-        fourthInputPort);
-    unModifiedParamsNames =
-        getParameterMap(firstInputPort, secondInputPort, thirdInputPort, fourthInputPort, fskID_to_fskObject);
-    JoinerNodeUtil.addIdentifierToParametersForCombinedObject(outObj, "", unModifiedParamsNames,
-        modelsParamsOriginalNames);
-    synchronized (getLock()) {
-
-      JoinerViewValue value = getViewValue();
-      if (value.modelMetaData == null) {
-        loadJsonSetting();
-
-        if (value.modelMetaData == null && fixNullPortsToDefault(inObjects).length >= 2) {
-          value.modelMetaData =
-              MAPPER.writeValueAsString(mergeParameterForJoinedObject(outObj).modelMetadata);
-        }
-        exec.setProgress(1);
-      }
-    }
-  }
+  
 
   private PortObject[] fixNullPortsToDefault(PortObject[] inObjects) throws IOException {
     PortObject[] inPorts =
@@ -627,16 +602,32 @@ public final class JoinerNodeModel
     fskPortObject.modelMetadata = NodeUtils.initializeModel(ModelType.genericModel);
     return fskPortObject;
   }
-
+  
   @Override
-  protected PortObject[] performExecuteCreatePortObjects(PortObject svgImageFromView,
-      PortObject[] inObjects, ExecutionContext exec) throws Exception {
-
+  protected PortObject[] performExecute(PortObject[] inObjects, ExecutionContext exec)
+      throws Exception {
+    PortObject svgImageFromView = null;
     JoinRelation[] connections = new JoinRelation[0];
-
+    
+    setInternalPortObjects(inObjects);
+    outObj = createCombinedFskPortObject(firstInputPort, secondInputPort, thirdInputPort,
+        fourthInputPort);
+    unModifiedParamsNames =
+        getParameterMap(firstInputPort, secondInputPort, thirdInputPort, fourthInputPort, fskID_to_fskObject);
+    JoinerNodeUtil.addIdentifierToParametersForCombinedObject(outObj, "", unModifiedParamsNames,
+        modelsParamsOriginalNames);
     synchronized (getLock()) {
 
       JoinerViewValue value = getViewValue();
+      if (value.modelMetaData == null) {
+        loadJsonSetting();
+
+        if (value.modelMetaData == null && fixNullPortsToDefault(inObjects).length >= 2) {
+          value.modelMetaData =
+              MAPPER.writeValueAsString(mergeParameterForJoinedObject(outObj).modelMetadata);
+        }
+        exec.setProgress(1);
+      }
 
       if (value.joinRelations != null) {
         connections = value.joinRelations;
@@ -750,10 +741,42 @@ public final class JoinerNodeModel
       if (value.joinRelations != null) {
         resetParameterId(outObj, 0);
       }
-
+      svgImageFromView = createImagePortObjectFromView(value.svgRepresentation,"");
     }
 
     return new PortObject[] {outObj, svgImageFromView};
+  }
+  
+  /**
+   * Creates the port object from the retrieved image content string.
+   *
+   * @param imageContent the string retrieved from the view, representing the image, may be null
+   * @param errorText an error string in case view retrieval failed, may be null
+   * @return A {@link PortObject} containing the image created by the view.
+   * @throws IOException if an I/O error occurs
+   */
+  
+  protected final ImagePortObject createImagePortObjectFromView(final String imageData, final String error) throws IOException {
+      String xmlPrimer = "<?xml version=\"1.0\" encoding=\"utf-8\"?>";
+      String svgPrimer = xmlPrimer
+          + "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">";
+      String image = imageData;
+      if (image != null && (image.length() < 4 || !image.substring(0, 4).equalsIgnoreCase("<svg"))) {
+          image = null;
+      }
+      String errorText = error;
+      if (StringUtils.isEmpty(image)) {
+          if (StringUtils.isEmpty(errorText)) {
+              errorText = "JavaScript returned nothing. Possible implementation error.";
+          }
+          image = "<svg width=\"600px\" height=\"40px\">"
+                  + "<text x=\"0\" y=\"20\" font-family=\"sans-serif;\" font-size=\"10\">"
+             + "SVG retrieval failed: " + errorText + "</text></svg>";
+      }
+      image = svgPrimer + image;
+      InputStream is = new ByteArrayInputStream(image.getBytes("UTF-8"));
+      ImagePortObjectSpec imageSpec = new ImagePortObjectSpec(SvgCell.TYPE);
+      return new ImagePortObject(new SvgImageContent(is), imageSpec);
   }
 
   /** A helper method to set the join information to the suitable level */
@@ -860,10 +883,7 @@ public final class JoinerNodeModel
     }
   }
 
-  @Override
-  protected boolean generateImage() {
-    return true;
-  }
+ 
 
   /**
    * converts Object into JSON string to be passed to the JS View used together
@@ -962,4 +982,5 @@ public final class JoinerNodeModel
 
     return portObject;
   }
+
 }
