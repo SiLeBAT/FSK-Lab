@@ -116,11 +116,11 @@ fskeditorjs = function () {
                       }, mainContainer );
     _modalDetails._createModelMetadataContent();
     await _modalDetails._updateContent(_metadata, 0);
-    window.editEventBus.subscribe('EditorJS',(event) =>{
-      _metadata = _modalDetails._modelHandler.metaData;
-      doSave(_metadata)
-    });
     createUI(modelscript, visualization);
+    window.editEventBus.subscribe('EditorJS',(event) =>{
+        _metadata = _modalDetails._modelHandler.metaData;
+        doSave(_metadata)
+      });
   }
 
 
