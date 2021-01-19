@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.apache.commons.io.FileUtils;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.util.FileUtil;
@@ -24,6 +25,7 @@ import metadata.SwaggerUtil;
 public abstract class ScriptHandler implements AutoCloseable {
 
   protected ModelPlotter plotter;
+  protected HDFHandler hdfHandler;
 
   /**
    * This template method runs a snippet of script code. It does not save the stdOutput or the
@@ -63,6 +65,15 @@ public abstract class ScriptHandler implements AutoCloseable {
       workingDirectory = Optional.of(Files.createTempDirectory("workingDirectory"));
       setWorkingDirectory(workingDirectory.get(), exec);
     }
+    // copy generated resource files (if present) into workingdirectory, then delete them
+    if(fskObj.getGeneratedResourcesDirectory().isPresent()) {
+      File generatedResourceDir = fskObj.getGeneratedResourcesDirectory().get();
+      for (File sourceFile : generatedResourceDir.listFiles()) {
+        File targetFile = new File(workingDirectory.get().toString(), sourceFile.getName());
+        FileUtil.copy(sourceFile, targetFile, exec);
+      }
+      FileUtils.deleteQuietly(generatedResourceDir);
+    }
     
 
     // START RUNNING MODEL
@@ -95,6 +106,11 @@ public abstract class ScriptHandler implements AutoCloseable {
      runScript(paramScript, exec, false);
     }
 
+    
+    // HDFHandler stores all input parameters before model execution
+    hdfHandler = HDFHandler.createHandler(this, exec);
+    hdfHandler.saveInputParametersToHDF(fskObj);
+    
     exec.setProgress(0.75, "Run models script");
     runScript(fskObj.getModel(), exec, false);
 
@@ -128,7 +144,9 @@ public abstract class ScriptHandler implements AutoCloseable {
 
     saveWorkspace(fskObj, exec);
     
-  
+    // HDFHandler stores all ouput parameters in HDF file
+    hdfHandler.saveOutputParametersToHDF(fskObj);
+    
     // Save generated resources
     if (workingDirectory.isPresent()) {
       File workingDirectoryFile = workingDirectory.get().toFile();
@@ -345,20 +363,32 @@ public abstract class ScriptHandler implements AutoCloseable {
 
     // Get filenames out of the output file parameter values
     String command = createVectorQuery(outputFileParameterIds);
-
+   
     try {
-      String[] filenames = runScript(command, exec, true);
-
-      // Copy every resource from the working directory
       File newResourcesDirectory = FileUtil.createTempDir("generatedResources");
-      for (String filename : filenames) {
-        File sourceFile = new File(workingDirectory, filename);
-        File targetFile = new File(newResourcesDirectory, filename);
-        FileUtil.copy(sourceFile, targetFile, exec);
+      
+      try {
+        String[] filenames = runScript(command, exec, true);
+
+        // Copy every resource from the working directory
+        for (String filename : filenames) {
+          File sourceFile = new File(workingDirectory, filename);
+          File targetFile = new File(newResourcesDirectory, filename);
+          FileUtil.copy(sourceFile, targetFile, exec);
+        }
+
+      }catch (Exception e) {
+        e.printStackTrace();
       }
+      
+      // Save .h5 file (HDF5)
+      File sourceFile = new File(workingDirectory, HDFHandler.HDF_FILE_NAME);
+      File targetFile = new File(newResourcesDirectory, HDFHandler.HDF_FILE_NAME);
+      FileUtil.copy(sourceFile, targetFile, exec);
       
       fskPortObject.setGeneratedResourcesDirectory(newResourcesDirectory);
     } catch (Exception e) {
+      e.printStackTrace();
     }
   }
 }

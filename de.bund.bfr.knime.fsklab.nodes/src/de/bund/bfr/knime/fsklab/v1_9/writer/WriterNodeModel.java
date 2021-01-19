@@ -188,6 +188,10 @@ class WriterNodeModel extends NoInternalsModel {
       else if (FilenameUtils.isExtension(filenameString, scriptHandler.getFileExtension())) {
       archive.addEntry(resourceFile, filenameString, FSKML.getURIS(1, 0, 12).get(scriptHandler.getFileExtension()));
       }
+      // ADD HDF5 file
+      else if (FilenameUtils.isExtension(filenameString, "h5")) {
+      archive.addEntry(resourceFile, filenameString, URI.create("http://purl.org/NET/mediatypes/text-xplain"));
+      }
     }
   }
   
