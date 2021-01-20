@@ -26,7 +26,7 @@ import de.bund.bfr.metadata.swagger.Parameter;
 public abstract class HDFHandler {
 
   // the hdf file where all model parameters are stored
-  public static String HDF_FILE_NAME = "parameters.h5";  
+  protected static final String HDF_FILE_NAME = "parameters.h5";  
 
   protected ScriptHandler scriptHandler;
   protected ExecutionContext exec;
@@ -122,13 +122,13 @@ public abstract class HDFHandler {
    * @throws IOException
    * @throws URISyntaxException
    */
-    protected File getResource(final String path) throws IOException, URISyntaxException {
+  protected File getResource(final String path) throws IOException, URISyntaxException {
     Bundle bundle = Platform.getBundle("de.bund.bfr.knime.fsklab.nodes");
     URL fileURL = bundle.getEntry(path);
     URL resolvedFileURL = FileLocator.toFileURL(fileURL);
     URI resolvedURI = new URI(resolvedFileURL.getProtocol(), resolvedFileURL.getPath(), null);
     return new File(resolvedURI);
-}
+  }
   
 }
 
