@@ -33,8 +33,13 @@ public class PythonScriptHandler extends ScriptHandler {
       controller = new PythonKernel(m_kernelOptions);
     }
 
+    // set up backend (rendering engine) for matplotlib for image handling:
+    controller.execute("import matplotlib");
+    controller.execute("matplotlib.use('Agg')");
+    
     // Currently only PythonPlotter is assigned as it is the only available for Python
     this.plotter = new PythonPlotter(controller);
+
   }
   // if no version is given in the model metadata, use the KNIME preference setting
   public PythonScriptHandler() throws IOException {
@@ -86,7 +91,10 @@ public class PythonScriptHandler extends ScriptHandler {
 
   @Override
   public void saveWorkspace(FskPortObject fskObj, ExecutionContext exec) throws Exception {
-    fskObj.setWorkspace(FileUtil.createTempFile("workspace", ".py").toPath());
+    if (fskObj.getWorkspace() == null) {
+      fskObj.setWorkspace(FileUtil.createTempFile("workspace", ".py").toPath());
+    }
+   
   }
 
   @Override

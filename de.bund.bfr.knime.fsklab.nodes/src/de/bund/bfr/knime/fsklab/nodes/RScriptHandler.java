@@ -1,29 +1,35 @@
 package de.bund.bfr.knime.fsklab.nodes;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.eclipse.core.runtime.FileLocator;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.util.FileUtil;
+import org.osgi.framework.Bundle;
 import org.rosuda.REngine.REXP;
 import de.bund.bfr.knime.fsklab.nodes.plot.BasePlotter;
 import de.bund.bfr.knime.fsklab.nodes.plot.Ggplot2Plotter;
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
+import de.bund.bfr.knime.fsklab.r.client.LibRegistry;
+import de.bund.bfr.knime.fsklab.r.client.RController;
+import de.bund.bfr.knime.fsklab.r.client.ScriptExecutor;
 import de.bund.bfr.knime.fsklab.v1_9.FskPortObject;
 import de.bund.bfr.knime.fsklab.v1_9.FskSimulation;
 import de.bund.bfr.knime.fsklab.v1_9.runner.RunnerNodeInternalSettings;
 import de.bund.bfr.knime.fsklab.v1_9.runner.RunnerNodeSettings;
-import metadata.SwaggerUtil;
-import de.bund.bfr.knime.fsklab.r.client.LibRegistry;
-import de.bund.bfr.knime.fsklab.r.client.RController;
-import de.bund.bfr.knime.fsklab.r.client.ScriptExecutor;
 import de.bund.bfr.metadata.swagger.Parameter;
-
+import metadata.SwaggerUtil;
 public class RScriptHandler extends ScriptHandler {
 
   ScriptExecutor executor;
@@ -137,9 +143,13 @@ public class RScriptHandler extends ScriptHandler {
     if (fskObj.getWorkspace() == null) {
       fskObj.setWorkspace(FileUtil.createTempFile("workspace", ".RData").toPath());
     }
+    
+    
     controller.saveWorkspace(fskObj.getWorkspace(), exec);
   }
 
+
+  
   @Override
   public void restoreDefaultLibrary() throws Exception {
     controller.restorePackagePath();
