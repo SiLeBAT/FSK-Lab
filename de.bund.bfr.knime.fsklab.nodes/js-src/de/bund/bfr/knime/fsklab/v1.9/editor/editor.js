@@ -118,9 +118,9 @@ fskeditorjs = function () {
     await _modalDetails._updateContent(_metadata, 0);
     createUI(modelscript, visualization);
     window.editEventBus.subscribe('EditorJS',(event) =>{
-        _metadata = _modalDetails._modelHandler.metaData;
-        doSave(_metadata)
-      });
+      _metadata = _modalDetails._modelHandler.metaData;
+      doSave(_metadata)
+    });
   }
 
 
