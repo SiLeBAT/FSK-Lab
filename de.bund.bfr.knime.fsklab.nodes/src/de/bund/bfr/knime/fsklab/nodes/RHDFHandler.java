@@ -80,12 +80,9 @@ public class RHDFHandler extends HDFHandler {
   public void loadInputParametersFromHDF(FskPortObject fskObj) throws Exception {
     
     String script = "";
-    
-
     script += "file.h5 <- H5File$new('" + HDF_FILE_NAME + "', mode='r')\n";
-    
-    Bundle bundle = Platform.getBundle("de.bund.bfr.knime.fsklab.nodes");
-    File file = getResource(bundle, "data/loadHDF.r");
+        
+    File file = getResource("data/loadHDF.r");
     script += FileUtils.readFileToString(file, StandardCharsets.UTF_8);
     
     scriptHandler.runScript(script, exec, false);

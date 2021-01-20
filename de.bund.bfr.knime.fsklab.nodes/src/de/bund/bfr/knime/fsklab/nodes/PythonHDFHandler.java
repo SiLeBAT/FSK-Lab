@@ -68,9 +68,8 @@ public class PythonHDFHandler extends HDFHandler {
     
     String script = "";
     script += "with h5py.File('" + HDF_FILE_NAME + "', 'r') as f:\n";
-    
-    Bundle bundle = Platform.getBundle("de.bund.bfr.knime.fsklab.nodes");
-    File file = getResource(bundle, "data/loadHDF.py");
+        
+    File file = getResource("data/loadHDF.py");
     script += FileUtils.readFileToString(file, StandardCharsets.UTF_8);
     
     scriptHandler.runScript(script, exec, false);
