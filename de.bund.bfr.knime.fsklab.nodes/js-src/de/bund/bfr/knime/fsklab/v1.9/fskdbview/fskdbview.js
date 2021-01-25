@@ -22,7 +22,7 @@ fskdbview = function () {
     var selectionEdited = function (modelMetaDatax) {
 		if(window.selectedModels[selectedModelIndex]){        
 	        window.selectedModels[selectedModelIndex]=modelMetaDatax.changeSet.added[0];
-	        knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c21joiner' , [window.selectedModels, window.downloadURs],{elements:[]});
+	        knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c21joiner' , [{"selecteModels":window.selectedModels, "downloadURs":window.downloadURs}],{elements:[]});
         }
         _app._mainTable._metadata[selectedModelIndex] = modelMetaDatax.changeSet.added[0];
         _app._mainTable._refresh(selectedModelIndex, modelMetaDatax.changeSet.added[0]);
@@ -302,7 +302,9 @@ fskdbview = function () {
                                         _value.selection.push(_representation.table.rows[rowIndex].rowKey);
                                         // emit selection event
                                         window.downloadURs.push(window._endpoints.download+rowIndex);
-                                        knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c21joiner' , [window.selectedModels,window.downloadURs],{elements:[]})  
+                                        knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c21joiner' ,
+                                        		[{"selecteModels":window.selectedModels, "downloadURs":window.downloadURs}]
+                                        /* [window.selectedModels,window.downloadURs]*/,{elements:[]})  
                                     });
                                 });
                                 
@@ -311,7 +313,8 @@ fskdbview = function () {
                                 window.selectedModels.push(rowData.modelMetadata);
                                 _value.selection.push(rowIndex);
                                 // emit selection event
-                                knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c21joiner' , [window.selectedModels],{elements:[]})  
+                                knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c21joiner' ,
+                                		[{"selecteModels":window.selectedModels, "downloadURs":[]}] /*[window.selectedModels]*/,{elements:[]})  
                             }
                         
 
@@ -334,7 +337,8 @@ fskdbview = function () {
                         _value.selection = _value.selection.filter(function (value, index, arr) {
                             return value != rowIndex;
                         });
-                        knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c21joiner' , [window.selectedModels,window.downloadURs],{elements:[]});
+                        knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c21joiner' ,
+                        		[{"selecteModels":window.selectedModels, "downloadURs":window.downloadURs}],{elements:[]});
                           
 					},
 					updateFilter 	: ( O, filtered ) => {
