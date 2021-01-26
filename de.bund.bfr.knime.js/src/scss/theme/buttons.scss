@@ -1,0 +1,144 @@
+/* buttons */
+
+.btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	&:not(.disabled):not(:disabled) {
+		&:focus {
+			border-color: $bfr-hover-border;
+			background-color: $bfr-hover;
+			color: $bfr-hover-color;
+			box-shadow: none;
+		}
+		&.hover,
+		&:hover {
+			border-color: $bfr-hover-border;
+			background-color: $bfr-hover;
+			color: $bfr-hover-color;
+			text-decoration: none;
+		}
+		&.active,
+		&:active {
+			border-color: $bfr-active;
+			background-color: $bfr-active;
+			color: $bfr-active-color;
+			text-decoration: none;
+		}
+	}
+	[class*="icon-"] {
+		margin-left: 0.5rem;
+		margin-right: 0.5rem;
+		&:first-child {
+			margin-left: 0rem;
+		}
+		&:last-child {
+			margin-right: 0rem;
+		}
+	}
+}
+.btn-sm {
+	[class*="icon-"] {
+		margin-left: 0.25rem;
+		margin-right: 0.25rem;
+	}
+}
+.btn-outline-secondary {
+	color: $bfr-btn-secondary-color;
+}
+.btn-outline-light {
+	border-color: rgba( $white, 0.5 );
+}
+.btn-icon {
+	padding: .625rem 0.75rem;
+	font-size: 1.125rem;
+	&.btn-sm {
+		padding: .375rem .475rem;
+		font-size: 1rem;
+	}
+}
+.show > .dropdown-toggle.btn {
+	border-color: $bfr-active;
+	background-color: $bfr-active;
+	color: $bfr-active-color;
+	text-decoration: none;
+	&:focus,
+	&.hover,
+	&:hover {
+		border-color: $bfr-active-hover;
+		background-color: $bfr-active-hover;
+		color: $bfr-active-color;
+		text-decoration: none;
+	}
+}
+/* action */
+.action {
+	@extend .btn;
+	flex: 1 0 1.875rem;
+	max-width: 1.875rem;
+	width: 1.875rem;
+	height: 1.875rem;
+	padding: 0;
+	border-radius: 1.875rem;
+	font-size: 1.1875rem;
+	line-height: 1.875rem;
+	text-align: center;
+}
+.action-pure {
+	color: var(--primary);
+}
+.action-sm {
+	flex: 1 0 1.625rem;
+	max-width: 1.625rem;
+	width: 1.625rem;
+	height: 1.625rem;
+	font-size: 1.0625rem;
+	line-height: 1.625rem;
+}
+.action-lg {
+	flex: 1 0 2.5rem;
+	max-width: 2.5rem;
+	width: 2.5rem;
+	height: 2.5rem;
+	font-size: 1.625rem;
+	line-height: 2.5rem;
+	@media (max-height: 740px) {
+		flex: 1 0 1.875rem;
+		max-width: 1.875rem;
+		width: 1.875rem;
+		height: 1.875rem;
+		border-radius: 1.875rem;
+		font-size: 1.1875rem;
+		line-height: 1.875rem;
+	}
+	@include media-breakpoint-down( xs ) {
+		flex: 1 0 1.875rem;
+		max-width: 1.875rem;
+		width: 1.875rem;
+		height: 1.875rem;
+		border-radius: 1.875rem;
+		font-size: 1.1875rem;
+		line-height: 1.875rem;
+	}
+}
+.action-primary {
+	@extend .btn-primary;
+}
+.action-secondary {
+	@extend .btn-secondary;
+}
+.action-info {
+	@extend .btn-info;
+}
+.action-warning {
+	@extend .btn-warning;
+}
+.action-danger {
+	@extend .btn-danger;
+}
+.action-success {
+	@extend .btn-success;
+}
+.action-outline-secondary {
+	@extend .btn-outline-secondary;
+}

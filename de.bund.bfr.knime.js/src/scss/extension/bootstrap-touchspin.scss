@@ -1,0 +1,16 @@
+// touchspin
+
+.bootstrap-touchspin {
+	.input-group-append {
+		&:last-of-type {
+			.bootstrap-touchspin-up {
+				border-radius: 0 $btn-border-radius $btn-border-radius 0;
+			}
+		}
+	}
+	input {
+		&.is-invalid {
+			z-index: 3;
+		}
+	}
+}

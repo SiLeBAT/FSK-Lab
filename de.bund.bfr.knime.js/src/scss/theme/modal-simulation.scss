@@ -1,0 +1,91 @@
+.modal-sim {
+	.modal-content {
+		@include media-breakpoint-up( xs ) {
+			height: 90vh;
+			max-height: 900px;
+			overflow: hidden;
+		}
+		.sim-params {
+			display: block;
+		}
+		.sim-execution {
+			display: none;
+		}
+	}
+	.sim-select {
+		z-index: 10;
+		position: sticky;
+		left: 0;
+		top: 0;
+		flex: 0 0 0;
+		padding: 1.875rem $bfr-padding-x 1.875rem $bfr-padding-x;
+		background-color: $bfr-blue;
+		box-shadow: 0 10px 13px 0 rgba(20, 20, 20, 0.1);
+		@media (max-height: 740px) {
+			padding-top: 1rem;
+			padding-bottom: 1rem;
+		}
+		@include media-breakpoint-down( xs ) {
+			padding: 1rem $bfr-padding-x-sm 1rem $bfr-padding-x-sm;
+		}
+		.navbar {
+			@extend .row;
+			align-items: center;
+		}
+		.col-divider {
+			&:after {
+				background-color: rgba( $white, 0.5 );
+			}
+		}
+		select,
+		input {
+			background-color: $bfr-negative;
+		}
+	}
+	.sim-select-label {
+		align-self: center;
+		color: $bfr-negative;
+		font-size: 1.125rem;
+		font-weight: bold;
+		@include media-breakpoint-up( md ) {
+			font-size: 1.125rem;
+		}
+	} 
+	.sim-select-field {
+		flex-grow: 1;
+		color: $bfr-negative;
+	} 
+	.sim-select-actions {
+		flex-grow: 1;
+	}
+	.sim-execution,
+	.sim-params {
+		overflow: hidden;
+		@include media-breakpoint-up( xs ) {
+			flex: 1 0 0;
+		}
+		.tab-content {
+			overflow-y: auto;
+			-webkit-overflow-scrolling: touch;
+		}
+	}
+	.sim-param-label {}
+	.sim-param-field {}
+	.sim-param-actions {
+		@include media-breakpoint-down( xxs ) {
+			transform: translate(0,-5px);
+			text-align: right;
+		}
+	}
+	.panel-heading {
+		position: sticky;
+		top: 0;
+		left: 0;
+	}
+	.panel-plot {
+		padding: 1.5rem $bfr-padding-x;
+		@include media-breakpoint-down( xs ) {
+			padding: 1rem $bfr-padding-x-sm;
+		}
+	}
+}
