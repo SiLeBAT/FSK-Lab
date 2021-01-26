@@ -56,9 +56,9 @@ fskeditorjs = function () {
     knimeService.subscribeToSelection('b800db46-4e25-4f77-bcc6-db0c215846e1', selectionChanged);
     knimeService.subscribeToSelection('b800db46-4e25-4f77-bcc6-db0c21GlobalInit', initiated);
     
-    
     _rep = representation;
     _val = value;
+    window._endpoints.controlledVocabularyEndpoint = _rep.controlledVocabularyURL;
     //fskutil = new fskutil();
     extractAndCreateUI(value.modelMetaData);
     

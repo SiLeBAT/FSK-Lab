@@ -44,6 +44,7 @@ import de.bund.bfr.fskml.RScript;
 import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
 import de.bund.bfr.knime.fsklab.nodes.environment.EnvironmentManager;
+import de.bund.bfr.knime.fsklab.preferences.PreferenceInitializer;
 import de.bund.bfr.knime.fsklab.v1_9.FskPortObject;
 import de.bund.bfr.knime.fsklab.v1_9.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.v1_9.FskSimulation;
@@ -80,6 +81,7 @@ final class FSKEditorJSNodeModel
   public FSKEditorJSViewRepresentation createEmptyViewRepresentation() {
     FSKEditorJSViewRepresentation representation = new FSKEditorJSViewRepresentation();
     representation.setServicePort(FskPlugin.getDefault().fskService.getPort());
+    representation.setControlledVocabularyURL(PreferenceInitializer.getControlledVocabularyURL());
     return representation;
   }
 
