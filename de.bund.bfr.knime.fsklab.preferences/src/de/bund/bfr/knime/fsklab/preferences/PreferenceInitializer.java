@@ -46,7 +46,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		IPreferenceStore store = Plugin.getDefault().getPreferenceStore();
 		store.setDefault(R3_PATH_CFG, rHome);
 		store.setDefault(PYTHON2_PATH_CFG, "");
-		store.setDefault(CV_URL_CFG, "http://knime-virtual-machine:8080/vocabularies-app/");
+		store.setDefault(CV_URL_CFG, "https://knime.bfr.berlin/vocabularies-app/");
 	}
 
 	/** @return provider to the path to the R3 executable. */
