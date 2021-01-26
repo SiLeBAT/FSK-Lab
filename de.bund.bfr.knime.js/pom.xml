@@ -24,18 +24,13 @@
 						<goals>
 							<goal>install-node-and-npm</goal>
 						</goals>
-						<!-- optional: default phase is "generate-resources" -->
-						<phase>generate-resources</phase>
+						
 					</execution>
 					<execution>
 						<id>npm install</id>
 						<goals>
 							<goal>npm</goal>
 						</goals>
-
-						<!-- optional: default phase is "generate-resources" -->
-						<phase>generate-resources</phase>
-
 						<configuration>
 							<!-- optional: The default argument is actually "install", so unless 
 								you need to run some other npm command, you can remove this whole <configuration> 
@@ -48,6 +43,7 @@
 						<goals>
 							<goal>grunt</goal>
 						</goals>
+						
 					</execution>
 				</executions>
 				<configuration>
