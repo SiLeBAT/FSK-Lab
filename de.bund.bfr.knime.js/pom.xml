@@ -4,6 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.bund.bfr.knime.js</groupId>
 	<artifactId>de.bund.bfr.knime.js</artifactId>
+    <packaging>eclipse-plugin</packaging>
 	<parent>
 		<groupId>de.bund.bfr.knime</groupId>
 		<artifactId>de.bund.bfr.knime.root</artifactId>
