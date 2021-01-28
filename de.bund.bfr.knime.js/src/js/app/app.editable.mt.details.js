@@ -292,7 +292,7 @@ class APPMTEditableDetails {
         let $panel = null;
         if (modelHandler && menu.id) {
             let panelMeta = modelHandler._panels[menu.id];
-            if (panelMeta.type) {
+            if (panelMeta && panelMeta.type) {
                 // complex
                 if (panelMeta.type == 'modelScript') {
                     $panel = O._createScriptPanel(menu, modelHandler);
@@ -392,37 +392,37 @@ class APPMTEditableDetails {
                 modelHandler = new GenericModel(modelMetadata, imgUrl, true);
             }
             else if (modelMetadata.modelType === 'dataModel') {
-                modelHandler = new DataModel(modelMetadata, imgUrl);
+                modelHandler = new DataModel(modelMetadata, imgUrl, true);
             }
             else if (modelMetadata.modelType === 'predictiveModel') {
-                modelHandler = new PredictiveModel(modelMetadata, imgUrl);
+                modelHandler = new PredictiveModel(modelMetadata, imgUrl, true);
             }
             else if (modelMetadata.modelType === 'otherModel') {
-                modelHandler = new OtherModel(modelMetadata, imgUrl);
+                modelHandler = new OtherModel(modelMetadata, imgUrl, true);
             }
             else if (modelMetadata.modelType === 'toxicologicalModel') {
-                modelHandler = new ToxicologicalModel(modelMetadata, imgUrl);
+                modelHandler = new ToxicologicalModel(modelMetadata, imgUrl, true);
             }
             else if (modelMetadata.modelType === 'doseResponseModel') {
-                modelHandler = new DoseResponseModel(modelMetadata, imgUrl);
+                modelHandler = new DoseResponseModel(modelMetadata, imgUrl, true);
             }
             else if (modelMetadata.modelType === 'exposureModel') {
-                modelHandler = new ExposureModel(modelMetadata, imgUrl);
+                modelHandler = new ExposureModel(modelMetadata, imgUrl, true);
             }
             else if (modelMetadata.modelType === 'processModel') {
-                modelHandler = new ProcessModel(modelMetadata, imgUrl);
+                modelHandler = new ProcessModel(modelMetadata, imgUrl, true);
             }
             else if (modelMetadata.modelType === 'consumptionModel') {
-                modelHandler = new ConsumptionModel(modelMetadata, imgUrl);
+                modelHandler = new ConsumptionModel(modelMetadata, imgUrl, true);
             }
             else if (modelMetadata.modelType === 'healthModel') {
-                modelHandler = new HealthModel(modelMetadata, imgUrl);
+                modelHandler = new HealthModel(modelMetadata, imgUrl, true);
             }
             else if (modelMetadata.modelType === 'riskModel') {
-                modelHandler = new RiskModel(modelMetadata, imgUrl);
+                modelHandler = new RiskModel(modelMetadata, imgUrl, true);
             }
             else if (modelMetadata.modelType === 'qraModel') {
-                modelHandler = new QraModel(modelMetadata, imgUrl);
+                modelHandler = new QraModel(modelMetadata, imgUrl, true);
             }
             else {
                 modelHandler = new GenericModel(modelMetadata, imgUrl, true);
