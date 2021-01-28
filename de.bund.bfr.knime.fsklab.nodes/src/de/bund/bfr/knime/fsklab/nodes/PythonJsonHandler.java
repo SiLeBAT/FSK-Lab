@@ -33,19 +33,11 @@ public class PythonJsonHandler extends HDFHandler {
     // create script to store variables in hdf5 file
 
     scriptHandler.runScript(JSON_PARAMETERS_NAME + " = {}\n", exec, false);
-    List<Parameter> paras = SwaggerUtil.getParameter(fskObj.modelMetadata);
-    for (Parameter p : paras) {
-      if (p.getClassification() == Parameter.ClassificationEnum.INPUT) {
-        
-        try {
-          convertParamToJsonSerializable(p.getId(), Parameter.ClassificationEnum.INPUT);
-          scriptHandler.runScript(JSON_PARAMETERS_NAME + "['" + p.getId() + "'] = toSerializable\n", exec, false);
-        } catch (Exception e) {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        }
-      }
-    }
+    
+    // set script language
+    scriptHandler.runScript(JSON_PARAMETERS_NAME + "['script_language'] = 'Python'\n", exec, false);
+    
+    compileListOfParameters(fskObj, Parameter.ClassificationEnum.INPUT);
     
   }
 
@@ -54,19 +46,7 @@ public class PythonJsonHandler extends HDFHandler {
     // create script to store variables in hdf5 file
     
 
-    List<Parameter> paras = SwaggerUtil.getParameter(fskObj.modelMetadata);
-    for (Parameter p : paras) {
-      if (p.getClassification() == Parameter.ClassificationEnum.OUTPUT) {
-        
-        try {
-          convertParamToJsonSerializable(p.getId(), Parameter.ClassificationEnum.OUTPUT);
-          scriptHandler.runScript(JSON_PARAMETERS_NAME + "['" + p.getId() + "'] = toSerializable\n", exec, false);
-        } catch (Exception e) {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        }
-      }
-    }
+    compileListOfParameters(fskObj, Parameter.ClassificationEnum.OUTPUT);
     StringBuilder script = new StringBuilder();
     script.append("with open('" + HDF_FILE_NAME +"', 'w') as outfile:\n");
     script.append("\tjson.dump(" + JSON_PARAMETERS_NAME + ", outfile)\n");
@@ -75,16 +55,57 @@ public class PythonJsonHandler extends HDFHandler {
 
   @Override
   public void loadInputParametersFromHDF(FskPortObject fskObj) throws Exception {
-    // TODO Auto-generated method stub
+    // TODO THIS IS DUMMY, REMOVE OR RENAME
+    loadJsonParameterIntoWorkspace("my_source","my_target");
 
   }
-
+  
+  /**
+   * 
+   * @param sourceParam : parameter of first script 
+   * @param targetParam : parameter of second script to be overwritten
+   * @throws Exception
+   */
+  public void loadJsonParameterIntoWorkspace(String sourceParam, String targetParam) throws Exception {
+    
+    StringBuilder script = new StringBuilder();
+    
+    //load source and target into workspace as strings
+    script.append("sourceParam = " + sourceParam + "\n");
+    script.append("targetParam = " + targetParam + "\n");
+    script.append("JSON_FILE_NAME = " + HDF_FILE_NAME + "\n");
+    // load JSON file into json_params
+    
+    
+    File file = getResource("data/loadJsonIntoPython.py");
+    script.append(FileUtils.readFileToString(file, StandardCharsets.UTF_8));
+    
+    script.append("del json_params\n"); // delete JSON to free up space
+    scriptHandler.runScript(script.toString(), exec, false);
+    
+  }
   @Override
   protected String compileListOfParameters(FskPortObject fskObj,
       ClassificationEnum classification) {
     
     StringBuilder script = new StringBuilder();
-    
+    List<Parameter> paras = SwaggerUtil.getParameter(fskObj.modelMetadata);
+    for (Parameter p : paras) {
+      if (p.getClassification() == classification) {
+        
+        try {
+          convertParamToJsonSerializable(p.getId(), classification);
+          scriptHandler.runScript(JSON_PARAMETERS_NAME + "['" + p.getId() + "'] = toSerializable\n", exec, false);
+          
+          // save type of parameter
+          scriptHandler.runScript(JSON_PARAMETERS_NAME + "['var_types']['" + p.getId() + "'] = type(" + p.getId() + ").__name__\n", exec, false);
+
+        } catch (Exception e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+      }
+    }
    
     return script.toString();
   }
@@ -93,11 +114,12 @@ public class PythonJsonHandler extends HDFHandler {
     StringBuilder script = new StringBuilder();
   
     if (classification.equals(Parameter.ClassificationEnum.INPUT)) {
+      // deep copy input parameters in case their values change during script execution
       script.append("toSerializable = copy.deepcopy(" + parameter + ")\n"); // deep copy is expensive, so only do it for input parameters  
     } else {
       script.append("toSerializable = " + parameter + "\n");
     }
-    
+    script.append("toSerializable = " + parameter + "\n");
     File file = getResource("data/convertToJsonSerializable.py");
     script.append(FileUtils.readFileToString(file, StandardCharsets.UTF_8));
     
