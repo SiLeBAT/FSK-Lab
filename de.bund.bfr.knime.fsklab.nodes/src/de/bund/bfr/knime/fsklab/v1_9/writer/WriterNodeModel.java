@@ -192,6 +192,10 @@ class WriterNodeModel extends NoInternalsModel {
       else if (FilenameUtils.isExtension(filenameString, "h5")) {
       archive.addEntry(resourceFile, filenameString, URI.create("http://purl.org/NET/mediatypes/text-xplain"));
       }
+      // ADD JSON file
+      else if (FilenameUtils.isExtension(filenameString, "json")) {
+      archive.addEntry(resourceFile, filenameString, URI.create("http://purl.org/NET/mediatypes/text-xplain"));
+      }
     }
   }
   

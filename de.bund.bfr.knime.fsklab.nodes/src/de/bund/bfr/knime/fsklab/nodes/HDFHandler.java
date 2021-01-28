@@ -26,7 +26,8 @@ import de.bund.bfr.metadata.swagger.Parameter;
 public abstract class HDFHandler {
 
   // the hdf file where all model parameters are stored
-  protected static final String HDF_FILE_NAME = "parameters.h5";  
+  protected static final String HDF_FILE_NAME = "parameters.json";
+  protected static final String JSON_PARAMETERS_NAME = "fsk_parameters";
 
   protected ScriptHandler scriptHandler;
   protected ExecutionContext exec;
@@ -108,7 +109,8 @@ public abstract class HDFHandler {
     final HDFHandler handler;
 
     if (scriptHandler instanceof PythonScriptHandler) {
-      handler = new PythonHDFHandler(scriptHandler, exec);
+      //handler = new PythonHDFHandler(scriptHandler, exec);
+      handler = new PythonJsonHandler(scriptHandler, exec);
     } else return new RHDFHandler(scriptHandler, exec);
     
     return handler;
