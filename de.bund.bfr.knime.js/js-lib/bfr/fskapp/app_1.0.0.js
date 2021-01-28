@@ -12108,12 +12108,15 @@ var GenericModel = function (_ModelHandler) {
 var DataModel = function (_ModelHandler2) {
 	_inherits(DataModel, _ModelHandler2);
 
-	function DataModel(metadata, img, modelScript, visScript) {
+	function DataModel(metadata, img, state, modelScript, visScript) {
 		_classCallCheck(this, DataModel);
 
 		var _this2 = _possibleConstructorReturn(this, (DataModel.__proto__ || Object.getPrototypeOf(DataModel)).call(this, metadata, img, modelScript, visScript));
 
 		_this2._schema = schemas.dataModel;
+		if (state) {
+			_this2.panels = _this2._createPanels();
+		}
 		_this2._menu = [{
 			label: "General information",
 			submenus: [{
@@ -12188,6 +12191,74 @@ var DataModel = function (_ModelHandler2) {
 		_get(DataModel.prototype.__proto__ || Object.getPrototypeOf(DataModel.prototype), '_create', _this2).call(_this2);
 		return _this2;
 	}
+	// Validate this.panels and return boolean
+
+
+	_createClass(DataModel, [{
+		key: 'validate',
+		value: function validate() {
+			var isValid = true;
+			if (!this.panels.generalInformation.validate()) isValid = false;
+			if (!this.panels.scopeGeneral.validate()) isValid = false;
+			if (!this.panels.study.validate()) isValid = false;
+			return isValid;
+		}
+	}, {
+		key: '_createPanels',
+		value: function _createPanels() {
+			var port = window.port || -1;
+			var schema = schemas.dataModel;
+
+			return {
+				generalInformation: new FormPanel("General", schema.generalInformation, this._metadata.generalInformation, port),
+				author: new TablePanel("Author", schema.contact, this._metadata.generalInformation.author, port),
+				creator: new TablePanel("Creator", schema.contact, this._metadata.generalInformation.creator, port),
+				reference: new TablePanel("Reference", schema.reference, this._metadata.generalInformation.reference, port),
+				scopeGeneral: new FormPanel("General", schema.scope, this._metadata.scope, port),
+				product: new TablePanel("Product", schema.product, this._metadata.scope.product, port),
+				hazard: new TablePanel("Hazard", schema.hazard, this._metadata.scope.hazard, port),
+				population: new TablePanel("Population", schema.populationGroup, this._metadata.scope.populationGroup, port),
+				study: new FormPanel("Study", schema.study, this._metadata.dataBackground.study, port),
+				studySample: new TablePanel("Study sample", schema.studySample, this._metadata.dataBackground.studySample, port),
+				dietaryAssessmentMethod: new TablePanel("Dietary assessment method", schema.dietaryAssessmentMethod, this._metadata.dataBackground.dietaryAssessmentMethod, port),
+				laboratory: new TablePanel("Laboratory", schema.laboratory, this._metadata.dataBackground.laboratory, port),
+				assay: new TablePanel("Assay", schema.assay, this._metadata.dataBackground.assay, port),
+				parameter: new TablePanel("Parameter", schema.parameter, this._metadata.modelMath.parameter, port)
+			};
+		}
+	}, {
+		key: 'metaData',
+		get: function get() {
+
+			// generalInformation
+			this._metadata.generalInformation = this.panels.generalInformation.data;
+			this._metadata.generalInformation.author = this.panels.author.data;
+			this._metadata.generalInformation.creator = this.panels.creator.data;
+			this._metadata.generalInformation.reference = this.panels.reference.data;
+
+			// Scope
+			this._metadata.scope = this.panels.scopeGeneral.data;
+			this._metadata.scope.product = this.panels.product.data;
+			this._metadata.scope.hazard = this.panels.hazard.data;
+			this._metadata.scope.populationGroup = this.panels.population.data;
+
+			// Data background
+			this._metadata.dataBackground.study = this.panels.study.data;
+			this._metadata.dataBackground.studySample = this.panels.studySample.data;
+			this._metadata.dataBackground.dietaryAssessmentMethod = this.panels.dietaryAssessmentMethod.data;
+			this._metadata.dataBackground.laboratory = this.panels.laboratory.data;
+			this._metadata.dataBackground.assay = this.panels.assay.data;
+
+			// Model math
+			this._metadata.modelMath.parameter = this.panels.parameter.data;
+
+			this._metadata.modelType = "dataModel";
+
+			this._metadata = metadataFix(this._metadata);
+
+			return this._metadata;
+		}
+	}]);
 
 	return DataModel;
 }(ModelHandler);
@@ -12195,12 +12266,15 @@ var DataModel = function (_ModelHandler2) {
 var PredictiveModel = function (_ModelHandler3) {
 	_inherits(PredictiveModel, _ModelHandler3);
 
-	function PredictiveModel(metadata, img, modelScript, visScript) {
+	function PredictiveModel(metadata, img, state, modelScript, visScript) {
 		_classCallCheck(this, PredictiveModel);
 
 		var _this3 = _possibleConstructorReturn(this, (PredictiveModel.__proto__ || Object.getPrototypeOf(PredictiveModel)).call(this, metadata, img, modelScript, visScript));
 
 		_this3._schema = schemas.predictiveModel;
+		if (state) {
+			_this3.panels = _this3._createPanels();
+		}
 		_this3._menu = [{
 			label: "General information",
 			submenus: [{
@@ -12270,18 +12344,94 @@ var PredictiveModel = function (_ModelHandler3) {
 		return _this3;
 	}
 
+	_createClass(PredictiveModel, [{
+		key: 'validate',
+
+
+		// Validate this.panels and return boolean
+		value: function validate() {
+			var isValid = true;
+			if (!this.panels.generalInformation.validate()) isValid = false;
+			if (!this.panels.modelCategory.validate()) isValid = false;
+			if (!this.panels.scopeGeneral.validate()) isValid = false;
+			if (!this.panels.study.validate()) isValid = false;
+			return isValid;
+		}
+	}, {
+		key: '_createPanels',
+		value: function _createPanels() {
+			var port = window.port || -1;
+			var schema = schemas.predictiveModel;
+
+			return {
+				generalInformation: new FormPanel("General", schema.generalInformation, this._metadata.generalInformation, port),
+				author: new TablePanel("Author", schema.contact, this._metadata.generalInformation.author, port),
+				creator: new TablePanel("Creator", schema.contact, this._metadata.generalInformation.creator, port),
+				reference: new TablePanel("Reference", schema.reference, this._metadata.generalInformation.reference, port),
+				scopeGeneral: new FormPanel("General", schema.scope, this._metadata.scope, port),
+				product: new TablePanel("Product", schema.product, this._metadata.scope.product, port),
+				hazard: new TablePanel("Hazard", schema.hazard, this._metadata.scope.hazard, port),
+				study: new FormPanel("Study", schema.study, this._metadata.dataBackground.study, port),
+				studySample: new TablePanel("Study sample", schema.studySample, this._metadata.dataBackground.studySample, port),
+				laboratory: new TablePanel("Laboratory", schema.laboratory, this._metadata.dataBackground.laboratory, port),
+				assay: new TablePanel("Assay", schema.assay, this._metadata.dataBackground.assay, port),
+				modelMath: new FormPanel("Model math", schema.modelMath, this._metadata.modelMath, port),
+				parameter: new TablePanel("Parameter", schema.parameter, this._metadata.modelMath.parameter, port),
+				qualityMeasures: new TablePanel("Quality measures", schema.qualityMeasures, this._metadata.modelMath.qualityMeasures, port),
+				modelEquation: new TablePanel("Model equation", schema.modelEquation, this._metadata.modelMath.modelEquation, port)
+			};
+		}
+	}, {
+		key: 'metaData',
+		get: function get() {
+
+			// generalInformation
+			this._metadata.generalInformation = this.panels.generalInformation.data;
+			this._metadata.generalInformation.modelCategory = this.panels.modelCategory;
+			this._metadata.generalInformation.author = this.panels.author.data;
+			this._metadata.generalInformation.creator = this.panels.creator.data;
+			this._metadata.generalInformation.reference = this.panels.reference.data;
+
+			// Scope
+			this._metadata.scope = this.panels.scopeGeneral.data;
+			this._metadata.scope.product = this.panels.product.data;
+			this._metadata.scope.hazard = this.panels.hazard.data;
+
+			// Data background
+			this._metadata.dataBackground.study = this.panels.study.data;
+			this._metadata.dataBackground.studySample = this.panels.studySample.data;
+			this._metadata.dataBackground.laboratory = this.panels.laboratory.data;
+			this._metadata.dataBackground.assay = this.panels.assay.data;
+
+			// Model math
+			this._metadata.modelMath = this.panels.modelMath.data;
+			this._metadata.modelMath.parameter = this.panels.parameter.data;
+			this._metadata.modelMath.qualityMeasures = this.panels.qualityMeasures.data;
+			this._metadata.modelMath.modelEquation = this.panels.modelEquation.data;
+
+			this._metadata.modelType = "predictiveModel";
+
+			this._metadata = metadataFix(this._metadata);
+
+			return this._metadata;
+		}
+	}]);
+
 	return PredictiveModel;
 }(ModelHandler);
 
 var OtherModel = function (_ModelHandler4) {
 	_inherits(OtherModel, _ModelHandler4);
 
-	function OtherModel(metadata, img, modelScript, visScript) {
+	function OtherModel(metadata, img, state, modelScript, visScript) {
 		_classCallCheck(this, OtherModel);
 
 		var _this4 = _possibleConstructorReturn(this, (OtherModel.__proto__ || Object.getPrototypeOf(OtherModel)).call(this, metadata, img, modelScript, visScript));
 
 		_this4._schema = schemas.otherModel;
+		if (state) {
+			_this4.panels = _this4._createPanels();
+		}
 		_this4._menu = [{
 			label: "General information",
 			submenus: [{
@@ -12366,18 +12516,97 @@ var OtherModel = function (_ModelHandler4) {
 		return _this4;
 	}
 
+	_createClass(OtherModel, [{
+		key: 'validate',
+
+
+		// Validate this.panels and return boolean
+		value: function validate() {
+			var isValid = true;
+			if (!this.panels.generalInformation.validate()) isValid = false;
+			if (!this.panels.modelCategory.validate()) isValid = false;
+			if (!this.panels.scopeGeneral.validate()) isValid = false;
+			if (!this.panels.study.validate()) isValid = false;
+			return isValid;
+		}
+	}, {
+		key: '_createPanels',
+		value: function _createPanels() {
+			var port = window.port || -1;
+			var schema = schemas.otherModel;
+
+			return {
+				generalInformation: new FormPanel("General", schema.generalInformation, this._metadata.generalInformation, port),
+				modelCategory: new FormPanel("Model category", schema.modelCategory, this._metadata.generalInformation.modelCategory, port),
+				author: new TablePanel("Author", schema.contact, this._metadata.generalInformation.author, port),
+				creator: new TablePanel("Creator", schema.contact, this._metadata.generalInformation.creator, port),
+				reference: new TablePanel("Reference", schema.reference, this._metadata.generalInformation.reference, port),
+				scopeGeneral: new FormPanel("General", schema.scope, this._metadata.scope, port),
+				product: new TablePanel("Product", schema.product, this._metadata.scope.product, port),
+				hazard: new TablePanel("Hazard", schema.hazard, this._metadata.scope.hazard, port),
+				population: new TablePanel("Population", schema.populationGroup, this._metadata.scope.populationGroup, port),
+				study: new FormPanel("Study", schema.study, this._metadata.dataBackground.study, port),
+				studySample: new TablePanel("Study sample", schema.studySample, this._metadata.dataBackground.studySample, port),
+				laboratory: new TablePanel("Laboratory", schema.laboratory, this._metadata.dataBackground.laboratory, port),
+				assay: new TablePanel("Assay", schema.assay, this._metadata.dataBackground.assay, port),
+				modelMath: new FormPanel("Model math", schema.modelMath, this._metadata.modelMath, port),
+				parameter: new TablePanel("Parameter", schema.parameter, this._metadata.modelMath.parameter, port),
+				qualityMeasures: new TablePanel("Quality measures", schema.qualityMeasures, this._metadata.modelMath.qualityMeasures, port),
+				modelEquation: new TablePanel("Model equation", schema.modelEquation, this._metadata.modelMath.modelEquation, port)
+			};
+		}
+	}, {
+		key: 'metaData',
+		get: function get() {
+
+			// general information
+			this._metadata.generalInformation = this.panels.generalInformation.data;
+			this._metadata.generalInformation.modelCategory = this.panels.modelCategory.data;
+			this._metadata.generalInformation.author = this.panels.author.data;
+			this._metadata.generalInformation.creator = this.panels.creator.data;
+			this._metadata.generalInformation.reference = this.panels.reference.data;
+
+			// scope
+			this._metadata.scope = this.panels.scopeGeneral.data;
+			this._metadata.scope.product = this.panels.product.data;
+			this._metadata.scope.hazard = this.panels.hazard.data;
+			this._metadata.scope.populationGroup = this.panels.population.data;
+
+			// Data background
+			this._metadata.dataBackground.study = this.panels.study.data;
+			this._metadata.dataBackground.studySample = this.panels.studySample.data;
+			this._metadata.dataBackground.laboratory = this.panels.laboratory.data;
+			this._metadata.dataBackground.assay = this.panels.assay.data;
+
+			// Model math
+			this._metadata.modelMath = this.panels.modelMath.data;
+			this._metadata.modelMath.parameter = this.panels.parameter.data;
+			this._metadata.modelMath.qualityMeasures = this.panels.qualityMeasures.data;
+			this._metadata.modelMath.modelEquation = this.panels.modelEquation.data;
+
+			this._metadata.modelType = "otherModel";
+
+			this._metadata = metadataFix(this._metadata);
+
+			return this._metadata;
+		}
+	}]);
+
 	return OtherModel;
 }(ModelHandler);
 
 var DoseResponseModel = function (_ModelHandler5) {
 	_inherits(DoseResponseModel, _ModelHandler5);
 
-	function DoseResponseModel(metadata, img, modelScript, visScript) {
+	function DoseResponseModel(metadata, img, state, modelScript, visScript) {
 		_classCallCheck(this, DoseResponseModel);
 
 		var _this5 = _possibleConstructorReturn(this, (DoseResponseModel.__proto__ || Object.getPrototypeOf(DoseResponseModel)).call(this, metadata, img, modelScript, visScript));
 
 		_this5._schema = schemas.doseResponseModel;
+		if (state) {
+			_this5.panels = _this5._createPanels();
+		}
 		_this5._menu = [{
 			label: "General information",
 			submenus: [{
@@ -12458,36 +12687,82 @@ var DoseResponseModel = function (_ModelHandler5) {
 			id: 'readme',
 			submenus: []
 		}];
-		// extend panels with specific data and schemas
-		_this5._panels = $.extend(true, {}, _this5._panels, {
-			study: {
-				type: 'simple',
-				schema: _this5._schema.study,
-				metadata: _this5._metadata.scope.study
-			},
-			studySample: {
-				type: 'complex',
-				schema: _this5._schema.study,
-				metadata: _this5._metadata.scope.studySample
-			},
-			laboratory: {
-				type: 'complex',
-				schema: _this5._schema.laboratory,
-				metadata: _this5._metadata.scope.laboratory
-			},
-			assay: {
-				type: 'complex',
-				schema: _this5._schema.assay,
-				metadata: _this5._metadata.scope.assay
-			},
-			exposure: {
-				type: 'complex',
-				schema: _this5._schema.exposure,
-				metadata: _this5._metadata.modelMath.exposure
-			}
-		});
+		_get(DoseResponseModel.prototype.__proto__ || Object.getPrototypeOf(DoseResponseModel.prototype), '_create', _this5).call(_this5);
 		return _this5;
 	}
+
+	_createClass(DoseResponseModel, [{
+		key: 'validate',
+		value: function validate() {
+			var isValid = true;
+			if (!this.panels.generalInformation.validate()) isValid = false;
+			if (!this.panels.modelCategory.validate()) isValid = false;
+			if (!this.panels.scopeGeneral.validate()) isValid = false;
+			if (!this.panels.study.validate()) isValid = false;
+			return isValid;
+		}
+	}, {
+		key: '_createPanels',
+		value: function _createPanels() {
+			var port = window.port || -1;
+			var schema = schemas.doseResponseModel;
+
+			return {
+				generalInformation: new FormPanel("General", schema.generalInformation, this._metadata.generalInformation, port),
+				modelCategory: new FormPanel("Model category", schema.modelCategory, this._metadata.generalInformation.modelCategory, port),
+				author: new TablePanel("Author", schema.contact, this._metadata.generalInformation.author, port),
+				creator: new TablePanel("Creator", schema.contact, this._metadata.generalInformation.creator, port),
+				reference: new TablePanel("Reference", schema.reference, this._metadata.generalInformation.reference, port),
+				scopeGeneral: new FormPanel("General", schema.scope, this._metadata.scope, port),
+				hazard: new TablePanel("Hazard", schema.hazard, this._metadata.scope.hazard, port),
+				population: new TablePanel("Population", schema.populationGroup, this._metadata.scope.populationGroup, port),
+				study: new FormPanel("Study", schema.study, this._metadata.dataBackground.study, port),
+				studySample: new TablePanel("Study sample", schema.studySample, this._metadata.dataBackground.studySample, port),
+				laboratory: new TablePanel("Laboratory", schema.laboratory, this._metadata.dataBackground.laboratory, port),
+				assay: new TablePanel("Assay", schema.assay, this._metadata.dataBackground.assay, port),
+				modelMath: new FormPanel("Model math", schema.modelMath, this._metadata.modelMath, port),
+				parameter: new TablePanel("Parameter", schema.parameter, this._metadata.modelMath.parameter, port),
+				qualityMeasures: new TablePanel("Quality measures", schema.qualityMeasures, this._metadata.modelMath.qualityMeasures, port),
+				modelEquation: new TablePanel("Model equation", schema.modelEquation, this._metadata.modelMath.modelEquation, port),
+				exposure: new FormPanel("Exposure", schema.exposure, this._metadata.modelMath.exposure, port)
+			};
+		}
+	}, {
+		key: 'metaData',
+		get: function get() {
+
+			// general information
+			this._metadata.generalInformation = this.panels.generalInformation.data;
+			this._metadata.generalInformation.modelCategory = this.panels.modelCategory.data;
+			this._metadata.generalInformation.author = this.panels.author.data;
+			this._metadata.generalInformation.creator = this.panels.creator.data;
+			this._metadata.generalInformation.reference = this.panels.reference.data;
+
+			// scope
+			this._metadata.scope = this.panels.scopeGeneral.data;
+			this._metadata.scope.hazard = this.panels.hazard.data;
+			this._metadata.scope.populationGroup = this.panels.population.data;
+
+			// Data background
+			this._metadata.dataBackground.study = this.panels.study.data;
+			this._metadata.dataBackground.studySample = this.panels.studySample.data;
+			this._metadata.dataBackground.laboratory = this.panels.laboratory.data;
+			this._metadata.dataBackground.assay = this.panels.assay.data;
+
+			// Model math
+			this._metadata.modelMath = this.panels.modelMath.data;
+			this._metadata.modelMath.parameter = this.panels.parameter.data;
+			this._metadata.modelMath.qualityMeasures = this.panels.qualityMeasures.data;
+			this._metadata.modelMath.modelEquation = this.panels.modelEquation.data;
+			this._metadata.modelMath.exposure = this.panels.exposure.data;
+
+			this._metadata.modelType = "doseResponseModel";
+
+			this._metadata = metadataFix(this._metadata);
+
+			return this._metadata;
+		}
+	}]);
 
 	return DoseResponseModel;
 }(ModelHandler);
@@ -12495,12 +12770,15 @@ var DoseResponseModel = function (_ModelHandler5) {
 var ToxicologicalModel = function (_ModelHandler6) {
 	_inherits(ToxicologicalModel, _ModelHandler6);
 
-	function ToxicologicalModel(metadata, img, modelScript, visScript) {
+	function ToxicologicalModel(metadata, img, state, modelScript, visScript) {
 		_classCallCheck(this, ToxicologicalModel);
 
 		var _this6 = _possibleConstructorReturn(this, (ToxicologicalModel.__proto__ || Object.getPrototypeOf(ToxicologicalModel)).call(this, metadata, img, modelScript, visScript));
 
 		_this6._schema = schemas.toxicologicalModel;
+		if (state) {
+			_this6.panels = _this6._createPanels();
+		}
 		_this6._menu = [{
 			label: "General information",
 			submenus: [{
@@ -12581,37 +12859,85 @@ var ToxicologicalModel = function (_ModelHandler6) {
 			id: 'readme',
 			submenus: []
 		}];
-
-		// extend panels with specific data and schemas
-		_this6._panels = $.extend(true, {}, _this6._panels, {
-			study: {
-				type: 'simple',
-				schema: _this6._schema.study,
-				metadata: _this6._metadata.scope.study
-			},
-			studySample: {
-				type: 'complex',
-				schema: _this6._schema.study,
-				metadata: _this6._metadata.scope.studySample
-			},
-			laboratory: {
-				type: 'complex',
-				schema: _this6._schema.laboratory,
-				metadata: _this6._metadata.scope.laboratory
-			},
-			assay: {
-				type: 'complex',
-				schema: _this6._schema.assay,
-				metadata: _this6._metadata.scope.assay
-			},
-			exposure: {
-				type: 'complex',
-				schema: _this6._schema.exposure,
-				metadata: _this6._metadata.modelMath.exposure
-			}
-		});
+		_get(ToxicologicalModel.prototype.__proto__ || Object.getPrototypeOf(ToxicologicalModel.prototype), '_create', _this6).call(_this6);
 		return _this6;
 	}
+
+	_createClass(ToxicologicalModel, [{
+		key: 'validate',
+
+
+		// Validate this.panels and return boolean
+		value: function validate() {
+			var isValid = true;
+			if (!this.panels.generalInformation.validate()) isValid = false;
+			if (!this.panels.modelCategory.validate()) isValid = false;
+			if (!this.panels.scopeGeneral.validate()) isValid = false;
+			if (!this.panels.study.validate()) isValid = false;
+			return isValid;
+		}
+	}, {
+		key: '_createPanels',
+		value: function _createPanels() {
+			var port = window.port || -1;
+			var schema = schemas.toxicologicalModel;
+
+			return {
+				generalInformation: new FormPanel("General", schema.generalInformation, this._metadata.generalInformation, port),
+				modelCategory: new FormPanel("Model category", schema.modelCategory, this._metadata.generalInformation.modelCategory, port),
+				author: new TablePanel("Author", schema.contact, this._metadata.generalInformation.author, port),
+				creator: new TablePanel("Creator", schema.contact, this._metadata.generalInformation.creator, port),
+				reference: new TablePanel("Reference", schema.reference, this._metadata.generalInformation.reference, port),
+				scopeGeneral: new FormPanel("General", schema.scope, this._metadata.scope, port),
+				hazard: new TablePanel("Hazard", schema.hazard, this._metadata.scope.hazard, port),
+				population: new TablePanel("Population", schema.populationGroup, this._metadata.scope.populationGroup, port),
+				study: new FormPanel("Study", schema.study, this._metadata.dataBackground.study, port),
+				studySample: new TablePanel("Study sample", schema.studySample, this._metadata.dataBackground.studySample, port),
+				laboratory: new TablePanel("Laboratory", schema.laboratory, this._metadata.dataBackground.laboratory, port),
+				assay: new TablePanel("Assay", schema.assay, this._metadata.dataBackground.assay, port),
+				modelMath: new FormPanel("Model math", schema.modelMath, this._metadata.modelMath, port),
+				parameter: new TablePanel("Parameter", schema.parameter, this._metadata.modelMath.parameter, port),
+				qualityMeasures: new TablePanel("Quality measures", schema.qualityMeasures, this._metadata.modelMath.qualityMeasures, port),
+				modelEquation: new TablePanel("Model equation", schema.modelEquation, this._metadata.modelMath.modelEquation, port),
+				exposure: new TablePanel("Exposure", schema.exposure, this._metadata.modelMath.exposure, port)
+			};
+		}
+	}, {
+		key: 'metaData',
+		get: function get() {
+
+			// generalInformation
+			this._metadata.generalInformation = this.panels.generalInformation.data;
+			this._metadata.generalInformation.modelCategory = this.panels.modelCategory.data;
+			this._metadata.generalInformation.author = this.panels.author.data;
+			this._metadata.generalInformation.creator = this.panels.creator.data;
+			this._metadata.generalInformation.reference = this.panels.reference.data;
+
+			// Scope
+			this._metadata.scope = this.panels.scopeGeneral.data;
+			this._metadata.scope.hazard = this.panels.hazard.data;
+			this._metadata.scope.populationGroup = this.panels.population.data;
+
+			// Data background
+			this._metadata.dataBackground.study = this.panels.study.data;
+			this._metadata.dataBackground.studySample = this.panels.studySample.data;
+			this._metadata.dataBackground.laboratory = this.panels.laboratory.data;
+			this._metadata.dataBackground.assay = this.panels.assay.data;
+
+			// Model math
+			this._metadata.modelMath = this.panels.modelMath.data;
+			this._metadata.modelMath.parameter = this.panels.parameter.data;
+			this._metadata.modelMath.qualityMeasures = this.panels.qualityMeasures.data;
+			this._metadata.modelMath.modelEquation = this.panels.modelEquation.data;
+			this._metadata.modelMath.exposure = this.panels.exposure.data;
+
+			this._metadata.modelType = "toxicologicalModel";
+
+			this._metadata = metadataFix(this._metadata);
+
+			return this._metadata;
+		}
+	}]);
 
 	return ToxicologicalModel;
 }(ModelHandler);
@@ -12619,12 +12945,15 @@ var ToxicologicalModel = function (_ModelHandler6) {
 var ExposureModel = function (_ModelHandler7) {
 	_inherits(ExposureModel, _ModelHandler7);
 
-	function ExposureModel(metadata, img, modelScript, visScript) {
+	function ExposureModel(metadata, img, state, modelScript, visScript) {
 		_classCallCheck(this, ExposureModel);
 
 		var _this7 = _possibleConstructorReturn(this, (ExposureModel.__proto__ || Object.getPrototypeOf(ExposureModel)).call(this, metadata, img, modelScript, visScript));
 
 		_this7._schema = schemas.exposureModel;
+		if (state) {
+			_this7.panels = _this7._createPanels();
+		}
 		_this7._menu = [{
 			label: "General information",
 			submenus: [{
@@ -12715,18 +13044,101 @@ var ExposureModel = function (_ModelHandler7) {
 		return _this7;
 	}
 
+	_createClass(ExposureModel, [{
+		key: 'validate',
+
+
+		// Validate this.panels and return boolean
+		value: function validate() {
+			var isValid = true;
+			if (!this.panels.generalInformation.validate()) isValid = false;
+			if (!this.panels.modelCategory.validate()) isValid = false;
+			if (!this.panels.scopeGeneral.validate()) isValid = false;
+			if (!this.panels.study.validate()) isValid = false;
+			return isValid;
+		}
+	}, {
+		key: '_createPanels',
+		value: function _createPanels() {
+			var port = window.port || -1;
+			var schema = schemas.exposureModel;
+
+			return {
+				generalInformation: new FormPanel("General", schema.generalInformation, this._metadata.generalInformation, port),
+				modelCategory: new FormPanel("Model category", schema.modelCategory, this._metadata.generalInformation.modelCategory, port),
+				author: new TablePanel("Author", schema.contact, this._metadata.generalInformation.author, port),
+				creator: new TablePanel("Creator", schema.contact, this._metadata.generalInformation.creator, port),
+				reference: new TablePanel("Reference", schema.reference, this._metadata.generalInformation.reference, port),
+				scopeGeneral: new FormPanel("General", schema.scope, this._metadata.scope, port),
+				product: new TablePanel("Product", schema.product, this._metadata.scope.product, port),
+				hazard: new TablePanel("Hazard", schema.hazard, this._metadata.scope.hazard, port),
+				population: new TablePanel("Population", schema.populationGroup, this._metadata.scope.populationGroup, port),
+				study: new FormPanel("Study", schema.study, this._metadata.dataBackground.study, port),
+				studySample: new TablePanel("Study sample", schema.studySample, this._metadata.dataBackground.studySample, port),
+				dietaryAssessmentMethod: new TablePanel("Dietary assessment method", schema.dietaryAssessmentMethod, this._metadata.dataBackground.dietaryAssessmentMethod, port),
+				laboratory: new TablePanel("Laboratory", schema.laboratory, this._metadata.dataBackground.laboratory, port),
+				assay: new TablePanel("Assay", schema.assay, this._metadata.dataBackground.assay, port),
+				modelMath: new FormPanel("Model math", schema.modelMath, this._metadata.modelMath, port),
+				parameter: new TablePanel("Parameter", schema.parameter, this._metadata.modelMath.parameter, port),
+				qualityMeasures: new TablePanel("Quality measures", schema.qualityMeasures, this._metadata.modelMath.qualityMeasures, port),
+				modelEquation: new TablePanel("Model equation", schema.modelEquation, this._metadata.modelMath.modelEquation, port),
+				exposure: new TablePanel("Exposure", schema.exposure, this._metadata.modelMath.exposure, port)
+			};
+		}
+	}, {
+		key: 'metaData',
+		get: function get() {
+
+			// general information
+			this._metadata.generalInformation = this.panels.generalInformation.data;
+			this._metadata.generalInformation.modelCategory = this.panels.modelCategory.data;
+			this._metadata.generalInformation.author = this.panels.author.data;
+			this._metadata.generalInformation.creator = this.panels.creator.data;
+			this._metadata.generalInformation.reference = this.panels.reference.data;
+
+			// scope
+			this._metadata.scope = this.panels.scopeGeneral.data;
+			this._metadata.scope.product = this.panels.product.data;
+			this._metadata.scope.hazard = this.panels.hazard.data;
+			this._metadata.scope.populationGroup = this.panels.population.data;
+
+			// Data background
+			this._metadata.dataBackground.study = this.panels.study.data;
+			this._metadata.dataBackground.studySample = this.panels.studySample.data;
+			this._metadata.dataBackground.dietaryAssessmentMethod = this.panels.dietaryAssessmentMethod.data;
+			this._metadata.dataBackground.laboratory = this.panels.laboratory.data;
+			this._metadata.dataBackground.assay = this.panels.assay.data;
+
+			// Model math
+			this._metadata.modelMath = this.panels.modelMath.data;
+			this._metadata.modelMath.parameter = this.panels.parameter.data;
+			this._metadata.modelMath.qualityMeasures = this.panels.qualityMeasures.data;
+			this._metadata.modelMath.modelEquation = this.panels.modelEquation.data;
+			this._metadata.modelMath.exposure = this.panels.exposure.data;
+
+			this._metadata.modelType = "exposureModel";
+
+			this._metadata = metadataFix(this._metadata);
+
+			return this._metadata;
+		}
+	}]);
+
 	return ExposureModel;
 }(ModelHandler);
 
 var ProcessModel = function (_ModelHandler8) {
 	_inherits(ProcessModel, _ModelHandler8);
 
-	function ProcessModel(metadata, img, modelScript, visScript) {
+	function ProcessModel(metadata, img, state, modelScript, visScript) {
 		_classCallCheck(this, ProcessModel);
 
 		var _this8 = _possibleConstructorReturn(this, (ProcessModel.__proto__ || Object.getPrototypeOf(ProcessModel)).call(this, metadata, img, modelScript, visScript));
 
 		_this8._schema = schemas.processModel;
+		if (state) {
+			_this8.panels = _this8._createPanels();
+		}
 		_this8._menu = [{
 			label: "General information",
 			submenus: [{
@@ -12802,18 +13214,95 @@ var ProcessModel = function (_ModelHandler8) {
 		return _this8;
 	}
 
+	_createClass(ProcessModel, [{
+		key: 'validate',
+
+
+		// Validate this.panels and return boolean
+		value: function validate() {
+			var isValid = true;
+			if (!this.panels.generalInformation.validate()) isValid = false;
+			if (!this.panels.modelCategory.validate()) isValid = false;
+			if (!this.panels.scopeGeneral.validate()) isValid = false;
+			if (!this.panels.study.validate()) isValid = false;
+			return isValid;
+		}
+	}, {
+		key: '_createPanels',
+		value: function _createPanels() {
+			var port = window.port || -1;
+			var schema = schemas.processModel;
+
+			return {
+				generalInformation: new FormPanel("General", schema.generalInformation, this._metadata.generalInformation, port),
+				modelCategory: new FormPanel("Model category", schema.modelCategory, this._metadata.generalInformation.modelCategory, port),
+				author: new TablePanel("Author", schema.contact, this._metadata.generalInformation.author, port),
+				creator: new TablePanel("Creator", schema.contact, this._metadata.generalInformation.creator, port),
+				reference: new TablePanel("Reference", schema.reference, this._metadata.generalInformation.reference, port),
+				scopeGeneral: new FormPanel("General", schema.scope, this._metadata.scope, port),
+				product: new TablePanel("Product", schema.product, this._metadata.scope.product, port),
+				hazard: new TablePanel("Hazard", schema.hazard, this._metadata.scope.hazard, port),
+				study: new FormPanel("Study", schema.study, this._metadata.dataBackground.study, port),
+				studySample: new TablePanel("Study sample", schema.studySample, this._metadata.dataBackground.studySample, port),
+				laboratory: new TablePanel("Laboratory", schema.laboratory, this._metadata.dataBackground.laboratory, port),
+				assay: new TablePanel("Assay", schema.assay, this._metadata.dataBackground.assay, port),
+				modelMath: new FormPanel("Model math", schema.modelMath, this._metadata.modelMath, port),
+				parameter: new TablePanel("Parameter", schema.parameter, this._metadata.modelMath.parameter, port),
+				qualityMeasures: new TablePanel("Quality measures", schema.qualityMeasures, this._metadata.modelMath.qualityMeasures, port),
+				modelEquation: new TablePanel("Model equation", schema.modelEquation, this._metadata.modelMath.modelEquation, port)
+			};
+		}
+	}, {
+		key: 'metaData',
+		get: function get() {
+
+			// generalInformation
+			this._metadata.generalInformation = this.panels.generalInformation.data;
+			this._metadata.generalInformation.modelCategory = this.panels.modelCategory.data;
+			this._metadata.generalInformation.author = this.panels.author.data;
+			this._metadata.generalInformation.creator = this.panels.creator.data;
+			this._metadata.generalInformation.reference = this.panels.reference.data;
+
+			// Scope
+			this._metadata.scope = this.panels.scopeGeneral.data;
+			this._metadata.scope.product = this.panels.product.data;
+			this._metadata.scope.hazard = this.panels.hazard.data;
+
+			// Data background
+			this._metadata.dataBackground.study = this.panels.study.data;
+			this._metadata.dataBackground.studySample = this.panels.studySample.data;
+			this._metadata.dataBackground.laboratory = this.panels.laboratory.data;
+			this._metadata.dataBackground.assay = this.panels.assay.data;
+
+			// Model math
+			this._metadata.modelMath = this.panels.modelMath.data;
+			this._metadata.modelMath.parameter = this.panels.parameter.data;
+			this._metadata.modelMath.qualityMeasures = this.panels.qualityMeasures.data;
+			this._metadata.modelMath.modelEquation = this.panels.modelEquation.data;
+
+			this._metadata.modelType = "processModel";
+
+			this._metadata = metadataFix(this._metadata);
+
+			return this._metadata;
+		}
+	}]);
+
 	return ProcessModel;
 }(ModelHandler);
 
 var ConsumptionModel = function (_ModelHandler9) {
 	_inherits(ConsumptionModel, _ModelHandler9);
 
-	function ConsumptionModel(metadata, img, modelScript, visScript) {
+	function ConsumptionModel(metadata, img, state, modelScript, visScript) {
 		_classCallCheck(this, ConsumptionModel);
 
 		var _this9 = _possibleConstructorReturn(this, (ConsumptionModel.__proto__ || Object.getPrototypeOf(ConsumptionModel)).call(this, metadata, img, modelScript, visScript));
 
 		_this9._schema = schemas.consumptionModel;
+		if (state) {
+			_this9.panels = _this9._createPanels();
+		}
 		_this9._menu = [{
 			label: "General information",
 			submenus: [{
@@ -12841,7 +13330,7 @@ var ConsumptionModel = function (_ModelHandler9) {
 				id: "product",
 				label: "Product"
 			}, {
-				id: "populationGroup",
+				id: "population",
 				label: "Population group"
 			}]
 		}, {
@@ -12892,18 +13381,97 @@ var ConsumptionModel = function (_ModelHandler9) {
 		return _this9;
 	}
 
+	_createClass(ConsumptionModel, [{
+		key: 'validate',
+
+
+		// Validate this.panels and return boolean
+		value: function validate() {
+			var isValid = true;
+			if (!this.panels.generalInformation.validate()) isValid = false;
+			if (!this.panels.modelCategory.validate()) isValid = false;
+			if (!this.panels.scopeGeneral.validate()) isValid = false;
+			if (!this.panels.study.validate()) isValid = false;
+			return isValid;
+		}
+	}, {
+		key: '_createPanels',
+		value: function _createPanels() {
+			var port = window.port || -1;
+			var schema = schemas.consumptionModel;
+
+			return {
+				generalInformation: new FormPanel("General", schema.generalInformation, this._metadata.generalInformation, port),
+				modelCategory: new FormPanel("Model category", schema.modelCategory, this._metadata.generalInformation.modelCategory, port),
+				author: new TablePanel("Author", schema.contact, this._metadata.generalInformation.author, port),
+				creator: new TablePanel("Creator", schema.contact, this._metadata.generalInformation.creator, port),
+				reference: new TablePanel("Reference", schema.reference, this._metadata.generalInformation.reference, port),
+				scopeGeneral: new FormPanel("General", schema.scope, this._metadata.scope, port),
+				product: new TablePanel("Product", schema.product, this._metadata.scope.product, port),
+				population: new TablePanel("Population group", schema.populationGroup, this._metadata.scope.populationGroup, port),
+				study: new FormPanel("Study", schema.study, this._metadata.dataBackground.study, port),
+				studySample: new TablePanel("Study sample", schema.studySample, this._metadata.dataBackground.studySample, port),
+				dietaryAssessmentMethod: new TablePanel("Dietary assessment method", schema.dietaryAssessmentMethod, this._metadata.dataBackground.dietaryAssessmentMethod, port),
+				laboratory: new TablePanel("Laboratory", schema.laboratory, this._metadata.dataBackground.laboratory, port),
+				assay: new TablePanel("Assay", schema.assay, this._metadata.dataBackground.assay, port),
+				modelMath: new FormPanel("Model math", schema.modelMath, this._metadata.modelMath, port),
+				parameter: new TablePanel("Parameter", schema.parameter, this._metadata.modelMath.parameter, port),
+				qualityMeasures: new TablePanel("Quality measures", schema.qualityMeasures, this._metadata.modelMath.qualityMeasures, port),
+				modelEquation: new TablePanel("Model equation", schema.modelEquation, this._metadata.modelMath.modelEquation, port)
+			};
+		}
+	}, {
+		key: 'metaData',
+		get: function get() {
+
+			// generalInformation
+			this._metadata.generalInformation = this.panels.generalInformation.data;
+			this._metadata.generalInformation.modelCategory = this.panels.modelCategory.data;
+			this._metadata.generalInformation.author = this.panels.author.data;
+			this._metadata.generalInformation.creator = this.panels.creator.data;
+			this._metadata.generalInformation.reference = this.panels.reference.data;
+
+			// Scope
+			this._metadata.scope = this.panels.scopeGeneral.data;
+			this._metadata.scope.product = this.panels.product.data;
+			this._metadata.scope.populationGroup = this.panels.populationGroup.data;
+
+			// Data background
+			this._metadata.dataBackground.study = this.panels.study.data;
+			this._metadata.dataBackground.studySample = this.panels.studySample.data;
+			this._metadata.dataBackground.dietaryAssessmentMethod = this.panels.dietaryAssessmentMethod.data;
+			this._metadata.dataBackground.laboratory = this.panels.laboratory.data;
+			this._metadata.dataBackground.assay = this.panels.assay.data;
+
+			// Model math
+			this._metadata.modelMath = this.panels.modelMath.data;
+			this._metadata.modelMath.parameter = this.panels.parameter.data;
+			this._metadata.modelMath.qualityMeasures = this.panels.qualityMeasures.data;
+			this._metadata.modelMath.modelEquation = this.panels.modelEquation.data;
+
+			this._metadata.modelType = "consumptionModel";
+
+			this._metadata = metadataFix(this._metadata);
+
+			return this._metadata;
+		}
+	}]);
+
 	return ConsumptionModel;
 }(ModelHandler);
 
 var HealthModel = function (_ModelHandler10) {
 	_inherits(HealthModel, _ModelHandler10);
 
-	function HealthModel(metadata, img, modelScript, visScript) {
+	function HealthModel(metadata, img, state, modelScript, visScript) {
 		_classCallCheck(this, HealthModel);
 
 		var _this10 = _possibleConstructorReturn(this, (HealthModel.__proto__ || Object.getPrototypeOf(HealthModel)).call(this, metadata, img, modelScript, visScript));
 
 		_this10._schema = schemas.healthModel;
+		if (state) {
+			_this10.panels = _this10._createPanels();
+		}
 		_this10._menu = [{
 			label: "General information",
 			submenus: [{
@@ -12984,8 +13552,85 @@ var HealthModel = function (_ModelHandler10) {
 			id: 'readme',
 			submenus: []
 		}];
+		_get(HealthModel.prototype.__proto__ || Object.getPrototypeOf(HealthModel.prototype), '_create', _this10).call(_this10);
 		return _this10;
 	}
+
+	_createClass(HealthModel, [{
+		key: 'validate',
+
+
+		// Validate this.panels and return boolean
+		value: function validate() {
+			var isValid = true;
+			if (!this.panels.generalInformation.validate()) isValid = false;
+			if (!this.panels.modelCategory.validate()) isValid = false;
+			if (!this.panels.scopeGeneral.validate()) isValid = false;
+			if (!this.panels.study.validate()) isValid = false;
+			return isValid;
+		}
+	}, {
+		key: '_createPanels',
+		value: function _createPanels() {
+			var port = window.port || -1;
+			var schema = schemas.healthModel;
+
+			return {
+				generalInformation: new FormPanel("General", schema.generalInformation, this._metadata.generalInformation, port),
+				modelCategory: new FormPanel("Model category", schema.modelCategory, this._metadata.generalInformation.modelCategory, port),
+				author: new TablePanel("Author", schema.contact, this._metadata.generalInformation.author, port),
+				creator: new TablePanel("Creator", schema.contact, this._metadata.generalInformation.creator, port),
+				reference: new TablePanel("Reference", schema.reference, this._metadata.generalInformation.reference, port),
+				scopeGeneral: new FormPanel("General", schema.scope, this._metadata.scope, port),
+				hazard: new TablePanel("Hazard", schema.hazard, this._metadata.scope.hazard, port),
+				populationGroup: new TablePanel("Population group", schema.populationGroup, this._metadata.scope.populationGroup, port),
+				study: new FormPanel("Study", schema.study, this._metadata.dataBackground.study, port),
+				studySample: new TablePanel("Study sample", schema.studySample, this._metadata.dataBackground.studySample, port),
+				laboratory: new TablePanel("Laboratory", schema.laboratory, this._metadata.dataBackground.laboratory, port),
+				assay: new TablePanel("Assay", schema.assay, this._metadata.dataBackground.assay, port),
+				modelMath: new FormPanel("Model math", schema.modelMath, this._metadata.modelMath, port),
+				parameter: new TablePanel("Parameter", schema.parameter, this._metadata.modelMath.parameter, port),
+				qualityMeasures: new TablePanel("Quality measures", schema.qualityMeasures, this._metadata.modelMath.qualityMeasures, port),
+				modelEquation: new TablePanel("Model equation", schema.modelEquation, this._metadata.modelMath.modelEquation, port),
+				exposure: new TablePanel("Exposure", schema.exposure, this._metadata.modelMath.exposure, port)
+			};
+		}
+	}, {
+		key: 'metaData',
+		get: function get() {
+
+			// generalInformation
+			this._metadata.generalInformation = this.panels.generalInformation.data;
+			this._metadata.generalInformation.modelCategory = this.panels.modelCategory.data;
+			this._metadata.generalInformation.author = this.panels.author.data;
+			this._metadata.generalInformation.creator = this.panels.creator.data;
+			this._metadata.generalInformation.reference = this.panels.reference.data;
+
+			// Scope
+			this._metadata.scope = this.panels.scopeGeneral.data;
+			this._metadata.scope.hazard = this.panels.hazard.data;
+			this._metadata.scope.populationGroup = this.panels.populationGroup.data;
+
+			// Data background
+			this._metadata.dataBackground.study = this.panels.study.data;
+			this._metadata.dataBackground.studySample = this.panels.studySample.data;
+			this._metadata.dataBackground.laboratory = this.panels.laboratory.data;
+			this._metadata.dataBackground.assay = this.panels.assay.data;
+
+			// Model math
+			this._metadata.modelMath = this.panels.modelMath.data;
+			this._metadata.modelMath.parameter = this.panels.parameter.data;
+			this._metadata.modelMath.qualityMeasures = this.panels.qualityMeasures.data;
+			this._metadata.modelMath.modelEquation = this.panels.modelEquation.data;
+			this._metadata.modelMath.exposure = this.panels.exposure.data;
+
+			this._metadata.modelType = "healthModel";
+
+			this._metadata = metadataFix(this._metadata);
+
+			return this._metadata;
+		}
+	}]);
 
 	return HealthModel;
 }(ModelHandler);
@@ -12993,12 +13638,15 @@ var HealthModel = function (_ModelHandler10) {
 var RiskModel = function (_ModelHandler11) {
 	_inherits(RiskModel, _ModelHandler11);
 
-	function RiskModel(metadata, img, modelScript, visScript) {
+	function RiskModel(metadata, img, state, modelScript, visScript) {
 		_classCallCheck(this, RiskModel);
 
 		var _this11 = _possibleConstructorReturn(this, (RiskModel.__proto__ || Object.getPrototypeOf(RiskModel)).call(this, metadata, img, modelScript, visScript));
 
 		_this11._schema = schemas.riskModel;
+		if (state) {
+			_this11.panels = _this11._createPanels();
+		}
 		_this11._menu = [{
 			label: "General information",
 			submenus: [{
@@ -13089,18 +13737,101 @@ var RiskModel = function (_ModelHandler11) {
 		return _this11;
 	}
 
+	_createClass(RiskModel, [{
+		key: 'validate',
+
+
+		// Validate this.panels and return boolean
+		value: function validate() {
+			var isValid = true;
+			if (!this.panels.generalInformation.validate()) isValid = false;
+			if (!this.panels.modelCategory.validate()) isValid = false;
+			if (!this.panels.scopeGeneral.validate()) isValid = false;
+			if (!this.panels.study.validate()) isValid = false;
+			return isValid;
+		}
+	}, {
+		key: '_createPanels',
+		value: function _createPanels() {
+			var port = window.port || -1;
+			var schema = schemas.riskModel;
+
+			return {
+				generalInformation: new FormPanel("General", schema.generalInformation, this._metadata.generalInformation, port),
+				modelCategory: new FormPanel("Model category", schema.modelCategory, this._metadata.generalInformation.modelCategory, port),
+				author: new TablePanel("Author", schema.contact, this._metadata.generalInformation.author, port),
+				creator: new TablePanel("Creator", schema.contact, this._metadata.generalInformation.creator, port),
+				reference: new TablePanel("Reference", schema.reference, this._metadata.generalInformation.reference, port),
+				scopeGeneral: new FormPanel("General", schema.scope, this._metadata.scope, port),
+				product: new TablePanel("Product", schema.product, this._metadata.scope.product, port),
+				hazard: new TablePanel("Hazard", schema.hazard, this._metadata.scope.hazard, port),
+				population: new TablePanel("Population", schema.populationGroup, this._metadata.scope.populationGroup, port),
+				study: new FormPanel("Study", schema.study, this._metadata.dataBackground.study, port),
+				studySample: new TablePanel("Study sample", schema.studySample, this._metadata.dataBackground.studySample, port),
+				dietaryAssessmentMethod: new TablePanel("Dietary assessment method", schema.dietaryAssessmentMethod, this._metadata.dataBackground.dietaryAssessmentMethod, port),
+				laboratory: new TablePanel("Laboratory", schema.laboratory, this._metadata.dataBackground.laboratory, port),
+				assay: new TablePanel("Assay", schema.assay, this._metadata.dataBackground.assay, port),
+				modelMath: new FormPanel("Model math", schema.modelMath, this._metadata.modelMath, port),
+				parameter: new TablePanel("Parameter", schema.parameter, this._metadata.modelMath.parameter, port),
+				qualityMeasures: new TablePanel("Quality measures", schema.qualityMeasures, this._metadata.modelMath.qualityMeasures, port),
+				modelEquation: new TablePanel("Model equation", schema.modelEquation, this._metadata.modelMath.modelEquation, port),
+				exposure: new TablePanel("Exposure", schema.exposure, this._metadata.modelMath.exposure, port)
+			};
+		}
+	}, {
+		key: 'metaData',
+		get: function get() {
+
+			// generalInformation
+			this._metadata.generalInformation = this.panels.generalInformation.data;
+			this._metadata.generalInformation.modelCategory = this.panels.modelCategory.data;
+			this._metadata.generalInformation.author = this.panels.author.data;
+			this._metadata.generalInformation.creator = this.panels.creator.data;
+			this._metadata.generalInformation.reference = this.panels.reference.data;
+
+			// Scope
+			this._metadata.scope = this.panels.scopeGeneral.data;
+			this._metadata.scope.product = this.panels.product.data;
+			this._metadata.scope.hazard = this.panels.hazard.data;
+			this._metadata.scope.populationGroup = this.panels.population.data;
+
+			// Data background
+			this._metadata.dataBackground.study = this.panels.study.data;
+			this._metadata.dataBackground.studySample = this.panels.studySample.data;
+			this._metadata.dataBackground.dietaryAssessmentMethod = this.panels.dietaryAssessmentMethod.data;
+			this._metadata.dataBackground.laboratory = this.panels.laboratory.data;
+			this._metadata.dataBackground.assay = this.panels.assay.data;
+
+			// Model math
+			this._metadata.modelMath = this.panels.modelMath.data;
+			this._metadata.modelMath.parameter = this.panels.parameter.data;
+			this._metadata.modelMath.qualityMeasures = this.panels.qualityMeasures.data;
+			this._metadata.modelMath.modelEquation = this.panels.modelEquation.data;
+			this._metadata.modelMath.exposure = this.panels.exposure.data;
+
+			this._metadata.modelType = "riskModel";
+
+			this._metadata = metadataFix(this._metadata);
+
+			return this._metadata;
+		}
+	}]);
+
 	return RiskModel;
 }(ModelHandler);
 
 var QraModel = function (_ModelHandler12) {
 	_inherits(QraModel, _ModelHandler12);
 
-	function QraModel(metadata, img, modelScript, visScript) {
+	function QraModel(metadata, img, state, modelScript, visScript) {
 		_classCallCheck(this, QraModel);
 
 		var _this12 = _possibleConstructorReturn(this, (QraModel.__proto__ || Object.getPrototypeOf(QraModel)).call(this, metadata, img, modelScript, visScript));
 
 		_this12._schema = schemas.qraModel;
+		if (state) {
+			_this12.panels = _this12._createPanels();
+		}
 		_this12._menu = [{
 			label: "General information",
 			submenus: [{
@@ -13191,6 +13922,86 @@ var QraModel = function (_ModelHandler12) {
 		return _this12;
 	}
 
+	_createClass(QraModel, [{
+		key: 'validate',
+
+
+		// Validate this.panels and return boolean
+		value: function validate() {
+			var isValid = true;
+			if (!this.panels.generalInformation.validate()) isValid = false;
+			if (!this.panels.modelCategory.validate()) isValid = false;
+			if (!this.panels.scopeGeneral.validate()) isValid = false;
+			if (!this.panels.study.validate()) isValid = false;
+			return isValid;
+		}
+	}, {
+		key: '_createPanels',
+		value: function _createPanels() {
+			var port = window.port || -1;
+			var schema = schemas.qraModel;
+
+			return {
+				generalInformation: new FormPanel("General", schema.generalInformation, this._metadata.generalInformation, port),
+				modelCategory: new FormPanel("Model category", schema.modelCategory, this._metadata.generalInformation.modelCategory, port),
+				author: new TablePanel("Author", schema.contact, this._metadata.generalInformation.author, port),
+				creator: new TablePanel("Creator", schema.contact, this._metadata.generalInformation.creator, port),
+				reference: new TablePanel("Reference", schema.reference, this._metadata.generalInformation.reference, port),
+				scopeGeneral: new FormPanel("General", schema.scope, this._metadata.scope, port),
+				product: new TablePanel("Product", schema.product, this._metadata.scope.product, port),
+				hazard: new TablePanel("Hazard", schema.hazard, this._metadata.scope.hazard, port),
+				population: new TablePanel("Population", schema.populationGroup, this._metadata.scope.populationGroup, port),
+				study: new FormPanel("Study", schema.study, this._metadata.dataBackground.study, port),
+				studySample: new TablePanel("Study sample", schema.studySample, this._metadata.dataBackground.studySample, port),
+				dietaryAssessmentMethod: new TablePanel("Dietary assessment method", schema.dietaryAssessmentMethod, this._metadata.dataBackground.dietaryAssessmentMethod, port),
+				laboratory: new TablePanel("Laboratory", schema.laboratory, this._metadata.dataBackground.laboratory, port),
+				assay: new TablePanel("Assay", schema.assay, this._metadata.dataBackground.assay, port),
+				modelMath: new FormPanel("Model math", schema.modelMath, this._metadata.modelMath, port),
+				parameter: new TablePanel("Parameter", schema.parameter, this._metadata.modelMath.parameter, port),
+				qualityMeasures: new TablePanel("Quality measures", schema.qualityMeasures, this._metadata.modelMath.qualityMeasures, port),
+				modelEquation: new TablePanel("Model equation", schema.modelEquation, this._metadata.modelMath.modelEquation, port),
+				exposure: new TablePanel("Exposure", schema.exposure, this._metadata.modelMath.exposure, port)
+			};
+		}
+	}, {
+		key: 'metaData',
+		get: function get() {
+
+			// generalInformation
+			this._metadata.generalInformation = this.panels.generalInformation.data;
+			this._metadata.generalInformation.modelCategory = this.panels.modelCategory.data;
+			this._metadata.generalInformation.author = this.panels.author.data;
+			this._metadata.generalInformation.creator = this.panels.creator.data;
+			this._metadata.generalInformation.reference = this.panels.reference.data;
+
+			// Scope
+			this._metadata.scope = this.panels.scopeGeneral.data;
+			this._metadata.scope.product = this.panels.product.data;
+			this._metadata.scope.hazard = this.panels.hazard.data;
+			this._metadata.scope.populationGroup = this.panels.population.data;
+
+			// Data background
+			this._metadata.dataBackground.study = this.panels.study.data;
+			this._metadata.dataBackground.studySample = this.panels.studySample.data;
+			this._metadata.dataBackground.dietaryAssessmentMethod = this.panels.dietaryAssessmentMethod.data;
+			this._metadata.dataBackground.laboratory = this.panels.laboratory.data;
+			this._metadata.dataBackground.assay = this.panels.assay.data;
+
+			// Model math
+			this._metadata.modelMath = this.panels.modelMath.data;
+			this._metadata.modelMath.parameter = this.panels.parameter.data;
+			this._metadata.modelMath.qualityMeasures = this.panels.qualityMeasures.data;
+			this._metadata.modelMath.modelEquation = this.panels.modelEquation.data;
+			this._metadata.modelMath.exposure = this.panels.exposure.data;
+
+			this._metadata.modelType = "qraModel";
+
+			this._metadata = metadataFix(this._metadata);
+
+			return this._metadata;
+		}
+	}]);
+
 	return QraModel;
 }(ModelHandler);
 /** Temporary workaround for some metadata glitches. */
@@ -13266,8 +14077,6 @@ var addControlledVocabulary = function addControlledVocabulary(input, vocabulary
 				showHintOnFocus: true
 			});
 		}).catch(function (error) {
-			console.log(error);
-			console.log(window._endpoints.controlledVocabularyEndpoint + ('' + vocabulary));
 			if (port >= 0) {
 				fetch('http://localhost:' + port + '/getAllNames/' + vocabulary).then(function (response) {
 					return response.json();
@@ -14353,7 +15162,7 @@ var APPMTEditableDetails = function () {
 			var $panel = null;
 			if (modelHandler && menu.id) {
 				var panelMeta = modelHandler._panels[menu.id];
-				if (panelMeta.type) {
+				if (panelMeta && panelMeta.type) {
 					// complex
 					if (panelMeta.type == 'modelScript') {
 						$panel = O._createScriptPanel(menu, modelHandler);
@@ -14454,27 +15263,27 @@ var APPMTEditableDetails = function () {
 				if (modelMetadata.modelType === 'genericModel') {
 					modelHandler = new GenericModel(modelMetadata, imgUrl, true);
 				} else if (modelMetadata.modelType === 'dataModel') {
-					modelHandler = new DataModel(modelMetadata, imgUrl);
+					modelHandler = new DataModel(modelMetadata, imgUrl, true);
 				} else if (modelMetadata.modelType === 'predictiveModel') {
-					modelHandler = new PredictiveModel(modelMetadata, imgUrl);
+					modelHandler = new PredictiveModel(modelMetadata, imgUrl, true);
 				} else if (modelMetadata.modelType === 'otherModel') {
-					modelHandler = new OtherModel(modelMetadata, imgUrl);
+					modelHandler = new OtherModel(modelMetadata, imgUrl, true);
 				} else if (modelMetadata.modelType === 'toxicologicalModel') {
-					modelHandler = new ToxicologicalModel(modelMetadata, imgUrl);
+					modelHandler = new ToxicologicalModel(modelMetadata, imgUrl, true);
 				} else if (modelMetadata.modelType === 'doseResponseModel') {
-					modelHandler = new DoseResponseModel(modelMetadata, imgUrl);
+					modelHandler = new DoseResponseModel(modelMetadata, imgUrl, true);
 				} else if (modelMetadata.modelType === 'exposureModel') {
-					modelHandler = new ExposureModel(modelMetadata, imgUrl);
+					modelHandler = new ExposureModel(modelMetadata, imgUrl, true);
 				} else if (modelMetadata.modelType === 'processModel') {
-					modelHandler = new ProcessModel(modelMetadata, imgUrl);
+					modelHandler = new ProcessModel(modelMetadata, imgUrl, true);
 				} else if (modelMetadata.modelType === 'consumptionModel') {
-					modelHandler = new ConsumptionModel(modelMetadata, imgUrl);
+					modelHandler = new ConsumptionModel(modelMetadata, imgUrl, true);
 				} else if (modelMetadata.modelType === 'healthModel') {
-					modelHandler = new HealthModel(modelMetadata, imgUrl);
+					modelHandler = new HealthModel(modelMetadata, imgUrl, true);
 				} else if (modelMetadata.modelType === 'riskModel') {
-					modelHandler = new RiskModel(modelMetadata, imgUrl);
+					modelHandler = new RiskModel(modelMetadata, imgUrl, true);
 				} else if (modelMetadata.modelType === 'qraModel') {
-					modelHandler = new QraModel(modelMetadata, imgUrl);
+					modelHandler = new QraModel(modelMetadata, imgUrl, true);
 				} else {
 					modelHandler = new GenericModel(modelMetadata, imgUrl, true);
 				}
@@ -15039,8 +15848,6 @@ var SelectForm = function () {
 						return '<option>' + item + '</option>';
 					}).join(""));
 				}).catch(function (error) {
-					console.log(error);
-					console.log(window._endpoints.controlledVocabularyEndpoint + ('' + vocabulary));
 					if (port >= 0) {
 						fetch('http://localhost:' + port + '/getAllNames/' + vocabulary).then(function (response) {
 							return response.json();
