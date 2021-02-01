@@ -25,7 +25,7 @@ import metadata.SwaggerUtil;
 public abstract class ScriptHandler implements AutoCloseable {
 
   protected ModelPlotter plotter;
-  protected HDFHandler hdfHandler;
+  protected JsonHandler hdfHandler;
 
   /**
    * This template method runs a snippet of script code. It does not save the stdOutput or the
@@ -108,7 +108,7 @@ public abstract class ScriptHandler implements AutoCloseable {
 
     
     // HDFHandler stores all input parameters before model execution
-    hdfHandler = HDFHandler.createHandler(this, exec);
+    hdfHandler = JsonHandler.createHandler(this, exec);
     hdfHandler.saveInputParametersToHDF(fskObj);
     
     exec.setProgress(0.75, "Run models script");
@@ -368,22 +368,23 @@ public abstract class ScriptHandler implements AutoCloseable {
       File newResourcesDirectory = FileUtil.createTempDir("generatedResources");
       
       try {
-        String[] filenames = runScript(command, exec, true);
-
-        // Copy every resource from the working directory
-        for (String filename : filenames) {
-          File sourceFile = new File(workingDirectory, filename);
-          File targetFile = new File(newResourcesDirectory, filename);
-          FileUtil.copy(sourceFile, targetFile, exec);
+        if(!command.equals("c()") && !command.equals("print([])")) {
+          String[] filenames = runScript(command, exec, true);
+          
+          // Copy every resource from the working directory
+          for (String filename : filenames) {
+            File sourceFile = new File(workingDirectory, filename);
+            File targetFile = new File(newResourcesDirectory, filename);
+            FileUtil.copy(sourceFile, targetFile, exec);
+          }
         }
-
-      }catch (Exception e) {
+              }catch (Exception e) {
         e.printStackTrace();
       }
       
       // Save .h5 file (HDF5)
-      File sourceFile = new File(workingDirectory, HDFHandler.HDF_FILE_NAME);
-      File targetFile = new File(newResourcesDirectory, HDFHandler.HDF_FILE_NAME);
+      File sourceFile = new File(workingDirectory, JsonHandler.HDF_FILE_NAME);
+      File targetFile = new File(newResourcesDirectory, JsonHandler.HDF_FILE_NAME);
       FileUtil.copy(sourceFile, targetFile, exec);
       
       fskPortObject.setGeneratedResourcesDirectory(newResourcesDirectory);

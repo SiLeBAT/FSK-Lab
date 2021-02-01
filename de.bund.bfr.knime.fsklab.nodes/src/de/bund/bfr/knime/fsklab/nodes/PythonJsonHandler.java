@@ -10,7 +10,7 @@ import de.bund.bfr.metadata.swagger.Parameter;
 import de.bund.bfr.metadata.swagger.Parameter.ClassificationEnum;
 import metadata.SwaggerUtil;
 
-public class PythonJsonHandler extends HDFHandler {
+public class PythonJsonHandler extends JsonHandler {
 
   public PythonJsonHandler(ScriptHandler scriptHandler, ExecutionContext exec) {
     super(scriptHandler, exec);
@@ -36,7 +36,7 @@ public class PythonJsonHandler extends HDFHandler {
     
     // set script language
     scriptHandler.runScript(JSON_PARAMETERS_NAME + "['script_language'] = 'Python'\n", exec, false);
-    
+    scriptHandler.runScript(JSON_PARAMETERS_NAME + "['var_types'] = {}\n", exec, false);
     compileListOfParameters(fskObj, Parameter.ClassificationEnum.INPUT);
     
   }
@@ -75,8 +75,6 @@ public class PythonJsonHandler extends HDFHandler {
     script.append("targetParam = " + targetParam + "\n");
     script.append("JSON_FILE_NAME = " + HDF_FILE_NAME + "\n");
     // load JSON file into json_params
-    
-    
     File file = getResource("data/loadJsonIntoPython.py");
     script.append(FileUtils.readFileToString(file, StandardCharsets.UTF_8));
     
@@ -89,6 +87,7 @@ public class PythonJsonHandler extends HDFHandler {
       ClassificationEnum classification) {
     
     StringBuilder script = new StringBuilder();
+    
     List<Parameter> paras = SwaggerUtil.getParameter(fskObj.modelMetadata);
     for (Parameter p : paras) {
       if (p.getClassification() == classification) {
@@ -99,14 +98,14 @@ public class PythonJsonHandler extends HDFHandler {
           
           // save type of parameter
           scriptHandler.runScript(JSON_PARAMETERS_NAME + "['var_types']['" + p.getId() + "'] = type(" + p.getId() + ").__name__\n", exec, false);
-
+         
         } catch (Exception e) {
           // TODO Auto-generated catch block
           e.printStackTrace();
         }
       }
     }
-   
+    
     return script.toString();
   }
   

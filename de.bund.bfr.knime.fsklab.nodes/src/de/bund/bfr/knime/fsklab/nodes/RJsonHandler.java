@@ -10,7 +10,7 @@ import de.bund.bfr.metadata.swagger.Parameter;
 import de.bund.bfr.metadata.swagger.Parameter.ClassificationEnum;
 import metadata.SwaggerUtil;
 
-public class RJsonHandler extends HDFHandler {
+public class RJsonHandler extends JsonHandler {
 
   
   
@@ -53,7 +53,7 @@ public class RJsonHandler extends HDFHandler {
     // save type of parameters (class)
     script.append(addTypesToJson(fskObj));
     
-    script.append(JSON_PARAMETERS_NAME + ", '" + HDF_FILE_NAME + "', auto_unbox=TRUE)\n");
+    script.append("write_json(" + JSON_PARAMETERS_NAME + ", '" + HDF_FILE_NAME + "', auto_unbox=TRUE)\n");
     scriptHandler.runScript(script.toString(), exec, false);
   }
 

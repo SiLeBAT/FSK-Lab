@@ -23,7 +23,7 @@ import de.bund.bfr.metadata.swagger.Parameter;
  * language to store parameters (input & ouput) in a hdf file.
  *
  */
-public abstract class HDFHandler {
+public abstract class JsonHandler {
 
   // the hdf file where all model parameters are stored
   protected static final String HDF_FILE_NAME = "parameters.json";
@@ -32,7 +32,7 @@ public abstract class HDFHandler {
   protected ScriptHandler scriptHandler;
   protected ExecutionContext exec;
   
-  public HDFHandler(ScriptHandler scriptHandler, ExecutionContext exec) {
+  public JsonHandler(ScriptHandler scriptHandler, ExecutionContext exec) {
     this.scriptHandler = scriptHandler;
     this.exec = exec;
     
@@ -103,15 +103,14 @@ public abstract class HDFHandler {
    * @throws Exception if an error occurs running the script.
    */
 
-  public static HDFHandler createHandler(ScriptHandler scriptHandler, ExecutionContext exec)
+  public static JsonHandler createHandler(ScriptHandler scriptHandler, ExecutionContext exec)
       throws Exception {
 
-    final HDFHandler handler;
+    final JsonHandler handler;
 
     if (scriptHandler instanceof PythonScriptHandler) {
-      //handler = new PythonHDFHandler(scriptHandler, exec);
       handler = new PythonJsonHandler(scriptHandler, exec);
-    } else return new RHDFHandler(scriptHandler, exec);
+    } else return new RJsonHandler(scriptHandler, exec);
     
     return handler;
   }
