@@ -90,12 +90,6 @@ module.exports = function (grunt) {
 					'src/build/js/lib.build.js',
 					'src/build/js/app.build-babel.js'
 				],
-				dest: 'assets/js/app.js'
-			},
-			jsall : {
-				src: [
-					'assets/js/app.js'
-				],
 				dest: 'js-lib/bfr/fskapp/app_1.0.0.js'
 			},
 			css: {
