@@ -383,8 +383,8 @@ public abstract class ScriptHandler implements AutoCloseable {
       }
       
       // Save .h5 file (HDF5)
-      File sourceFile = new File(workingDirectory, JsonHandler.HDF_FILE_NAME);
-      File targetFile = new File(newResourcesDirectory, JsonHandler.HDF_FILE_NAME);
+      File sourceFile = new File(workingDirectory, JsonHandler.JSON_FILE_NAME);
+      File targetFile = new File(newResourcesDirectory, JsonHandler.JSON_FILE_NAME);
       FileUtil.copy(sourceFile, targetFile, exec);
       
       fskPortObject.setGeneratedResourcesDirectory(newResourcesDirectory);

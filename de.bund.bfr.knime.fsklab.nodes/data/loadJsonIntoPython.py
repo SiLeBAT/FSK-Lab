@@ -20,4 +20,4 @@ del script_language
 del json_params
 del sourceParam
 del targetParam
-del HDF_FILE_NAME
+del JSON_FILE_NAME

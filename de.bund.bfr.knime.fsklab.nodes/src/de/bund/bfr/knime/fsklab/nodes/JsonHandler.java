@@ -26,7 +26,7 @@ import de.bund.bfr.metadata.swagger.Parameter;
 public abstract class JsonHandler {
 
   // the hdf file where all model parameters are stored
-  protected static final String HDF_FILE_NAME = "parameters.json";
+  protected static final String JSON_FILE_NAME = "parameters.json";
   protected static final String JSON_PARAMETERS_NAME = "fsk_parameters";
 
   protected ScriptHandler scriptHandler;

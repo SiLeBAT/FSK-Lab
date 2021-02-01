@@ -53,7 +53,7 @@ public class RJsonHandler extends JsonHandler {
     // save type of parameters (class)
     script.append(addTypesToJson(fskObj));
     
-    script.append("write_json(" + JSON_PARAMETERS_NAME + ", '" + HDF_FILE_NAME + "', auto_unbox=TRUE)\n");
+    script.append("write_json(" + JSON_PARAMETERS_NAME + ", '" + JSON_FILE_NAME + "', auto_unbox=TRUE)\n");
     scriptHandler.runScript(script.toString(), exec, false);
   }
 
@@ -107,7 +107,7 @@ public class RJsonHandler extends JsonHandler {
     
     //TODO: figure out if libraries are loaded at this point
     StringBuilder script = new StringBuilder();
-    script.append("json_params <- read_json( " + HDF_FILE_NAME + ", simplifyVector = TRUE)\n");
+    script.append("json_params <- read_json( " + JSON_FILE_NAME + ", simplifyVector = TRUE)\n");
     script.append("sourceParam <- " + sourceParam + "\n");
     script.append("targetParam <- " + targetParam + "\n");
         

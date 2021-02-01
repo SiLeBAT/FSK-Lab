@@ -48,7 +48,7 @@ public class PythonJsonHandler extends JsonHandler {
 
     compileListOfParameters(fskObj, Parameter.ClassificationEnum.OUTPUT);
     StringBuilder script = new StringBuilder();
-    script.append("with open('" + HDF_FILE_NAME +"', 'w') as outfile:\n");
+    script.append("with open('" + JSON_FILE_NAME +"', 'w') as outfile:\n");
     script.append("\tjson.dump(" + JSON_PARAMETERS_NAME + ", outfile)\n");
     scriptHandler.runScript(script.toString(), exec, false);
   }
@@ -73,7 +73,7 @@ public class PythonJsonHandler extends JsonHandler {
     //load source and target into workspace as strings
     script.append("sourceParam = " + sourceParam + "\n");
     script.append("targetParam = " + targetParam + "\n");
-    script.append("JSON_FILE_NAME = " + HDF_FILE_NAME + "\n");
+    script.append("JSON_FILE_NAME = " + JSON_FILE_NAME + "\n");
     // load JSON file into json_params
     File file = getResource("data/loadJsonIntoPython.py");
     script.append(FileUtils.readFileToString(file, StandardCharsets.UTF_8));
