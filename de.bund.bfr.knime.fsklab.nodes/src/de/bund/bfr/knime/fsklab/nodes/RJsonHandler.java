@@ -20,7 +20,7 @@ public class RJsonHandler extends JsonHandler {
   }
 
   @Override
-  protected void importHDFLibraries() throws Exception {
+  protected void importLibraries() throws Exception {
     try {
       scriptHandler.runScript("library(jsonlite)", exec, true);
     } catch (Exception e) {
@@ -30,7 +30,7 @@ public class RJsonHandler extends JsonHandler {
   }
 
   @Override
-  public void saveInputParametersToHDF(FskPortObject fskObj) throws Exception {
+  public void saveInputParameters(FskPortObject fskObj) throws Exception {
     StringBuilder script = new StringBuilder();
     
     script.append(JSON_PARAMETERS_NAME + " <- list()\n");
@@ -45,7 +45,7 @@ public class RJsonHandler extends JsonHandler {
   }
 
   @Override
-  public void saveOutputParametersToHDF(FskPortObject fskObj) throws Exception {
+  public void saveOutputParameters(FskPortObject fskObj) throws Exception {
     StringBuilder script = new StringBuilder();
     
     script.append(compileListOfParameters(fskObj, Parameter.ClassificationEnum.OUTPUT));
@@ -88,22 +88,14 @@ public class RJsonHandler extends JsonHandler {
     return script.toString();
 
   }
-  @Override
-  public void loadInputParametersFromHDF(FskPortObject fskObj) throws Exception {
-    
- // TODO THIS IS DUMMY, REMOVE OR RENAME
-    
-    loadJsonParameterIntoWorkspace("my_source","my_target");
-    
-
-  }
   /**
    * 
    * @param sourceParam : parameter of first script 
    * @param targetParam : parameter of second script to be overwritten
    * @throws Exception
    */
-  public void loadJsonParameterIntoWorkspace(String sourceParam, String targetParam) throws Exception {
+  @Override
+  public void loadParametersIntoWorkspace(String sourceParam, String targetParam) throws Exception {
     
     //TODO: figure out if libraries are loaded at this point
     StringBuilder script = new StringBuilder();

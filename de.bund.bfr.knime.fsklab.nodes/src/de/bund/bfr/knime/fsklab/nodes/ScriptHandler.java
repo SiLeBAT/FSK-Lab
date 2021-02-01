@@ -109,7 +109,7 @@ public abstract class ScriptHandler implements AutoCloseable {
     
     // HDFHandler stores all input parameters before model execution
     hdfHandler = JsonHandler.createHandler(this, exec);
-    hdfHandler.saveInputParametersToHDF(fskObj);
+    hdfHandler.saveInputParameters(fskObj);
     
     exec.setProgress(0.75, "Run models script");
     runScript(fskObj.getModel(), exec, false);
@@ -145,7 +145,7 @@ public abstract class ScriptHandler implements AutoCloseable {
     saveWorkspace(fskObj, exec);
     
     // HDFHandler stores all ouput parameters in HDF file
-    hdfHandler.saveOutputParametersToHDF(fskObj);
+    hdfHandler.saveOutputParameters(fskObj);
     
     // Save generated resources
     if (workingDirectory.isPresent()) {

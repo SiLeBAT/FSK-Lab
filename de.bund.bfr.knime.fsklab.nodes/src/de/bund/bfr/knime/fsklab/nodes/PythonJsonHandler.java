@@ -20,7 +20,7 @@ public class PythonJsonHandler extends JsonHandler {
   
   // 
   @Override
-  protected void importHDFLibraries() throws Exception {
+  protected void importLibraries() throws Exception {
     // load h5py library
     scriptHandler.runScript("import pandas", exec, false);
     scriptHandler.runScript("import copy", exec, false);
@@ -29,7 +29,7 @@ public class PythonJsonHandler extends JsonHandler {
   }
 
   @Override
-  public void saveInputParametersToHDF(FskPortObject fskObj) throws Exception {
+  public void saveInputParameters(FskPortObject fskObj) throws Exception {
     // create script to store variables in hdf5 file
 
     scriptHandler.runScript(JSON_PARAMETERS_NAME + " = {}\n", exec, false);
@@ -42,7 +42,7 @@ public class PythonJsonHandler extends JsonHandler {
   }
 
   @Override
-  public void saveOutputParametersToHDF(FskPortObject fskObj) throws Exception {
+  public void saveOutputParameters(FskPortObject fskObj) throws Exception {
     // create script to store variables in hdf5 file
     
 
@@ -53,12 +53,7 @@ public class PythonJsonHandler extends JsonHandler {
     scriptHandler.runScript(script.toString(), exec, false);
   }
 
-  @Override
-  public void loadInputParametersFromHDF(FskPortObject fskObj) throws Exception {
-    // TODO THIS IS DUMMY, REMOVE OR RENAME
-    loadJsonParameterIntoWorkspace("my_source","my_target");
 
-  }
   
   /**
    * 
@@ -66,7 +61,8 @@ public class PythonJsonHandler extends JsonHandler {
    * @param targetParam : parameter of second script to be overwritten
    * @throws Exception
    */
-  public void loadJsonParameterIntoWorkspace(String sourceParam, String targetParam) throws Exception {
+  @Override
+  public void loadParametersIntoWorkspace(String sourceParam, String targetParam) throws Exception {
     
     StringBuilder script = new StringBuilder();
     

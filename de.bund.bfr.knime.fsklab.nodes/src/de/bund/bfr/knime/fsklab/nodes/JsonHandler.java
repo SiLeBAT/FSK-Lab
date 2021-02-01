@@ -32,12 +32,12 @@ public abstract class JsonHandler {
   protected ScriptHandler scriptHandler;
   protected ExecutionContext exec;
   
-  public JsonHandler(ScriptHandler scriptHandler, ExecutionContext exec) {
+  protected JsonHandler(ScriptHandler scriptHandler, ExecutionContext exec) {
     this.scriptHandler = scriptHandler;
     this.exec = exec;
     
     try {
-      importHDFLibraries();
+      importLibraries();
     } catch(Exception e) {
       e.printStackTrace();
     }
@@ -49,7 +49,7 @@ public abstract class JsonHandler {
    * 
    * @throws Exception if an error occurs running the script.
    */
-  protected abstract void importHDFLibraries() throws Exception;
+  protected abstract void importLibraries() throws Exception;
   
   /**
    * Method to save input parameters in the hdf files. This needs
@@ -59,7 +59,7 @@ public abstract class JsonHandler {
    * @param FSKPortObject fsk object containing the parameter names
    * @throws Exception if an error occurs running the script.
    */
-  public abstract void saveInputParametersToHDF(FskPortObject fskObj)
+  public abstract void saveInputParameters(FskPortObject fskObj)
       throws Exception;
   /**
    * Method to save output parameters in the hdf files. This needs
@@ -68,7 +68,7 @@ public abstract class JsonHandler {
    * @param FSKPortObject fsk object containing the parameter names
    * @throws Exception if an error occurs running the script.
    */
-  public abstract void saveOutputParametersToHDF(FskPortObject fskObj)
+  public abstract void saveOutputParameters(FskPortObject fskObj)
       throws Exception;
 
   /**
@@ -80,7 +80,7 @@ public abstract class JsonHandler {
    * @param FSKPortObject fsk object containing the parameter names
    * @throws Exception if an error occurs running the script.
    */
-  public abstract void loadInputParametersFromHDF(FskPortObject fskObj)
+  public abstract void loadParametersIntoWorkspace(String sourceParam, String targetParam)
       throws Exception;
   
   
