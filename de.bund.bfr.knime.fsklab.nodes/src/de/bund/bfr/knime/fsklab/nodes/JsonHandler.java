@@ -23,20 +23,21 @@ import de.bund.bfr.metadata.swagger.Parameter;
  * language to store parameters (input & ouput) in a hdf file.
  *
  */
-public abstract class HDFHandler {
+public abstract class JsonHandler {
 
   // the hdf file where all model parameters are stored
-  protected static final String HDF_FILE_NAME = "parameters.h5";  
+  protected static final String JSON_FILE_NAME = "parameters.json";
+  protected static final String JSON_PARAMETERS_NAME = "fsk_parameters";
 
   protected ScriptHandler scriptHandler;
   protected ExecutionContext exec;
   
-  public HDFHandler(ScriptHandler scriptHandler, ExecutionContext exec) {
+  protected JsonHandler(ScriptHandler scriptHandler, ExecutionContext exec) {
     this.scriptHandler = scriptHandler;
     this.exec = exec;
     
     try {
-      importHDFLibraries();
+      importLibraries();
     } catch(Exception e) {
       e.printStackTrace();
     }
@@ -48,7 +49,7 @@ public abstract class HDFHandler {
    * 
    * @throws Exception if an error occurs running the script.
    */
-  protected abstract void importHDFLibraries() throws Exception;
+  protected abstract void importLibraries() throws Exception;
   
   /**
    * Method to save input parameters in the hdf files. This needs
@@ -58,7 +59,7 @@ public abstract class HDFHandler {
    * @param FSKPortObject fsk object containing the parameter names
    * @throws Exception if an error occurs running the script.
    */
-  public abstract void saveInputParametersToHDF(FskPortObject fskObj)
+  public abstract void saveInputParameters(FskPortObject fskObj)
       throws Exception;
   /**
    * Method to save output parameters in the hdf files. This needs
@@ -67,7 +68,7 @@ public abstract class HDFHandler {
    * @param FSKPortObject fsk object containing the parameter names
    * @throws Exception if an error occurs running the script.
    */
-  public abstract void saveOutputParametersToHDF(FskPortObject fskObj)
+  public abstract void saveOutputParameters(FskPortObject fskObj)
       throws Exception;
 
   /**
@@ -79,7 +80,7 @@ public abstract class HDFHandler {
    * @param FSKPortObject fsk object containing the parameter names
    * @throws Exception if an error occurs running the script.
    */
-  public abstract void loadInputParametersFromHDF(FskPortObject fskObj)
+  public abstract void loadParametersIntoWorkspace(String sourceParam, String targetParam)
       throws Exception;
   
   
@@ -102,14 +103,14 @@ public abstract class HDFHandler {
    * @throws Exception if an error occurs running the script.
    */
 
-  public static HDFHandler createHandler(ScriptHandler scriptHandler, ExecutionContext exec)
+  public static JsonHandler createHandler(ScriptHandler scriptHandler, ExecutionContext exec)
       throws Exception {
 
-    final HDFHandler handler;
+    final JsonHandler handler;
 
     if (scriptHandler instanceof PythonScriptHandler) {
-      handler = new PythonHDFHandler(scriptHandler, exec);
-    } else return new RHDFHandler(scriptHandler, exec);
+      handler = new PythonJsonHandler(scriptHandler, exec);
+    } else return new RJsonHandler(scriptHandler, exec);
     
     return handler;
   }
