@@ -1,0 +1,319 @@
+
+$bfr-blue 					: #034EA2; // brand blue
+$bfr-teal 					: #34AC9F; // primary
+$bfr-yellow					: #F1C753; // brand yellow, warning
+$bfr-red					: #dc3545; // danger
+$bfr-green					: #79C941; // success
+$bfr-black					: #000000; // text
+$bfr-cyan 					: #D1EDF4; // hover, focus
+$bfr-negative 				: #FFFFFF; // hover, focus
+
+$bfr-dark-gray				: #393939; // text
+$bfr-stone-gray 			: #ACB0B6; // placeholders, borders, secondary
+$bfr-light-gray 			: #F7F7FB; // td bg
+$bfr-iron-gray 				: #E4E4E5; // lines
+$bfr-dove-gray 				: #666666; // form fields, icons
+
+$bfr-primary				: $bfr-teal;
+$bfr-secondary				: $bfr-stone-gray;
+$bfr-info 					: $bfr-blue;//#8CBEDA;
+$bfr-hover 					: $bfr-cyan;
+$bfr-hover-border 			: $bfr-cyan;
+$bfr-hover-color			: $bfr-dark-gray;
+$bfr-focus 					: rgba(#11A0CC, 0.3);
+$bfr-active					: $bfr-blue;
+$bfr-active-border			: $bfr-blue;
+$bfr-active-color			: #FFFFFF;
+$bfr-active-hover			: darken($bfr-active, 10%);
+$bfr-disabled 				: $bfr-light-gray;
+$bfr-disabled-color 		: #CCCCCC;
+$bfr-disabled-opacity 		: .5;
+
+$bfr-link-secondary 		: $bfr-dove-gray;
+
+$bfr-text-color 			: $bfr-dark-gray;
+$bfr-text-muted-color 		: $bfr-dove-gray;
+$bfr-placeholder-color 		: $bfr-stone-gray;
+
+$bfr-border-input-btn		: $bfr-stone-gray; // border input, btn secondary
+$bfr-btn-secondary-color	: $bfr-dove-gray; // btn secondary
+$bfr-input-secondary-color	: $bfr-dove-gray; // range min/max color
+$bfr-input-secondary		: $bfr-iron-gray; // range track
+$bfr-input-addon 			: rgba($bfr-iron-gray,0.4);
+$bfr-input-addon-color		: $bfr-text-color;
+$bfr-function-link			: $bfr-dove-gray;
+$bfr-line-color				: rgba(0, 0, 0, .1);//$bfr-iron-gray;
+$bfr-icon-primary-color		: $bfr-teal;
+$bfr-icon-secondary-color	: $bfr-dove-gray;
+
+$bfr-padding-x 				: 1.25rem;
+$bfr-padding-y 				: 1rem;
+$bfr-padding-x-sm 			: 1rem;
+$bfr-padding-y-sm 			: 0.75rem;
+
+$black 						: $bfr-black;
+$blue 						: $bfr-blue;
+$cyan 						: $bfr-cyan;
+$green 						: $bfr-green;
+$red 						: $bfr-red;
+$yellow 					: $bfr-yellow;
+$light 						: $bfr-negative ;
+$info 						: $bfr-info;
+$success 					: $bfr-green;
+$gray-600 					: $bfr-disabled-color;
+
+$theme-colors: (
+	'primary' 				: $bfr-primary,
+	'secondary' 			: $bfr-secondary,
+	'bfr-hover'				: $bfr-hover,
+	'bfr'					: $bfr-blue
+);
+
+$body-color 				: $bfr-text-color;
+
+
+$link-color					: $bfr-primary;
+$link-decoration			: none;
+$link-hover-color			: $link-color;
+$link-hover-decoration		: underline;
+
+$grid-gutter-width			: 1.25rem;	
+$grid-breakpoints			: (
+	xxxs	: 0,
+	xxs		: 460px,
+	xs		: 576px,
+	sm		: 768px,
+	md		: 1024px,
+	lg		: 1280px,
+	xl		: 1600px,
+	xxl		: 1920px
+);
+
+$enable-responsive-font-sizes	: true;
+$enable-validation-icons		: false;
+
+$spacer 					: 1rem;
+$spacers					: (
+	0		: 0,
+	1		: ($spacer * 0.5),
+	2		: ($spacer * 1),
+	3		: ($spacer * 2),
+	4		: ($spacer * 4),
+	5		: ($spacer * 6),
+	6		: ($spacer * 8)
+);
+
+
+
+// typography
+$font-family-sans-serif		: 'Arial', sans-serif;
+$line-height-base 			: 1.375;
+
+$font-size-base				: 1rem;
+$font-size-sm 				: .875rem;
+
+$line-height-sm				: 1.285714285714286;
+
+$small-font-size			: 87.5%;
+
+$h1-font-size				: 26px; // 30
+$h2-font-size				: 20px; // 24
+$h3-font-size				: 16px; // 20
+
+$headings-color				: $bfr-black;
+$headings-font-weight		: bold;
+$headings-line-height		: 1.25;
+
+$text-muted					: $bfr-text-muted-color;
+
+$mark-padding				: 0; 
+$mark-bg					: $bfr-yellow;
+
+
+
+// borders
+$border-color 				: $bfr-iron-gray;	
+$border-radius				: 4px;
+$border-radius-lg			: 6px;
+$border-radius-sm			: 3px;
+
+
+
+// input btn
+$input-btn-padding-y 		: .5rem;
+$input-btn-padding-x 		: .625rem;
+$input-btn-font-size 		: 1rem;
+$input-btn-line-height		: 1.375;
+$input-btn-border-width		: 1px;
+
+$input-btn-padding-y-sm		: .3125rem;
+$input-btn-padding-x-sm		: .625rem;
+$input-btn-font-size-sm		: $font-size-sm;
+$input-btn-line-height-sm	: $line-height-sm;
+
+$input-btn-focus-width 		: 3px;
+$input-btn-focus-color		: $bfr-focus;
+$input-btn-focus-box-shadow	: 0 0 0 $input-btn-focus-width $input-btn-focus-color;
+
+
+
+// buttons
+$btn-line-height			: 1.375;
+$btn-font-weight			: bold;
+$btn-disabled-opacity		: $bfr-disabled-opacity;
+$btn-focus-box-shadow		: $input-btn-focus-box-shadow;
+
+$btn-padding-x 				: 1.25rem;
+$btn-padding-x-sm			: 1rem;
+
+$btn-focus-width			: 0px;
+$btn-border-radius			: 4px;
+$btn-border-radius-lg		: 4px;
+$btn-border-radius-sm		: 3px;
+
+// inputs
+$label-margin-bottom		: 0.25rem;
+
+$input-bg 					: transparent;
+$input-disabled-bg			: $bfr-disabled;
+
+$input-border-radius		: 5px;
+$input-border-radius-lg		: 6px;
+$input-border-radius-sm		: 4px;
+$input-color				: $bfr-text-color;
+$input-border-color			: $bfr-border-input-btn;
+
+$input-focus-border-color 	: $bfr-border-input-btn;
+$input-placeholder-color	: $bfr-border-input-btn;
+
+$input-group-addon-color		: $bfr-input-addon-color;
+$input-group-addon-bg			: $bfr-input-addon ;
+$input-group-addon-border-color	: transparent; //$input-border-color;
+
+$custom-control-indicator-size				: 1.125rem;
+$custom-control-indicator-bg-size			: 100% 100%;
+$custom-control-indicator-checked-bg 		: $bfr-active;
+$custom-control-indicator-checked-color 	: $bfr-active-color;
+
+$custom-checkbox-indicator-border-radius	: 2px;
+$custom-checkbox-indicator-icon-checked		: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='#{$custom-control-indicator-checked-color}' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-check'><polyline points='20 6 9 17 4 12'></polyline></svg>");
+
+$custom-select-bg-size			: 1rem 1rem;
+$custom-select-disabled-bg 		: $input-disabled-bg;	
+$custom-select-disabled-color	: $bfr-text-color;
+$custom-select-indicator-color	: $bfr-icon-primary-color;
+$custom-select-indicator		: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='#{$custom-select-indicator-color}' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-chevron-down'><polyline points='6 9 12 15 18 9'></polyline></svg>");
+
+$custom-range-thumb-width					: 1.125rem;
+$custom-range-thumb-height					: 1.125rem;
+$custom-range-thumb-bg						: $bfr-active;
+$custom-range-thumb-box-shadow				: $input-btn-focus-box-shadow;
+$custom-range-thumb-focus-box-shadow		: $input-btn-focus-box-shadow;
+$custom-range-thumb-focus-box-shadow-width	: $input-btn-focus-width;
+$custom-range-thumb-active-bg				: $bfr-active;
+$custom-range-thumb-disabled-bg				: $bfr-disabled;
+
+$custom-range-track-height					: .25rem;
+$custom-range-track-cursor					: pointer;
+$custom-range-track-bg						: $bfr-iron-gray;
+$custom-range-track-border-radius			: 1rem;
+$custom-range-track-box-shadow				: 0;
+
+
+
+// select 2
+$select2-gap				: 2px;
+$select2-gap-sm				: 1px;
+
+
+
+// tables	
+$table-head-bg 				: $bfr-light-gray;
+$table-head-color			: $bfr-blue;
+$table-th-font-weight		: bold;
+$table-cell-padding   		: 1.25rem $bfr-padding-x;
+$table-cell-padding-sm		: 0.75rem $bfr-padding-x-sm;
+$table-accent-bg			: $bfr-light-gray;
+$table-border-width 		: 1px;
+$table-hover-bg 			: $bfr-hover;
+$table-striped-order 		: even;
+	
+
+	
+// cards	
+$card-spacer-y				: $bfr-padding-y;
+$card-spacer-x				: $bfr-padding-x;
+$card-cap-bg 				: $bfr-light-gray;
+$card-border-width			: 0;
+$card-border-radius 		: 6px;
+
+
+
+// modals
+$modal-inner-padding		: $bfr-padding-y $bfr-padding-x;
+$modal-header-padding		: 1.75rem $bfr-padding-x;
+$modal-content-border-width	: 0;
+$modal-content-border-radius: 6px;
+
+$modal-backdrop-bg			: $black;
+$modal-backdrop-opacity		: .7;
+
+$modal-fade-transform		: scale(0.9);
+$modal-transition			: transform .5s ease-out;
+
+$modal-xl					: 1140px;
+$modal-lg					: 90%;
+$modal-md					: 90%;
+$modal-sm					: 90%;
+
+
+
+// dropdown
+$dropdown-padding-y				: 0.25rem;
+$dropdown-border-width			: 0;
+$dropdown-box-shadow			: 0 0 10px rgba(0,0,0,0.4) !important;
+
+$dropdown-link-color			: $bfr-function-link;
+$dropdown-link-hover-color		: $bfr-hover-color;
+$dropdown-link-hover-bg			: $bfr-hover;
+
+$dropdown-link-active-color 	: $bfr-active-color;
+$dropdown-link-active-bg		: $bfr-active;
+$dropdown-link-disabled-color	: $bfr-disabled;
+
+$dropdown-item-padding-y		: .4375rem;
+$dropdown-item-padding-x		: 1rem;
+
+
+
+// navbar
+$nav-link-padding-y			: .75rem;
+$nav-link-padding-x			: 1rem;
+$navbar-nav-link-padding-x	: 1rem;
+
+$navbar-padding-y			: 0;
+$navbar-padding-x			: 0;
+
+$navbar-brand-height		: 5rem;
+$navbar-brand-font-size		: 2.5rem;
+$navbar-light-brand-color	: $bfr-blue;
+
+$navbar-toggler-padding-y	: 0;
+$navbar-toggler-padding-x	: 0;
+
+
+
+// tooltips
+$tooltip-font-size			: 12px;
+$tooltip-bg					: $bfr-dark-gray;
+$tooltip-border-radius		: $border-radius-sm;
+
+
+
+// alerts
+$alert-border-width			: 0;
+
+
+// badges
+$badge-font-weight			: normal; 
+$badge-font-size			: 11px;

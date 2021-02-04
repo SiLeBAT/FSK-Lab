@@ -1,0 +1,61 @@
+.modal-details {
+	.modal-content {
+		@include media-breakpoint-up( xs ) {
+			height: 90vh;
+			max-height: 900px;
+			overflow: hidden;
+		}
+	}
+	.modal-table {
+		flex: 1 0 0;
+	}
+	.table-heading {
+		position: sticky;
+		left: 0;
+	}
+	.tab-pane {
+		overflow: auto;
+		-webkit-overflow-scrolling: touch;
+	}
+	.panel-plot {
+		padding: 1.5rem $bfr-padding-x;
+		@include media-breakpoint-down( xs ) {
+			padding: 1rem $bfr-padding-x-sm;
+		}
+		.figure {
+			width: 100%;
+			img,
+			svg {
+				max-width: 100%;
+			}
+		}
+	}
+}
+
+pre {
+	tab-size: 4;
+	counter-reset: line;
+	padding: 0;
+	color: rgb(255, 255, 255);
+	background-color: rgb(255, 255, 255);
+	font-size: 16px;
+	line-height: 16px;
+}
+pre {
+	background: #ffffff; 
+	color: #303030;
+	padding: 10px 16px;
+  }
+  pre span {
+	display: block;
+	line-height: 1.5rem;
+  }
+  pre span:before {
+	counter-increment: line;
+	content: counter(line);
+	display: inline-block;
+	border-right: 1px solid #ddd;
+	padding: 0 .5em;
+	margin-right: .5em;
+	color: #888
+  }
