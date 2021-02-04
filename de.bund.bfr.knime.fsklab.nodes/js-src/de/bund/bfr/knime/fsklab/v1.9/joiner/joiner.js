@@ -106,24 +106,25 @@ joiner = function () {
     }
   }
   let selectionChanged = function (modelMetaData) {
+	console.log(modelMetaData);
     cleanUp();
-    let _modelColectionSuffixed =  addSuffixToParameters(JSON.parse(JSON.stringify(modelMetaData.changeSet.added[0])));
+    let _modelColectionSuffixed =  addSuffixToParameters(JSON.parse(JSON.stringify(modelMetaData.changeSet.added[0]["selecteModels"])));
     poolSize =_modelColectionSuffixed.length;
     let keys = ['firstModel','secondModel','thirdModel','fourthModel']; 
     _graph.clear();
     $.each(_modelColectionSuffixed,function(index,selectedModel){
-      _modelsParamsOriginalNames[selectedModel.generalInformation.name] = buildOldNewParamName(_modelColectionSuffixed[index].modelMath.parameter, modelMetaData.changeSet.added[0][index].modelMath.parameter);
-      _modelColectionWithoutSuffixedmap[selectedModel.generalInformation.name] = modelMetaData.changeSet.added[0][index].modelMath.parameter;
+      _modelsParamsOriginalNames[selectedModel.generalInformation.name] = buildOldNewParamName(_modelColectionSuffixed[index].modelMath.parameter, modelMetaData.changeSet.added[0]["selecteModels"][index].modelMath.parameter);
+      _modelColectionWithoutSuffixedmap[selectedModel.generalInformation.name] = modelMetaData.changeSet.added[0]["selecteModels"][index].modelMath.parameter;
       delete _modelColectionSuffixed[index]['modelscript'];
       delete _modelColectionSuffixed[index]['visualization'];
       delete _modelColectionSuffixed[index]['Location'];
       delete _modelColectionSuffixed[index]['simulation'];
       editModelsPool(keys[index], _modelColectionSuffixed[index].modelMath.parameter, selectedModel.generalInformation.name, _modelColectionSuffixed[index], selectedModel.modelType 
-                    ,JSON.stringify(modelMetaData.changeSet.added[0][index]['modelscript'])
-                    ,JSON.stringify(modelMetaData.changeSet.added[0][index]['visualization'])
-                    ,JSON.stringify(modelMetaData.changeSet.added[0][index]['Location'])
-                    ,modelMetaData.changeSet.added[0][index]['simulation']
-                    ,modelMetaData.changeSet.added[1]?modelMetaData.changeSet.added[1][index]:"");
+                    ,JSON.stringify(modelMetaData.changeSet.added[0]["selecteModels"][index]['modelscript'])
+                    ,JSON.stringify(modelMetaData.changeSet.added[0]["selecteModels"][index]['visualization'])
+                    ,JSON.stringify(modelMetaData.changeSet.added[0]["selecteModels"][index]['Location'])
+                    ,modelMetaData.changeSet.added[0]["selecteModels"][index]['simulation']
+                    ,modelMetaData.changeSet.added[0]['downloadURs']?modelMetaData.changeSet.added[0]['downloadURs'][index]:"");
 
     });
     

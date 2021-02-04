@@ -29,7 +29,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 	/** Path to R v.3 */
 	static final String R3_PATH_CFG = "r3.path";
 	static final String PYTHON2_PATH_CFG = "python2Path";
-
+	static final String CV_URL_CFG = "controlledvocabulary.path";
 	private static RPreferenceProvider cachedRProvider = null;
 
 	@Override
@@ -46,6 +46,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		IPreferenceStore store = Plugin.getDefault().getPreferenceStore();
 		store.setDefault(R3_PATH_CFG, rHome);
 		store.setDefault(PYTHON2_PATH_CFG, "");
+		store.setDefault(CV_URL_CFG, "https://knime.bfr.berlin/vocabularies-app/");
 	}
 
 	/** @return provider to the path to the R3 executable. */
@@ -56,6 +57,10 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		}
 
 		return cachedRProvider;
+	}
+
+	public static final String getControlledVocabularyURL() {
+		return Plugin.getDefault().getPreferenceStore().getString(CV_URL_CFG);
 	}
 	
 	/**

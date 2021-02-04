@@ -41,6 +41,15 @@ final class FSKEditorJSViewRepresentation extends JSONViewContent {
    * </p>
    */
   private int servicePort;
+  private String controlledVocabularyURL;
+  
+  public String getControlledVocabularyURL() {
+    return controlledVocabularyURL;
+  }
+
+  public void setControlledVocabularyURL(String controlledVocabularyURL) {
+    this.controlledVocabularyURL = controlledVocabularyURL;
+  }
 
   public FSKEditorJSViewRepresentation() {
     servicePort = 0;
