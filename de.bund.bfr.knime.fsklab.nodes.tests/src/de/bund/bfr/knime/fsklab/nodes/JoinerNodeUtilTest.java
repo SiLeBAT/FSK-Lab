@@ -4,12 +4,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
+
 import org.junit.Test;
+
 import de.bund.bfr.knime.fsklab.v1_9.FskSimulation;
 import de.bund.bfr.knime.fsklab.v1_9.joiner.JoinerNodeModel;
 import de.bund.bfr.knime.fsklab.v1_9.joiner.JoinerNodeUtil;
@@ -77,8 +79,8 @@ public class JoinerNodeUtilTest {
     List<Parameter> firstModelParams = Collections.singletonList(new Parameter().id("log10_D"));
     List<Parameter> secondModelParams = Collections.singletonList(new Parameter().id("log10_D"));
 
-    JoinerNodeUtil.addIdentifierToParameters(firstModelParams,JoinerNodeModel.SUFFIX_FIRST);
-    JoinerNodeUtil.addIdentifierToParameters(secondModelParams,JoinerNodeModel.SUFFIX_SECOND);
+    JoinerNodeUtil.addIdentifierToParameters(firstModelParams,JoinerNodeModel.SUFFIX_FIRST, 0);
+    JoinerNodeUtil.addIdentifierToParameters(secondModelParams,JoinerNodeModel.SUFFIX_SECOND, 0);
     
     assertFalse(firstModelParams.isEmpty());
     assertFalse(secondModelParams.isEmpty());
@@ -93,8 +95,8 @@ public class JoinerNodeUtilTest {
     List<Parameter> secondModelParams =
         Arrays.asList(new Parameter().id("log10_D"), new Parameter().id("Temp"));
 
-    JoinerNodeUtil.addIdentifierToParameters(firstModelParams,JoinerNodeModel.SUFFIX_FIRST);
-    JoinerNodeUtil.addIdentifierToParameters(secondModelParams,JoinerNodeModel.SUFFIX_SECOND);
+    JoinerNodeUtil.addIdentifierToParameters(firstModelParams,JoinerNodeModel.SUFFIX_FIRST, 0);
+    JoinerNodeUtil.addIdentifierToParameters(secondModelParams,JoinerNodeModel.SUFFIX_SECOND, 0);
     
     assertEquals(firstModelParams.get(0).getId(), "log10_D" + JoinerNodeModel.SUFFIX_FIRST);
     assertEquals(firstModelParams.get(1).getId(), "Temp" + JoinerNodeModel.SUFFIX_FIRST);
