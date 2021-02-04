@@ -614,7 +614,7 @@ public final class JoinerNodeModel
         fourthInputPort);
     unModifiedParamsNames =
         getParameterMap(firstInputPort, secondInputPort, thirdInputPort, fourthInputPort, fskID_to_fskObject);
-    JoinerNodeUtil.addIdentifierToParametersForCombinedObject(outObj, "", unModifiedParamsNames,
+    JoinerNodeUtil.addIdentifierToParametersForCombinedObject(outObj, "",0, unModifiedParamsNames,
         modelsParamsOriginalNames);
     synchronized (getLock()) {
 
@@ -705,7 +705,7 @@ public final class JoinerNodeModel
         unModifiedParamsNames =
             getParameterMap(jFirstInputPort, jSecondInputPort, jThirdInputPort, jFourthInputPort, fskID_to_fskObject);
 
-        JoinerNodeUtil.addIdentifierToParametersForCombinedObject(outObj, "", unModifiedParamsNames,
+        JoinerNodeUtil.addIdentifierToParametersForCombinedObject(outObj, "",0, unModifiedParamsNames,
             modelsParamsOriginalNames);
         mergeParameterForJoinedObject(outObj);
 
@@ -832,18 +832,18 @@ public final class JoinerNodeModel
       ++suffixIndex;
       if(first instanceof CombinedFskPortObject && fskID_to_fskObject.containsKey(SwaggerUtil.getModelName(first.modelMetadata))) {
         int suffixspacial = suffixIndex - 1;
-        resetParameterIdToOriginal(SwaggerUtil.getParameter(first.modelMetadata), suffixspacial);
+        resetParameterIdToOriginal(SwaggerUtil.getParameter(first.modelMetadata), suffixspacial, false);
       }
       else
         resetParameterId(first, suffixIndex);
       
       if(second instanceof CombinedFskPortObject && fskID_to_fskObject.containsKey(SwaggerUtil.getModelName(second.modelMetadata)))
-        resetParameterIdToOriginal(SwaggerUtil.getParameter(second.modelMetadata), --suffixIndex);
+        resetParameterIdToOriginal(SwaggerUtil.getParameter(second.modelMetadata), --suffixIndex, false);
       else
         resetParameterId(second, suffixIndex);
       
     } else {
-      resetParameterIdToOriginal(SwaggerUtil.getParameter(outObj1.modelMetadata), suffixIndex);
+      resetParameterIdToOriginal(SwaggerUtil.getParameter(outObj1.modelMetadata), suffixIndex, false);
     }
   }
 
@@ -855,18 +855,41 @@ public final class JoinerNodeModel
       if(fskID_to_fskObject.containsKey(modelName) && suffixIndex > 1 ) {
         resetParameterIdToOriginal(SwaggerUtil.getParameter(
             fskID_to_fskObject.get(modelName).modelMetadata),
-            --suffixIndex);
+            --suffixIndex, false);
       }else {
-        resetParameterIdForObjectsFromJSON(((CombinedFskPortObject) outObj1).getFirstFskPortObject(),
-            suffixIndex);
-        resetParameterIdForObjectsFromJSON(((CombinedFskPortObject) outObj1).getSecondFskPortObject(),
-            suffixIndex);
+        FskPortObject firstObject = ((CombinedFskPortObject) outObj1).getFirstFskPortObject();
+        String firstModelName = SwaggerUtil.getModelName(firstObject.modelMetadata);
+        FskPortObject secondObject = ((CombinedFskPortObject) outObj1).getSecondFskPortObject();
+        String secondModelName = SwaggerUtil.getModelName(secondObject.modelMetadata);
+
+        if (firstObject instanceof CombinedFskPortObject
+            && unModifiedParamsNames.containsKey(firstModelName)) {
+          resetParameterIdToOriginal(SwaggerUtil.getParameter(
+              fskID_to_fskObject.get(firstModelName).modelMetadata),
+              ++suffixIndex, true);
+          --suffixIndex;
+        }else {
+          resetParameterIdForObjectsFromJSON(firstObject,
+              suffixIndex);
+          
+        }
+        if (secondObject instanceof CombinedFskPortObject
+            && unModifiedParamsNames.containsKey(secondModelName)) {
+          resetParameterIdToOriginal(SwaggerUtil.getParameter(
+              fskID_to_fskObject.get(secondModelName).modelMetadata),
+              ++suffixIndex, true);
+          --suffixIndex;
+        }
+        else {
+          resetParameterIdForObjectsFromJSON(secondObject,
+              suffixIndex);
+        }
       }
     } else {
       if(fskID_to_fskObject.containsKey(modelName)) {
         resetParameterIdToOriginal(SwaggerUtil.getParameter(
             fskID_to_fskObject.get(modelName).modelMetadata),
-            suffixIndex);
+            suffixIndex,false);
       }
     }
   }
@@ -877,9 +900,12 @@ public final class JoinerNodeModel
    * @param parameter list of parameters
    * @param suffixIndex
    */
-  private void resetParameterIdToOriginal(List<Parameter> parameters, int suffixIndex) {
+  private void resetParameterIdToOriginal(List<Parameter> parameters, int suffixIndex, boolean replace) {
     for (Parameter p : parameters) {
-      p.setId(p.getId().substring(0, p.getId().length() - suffixIndex));
+      if(replace)
+        p.setId(new StringBuilder(p.getId()).deleteCharAt(p.getId().length() - suffixIndex).toString());
+      else
+        p.setId(p.getId().substring(0, p.getId().length() - suffixIndex));
     }
   }
 
