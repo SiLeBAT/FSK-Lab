@@ -4,12 +4,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
+
 import org.junit.Test;
+
 import de.bund.bfr.knime.fsklab.v1_9.FskSimulation;
 import de.bund.bfr.knime.fsklab.v1_9.joiner.JoinerNodeModel;
 import de.bund.bfr.knime.fsklab.v1_9.joiner.JoinerNodeUtil;

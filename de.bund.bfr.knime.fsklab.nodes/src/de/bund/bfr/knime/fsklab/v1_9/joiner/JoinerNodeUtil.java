@@ -96,7 +96,6 @@ public class JoinerNodeUtil {
     List<Parameter> listOfParameter = SwaggerUtil.getParameter(portObject.modelMetadata);
     combinedSim.getParameters().forEach((pId, pValue) -> {
       for (Parameter param : listOfParameter) {
-        System.out.print(pId + " ????? " + (param.getId() + suffix));
         if (pId.equals(param.getId() + suffix))
           fskSimulation.getParameters().put(param.getId(), pValue);
       }
