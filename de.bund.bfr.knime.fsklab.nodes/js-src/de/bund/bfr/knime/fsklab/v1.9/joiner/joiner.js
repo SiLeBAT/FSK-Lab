@@ -936,11 +936,11 @@ joiner = function () {
         if (_modelsParamsOriginalNames[key][sourcePort])
           sourceMask = _modelsParamsOriginalNames[key][sourcePort];
         sourceMaskSuffix = sourceMask;
+        commandMask = "[" + sourceMask + "]";
 
         if (_modelsParamsOriginalNames[key][targetPort]) {
           targetMask = _modelsParamsOriginalNames[key][targetPort];
           targetMaskSuffix = targetMask;
-          commandMask = "[" + targetMask + "]";
         }
       }
       if (!targetPort) {
