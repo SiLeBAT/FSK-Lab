@@ -112,10 +112,12 @@
 
 
         }
-        
         get value() {
             let O = this;
-            return O.input.val() || O.input.find("option[data-select2-id]").text();
+            if(O.input.val() && O.input.val() != '(Data)')
+                return O.input.val();
+            else
+                return O.input.find("option[data-select2-id]").text();
         }
 
         set value(newValue) {
