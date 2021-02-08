@@ -95,13 +95,14 @@ public class RJsonHandler extends JsonHandler {
    * @throws Exception
    */
   @Override
-  public void loadParametersIntoWorkspace(String sourceParam, String targetParam) throws Exception {
+  public void loadParametersIntoWorkspace(String parameterJson, 
+      String sourceParam, String targetParam) throws Exception {
     
     //TODO: figure out if libraries are loaded at this point
     StringBuilder script = new StringBuilder();
-    script.append("json_params <- read_json( " + JSON_FILE_NAME + ", simplifyVector = TRUE)\n");
-    script.append("sourceParam <- " + sourceParam + "\n");
-    script.append("targetParam <- " + targetParam + "\n");
+    script.append("json_params <- read_json( '" + parameterJson + "', simplifyVector = TRUE)\n");
+    script.append("sourceParam <- '" + sourceParam + "'\n");
+    script.append("targetParam <- '" + targetParam + "'\n");
         
     File file = getResource("data/loadJsonIntoR.r");
     script.append(FileUtils.readFileToString(file, StandardCharsets.UTF_8));

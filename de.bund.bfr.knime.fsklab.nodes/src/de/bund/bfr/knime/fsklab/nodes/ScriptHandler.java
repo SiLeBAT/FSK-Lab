@@ -4,7 +4,9 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
@@ -25,7 +27,7 @@ import metadata.SwaggerUtil;
 public abstract class ScriptHandler implements AutoCloseable {
 
   protected ModelPlotter plotter;
-  protected JsonHandler hdfHandler;
+  protected JsonHandler jsonHandler;
 
   /**
    * This template method runs a snippet of script code. It does not save the stdOutput or the
@@ -44,8 +46,13 @@ public abstract class ScriptHandler implements AutoCloseable {
    * @param nodeSettings settings of the node containing the dimensions of the output im-age
    * @throws Exception
    */
-  public final void runSnippet(final FskPortObject fskObj, final FskSimulation simulation,
-      final ExecutionContext exec, NodeLogger LOGGER, File imageFile) throws Exception {
+  public final void runSnippet(final FskPortObject fskObj,
+      final FskSimulation simulation,
+      final ExecutionContext exec,
+      NodeLogger LOGGER,
+      File imageFile,
+      LinkedHashMap<String,Map.Entry<FskPortObject,String>> relationsMap,
+      String suffix) throws Exception {
     
     // Sets up working directory with resource files. This directory needs to be deleted.
     exec.setProgress(0.05, "Add resource files");
@@ -84,7 +91,12 @@ public abstract class ScriptHandler implements AutoCloseable {
     if (!fskObj.packages.isEmpty()) {
       installLibs(fskObj, exec, LOGGER);
     }
+    
+    jsonHandler = JsonHandler.createHandler(this, exec);
+    jsonHandler.applyJoinCommand(fskObj, relationsMap, suffix);
 
+    
+    
     exec.setProgress(0.72, "Set parameter values");
     LOGGER.info(" Running with '" + simulation.getName() + "' simulation!");
 
@@ -108,8 +120,8 @@ public abstract class ScriptHandler implements AutoCloseable {
 
     
     // HDFHandler stores all input parameters before model execution
-    hdfHandler = JsonHandler.createHandler(this, exec);
-    hdfHandler.saveInputParameters(fskObj);
+    
+    jsonHandler.saveInputParameters(fskObj);
     
     exec.setProgress(0.75, "Run models script");
     runScript(fskObj.getModel(), exec, false);
@@ -145,7 +157,7 @@ public abstract class ScriptHandler implements AutoCloseable {
     saveWorkspace(fskObj, exec);
     
     // HDFHandler stores all ouput parameters in HDF file
-    hdfHandler.saveOutputParameters(fskObj);
+    jsonHandler.saveOutputParameters(fskObj);
     
     // Save generated resources
     if (workingDirectory.isPresent()) {
@@ -382,7 +394,7 @@ public abstract class ScriptHandler implements AutoCloseable {
         e.printStackTrace();
       }
       
-      // Save .h5 file (HDF5)
+      // Save JSON file
       File sourceFile = new File(workingDirectory, JsonHandler.JSON_FILE_NAME);
       File targetFile = new File(newResourcesDirectory, JsonHandler.JSON_FILE_NAME);
       FileUtil.copy(sourceFile, targetFile, exec);

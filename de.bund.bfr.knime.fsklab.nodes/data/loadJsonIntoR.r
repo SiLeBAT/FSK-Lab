@@ -7,11 +7,10 @@ json_params <- within(json_params, rm(var_types))
 
 if(var_types[sourceParam] == 'DataFrame' | var_types[sourceParam] == 'data.frame') {
   if(script_language == "Python") {
-    assign(targetParam,as.data.frame(lapply(fromJSON(parameters[sourceParam][[1]]),cbind)))
+    assign(targetParam,as.data.frame(lapply(fromJSON(json_params[sourceParam][[1]]),cbind)))
   }
-}
-else {
-  assign(targetParam,parameters[sourceParam][[1]]) #create variable of parameter with values
+} else {
+  assign(targetParam,json_params[sourceParam][[1]]) #create variable of parameter with values
 }
   
 rm(sourceParam)

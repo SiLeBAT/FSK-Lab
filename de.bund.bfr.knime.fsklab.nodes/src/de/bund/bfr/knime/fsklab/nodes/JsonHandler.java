@@ -5,12 +5,16 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.LinkedHashMap;
+import java.util.Map.Entry;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
 import org.knime.core.node.ExecutionContext;
 import org.osgi.framework.Bundle;
 import de.bund.bfr.knime.fsklab.v1_9.FskPortObject;
+import de.bund.bfr.knime.fsklab.v1_9.FskSimulation;
 import de.bund.bfr.metadata.swagger.Parameter;
+import metadata.SwaggerUtil;
 
 /**
  * 
@@ -26,7 +30,7 @@ import de.bund.bfr.metadata.swagger.Parameter;
 public abstract class JsonHandler {
 
   // the hdf file where all model parameters are stored
-  protected static final String JSON_FILE_NAME = "parameters.json";
+  public static final String JSON_FILE_NAME = "parameters.json";
   protected static final String JSON_PARAMETERS_NAME = "fsk_parameters";
 
   protected ScriptHandler scriptHandler;
@@ -40,6 +44,30 @@ public abstract class JsonHandler {
       importLibraries();
     } catch(Exception e) {
       e.printStackTrace();
+    }
+  }
+  
+  // TODO: conversion command? maybe create a new Class instead of using a map
+  public void applyJoinCommand(FskPortObject fskObj,
+      LinkedHashMap<String, Entry<FskPortObject, String>> relationsMap,
+      String suffix) throws Exception {
+    
+      if(relationsMap != null) {
+        for (String targetParameter : relationsMap.keySet()) {
+        
+          FskPortObject sourceModel = relationsMap.get(targetParameter).getKey();
+          String sourceParameter = relationsMap.get(targetParameter).getValue();
+          
+          for (Parameter param : SwaggerUtil.getParameter(fskObj.modelMetadata)) {
+            if (targetParameter.equals(param.getId() + suffix)) {
+              String json = sourceModel.getGeneratedResourcesDirectory().get().getAbsolutePath().replaceAll("\\\\", "/") + 
+                  "/" +
+                  JSON_FILE_NAME;
+              
+              loadParametersIntoWorkspace(json, sourceParameter, param.getId());          
+          }
+        }
+      }
     }
   }
   
@@ -80,7 +108,8 @@ public abstract class JsonHandler {
    * @param FSKPortObject fsk object containing the parameter names
    * @throws Exception if an error occurs running the script.
    */
-  public abstract void loadParametersIntoWorkspace(String sourceParam, String targetParam)
+  public abstract void loadParametersIntoWorkspace(String parameterJson, 
+      String sourceParam, String targetParam)
       throws Exception;
   
   

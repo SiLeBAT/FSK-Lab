@@ -22,11 +22,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.AbstractMap;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -48,6 +51,7 @@ import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.image.ImagePortObject;
 import org.knime.core.node.port.image.ImagePortObjectSpec;
 import org.knime.core.util.FileUtil;
+import de.bund.bfr.knime.fsklab.nodes.JsonHandler;
 import de.bund.bfr.knime.fsklab.nodes.ScriptHandler;
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
 import de.bund.bfr.knime.fsklab.r.client.ScriptExecutor;
@@ -145,15 +149,26 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
           .findFirst().ifPresent(index -> reSelectSimulation(fskObjk, index));
     }
 
-    try (ScriptHandler handler = ScriptHandler
-        .createHandler(SwaggerUtil.getLanguageWrittenIn(fskObj.modelMetadata), fskObj.packages)) {
-      LinkedHashMap<String, String> originalOutputParameters = new LinkedHashMap<String, String>();
-      List<Parameter> p = SwaggerUtil.getParameter(fskObj.modelMetadata);
-      p.forEach(item -> originalOutputParameters.put(item.getId(), item.getId()));
-      LinkedHashMap<String, String> originalNamesMap =
-          JoinerNodeUtil.getTopLevelParameterNames(fskObj, originalOutputParameters, null,"");
+    try {
+//      LinkedHashMap<String, String> originalOutputParameters = new LinkedHashMap<String, String>();
+//      List<Parameter> p = SwaggerUtil.getParameter(fskObj.modelMetadata);
+//      p.forEach(item -> originalOutputParameters.put(item.getId(), item.getId()));
+//      LinkedHashMap<String, String> originalNamesMap =
+//          JoinerNodeUtil.getTopLevelParameterNames(fskObj, originalOutputParameters, null,"");
+//      
       FskSimulation combinedSim = fskObj.simulations.get(fskObj.selectedSimulationIndex);
-      runFskPortObject(handler, fskObj, originalNamesMap, combinedSim, exec, "");
+      LinkedHashMap<String, Entry<FskPortObject, String>> relationsMap = null;
+      if (fskObj instanceof CombinedFskPortObject) {
+        relationsMap = getMapOfSourceParameters(
+            fskObj,
+            ((CombinedFskPortObject)fskObj).getJoinerRelation(),
+            null,
+            ""
+            );
+          
+      }
+     
+      runFskPortObject(fskObj, null, combinedSim, exec, relationsMap, "");
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -192,11 +207,52 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
     return embedFSKObject;
   }
 
+  
+  private LinkedHashMap<String, Entry<FskPortObject, String>> getMapOfSourceParameters(
+      FskPortObject portObject,
+      JoinRelation[] joinRelations,
+      LinkedHashMap<String, Map.Entry<FskPortObject, String>> sourceParametersMap,
+      String suffix) {
+    if (sourceParametersMap == null) {
+      sourceParametersMap = new LinkedHashMap<String, Map.Entry<FskPortObject, String>>();
+    }
+    if (portObject instanceof CombinedFskPortObject) {
+      sourceParametersMap =
+          getMapOfSourceParameters(((CombinedFskPortObject) portObject).getFirstFskPortObject(),
+              joinRelations, sourceParametersMap, suffix + JoinerNodeModel.SUFFIX_FIRST);
+      sourceParametersMap =
+          getMapOfSourceParameters(((CombinedFskPortObject) portObject).getSecondFskPortObject(),
+              joinRelations, sourceParametersMap, suffix + JoinerNodeModel.SUFFIX_SECOND);
+    } else {
+      List<Parameter> listOfParameter = SwaggerUtil.getParameter(portObject.modelMetadata);
+      
+      for(JoinRelation joinRelation : joinRelations) {
+        for (Parameter param : listOfParameter) {
+          if (joinRelation.getSourceParam().startsWith(param.getId() + suffix)) {
+            
+//            String command_new = joinRelation.getCommand().replaceAll("\\[([^<]*)\\]",
+//                param.getId());
+            Entry<FskPortObject, String> entry =
+                new AbstractMap.SimpleEntry<FskPortObject, String>(portObject, param.getId());
+            sourceParametersMap.put(joinRelation.getTargetParam(), entry);
+          }
+        }
+      }
+    }
+
+    return sourceParametersMap;
+  }
+  
+  
+  
   // TODO: make a method that just runs a simulation of a portObject runSimulation(fskObj,
   // simulation)
-  public FskPortObject runFskPortObject(ScriptHandler handler, FskPortObject fskObj,
-      LinkedHashMap<String, String> originalOutputParameters, FskSimulation combinedSim,
-      ExecutionContext exec, String suffix) throws Exception {
+  public FskPortObject runFskPortObject(FskPortObject fskObj,
+      LinkedHashMap<String, String> originalOutputParameters,
+      FskSimulation combinedSim,
+      ExecutionContext exec,
+      LinkedHashMap<String, Entry<FskPortObject, String>> relationsMap,
+      String suffix) throws Exception {
     LOGGER.info("Running Model: " + fskObj);
 
 
@@ -215,18 +271,18 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
       // p.forEach(item -> originalOutputParameters.put(item.getId(), item.getId() ));
 
       FskPortObject firstFskObj = comFskObj.getFirstFskPortObject();
-      LinkedHashMap<String, String> oopFirst = new LinkedHashMap<>();
+//      LinkedHashMap<String, String> oopFirst = new LinkedHashMap<>();
       if (!(firstFskObj instanceof CombinedFskPortObject)) {
         // create a mapping for the output parameters so that the true (original) parameter name is
         // preserved but links
-        oopFirst = JoinerNodeUtil.getOriginalParameterNamesOfFSKObject(originalOutputParameters,
-            firstFskObj, suffix + JoinerNodeModel.SUFFIX_FIRST);
+//        oopFirst = JoinerNodeUtil.getOriginalParameterNamesOfFSKObject(originalOutputParameters,
+//            firstFskObj, suffix + JoinerNodeModel.SUFFIX_FIRST);
         // prepareSimulation 1 *******
         fskSimulationFirst = JoinerNodeUtil.makeIndividualSimulation(combinedSim,
             originalOutputParameters, firstFskObj,suffix + JoinerNodeModel.SUFFIX_FIRST);
       } else {
         firstFskObj = stepIntoSubModel(firstFskObj, fskSimulationFirst, originalOutputParameters,
-            combinedSim, handler, exec, suffix + JoinerNodeModel.SUFFIX_FIRST);
+            combinedSim, exec, relationsMap, suffix + JoinerNodeModel.SUFFIX_FIRST);
       }
 
 
@@ -260,10 +316,10 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
       LOGGER.info("Running Snippet of first Model: " + firstFskObj.toString());
 
       if (!(firstFskObj instanceof CombinedFskPortObject)) {
-        firstFskObj = runSnippet(handler, firstFskObj, fskSimulationFirst, context);
+        firstFskObj = runSnippet(firstFskObj, fskSimulationFirst, context, relationsMap, suffix + JoinerNodeModel.SUFFIX_FIRST);
         // save output from simulation by using current output name (with suffixes)
         // save is done by running the command in R
-        JoinerNodeUtil.saveOutputVariable(oopFirst, handler, exec);
+//TODO:        JoinerNodeUtil.saveOutputVariable(oopFirst, handler, exec);
 
         // Copy generated resources from first model to the combined model generated resources
         if (firstFskObj.getGeneratedResourcesDirectory().isPresent()) {
@@ -299,14 +355,9 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
 
 
       // apply join command
-      Map<String, String> mapInversed = originalOutputParameters.entrySet().stream()
-          .collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey,
-              //choose the second value in the case of key duplication 
-              (value1, value2) -> {
-                return value2;
-            }));
+   
       
-      applyJoinCommandToSimulation(comFskObj, fskSimulationSecond, originalOutputParameters,  suffix + JoinerNodeModel.SUFFIX_SECOND);
+      //applyJoinCommandToSimulation(comFskObj, fskSimulationSecond, originalOutputParameters,  suffix + JoinerNodeModel.SUFFIX_SECOND);
 
       Optional<Path> workingDirectory2;
       if (comFskObj.getSecondFskPortObject().getEnvironmentManager().isPresent()) {
@@ -318,7 +369,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
 
       // Copy generated resources in the first model to the working directory of the second model
       // TODO: Big error still not solved: What if workingDirectory2 is empty??
-      if (firstFskObj.getGeneratedResourcesDirectory().isPresent()) {
+      if (firstFskObj.getGeneratedResourcesDirectory().isPresent() && workingDirectory2.isPresent()) {
         File secondModelWorkingDirectory = workingDirectory2.get().toFile();
         for (File sourceFile : firstFskObj.getGeneratedResourcesDirectory().get().listFiles()) {
           File targetFile = new File(secondModelWorkingDirectory, sourceFile.getName());
@@ -331,19 +382,19 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
 
       LOGGER.info("Running Snippet of second Model: " + secondFskObj);
       // apply join command for complex join
-      LinkedHashMap<String, String> oopSecond = new LinkedHashMap<>();
+//      LinkedHashMap<String, String> oopSecond = new LinkedHashMap<>();
       if (secondFskObj instanceof CombinedFskPortObject) {
         //
         secondFskObj = stepIntoSubModel(secondFskObj, fskSimulationSecond, originalOutputParameters,
-            combinedSim, handler, exec , suffix + JoinerNodeModel.SUFFIX_SECOND);
+            combinedSim, exec, relationsMap, suffix + JoinerNodeModel.SUFFIX_SECOND);
       } else {
-        oopSecond = JoinerNodeUtil.getOriginalParameterNamesOfFSKObject(originalOutputParameters,
-            secondFskObj, suffix + JoinerNodeModel.SUFFIX_SECOND);
-        secondFskObj = runSnippet(handler, secondFskObj, fskSimulationSecond, context);
+//        oopSecond = JoinerNodeUtil.getOriginalParameterNamesOfFSKObject(originalOutputParameters,
+//            secondFskObj, suffix + JoinerNodeModel.SUFFIX_SECOND);
+        secondFskObj = runSnippet( secondFskObj, fskSimulationSecond, context, relationsMap, suffix + JoinerNodeModel.SUFFIX_SECOND);
 
 
         // save output in the proper variable (with suffix)
-        JoinerNodeUtil.saveOutputVariable(oopSecond, handler, exec);
+//TODO:        JoinerNodeUtil.saveOutputVariable(oopSecond, handler, exec);
 
         // Copy generated resources from the second model to the combined model
         if (secondFskObj.getGeneratedResourcesDirectory().isPresent()) {
@@ -378,50 +429,54 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
 
       ExecutionContext context = exec.createSubExecutionContext(1.0);
 
-      fskObj = runSnippet(handler, fskObj, fskSimulation, context);
+      fskObj = runSnippet(fskObj, fskSimulation, context, relationsMap, suffix);
 
       return fskObj;
     }
   }
 
 
-  private void applyJoinCommandToSimulation(CombinedFskPortObject fskObj,
-      FskSimulation fskSimulation, Map<String, String> originalOutputParameters, String suffix) {
-
-    JoinRelation[] joinRelations = fskObj.getJoinerRelation();
-    FskPortObject seconFskPortObject = fskObj.getSecondFskPortObject();
-
-    if (joinRelations != null) {
-      // originalOutputParameters have the name of the actual, globally unique parameter name.
-      // the parameter name is marked (currently with []) e.g. [output_var]
-      // therefore, the join command is something like input_var = 3*[output_var]
-      // the local parameter name needs to be replaced with the unique one
-      //
-
-      for (JoinRelation joinRelation : joinRelations)
-        if (originalOutputParameters.containsKey(joinRelation.getSourceParam())) {
-          // replace join command with unique identifier of parameter
-          String command_new = joinRelation.getCommand().replaceAll("\\[([^<]*)\\]",
-              joinRelation.getSourceParam());
-          for (Parameter param : SwaggerUtil.getParameter(seconFskPortObject.modelMetadata)) {
-            if (joinRelation.getTargetParam().equals(param.getId() + suffix)) {
-              fskSimulation.getParameters().put(param.getId(), command_new);
-            }
-          }
-        }
-    }
-  }
+//  private void applyJoinCommandToSimulation(CombinedFskPortObject fskObj,
+//      FskSimulation fskSimulation, Map<String, String> originalOutputParameters, String suffix) {
+//
+//    
+//    
+//    JoinRelation[] joinRelations = fskObj.getJoinerRelation();
+//    FskPortObject seconFskPortObject = fskObj.getSecondFskPortObject();
+//
+//    if (joinRelations != null) {
+//      // originalOutputParameters have the name of the actual, globally unique parameter name.
+//      // the parameter name is marked (currently with []) e.g. [output_var]
+//      // therefore, the join command is something like input_var = 3*[output_var]
+//      // the local parameter name needs to be replaced with the unique one
+//      //
+//
+//      for (JoinRelation joinRelation : joinRelations)
+//        if (originalOutputParameters.containsKey(joinRelation.getSourceParam())) {
+//          // replace join command with unique identifier of parameter
+//          String command_new = joinRelation.getCommand().replaceAll("\\[([^<]*)\\]",
+//              joinRelation.getSourceParam());
+//          for (Parameter param : SwaggerUtil.getParameter(seconFskPortObject.modelMetadata)) {
+//            if (joinRelation.getTargetParam().equals(param.getId() + suffix)) {
+//              fskSimulation.getParameters().put(param.getId(), command_new);
+//            }
+//          }
+//        }
+//    }
+//  }
 
   private FskPortObject stepIntoSubModel(FskPortObject fskObj, FskSimulation fskSimulation,
       LinkedHashMap<String, String> orignialParameters, FskSimulation combinedSim,
-      ScriptHandler handler, final ExecutionContext exec,String suffix) {
+      final ExecutionContext exec,
+      LinkedHashMap<String, Entry<FskPortObject, String>> relationsMap,
+      String suffix) {
 
     // carry correct simulation values
     int selectIndex = fskObj.selectedSimulationIndex;
     fskObj.selectedSimulationIndex = fskObj.simulations.size();
     fskObj.simulations.add(fskSimulation);
     try {
-      fskObj = runFskPortObject(handler, fskObj, orignialParameters, combinedSim, exec, suffix);
+      fskObj = runFskPortObject(fskObj, orignialParameters, combinedSim, exec, relationsMap, suffix);
     } catch (Exception e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -434,32 +489,42 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
 
   }
 
-  private FskPortObject runSnippet(ScriptHandler handler, final FskPortObject fskObj,
-      final FskSimulation simulation, final ExecutionContext exec) throws Exception {
-
-    handler.runSnippet(fskObj, simulation, exec, LOGGER, internalSettings.imageFile);
-
-    // process the return value of error capturing and update error and
-    // output views accordingly
-    if (!handler.getStdOut().isEmpty()) {
-      setExternalOutput(getLinkedListFromOutput(handler.getStdOut()));
-    }
-
-    if (!handler.getStdErr().isEmpty()) {
-      final LinkedList<String> output = getLinkedListFromOutput(handler.getStdErr());
-      setExternalErrorOutput(output);
-
-      for (final String line : output) {
-        if (line.startsWith(ScriptExecutor.ERROR_PREFIX)) {
-          throw new RException(line, null);
+  private FskPortObject runSnippet(
+      final FskPortObject fskObj,
+      final FskSimulation simulation,
+      final ExecutionContext exec,
+      LinkedHashMap<String,Map.Entry<FskPortObject,String>> relationsMap,
+      String suffix) throws Exception {
+    
+    try (ScriptHandler handler = ScriptHandler
+        .createHandler(SwaggerUtil.getLanguageWrittenIn(fskObj.modelMetadata), fskObj.packages)) {
+     
+      handler.runSnippet(fskObj, simulation, exec, LOGGER, internalSettings.imageFile, relationsMap, suffix);
+  
+      // process the return value of error capturing and update error and
+      // output views accordingly
+      if (!handler.getStdOut().isEmpty()) {
+        setExternalOutput(getLinkedListFromOutput(handler.getStdOut()));
+      }
+  
+      if (!handler.getStdErr().isEmpty()) {
+        final LinkedList<String> output = getLinkedListFromOutput(handler.getStdErr());
+        setExternalErrorOutput(output);
+  
+        for (final String line : output) {
+          if (line.startsWith(ScriptExecutor.ERROR_PREFIX)) {
+            throw new RException(line, null);
+          }
         }
       }
+  
+      // cleanup temporary variables of output capturing and consoleLikeCommand stuff
+      exec.setProgress(0.99, "Cleaning up");
+      handler.cleanup(exec);
+    } catch(Exception e) {
+      e.printStackTrace();
     }
-
-    // cleanup temporary variables of output capturing and consoleLikeCommand stuff
-    exec.setProgress(0.99, "Cleaning up");
-    handler.cleanup(exec);
-    return fskObj;
+      return fskObj;
   }
 
   private static final LinkedList<String> getLinkedListFromOutput(final String output) {
