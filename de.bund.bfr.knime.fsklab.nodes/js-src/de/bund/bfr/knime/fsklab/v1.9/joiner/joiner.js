@@ -24,7 +24,7 @@ joiner = function () {
   let _paper;
 
   let _metadata;
-
+  let _graphObject;
   let _firstModelParameterMap = {};
   let _secondModelParameterMap = {};
   let _modelColectionWithoutSuffixedmap = {};
@@ -133,6 +133,7 @@ joiner = function () {
   }
   view.init = function (representation, value) {
     _value = value;
+    _graphObject = JSON.parse(_value.jsonRepresentation)
     _joinerModelsData = representation.joinerModelsData;
     
     _representation = representation;
@@ -312,6 +313,9 @@ joiner = function () {
       _value.joinerModelsData.fourthModelType = modelsPool.fourthModel['modelType'];
     }
     _value.svgRepresentation = this.getSVG();
+    if(_graph)
+     _value.jsonRepresentation = JSON.stringify(_graph.toJSON());
+    
     return _value;
   };
 
@@ -1021,18 +1025,19 @@ joiner = function () {
       }
     });
 
-    if (_value && _value.jsonRepresentation) {
-      let graphObject = JSON.parse(_value.jsonRepresentation)
-      _graph.fromJSON(graphObject);
+    if (_graphObject) { 
+      _graph.fromJSON(_graphObject);
+      console.log(_graphObject);
 
-      if (graphObject.cells) {
-        for (const cell of graphObject.cells) {
+      if (_graphObject.cells) {
+        for (const cell of _graphObject.cells) {
           if (cell.ports && cell.ports.items) {
             let currentCell = _graph.getCell(cell.id);
             cell.ports.items.forEach(item => currentCell.addPort(item));
           }
         }
       }
+      
     } else {
       $.each(Object.keys(modelsPool), function (index, value) {
         if (Object.keys(modelsPool[value]).length > 0)
