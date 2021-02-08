@@ -137,7 +137,6 @@
         }
         clear() {
             let O = this;
-            O.input.val('');
         }
 
         /**
