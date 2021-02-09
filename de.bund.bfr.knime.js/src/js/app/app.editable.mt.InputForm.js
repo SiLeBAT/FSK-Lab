@@ -182,7 +182,16 @@
 
         get value() {
             let O = this;
-            return O.type !== "checkbox" ? O.input.val(): O.input.checked;
+            if (O.type === "date") {
+                if(O.input.val()){
+                    value = O.input.val().split("-");
+                    let day = ("" + value[2]).length > 1 ? ("" + value[2]) : ("0" + value[2]);
+                    let month = ("" + value[1]).length > 1 ? ("" + value[1]) : ("0" + value[1]);
+                    return value[0] + "-" + month + "-" + day;
+                }
+            }
+            else
+                return O.type !== "checkbox" ? O.input.val(): O.input.checked;
         }
 
         set value(newValue) {
