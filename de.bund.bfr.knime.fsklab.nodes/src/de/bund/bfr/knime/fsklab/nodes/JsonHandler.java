@@ -5,12 +5,15 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.LinkedHashMap;
+import java.util.Map.Entry;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
 import org.knime.core.node.ExecutionContext;
 import org.osgi.framework.Bundle;
 import de.bund.bfr.knime.fsklab.v1_9.FskPortObject;
 import de.bund.bfr.metadata.swagger.Parameter;
+import metadata.SwaggerUtil;
 
 /**
  * 
@@ -26,7 +29,7 @@ import de.bund.bfr.metadata.swagger.Parameter;
 public abstract class JsonHandler {
 
   // the hdf file where all model parameters are stored
-  protected static final String JSON_FILE_NAME = "parameters.json";
+  public static final String JSON_FILE_NAME = "parameters.json";
   protected static final String JSON_PARAMETERS_NAME = "fsk_parameters";
 
   protected ScriptHandler scriptHandler;
@@ -40,6 +43,37 @@ public abstract class JsonHandler {
       importLibraries();
     } catch(Exception e) {
       e.printStackTrace();
+    }
+  }
+  
+  // TODO: conversion command? maybe create a new Class instead of using a map
+  public void applyJoinCommand(FskPortObject fskObj,
+      LinkedHashMap<String, Entry<FskPortObject, String>> relationsMap,
+      String suffix) throws Exception {
+    
+      if(relationsMap != null) {
+        for (String targetParameter : relationsMap.keySet()) {
+        
+          FskPortObject sourceModel = relationsMap.get(targetParameter).getKey();
+          String sourceParameter = relationsMap.get(targetParameter).getValue();
+          
+          for (Parameter param : SwaggerUtil.getParameter(fskObj.modelMetadata)) {
+            if (targetParameter.equals(param.getId() + suffix)) {
+              String resourcePath = sourceModel.getGeneratedResourcesDirectory().get().getAbsolutePath()
+                  .replaceAll("\\\\", "/") + "/";
+              String jsonPath = resourcePath + JSON_FILE_NAME;
+             
+              loadParametersIntoWorkspace(jsonPath, sourceParameter, param.getId());
+
+              // if target parameter is of type FILE, add path to generatedResources to sourceParam
+              // This should be safe since source and target parameter must have the same type (if File)
+              if(param.getDataType().equals(Parameter.DataTypeEnum.FILE)) {
+                addPathToFileParameter(param.getId(), resourcePath);
+              }
+                        
+          }
+        }
+      }
     }
   }
   
@@ -80,7 +114,8 @@ public abstract class JsonHandler {
    * @param FSKPortObject fsk object containing the parameter names
    * @throws Exception if an error occurs running the script.
    */
-  public abstract void loadParametersIntoWorkspace(String sourceParam, String targetParam)
+  public abstract void loadParametersIntoWorkspace(String parameterJson, 
+      String sourceParam, String targetParam)
       throws Exception;
   
   
@@ -114,6 +149,24 @@ public abstract class JsonHandler {
     
     return handler;
   }
+  
+  /**
+   *  If a FILE parameter is overwritten with another value (file) because of joining,
+   *  the new file will be located in the generatedResource folder of the other model.
+   *  This method concatenates the path to the parameter value.
+   *  
+   *  Assume, inFile <- "myFile.csv" will be overwritten with "fileOfModel1.csv", then:
+   *    inFile <- "fileOfModel1.csv"
+   *  will become
+   *    inFile <- "/path/to/generatedResourceOfModel1/fileOfModel1.csv"
+   *    
+   *  
+   * @param parameter
+   * @param path
+   * @throws Exception
+   */
+  protected abstract void addPathToFileParameter(String parameter, String path) 
+      throws Exception;
   
   /**
    * 

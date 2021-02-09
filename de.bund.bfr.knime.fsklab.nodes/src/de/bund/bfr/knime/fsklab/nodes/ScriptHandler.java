@@ -1,13 +1,13 @@
 package de.bund.bfr.knime.fsklab.nodes;
 
 import java.io.File;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.apache.commons.io.FileUtils;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.util.FileUtil;
@@ -25,7 +25,7 @@ import metadata.SwaggerUtil;
 public abstract class ScriptHandler implements AutoCloseable {
 
   protected ModelPlotter plotter;
-  protected JsonHandler hdfHandler;
+  protected JsonHandler jsonHandler;
 
   /**
    * This template method runs a snippet of script code. It does not save the stdOutput or the
@@ -44,8 +44,13 @@ public abstract class ScriptHandler implements AutoCloseable {
    * @param nodeSettings settings of the node containing the dimensions of the output im-age
    * @throws Exception
    */
-  public final void runSnippet(final FskPortObject fskObj, final FskSimulation simulation,
-      final ExecutionContext exec, NodeLogger LOGGER, File imageFile) throws Exception {
+  public final void runSnippet(final FskPortObject fskObj,
+      final FskSimulation simulation,
+      final ExecutionContext exec,
+      NodeLogger LOGGER,
+      File imageFile,
+      LinkedHashMap<String,Map.Entry<FskPortObject,String>> relationsMap,
+      String suffix) throws Exception {
     
     // Sets up working directory with resource files. This directory needs to be deleted.
     exec.setProgress(0.05, "Add resource files");
@@ -53,28 +58,10 @@ public abstract class ScriptHandler implements AutoCloseable {
     if (fskObj.getEnvironmentManager().isPresent()) {
       workingDirectory = fskObj.getEnvironmentManager().get().getEnvironment();
     } else {
-      // @Miguel: this is a workaround. But we ALWAYS need a working directory, so I suggest to 
-      // change the environment manager to always create some sort of default directory.
-         //workingDirectory = Optional.of(FileUtil.createTempDir("defaultWorkingDirectory").toPath());
-      workingDirectory = Optional.empty();
+      workingDirectory = Optional.of(FileUtil.createTempDir("tempResourceFiles").toPath());
+   
     }
-
-    if (workingDirectory.isPresent()) {
-      setWorkingDirectory(workingDirectory.get(), exec);
-    }else {
-      workingDirectory = Optional.of(Files.createTempDirectory("workingDirectory"));
-      setWorkingDirectory(workingDirectory.get(), exec);
-    }
-    // copy generated resource files (if present) into workingdirectory, then delete them
-    if(fskObj.getGeneratedResourcesDirectory().isPresent()) {
-      File generatedResourceDir = fskObj.getGeneratedResourcesDirectory().get();
-      for (File sourceFile : generatedResourceDir.listFiles()) {
-        File targetFile = new File(workingDirectory.get().toString(), sourceFile.getName());
-        FileUtil.copy(sourceFile, targetFile, exec);
-      }
-      FileUtils.deleteQuietly(generatedResourceDir);
-    }
-    
+    setWorkingDirectory(workingDirectory.get(), exec);
 
     // START RUNNING MODEL
     exec.setProgress(0.1, "Setting up output capturing");
@@ -84,7 +71,12 @@ public abstract class ScriptHandler implements AutoCloseable {
     if (!fskObj.packages.isEmpty()) {
       installLibs(fskObj, exec, LOGGER);
     }
+    
+    jsonHandler = JsonHandler.createHandler(this, exec);
+    jsonHandler.applyJoinCommand(fskObj, relationsMap, suffix);
 
+    
+    
     exec.setProgress(0.72, "Set parameter values");
     LOGGER.info(" Running with '" + simulation.getName() + "' simulation!");
 
@@ -107,9 +99,9 @@ public abstract class ScriptHandler implements AutoCloseable {
     }
 
     
-    // HDFHandler stores all input parameters before model execution
-    hdfHandler = JsonHandler.createHandler(this, exec);
-    hdfHandler.saveInputParameters(fskObj);
+    // JsonHandler stores all input parameters before model execution
+    
+    jsonHandler.saveInputParameters(fskObj);
     
     exec.setProgress(0.75, "Run models script");
     runScript(fskObj.getModel(), exec, false);
@@ -125,7 +117,7 @@ public abstract class ScriptHandler implements AutoCloseable {
     }
 
     exec.setProgress(0.9, "Run visualization script");
-    // convertToKnimeDataTable(fskObj,exec);
+    
 
     try {
       plotter.plotSvg(imageFile, fskObj.getViz());
@@ -145,17 +137,21 @@ public abstract class ScriptHandler implements AutoCloseable {
     saveWorkspace(fskObj, exec);
     
     // HDFHandler stores all ouput parameters in HDF file
-    hdfHandler.saveOutputParameters(fskObj);
+    jsonHandler.saveOutputParameters(fskObj);
     
     // Save generated resources
     if (workingDirectory.isPresent()) {
       File workingDirectoryFile = workingDirectory.get().toFile();
       saveGeneratedResources(fskObj, workingDirectoryFile, exec.createSubExecutionContext(1));
+            
     }
     
-    // delete working directory
-    if (fskObj.getEnvironmentManager().isPresent() && workingDirectory.isPresent()) {
+    // delete environment directory (workingDirectory is always present)
+    if (fskObj.getEnvironmentManager().isPresent()) {
       fskObj.getEnvironmentManager().get().deleteEnvironment(workingDirectory.get());
+    } else {
+      // delete temporary working directory
+      FileUtil.deleteRecursively(workingDirectory.get().toFile());
     }
   
   }
@@ -356,9 +352,9 @@ public abstract class ScriptHandler implements AutoCloseable {
       return;
     }
 
+    // save all FILE Parameters since they might be joined with another model later
     List<String> outputFileParameterIds = parameterMetadata.stream()
-        .filter(currentParameter -> currentParameter.getClassification() == Parameter.ClassificationEnum.OUTPUT
-        && currentParameter.getDataType() == Parameter.DataTypeEnum.FILE)
+        .filter(currentParameter -> currentParameter.getDataType() == Parameter.DataTypeEnum.FILE)
         .map(Parameter::getId).collect(Collectors.toList());
 
     // Get filenames out of the output file parameter values
@@ -382,7 +378,7 @@ public abstract class ScriptHandler implements AutoCloseable {
         e.printStackTrace();
       }
       
-      // Save .h5 file (HDF5)
+      // Save JSON file
       File sourceFile = new File(workingDirectory, JsonHandler.JSON_FILE_NAME);
       File targetFile = new File(newResourcesDirectory, JsonHandler.JSON_FILE_NAME);
       FileUtil.copy(sourceFile, targetFile, exec);

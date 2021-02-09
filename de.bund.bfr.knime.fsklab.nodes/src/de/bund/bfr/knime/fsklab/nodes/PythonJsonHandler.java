@@ -62,19 +62,20 @@ public class PythonJsonHandler extends JsonHandler {
    * @throws Exception
    */
   @Override
-  public void loadParametersIntoWorkspace(String sourceParam, String targetParam) throws Exception {
+  public void loadParametersIntoWorkspace(String parameterJson, 
+      String sourceParam, String targetParam) throws Exception {
     
     StringBuilder script = new StringBuilder();
     
     //load source and target into workspace as strings
-    script.append("sourceParam = " + sourceParam + "\n");
-    script.append("targetParam = " + targetParam + "\n");
-    script.append("JSON_FILE_NAME = " + JSON_FILE_NAME + "\n");
+    script.append("sourceParam = '" + sourceParam + "'\n");
+    script.append("targetParam = '" + targetParam + "'\n");
+    script.append("JSON_FILE_NAME = '" + parameterJson + "'\n");
     // load JSON file into json_params
     File file = getResource("data/loadJsonIntoPython.py");
     script.append(FileUtils.readFileToString(file, StandardCharsets.UTF_8));
     
-    script.append("del json_params\n"); // delete JSON to free up space
+    
     scriptHandler.runScript(script.toString(), exec, false);
     
   }
@@ -120,6 +121,13 @@ public class PythonJsonHandler extends JsonHandler {
     
     scriptHandler.runScript(script.toString(), exec, false);
     
+  }
+
+
+  @Override
+  protected void addPathToFileParameter(String parameter, String path) throws Exception {
+    // parameter = 'path/to/resource' + parameter
+    scriptHandler.runScript(parameter + " = '" + path + "' + " + parameter , exec, false);
   }
   
   
