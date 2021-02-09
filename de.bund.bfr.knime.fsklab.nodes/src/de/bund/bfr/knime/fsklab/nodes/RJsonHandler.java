@@ -112,4 +112,11 @@ public class RJsonHandler extends JsonHandler {
     scriptHandler.runScript(script.toString(), exec, false);
 
   }
+
+  @Override
+  protected void addPathToFileParameter(String parameter, String path) throws Exception {
+    // parameter <- paste('/path/to/resource/', parameter)
+    scriptHandler.runScript(parameter + " <- paste('" + path + "' , " + parameter + ")" , exec, false);
+    
+  }
 }

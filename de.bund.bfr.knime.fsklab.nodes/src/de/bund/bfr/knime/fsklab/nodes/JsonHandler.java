@@ -12,7 +12,6 @@ import org.eclipse.core.runtime.Platform;
 import org.knime.core.node.ExecutionContext;
 import org.osgi.framework.Bundle;
 import de.bund.bfr.knime.fsklab.v1_9.FskPortObject;
-import de.bund.bfr.knime.fsklab.v1_9.FskSimulation;
 import de.bund.bfr.metadata.swagger.Parameter;
 import metadata.SwaggerUtil;
 
@@ -60,11 +59,18 @@ public abstract class JsonHandler {
           
           for (Parameter param : SwaggerUtil.getParameter(fskObj.modelMetadata)) {
             if (targetParameter.equals(param.getId() + suffix)) {
-              String json = sourceModel.getGeneratedResourcesDirectory().get().getAbsolutePath().replaceAll("\\\\", "/") + 
-                  "/" +
-                  JSON_FILE_NAME;
-              
-              loadParametersIntoWorkspace(json, sourceParameter, param.getId());          
+              String resourcePath = sourceModel.getGeneratedResourcesDirectory().get().getAbsolutePath()
+                  .replaceAll("\\\\", "/") + "/";
+              String jsonPath = resourcePath + JSON_FILE_NAME;
+             
+              loadParametersIntoWorkspace(jsonPath, sourceParameter, param.getId());
+
+              // if target parameter is of type FILE, add path to generatedResources to sourceParam
+              // This should be safe since source and target parameter must have the same type (if File)
+              if(param.getDataType().equals(Parameter.DataTypeEnum.FILE)) {
+                addPathToFileParameter(param.getId(), resourcePath);
+              }
+                        
           }
         }
       }
@@ -143,6 +149,24 @@ public abstract class JsonHandler {
     
     return handler;
   }
+  
+  /**
+   *  If a FILE parameter is overwritten with another value (file) because of joining,
+   *  the new file will be located in the generatedResource folder of the other model.
+   *  This method concatenates the path to the parameter value.
+   *  
+   *  Assume, inFile <- "myFile.csv" will be overwritten with "fileOfModel1.csv", then:
+   *    inFile <- "fileOfModel1.csv"
+   *  will become
+   *    inFile <- "/path/to/generatedResourceOfModel1/fileOfModel1.csv"
+   *    
+   *  
+   * @param parameter
+   * @param path
+   * @throws Exception
+   */
+  protected abstract void addPathToFileParameter(String parameter, String path) 
+      throws Exception;
   
   /**
    * 

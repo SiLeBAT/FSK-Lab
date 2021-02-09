@@ -122,6 +122,13 @@ public class PythonJsonHandler extends JsonHandler {
     scriptHandler.runScript(script.toString(), exec, false);
     
   }
+
+
+  @Override
+  protected void addPathToFileParameter(String parameter, String path) throws Exception {
+    // parameter = 'path/to/resource' + parameter
+    scriptHandler.runScript(parameter + " = '" + path + "' + " + parameter , exec, false);
+  }
   
   
 

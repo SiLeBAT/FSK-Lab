@@ -1,22 +1,15 @@
 package de.bund.bfr.knime.fsklab.nodes;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import org.eclipse.core.runtime.FileLocator;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.util.FileUtil;
-import org.osgi.framework.Bundle;
 import org.rosuda.REngine.REXP;
 import de.bund.bfr.knime.fsklab.nodes.plot.BasePlotter;
 import de.bund.bfr.knime.fsklab.nodes.plot.Ggplot2Plotter;
