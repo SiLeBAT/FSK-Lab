@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.AbstractMap;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -56,6 +57,7 @@ import de.bund.bfr.knime.fsklab.v1_9.FskPortObject;
 import de.bund.bfr.knime.fsklab.v1_9.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.v1_9.FskSimulation;
 import de.bund.bfr.knime.fsklab.v1_9.JoinRelation;
+import de.bund.bfr.knime.fsklab.v1_9.JoinRelationAdvanced;
 import de.bund.bfr.knime.fsklab.v1_9.joiner.JoinerNodeModel;
 import de.bund.bfr.knime.fsklab.v1_9.joiner.JoinerNodeUtil;
 import de.bund.bfr.metadata.swagger.Parameter;
@@ -148,9 +150,9 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
     try {
       
       FskSimulation combinedSim = fskObj.simulations.get(fskObj.selectedSimulationIndex);
-      LinkedHashMap<String, Entry<FskPortObject, String>> relationsMap = null;
+      List<JoinRelationAdvanced> joinRelationList = null;
       if (fskObj instanceof CombinedFskPortObject) {
-        relationsMap = getMapOfSourceParameters(
+        joinRelationList = getMapOfSourceParameters(
             fskObj,
             ((CombinedFskPortObject)fskObj).getJoinerRelation(),
             null,
@@ -159,7 +161,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
           
       }
      
-      runFskPortObject(fskObj, combinedSim, exec, relationsMap, "");
+      runFskPortObject(fskObj, combinedSim, exec, joinRelationList, "");
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -212,21 +214,21 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
    * @param suffix of current model
    * @return Map < Target Parameter , < FSKX_Model, Source Parameter> >
    */
-  private LinkedHashMap<String, Entry<FskPortObject, String>> getMapOfSourceParameters(
+  private List<JoinRelationAdvanced> getMapOfSourceParameters(
       FskPortObject portObject,
       JoinRelation[] joinRelations,
-      LinkedHashMap<String, Map.Entry<FskPortObject, String>> sourceParametersMap,
+      List<JoinRelationAdvanced> joinRelationList,
       String suffix) {
-    if (sourceParametersMap == null) {
-      sourceParametersMap = new LinkedHashMap<String, Map.Entry<FskPortObject, String>>();
+    if (joinRelationList == null) {
+      joinRelationList = new ArrayList<JoinRelationAdvanced>();
     }
     if (portObject instanceof CombinedFskPortObject) {
-      sourceParametersMap =
+      joinRelationList =
           getMapOfSourceParameters(((CombinedFskPortObject) portObject).getFirstFskPortObject(),
-              joinRelations, sourceParametersMap, suffix + JoinerNodeModel.SUFFIX_FIRST);
-      sourceParametersMap =
+              joinRelations, joinRelationList, suffix + JoinerNodeModel.SUFFIX_FIRST);
+      joinRelationList =
           getMapOfSourceParameters(((CombinedFskPortObject) portObject).getSecondFskPortObject(),
-              joinRelations, sourceParametersMap, suffix + JoinerNodeModel.SUFFIX_SECOND);
+              joinRelations, joinRelationList, suffix + JoinerNodeModel.SUFFIX_SECOND);
     } else {
       List<Parameter> listOfParameter = SwaggerUtil.getParameter(portObject.modelMetadata);
       
@@ -234,17 +236,50 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
         for (Parameter param : listOfParameter) {
           if (joinRelation.getSourceParam().startsWith(param.getId() + suffix)) {
             
-            Entry<FskPortObject, String> entry =
-                new AbstractMap.SimpleEntry<FskPortObject, String>(portObject, param.getId());
-            sourceParametersMap.put(joinRelation.getTargetParam(), entry);
+            JoinRelationAdvanced entry = new JoinRelationAdvanced(joinRelation, portObject, suffix);
+            entry.setSourceParam(param.getId());
+            
+            joinRelationList.add(entry);
           }
         }
       }
     }
 
-    return sourceParametersMap;
+    return joinRelationList;
   }
   
+//  private LinkedHashMap<String, Entry<FskPortObject, String>> getMapOfSourceParameters(
+//      FskPortObject portObject,
+//      JoinRelation[] joinRelations,
+//      LinkedHashMap<String, Map.Entry<FskPortObject, String>> sourceParametersMap,
+//      String suffix) {
+//    if (sourceParametersMap == null) {
+//      sourceParametersMap = new LinkedHashMap<String, Map.Entry<FskPortObject, String>>();
+//    }
+//    if (portObject instanceof CombinedFskPortObject) {
+//      sourceParametersMap =
+//          getMapOfSourceParameters(((CombinedFskPortObject) portObject).getFirstFskPortObject(),
+//              joinRelations, sourceParametersMap, suffix + JoinerNodeModel.SUFFIX_FIRST);
+//      sourceParametersMap =
+//          getMapOfSourceParameters(((CombinedFskPortObject) portObject).getSecondFskPortObject(),
+//              joinRelations, sourceParametersMap, suffix + JoinerNodeModel.SUFFIX_SECOND);
+//    } else {
+//      List<Parameter> listOfParameter = SwaggerUtil.getParameter(portObject.modelMetadata);
+//      
+//      for(JoinRelation joinRelation : joinRelations) {
+//        for (Parameter param : listOfParameter) {
+//          if (joinRelation.getSourceParam().startsWith(param.getId() + suffix)) {
+//            
+//            Entry<FskPortObject, String> entry =
+//                new AbstractMap.SimpleEntry<FskPortObject, String>(portObject, param.getId());
+//            sourceParametersMap.put(joinRelation.getTargetParam(), entry);
+//          }
+//        }
+//      }
+//    }
+//
+//    return sourceParametersMap;
+//  }
   
   
   // TODO: make a method that just runs a simulation of a portObject runSimulation(fskObj,
@@ -252,7 +287,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
   public FskPortObject runFskPortObject(FskPortObject fskObj,
       FskSimulation combinedSim,
       ExecutionContext exec,
-      LinkedHashMap<String, Entry<FskPortObject, String>> relationsMap,
+      List<JoinRelationAdvanced> joinRelationList,
       String suffix) throws Exception {
     LOGGER.info("Running Model: " + fskObj);
 
@@ -271,7 +306,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
              firstFskObj,suffix + JoinerNodeModel.SUFFIX_FIRST);
       } else {
         firstFskObj = stepIntoSubModel(firstFskObj, fskSimulationFirst, 
-            combinedSim, exec, relationsMap, suffix + JoinerNodeModel.SUFFIX_FIRST);
+            combinedSim, exec, joinRelationList, suffix + JoinerNodeModel.SUFFIX_FIRST);
       }
 
 
@@ -286,7 +321,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
       LOGGER.info("Running Snippet of first Model: " + firstFskObj.toString());
 
       if (!(firstFskObj instanceof CombinedFskPortObject)) {
-        firstFskObj = runSnippet(firstFskObj, fskSimulationFirst, context, relationsMap,
+        firstFskObj = runSnippet(firstFskObj, fskSimulationFirst, context, joinRelationList,
             suffix + JoinerNodeModel.SUFFIX_FIRST);
 
       }
@@ -309,9 +344,9 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
       if (secondFskObj instanceof CombinedFskPortObject) {
         //
         secondFskObj = stepIntoSubModel(secondFskObj, fskSimulationSecond,
-            combinedSim, exec, relationsMap, suffix + JoinerNodeModel.SUFFIX_SECOND);
+            combinedSim, exec, joinRelationList, suffix + JoinerNodeModel.SUFFIX_SECOND);
       } else {
-       secondFskObj = runSnippet( secondFskObj, fskSimulationSecond, context, relationsMap, suffix + JoinerNodeModel.SUFFIX_SECOND);
+       secondFskObj = runSnippet( secondFskObj, fskSimulationSecond, context, joinRelationList, suffix + JoinerNodeModel.SUFFIX_SECOND);
 
 
         // save output in the proper variable (with suffix)
@@ -340,7 +375,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
 
       ExecutionContext context = exec.createSubExecutionContext(1.0);
 
-      fskObj = runSnippet(fskObj, fskSimulation, context, relationsMap, suffix);
+      fskObj = runSnippet(fskObj, fskSimulation, context, joinRelationList, suffix);
 
       return fskObj;
     }
@@ -349,7 +384,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
   private FskPortObject stepIntoSubModel(FskPortObject fskObj, FskSimulation fskSimulation,
       FskSimulation combinedSim,
       final ExecutionContext exec,
-      LinkedHashMap<String, Entry<FskPortObject, String>> relationsMap,
+      List<JoinRelationAdvanced> joinRelationList,
       String suffix) {
 
     // carry correct simulation values
@@ -357,7 +392,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
     fskObj.selectedSimulationIndex = fskObj.simulations.size();
     fskObj.simulations.add(fskSimulation);
     try {
-      fskObj = runFskPortObject(fskObj, combinedSim, exec, relationsMap, suffix);
+      fskObj = runFskPortObject(fskObj, combinedSim, exec, joinRelationList, suffix);
     } catch (Exception e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -374,13 +409,13 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
       final FskPortObject fskObj,
       final FskSimulation simulation,
       final ExecutionContext exec,
-      LinkedHashMap<String,Map.Entry<FskPortObject,String>> relationsMap,
+      List<JoinRelationAdvanced> joinRelationList,
       String suffix) throws Exception {
     
     try (ScriptHandler handler = ScriptHandler
         .createHandler(SwaggerUtil.getLanguageWrittenIn(fskObj.modelMetadata), fskObj.packages)) {
      
-      handler.runSnippet(fskObj, simulation, exec, LOGGER, internalSettings.imageFile, relationsMap, suffix);
+      handler.runSnippet(fskObj, simulation, exec, LOGGER, internalSettings.imageFile, joinRelationList, suffix);
   
       // process the return value of error capturing and update error and
       // output views accordingly

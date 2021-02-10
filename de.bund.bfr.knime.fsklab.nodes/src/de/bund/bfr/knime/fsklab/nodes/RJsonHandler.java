@@ -119,4 +119,10 @@ public class RJsonHandler extends JsonHandler {
     scriptHandler.runScript(parameter + " <- paste('" + path + "' , " + parameter + ")" , exec, false);
     
   }
+
+  @Override
+  protected void applyJoinCommand(String parameter, String command) throws Exception {
+    scriptHandler.runScript(parameter + " <- " + command , exec, false);
+    
+  }
 }

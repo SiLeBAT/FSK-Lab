@@ -15,6 +15,7 @@ import org.knime.python2.PythonVersion;
 import de.bund.bfr.knime.fsklab.nodes.plot.ModelPlotter;
 import de.bund.bfr.knime.fsklab.v1_9.FskPortObject;
 import de.bund.bfr.knime.fsklab.v1_9.FskSimulation;
+import de.bund.bfr.knime.fsklab.v1_9.JoinRelationAdvanced;
 import de.bund.bfr.knime.fsklab.v1_9.runner.RunnerNodeInternalSettings;
 import de.bund.bfr.knime.fsklab.v1_9.runner.RunnerNodeModel;
 import de.bund.bfr.knime.fsklab.v1_9.runner.RunnerNodeSettings;
@@ -49,7 +50,7 @@ public abstract class ScriptHandler implements AutoCloseable {
       final ExecutionContext exec,
       NodeLogger LOGGER,
       File imageFile,
-      LinkedHashMap<String,Map.Entry<FskPortObject,String>> relationsMap,
+      List<JoinRelationAdvanced> joinRelationList,
       String suffix) throws Exception {
     
     // Sets up working directory with resource files. This directory needs to be deleted.
@@ -73,7 +74,7 @@ public abstract class ScriptHandler implements AutoCloseable {
     }
     
     jsonHandler = JsonHandler.createHandler(this, exec);
-    jsonHandler.applyJoinCommand(fskObj, relationsMap, suffix);
+    jsonHandler.applyJoinRelation(fskObj, joinRelationList, suffix);
 
     
     
