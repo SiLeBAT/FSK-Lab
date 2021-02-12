@@ -248,39 +248,6 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
     return joinRelationList;
   }
   
-//  private LinkedHashMap<String, Entry<FskPortObject, String>> getMapOfSourceParameters(
-//      FskPortObject portObject,
-//      JoinRelation[] joinRelations,
-//      LinkedHashMap<String, Map.Entry<FskPortObject, String>> sourceParametersMap,
-//      String suffix) {
-//    if (sourceParametersMap == null) {
-//      sourceParametersMap = new LinkedHashMap<String, Map.Entry<FskPortObject, String>>();
-//    }
-//    if (portObject instanceof CombinedFskPortObject) {
-//      sourceParametersMap =
-//          getMapOfSourceParameters(((CombinedFskPortObject) portObject).getFirstFskPortObject(),
-//              joinRelations, sourceParametersMap, suffix + JoinerNodeModel.SUFFIX_FIRST);
-//      sourceParametersMap =
-//          getMapOfSourceParameters(((CombinedFskPortObject) portObject).getSecondFskPortObject(),
-//              joinRelations, sourceParametersMap, suffix + JoinerNodeModel.SUFFIX_SECOND);
-//    } else {
-//      List<Parameter> listOfParameter = SwaggerUtil.getParameter(portObject.modelMetadata);
-//      
-//      for(JoinRelation joinRelation : joinRelations) {
-//        for (Parameter param : listOfParameter) {
-//          if (joinRelation.getSourceParam().startsWith(param.getId() + suffix)) {
-//            
-//            Entry<FskPortObject, String> entry =
-//                new AbstractMap.SimpleEntry<FskPortObject, String>(portObject, param.getId());
-//            sourceParametersMap.put(joinRelation.getTargetParam(), entry);
-//          }
-//        }
-//      }
-//    }
-//
-//    return sourceParametersMap;
-//  }
-  
   
   // TODO: make a method that just runs a simulation of a portObject runSimulation(fskObj,
   // simulation)
