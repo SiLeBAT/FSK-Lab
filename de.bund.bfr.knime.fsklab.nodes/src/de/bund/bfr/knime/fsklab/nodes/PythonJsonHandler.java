@@ -129,6 +129,13 @@ public class PythonJsonHandler extends JsonHandler {
     // parameter = 'path/to/resource' + parameter
     scriptHandler.runScript(parameter + " = '" + path + "' + " + parameter , exec, false);
   }
+
+
+  @Override
+  protected void applyJoinCommand(String parameter, String command) throws Exception {
+    scriptHandler.runScript(parameter + " = " + command , exec, false);
+    
+  }
   
   
 

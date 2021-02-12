@@ -6,12 +6,14 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map.Entry;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
 import org.knime.core.node.ExecutionContext;
 import org.osgi.framework.Bundle;
 import de.bund.bfr.knime.fsklab.v1_9.FskPortObject;
+import de.bund.bfr.knime.fsklab.v1_9.JoinRelationAdvanced;
 import de.bund.bfr.metadata.swagger.Parameter;
 import metadata.SwaggerUtil;
 
@@ -47,35 +49,36 @@ public abstract class JsonHandler {
   }
   
   // TODO: conversion command? maybe create a new Class instead of using a map
-  public void applyJoinCommand(FskPortObject fskObj,
-      LinkedHashMap<String, Entry<FskPortObject, String>> relationsMap,
+  public void applyJoinRelation(FskPortObject fskObj,
+      List<JoinRelationAdvanced> joinRelationList,
       String suffix) throws Exception {
     
-      if(relationsMap != null) {
-        for (String targetParameter : relationsMap.keySet()) {
-        
-          FskPortObject sourceModel = relationsMap.get(targetParameter).getKey();
-          String sourceParameter = relationsMap.get(targetParameter).getValue();
+      if(joinRelationList != null ) {
+        for (JoinRelationAdvanced joinRelation: joinRelationList) {
+          String targetParameter = joinRelation.getTargetParam();
+          FskPortObject sourceModel = joinRelation.getModel();
+          String sourceParameter = joinRelation.getSourceParam();
           
           for (Parameter param : SwaggerUtil.getParameter(fskObj.modelMetadata)) {
             if (targetParameter.equals(param.getId() + suffix)) {
               String resourcePath = sourceModel.getGeneratedResourcesDirectory().get().getAbsolutePath()
                   .replaceAll("\\\\", "/") + "/";
               String jsonPath = resourcePath + JSON_FILE_NAME;
-             
               loadParametersIntoWorkspace(jsonPath, sourceParameter, param.getId());
-
-              // if target parameter is of type FILE, add path to generatedResources to sourceParam
+              
+           // if target parameter is of type FILE, add path to generatedResources to sourceParam
               // This should be safe since source and target parameter must have the same type (if File)
               if(param.getDataType().equals(Parameter.DataTypeEnum.FILE)) {
                 addPathToFileParameter(param.getId(), resourcePath);
               }
-                        
+              applyJoinCommand(param.getId(), joinRelation.replaceCommand(param.getId()));
+            }
           }
         }
       }
-    }
   }
+  
+  protected abstract void applyJoinCommand(String parameter, String command) throws Exception;
   
   /**
    * Import the required hdf5 library into workspace using the runscript() metod
