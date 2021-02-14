@@ -443,12 +443,14 @@ class APPTableMT extends APPTable {
 
 			$.each( O._tableData, ( rowIndex, rowData ) => {
 				rowData.el.find( 'td' ).each( ( j, td ) => {
-					let value = $( td ).html();
-					value = _formatter._searchHighlight( value, query );
+					let $td = $( td );
+					if( ! $td.is( '.td-actions' ) ) {
+						let value = $td.html();
+						value = _formatter._searchHighlight( value, query );
 
-					$( td ).html( value );
+						$td.html( value );
+					}
 				} );
-				
 			} );
 		}
 	}
