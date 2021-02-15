@@ -202,6 +202,8 @@ class WriterNodeModel extends NoInternalsModel {
   public static void writeFSKObject(FskPortObject fskObj, CombineArchive archive, String filePrefix,
       Map<String, URI> URIS) throws Exception {
 
+    scriptHandler = ScriptHandler.createHandler(SwaggerUtil.getLanguageWrittenIn(fskObj.modelMetadata),
+        fskObj.packages);
     addVersion(archive);
    
 
@@ -319,8 +321,7 @@ class WriterNodeModel extends NoInternalsModel {
 
     FskPortObject in = (FskPortObject) inObjects[0];
     
-    scriptHandler = ScriptHandler.createHandler(SwaggerUtil.getLanguageWrittenIn(in.modelMetadata),
-        in.packages);
+    
     URL url = FileUtil.toURL(filePath.getStringValue());
     File localPath = FileUtil.getFileFromURL(url);
 
