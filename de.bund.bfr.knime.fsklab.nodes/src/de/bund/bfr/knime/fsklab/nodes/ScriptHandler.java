@@ -13,6 +13,7 @@ import org.knime.core.node.NodeLogger;
 import org.knime.core.util.FileUtil;
 import org.knime.python2.PythonVersion;
 import de.bund.bfr.knime.fsklab.nodes.plot.ModelPlotter;
+import de.bund.bfr.knime.fsklab.v1_9.CombinedFskPortObject;
 import de.bund.bfr.knime.fsklab.v1_9.FskPortObject;
 import de.bund.bfr.knime.fsklab.v1_9.FskSimulation;
 import de.bund.bfr.knime.fsklab.v1_9.JoinRelationAdvanced;
@@ -76,8 +77,7 @@ public abstract class ScriptHandler implements AutoCloseable {
     jsonHandler = JsonHandler.createHandler(this, exec);
     jsonHandler.applyJoinRelation(fskObj, joinRelationList, suffix);
 
-    
-    
+  
     exec.setProgress(0.72, "Set parameter values");
     LOGGER.info(" Running with '" + simulation.getName() + "' simulation!");
 
@@ -103,7 +103,7 @@ public abstract class ScriptHandler implements AutoCloseable {
     // JsonHandler stores all input parameters before model execution
     
     jsonHandler.saveInputParameters(fskObj);
-    
+
     exec.setProgress(0.75, "Run models script");
     runScript(fskObj.getModel(), exec, false);
 
