@@ -100,7 +100,7 @@ public class RJsonHandler extends JsonHandler {
     
     //TODO: figure out if libraries are loaded at this point
     StringBuilder script = new StringBuilder();
-    script.append("json_params <- read_json( '" + parameterJson + "', simplifyVector = TRUE)\n");
+    script.append("json_params <- read_json( '" + parameterJson + "', simplifyVector = FALSE)\n");
     script.append("sourceParam <- '" + sourceParam + "'\n");
     script.append("targetParam <- '" + targetParam + "'\n");
         
