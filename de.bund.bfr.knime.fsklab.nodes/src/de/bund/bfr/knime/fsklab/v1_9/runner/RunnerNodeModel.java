@@ -191,10 +191,8 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
     FskSimulation fskSimulation = new FskSimulation("dd");
 //    fskObj.setViz("plot(1)");
     runSnippet(fskObj, fskSimulation, exec, joinRelationList, "");
-    
-    
-    
   }
+
   private List<JoinRelationAdvanced> getMapOfTopLevelParameters(
       FskPortObject topLevel,
       FskPortObject fskObj,
