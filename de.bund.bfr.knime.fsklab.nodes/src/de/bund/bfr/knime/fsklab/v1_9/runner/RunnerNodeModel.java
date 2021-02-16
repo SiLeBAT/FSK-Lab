@@ -49,7 +49,9 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.image.ImagePortObject;
 import org.knime.core.node.port.image.ImagePortObjectSpec;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.nodes.JsonHandler;
+import de.bund.bfr.knime.fsklab.nodes.ParameterData;
 import de.bund.bfr.knime.fsklab.nodes.ScriptHandler;
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
 import de.bund.bfr.knime.fsklab.r.client.ScriptExecutor;
@@ -168,6 +170,8 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
       e.printStackTrace();
     }
     
+    serializeParameterJson(fskObj);
+    
     try (FileInputStream fis = new FileInputStream(internalSettings.imageFile)) {
       final SvgImageContent content = new SvgImageContent(fis);
       ImagePortObject imgObj = new ImagePortObject(content, SVG_SPEC);
@@ -193,6 +197,19 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
     runSnippet(fskObj, fskSimulation, exec, joinRelationList, "");
   }
 
+  
+  private void serializeParameterJson(FskPortObject fskObj) throws Exception {
+    ObjectMapper paramMapper = new ObjectMapper();
+    ParameterData parameterJson = new ParameterData(SwaggerUtil.getLanguageWrittenIn(fskObj.modelMetadata));
+    
+    List<Parameter> parameters = SwaggerUtil.getParameter(fskObj.modelMetadata);
+    for (Parameter param : parameters) {
+      parameterJson.addParameters(param);
+    }
+    
+    paramMapper.writeValue(new File("C:/Users/thsch/OneDrive/Dokumente/CodeAndScripts/paramJsonJavaTest.json"), parameterJson);
+  }
+  
   private List<JoinRelationAdvanced> getMapOfTopLevelParameters(
       FskPortObject topLevel,
       FskPortObject fskObj,
