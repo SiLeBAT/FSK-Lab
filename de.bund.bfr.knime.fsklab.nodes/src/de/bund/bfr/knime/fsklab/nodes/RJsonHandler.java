@@ -52,11 +52,14 @@ public class RJsonHandler extends JsonHandler {
     
     // save type of parameters (class)
     script.append(addTypesToJson(fskObj));
-    
+    script.append("toJSON(" + JSON_PARAMETERS_NAME + ", auto_unbox=TRUE)\n");
+    String [] results = scriptHandler.runScript(script.toString(), exec, true);
     script.append("write_json(" + JSON_PARAMETERS_NAME + ", '" + JSON_FILE_NAME + "', auto_unbox=TRUE)\n");
     scriptHandler.runScript(script.toString(), exec, false);
+    
   }
 
+  
   @Override
   protected
   String compileListOfParameters(FskPortObject fskObj, ClassificationEnum classification) {

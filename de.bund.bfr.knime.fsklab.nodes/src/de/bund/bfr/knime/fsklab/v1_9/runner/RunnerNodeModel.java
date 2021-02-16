@@ -204,7 +204,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
     
     List<Parameter> parameters = SwaggerUtil.getParameter(fskObj.modelMetadata);
     for (Parameter param : parameters) {
-      parameterJson.addParameters(param);
+      parameterJson.addParameter(param, SwaggerUtil.getModelId(fskObj.modelMetadata), "[1, 2, 3]");
     }
     
     paramMapper.writeValue(new File("C:/Users/thsch/OneDrive/Dokumente/CodeAndScripts/paramJsonJavaTest.json"), parameterJson);

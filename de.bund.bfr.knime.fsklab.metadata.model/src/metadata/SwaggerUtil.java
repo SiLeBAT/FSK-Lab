@@ -704,6 +704,42 @@ public class SwaggerUtil {
 		return name;
 	}
 	
+	/** @return language written in. Null if missing. */
+	public static String getModelId(Model model) {
+		String name;
+
+		final String modelType = model.getModelType();
+		if (modelType.equalsIgnoreCase("genericModel")) {
+			name = ((GenericModel) model).getGeneralInformation().getIdentifier();
+		} else if (modelType.equalsIgnoreCase("dataModel")) {
+			name = ((DataModel) model).getGeneralInformation().getIdentifier();
+		} else if (modelType.equalsIgnoreCase("predictiveModel")) {
+			name = ((PredictiveModel) model).getGeneralInformation().getIdentifier();
+		} else if (modelType.equalsIgnoreCase("otherModel")) {
+			name = ((OtherModel) model).getGeneralInformation().getIdentifier();
+		} else if (modelType.equalsIgnoreCase("exposureModel")) {
+			name = ((ExposureModel) model).getGeneralInformation().getIdentifier();
+		} else if (modelType.equalsIgnoreCase("toxicologicalModel")) {
+			name = ((ToxicologicalModel) model).getGeneralInformation().getIdentifier();
+		} else if (modelType.equalsIgnoreCase("doseResponseModel")) {
+			name = ((DoseResponseModel) model).getGeneralInformation().getIdentifier();
+		} else if (modelType.equalsIgnoreCase("processModel")) {
+			name = ((ProcessModel) model).getGeneralInformation().getIdentifier();
+		} else if (modelType.equalsIgnoreCase("consumptionModel")) {
+			name = ((ConsumptionModel) model).getGeneralInformation().getIdentifier();
+		} else if (modelType.equalsIgnoreCase("riskModel")) {
+			name = ((RiskModel) model).getGeneralInformation().getIdentifier();
+		} else if (modelType.equalsIgnoreCase("qraModel")) {
+			name = ((QraModel) model).getGeneralInformation().getIdentifier();
+		}  else if (modelType.equalsIgnoreCase("healthModel")) {
+			name = ((HealthModel) model).getGeneralInformation().getIdentifier();
+		} else {
+			name = null;
+		}
+
+		return name;
+	}
+	
 	public static void setModelName(Model model, String name) {
 
 		final String modelType = model.getModelType();

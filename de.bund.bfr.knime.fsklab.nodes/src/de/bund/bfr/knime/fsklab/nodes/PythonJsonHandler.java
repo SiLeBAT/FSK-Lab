@@ -48,6 +48,10 @@ public class PythonJsonHandler extends JsonHandler {
 
     compileListOfParameters(fskObj, Parameter.ClassificationEnum.OUTPUT);
     StringBuilder script = new StringBuilder();
+    script.append("#JSON_PARAMETER_OUTUT\n");
+    script.append("print(json.dumps(" + JSON_PARAMETERS_NAME + "))\n");
+    String[] results = scriptHandler.runScript(script.toString(), exec, true);
+    
     script.append("with open('" + JSON_FILE_NAME +"', 'w') as outfile:\n");
     script.append("\tjson.dump(" + JSON_PARAMETERS_NAME + ", outfile)\n");
     scriptHandler.runScript(script.toString(), exec, false);

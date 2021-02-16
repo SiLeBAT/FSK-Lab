@@ -60,6 +60,10 @@ public class PythonScriptHandler extends ScriptHandler {
       std_out += output[0] + "\n";
     if (!output[1].isEmpty())
       std_err += output[1] + "\n";
+    
+    // this prevents the json data string to be corrupted:
+    if(script.startsWith("#JSON_PARAMETER_OUTUT"))
+      return output;
     return output[0].replaceAll("[\\[\\]\\'\\n]", "").split(","); // remove these characters: [ ' \n 
   }
 
