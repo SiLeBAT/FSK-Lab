@@ -71,6 +71,7 @@ public abstract class JsonHandler {
               if(param.getDataType().equals(Parameter.DataTypeEnum.FILE)) {
                 addPathToFileParameter(param.getId(), resourcePath);
               }
+              String rep = joinRelation.replaceCommand(param.getId());
               applyJoinCommand(param.getId(), joinRelation.replaceCommand(param.getId()));
             }
           }

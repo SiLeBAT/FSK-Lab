@@ -49,6 +49,7 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.image.ImagePortObject;
 import org.knime.core.node.port.image.ImagePortObjectSpec;
+import de.bund.bfr.knime.fsklab.nodes.JsonHandler;
 import de.bund.bfr.knime.fsklab.nodes.ScriptHandler;
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
 import de.bund.bfr.knime.fsklab.r.client.ScriptExecutor;
@@ -162,13 +163,19 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
       }
      
       runFskPortObject(fskObj, combinedSim, exec, joinRelationList, "");
+      
     } catch (Exception e) {
       e.printStackTrace();
     }
-
+    
     try (FileInputStream fis = new FileInputStream(internalSettings.imageFile)) {
       final SvgImageContent content = new SvgImageContent(fis);
       ImagePortObject imgObj = new ImagePortObject(content, SVG_SPEC);
+      // create a parameter.json for the top level combined model
+      if (fskObj instanceof CombinedFskPortObject) {
+        createTopLevelJsonFile((CombinedFskPortObject)fskObj, null, exec);  
+      }
+      
       return new PortObject[] {fskObj, imgObj};
     } catch (IOException e) {
       LOGGER.warn("There is no image created");
@@ -176,6 +183,50 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
     }
   }
 
+  private void createTopLevelJsonFile(CombinedFskPortObject fskObj,
+      List<JoinRelationAdvanced> joinRelationList,
+      ExecutionContext exec) throws Exception {
+    
+    joinRelationList = getMapOfTopLevelParameters(fskObj, fskObj, null,"");
+    FskSimulation fskSimulation = new FskSimulation("dd");
+//    fskObj.setViz("plot(1)");
+    runSnippet(fskObj, fskSimulation, exec, joinRelationList, "");
+  }
+
+  private List<JoinRelationAdvanced> getMapOfTopLevelParameters(
+      FskPortObject topLevel,
+      FskPortObject fskObj,
+      List<JoinRelationAdvanced> joinRelationList,
+      String suffix) {
+    if (joinRelationList == null) {
+      joinRelationList = new ArrayList<JoinRelationAdvanced>();
+    }
+    if (fskObj instanceof CombinedFskPortObject) {
+      joinRelationList =
+          getMapOfTopLevelParameters(topLevel, ((CombinedFskPortObject) fskObj).getFirstFskPortObject(),
+              joinRelationList, suffix + JoinerNodeModel.SUFFIX_FIRST);
+      joinRelationList =
+          getMapOfTopLevelParameters(topLevel, ((CombinedFskPortObject) fskObj).getSecondFskPortObject(),
+              joinRelationList, suffix + JoinerNodeModel.SUFFIX_SECOND);
+    } else {
+      List<Parameter> topLevelParameter = SwaggerUtil.getParameter(topLevel.modelMetadata);
+      List<Parameter> botLevelParameter = SwaggerUtil.getParameter(fskObj.modelMetadata);
+      for (Parameter topParam : topLevelParameter) {
+        for(Parameter botParam : botLevelParameter) {
+          if ( topParam.getId().startsWith(botParam.getId() + suffix)) {
+            JoinRelation joinRelation = new JoinRelation(
+                botParam.getId(),
+                topParam.getId(),
+                botParam.getId() + suffix,
+                SwaggerUtil.getLanguageWrittenIn(fskObj.modelMetadata));
+            JoinRelationAdvanced entry = new JoinRelationAdvanced(joinRelation, fskObj, suffix);
+            joinRelationList.add(entry);
+          }
+        }
+      }
+    }
+    return joinRelationList;
+  }
   public void reSelectSimulation(FskPortObject fskObj, int index) {
     fskObj.selectedSimulationIndex = index;
     if (fskObj instanceof CombinedFskPortObject) {

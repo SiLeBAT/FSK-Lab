@@ -10,6 +10,8 @@ if(var_types[sourceParam] == 'DataFrame' | var_types[sourceParam] == 'data.frame
   if(script_language == "Python") {
     #unlist columns to restore their original structure
     assign(targetParam,as.data.frame(lapply(lapply(fromJSON(json_params[sourceParam][[1]]),cbind),unlist)))
+  } else {
+    assign(targetParam, do.call(rbind.data.frame, json_params[sourceParam][[1]]))
   }
 } else if ((var_types[sourceParam] =='ndarray'| var_types[sourceParam] =='list' ) & classes == 1 & sizes==1) {
     assign(targetParam,matrix(unlist(json_params[sourceParam][[1]]), nrow=length(json_params[sourceParam][[1]])))
