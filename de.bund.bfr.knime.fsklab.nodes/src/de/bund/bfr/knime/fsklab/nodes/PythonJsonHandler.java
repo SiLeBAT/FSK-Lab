@@ -2,6 +2,7 @@ package de.bund.bfr.knime.fsklab.nodes;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.knime.core.node.ExecutionContext;
@@ -32,29 +33,45 @@ public class PythonJsonHandler extends JsonHandler {
   public void saveInputParameters(FskPortObject fskObj) throws Exception {
     // create script to store variables in hdf5 file
 
-    scriptHandler.runScript(JSON_PARAMETERS_NAME + " = {}\n", exec, false);
     
-    // set script language
-    scriptHandler.runScript(JSON_PARAMETERS_NAME + "['script_language'] = 'Python'\n", exec, false);
-    scriptHandler.runScript(JSON_PARAMETERS_NAME + "['var_types'] = {}\n", exec, false);
-    compileListOfParameters(fskObj, Parameter.ClassificationEnum.INPUT);
+    parameterJson.setGeneratorLanguage(SwaggerUtil.getLanguageWrittenIn(fskObj.modelMetadata));
+    
+    String modelId = SwaggerUtil.getModelId(fskObj.modelMetadata);
+    
+    List<Parameter> parameters = SwaggerUtil.getParameter(fskObj.modelMetadata);
+    for (Parameter p : parameters) {
+      if (p.getClassification() != Parameter.ClassificationEnum.OUTPUT) {
+        StringBuilder script = new StringBuilder();
+        script.append("#JSON_PARAMETER_OUTUT\n");
+        convertParamToJsonSerializable(p.getId(), Parameter.ClassificationEnum.INPUT);
+        script.append("print(toSerializable)\n");
+        String [] results = scriptHandler.runScript(script.toString(), exec, true);
+        String data = (results != null) ? results[0] : "";
+        parameterJson.addParameter(p, modelId , data);
+      } 
+    }
     
   }
 
   @Override
-  public void saveOutputParameters(FskPortObject fskObj) throws Exception {
+  public void saveOutputParameters(FskPortObject fskObj, Path workingDirectory) throws Exception {
     // create script to store variables in hdf5 file
     
-
-    compileListOfParameters(fskObj, Parameter.ClassificationEnum.OUTPUT);
-    StringBuilder script = new StringBuilder();
-    script.append("#JSON_PARAMETER_OUTUT\n");
-    script.append("print(json.dumps(" + JSON_PARAMETERS_NAME + "))\n");
-    String[] results = scriptHandler.runScript(script.toString(), exec, true);
-    
-    script.append("with open('" + JSON_FILE_NAME +"', 'w') as outfile:\n");
-    script.append("\tjson.dump(" + JSON_PARAMETERS_NAME + ", outfile)\n");
-    scriptHandler.runScript(script.toString(), exec, false);
+    String modelId = SwaggerUtil.getModelId(fskObj.modelMetadata);
+    List<Parameter> parameters = SwaggerUtil.getParameter(fskObj.modelMetadata);
+    for (Parameter p : parameters) {
+      if (p.getClassification() == Parameter.ClassificationEnum.OUTPUT) {
+        StringBuilder script = new StringBuilder();
+        script.append("#JSON_PARAMETER_OUTUT\n");
+        convertParamToJsonSerializable(p.getId(), Parameter.ClassificationEnum.OUTPUT);
+        script.append("print(toSerializable)\n");
+        String [] results = scriptHandler.runScript(script.toString(), exec, true);
+        String data = (results != null) ? results[0] : "";
+        parameterJson.addParameter(p, modelId , data);
+      } 
+    }
+    String path = workingDirectory.toString() + File.separator + JSON_FILE_NAME;
+    MAPPER.writeValue(new File(path), parameterJson);
   }
 
 
@@ -113,7 +130,7 @@ public class PythonJsonHandler extends JsonHandler {
   private void convertParamToJsonSerializable(String parameter, ClassificationEnum classification) throws Exception {
     StringBuilder script = new StringBuilder();
   
-    if (classification.equals(Parameter.ClassificationEnum.INPUT)) {
+    if (!classification.equals(Parameter.ClassificationEnum.OUTPUT)) {
       // deep copy input parameters in case their values change during script execution
       script.append("toSerializable = copy.deepcopy(" + parameter + ")\n"); // deep copy is expensive, so only do it for input parameters  
     } else {

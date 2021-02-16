@@ -12,6 +12,7 @@ import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.util.FileUtil;
 import org.knime.python2.PythonVersion;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.nodes.plot.ModelPlotter;
 import de.bund.bfr.knime.fsklab.v1_9.CombinedFskPortObject;
 import de.bund.bfr.knime.fsklab.v1_9.FskPortObject;
@@ -75,7 +76,7 @@ public abstract class ScriptHandler implements AutoCloseable {
     }
     
     jsonHandler = JsonHandler.createHandler(this, exec);
-    jsonHandler.applyJoinRelation(fskObj, joinRelationList, suffix);
+    //jsonHandler.applyJoinRelation(fskObj, joinRelationList, suffix);
 
   
     exec.setProgress(0.72, "Set parameter values");
@@ -138,7 +139,7 @@ public abstract class ScriptHandler implements AutoCloseable {
     saveWorkspace(fskObj, exec);
     
     // HDFHandler stores all ouput parameters in HDF file
-    jsonHandler.saveOutputParameters(fskObj);
+    jsonHandler.saveOutputParameters(fskObj, workingDirectory.get());
     
     // Save generated resources
     if (workingDirectory.isPresent()) {

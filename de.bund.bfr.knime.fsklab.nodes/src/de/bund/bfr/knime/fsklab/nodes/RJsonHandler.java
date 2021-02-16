@@ -2,6 +2,7 @@ package de.bund.bfr.knime.fsklab.nodes;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.knime.core.node.ExecutionContext;
@@ -31,32 +32,40 @@ public class RJsonHandler extends JsonHandler {
 
   @Override
   public void saveInputParameters(FskPortObject fskObj) throws Exception {
-    StringBuilder script = new StringBuilder();
+  
+    parameterJson.setGeneratorLanguage(SwaggerUtil.getLanguageWrittenIn(fskObj.modelMetadata));
     
-    script.append(JSON_PARAMETERS_NAME + " <- list()\n");
+    String modelId = SwaggerUtil.getModelId(fskObj.modelMetadata);
+    List<Parameter> parameters = SwaggerUtil.getParameter(fskObj.modelMetadata);
+    for (Parameter p : parameters) {
+      if (p.getClassification() != Parameter.ClassificationEnum.OUTPUT) {
+        
+        String [] results = scriptHandler.runScript("toJSON(" + p.getId() + ", auto_unbox=TRUE)\n", exec, true);
+        String data = (results != null) ? results[0] : "";
+        parameterJson.addParameter(p, modelId , data);
+      } 
+    }
     
-    // set script language
-    script.append(JSON_PARAMETERS_NAME + "$script_language <- 'R'\n");
-    
-    script.append(compileListOfParameters(fskObj, Parameter.ClassificationEnum.INPUT));
-    
-    scriptHandler.runScript(script.toString(), exec, false);
-
   }
 
   @Override
-  public void saveOutputParameters(FskPortObject fskObj) throws Exception {
+  public void saveOutputParameters(FskPortObject fskObj, Path workingDirectory) throws Exception {
     StringBuilder script = new StringBuilder();
     
-    script.append(compileListOfParameters(fskObj, Parameter.ClassificationEnum.OUTPUT));
     
-    // save type of parameters (class)
-    script.append(addTypesToJson(fskObj));
-    script.append("toJSON(" + JSON_PARAMETERS_NAME + ", auto_unbox=TRUE)\n");
-    String [] results = scriptHandler.runScript(script.toString(), exec, true);
-    script.append("write_json(" + JSON_PARAMETERS_NAME + ", '" + JSON_FILE_NAME + "', auto_unbox=TRUE)\n");
-    scriptHandler.runScript(script.toString(), exec, false);
+    String modelId = SwaggerUtil.getModelId(fskObj.modelMetadata);
+    List<Parameter> parameters = SwaggerUtil.getParameter(fskObj.modelMetadata);
+    for (Parameter p : parameters) {
+      if (p.getClassification() == Parameter.ClassificationEnum.OUTPUT) {
+        script.append("toJSON(" + p.getId() + ", auto_unbox=TRUE)\n");
+        String [] results = scriptHandler.runScript("toJSON(" + p.getId() + ", auto_unbox=TRUE)\n", exec, true);
+        String data = (results != null) ? results[0] : "";
+        parameterJson.addParameter(p, modelId , data);
+      } 
+    }
     
+    String path = workingDirectory.toString() + File.separator + JSON_FILE_NAME;
+    MAPPER.writeValue(new File(path), parameterJson);
   }
 
   

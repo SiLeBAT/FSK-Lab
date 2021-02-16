@@ -170,8 +170,6 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
       e.printStackTrace();
     }
     
-    serializeParameterJson(fskObj);
-    
     try (FileInputStream fis = new FileInputStream(internalSettings.imageFile)) {
       final SvgImageContent content = new SvgImageContent(fis);
       ImagePortObject imgObj = new ImagePortObject(content, SVG_SPEC);
@@ -198,17 +196,17 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
   }
 
   
-  private void serializeParameterJson(FskPortObject fskObj) throws Exception {
-    ObjectMapper paramMapper = new ObjectMapper();
-    ParameterData parameterJson = new ParameterData(SwaggerUtil.getLanguageWrittenIn(fskObj.modelMetadata));
-    
-    List<Parameter> parameters = SwaggerUtil.getParameter(fskObj.modelMetadata);
-    for (Parameter param : parameters) {
-      parameterJson.addParameter(param, SwaggerUtil.getModelId(fskObj.modelMetadata), "[1, 2, 3]");
-    }
-    
-    paramMapper.writeValue(new File("C:/Users/thsch/OneDrive/Dokumente/CodeAndScripts/paramJsonJavaTest.json"), parameterJson);
-  }
+//  private void serializeParameterJson(FskPortObject fskObj) throws Exception {
+//    ObjectMapper paramMapper = new ObjectMapper();
+//    ParameterData parameterJson = new ParameterData(SwaggerUtil.getLanguageWrittenIn(fskObj.modelMetadata));
+//    
+//    List<Parameter> parameters = SwaggerUtil.getParameter(fskObj.modelMetadata);
+//    for (Parameter param : parameters) {
+//      parameterJson.addParameter(param, SwaggerUtil.getModelId(fskObj.modelMetadata), "[1, 2, 3]");
+//    }
+//    
+//    paramMapper.writeValue(new File("C:/Users/thsch/OneDrive/Dokumente/CodeAndScripts/paramJsonJavaTest.json"), parameterJson);
+//  }
   
   private List<JoinRelationAdvanced> getMapOfTopLevelParameters(
       FskPortObject topLevel,
@@ -447,10 +445,13 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
       List<JoinRelationAdvanced> joinRelationList,
       String suffix) throws Exception {
     
+    
+  
+    
     try (ScriptHandler handler = ScriptHandler
         .createHandler(SwaggerUtil.getLanguageWrittenIn(fskObj.modelMetadata), fskObj.packages)) {
      
-      handler.runSnippet(fskObj, simulation, exec, LOGGER, internalSettings.imageFile, joinRelationList, suffix);
+      handler.runSnippet(fskObj, simulation, exec, LOGGER, internalSettings.imageFile, joinRelationList,  suffix);
   
       // process the return value of error capturing and update error and
       // output views accordingly

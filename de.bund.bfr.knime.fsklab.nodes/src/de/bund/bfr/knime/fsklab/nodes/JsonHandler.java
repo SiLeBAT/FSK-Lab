@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
@@ -12,6 +13,7 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
 import org.knime.core.node.ExecutionContext;
 import org.osgi.framework.Bundle;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.v1_9.FskPortObject;
 import de.bund.bfr.knime.fsklab.v1_9.JoinRelationAdvanced;
 import de.bund.bfr.metadata.swagger.Parameter;
@@ -36,11 +38,13 @@ public abstract class JsonHandler {
 
   protected ScriptHandler scriptHandler;
   protected ExecutionContext exec;
-  
+  protected ParameterData parameterJson;
+  protected ObjectMapper MAPPER = new ObjectMapper();
+   
   protected JsonHandler(ScriptHandler scriptHandler, ExecutionContext exec) {
     this.scriptHandler = scriptHandler;
     this.exec = exec;
-    
+    this.parameterJson = new ParameterData();
     try {
       importLibraries();
     } catch(Exception e) {
@@ -106,7 +110,7 @@ public abstract class JsonHandler {
    * @param FSKPortObject fsk object containing the parameter names
    * @throws Exception if an error occurs running the script.
    */
-  public abstract void saveOutputParameters(FskPortObject fskObj)
+  public abstract void saveOutputParameters(FskPortObject fskObj, Path workingDirectory)
       throws Exception;
 
   /**

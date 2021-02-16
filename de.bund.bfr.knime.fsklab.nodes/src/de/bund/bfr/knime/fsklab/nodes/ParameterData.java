@@ -10,8 +10,8 @@ public class ParameterData {
 
   private List<DataArray> parameters;
   
-  public ParameterData(String language) {
-    setGeneratorLanguage(language);
+  public ParameterData() {
+    
     this.parameters = new ArrayList<DataArray>();
     
   }
