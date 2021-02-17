@@ -129,7 +129,6 @@ joiner = function () {
     });
     
     
-    _paper.scaleContentToFit();
   }
   view.init = function (representation, value) {
     _value = value;
@@ -377,7 +376,7 @@ joiner = function () {
       width: 150,
       height: modelHeight
     });
-    modelsPool[key]['modelToJoin'] = createAtomic(paperWidth - (250 * (4 - (Object.keys(modelsPool).indexOf(key)))), 60, 175,
+    modelsPool[key]['modelToJoin'] = createAtomic(paperWidth - (200 * (4 - (Object.keys(modelsPool).indexOf(key)))), 60, 160,
       modelHeight, modelNameWrap, modelsPool[key]['inputParameters'],
       modelsPool[key]['outputParameters'], key, modelsPool[key]['simulation']);
 
