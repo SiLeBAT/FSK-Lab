@@ -106,7 +106,6 @@ joiner = function () {
     }
   }
   let selectionChanged = function (modelMetaData) {
-	console.log(modelMetaData);
     cleanUp();
     let _modelColectionSuffixed =  addSuffixToParameters(JSON.parse(JSON.stringify(modelMetaData.changeSet.added[0]["selecteModels"])));
     poolSize =_modelColectionSuffixed.length;
@@ -376,7 +375,7 @@ joiner = function () {
       width: 150,
       height: modelHeight
     });
-    modelsPool[key]['modelToJoin'] = createAtomic(paperWidth - (200 * (4 - (Object.keys(modelsPool).indexOf(key)))), 60, 160,
+    modelsPool[key]['modelToJoin'] = createAtomic(paperWidth - (210 * (4 - (Object.keys(modelsPool).indexOf(key)))), 55, 160,
       modelHeight, modelNameWrap, modelsPool[key]['inputParameters'],
       modelsPool[key]['outputParameters'], key, modelsPool[key]['simulation']);
 
@@ -1033,7 +1032,6 @@ joiner = function () {
 
     if (_graphObject) { 
       _graph.fromJSON(_graphObject);
-      console.log(_graphObject);
 
       if (_graphObject.cells) {
         for (const cell of _graphObject.cells) {
