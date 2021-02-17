@@ -18,6 +18,9 @@
  */
 package de.bund.bfr.knime.fsklab.v1_9.editor;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -27,15 +30,19 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import org.apache.commons.lang3.StringUtils;
+import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
+import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
+import org.knime.core.node.interactive.ViewRequestHandlingException;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectHolder;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.web.ValidationError;
+import org.knime.js.core.JSONViewRequestHandler;
 import org.knime.js.core.node.AbstractWizardNodeModel;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -51,6 +58,8 @@ import de.bund.bfr.knime.fsklab.v1_9.FskSimulation;
 import de.bund.bfr.knime.fsklab.v1_9.editor.FSKEditorJSNodeDialog.ModelType;
 import de.bund.bfr.metadata.swagger.Model;
 import de.bund.bfr.metadata.swagger.Parameter;
+import de.bund.bfr.rakip.vocabularies.data.SourceRepository;
+import de.bund.bfr.rakip.vocabularies.domain.Source;
 import metadata.SwaggerUtil;
 
 
@@ -59,7 +68,7 @@ import metadata.SwaggerUtil;
  */
 final class FSKEditorJSNodeModel
     extends AbstractWizardNodeModel<FSKEditorJSViewRepresentation, FSKEditorJSViewValue>
-    implements PortObjectHolder {
+    implements PortObjectHolder, JSONViewRequestHandler<FSKEditorJSViewRequest, FSKEditorJSViewResponse> {
 
   private final FSKEditorJSConfig m_config = new FSKEditorJSConfig();
   private FskPortObject m_port;
@@ -355,5 +364,32 @@ final class FSKEditorJSNodeModel
     m_port.getEnvironmentManager().ifPresent(value::setEnvironment);
     
     // Cannot assign server name, completed and validation errors
+  }
+  
+  @Override
+  public FSKEditorJSViewResponse handleRequest(FSKEditorJSViewRequest request,
+      ExecutionMonitor exec)
+      throws ViewRequestHandlingException, InterruptedException, CanceledExecutionException {
+
+    final FSKEditorJSViewResponse response = new FSKEditorJSViewResponse(request);
+    
+    String dataString = "";
+    try (Connection connection = DriverManager.getConnection("jdbc:h2:~/.fsk/vocabularies")) {
+      // TODO: using source as an example. Enable all entities.
+      SourceRepository repository = new SourceRepository(connection);
+      Source[] sources = repository.getAll();
+      // TODO: temporary serialization to JSON. Actual values should be returned.
+      dataString = MAPPER.writeValueAsString(sources);
+    } catch (SQLException | JsonProcessingException e) {
+      dataString = "";
+    }
+    response.setVocabulary(dataString);
+    
+    return response;
+  }
+
+  @Override
+  public FSKEditorJSViewRequest createEmptyViewRequest() {
+    return new FSKEditorJSViewRequest();
   }
 }

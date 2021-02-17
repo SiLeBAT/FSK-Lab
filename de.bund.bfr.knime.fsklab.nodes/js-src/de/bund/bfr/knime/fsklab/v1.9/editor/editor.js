@@ -62,6 +62,15 @@ fskeditorjs = function () {
     //fskutil = new fskutil();
     extractAndCreateUI(value.modelMetaData);
     
+    // New requests test (TODO: delete this) -------------
+    const request = { vocabulary: 'source' };
+    let promise = knimeService.requestViewUpdate(request);
+    promise.progress(monitor => {
+      // empty: no progress update
+    }).then(response => {
+      console.log(response.vocabulary);
+    });
+    // TODO: delete above --------------------------------
   }
   async function  extractAndCreateUI(modelMetaData, modelscript, visualization){
     if (!modelMetaData || modelMetaData == "null" || modelMetaData == "") {
