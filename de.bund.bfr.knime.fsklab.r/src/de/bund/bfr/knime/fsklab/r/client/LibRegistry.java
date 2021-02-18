@@ -182,7 +182,7 @@ public class LibRegistry {
       } catch(Exception e) {
         missingPackages = packages;
       }
-      missingPackages.add("jsonlite");
+
       if (!missingPackages.isEmpty()) {
 
         // Adds the dependencies to the miniCRAN repository

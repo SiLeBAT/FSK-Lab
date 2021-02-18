@@ -6,7 +6,6 @@ import java.nio.file.Path;
 import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.knime.core.node.ExecutionContext;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import de.bund.bfr.knime.fsklab.v1_9.FskPortObject;
 import de.bund.bfr.metadata.swagger.Parameter;
 import de.bund.bfr.metadata.swagger.Parameter.ClassificationEnum;
