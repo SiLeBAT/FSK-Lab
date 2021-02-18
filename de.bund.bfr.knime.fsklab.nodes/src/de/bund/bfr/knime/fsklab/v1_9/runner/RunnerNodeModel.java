@@ -49,9 +49,7 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.image.ImagePortObject;
 import org.knime.core.node.port.image.ImagePortObjectSpec;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.nodes.JsonHandler;
-import de.bund.bfr.knime.fsklab.nodes.ParameterData;
 import de.bund.bfr.knime.fsklab.nodes.ScriptHandler;
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
 import de.bund.bfr.knime.fsklab.r.client.ScriptExecutor;
@@ -191,7 +189,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
     
     joinRelationList = getMapOfTopLevelParameters(fskObj, fskObj, null,"");
     FskSimulation fskSimulation = new FskSimulation("dd");
-    fskObj.setViz("");
+//    fskObj.setViz("plot(1)");
     runSnippet(fskObj, fskSimulation, exec, joinRelationList, "");
   }
 
@@ -432,13 +430,10 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
       List<JoinRelationAdvanced> joinRelationList,
       String suffix) throws Exception {
     
-    
-    exec.setProgress(0.5, "execute "+ SwaggerUtil.getModelId(fskObj.modelMetadata) );
-    
     try (ScriptHandler handler = ScriptHandler
         .createHandler(SwaggerUtil.getLanguageWrittenIn(fskObj.modelMetadata), fskObj.packages)) {
      
-      handler.runSnippet(fskObj, simulation, exec, LOGGER, internalSettings.imageFile, joinRelationList,  suffix);
+      handler.runSnippet(fskObj, simulation, exec, LOGGER, internalSettings.imageFile, joinRelationList, suffix);
   
       // process the return value of error capturing and update error and
       // output views accordingly
