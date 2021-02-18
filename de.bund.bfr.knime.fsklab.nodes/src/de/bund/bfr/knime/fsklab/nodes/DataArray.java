@@ -8,12 +8,21 @@ public class DataArray {
   private final Parameter metadata;
   private final String data;
   private final String modelId;
+  private final String parameterType;   // this will be removed when FSK-ML 5 is out
   
-  
-  public DataArray(Parameter parameter,String modelId,  String data) {
+  public DataArray() {
+    metadata = new Parameter();
+    data = "";
+    modelId = "";
+    parameterType = "";
+  }
+  public DataArray(Parameter parameter,String modelId,
+      String data,
+      String type) {
     metadata = parameter;
     this.data = data;
     this.modelId = modelId;
+    this.parameterType = type;
   }
   public Parameter getMetadata() {
     return metadata;
@@ -24,6 +33,9 @@ public class DataArray {
   
   public String getModelId() {
     return modelId;
+  }
+  public String getParameterType() {
+    return parameterType;
   }
   
   

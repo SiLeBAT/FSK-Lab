@@ -29,8 +29,8 @@ public class ParameterData {
     this.parameters = parameters;
   }
   
-  public void addParameter(Parameter parameter, String modelId, String data) {
-    DataArray arr = new DataArray(parameter, modelId, data);
+  public void addParameter(Parameter parameter, String modelId, String data, String parameterType) {
+    DataArray arr = new DataArray(parameter, modelId, data.replaceAll("\\r?\\n",""), parameterType);
     this.parameters.add(arr);
   }
   

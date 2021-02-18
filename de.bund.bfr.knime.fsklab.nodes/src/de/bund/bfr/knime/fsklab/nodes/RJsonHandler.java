@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.knime.core.node.ExecutionContext;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import de.bund.bfr.knime.fsklab.v1_9.FskPortObject;
 import de.bund.bfr.metadata.swagger.Parameter;
 import de.bund.bfr.metadata.swagger.Parameter.ClassificationEnum;
@@ -39,10 +40,10 @@ public class RJsonHandler extends JsonHandler {
     List<Parameter> parameters = SwaggerUtil.getParameter(fskObj.modelMetadata);
     for (Parameter p : parameters) {
       if (p.getClassification() != Parameter.ClassificationEnum.OUTPUT) {
-        
+        String parameterType = scriptHandler.runScript("class(" + p.getId() + ")\n", exec, true)[0];
         String [] results = scriptHandler.runScript("toJSON(" + p.getId() + ", auto_unbox=TRUE)\n", exec, true);
         String data = (results != null) ? results[0] : "";
-        parameterJson.addParameter(p, modelId , data);
+        parameterJson.addParameter(p, modelId , data, parameterType);
       } 
     }
     
@@ -58,48 +59,22 @@ public class RJsonHandler extends JsonHandler {
     for (Parameter p : parameters) {
       if (p.getClassification() == Parameter.ClassificationEnum.OUTPUT) {
         script.append("toJSON(" + p.getId() + ", auto_unbox=TRUE)\n");
+        
+        String parameterDataType = scriptHandler.runScript("class(" + p.getId() + ")\n", exec, true)[0];
         String [] results = scriptHandler.runScript("toJSON(" + p.getId() + ", auto_unbox=TRUE)\n", exec, true);
         String data = (results != null) ? results[0] : "";
-        parameterJson.addParameter(p, modelId , data);
+        parameterJson.addParameter(p, modelId , data, parameterDataType);
       } 
     }
     
     String path = workingDirectory.toString() + File.separator + JSON_FILE_NAME;
-    MAPPER.writeValue(new File(path), parameterJson);
+    MAPPER.writer().writeValue(new File(path), parameterJson);
   }
 
   
-  @Override
-  protected
-  String compileListOfParameters(FskPortObject fskObj, ClassificationEnum classification) {
-    StringBuilder script = new StringBuilder();
 
-    List<Parameter> paras = SwaggerUtil.getParameter(fskObj.modelMetadata);
-    for (Parameter p : paras) {
-      if (p.getClassification() == classification) {
-        script.append(JSON_PARAMETERS_NAME + "$" + p.getId() + " <- "+ p.getId() + "\n");
-      }
-    }
-    
-    return script.toString();  
-  }
   
-  private String addTypesToJson(FskPortObject fskObj){
-    StringBuilder script = new StringBuilder();
-
-    script.append("var_types = list();\n");
-    List<Parameter> paras = SwaggerUtil.getParameter(fskObj.modelMetadata);
-    
-    for (Parameter p : paras) {
-      
-      // because of auto_unboxing, we need to crate a var_types dict
-      script.append("var_types$" + p.getId() + " <- class(" + p.getId() + ")\n");
-    }
-
-    script.append(JSON_PARAMETERS_NAME + "$var_types = var_types\n");
-    return script.toString();
-
-  }
+ 
   /**
    * 
    * @param sourceParam : parameter of first script 
@@ -110,21 +85,53 @@ public class RJsonHandler extends JsonHandler {
   public void loadParametersIntoWorkspace(String parameterJson, 
       String sourceParam, String targetParam) throws Exception {
     
-    //TODO: figure out if libraries are loaded at this point
-    StringBuilder script = new StringBuilder();
-    script.append("json_params <- read_json( '" + parameterJson + "', simplifyVector = FALSE)\n");
-    script.append("sourceParam <- '" + sourceParam + "'\n");
-    script.append("targetParam <- '" + targetParam + "'\n");
+    ParameterData parameterData = MAPPER.readValue(new File(parameterJson), ParameterData.class);
+    String language = parameterData.getGeneratorLanguage();
+    for(DataArray param : parameterData.getParameters()) {
+      if(sourceParam.equals(param.getMetadata().getId())) {
+        String type = param.getParameterType();
+        String rawJsonData = "sourceParam <- fromJSON('"+ param.getData() +"', simplifyVector=FALSE)";
+        scriptHandler.runScript(rawJsonData , exec, false);
+        String data = convertRawJson("sourceParam", language, type);
+        String script = targetParam + "<-" + data;
+        scriptHandler.runScript(script, exec, false);
+        scriptHandler.runScript("rm(sourceParam)", exec, false);
         
-    File file = getResource("data/loadJsonIntoR.r");
-    script.append(FileUtils.readFileToString(file, StandardCharsets.UTF_8));
-    
-    
-    
-    scriptHandler.runScript(script.toString(), exec, false);
+      }
+    }
+   
 
   }
 
+  private String convertRawJson(String data, String language, String type) throws Exception {
+    String converted ="";
+    
+    
+    String sizes = scriptHandler.runScript("length(unique(lapply("+ data + ",length)))", exec, true)[0];
+    String classes = scriptHandler.runScript("length(unique(lapply("+ data + ",class)))", exec, true)[0];
+    if(type.equals("DataFrame") || type.equals("data.frame")) {
+      if(language.startsWith("Python")) {
+        //unlist columns to restore their original structure
+        converted = "as.data.frame(lapply(lapply("+ data +",cbind),unlist))";
+      } else {
+        converted = "do.call(rbind.data.frame, " + data + ")";
+        
+      }
+    } 
+    else {
+     
+      if ((type.equals("ndarray") || type.equals("list")) && classes.equals("1") && sizes.equals("1")) {
+        
+        converted = "matrix(unlist(" + data + "), nrow=length(" + data + "))";
+        
+      } else {
+        converted = data;
+      }
+    }
+      
+    return converted;
+  }
+  
   @Override
   protected void addPathToFileParameter(String parameter, String path) throws Exception {
     // parameter <- paste('/path/to/resource/', parameter)

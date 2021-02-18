@@ -76,7 +76,7 @@ public abstract class ScriptHandler implements AutoCloseable {
     }
     
     jsonHandler = JsonHandler.createHandler(this, exec);
-    //jsonHandler.applyJoinRelation(fskObj, joinRelationList, suffix);
+    jsonHandler.applyJoinRelation(fskObj, joinRelationList, suffix);
 
   
     exec.setProgress(0.72, "Set parameter values");

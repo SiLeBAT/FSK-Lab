@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.knime.core.node.ExecutionContext;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import de.bund.bfr.knime.fsklab.v1_9.FskPortObject;
 import de.bund.bfr.metadata.swagger.Parameter;
 import de.bund.bfr.metadata.swagger.Parameter.ClassificationEnum;
@@ -31,9 +32,7 @@ public class PythonJsonHandler extends JsonHandler {
 
   @Override
   public void saveInputParameters(FskPortObject fskObj) throws Exception {
-    // create script to store variables in hdf5 file
-
-    
+       
     parameterJson.setGeneratorLanguage(SwaggerUtil.getLanguageWrittenIn(fskObj.modelMetadata));
     
     String modelId = SwaggerUtil.getModelId(fskObj.modelMetadata);
@@ -42,12 +41,13 @@ public class PythonJsonHandler extends JsonHandler {
     for (Parameter p : parameters) {
       if (p.getClassification() != Parameter.ClassificationEnum.OUTPUT) {
         StringBuilder script = new StringBuilder();
+        String parameterDataType = scriptHandler.runScript("print(type(" + p.getId() + ").__name__)", exec, true)[0];
         script.append("#JSON_PARAMETER_OUTUT\n");
         convertParamToJsonSerializable(p.getId(), Parameter.ClassificationEnum.INPUT);
         script.append("print(toSerializable)\n");
         String [] results = scriptHandler.runScript(script.toString(), exec, true);
         String data = (results != null) ? results[0] : "";
-        parameterJson.addParameter(p, modelId , data);
+        parameterJson.addParameter(p, modelId , data, parameterDataType);
       } 
     }
     
@@ -61,17 +61,18 @@ public class PythonJsonHandler extends JsonHandler {
     List<Parameter> parameters = SwaggerUtil.getParameter(fskObj.modelMetadata);
     for (Parameter p : parameters) {
       if (p.getClassification() == Parameter.ClassificationEnum.OUTPUT) {
+        String parameterDataType = scriptHandler.runScript("print(type(" + p.getId() + ").__name__)", exec, true)[0];
         StringBuilder script = new StringBuilder();
         script.append("#JSON_PARAMETER_OUTUT\n");
         convertParamToJsonSerializable(p.getId(), Parameter.ClassificationEnum.OUTPUT);
-        script.append("print(toSerializable)\n");
+        script.append("print(toSerializable)");
         String [] results = scriptHandler.runScript(script.toString(), exec, true);
         String data = (results != null) ? results[0] : "";
-        parameterJson.addParameter(p, modelId , data);
+        parameterJson.addParameter(p, modelId , data, parameterDataType);
       } 
     }
     String path = workingDirectory.toString() + File.separator + JSON_FILE_NAME;
-    MAPPER.writeValue(new File(path), parameterJson);
+    MAPPER.writer().writeValue(new File(path), parameterJson);
   }
 
 
@@ -86,46 +87,40 @@ public class PythonJsonHandler extends JsonHandler {
   public void loadParametersIntoWorkspace(String parameterJson, 
       String sourceParam, String targetParam) throws Exception {
     
-    StringBuilder script = new StringBuilder();
+//    StringBuilder script = new StringBuilder();
     
     //load source and target into workspace as strings
-    script.append("sourceParam = '" + sourceParam + "'\n");
-    script.append("targetParam = '" + targetParam + "'\n");
-    script.append("JSON_FILE_NAME = '" + parameterJson + "'\n");
-    // load JSON file into json_params
-    File file = getResource("data/loadJsonIntoPython.py");
-    script.append(FileUtils.readFileToString(file, StandardCharsets.UTF_8));
-    
-    
-    scriptHandler.runScript(script.toString(), exec, false);
-    
-  }
-  @Override
-  protected String compileListOfParameters(FskPortObject fskObj,
-      ClassificationEnum classification) {
-    
-    StringBuilder script = new StringBuilder();
-    
-    List<Parameter> paras = SwaggerUtil.getParameter(fskObj.modelMetadata);
-    for (Parameter p : paras) {
-      if (p.getClassification() == classification) {
+    ParameterData parameterData = MAPPER.readValue(new File(parameterJson), ParameterData.class);
+    String language = parameterData.getGeneratorLanguage();
+    for(DataArray param : parameterData.getParameters()) {
+      if(sourceParam.equals(param.getMetadata().getId())) {
+        String type = param.getParameterType();
+        String rawJsonData = "sourceParam = json.loads('"+ param.getData() +"')";
+        scriptHandler.runScript(rawJsonData , exec, false);
+        String data = convertRawJson("sourceParam", language, type);
+        String script = targetParam + "=" + data;
+        scriptHandler.runScript(script, exec, false);
+        scriptHandler.runScript("del sourceParam", exec, false);
         
-        try {
-          convertParamToJsonSerializable(p.getId(), classification);
-          scriptHandler.runScript(JSON_PARAMETERS_NAME + "['" + p.getId() + "'] = toSerializable\n", exec, false);
-          
-          // save type of parameter
-          scriptHandler.runScript(JSON_PARAMETERS_NAME + "['var_types']['" + p.getId() + "'] = type(" + p.getId() + ").__name__\n", exec, false);
-         
-        } catch (Exception e) {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        }
       }
     }
-    
-    return script.toString();
   }
+  
+  private String convertRawJson(String data, String language, String type) throws Exception {
+    String converted ="";
+    
+    if(type.equals("DataFrame") || type.equals("data.frame")) {
+      
+      converted = "pandas.DataFrame.from_records("+ data +")";
+      
+    } 
+    else {
+      converted = data;
+    }
+    return converted;
+  }
+  
+
   
   private void convertParamToJsonSerializable(String parameter, ClassificationEnum classification) throws Exception {
     StringBuilder script = new StringBuilder();

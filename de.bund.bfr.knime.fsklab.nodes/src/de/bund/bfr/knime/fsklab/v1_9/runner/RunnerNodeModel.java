@@ -191,23 +191,10 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
     
     joinRelationList = getMapOfTopLevelParameters(fskObj, fskObj, null,"");
     FskSimulation fskSimulation = new FskSimulation("dd");
-//    fskObj.setViz("plot(1)");
+    fskObj.setViz("");
     runSnippet(fskObj, fskSimulation, exec, joinRelationList, "");
   }
 
-  
-//  private void serializeParameterJson(FskPortObject fskObj) throws Exception {
-//    ObjectMapper paramMapper = new ObjectMapper();
-//    ParameterData parameterJson = new ParameterData(SwaggerUtil.getLanguageWrittenIn(fskObj.modelMetadata));
-//    
-//    List<Parameter> parameters = SwaggerUtil.getParameter(fskObj.modelMetadata);
-//    for (Parameter param : parameters) {
-//      parameterJson.addParameter(param, SwaggerUtil.getModelId(fskObj.modelMetadata), "[1, 2, 3]");
-//    }
-//    
-//    paramMapper.writeValue(new File("C:/Users/thsch/OneDrive/Dokumente/CodeAndScripts/paramJsonJavaTest.json"), parameterJson);
-//  }
-  
   private List<JoinRelationAdvanced> getMapOfTopLevelParameters(
       FskPortObject topLevel,
       FskPortObject fskObj,
@@ -446,7 +433,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
       String suffix) throws Exception {
     
     
-  
+    exec.setProgress(0.5, "execute "+ SwaggerUtil.getModelId(fskObj.modelMetadata) );
     
     try (ScriptHandler handler = ScriptHandler
         .createHandler(SwaggerUtil.getLanguageWrittenIn(fskObj.modelMetadata), fskObj.packages)) {

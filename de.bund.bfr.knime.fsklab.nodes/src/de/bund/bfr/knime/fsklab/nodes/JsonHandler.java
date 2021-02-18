@@ -75,7 +75,7 @@ public abstract class JsonHandler {
               if(param.getDataType().equals(Parameter.DataTypeEnum.FILE)) {
                 addPathToFileParameter(param.getId(), resourcePath);
               }
-              String rep = joinRelation.replaceCommand(param.getId());
+             
               applyJoinCommand(param.getId(), joinRelation.replaceCommand(param.getId()));
             }
           }
@@ -127,16 +127,6 @@ public abstract class JsonHandler {
       throws Exception;
   
   
-  /**
-   * @return a string containing script code that adds variables (parameters)
-   * to the hdf file in the corresponding script-language.
-   * 
-   * @param fskObj fsk object containing the parameter names
-   * @param classification Parameter.ClassificationEnum either OUTPUT or INPUT 
-   */
-  protected abstract String compileListOfParameters(FskPortObject fskObj,
-      Parameter.ClassificationEnum classification);
- 
   /**
    * Creates and returns an HDFHandler instance of the correct language
    * (Python or R).
