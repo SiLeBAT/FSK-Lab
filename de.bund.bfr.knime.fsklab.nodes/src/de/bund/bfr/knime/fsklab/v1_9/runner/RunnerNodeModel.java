@@ -21,14 +21,10 @@ package de.bund.bfr.knime.fsklab.v1_9.runner;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -49,7 +45,6 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.image.ImagePortObject;
 import org.knime.core.node.port.image.ImagePortObjectSpec;
-import de.bund.bfr.knime.fsklab.nodes.JsonHandler;
 import de.bund.bfr.knime.fsklab.nodes.ScriptHandler;
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
 import de.bund.bfr.knime.fsklab.r.client.ScriptExecutor;
@@ -155,7 +150,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
       if (fskObj instanceof CombinedFskPortObject) {
         joinRelationList = getMapOfSourceParameters(
             fskObj,
-            ((CombinedFskPortObject)fskObj).getJoinerRelation(),
+            getJoinRelations((CombinedFskPortObject)fskObj, new ArrayList<JoinRelation>()),
             null,
             ""
             );
@@ -267,7 +262,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
    */
   private List<JoinRelationAdvanced> getMapOfSourceParameters(
       FskPortObject portObject,
-      JoinRelation[] joinRelations,
+      List<JoinRelation> joinRelations,
       List<JoinRelationAdvanced> joinRelationList,
       String suffix) {
     if (joinRelationList == null) {
@@ -297,6 +292,22 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
     }
 
     return joinRelationList;
+  }
+  
+  /*
+   * helper method to get all join relations for top and sub-models 
+   */
+  
+  private List<JoinRelation> getJoinRelations(
+      CombinedFskPortObject portObject,
+      List<JoinRelation> joinRelations) {
+    joinRelations.addAll(Arrays.asList(portObject.getJoinerRelation()));
+    if (portObject.getFirstFskPortObject() instanceof CombinedFskPortObject) {
+      getJoinRelations((CombinedFskPortObject) portObject.getFirstFskPortObject(), joinRelations);
+    } else if (portObject.getSecondFskPortObject() instanceof CombinedFskPortObject) {
+      getJoinRelations((CombinedFskPortObject) portObject.getSecondFskPortObject(), joinRelations);
+    }
+    return joinRelations;
   }
   
   
