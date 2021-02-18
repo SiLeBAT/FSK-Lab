@@ -298,15 +298,18 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
    * helper method to get all join relations for top and sub-models 
    */
   
-  private List<JoinRelation> getJoinRelations(
-      CombinedFskPortObject portObject,
+  private List<JoinRelation> getJoinRelations(CombinedFskPortObject portObject,
       List<JoinRelation> joinRelations) {
-    joinRelations.addAll(Arrays.asList(portObject.getJoinerRelation()));
+    if (portObject.getJoinerRelation() != null) {
+      joinRelations.addAll(Arrays.asList(portObject.getJoinerRelation()));
+    }
     if (portObject.getFirstFskPortObject() instanceof CombinedFskPortObject) {
       getJoinRelations((CombinedFskPortObject) portObject.getFirstFskPortObject(), joinRelations);
-    } else if (portObject.getSecondFskPortObject() instanceof CombinedFskPortObject) {
+    }
+    if (portObject.getSecondFskPortObject() instanceof CombinedFskPortObject) {
       getJoinRelations((CombinedFskPortObject) portObject.getSecondFskPortObject(), joinRelations);
     }
+
     return joinRelations;
   }
   
