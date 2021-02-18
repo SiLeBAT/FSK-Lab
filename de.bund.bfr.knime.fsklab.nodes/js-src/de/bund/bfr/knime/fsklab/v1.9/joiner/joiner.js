@@ -106,7 +106,6 @@ joiner = function () {
     }
   }
   let selectionChanged = function (modelMetaData) {
-	console.log(modelMetaData);
     cleanUp();
     let _modelColectionSuffixed =  addSuffixToParameters(JSON.parse(JSON.stringify(modelMetaData.changeSet.added[0]["selecteModels"])));
     poolSize =_modelColectionSuffixed.length;
@@ -129,7 +128,6 @@ joiner = function () {
     });
     
     
-    _paper.scaleContentToFit();
   }
   view.init = function (representation, value) {
     _value = value;
@@ -224,6 +222,13 @@ joiner = function () {
         }
         
         _value.joinerModelsData.interactiveMode = true;
+        $.each(_finalsimulationList,function(index, simulation){
+            $.each(_value.joinRelations, function(indexz, connection){
+              if(connection.targetParam != undefined && simulation.params[connection.targetParam] != undefined){
+                delete simulation.params[connection.targetParam]
+              }
+            });
+        });     
         _value.joinerModelsData.joinedSimulation = _finalsimulationList;
         if (modelsPool.firstModel['metadata'] && modelsPool.secondModel['metadata']) {
           fetch("http://localhost:" + _representation.servicePort + "/joinMetadata", {
@@ -370,7 +375,7 @@ joiner = function () {
       width: 150,
       height: modelHeight
     });
-    modelsPool[key]['modelToJoin'] = createAtomic(paperWidth - (250 * (4 - (Object.keys(modelsPool).indexOf(key)))), 60, 175,
+    modelsPool[key]['modelToJoin'] = createAtomic(paperWidth - (210 * (4 - (Object.keys(modelsPool).indexOf(key)))), 55, 160,
       modelHeight, modelNameWrap, modelsPool[key]['inputParameters'],
       modelsPool[key]['outputParameters'], key, modelsPool[key]['simulation']);
 
@@ -1027,7 +1032,6 @@ joiner = function () {
 
     if (_graphObject) { 
       _graph.fromJSON(_graphObject);
-      console.log(_graphObject);
 
       if (_graphObject.cells) {
         for (const cell of _graphObject.cells) {
@@ -1136,7 +1140,7 @@ joiner = function () {
                       </text>
                       
 
-                      <foreignObject  x="20" y="20" width="${width}" height="${height + 30}" >
+                      <foreignObject  x="20" y="20" width="${width}" height="${height + 60}" >
                       <!--
                         In the context of SVG embedded in an HTML document, the XHTML 
                         namespace could be omitted, but it is mandatory in the 
@@ -1164,7 +1168,7 @@ joiner = function () {
         x: x, y: y
       },
       size: {
-        width: width, height: height + 30
+        width: width, height: height + 60
       },
       ports: {
         groups: {
