@@ -1,16 +1,5 @@
 package de.bund.bfr.knime.fsklab.nodes;
 
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import org.knime.core.node.BufferedDataTable;
-import org.knime.core.node.ExecutionContext;
-import org.knime.core.node.NodeLogger;
-import org.knime.core.util.FileUtil;
-import org.rosuda.REngine.REXP;
 import de.bund.bfr.knime.fsklab.nodes.plot.BasePlotter;
 import de.bund.bfr.knime.fsklab.nodes.plot.Ggplot2Plotter;
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
@@ -22,7 +11,19 @@ import de.bund.bfr.knime.fsklab.v1_9.FskSimulation;
 import de.bund.bfr.knime.fsklab.v1_9.runner.RunnerNodeInternalSettings;
 import de.bund.bfr.knime.fsklab.v1_9.runner.RunnerNodeSettings;
 import de.bund.bfr.metadata.swagger.Parameter;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import metadata.SwaggerUtil;
+import org.knime.core.node.BufferedDataTable;
+import org.knime.core.node.ExecutionContext;
+import org.knime.core.node.NodeLogger;
+import org.knime.core.util.FileUtil;
+import org.rosuda.REngine.REXP;
+
 public class RScriptHandler extends ScriptHandler {
 
   ScriptExecutor executor;
@@ -35,7 +36,7 @@ public class RScriptHandler extends ScriptHandler {
   public RScriptHandler(List<String> packages) throws RException {
     this.controller = new RController();
     this.executor = new ScriptExecutor(controller);
-    
+
     if (packages.contains("ggplot2")) {
       plotter = new Ggplot2Plotter(controller);
     } else {
@@ -43,6 +44,7 @@ public class RScriptHandler extends ScriptHandler {
     }
   }
 
+  @Override
   public void setWorkingDirectory(Path workingDirectory, ExecutionContext exec) throws Exception {
     controller.setWorkingDirectory(workingDirectory);
   }
@@ -61,7 +63,9 @@ public class RScriptHandler extends ScriptHandler {
     return null;
   }
 
-  public void convertToKnimeDataTable(FskPortObject fskObj, ExecutionContext exec) throws Exception {
+  @Override
+  public void convertToKnimeDataTable(FskPortObject fskObj, ExecutionContext exec)
+      throws Exception {
     LibRegistry.instance().install(Arrays.asList("data.table"));
 
     String DT = "library(data.table)\n";
@@ -136,13 +140,13 @@ public class RScriptHandler extends ScriptHandler {
     if (fskObj.getWorkspace() == null) {
       fskObj.setWorkspace(FileUtil.createTempFile("workspace", ".RData").toPath());
     }
-    
-    
+
+
     controller.saveWorkspace(fskObj.getWorkspace(), exec);
   }
 
 
-  
+
   @Override
   public void restoreDefaultLibrary() throws Exception {
     controller.restorePackagePath();
@@ -158,6 +162,7 @@ public class RScriptHandler extends ScriptHandler {
     return executor.getStdErr();
   }
 
+  @Override
   public void cleanup(ExecutionContext exec) throws Exception {
     executor.cleanup(exec);
   }
@@ -196,9 +201,9 @@ public class RScriptHandler extends ScriptHandler {
     controller.close();
 
   }
-  
+
   @Override
   protected String createVectorQuery(List<String> variableNames) {
-    return "c(" +  String.join(", ", variableNames) + ")";
+    return "c(" + String.join(", ", variableNames) + ")";
   }
 }

@@ -35,7 +35,7 @@ import de.bund.bfr.metadata.swagger.ToxicologicalModel;
 
 public class SwaggerUtil {
 
-    @Deprecated
+	@Deprecated
 	public static de.bund.bfr.metadata.swagger.GenericModelGeneralInformation convert(
 			metadata.GeneralInformation deprecatedGeneralInformation) {
 		GenericModelGeneralInformation swaggerGI = new GenericModelGeneralInformation();
@@ -56,8 +56,7 @@ public class SwaggerUtil {
 		}
 
 		deprecatedGeneralInformation.getModificationdate().stream().map(ModificationDate::getValue)
-			.filter(Objects::nonNull).map(SwaggerUtil::toLocalDate)
-			.forEach(swaggerGI::addModificationDateItem);
+				.filter(Objects::nonNull).map(SwaggerUtil::toLocalDate).forEach(swaggerGI::addModificationDateItem);
 
 		swaggerGI.setRights(deprecatedGeneralInformation.getRights());
 		swaggerGI.setAvailability(Boolean.toString(deprecatedGeneralInformation.isAvailable()));
@@ -72,7 +71,8 @@ public class SwaggerUtil {
 		swaggerGI.setSoftware(deprecatedGeneralInformation.getSoftware());
 		swaggerGI.setLanguageWrittenIn(deprecatedGeneralInformation.getLanguageWrittenIn());
 
-		if (deprecatedGeneralInformation.getModelCategory() != null && deprecatedGeneralInformation.getModelCategory().size() > 0) {
+		if (deprecatedGeneralInformation.getModelCategory() != null
+				&& deprecatedGeneralInformation.getModelCategory().size() > 0) {
 			swaggerGI.setModelCategory(convert(deprecatedGeneralInformation.getModelCategory().get(0)));
 		}
 
@@ -87,7 +87,7 @@ public class SwaggerUtil {
 	 * TODO: replace {@link #convert(ModelCategory)} Convert deprecated
 	 * ModelCategory to 1.0.4
 	 */
-    @Deprecated
+	@Deprecated
 	public static de.bund.bfr.metadata.swagger.ModelCategory convert(metadata.ModelCategory deprecated) {
 		de.bund.bfr.metadata.swagger.ModelCategory modelCategory = new de.bund.bfr.metadata.swagger.ModelCategory();
 
@@ -104,7 +104,7 @@ public class SwaggerUtil {
 		return modelCategory;
 	}
 
-    @Deprecated
+	@Deprecated
 	public static de.bund.bfr.metadata.swagger.Reference convert(metadata.Reference record) {
 
 		de.bund.bfr.metadata.swagger.Reference reference = new de.bund.bfr.metadata.swagger.Reference();
@@ -132,7 +132,7 @@ public class SwaggerUtil {
 		return reference;
 	}
 
-    @Deprecated
+	@Deprecated
 	public static de.bund.bfr.metadata.swagger.Contact convert(metadata.Contact deprecated) {
 
 		de.bund.bfr.metadata.swagger.Contact contact = new de.bund.bfr.metadata.swagger.Contact();
@@ -153,7 +153,7 @@ public class SwaggerUtil {
 		return contact;
 	}
 
-    @Deprecated
+	@Deprecated
 	public static de.bund.bfr.metadata.swagger.GenericModelModelMath convert(metadata.ModelMath emfMM) {
 
 		de.bund.bfr.metadata.swagger.GenericModelModelMath swaggerMM = new de.bund.bfr.metadata.swagger.GenericModelModelMath();
@@ -194,7 +194,7 @@ public class SwaggerUtil {
 		return swaggerMM;
 	}
 
-    @Deprecated
+	@Deprecated
 	public static de.bund.bfr.metadata.swagger.Parameter convert(metadata.Parameter deprecated) {
 
 		de.bund.bfr.metadata.swagger.Parameter parameter = new de.bund.bfr.metadata.swagger.Parameter();
@@ -221,7 +221,7 @@ public class SwaggerUtil {
 		return parameter;
 	}
 
-    @Deprecated
+	@Deprecated
 	public static de.bund.bfr.metadata.swagger.ModelEquation convert(metadata.ModelEquation deprecated) {
 
 		de.bund.bfr.metadata.swagger.ModelEquation modelEq = new de.bund.bfr.metadata.swagger.ModelEquation();
@@ -235,7 +235,7 @@ public class SwaggerUtil {
 		return modelEq;
 	}
 
-    @Deprecated
+	@Deprecated
 	public static de.bund.bfr.metadata.swagger.Exposure convert(metadata.Exposure deprecated) {
 
 		de.bund.bfr.metadata.swagger.Exposure exposure = new de.bund.bfr.metadata.swagger.Exposure();
@@ -250,7 +250,7 @@ public class SwaggerUtil {
 		return exposure;
 	}
 
-    @Deprecated
+	@Deprecated
 	public static de.bund.bfr.metadata.swagger.GenericModelScope convert(metadata.Scope emfScope) {
 		de.bund.bfr.metadata.swagger.GenericModelScope swaggerS = new de.bund.bfr.metadata.swagger.GenericModelScope();
 
@@ -265,7 +265,7 @@ public class SwaggerUtil {
 		return swaggerS;
 	}
 
-    @Deprecated
+	@Deprecated
 	public static de.bund.bfr.metadata.swagger.Product convert(metadata.Product deprecated) {
 
 		de.bund.bfr.metadata.swagger.Product product = new de.bund.bfr.metadata.swagger.Product();
@@ -290,7 +290,7 @@ public class SwaggerUtil {
 		return product;
 	}
 
-    @Deprecated
+	@Deprecated
 	public static de.bund.bfr.metadata.swagger.PopulationGroup convert(metadata.PopulationGroup deprecated) {
 		de.bund.bfr.metadata.swagger.PopulationGroup pop = new de.bund.bfr.metadata.swagger.PopulationGroup();
 		pop.setName(deprecated.getPopulationName());
@@ -312,7 +312,7 @@ public class SwaggerUtil {
 		return pop;
 	}
 
-    @Deprecated
+	@Deprecated
 	public static de.bund.bfr.metadata.swagger.Hazard convert(metadata.Hazard deprecated) {
 
 		de.bund.bfr.metadata.swagger.Hazard hazard = new de.bund.bfr.metadata.swagger.Hazard();
@@ -334,7 +334,7 @@ public class SwaggerUtil {
 		return hazard;
 	}
 
-    @Deprecated
+	@Deprecated
 	public static de.bund.bfr.metadata.swagger.GenericModelDataBackground convert(metadata.DataBackground emfDBG) {
 		de.bund.bfr.metadata.swagger.GenericModelDataBackground swaggerDBG = new de.bund.bfr.metadata.swagger.GenericModelDataBackground();
 
@@ -350,7 +350,7 @@ public class SwaggerUtil {
 		return swaggerDBG;
 	}
 
-    @Deprecated
+	@Deprecated
 	public static de.bund.bfr.metadata.swagger.Assay convert(metadata.Assay deprecated) {
 
 		de.bund.bfr.metadata.swagger.Assay assay = new de.bund.bfr.metadata.swagger.Assay();
@@ -367,7 +367,7 @@ public class SwaggerUtil {
 		return assay;
 	}
 
-    @Deprecated
+	@Deprecated
 	public static de.bund.bfr.metadata.swagger.DietaryAssessmentMethod convert(
 			metadata.DietaryAssessmentMethod deprecated) {
 
@@ -382,7 +382,7 @@ public class SwaggerUtil {
 		return diet;
 	}
 
-    @Deprecated
+	@Deprecated
 	public static de.bund.bfr.metadata.swagger.Laboratory convert(metadata.Laboratory deprecated) {
 
 		de.bund.bfr.metadata.swagger.Laboratory lab = new de.bund.bfr.metadata.swagger.Laboratory();
@@ -393,7 +393,7 @@ public class SwaggerUtil {
 		return lab;
 	}
 
-    @Deprecated
+	@Deprecated
 	public static de.bund.bfr.metadata.swagger.StudySample convert(metadata.StudySample deprecated) {
 
 		de.bund.bfr.metadata.swagger.StudySample sample = new de.bund.bfr.metadata.swagger.StudySample();
@@ -411,7 +411,7 @@ public class SwaggerUtil {
 		return sample;
 	}
 
-    @Deprecated
+	@Deprecated
 	public static de.bund.bfr.metadata.swagger.Study convert(metadata.Study deprecated) {
 
 		de.bund.bfr.metadata.swagger.Study study = new de.bund.bfr.metadata.swagger.Study();
@@ -439,6 +439,7 @@ public class SwaggerUtil {
 
 		return study;
 	}
+
 	public static Map<String, Class<? extends Model>> modelClasses = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 	static {
 		modelClasses.put("GenericModel", GenericModel.class);
@@ -556,13 +557,13 @@ public class SwaggerUtil {
 	}
 
 	public static LocalDate toLocalDate(Date date) {
-		
+
 		ZoneId defaultZoneId = ZoneId.systemDefault();
-		
+
 		int year = date.toInstant().atZone(defaultZoneId).toLocalDate().getYear();
 		int month = date.toInstant().atZone(defaultZoneId).toLocalDate().getMonthValue();
 		int day = date.toInstant().atZone(defaultZoneId).toLocalDate().getDayOfMonth();
-		
+
 		return LocalDate.of(year, month, day);
 	}
 
@@ -695,7 +696,7 @@ public class SwaggerUtil {
 			name = ((RiskModel) model).getGeneralInformation().getName();
 		} else if (modelType.equalsIgnoreCase("qraModel")) {
 			name = ((QraModel) model).getGeneralInformation().getName();
-		}  else if (modelType.equalsIgnoreCase("healthModel")) {
+		} else if (modelType.equalsIgnoreCase("healthModel")) {
 			name = ((HealthModel) model).getGeneralInformation().getName();
 		} else {
 			name = null;
@@ -703,7 +704,7 @@ public class SwaggerUtil {
 
 		return name;
 	}
-	
+
 	/** @return language written in. Null if missing. */
 	public static String getModelId(Model model) {
 		String name;
@@ -731,7 +732,7 @@ public class SwaggerUtil {
 			name = ((RiskModel) model).getGeneralInformation().getIdentifier();
 		} else if (modelType.equalsIgnoreCase("qraModel")) {
 			name = ((QraModel) model).getGeneralInformation().getIdentifier();
-		}  else if (modelType.equalsIgnoreCase("healthModel")) {
+		} else if (modelType.equalsIgnoreCase("healthModel")) {
 			name = ((HealthModel) model).getGeneralInformation().getIdentifier();
 		} else {
 			name = null;
@@ -739,7 +740,7 @@ public class SwaggerUtil {
 
 		return name;
 	}
-	
+
 	public static void setModelName(Model model, String name) {
 
 		final String modelType = model.getModelType();
@@ -765,7 +766,7 @@ public class SwaggerUtil {
 			((RiskModel) model).getGeneralInformation().setName(name);
 		} else if (modelType.equalsIgnoreCase("qraModel")) {
 			((QraModel) model).getGeneralInformation().setName(name);
-		}  else if (modelType.equalsIgnoreCase("healthModel")) {
+		} else if (modelType.equalsIgnoreCase("healthModel")) {
 			((HealthModel) model).getGeneralInformation().setName(name);
 		}
 	}

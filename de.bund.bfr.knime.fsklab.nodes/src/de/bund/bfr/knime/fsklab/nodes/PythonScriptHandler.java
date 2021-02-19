@@ -1,5 +1,10 @@
 package de.bund.bfr.knime.fsklab.nodes;
 
+import de.bund.bfr.knime.fsklab.nodes.plot.PythonPlotter;
+import de.bund.bfr.knime.fsklab.v1_9.FskPortObject;
+import de.bund.bfr.knime.fsklab.v1_9.FskSimulation;
+import de.bund.bfr.knime.fsklab.v1_9.runner.RunnerNodeInternalSettings;
+import de.bund.bfr.knime.fsklab.v1_9.runner.RunnerNodeSettings;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
@@ -9,11 +14,6 @@ import org.knime.core.util.FileUtil;
 import org.knime.python2.PythonVersion;
 import org.knime.python2.kernel.PythonKernel;
 import org.knime.python2.kernel.PythonKernelOptions;
-import de.bund.bfr.knime.fsklab.nodes.plot.PythonPlotter;
-import de.bund.bfr.knime.fsklab.v1_9.FskPortObject;
-import de.bund.bfr.knime.fsklab.v1_9.FskSimulation;
-import de.bund.bfr.knime.fsklab.v1_9.runner.RunnerNodeInternalSettings;
-import de.bund.bfr.knime.fsklab.v1_9.runner.RunnerNodeSettings;
 
 public class PythonScriptHandler extends ScriptHandler {
   String std_out = "";
@@ -36,11 +36,12 @@ public class PythonScriptHandler extends ScriptHandler {
     // set up backend (rendering engine) for matplotlib for image handling:
     controller.execute("import matplotlib");
     controller.execute("matplotlib.use('Agg')");
-    
+
     // Currently only PythonPlotter is assigned as it is the only available for Python
     this.plotter = new PythonPlotter(controller);
 
   }
+
   // if no version is given in the model metadata, use the KNIME preference setting
   public PythonScriptHandler() throws IOException {
     this(null);
@@ -60,11 +61,11 @@ public class PythonScriptHandler extends ScriptHandler {
       std_out += output[0] + "\n";
     if (!output[1].isEmpty())
       std_err += output[1] + "\n";
-    
+
     // this prevents the json data string to be corrupted:
-    if(script.startsWith("#JSON_PARAMETER_OUTUT"))
+    if (script.startsWith("#JSON_PARAMETER_OUTUT"))
       return output;
-    return output[0].replaceAll("[\\[\\]\\'\\n]", "").split(","); // remove these characters: [ ' \n 
+    return output[0].replaceAll("[\\[\\]\\'\\n]", "").split(","); // remove these characters: [ ' \n
   }
 
   @Override
@@ -98,7 +99,7 @@ public class PythonScriptHandler extends ScriptHandler {
     if (fskObj.getWorkspace() == null) {
       fskObj.setWorkspace(FileUtil.createTempFile("workspace", ".py").toPath());
     }
-   
+
   }
 
   @Override
