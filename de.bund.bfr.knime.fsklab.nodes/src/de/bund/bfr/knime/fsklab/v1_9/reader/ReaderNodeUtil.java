@@ -511,7 +511,7 @@ public class ReaderNodeUtil {
 
       // Get entries of the current model
       List<ArchiveEntry> entries = archive.getEntries().stream()
-          .filter(entry -> entry.getEntityPath().indexOf(pathToResource) == 0)
+          .filter(entry -> entry.getEntityPath().lastIndexOf(pathToResource) == 0)
           .collect(Collectors.toList());
 
       URI textUri = URI.create("http://purl.org/NET/mediatypes/text-xplain");
