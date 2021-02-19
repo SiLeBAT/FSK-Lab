@@ -509,9 +509,10 @@ public class ReaderNodeUtil {
       String pathToResource = ListOfPaths.get(0);
       String readme = "";
 
-      // Get entries of the current model
+      // Get entries of the current model (but ignore files in /simulations/ )
       List<ArchiveEntry> entries = archive.getEntries().stream()
-          .filter(entry -> entry.getEntityPath().lastIndexOf(pathToResource) == 0)
+          .filter(entry -> entry.getEntityPath().indexOf(pathToResource) == 0 
+          && !entry.getEntityPath().startsWith(pathToResource + "simulations" + pathToResource))
           .collect(Collectors.toList());
 
       URI textUri = URI.create("http://purl.org/NET/mediatypes/text-xplain");
