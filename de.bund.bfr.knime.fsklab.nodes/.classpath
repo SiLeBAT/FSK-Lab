@@ -11,6 +11,7 @@
 	<classpathentry kind="lib" path="sedml_libs/jlibsedml-2.2.3.jar" sourcepath="sedml_libs/jlibsedml-2.2.3-sources.jar"/>
 	<classpathentry kind="lib" path="sedml_libs/jmathml-2.2.1.jar"/>
 	<classpathentry kind="lib" path="sedml_libs/xom-1.2.5.jar"/>
+	<classpathentry kind="lib" path="libs/vocabularies-2.0.0.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>

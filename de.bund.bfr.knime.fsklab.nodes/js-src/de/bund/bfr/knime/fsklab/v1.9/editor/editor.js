@@ -62,6 +62,8 @@ fskeditorjs = function () {
     //fskutil = new fskutil();
     extractAndCreateUI(value.modelMetaData);
     
+    // TODO: remove this test for the vocabularies
+    // makeRequest("source");
   }
   async function  extractAndCreateUI(modelMetaData, modelscript, visualization){
     if (!modelMetaData || modelMetaData == "null" || modelMetaData == "") {
@@ -209,5 +211,10 @@ fskeditorjs = function () {
         extraKeys: { 'Ctrl-Space': 'autocomplete' },
         mode: { 'name': language }
       });
+  }
+
+  function makeRequest(vocabularyName) {
+    knimeService.loadConditionally(["js-src/de/bund/bfr/knime/fsklab/v1.9/editor/lazyload.js"],
+    		() => window.fetchVocabulary(vocabularyName));
   }
 }();
