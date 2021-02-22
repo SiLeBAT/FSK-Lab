@@ -25,7 +25,9 @@ public class PythonScriptHandler extends ScriptHandler {
     // automatically receive information about used Python Version (2.7 or 3.x)
     PythonKernelOptions m_kernelOptions = new PythonKernelOptions();
     controller = new PythonKernel(m_kernelOptions);
-    
+ // set up backend (rendering engine) for matplotlib for image handling:
+    controller.execute("import matplotlib");
+    controller.execute("matplotlib.use('Agg')");
     this.plotter = new PythonPlotter(controller);
   }
 

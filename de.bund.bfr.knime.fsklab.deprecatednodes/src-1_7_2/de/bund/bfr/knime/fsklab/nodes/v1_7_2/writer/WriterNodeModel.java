@@ -61,7 +61,6 @@ import org.knime.core.node.NoInternalsModel;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
-import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
@@ -123,9 +122,8 @@ public class WriterNodeModel extends NoInternalsModel {
   public static final String METADATA_COMMAND = "command";
   public static final String METADATA_COMMAND_VALUE = "commandValue";
   static ScriptHandler scriptHandler;
-  
-  static final String CFG_FILE = "file";
-  private final SettingsModelString filePath = new SettingsModelString(CFG_FILE, null);
+
+  private final WriterNodeSettings nodeSettings = new WriterNodeSettings();
 
   public WriterNodeModel() {
     super(IN_TYPES, OUT_TYPES);
@@ -133,18 +131,18 @@ public class WriterNodeModel extends NoInternalsModel {
 
   @Override
   protected void saveSettingsTo(NodeSettingsWO settings) {
-    filePath.saveSettingsTo(settings);
+    nodeSettings.save(settings);
   }
 
   @Override
   protected void loadValidatedSettingsFrom(NodeSettingsRO settings)
       throws InvalidSettingsException {
-    filePath.loadSettingsFrom(settings);
+    nodeSettings.load(settings);
   }
 
   @Override
   protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
-    filePath.validateSettings(settings);
+    CheckUtils.checkDestinationFile(settings.getString("file"), true);
   }
 
   @Override
@@ -152,11 +150,6 @@ public class WriterNodeModel extends NoInternalsModel {
 
   @Override
   protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
-    String warning = CheckUtils.checkDestinationFile(filePath.getStringValue(), true);
-    if (warning != null) {
-        setWarningMessage(warning);
-    }
-    
     return new PortObjectSpec[] {};
   }
 
@@ -290,7 +283,7 @@ public class WriterNodeModel extends NoInternalsModel {
 
     FskPortObject in = (FskPortObject) inObjects[0];
     scriptHandler = ScriptHandler.createHandler(SwaggerUtil.getLanguageWrittenIn(in.modelMetadata), in.packages);
-    URL url = FileUtil.toURL(filePath.getStringValue());
+    URL url = FileUtil.toURL(nodeSettings.filePath);
     Path localPath = FileUtil.resolveToPath(url);
 
     if (localPath != null) {

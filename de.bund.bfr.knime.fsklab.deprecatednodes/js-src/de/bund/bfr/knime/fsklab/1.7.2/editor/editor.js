@@ -2577,15 +2577,23 @@ fskeditorjs = function () {
 
     if (!value.modelMetaData || value.modelMetaData == "null" || value.modelMetaData == "") {
       _metadata.generalInformation = {};
+      _metadata.generalInformation.modelCategory = {};
       _metadata.scope = {};
       _metadata.modelMath = {};
       _metadata.dataBackground = {}
     } else {
       let metaData = JSON.parse(value.modelMetaData);
-      _metadata.generalInformation = metaData.generalInformation;
-      _metadata.scope = metaData.scope;
-      _metadata.modelMath = metaData.modelMath;
-      _metadata.dataBackground = metaData.dataBackground;
+
+      if (!metaData.generalInformation) {
+        _metadata.generalInformation = { modelCategory: {} };
+      } else {
+        _metadata.generalInformation = metaData.generalInformation;
+      }
+
+      _metadata.scope = metaData.scope ? metaData.scope : {};
+      _metadata.dataBackground = metaData.dataBackground ? metaData.dataBackground : {};
+      _metadata.modelMath = metaData.modelMath ? metaData.modelMath : {};
+      _metadata.modelType = metaData.modelType;
     }
 
     if (value.modelType === "genericModel") {
@@ -2637,7 +2645,8 @@ fskeditorjs = function () {
   };
 
   view.validate = () => {
-    return handler.validate();
+    // return handler.validate();
+    return true;
   }
 
   return view;
@@ -2725,14 +2734,17 @@ fskeditorjs = function () {
 
     $('#modelScript-tab').on('shown.bs.tab', () => {
       _modelCodeMirror.refresh();
+      _modelCodeMirror.focus();
     });
 
     $('#visualizationScript-tab').on('shown.bs.tab', () => {
       _visualizationCodeMirror.refresh();
+      _visualizationCodeMirror.focus();
     });
 
     $('#readme-tab').on('shown.bs.tab', () => {
       _readmeCodeMirror.refresh();
+      _readmeCodeMirror.focus();
     });
   }
 
