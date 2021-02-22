@@ -518,6 +518,10 @@ joiner = function () {
       <div class="tab-content" id="viewContent">
         <div role="tabpanel" class="tab-pane active" id="joinPanel">
           <div id="paper"></div>
+          <div class="toolbar">
+            <span id="zoom-out" class="minus bg-dark toolbar-button">-</span>
+            <span id="zoom-in" class="plus bg-dark toolbar-button">+</span>
+          </div>
           <form id="detailsForm">
             <div class="form-group row">
               <label class="col-sm-2 col-form-label" for="source">Source Port:</label>
@@ -819,6 +823,42 @@ joiner = function () {
       markAvailable: true
     });
     _paper.setDimensions($('#viewContent').width(), 500);
+    // Toolbar
+    var zoomLevel = 1;
+
+    document.getElementById('zoom-in').addEventListener('click', function() {
+        zoomLevel = Math.min(3, zoomLevel + 0.2);
+        var size = _paper.getComputedSize();
+        _paper.translate(0,0);
+        _paper.scale(zoomLevel, zoomLevel, size.width / 2, size.height / 2);
+    });
+
+    document.getElementById('zoom-out').addEventListener('click', function() {
+        zoomLevel = Math.max(0.2, zoomLevel - 0.2);
+        var size = _paper.getComputedSize();
+        _paper.translate(0,0);
+        _paper.scale(zoomLevel, zoomLevel, size.width / 2, size.height / 2);
+    });
+    function zoomOnMousewheel(x, y, delta) {
+        var MIN_ZOOM = 0.2;
+        var MAX_ZOOM = 4;
+        var currentZoom = _paper.scale().sx;
+        var newZoom = currentZoom + delta * 0.01;
+        if (newZoom > MIN_ZOOM && newZoom < MAX_ZOOM) {
+            _paper.translate(0, 0);
+            _paper.scale(newZoom, newZoom, x, y);
+        }
+    }
+
+    _paper.on('blank:mousewheel', function(evt, x, y, delta) {
+        evt.preventDefault();
+        zoomOnMousewheel(x, y, delta);
+    });
+
+    _paper.on('cell:mousewheel', function(_, evt, x, y, delta) {
+        evt.preventDefault();
+        zoomOnMousewheel(x, y, delta);
+    });
 
 
     let previousOne;
