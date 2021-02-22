@@ -74,6 +74,9 @@
     border-radius: 50%;
     background-clip: padding-box;
 }
+.scale{
+    padding: 5px;
+}
 div {
     text-align: center;
 }
