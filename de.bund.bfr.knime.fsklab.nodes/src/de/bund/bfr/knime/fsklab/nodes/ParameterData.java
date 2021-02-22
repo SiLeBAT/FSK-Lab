@@ -12,7 +12,7 @@ public class ParameterData {
 
   public ParameterData() {
 
-    this.parameters = new ArrayList<DataArray>();
+    this.parameters = new ArrayList<>();
 
   }
 

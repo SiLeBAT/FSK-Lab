@@ -49,14 +49,14 @@ public abstract class ScriptHandler implements AutoCloseable {
 
     // Sets up working directory with resource files. This directory needs to be deleted.
     exec.setProgress(0.05, "Add resource files");
-    Optional<Path> workingDirectory;
+    Path workingDirectory;
     if (fskObj.getEnvironmentManager().isPresent()) {
-      workingDirectory = fskObj.getEnvironmentManager().get().getEnvironment();
+      workingDirectory = fskObj.getEnvironmentManager().get().getEnvironment().get();
     } else {
-      workingDirectory = Optional.of(FileUtil.createTempDir("tempResourceFiles").toPath());
+      workingDirectory = FileUtil.createTempDir("tempResourceFiles").toPath();
 
     }
-    setWorkingDirectory(workingDirectory.get(), exec);
+    setWorkingDirectory(workingDirectory, exec);
 
     // START RUNNING MODEL
     exec.setProgress(0.1, "Setting up output capturing");
@@ -131,21 +131,19 @@ public abstract class ScriptHandler implements AutoCloseable {
     saveWorkspace(fskObj, exec);
 
     // HDFHandler stores all ouput parameters in HDF file
-    jsonHandler.saveOutputParameters(fskObj, workingDirectory.get());
+    jsonHandler.saveOutputParameters(fskObj, workingDirectory);
 
     // Save generated resources
-    if (workingDirectory.isPresent()) {
-      File workingDirectoryFile = workingDirectory.get().toFile();
-      saveGeneratedResources(fskObj, workingDirectoryFile, exec.createSubExecutionContext(1));
+    saveGeneratedResources(fskObj, workingDirectory.toFile(), exec.createSubExecutionContext(1));
 
-    }
+  
 
     // delete environment directory (workingDirectory is always present)
     if (fskObj.getEnvironmentManager().isPresent()) {
-      fskObj.getEnvironmentManager().get().deleteEnvironment(workingDirectory.get());
+      fskObj.getEnvironmentManager().get().deleteEnvironment(workingDirectory);
     } else {
       // delete temporary working directory
-      FileUtil.deleteRecursively(workingDirectory.get().toFile());
+      FileUtil.deleteRecursively(workingDirectory.toFile());
     }
 
   }
