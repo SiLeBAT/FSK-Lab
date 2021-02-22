@@ -31,7 +31,7 @@
 .toolbar {
     position: absolute;
     width: 300px;
-    right: calc(1% - 110px);
+    right: calc(1% - 75px);
     top: calc(60%);
     text-align: middle;
     vertical-align: middle;
