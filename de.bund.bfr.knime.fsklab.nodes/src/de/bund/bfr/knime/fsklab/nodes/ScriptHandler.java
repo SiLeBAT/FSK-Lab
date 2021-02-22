@@ -1,19 +1,6 @@
 package de.bund.bfr.knime.fsklab.nodes;
 
-import java.io.File;
-import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import org.knime.core.node.ExecutionContext;
-import org.knime.core.node.NodeLogger;
-import org.knime.core.util.FileUtil;
-import org.knime.python2.PythonVersion;
 import de.bund.bfr.knime.fsklab.nodes.plot.ModelPlotter;
-import de.bund.bfr.knime.fsklab.v1_9.CombinedFskPortObject;
 import de.bund.bfr.knime.fsklab.v1_9.FskPortObject;
 import de.bund.bfr.knime.fsklab.v1_9.FskSimulation;
 import de.bund.bfr.knime.fsklab.v1_9.JoinRelationAdvanced;
@@ -22,7 +9,17 @@ import de.bund.bfr.knime.fsklab.v1_9.runner.RunnerNodeModel;
 import de.bund.bfr.knime.fsklab.v1_9.runner.RunnerNodeSettings;
 import de.bund.bfr.metadata.swagger.Parameter;
 import de.bund.bfr.metadata.swagger.Parameter.ClassificationEnum;
+import java.io.File;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import metadata.SwaggerUtil;
+import org.knime.core.node.ExecutionContext;
+import org.knime.core.node.NodeLogger;
+import org.knime.core.util.FileUtil;
+import org.knime.python2.PythonVersion;
 
 public abstract class ScriptHandler implements AutoCloseable {
 
@@ -40,30 +37,26 @@ public abstract class ScriptHandler implements AutoCloseable {
    *        simulation
    * @param exec KNIME way of managing storage and information output during the current NodeModels
    *        execution
-   * @param LOGGER A {@link NodeLogger} that keeps track of the progress during the execu-tion of
+   * @param logger A {@link NodeLogger} that keeps track of the progress during the execu-tion of
    *        the node
    * @param internalSettings internal settings to store the image file of the plot
    * @param nodeSettings settings of the node containing the dimensions of the output im-age
    * @throws Exception
    */
-  public final void runSnippet(final FskPortObject fskObj,
-      final FskSimulation simulation,
-      final ExecutionContext exec,
-      NodeLogger LOGGER,
-      File imageFile,
-      List<JoinRelationAdvanced> joinRelationList,
-      String suffix) throws Exception {
-    
+  public final void runSnippet(final FskPortObject fskObj, final FskSimulation simulation,
+      final ExecutionContext exec, NodeLogger logger, File imageFile,
+      List<JoinRelationAdvanced> joinRelationList, String suffix) throws Exception {
+
     // Sets up working directory with resource files. This directory needs to be deleted.
     exec.setProgress(0.05, "Add resource files");
-    Optional<Path> workingDirectory;
+    Path workingDirectory;
     if (fskObj.getEnvironmentManager().isPresent()) {
-      workingDirectory = fskObj.getEnvironmentManager().get().getEnvironment();
+      workingDirectory = fskObj.getEnvironmentManager().get().getEnvironment().get();
     } else {
-      workingDirectory = Optional.of(FileUtil.createTempDir("tempResourceFiles").toPath());
-   
+      workingDirectory = FileUtil.createTempDir("tempResourceFiles").toPath();
+
     }
-    setWorkingDirectory(workingDirectory.get(), exec);
+    setWorkingDirectory(workingDirectory, exec);
 
     // START RUNNING MODEL
     exec.setProgress(0.1, "Setting up output capturing");
@@ -71,15 +64,15 @@ public abstract class ScriptHandler implements AutoCloseable {
 
     // Install needed libraries
     if (!fskObj.packages.isEmpty()) {
-      installLibs(fskObj, exec, LOGGER);
+      installLibs(fskObj, exec, logger);
     }
-    
+
     jsonHandler = JsonHandler.createHandler(this, exec);
     jsonHandler.applyJoinRelation(fskObj, joinRelationList, suffix);
 
-  
+
     exec.setProgress(0.72, "Set parameter values");
-    LOGGER.info(" Running with '" + simulation.getName() + "' simulation!");
+    logger.info(" Running with '" + simulation.getName() + "' simulation!");
 
     // load libraries before (python) parameters are evaluated
 
@@ -96,12 +89,12 @@ public abstract class ScriptHandler implements AutoCloseable {
               e.printStackTrace();
             }
           });
-     runScript(paramScript, exec, false);
+      runScript(paramScript, exec, false);
     }
 
-    
+
     // JsonHandler stores all input parameters before model execution
-    
+
     jsonHandler.saveInputParameters(fskObj);
 
     exec.setProgress(0.75, "Run models script");
@@ -118,7 +111,7 @@ public abstract class ScriptHandler implements AutoCloseable {
     }
 
     exec.setProgress(0.9, "Run visualization script");
-    
+
 
     try {
       plotter.plotSvg(imageFile, fskObj.getViz());
@@ -126,7 +119,7 @@ public abstract class ScriptHandler implements AutoCloseable {
       // Save path of generated plot
       fskObj.setPlot(imageFile.getAbsolutePath());
     } catch (final Exception exception) {
-      LOGGER.warn("Visualization script failed", exception);
+      logger.warn("Visualization script failed", exception);
     }
 
     exec.setProgress(0.96, "Restore library paths");
@@ -136,25 +129,23 @@ public abstract class ScriptHandler implements AutoCloseable {
     finishOutputCapturing(exec);
 
     saveWorkspace(fskObj, exec);
-    
+
     // HDFHandler stores all ouput parameters in HDF file
-    jsonHandler.saveOutputParameters(fskObj);
-    
+    jsonHandler.saveOutputParameters(fskObj, workingDirectory);
+
     // Save generated resources
-    if (workingDirectory.isPresent()) {
-      File workingDirectoryFile = workingDirectory.get().toFile();
-      saveGeneratedResources(fskObj, workingDirectoryFile, exec.createSubExecutionContext(1));
-            
-    }
-    
+    saveGeneratedResources(fskObj, workingDirectory.toFile(), exec.createSubExecutionContext(1));
+
+  
+
     // delete environment directory (workingDirectory is always present)
     if (fskObj.getEnvironmentManager().isPresent()) {
-      fskObj.getEnvironmentManager().get().deleteEnvironment(workingDirectory.get());
+      fskObj.getEnvironmentManager().get().deleteEnvironment(workingDirectory);
     } else {
       // delete temporary working directory
-      FileUtil.deleteRecursively(workingDirectory.get().toFile());
+      FileUtil.deleteRecursively(workingDirectory.toFile());
     }
-  
+
   }
 
   public abstract void convertToKnimeDataTable(FskPortObject fskObj, ExecutionContext exec)
@@ -175,7 +166,7 @@ public abstract class ScriptHandler implements AutoCloseable {
         if (type.startsWith("python 2")) {
           handler = new PythonScriptHandler(PythonVersion.PYTHON2);
         } else if (type.startsWith("python 3")) {
-          handler = new PythonScriptHandler(PythonVersion.PYTHON3);  
+          handler = new PythonScriptHandler(PythonVersion.PYTHON3);
         } else {
           handler = new PythonScriptHandler(); // use version from KNIME preference page
         }
@@ -194,7 +185,8 @@ public abstract class ScriptHandler implements AutoCloseable {
    * @param workingDirectory The directory in which the script code is executed
    * @throws Exception if an error occurs accessing the directory
    */
-  public abstract void setWorkingDirectory(Path workingDirectory, ExecutionContext exec) throws Exception;
+  public abstract void setWorkingDirectory(Path workingDirectory, ExecutionContext exec)
+      throws Exception;
 
   /**
    * Needed if the interpreter requires specific code necessary for starting output captur-ing.
@@ -236,8 +228,8 @@ public abstract class ScriptHandler implements AutoCloseable {
    *        the node
    * @throws Exception
    */
-  public abstract void installLibs(final FskPortObject fskObj, ExecutionContext exec, NodeLogger LOGGER)
-      throws Exception;
+  public abstract void installLibs(final FskPortObject fskObj, ExecutionContext exec,
+      NodeLogger LOGGER) throws Exception;
 
   /**
    *
@@ -324,21 +316,23 @@ public abstract class ScriptHandler implements AutoCloseable {
    *         would be "r" )
    */
   public abstract String getFileExtension();
-  
+
   /**
-   * Creates the string command in R or Python to return a java String array with the values of the passed
-   * variables. For example:
+   * Creates the string command in R or Python to return a java String array with the values of the
+   * passed variables. For example:
    * <ul>
    * <li>c(0, 1, 2) should return [0, 1, 2] when called in R.
    * <li>[0, 1, 2] should return [0, 1, 2] when called in Python.
    * </ul>
    * 
    * @param items List of strings
-   * @return Command in the script language to retrieve a vector with the values of the passed variables.
+   * @return Command in the script language to retrieve a vector with the values of the passed
+   *         variables.
    */
   protected abstract String createVectorQuery(List<String> variableNames);
-  
-  private void saveGeneratedResources(FskPortObject fskPortObject, File workingDirectory, ExecutionContext exec) {
+
+  private void saveGeneratedResources(FskPortObject fskPortObject, File workingDirectory,
+      ExecutionContext exec) {
 
     // Delete previous resources if they exist
     fskPortObject.getGeneratedResourcesDirectory().ifPresent(directory -> {
@@ -360,14 +354,14 @@ public abstract class ScriptHandler implements AutoCloseable {
 
     // Get filenames out of the output file parameter values
     String command = createVectorQuery(outputFileParameterIds);
-   
+
     try {
       File newResourcesDirectory = FileUtil.createTempDir("generatedResources");
-      
+
       try {
-        if(!command.equals("c()") && !command.equals("print([])")) {
+        if (!command.equals("c()") && !command.equals("print([])")) {
           String[] filenames = runScript(command, exec, true);
-          
+
           // Copy every resource from the working directory
           for (String filename : filenames) {
             File sourceFile = new File(workingDirectory, filename);
@@ -375,15 +369,15 @@ public abstract class ScriptHandler implements AutoCloseable {
             FileUtil.copy(sourceFile, targetFile, exec);
           }
         }
-              }catch (Exception e) {
+      } catch (Exception e) {
         e.printStackTrace();
       }
-      
+
       // Save JSON file
       File sourceFile = new File(workingDirectory, JsonHandler.JSON_FILE_NAME);
       File targetFile = new File(newResourcesDirectory, JsonHandler.JSON_FILE_NAME);
       FileUtil.copy(sourceFile, targetFile, exec);
-      
+
       fskPortObject.setGeneratedResourcesDirectory(newResourcesDirectory);
     } catch (Exception e) {
       e.printStackTrace();
