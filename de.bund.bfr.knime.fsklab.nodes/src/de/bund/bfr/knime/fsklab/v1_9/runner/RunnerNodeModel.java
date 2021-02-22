@@ -171,6 +171,12 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
         createTopLevelJsonFile((CombinedFskPortObject)fskObj, null, exec);  
       }
       
+      // make path to JSON parameters available by adding a flow-variable
+      if (fskObj.getGeneratedResourcesDirectory().isPresent()) {
+        this.pushFlowVariableString("generatedResources",
+            fskObj.getGeneratedResourcesDirectory().get().getAbsolutePath());
+      }
+      
       return new PortObject[] {fskObj, imgObj};
     } catch (IOException e) {
       LOGGER.warn("There is no image created");
