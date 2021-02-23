@@ -90,12 +90,12 @@ public class RJsonHandler extends JsonHandler {
       if (sourceParam.equals(param.getMetadata().getId())) {
         // store data in temp file because moving big arrays between controller and Java
         // doesn't seem to work properly
-        File temp_data = FileUtil.createTempFile("data", "json");
+        File tempData = FileUtil.createTempFile("data", "json");
 
-        MAPPER.writer().writeValue(temp_data, param.getData());
+        MAPPER.writer().writeValue(tempData, param.getData());
         String type = param.getParameterType();
         String rawJsonData = "sourceParam <- fromJSON(read_json('"
-            + temp_data.getAbsolutePath().replaceAll("\\\\", "/") + "'), simplifyVector=FALSE)";
+            + tempData.getAbsolutePath().replaceAll("\\\\", "/") + "'), simplifyVector=FALSE)";
 
         scriptHandler.runScript(rawJsonData, exec, false);
         String data = convertRawJson("sourceParam", language, type);
@@ -103,7 +103,7 @@ public class RJsonHandler extends JsonHandler {
         scriptHandler.runScript(script, exec, false);
         scriptHandler.runScript("rm(sourceParam)", exec, false);
 
-        FileUtil.deleteRecursively(temp_data);
+        FileUtil.deleteRecursively(tempData);
       }
     }
 
