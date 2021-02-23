@@ -164,7 +164,7 @@ joiner = function () {
 
 
     createBody();
-    _paper.scaleContentToFit();
+    //_paper.scaleContentToFit();
     window.toogle = true;
   }
   function isValidModel(model) {
@@ -518,6 +518,11 @@ joiner = function () {
       <div class="tab-content" id="viewContent">
         <div role="tabpanel" class="tab-pane active" id="joinPanel">
           <div id="paper"></div>
+          <div class="toolbar">
+            <span id="zoom-out" class="minus bg-dark toolbar-button">-</span>
+            <span id="scaletofit" class="scale bg-dark toolbar-button">Scale</span>
+            <span id="zoom-in" class="plus bg-dark toolbar-button">+</span>
+          </div>
           <form id="detailsForm">
             <div class="form-group row">
               <label class="col-sm-2 col-form-label" for="source">Source Port:</label>
@@ -563,7 +568,7 @@ joiner = function () {
       //  _paper.setDimensions(getChartWidth(), getChartHeight());
 
       _paper.setDimensions($('#viewContent').width(), 500);
-      _paper.scaleContentToFit();
+      //_paper.scaleContentToFit();
       //_paper.scaleContentToFit({ padding: 20 });
     };
     reoderTool();
@@ -819,7 +824,54 @@ joiner = function () {
       markAvailable: true
     });
     _paper.setDimensions($('#viewContent').width(), 500);
+    var MIN_SCALE = 0.1
+    var MAX_SCALE = 1000
+    var handleCellMouseWheel = ( e, x, y, delta) =>
+      handleCanvasMouseWheel(e, x, y, delta);
 
+    var handleCanvasMouseWheel = (e, x, y, delta) => {
+      e.preventDefault();
+
+      const oldScale = _paper.scale().sx;
+      const newScale = oldScale + delta * .01;
+      console.log(newScale+'     '+delta);
+      scaleToPoint(newScale, x, y);
+    };
+
+    var scaleToPoint = (nextScale, x, y) => {
+      
+      if (nextScale >= MIN_SCALE && nextScale <= MAX_SCALE) {
+        const ctm = _paper.matrix();
+
+        ctm.a = nextScale;
+        ctm.d = nextScale;
+
+        _paper.matrix(ctm);
+      }
+    };
+    _paper.on('blank:mousewheel', function(evt, x, y, delta) {
+      handleCellMouseWheel(evt, x, y,  delta );
+    });
+    // Toolbar
+    var zoomLevel = 1;
+
+    document.getElementById('zoom-in').addEventListener('click', function() {
+        zoomLevel = Math.min(3, zoomLevel + 0.2);
+        var size = _paper.getComputedSize();
+        _paper.translate(0,0);
+        _paper.scale(zoomLevel, zoomLevel, size.width / 2, size.height / 2);
+    });
+
+    document.getElementById('scaletofit').addEventListener('click', function() {
+        _paper.scaleContentToFit();
+    });
+
+    document.getElementById('zoom-out').addEventListener('click', function() {
+        zoomLevel = Math.max(0.2, zoomLevel - 0.2);
+        var size = _paper.getComputedSize();
+        _paper.translate(0,0);
+        _paper.scale(zoomLevel, zoomLevel, size.width / 2, size.height / 2);
+    });
 
     let previousOne;
     function highlight(cellView) {

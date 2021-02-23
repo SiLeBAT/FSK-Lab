@@ -27,3 +27,80 @@
     pointer-events: all;
 }
 
+/* Toolbar */
+.toolbar {
+    position: absolute;
+    width: 300px;
+    right: calc(1% - 75px);
+    top: calc(60%);
+    text-align: middle;
+    vertical-align: middle;
+    
+}
+.toolbar-button {
+    outline: none;
+    border: 1px solid #E0E0E0;
+    text-align: center;
+    vertical-align: middle;
+    font-family: sans-serif;
+    font-size: 20px;
+    letter-spacing: 0.25px;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none
+}
+.plus {
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: top;
+    color: black;
+    width: 30px;
+    height: 30px;
+    font: 30px/1 Arial,sans-serif;
+    text-align: center;
+    border-radius: 50%;
+    }
+.minus {
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: top;
+    color: black;
+    width: 30px;
+    height: 30px;
+    font: 30px/1 Arial,sans-serif;
+    text-align: center;
+    border-radius: 50%;
+    background-clip: padding-box;
+}
+.scale{
+    padding: 5px;
+}
+div {
+    text-align: center;
+}
+.minus:hover{
+    background-color: #717fe0 !important;
+}
+.plus:hover{
+    background-color: #717fe0 !important;
+}
+/*Prevent text selection*/
+span{
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+input{  
+    border: 0;
+    width: 2%;
+}
+nput::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input:disabled{
+    background-color:white;
+}
