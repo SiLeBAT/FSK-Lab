@@ -28,7 +28,6 @@ import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
-import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.util.FilesHistoryPanel;
 import org.knime.core.node.util.FilesHistoryPanel.LocationValidation;
@@ -36,12 +35,12 @@ import org.knime.core.node.workflow.FlowVariable;
 
 public class WriterNodeDialog extends NodeDialogPane {
 
-  private final SettingsModelString filePath;
+  private final WriterNodeSettings nodeSettings;
 
   private final FilesHistoryPanel m_filePanel;
 
   public WriterNodeDialog() {
-    filePath = new SettingsModelString(WriterNodeModel.CFG_FILE, "");
+    nodeSettings = new WriterNodeSettings();
 
     m_filePanel = new FilesHistoryPanel(createFlowVariableModel("file", FlowVariable.Type.STRING),
         "fskx_writer", LocationValidation.FileOutput, ".fskx");
@@ -53,10 +52,10 @@ public class WriterNodeDialog extends NodeDialogPane {
   protected void loadSettingsFrom(NodeSettingsRO settings, PortObjectSpec[] specs)
       throws NotConfigurableException {
     try {
-      filePath.loadSettingsFrom(settings);
+      nodeSettings.load(settings);
 
       m_filePanel.updateHistory();
-      m_filePanel.setSelectedFile(filePath.getStringValue());
+      m_filePanel.setSelectedFile(nodeSettings.filePath);
 
     } catch (InvalidSettingsException exception) {
       throw new NotConfigurableException(exception.getMessage(), exception);
@@ -65,10 +64,10 @@ public class WriterNodeDialog extends NodeDialogPane {
 
   @Override
   protected void saveSettingsTo(NodeSettingsWO settings) throws InvalidSettingsException {
-    filePath.setStringValue(m_filePanel.getSelectedFile().trim());
+    nodeSettings.filePath = m_filePanel.getSelectedFile().trim();
     m_filePanel.addToHistory();
     
-    filePath.saveSettingsTo(settings);
+    nodeSettings.save(settings);
   }
   
   private JPanel initLayout() {

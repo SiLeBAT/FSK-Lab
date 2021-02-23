@@ -125,6 +125,7 @@ public class JSSimulatorNodeModel
         final List<Parameter> parameters = SwaggerUtil.getParameter(port.modelMetadata);
         val.simulations = port.simulations.stream().map(it -> toJSSimulation(it, parameters))
             .collect(Collectors.toList());
+        val.selectedSimulationIndex = port.selectedSimulationIndex;
       }
     }
 
@@ -169,9 +170,9 @@ public class JSSimulatorNodeModel
       final JSSimulatorViewValue val = getViewValue();
 
       // If not executed
+   // If not executed
       if (val.simulations == null) {
         final List<Parameter> parameters = SwaggerUtil.getParameter(inObj.modelMetadata);
-
         loadJsonSetting();
         final List<JSSimulation> simulations = inObj.simulations.stream()
             .map(it -> toJSSimulation(it, parameters)).collect(Collectors.toList());
@@ -179,6 +180,7 @@ public class JSSimulatorNodeModel
         if (val.modelMath == null) {
           val.simulations = simulations;
           val.modelMath = FromOjectToJSON(SwaggerUtil.getModelMath(inObj.modelMetadata));
+          val.selectedSimulationIndex = inObj.selectedSimulationIndex;
         }
         port = inObj;
       }
@@ -264,7 +266,7 @@ public class JSSimulatorNodeModel
           index++;
 
         });
-
+        
         for (int i = 0; i < properInputParam.size(); i++) {
           final String paramName = properInputParam.get(i).getId();
           final String paramValue = jsSimulation.values.get(indexes.get(i));
