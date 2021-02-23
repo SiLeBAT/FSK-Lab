@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.util.List;
 import metadata.SwaggerUtil;
 import org.knime.core.node.ExecutionContext;
+import org.knime.core.util.FileUtil;
 
 public class RJsonHandler extends JsonHandler {
 
@@ -87,15 +88,22 @@ public class RJsonHandler extends JsonHandler {
     String language = parameterData.getGeneratorLanguage();
     for (DataArray param : parameterData.getParameters()) {
       if (sourceParam.equals(param.getMetadata().getId())) {
+        // store data in temp file because moving big arrays between controller and Java
+        // doesn't seem to work properly
+        File tempData = FileUtil.createTempFile("data", "json");
+
+        MAPPER.writer().writeValue(tempData, param.getData());
         String type = param.getParameterType();
-        String rawJsonData =
-            "sourceParam <- fromJSON('" + param.getData() + "', simplifyVector=FALSE)";
+        String rawJsonData = "sourceParam <- fromJSON(read_json('"
+            + tempData.getAbsolutePath().replaceAll("\\\\", "/") + "'), simplifyVector=FALSE)";
+
         scriptHandler.runScript(rawJsonData, exec, false);
         String data = convertRawJson("sourceParam", language, type);
         String script = targetParam + "<-" + data;
         scriptHandler.runScript(script, exec, false);
         scriptHandler.runScript("rm(sourceParam)", exec, false);
 
+        FileUtil.deleteRecursively(tempData);
       }
     }
 
@@ -120,7 +128,7 @@ public class RJsonHandler extends JsonHandler {
       }
     } else {
 
-      if ((type.equals("ndarray") || type.equals("list")) && classes.equals("1")
+      if ((type.contains("array") || type.equals("list")) && classes.equals("1")
           && sizes.equals("1")) {
 
         converted = "matrix(unlist(" + data + "), nrow=length(" + data + "))";
