@@ -60,16 +60,14 @@ class JoinerViewValue extends JSONViewContent {
   public void saveToNodeSettings(NodeSettingsWO settings) {
 
     // Add joinRelations as string
-    if (joinRelations != null) {
-      try {
-        String relationsAsString = MAPPER.writeValueAsString(joinRelations);
-        settings.addString(CFG_JOINER_RELATION, relationsAsString);
+    try {
+      String relationsAsString = MAPPER.writeValueAsString(joinRelations);
+      settings.addString(CFG_JOINER_RELATION, relationsAsString);
 
-        String joinerModelsDataAsString = MAPPER.writeValueAsString(joinerModelsData);
-        settings.addString(CFG_MODELS_DATA, joinerModelsDataAsString);
-      } catch (JsonProcessingException err) {
-        // do nothing
-      }
+      String joinerModelsDataAsString = MAPPER.writeValueAsString(joinerModelsData);
+      settings.addString(CFG_MODELS_DATA, joinerModelsDataAsString);
+    } catch (JsonProcessingException err) {
+      // do nothing
     }
 
     settings.addString(CFG_ORIGINAL_VISUALIZATION_SCRIPT, visualizationScript);
@@ -83,14 +81,16 @@ class JoinerViewValue extends JSONViewContent {
   public void loadFromNodeSettings(NodeSettingsRO settings) throws InvalidSettingsException {
 
     // Read relations as string
-    String relationsAsString = settings.getString(CFG_JOINER_RELATION);
-    if (relationsAsString != null) {
-      try {
-        joinRelations = MAPPER.readValue(relationsAsString, JoinRelation[].class);
-        joinerModelsData =
-            MAPPER.readValue(settings.getString(CFG_MODELS_DATA), JoinerModelsData.class);
-      } catch (IOException err) {
-        // do nothing
+    if (settings.containsKey(CFG_JOINER_RELATION)) {
+      String relationsAsString = settings.getString(CFG_JOINER_RELATION);
+      if (relationsAsString != null) {
+        try {
+          joinRelations = MAPPER.readValue(relationsAsString, JoinRelation[].class);
+          joinerModelsData =
+              MAPPER.readValue(settings.getString(CFG_MODELS_DATA), JoinerModelsData.class);
+        } catch (IOException err) {
+          // do nothing
+        }
       }
     }
 

@@ -256,7 +256,9 @@ public final class JoinerNodeModel
       }
     }
     modelsParamsOriginalNames.remove(null);
-    representation.joinerModelsData.modelsParamsOriginalNames = this.modelsParamsOriginalNames;
+    if(this.modelsParamsOriginalNames!=null && !this.modelsParamsOriginalNames.isEmpty()) {
+      representation.joinerModelsData.modelsParamsOriginalNames = this.modelsParamsOriginalNames;
+    }
     return representation;
   }
 
