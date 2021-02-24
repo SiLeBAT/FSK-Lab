@@ -76,7 +76,7 @@ public class FSKDBViewNodeModel
    * this case, the key for the online repository URL String that should be entered by the user in
    * the dialog.
    */
-  private static final String KEY_REPOSITORY_LOCATION = "repository_location";
+  static final String KEY_REPOSITORY_LOCATION = "repository_location";
 
   /**
    * The default online repository URL String.
@@ -93,7 +93,7 @@ public class FSKDBViewNodeModel
    * at the comments in the constructor of the {@link FSKDBViewNodeDialog} as the settings models
    * are also used to create simple dialogs.
    */
-  private final SettingsModelString m_repositoryLocationSettings =
+   static final SettingsModelString m_repositoryLocationSettings =
       createRepositoryLocationSettingsModel();
 
 
@@ -113,7 +113,7 @@ public class FSKDBViewNodeModel
    * this case, the key for the maximum number of models that are allowed to be selected that should
    * be entered by the user in the dialog.
    */
-  private static final String MAX_SELECTION_NUMBER = "max_selection_number";
+  static final String MAX_SELECTION_NUMBER = "max_selection_number";
 
   /**
    * The default the maximum number of models that are allowed to be selected.
@@ -130,7 +130,7 @@ public class FSKDBViewNodeModel
    * selected is a number. Also have a look at the comments in the constructor of the
    * {@link FSKDBViewNodeDialog} as the settings models are also used to create simple dialogs.
    */
-  private final SettingsModelNumber m_maxSelectionNumberSettings =
+  static final SettingsModelNumber m_maxSelectionNumberSettings =
       createMaxSelectionNumberSettingsModel();
 
 

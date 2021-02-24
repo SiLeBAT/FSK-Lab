@@ -22,10 +22,9 @@ import org.knime.core.node.FlowVariableModel;
 import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
 import org.knime.core.node.defaultnodesettings.DialogComponentNumber;
 import org.knime.core.node.defaultnodesettings.DialogComponentString;
-import org.knime.core.node.defaultnodesettings.SettingsModelInteger;
 import org.knime.core.node.defaultnodesettings.SettingsModelNumber;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
-import org.knime.core.node.workflow.FlowVariable;
+import org.knime.core.node.workflow.VariableType;
 
 /**
  * This is an implementation of the node dialog of the "FSKDBView" node.
@@ -43,21 +42,19 @@ public class FSKDBViewNodeDialog extends DefaultNodeSettingsPane {
      * 
      */
     // First, create a new settings model using the create method from the node model.
-    SettingsModelString stringSettings = FSKDBViewNodeModel.createRepositoryLocationSettingsModel();
     FlowVariableModel repositoryVariable =
-        createFlowVariableModel("repository", FlowVariable.Type.STRING);
+        createFlowVariableModel(FSKDBViewNodeModel.KEY_REPOSITORY_LOCATION,  VariableType.StringType.INSTANCE);
     
-    SettingsModelNumber intSettings = FSKDBViewNodeModel.createMaxSelectionNumberSettingsModel();
     FlowVariableModel maxSelectionNumberVariable =
-        createFlowVariableModel("maxSelectionNumber", FlowVariable.Type.INTEGER);
+        createFlowVariableModel(FSKDBViewNodeModel.MAX_SELECTION_NUMBER,  VariableType.IntType.INSTANCE);
 
     // Add a new String component to the dialog for Repository URL.
     addDialogComponent(
-        new DialogComponentString(stringSettings, "Repository URL", true, 30, repositoryVariable));
+        new DialogComponentString(FSKDBViewNodeModel.m_repositoryLocationSettings, "Repository URL", true, 30, repositoryVariable));
     
     // Add a new Number component to the dialog for the number of models allowed to be selected.
     addDialogComponent(
-        new DialogComponentNumber(intSettings, "Max Selection Number",1, maxSelectionNumberVariable));
+        new DialogComponentNumber(FSKDBViewNodeModel.m_maxSelectionNumberSettings, "Max Selection Number",1, maxSelectionNumberVariable));
   }
 }
 
