@@ -254,7 +254,7 @@ public class ConversionUtils {
 			Map<String, Object> propB = (Map<String, Object>) classBProperties.getOrDefault(key,
 					Collections.emptyMap());
 
-			if (targetProp.containsKey(TYPE)) {
+			if (targetProp.containsKey(TYPE) && metadataA != null && metadataB != null) {
 				String targetPropertyType = (String) targetProp.get(TYPE);
 				if (targetPropertyType.equals("string")) {
 					if (targetProp.containsKey("format") && targetProp.get("format").equals("date")) {
@@ -282,7 +282,7 @@ public class ConversionUtils {
 						  }
 						}
 					}
-
+					
 					if (metadataB.has(key)) {
 						for (JsonNode child : metadataB.get(key)) {
 							if (child.isTextual()) {
