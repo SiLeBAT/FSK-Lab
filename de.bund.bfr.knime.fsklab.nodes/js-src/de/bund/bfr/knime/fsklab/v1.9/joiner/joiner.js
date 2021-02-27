@@ -194,6 +194,7 @@ joiner = function () {
           _value.joinerModelsData.firstModelType = modelsPool.firstModel['modelType'];
           _value.joinerModelsData.firstModelName = modelsPool.firstModel['modelName'];
           _value.joinerModelsData.numberOfModels++;
+          _value.joinerModelsData.firstModelParameters = modelsPool.firstModel['modelParameters'];
 
         }
 
@@ -203,6 +204,7 @@ joiner = function () {
           _value.joinerModelsData.secondModelType = modelsPool.secondModel['modelType'];
           _value.joinerModelsData.secondModelName = modelsPool.secondModel['modelName'];
           _value.joinerModelsData.numberOfModels++;
+          _value.joinerModelsData.secondModelParameters = modelsPool.secondModel['modelParameters'];
         }
 
         if (isValidModel(modelsPool.thirdModel)) {
@@ -211,6 +213,7 @@ joiner = function () {
           _value.joinerModelsData.thirdModelType = modelsPool.thirdModel['modelType'];
           _value.joinerModelsData.thirdModelName = modelsPool.thirdModel['modelName'];
           _value.joinerModelsData.numberOfModels++;
+          _value.joinerModelsData.thirdModelParameters =  modelsPool.thirdModel['modelParameters'];
         }
 
         if (isValidModel(modelsPool.fourthModel)) {
@@ -219,6 +222,7 @@ joiner = function () {
           _value.joinerModelsData.fourthModelType = modelsPool.fourthModel['modelType'];
           _value.joinerModelsData.fourthModelName = modelsPool.fourthModel['modelName'];
           _value.joinerModelsData.numberOfModels++;
+          _value.joinerModelsData.thirdModelParameters = modelsPool.fourthModel['modelParameters'];
         }
         
         _value.joinerModelsData.interactiveMode = true;
