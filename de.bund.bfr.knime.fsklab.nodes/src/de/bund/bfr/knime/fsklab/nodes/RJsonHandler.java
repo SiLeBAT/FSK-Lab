@@ -2,6 +2,7 @@ package de.bund.bfr.knime.fsklab.nodes;
 
 import de.bund.bfr.knime.fsklab.v1_9.FskPortObject;
 import de.bund.bfr.metadata.swagger.Parameter;
+import de.bund.bfr.metadata.swagger.Parameter.DataTypeEnum;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
@@ -38,11 +39,14 @@ public class RJsonHandler extends JsonHandler {
     List<Parameter> parameters = SwaggerUtil.getParameter(fskObj.modelMetadata);
     for (Parameter p : parameters) {
       if (p.getClassification() != Parameter.ClassificationEnum.OUTPUT) {
-        String parameterType = scriptHandler.runScript("class(" + p.getId() + ")\n", exec, true)[0];
+        Boolean isDataFrame = scriptHandler.runScript("class(" + p.getId() + ")\n", exec, true)[0]
+            .contains("data.frame");
+        String parameterDataType = isDataFrame ? "DataFrame" : p.getDataType().getValue();
+
         String[] results =
             scriptHandler.runScript("toJSON(" + p.getId() + ", auto_unbox=TRUE)\n", exec, true);
         String data = (results != null) ? results[0] : "";
-        parameterJson.addParameter(p, modelId, data, parameterType);
+        parameterJson.addParameter(p, modelId, data, parameterDataType);
       }
     }
 
@@ -59,8 +63,11 @@ public class RJsonHandler extends JsonHandler {
       if (p.getClassification() == Parameter.ClassificationEnum.OUTPUT) {
         script.append("toJSON(" + p.getId() + ", auto_unbox=TRUE)\n");
 
-        String parameterDataType =
-            scriptHandler.runScript("class(" + p.getId() + ")\n", exec, true)[0];
+        // we need to differentiate between list and dataframe:
+        Boolean isDataFrame = scriptHandler.runScript("class(" + p.getId() + ")\n", exec, true)[0]
+            .contains("data.frame");
+        String parameterDataType = isDataFrame ? "DataFrame" : p.getDataType().getValue();
+
         String[] results =
             scriptHandler.runScript("toJSON(" + p.getId() + ", auto_unbox=TRUE)\n", exec, true);
         String data = (results != null) ? results[0] : "";
@@ -94,8 +101,17 @@ public class RJsonHandler extends JsonHandler {
 
         MAPPER.writer().writeValue(tempData, param.getData());
         String type = param.getParameterType();
-        String rawJsonData = "sourceParam <- fromJSON(read_json('"
-            + tempData.getAbsolutePath().replaceAll("\\\\", "/") + "'), simplifyVector=FALSE)";
+        String rawJsonData = "";
+        if (type.contains(DataTypeEnum.OBJECT.getValue()) || type.equals("DataFrame")) {
+
+          rawJsonData = "sourceParam <- fromJSON(read_json('"
+              + tempData.getAbsolutePath().replaceAll("\\\\", "/") + "'), simplifyVector=FALSE)";
+        } else {
+          rawJsonData = "sourceParam <- fromJSON(read_json('"
+              + tempData.getAbsolutePath().replaceAll("\\\\", "/") + "'))";
+
+        }
+
 
         scriptHandler.runScript(rawJsonData, exec, false);
         String data = convertRawJson("sourceParam", language, type);
@@ -118,7 +134,7 @@ public class RJsonHandler extends JsonHandler {
         scriptHandler.runScript("length(unique(lapply(" + data + ",length)))", exec, true)[0];
     String classes =
         scriptHandler.runScript("length(unique(lapply(" + data + ",class)))", exec, true)[0];
-    if (type.equals("DataFrame") || type.equals("data.frame")) {
+    if (type.equals("DataFrame")) {
       if (language.startsWith("Python")) {
         // unlist columns to restore their original structure
         converted = "as.data.frame(lapply(lapply(" + data + ",cbind),unlist))";
@@ -127,15 +143,8 @@ public class RJsonHandler extends JsonHandler {
 
       }
     } else {
+      converted = data;
 
-      if ((type.contains("array") || type.equals("list")) && classes.equals("1")
-          && sizes.equals("1")) {
-
-        converted = "matrix(unlist(" + data + "), nrow=length(" + data + "))";
-
-      } else {
-        converted = data;
-      }
     }
 
     return converted;
@@ -143,7 +152,6 @@ public class RJsonHandler extends JsonHandler {
 
   @Override
   protected void addPathToFileParameter(String parameter, String path) throws Exception {
-    // parameter <- paste('/path/to/resource/', parameter)
     scriptHandler.runScript(parameter + " <- paste('" + path + "' , " + parameter + ")", exec,
         false);
 

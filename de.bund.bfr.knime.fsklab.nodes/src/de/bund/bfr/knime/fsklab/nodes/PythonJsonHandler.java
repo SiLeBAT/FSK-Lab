@@ -41,11 +41,14 @@ public class PythonJsonHandler extends JsonHandler {
         StringBuilder script = new StringBuilder();
         script.append("#JSON_PARAMETER_OUTUT\n");
         convertParamToJsonSerializable(p.getId(), Parameter.ClassificationEnum.INPUT);
-        script.append("print(toSerializable)\n");
+        script.append("print(toSerializable)\n"); // important to get a return from controller
         String[] results = scriptHandler.runScript(script.toString(), exec, true);
         String data = (results != null) ? results[0] : "";
-        String parameterDataType =
-            scriptHandler.runScript("print(type(" + p.getId() + ").__name__)", exec, true)[0];
+        
+        Boolean isDataFrame = scriptHandler.runScript("print(type(" + p.getId() + ").__name__)", exec, true)[0]
+            .contains("DataFrame");
+        String parameterDataType = isDataFrame ? "DataFrame" : p.getDataType().getValue();
+        
         parameterJson.addParameter(p, modelId, data, parameterDataType);
       }
     }
@@ -63,11 +66,12 @@ public class PythonJsonHandler extends JsonHandler {
         StringBuilder script = new StringBuilder();
         script.append("#JSON_PARAMETER_OUTUT\n");
         convertParamToJsonSerializable(p.getId(), Parameter.ClassificationEnum.OUTPUT);
-        script.append("print(toSerializable)");
+        script.append("print(toSerializable)"); // important to get a return from controller
         String[] results = scriptHandler.runScript(script.toString(), exec, true);
         String data = (results != null) ? results[0] : "";
-        String parameterDataType =
-            scriptHandler.runScript("print(type(" + p.getId() + ").__name__)", exec, true)[0];
+        Boolean isDataFrame = scriptHandler.runScript("print(type(" + p.getId() + ").__name__)", exec, true)[0]
+            .contains("DataFrame");
+        String parameterDataType = isDataFrame ? "DataFrame" : p.getDataType().getValue();
         parameterJson.addParameter(p, modelId, data, parameterDataType);
       }
     }
@@ -109,7 +113,7 @@ public class PythonJsonHandler extends JsonHandler {
   private String convertRawJson(String data, String language, String type) throws Exception {
     String converted = "";
 
-    if (type.equals("DataFrame") || type.equals("data.frame")) {
+    if (type.equals("DataFrame") ) {
 
       converted = "pandas.DataFrame.from_records(" + data + ")";
 
