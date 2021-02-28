@@ -194,6 +194,7 @@ joiner = function () {
           _value.joinerModelsData.firstModelType = modelsPool.firstModel['modelType'];
           _value.joinerModelsData.firstModelName = modelsPool.firstModel['modelName'];
           _value.joinerModelsData.numberOfModels++;
+          _value.joinerModelsData.firstModelParameters = modelsPool.firstModel['modelParameters'];
 
         }
 
@@ -203,6 +204,7 @@ joiner = function () {
           _value.joinerModelsData.secondModelType = modelsPool.secondModel['modelType'];
           _value.joinerModelsData.secondModelName = modelsPool.secondModel['modelName'];
           _value.joinerModelsData.numberOfModels++;
+          _value.joinerModelsData.secondModelParameters = modelsPool.secondModel['modelParameters'];
         }
 
         if (isValidModel(modelsPool.thirdModel)) {
@@ -211,6 +213,7 @@ joiner = function () {
           _value.joinerModelsData.thirdModelType = modelsPool.thirdModel['modelType'];
           _value.joinerModelsData.thirdModelName = modelsPool.thirdModel['modelName'];
           _value.joinerModelsData.numberOfModels++;
+          _value.joinerModelsData.thirdModelParameters =  modelsPool.thirdModel['modelParameters'];
         }
 
         if (isValidModel(modelsPool.fourthModel)) {
@@ -219,6 +222,7 @@ joiner = function () {
           _value.joinerModelsData.fourthModelType = modelsPool.fourthModel['modelType'];
           _value.joinerModelsData.fourthModelName = modelsPool.fourthModel['modelName'];
           _value.joinerModelsData.numberOfModels++;
+          _value.joinerModelsData.thirdModelParameters = modelsPool.fourthModel['modelParameters'];
         }
         
         _value.joinerModelsData.interactiveMode = true;
@@ -375,7 +379,8 @@ joiner = function () {
       width: 150,
       height: modelHeight
     });
-    modelsPool[key]['modelToJoin'] = createAtomic(paperWidth - (210 * (4 - (Object.keys(modelsPool).indexOf(key)))), 55, 160,
+    let order = Object.keys(modelsPool).indexOf(key);
+    modelsPool[key]['modelToJoin'] = createAtomic(order == 0 ? 80 : ( 250 * order) + ((4-order)*30), 55, 160,
       modelHeight, modelNameWrap, modelsPool[key]['inputParameters'],
       modelsPool[key]['outputParameters'], key, modelsPool[key]['simulation']);
 
@@ -567,7 +572,10 @@ joiner = function () {
     window.onresize = () => {
       //  _paper.setDimensions(getChartWidth(), getChartHeight());
 
-      _paper.setDimensions($('#viewContent').width(), 500);
+      //_paper.setDimensions($('#viewContent').width(), 500);
+      _paper.svg.setAttribute("width", $('#viewContent').width());
+      _paper.svg.setAttribute("height",  600);
+      $("#paper").width( $('#viewContent').width());
       //_paper.scaleContentToFit();
       //_paper.scaleContentToFit({ padding: 20 });
     };
@@ -823,7 +831,10 @@ joiner = function () {
       // Enable marking available cells and magnets
       markAvailable: true
     });
-    _paper.setDimensions($('#viewContent').width(), 500);
+    //_paper.setDimensions($('#viewContent').width(), 500);
+    _paper.svg.setAttribute("width", $('#viewContent').width());
+    _paper.svg.setAttribute("height",  600);
+    $("#paper").width( $('#viewContent').width());
     var MIN_SCALE = 0.1
     var MAX_SCALE = 1000
     var handleCellMouseWheel = ( e, x, y, delta) =>
