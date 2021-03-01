@@ -223,6 +223,9 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
     } else {
 
       // get json file of single model
+      if(!fskObj.getGeneratedResourcesDirectory().isPresent()) {
+        return;
+      }
       String resourcePath =
           fskObj.getGeneratedResourcesDirectory().get().getAbsolutePath().replaceAll("\\\\", "/")
               + "/";
