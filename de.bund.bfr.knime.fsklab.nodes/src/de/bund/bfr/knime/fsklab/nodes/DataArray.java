@@ -9,6 +9,8 @@ public class DataArray {
   private final String data;
   private final String modelId;
   private final String parameterType; // this will be removed when FSK-ML 5 is out
+  private String generatorLanguage;
+
 
   /**
    * dddd
@@ -27,7 +29,7 @@ public class DataArray {
    * @param data
    * @param type
    */
-  public DataArray(Parameter parameter, String modelId, String data, String type) {
+  public DataArray(Parameter parameter, String modelId, String data, String type, String language) {
     metadata = parameter;
     this.data = data;
     this.modelId = modelId;
@@ -50,6 +52,8 @@ public class DataArray {
     return parameterType;
   }
 
-
+  public String getGeneratorLanguage() {
+    return generatorLanguage;
+  }
 
 }

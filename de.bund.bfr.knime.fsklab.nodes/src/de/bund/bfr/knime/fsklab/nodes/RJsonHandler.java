@@ -33,8 +33,6 @@ public class RJsonHandler extends JsonHandler {
   @Override
   public void saveInputParameters(FskPortObject fskObj) throws Exception {
 
-    parameterJson.setGeneratorLanguage(SwaggerUtil.getLanguageWrittenIn(fskObj.modelMetadata));
-
     String modelId = SwaggerUtil.getModelId(fskObj.modelMetadata);
     List<Parameter> parameters = SwaggerUtil.getParameter(fskObj.modelMetadata);
     for (Parameter p : parameters) {
@@ -46,7 +44,12 @@ public class RJsonHandler extends JsonHandler {
         String[] results =
             scriptHandler.runScript("toJSON(" + p.getId() + ", auto_unbox=TRUE)\n", exec, true);
         String data = (results != null) ? results[0] : "";
-        parameterJson.addParameter(p, modelId, data, parameterDataType);
+
+        parameterJson.addParameter(p,
+            modelId,
+            data,
+            parameterDataType,
+            SwaggerUtil.getLanguageWrittenIn(fskObj.modelMetadata));
       }
     }
 
@@ -55,7 +58,6 @@ public class RJsonHandler extends JsonHandler {
   @Override
   public void saveOutputParameters(FskPortObject fskObj, Path workingDirectory) throws Exception {
     StringBuilder script = new StringBuilder();
-
 
     String modelId = SwaggerUtil.getModelId(fskObj.modelMetadata);
     List<Parameter> parameters = SwaggerUtil.getParameter(fskObj.modelMetadata);
@@ -71,8 +73,12 @@ public class RJsonHandler extends JsonHandler {
         String[] results =
             scriptHandler.runScript("toJSON(" + p.getId() + ", auto_unbox=TRUE)\n", exec, true);
         String data = (results != null) ? results[0] : "";
-        parameterJson.addParameter(p, modelId, data, parameterDataType);
-      }
+        parameterJson.addParameter(p,
+            modelId,
+            data,
+            parameterDataType,
+            SwaggerUtil.getLanguageWrittenIn(fskObj.modelMetadata));
+        }
     }
 
     String path = workingDirectory.toString() + File.separator + JSON_FILE_NAME;
@@ -92,10 +98,10 @@ public class RJsonHandler extends JsonHandler {
       String targetParam) throws Exception {
 
     ParameterData parameterData = MAPPER.readValue(new File(parameterJson), ParameterData.class);
-    String language = parameterData.getGeneratorLanguage();
+    
     for (DataArray param : parameterData.getParameters()) {
       if (sourceParam.equals(param.getMetadata().getId())) {
-
+        String language = param.getGeneratorLanguage();
         String type = param.getParameterType();
         loadRawJsonData(param);
         String data = convertRawJson("sourceParam", language, type);
