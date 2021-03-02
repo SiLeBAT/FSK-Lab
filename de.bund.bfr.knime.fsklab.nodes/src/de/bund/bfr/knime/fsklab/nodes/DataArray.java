@@ -20,6 +20,7 @@ public class DataArray {
     data = "";
     modelId = "";
     parameterType = "";
+    generatorLanguage="";
   }
 
   /**
@@ -34,6 +35,7 @@ public class DataArray {
     this.data = data;
     this.modelId = modelId;
     this.parameterType = type;
+    this.generatorLanguage = language;
   }
 
   public Parameter getMetadata() {

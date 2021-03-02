@@ -22,11 +22,12 @@ public class RJsonHandler extends JsonHandler {
   @Override
   protected void importLibraries() throws Exception {
     try {
-      scriptHandler.runScript("library(jsonlite)", exec, true);
+      scriptHandler.runScript("library(jsonlite)", exec, false);
     } catch (Exception e) {
-      scriptHandler.runScript("install.packages('jsonlite', type='source', dependencies=TRUE)",
-          exec, true);
-      scriptHandler.runScript("library(jsonlite)", exec, true);
+    	e.printStackTrace();
+//      scriptHandler.runScript("install.packages('jsonlite', type='source', dependencies=TRUE)",
+//          exec, true);
+//      scriptHandler.runScript("library(jsonlite)", exec, true);
     }
   }
 
@@ -37,12 +38,12 @@ public class RJsonHandler extends JsonHandler {
     List<Parameter> parameters = SwaggerUtil.getParameter(fskObj.modelMetadata);
     for (Parameter p : parameters) {
       if (p.getClassification() != Parameter.ClassificationEnum.OUTPUT) {
-        Boolean isDataFrame = scriptHandler.runScript("class(" + p.getId() + ")\n", exec, true)[0]
+        Boolean isDataFrame = scriptHandler.runScript("class(" + p.getId() + ")", exec, true)[0]
             .contains("data.frame");
         String parameterDataType = isDataFrame ? "DataFrame" : p.getDataType().getValue();
 
         String[] results =
-            scriptHandler.runScript("toJSON(" + p.getId() + ", auto_unbox=TRUE)\n", exec, true);
+            scriptHandler.runScript("toJSON(" + p.getId() + ", auto_unbox=TRUE)", exec, true);
         String data = (results != null) ? results[0] : "";
 
         parameterJson.addParameter(p,
@@ -66,12 +67,12 @@ public class RJsonHandler extends JsonHandler {
         script.append("toJSON(" + p.getId() + ", auto_unbox=TRUE)\n");
 
         // we need to differentiate between list and dataframe:
-        Boolean isDataFrame = scriptHandler.runScript("class(" + p.getId() + ")\n", exec, true)[0]
+        Boolean isDataFrame = scriptHandler.runScript("class(" + p.getId() + ")", exec, true)[0]
             .contains("data.frame");
         String parameterDataType = isDataFrame ? "DataFrame" : p.getDataType().getValue();
 
         String[] results =
-            scriptHandler.runScript("toJSON(" + p.getId() + ", auto_unbox=TRUE)\n", exec, true);
+            scriptHandler.runScript("toJSON(" + p.getId() + ", auto_unbox=TRUE)", exec, true);
         String data = (results != null) ? results[0] : "";
         parameterJson.addParameter(p,
             modelId,
