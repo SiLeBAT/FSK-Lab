@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<knimeNode icon="fsk2metadata.png" type="Manipulator"
+	deprecated="false" xmlns="http://knime.org/node/v2.8"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://knime.org/node/v2.8 http://knime.org/node/v2.8.xsd">
+	<name>FSK to metadata</name>
+
+	<shortDescription>Extract metadata from an FSK object</shortDescription>
+
+	<fullDescription>
+		<intro>
+			The "FSK to metadata"-node extracts the metadata of an FSK
+			object (e.g., FSKX-model) to a KNIME JSON table. The FSK object can
+			be created using the “FSK Creator”-node or “FSK Editor”-node (both
+			are available in the FSK-Lab library). The FSK object includes
+			metadata schema that shows a hierarchical structure with four
+			top-level elements:
+			<ul>
+			<li>(1) general information,</li>
+			<li>(2) scope,</li>
+			<li>(3) data background,</li>
+			<li>and (4) mathematical model and data (so called "Model math").</li>
+			</ul>
+			
+			Each top-level element is saved in a separate JSON column.
+			KNIME JSON nodes can process the columns contain JSON objects , e.g.
+			to show metadata on the KNIME Server. Note that the JSON table
+			describes the metadata of only one model and therefore, needs one
+			row.
+			
+			<p>
+			For details about FSKX-model can be found here:
+			<a href="https://foodrisklabs.bfr.bund.de/fsk-ml-food-safety-knowledge-markup-language/.">
+			https://foodrisklabs.bfr.bund.de/fsk-ml-food-safety-knowledge-markup-language/</a>.
+			Additional information about the metadata structure can be found in
+			Haberbeck et al., 2018, Microbial Risk Analysis, doi:10.1016/j.mran.2018.06.001
+			or the online version of the metadata schema available at
+			<a href="https://goo.gl/PE4ysP">https://goo.gl/PE4ysP</a>.
+			</p>
+		</intro>
+
+
+
+	</fullDescription>
+	<ports>
+		<inPort name="FSK object" index="0">FSK object</inPort>
+		<outPort name="Metadata" index="0">Metadata</outPort>
+	</ports>
+</knimeNode>

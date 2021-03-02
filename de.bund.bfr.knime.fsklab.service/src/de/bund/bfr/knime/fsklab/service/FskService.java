@@ -87,7 +87,17 @@ public class FskService implements Runnable {
 	private final ConversionUtils utils = new ConversionUtils();
 
 	private int port;
-
+	private static FskService service;
+	
+	private FskService() {
+	}
+	
+	public static FskService instance() {
+		if(service == null) {
+			service = new FskService();
+		}
+		return service;
+	}
 	public int getPort() {
 		return port;
 	}

@@ -13,8 +13,8 @@ import org.knime.core.node.ExecutionContext;
 import org.osgi.framework.Bundle;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.FskPlugin;
-import de.bund.bfr.knime.fsklab.v1_9.FskPortObject;
-import de.bund.bfr.knime.fsklab.v1_9.JoinRelationAdvanced;
+import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
+import de.bund.bfr.knime.fsklab.v2_0.JoinRelationAdvanced;
 import de.bund.bfr.metadata.swagger.Parameter;
 import metadata.SwaggerUtil;
 
