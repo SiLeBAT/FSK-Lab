@@ -54,10 +54,11 @@ public class FskErrorMessages {
     }
   }
 
-  //
+  // Error if package is missing and cant be installed automatically.
   public static void packageNotFoundError(String pkg) {
     if (isNotNull("Package", pkg)) {
-      LOGGER.error("ERROR: E");
+      LOGGER.error("ERROR: there is no package called '" + pkg
+          + "' nor could it be installed automatically");
       LOGGER.warn(">> " + pkg);
     }
   }
