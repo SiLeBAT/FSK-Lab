@@ -11,6 +11,7 @@ import de.bund.bfr.metadata.swagger.Parameter;
 import de.bund.bfr.metadata.swagger.Parameter.ClassificationEnum;
 import java.io.File;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -364,8 +365,14 @@ public abstract class ScriptHandler implements AutoCloseable {
 
           // Copy every resource from the working directory
           for (String filename : filenames) {
-            File sourceFile = new File(workingDirectory, filename);
-            File targetFile = new File(newResourcesDirectory, filename);
+            // file parameters can come from another generatedResourceDirectory
+            // from another model; in that case we use that path since it is
+            // not present in the current workingDirectory
+            Path sourceDir = workingDirectory.toPath();
+            Path source = Paths.get(filename.trim());
+            // if a file variable has a path already attached, use that instead
+            File sourceFile = sourceDir.resolve(source).toFile();
+            File targetFile = new File(newResourcesDirectory, source.getFileName().toString());
             FileUtil.copy(sourceFile, targetFile, exec);
           }
         }
