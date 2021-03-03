@@ -337,7 +337,7 @@ public final class JoinerNodeModel
 
     File directory =
         NodeContext.getContext().getWorkflowManager().getContext().getCurrentLocation();
-    File settingFolder = new File(directory, buildContainerName());
+    File settingFolder = new File(buildContainerName());
 
     // Get flow variables
     Map<String, FlowVariable> flowVariables;
@@ -475,7 +475,7 @@ public final class JoinerNodeModel
   /** @return string with node name and id with format "{name} (#{id}) setting". */
   private static String buildContainerName() {
     final NodeContainer nodeContainer = NodeContext.getContext().getNodeContainer();
-    return nodeContainer.getName() + " (#" + nodeContainer.getID().getIndex() + ") setting";
+    return nodeContainer.getNodeContainerDirectory() + " setting";
   }
 
   private static Map<String, List<String>> getParameterMap(FskPortObject jFirstInputPort,
