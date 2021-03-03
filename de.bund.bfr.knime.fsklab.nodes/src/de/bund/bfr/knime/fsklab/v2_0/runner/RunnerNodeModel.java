@@ -45,6 +45,12 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.image.ImagePortObject;
 import org.knime.core.node.port.image.ImagePortObjectSpec;
+import org.knime.core.util.FileUtil;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import de.bund.bfr.knime.fsklab.FskPlugin;
+import de.bund.bfr.knime.fsklab.nodes.DataArray;
+import de.bund.bfr.knime.fsklab.nodes.JsonHandler;
+import de.bund.bfr.knime.fsklab.nodes.ParameterData;
 import de.bund.bfr.knime.fsklab.nodes.ScriptHandler;
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
 import de.bund.bfr.knime.fsklab.r.client.ScriptExecutor;
@@ -168,15 +174,15 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
       ImagePortObject imgObj = new ImagePortObject(content, SVG_SPEC);
       // create a parameter.json for the top level combined model
       if (fskObj instanceof CombinedFskPortObject) {
-        createTopLevelJsonFile((CombinedFskPortObject)fskObj, null, exec);  
+        createTopLevelJsonFile((CombinedFskPortObject) fskObj, exec);
       }
-      
+
       // make path to JSON parameters available by adding a flow-variable
       if (fskObj.getGeneratedResourcesDirectory().isPresent()) {
         this.pushFlowVariableString("generatedResources",
             fskObj.getGeneratedResourcesDirectory().get().getAbsolutePath());
       }
-      
+
       return new PortObject[] {fskObj, imgObj};
     } catch (IOException e) {
       LOGGER.warn("There is no image created");
@@ -185,49 +191,70 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
   }
 
   private void createTopLevelJsonFile(CombinedFskPortObject fskObj,
-      List<JoinRelationAdvanced> joinRelationList,
-      ExecutionContext exec) throws Exception {
+     ExecutionContext exec) throws Exception {
+
+    // joinRelationList = 
+    ParameterData parameterJson = new ParameterData();
+    getTopLevelParameters(fskObj, fskObj, parameterJson, "");
+    File newResourcesDirectory = FileUtil.createTempDir("generatedResources");
+    File targetFile = new File(newResourcesDirectory, JsonHandler.JSON_FILE_NAME);
     
-    joinRelationList = getMapOfTopLevelParameters(fskObj, fskObj, null,"");
-    FskSimulation fskSimulation = new FskSimulation("dd");
-    fskObj.setViz("");
-    runSnippet(fskObj, fskSimulation, exec, joinRelationList, "");
+    ObjectMapper mapper = FskPlugin.getDefault().MAPPER104;
+    mapper.writer().writeValue(targetFile, parameterJson);
+    fskObj.setGeneratedResourcesDirectory(newResourcesDirectory);
+
   }
 
-  private List<JoinRelationAdvanced> getMapOfTopLevelParameters(
-      FskPortObject topLevel,
-      FskPortObject fskObj,
-      List<JoinRelationAdvanced> joinRelationList,
-      String suffix) {
-    if (joinRelationList == null) {
-      joinRelationList = new ArrayList<JoinRelationAdvanced>();
-    }
+
+  // get all parameter data from singular models for the top-level portObject
+  // (input and output parameters of combined object)
+  private void getTopLevelParameters(FskPortObject topLevel, FskPortObject fskObj,
+      ParameterData parameterJson, String suffix) {
+
     if (fskObj instanceof CombinedFskPortObject) {
-      joinRelationList =
-          getMapOfTopLevelParameters(topLevel, ((CombinedFskPortObject) fskObj).getFirstFskPortObject(),
-              joinRelationList, suffix + JoinerNodeModel.SUFFIX_FIRST);
-      joinRelationList =
-          getMapOfTopLevelParameters(topLevel, ((CombinedFskPortObject) fskObj).getSecondFskPortObject(),
-              joinRelationList, suffix + JoinerNodeModel.SUFFIX_SECOND);
+
+      getTopLevelParameters(topLevel, ((CombinedFskPortObject) fskObj).getFirstFskPortObject(),
+          parameterJson, suffix + JoinerNodeModel.SUFFIX_FIRST);
+
+      getTopLevelParameters(topLevel,
+          ((CombinedFskPortObject) fskObj).getSecondFskPortObject(), parameterJson,
+          suffix + JoinerNodeModel.SUFFIX_SECOND);
     } else {
-      List<Parameter> topLevelParameter = SwaggerUtil.getParameter(topLevel.modelMetadata);
-      List<Parameter> botLevelParameter = SwaggerUtil.getParameter(fskObj.modelMetadata);
-      for (Parameter topParam : topLevelParameter) {
-        for(Parameter botParam : botLevelParameter) {
-          if ( topParam.getId().startsWith(botParam.getId() + suffix)) {
-            JoinRelation joinRelation = new JoinRelation(
-                botParam.getId(),
-                topParam.getId(),
-                botParam.getId() + suffix,
-                SwaggerUtil.getLanguageWrittenIn(fskObj.modelMetadata));
-            JoinRelationAdvanced entry = new JoinRelationAdvanced(joinRelation, fskObj, suffix);
-            joinRelationList.add(entry);
+
+      // get json file of single model
+      if(!fskObj.getGeneratedResourcesDirectory().isPresent()) {
+        return;
+      }
+      String resourcePath =
+          fskObj.getGeneratedResourcesDirectory().get().getAbsolutePath().replaceAll("\\\\", "/")
+              + "/";
+      String jsonPath = resourcePath + "parameters.json";
+      ObjectMapper mapper = FskPlugin.getDefault().MAPPER104;
+
+      // try to copy json data to top level combined object
+      try {
+        ParameterData sourceParameterData =
+            mapper.readValue(new File(jsonPath), ParameterData.class);
+        List<Parameter> topLevelParameter = SwaggerUtil.getParameter(topLevel.modelMetadata);
+
+        for (Parameter topParam : topLevelParameter) {
+          for (DataArray botParam : sourceParameterData.getParameters()) {
+            if (topParam.getId().startsWith(botParam.getMetadata().getId() + suffix)) {
+
+              parameterJson.addParameter(topParam,
+                  botParam.getModelId(),
+                  botParam.getData(),
+                  botParam.getParameterType(),
+                  botParam.getGeneratorLanguage());
+            }
           }
         }
+      } catch (Exception e) {
+        e.printStackTrace();
       }
     }
-    return joinRelationList;
   }
+
   public void reSelectSimulation(FskPortObject fskObj, int index) {
     fskObj.selectedSimulationIndex = index;
     if (fskObj instanceof CombinedFskPortObject) {
