@@ -31,9 +31,7 @@ public class PythonJsonHandler extends JsonHandler {
   @Override
   public void saveInputParameters(FskPortObject fskObj) throws Exception {
 
-    parameterJson.setGeneratorLanguage(SwaggerUtil.getLanguageWrittenIn(fskObj.modelMetadata));
-
-    String modelId = SwaggerUtil.getModelId(fskObj.modelMetadata);
+   String modelId = SwaggerUtil.getModelId(fskObj.modelMetadata);
 
     List<Parameter> parameters = SwaggerUtil.getParameter(fskObj.modelMetadata);
     for (Parameter p : parameters) {
@@ -41,12 +39,19 @@ public class PythonJsonHandler extends JsonHandler {
         StringBuilder script = new StringBuilder();
         script.append("#JSON_PARAMETER_OUTUT\n");
         convertParamToJsonSerializable(p.getId(), Parameter.ClassificationEnum.INPUT);
-        script.append("print(toSerializable)\n");
+        script.append("print(toSerializable)\n"); // important to get a return from controller
         String[] results = scriptHandler.runScript(script.toString(), exec, true);
         String data = (results != null) ? results[0] : "";
-        String parameterDataType =
-            scriptHandler.runScript("print(type(" + p.getId() + ").__name__)", exec, true)[0];
-        parameterJson.addParameter(p, modelId, data, parameterDataType);
+        
+        Boolean isDataFrame = scriptHandler.runScript("print(type(" + p.getId() + ").__name__)", exec, true)[0]
+            .contains("DataFrame");
+        String parameterDataType = isDataFrame ? "DataFrame" : p.getDataType().getValue();
+        
+        parameterJson.addParameter(p,
+            modelId,
+            data,
+            parameterDataType,
+            SwaggerUtil.getLanguageWrittenIn(fskObj.modelMetadata));
       }
     }
 
@@ -63,12 +68,17 @@ public class PythonJsonHandler extends JsonHandler {
         StringBuilder script = new StringBuilder();
         script.append("#JSON_PARAMETER_OUTUT\n");
         convertParamToJsonSerializable(p.getId(), Parameter.ClassificationEnum.OUTPUT);
-        script.append("print(toSerializable)");
+        script.append("print(toSerializable)"); // important to get a return from controller
         String[] results = scriptHandler.runScript(script.toString(), exec, true);
         String data = (results != null) ? results[0] : "";
-        String parameterDataType =
-            scriptHandler.runScript("print(type(" + p.getId() + ").__name__)", exec, true)[0];
-        parameterJson.addParameter(p, modelId, data, parameterDataType);
+        Boolean isDataFrame = scriptHandler.runScript("print(type(" + p.getId() + ").__name__)", exec, true)[0]
+            .contains("DataFrame");
+        String parameterDataType = isDataFrame ? "DataFrame" : p.getDataType().getValue();
+        parameterJson.addParameter(p,
+            modelId,
+            data,
+            parameterDataType,
+            SwaggerUtil.getLanguageWrittenIn(fskObj.modelMetadata));
       }
     }
     String path = workingDirectory.toString() + File.separator + JSON_FILE_NAME;
@@ -91,9 +101,10 @@ public class PythonJsonHandler extends JsonHandler {
 
     // load source and target into workspace as strings
     ParameterData parameterData = MAPPER.readValue(new File(parameterJson), ParameterData.class);
-    String language = parameterData.getGeneratorLanguage();
+    
     for (DataArray param : parameterData.getParameters()) {
       if (sourceParam.equals(param.getMetadata().getId())) {
+        String language = param.getGeneratorLanguage();
         String type = param.getParameterType();
         String rawJsonData = "sourceParam = json.loads('" + param.getData() + "')";
         scriptHandler.runScript(rawJsonData, exec, false);
@@ -109,7 +120,7 @@ public class PythonJsonHandler extends JsonHandler {
   private String convertRawJson(String data, String language, String type) throws Exception {
     String converted = "";
 
-    if (type.equals("DataFrame") || type.equals("data.frame")) {
+    if (type.equals("DataFrame") ) {
 
       converted = "pandas.DataFrame.from_records(" + data + ")";
 

@@ -6,7 +6,7 @@ import java.util.List;
 
 public class ParameterData {
 
-  private String generatorLanguage;
+
 
   private List<DataArray> parameters;
 
@@ -14,14 +14,6 @@ public class ParameterData {
 
     this.parameters = new ArrayList<>();
 
-  }
-
-  public String getGeneratorLanguage() {
-    return generatorLanguage;
-  }
-
-  public void setGeneratorLanguage(String generatorLanguage) {
-    this.generatorLanguage = generatorLanguage;
   }
 
   public List<DataArray> getParameters() {
@@ -40,9 +32,10 @@ public class ParameterData {
    * @param data JSON data
    * @param parameterType data-type of parameter value
    */
-  public void addParameter(Parameter parameter, String modelId, String data, String parameterType) {
+  public void addParameter(Parameter parameter, String modelId, String data, String parameterType,
+      String language) {
     DataArray arr =
-        new DataArray(parameter, modelId, data.replaceAll("\\r?\\n", ""), parameterType);
+        new DataArray(parameter, modelId, data.replaceAll("\\r?\\n", ""), parameterType, language);
     this.parameters.add(arr);
   }
 
