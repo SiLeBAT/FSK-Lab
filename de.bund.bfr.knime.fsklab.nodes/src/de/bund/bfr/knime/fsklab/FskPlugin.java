@@ -77,7 +77,7 @@ public class FskPlugin extends AbstractUIPlugin {
 
     OLD_OBJECT_MAPPER = new ObjectMapper().registerModule(new RakipModule());
     
-    fskService = new FskService();
+    fskService = FskService.instance();
     
     service = new Thread(fskService);
     service.setName("FSK-Service");

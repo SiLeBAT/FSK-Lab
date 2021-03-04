@@ -1,10 +1,10 @@
 package de.bund.bfr.knime.fsklab.nodes;
 
 import de.bund.bfr.knime.fsklab.nodes.plot.PythonPlotter;
-import de.bund.bfr.knime.fsklab.v1_9.FskPortObject;
-import de.bund.bfr.knime.fsklab.v1_9.FskSimulation;
-import de.bund.bfr.knime.fsklab.v1_9.runner.RunnerNodeInternalSettings;
-import de.bund.bfr.knime.fsklab.v1_9.runner.RunnerNodeSettings;
+import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
+import de.bund.bfr.knime.fsklab.v2_0.FskSimulation;
+import de.bund.bfr.knime.fsklab.v2_0.runner.RunnerNodeInternalSettings;
+import de.bund.bfr.knime.fsklab.v2_0.runner.RunnerNodeSettings;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;

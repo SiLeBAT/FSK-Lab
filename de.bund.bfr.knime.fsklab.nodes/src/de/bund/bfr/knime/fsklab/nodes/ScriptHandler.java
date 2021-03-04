@@ -1,12 +1,12 @@
 package de.bund.bfr.knime.fsklab.nodes;
 
 import de.bund.bfr.knime.fsklab.nodes.plot.ModelPlotter;
-import de.bund.bfr.knime.fsklab.v1_9.FskPortObject;
-import de.bund.bfr.knime.fsklab.v1_9.FskSimulation;
-import de.bund.bfr.knime.fsklab.v1_9.JoinRelationAdvanced;
-import de.bund.bfr.knime.fsklab.v1_9.runner.RunnerNodeInternalSettings;
-import de.bund.bfr.knime.fsklab.v1_9.runner.RunnerNodeModel;
-import de.bund.bfr.knime.fsklab.v1_9.runner.RunnerNodeSettings;
+import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
+import de.bund.bfr.knime.fsklab.v2_0.FskSimulation;
+import de.bund.bfr.knime.fsklab.v2_0.JoinRelationAdvanced;
+import de.bund.bfr.knime.fsklab.v2_0.runner.RunnerNodeInternalSettings;
+import de.bund.bfr.knime.fsklab.v2_0.runner.RunnerNodeModel;
+import de.bund.bfr.knime.fsklab.v2_0.runner.RunnerNodeSettings;
 import de.bund.bfr.metadata.swagger.Parameter;
 import de.bund.bfr.metadata.swagger.Parameter.ClassificationEnum;
 import java.io.File;

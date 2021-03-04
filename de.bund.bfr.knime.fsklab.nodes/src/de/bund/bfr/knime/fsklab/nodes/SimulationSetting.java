@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.knime.core.util.Pair;
-import de.bund.bfr.knime.fsklab.v1_9.simulator.JSSimulatorViewValue.JSSimulation;
+import de.bund.bfr.knime.fsklab.v2_0.simulator.JSSimulatorViewValue.JSSimulation;
 
 /**
  * Load and save simulation. Used in the simulation configurator node.
