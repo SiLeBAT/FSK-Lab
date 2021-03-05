@@ -5,9 +5,12 @@ import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
 import de.bund.bfr.knime.fsklab.v2_0.FskSimulation;
 import de.bund.bfr.knime.fsklab.v2_0.runner.RunnerNodeInternalSettings;
 import de.bund.bfr.knime.fsklab.v2_0.runner.RunnerNodeSettings;
+import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.List;
+import org.apache.commons.io.FileUtils;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.util.FileUtil;
@@ -97,9 +100,15 @@ public class PythonScriptHandler extends ScriptHandler {
   @Override
   public void saveWorkspace(FskPortObject fskObj, ExecutionContext exec) throws Exception {
     if (fskObj.getWorkspace() == null) {
-      fskObj.setWorkspace(FileUtil.createTempFile("workspace", ".py").toPath());
+      fskObj.setWorkspace(FileUtil.createTempFile("workspace", ".RData").toPath());
+      
     }
+   
+    File file = getResource("data/shelvePythonSession.py");
+    String script = "filename='" + fskObj.getWorkspace().toString() +"'\n";
+    script += FileUtils.readFileToString(file, StandardCharsets.UTF_8);
 
+    runScript(script.toString(), exec, false);
   }
 
   @Override

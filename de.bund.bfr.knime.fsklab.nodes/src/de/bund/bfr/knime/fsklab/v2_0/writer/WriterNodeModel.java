@@ -18,6 +18,32 @@
  */
 package de.bund.bfr.knime.fsklab.v2_0.writer;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.threetenbp.ThreeTenModule;
+import de.bund.bfr.fskml.FSKML;
+import de.bund.bfr.fskml.FskMetaDataObject;
+import de.bund.bfr.fskml.FskMetaDataObject.ResourceType;
+import de.bund.bfr.fskml.sedml.SourceScript;
+import de.bund.bfr.knime.fsklab.FskPlugin;
+import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
+import de.bund.bfr.knime.fsklab.nodes.ScriptHandler;
+import de.bund.bfr.knime.fsklab.nodes.WriterNodeUtils;
+import de.bund.bfr.knime.fsklab.r.client.LibRegistry;
+import de.bund.bfr.knime.fsklab.v2_0.CombinedFskPortObject;
+import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
+import de.bund.bfr.knime.fsklab.v2_0.FskSimulation;
+import de.bund.bfr.knime.fsklab.v2_0.JoinRelation;
+import de.bund.bfr.metadata.swagger.Model;
+import de.bund.bfr.metadata.swagger.Parameter;
+import de.unirostock.sems.cbarchive.ArchiveEntry;
+import de.unirostock.sems.cbarchive.CombineArchive;
+import de.unirostock.sems.cbarchive.meta.DefaultMetaDataObject;
+import de.unirostock.sems.cbarchive.meta.MetaDataObject;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -33,6 +59,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.xml.stream.XMLStreamException;
+import metadata.SwaggerUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
@@ -75,33 +102,6 @@ import org.sbml.jsbml.ext.comp.Submodel;
 import org.sbml.jsbml.xml.XMLAttributes;
 import org.sbml.jsbml.xml.XMLNode;
 import org.sbml.jsbml.xml.XMLTriple;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.threetenbp.ThreeTenModule;
-import de.bund.bfr.fskml.FSKML;
-import de.bund.bfr.fskml.FskMetaDataObject;
-import de.bund.bfr.fskml.FskMetaDataObject.ResourceType;
-import de.bund.bfr.fskml.sedml.SourceScript;
-import de.bund.bfr.knime.fsklab.FskPlugin;
-import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
-import de.bund.bfr.knime.fsklab.nodes.ScriptHandler;
-import de.bund.bfr.knime.fsklab.nodes.WriterNodeUtils;
-import de.bund.bfr.knime.fsklab.r.client.LibRegistry;
-import de.bund.bfr.knime.fsklab.v2_0.CombinedFskPortObject;
-import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
-import de.bund.bfr.knime.fsklab.v2_0.FskSimulation;
-import de.bund.bfr.knime.fsklab.v2_0.JoinRelation;
-import de.bund.bfr.metadata.swagger.Model;
-import de.bund.bfr.metadata.swagger.Parameter;
-import de.unirostock.sems.cbarchive.ArchiveEntry;
-import de.unirostock.sems.cbarchive.CombineArchive;
-import de.unirostock.sems.cbarchive.meta.DefaultMetaDataObject;
-import de.unirostock.sems.cbarchive.meta.MetaDataObject;
-import metadata.SwaggerUtil;
 
 class WriterNodeModel extends NoInternalsModel {
 
@@ -745,8 +745,15 @@ class WriterNodeModel extends NoInternalsModel {
 
     // Only save R workspace smaller than 100 MB
     if (fileSizeInMB < 100) {
-      final ArchiveEntry workspaceEntry = archive.addEntry(workspace.toFile(),
-          filePrefix + "workspace.RData", FSKML.getURIS(1, 0, 12).get("rdata"));
+      final ArchiveEntry workspaceEntry;
+      if(scriptHandler.getFileExtension().equals("py")) {
+        // TODO: no luck with other URL's so far, it always creates some locked tmp file
+        workspaceEntry = archive.addEntry(workspace.toFile(),
+            filePrefix + "workspace", FSKML.getURIS(1, 0, 12).get("rdata"));
+      } else {
+        workspaceEntry = archive.addEntry(workspace.toFile(),
+            filePrefix + "workspace.RData", FSKML.getURIS(1, 0, 12).get("rdata"));
+      }
       workspaceEntry.addDescription(new FskMetaDataObject(ResourceType.workspace).metaDataObject);
     } else {
       LOGGER.warn("Results file larger than 100 MB -> Skipping file");

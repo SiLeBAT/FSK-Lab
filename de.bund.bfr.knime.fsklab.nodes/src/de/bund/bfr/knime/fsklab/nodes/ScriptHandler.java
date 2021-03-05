@@ -10,17 +10,23 @@ import de.bund.bfr.knime.fsklab.v2_0.runner.RunnerNodeSettings;
 import de.bund.bfr.metadata.swagger.Parameter;
 import de.bund.bfr.metadata.swagger.Parameter.ClassificationEnum;
 import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import metadata.SwaggerUtil;
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Platform;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.util.FileUtil;
 import org.knime.python2.PythonVersion;
+import org.osgi.framework.Bundle;
 
 public abstract class ScriptHandler implements AutoCloseable {
 
@@ -390,4 +396,22 @@ public abstract class ScriptHandler implements AutoCloseable {
       e.printStackTrace();
     }
   }
+  
+  /**
+   * This is a duplicate from JSONHandler, but since the bundle is hardcoded I put 
+   * a separate method here.
+   * @param path to the appropriate script file
+   * @return appropriate R or Python script file (in /data) needed to load parameters from a hdf
+   *         file into the current workspace
+   * @throws IOException
+   * @throws URISyntaxException
+   */
+  protected File getResource(final String path) throws IOException, URISyntaxException {
+    Bundle bundle = Platform.getBundle("de.bund.bfr.knime.fsklab.nodes");
+    URL fileUrl = bundle.getEntry(path);
+    URL resolvedFileUrl = FileLocator.toFileURL(fileUrl);
+    URI resolvedUri = new URI(resolvedFileUrl.getProtocol(), resolvedFileUrl.getPath(), null);
+    return new File(resolvedUri);
+  }
+  
 }
