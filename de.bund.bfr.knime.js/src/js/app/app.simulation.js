@@ -372,6 +372,21 @@ class APPSimulation {
 						if ( param.unit && param.unit != '[]' && param.unit != 'Others' ) {
 							$input.attr( 'data-touchspin-postfix', param.unit );
 						}
+						let step = 1;
+
+						// calc decimals for slider steps depending on min-max values
+						if ( param.dataType.toLowerCase() === 'double' ) {
+							let decimals = param.value.substring( param.value.indexOf( '.' ) + 1 ).length;
+							for ( let j = 0; j < decimals; j++ ) {
+								step = step / 10;
+							}
+							// add decimals support
+							if ( decimals > 0 ) {
+								$input.attr( 'data-touchspin-decimals', true );
+							}
+						}
+						// add step range
+						$input.attr( 'data-touchspin-step', step );
 					}
 				}
 				// sim name
@@ -598,7 +613,7 @@ class APPSimulation {
 		// $.each( O._$simInputs, ( i, $input ) => {
 
 		$.each( O._simFields, ( id, field ) => {
-
+			_log( field );
 			if( field.input && field.param ) {
 
 				// disable or enable 
@@ -624,7 +639,19 @@ class APPSimulation {
 					_log( field.param.id +' : '+ simulation.parameters[field.param.id], 'level1' );
 					let paramValue = simulation.parameters[field.param.id];
 
-					! _isNull( paramValue ) ? field.input.val( paramValue ) : null;
+					// change rangeslider value
+					if ( ! _isUndefined( $( field.input ).data( 'rangeslider' ) ) ) {
+						let $inputControl = $( $( field.input ).data( 'control-single' ) );
+						if ( $inputControl.length > 0 ) {
+							$inputControl.val( paramValue );
+							// trigger change
+							$inputControl.trigger( 'change' );
+						}
+					}
+					// change other inputs
+					else {
+						! _isNull( paramValue ) ? field.input.val( paramValue ) : null;
+					}
 				}
 				// custom fields like name and desc
 				else if( field.param._isCustom && field.param._isCustom == true ) {
