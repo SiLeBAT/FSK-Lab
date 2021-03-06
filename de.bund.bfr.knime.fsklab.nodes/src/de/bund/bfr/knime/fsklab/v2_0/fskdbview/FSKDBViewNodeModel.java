@@ -39,6 +39,7 @@ import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.defaultnodesettings.SettingsModelIntegerBounded;
 import org.knime.core.node.defaultnodesettings.SettingsModelNumber;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
+import org.knime.core.node.defaultnodesettings.SettingsModelStringArray;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.web.ValidationError;
@@ -114,6 +115,7 @@ public class FSKDBViewNodeModel
    * be entered by the user in the dialog.
    */
   static final String MAX_SELECTION_NUMBER = "max_selection_number";
+  static final String SELECTION = "selection";
 
   /**
    * The default the maximum number of models that are allowed to be selected.
@@ -132,6 +134,9 @@ public class FSKDBViewNodeModel
    */
   static final SettingsModelNumber m_maxSelectionNumberSettings =
       createMaxSelectionNumberSettingsModel();
+  
+  final SettingsModelStringArray selectionSettings =
+      createSelectionSettingsModel();
 
 
   /**
@@ -147,6 +152,10 @@ public class FSKDBViewNodeModel
     return new SettingsModelIntegerBounded(MAX_SELECTION_NUMBER, DEFAULT_MAX_SELECTION_NUMBER, 2,
         4);
   }
+  
+  static SettingsModelStringArray createSelectionSettingsModel() {
+    return new SettingsModelStringArray(SELECTION, new String[0])  ;
+  }
 
   /**
    * {@inheritDoc}
@@ -155,6 +164,11 @@ public class FSKDBViewNodeModel
   protected void saveSettingsTo(final NodeSettingsWO settings) {
     m_repositoryLocationSettings.saveSettingsTo(settings);
     m_maxSelectionNumberSettings.saveSettingsTo(settings);
+    FSKDBViewValue viewValue = getViewValue();
+    if (viewValue != null && viewValue.getSelection() != null) {
+      selectionSettings.setStringArrayValue(viewValue.getSelection());
+      selectionSettings.saveSettingsTo(settings);
+    }
   }
 
   /**
@@ -165,6 +179,7 @@ public class FSKDBViewNodeModel
       throws InvalidSettingsException {
     m_repositoryLocationSettings.loadSettingsFrom(settings);
     m_maxSelectionNumberSettings.loadSettingsFrom(settings);
+    selectionSettings.loadSettingsFrom(settings);
   }
 
   /**
@@ -174,8 +189,23 @@ public class FSKDBViewNodeModel
   protected void validateSettings(final NodeSettingsRO settings) throws InvalidSettingsException {
     m_repositoryLocationSettings.validateSettings(settings);
     m_maxSelectionNumberSettings.validateSettings(settings);
+    selectionSettings.validateSettings(settings);
   }
 
+  @Override
+  public FSKDBViewRepresentation getViewRepresentation() {
+    FSKDBViewRepresentation representation;
+    synchronized (getLock()) {
+      representation = super.getViewRepresentation();
+      if (representation == null) {
+        representation = createEmptyViewRepresentation();
+      }
+    }
+    representation.setSelection(
+        ((SettingsModelStringArray) selectionSettings).getStringArrayValue());
+    return representation;
+  }
+  
   @Override
   public FSKDBViewRepresentation createEmptyViewRepresentation() {
     return new FSKDBViewRepresentation();
@@ -242,10 +272,15 @@ public class FSKDBViewNodeModel
 
     synchronized (getLock()) {
       FSKDBViewRepresentation representation = getViewRepresentation();
-      FSKDBViewValue fskdbViewValue = getViewValue();
       representation.setRemoteRepositoryURL(m_repositoryLocationSettings.getStringValue());
       representation.setMaxSelectionNumber(
           ((SettingsModelIntegerBounded) m_maxSelectionNumberSettings).getIntValue());
+      representation.setSelection(
+          ((SettingsModelStringArray) selectionSettings).getStringArrayValue());
+      FSKDBViewValue fskdbViewValue = getViewValue();
+      if (fskdbViewValue != null && fskdbViewValue.getSelection() != null) {
+        selectionSettings.setStringArrayValue(fskdbViewValue.getSelection());
+      }
       if (fskdbViewValue.getTable() != null) {
         outputPort = convertJSONTableToBufferedDataTable(exec);
       } else if (inPort == null && representation.getTable() == null) {

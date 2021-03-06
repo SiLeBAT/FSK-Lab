@@ -40,6 +40,7 @@ public class FSKDBViewRepresentation extends JSONViewContent {
   private JSONDataTable m_table;
   private String m_remoteRepositoryURL;
   private int m_MaxSelectionNumber;
+  private String[] m_selection = {};
 
   public String getTableID() {
     return m_tableID;
@@ -80,6 +81,20 @@ public class FSKDBViewRepresentation extends JSONViewContent {
   }
   
   /**
+   * @return the selection
+   */
+  public String[] getSelection() {
+    return m_selection;
+  }
+
+  /**
+   * @param selection the selection to set
+   */
+  public void setSelection(final String[] selection) {
+    m_selection = selection;
+  }
+  
+  /**
    * {@inheritDoc}
    */
   @Override
@@ -114,7 +129,7 @@ public class FSKDBViewRepresentation extends JSONViewContent {
       return false;
     }
     FSKDBViewRepresentation other = (FSKDBViewRepresentation) obj;
-    return new EqualsBuilder().append(m_tableID, other.m_tableID).isEquals();
+    return new EqualsBuilder().append(m_selection, other.m_selection).append(m_tableID, other.m_tableID).isEquals();
   }
 
   /**
@@ -122,6 +137,6 @@ public class FSKDBViewRepresentation extends JSONViewContent {
    */
   @Override
   public int hashCode() {
-    return new HashCodeBuilder().append(m_tableID).toHashCode();
+    return new HashCodeBuilder().append(m_selection).append(m_tableID).toHashCode();
   }
 }
