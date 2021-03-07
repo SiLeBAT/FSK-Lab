@@ -258,6 +258,8 @@ public final class JoinerNodeModel
     modelsParamsOriginalNames.remove(null);
     if(this.modelsParamsOriginalNames!=null && !this.modelsParamsOriginalNames.isEmpty()) {
       representation.joinerModelsData.modelsParamsOriginalNames = this.modelsParamsOriginalNames;
+    }else {
+      representation.joinerModelsData.modelsParamsOriginalNames = m_config.joinerModelsData.modelsParamsOriginalNames; 
     }
     return representation;
   }
