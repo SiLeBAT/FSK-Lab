@@ -345,7 +345,8 @@ fskdbview = function () {
                         });
                         
                         _value.selection = _value.selection.filter(function (value, index, arr) {
-                            return value != rowIndex;
+							let indexToBeSelected = value.replace("Row","").replace("#","");
+                            return indexToBeSelected != rowIndex;
                         });	
                         knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c21joiner' ,
                         		[{"selecteModels":window.selectedModels, "downloadURs":window.downloadURs}],{elements:[]});
