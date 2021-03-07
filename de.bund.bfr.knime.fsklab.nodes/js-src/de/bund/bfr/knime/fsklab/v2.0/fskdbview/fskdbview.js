@@ -136,7 +136,7 @@ fskdbview = function () {
                     });
                 }
             }
-            //postTableBuilt(_representation.table.rows);
+			
             return j;
         }
     }
@@ -270,15 +270,23 @@ fskdbview = function () {
 				on 				: {			
 					afterInit 		: ( O ) => {
 						_log( 'on > afterInit', 'hook' ); 
-						_log( O );
+                        _log( O._tableData );
 					},
 					afterPopulate 	: ( O, tableData ) => {
 						_log( 'on > afterPopulate', 'hook' ); 
 						_log( O );
-						_log( tableData );
+                        _log( tableData );
+                        let tbl = O._tableData;
+                        $.each(_representation.selection,function(index,value){
+                            let indexToBeSelected = value.replace("Row","").replace("#","");
+                            let $tr = $(tbl[indexToBeSelected].el[0]);     
+                            $tr.addClass('tr-selected');
+			                $tr.data('selected', true);
+							window.selectedModels.push(_representation.metadata[indexToBeSelected]);
+                        });
+                        
 					},
 					selectRow 		: ( O, rowIndex, rowData ) => {
-                            
                             if (window.selectedModels.length >= _representation.maxSelectionNumber) {
                                 $(this).prop("checked", false);
                                 return;
@@ -325,18 +333,20 @@ fskdbview = function () {
 						_log( O );
 						_log( rowIndex );
                         _log( rowData );
+						
                         this.checked = false;
                         $(this).closest("tr").css("background-color", "transparent");
+						
                         //filter out the model if the Checkbox is unchecked
                         window.selectedModels = window.selectedModels.filter(function (value, index, arr) {
                             let selectedModelID = getData(_representation.metadata[rowIndex], "generalInformation", "identifier")
                             let currentModelId = getData(value, "generalInformation", "identifier");
-                            return selectedModelID != currentModelId;
+							return selectedModelID != currentModelId;
                         });
                         
                         _value.selection = _value.selection.filter(function (value, index, arr) {
                             return value != rowIndex;
-                        });
+                        });	
                         knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c21joiner' ,
                         		[{"selecteModels":window.selectedModels, "downloadURs":window.downloadURs}],{elements:[]});
                           

@@ -33,6 +33,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 public class FSKDBViewValue extends JSONViewContent {
   private static final String TABLE_ID = "tableid";
+  private static final String SELECTION = "selection";
   private String tableID;
   private JSONDataTable m_table;
   private String[] m_selection = {};
@@ -80,7 +81,7 @@ public class FSKDBViewValue extends JSONViewContent {
   @Override
   public void saveToNodeSettings(final NodeSettingsWO settings) {
     settings.addString(TABLE_ID, tableID);
-
+    settings.addStringArray(SELECTION, m_selection);
   }
 
   /**
@@ -89,7 +90,7 @@ public class FSKDBViewValue extends JSONViewContent {
   @Override
   public void loadFromNodeSettings(final NodeSettingsRO settings) throws InvalidSettingsException {
     tableID = settings.getString(TABLE_ID);
-
+    m_selection = settings.getStringArray(SELECTION);
   }
 
   @Override

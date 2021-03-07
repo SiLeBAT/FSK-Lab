@@ -40,7 +40,7 @@ public class FSKDBViewRepresentation extends JSONViewContent {
   private JSONDataTable m_table;
   private String m_remoteRepositoryURL;
   private int m_MaxSelectionNumber;
-
+  private String[] m_selection = {};
   public String getTableID() {
     return m_tableID;
   }
@@ -77,6 +77,20 @@ public class FSKDBViewRepresentation extends JSONViewContent {
 
   public void setMaxSelectionNumber(int maxSelctionNumber) {
     this.m_MaxSelectionNumber = maxSelctionNumber;
+  }
+  
+  /**
+   * @return the selection
+   */
+  public String[] getSelection() {
+    return m_selection;
+  }
+
+  /**
+   * @param selection the selection to set
+   */
+  public void setSelection(final String[] selection) {
+    m_selection = selection;
   }
   
   /**
