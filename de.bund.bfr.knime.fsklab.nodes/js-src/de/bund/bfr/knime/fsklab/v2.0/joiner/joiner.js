@@ -845,7 +845,6 @@ joiner = function () {
 
       const oldScale = _paper.scale().sx;
       const newScale = oldScale + delta * .01;
-      console.log(newScale+'     '+delta);
       scaleToPoint(newScale, x, y);
     };
 
