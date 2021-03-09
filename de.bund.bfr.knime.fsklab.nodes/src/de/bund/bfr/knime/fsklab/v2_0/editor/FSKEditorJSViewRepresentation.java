@@ -42,7 +42,16 @@ final class FSKEditorJSViewRepresentation extends JSONViewContent {
    */
   private int servicePort;
   private String controlledVocabularyURL;
+  private String modelMetadata;
   
+  public String getModelMetadata() {
+    return modelMetadata;
+  }
+
+  public void setModelMetadata(String modelMetadata) {
+    this.modelMetadata = modelMetadata;
+  }
+
   public String getControlledVocabularyURL() {
     return controlledVocabularyURL;
   }
