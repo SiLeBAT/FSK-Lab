@@ -1,5 +1,22 @@
 package de.bund.bfr.knime.fsklab.nodes;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+import org.knime.core.node.ExecutionContext;
+import org.knime.core.node.NodeLogger;
+import org.knime.core.util.FileUtil;
+import org.knime.python2.PythonVersion;
+import de.bund.bfr.knime.fsklab.JsonFileNotFoundException;
+import de.bund.bfr.knime.fsklab.ModelScriptException;
+import de.bund.bfr.knime.fsklab.PackageNotFoundException;
+import de.bund.bfr.knime.fsklab.ParameterDeclarationException;
+import de.bund.bfr.knime.fsklab.ResourceFileNotFoundException;
+import de.bund.bfr.knime.fsklab.VariableNotGlobalException;
 import de.bund.bfr.knime.fsklab.nodes.plot.ModelPlotter;
 import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
 import de.bund.bfr.knime.fsklab.v2_0.FskSimulation;
@@ -9,18 +26,7 @@ import de.bund.bfr.knime.fsklab.v2_0.runner.RunnerNodeModel;
 import de.bund.bfr.knime.fsklab.v2_0.runner.RunnerNodeSettings;
 import de.bund.bfr.metadata.swagger.Parameter;
 import de.bund.bfr.metadata.swagger.Parameter.ClassificationEnum;
-import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 import metadata.SwaggerUtil;
-import org.knime.core.node.ExecutionContext;
-import org.knime.core.node.NodeLogger;
-import org.knime.core.util.FileUtil;
-import org.knime.python2.PythonVersion;
 
 public abstract class ScriptHandler implements AutoCloseable {
 
@@ -46,7 +52,9 @@ public abstract class ScriptHandler implements AutoCloseable {
    */
   public final void runSnippet(final FskPortObject fskObj, final FskSimulation simulation,
       final ExecutionContext exec, NodeLogger logger, File imageFile,
-      List<JoinRelationAdvanced> joinRelationList, String suffix) throws Exception {
+      List<JoinRelationAdvanced> joinRelationList, String suffix)
+      throws ParameterDeclarationException, PackageNotFoundException, ModelScriptException,
+      Exception {
 
     // Sets up working directory with resource files. This directory needs to be deleted.
     exec.setProgress(0.05, "Add resource files");
@@ -67,6 +75,13 @@ public abstract class ScriptHandler implements AutoCloseable {
     if (!fskObj.packages.isEmpty()) {
       installLibs(fskObj, exec, logger);
     }
+    // Throw error if packages cannot be installed
+    finishOutputCapturing(exec);
+    if (!getStdErr().isEmpty()) {
+      throw new PackageNotFoundException(getStdErr(), null);
+    }
+    setupOutputCapturing(exec); // re-setup the output capturing
+
 
     jsonHandler = JsonHandler.createHandler(this, exec);
     jsonHandler.applyJoinRelation(fskObj, joinRelationList, suffix);
@@ -84,22 +99,39 @@ public abstract class ScriptHandler implements AutoCloseable {
           .forEach(line -> {
             try {
               runScript(line, exec, false);
-
+              // Throw error if any package in parameter script cannot be loaded
+              finishOutputCapturing(exec);
+              if (!getStdErr().isEmpty()) {
+                throw new PackageNotFoundException(getStdErr(), null);
+              }
+              setupOutputCapturing(exec); // re-setup the output capturing
             } catch (Exception e) {
-              // TODO Auto-generated catch block
               e.printStackTrace();
             }
           });
+
       runScript(paramScript, exec, false);
+      // Throw error if parameters cannot be loaded
+      finishOutputCapturing(exec);
+      if (!getStdErr().isEmpty()) {
+        throw new ParameterDeclarationException(getStdErr(), null);
+      }
+      setupOutputCapturing(exec); // re-setup the output capturing
     }
 
 
     // JsonHandler stores all input parameters before model execution
-
     jsonHandler.saveInputParameters(fskObj);
 
     exec.setProgress(0.75, "Run models script");
     runScript(fskObj.getModel(), exec, false);
+
+    // Throw error if model script failed
+    finishOutputCapturing(exec);
+    if (!getStdErr().isEmpty()) {
+      throw new ModelScriptException(getStdErr(), null);
+    }
+    setupOutputCapturing(exec); // re-setup the output capturing
 
     if (RunnerNodeModel.isTest) {
       List<Parameter> parameters = SwaggerUtil.getParameter(fskObj.modelMetadata);
@@ -131,13 +163,24 @@ public abstract class ScriptHandler implements AutoCloseable {
 
     saveWorkspace(fskObj, exec);
 
-    // HDFHandler stores all ouput parameters in HDF file
-    jsonHandler.saveOutputParameters(fskObj, workingDirectory);
+    // Save output parameters, log a warning if anything is not available
+    try {
+      jsonHandler.saveOutputParameters(fskObj, workingDirectory);
+    } catch (VariableNotGlobalException e) {
+      e.printStackTrace();
+    }
 
-    // Save generated resources
-    saveGeneratedResources(fskObj, workingDirectory.toFile(), exec.createSubExecutionContext(1));
 
-  
+    // Save generated resources, catch error and log a warning
+    try {
+      saveGeneratedResources(fskObj, workingDirectory.toFile(), exec.createSubExecutionContext(1));
+    } catch (ResourceFileNotFoundException e) {
+      e.printStackTrace();
+    } catch (JsonFileNotFoundException e) {
+      e.printStackTrace();
+    }
+
+
 
     // delete environment directory (workingDirectory is always present)
     if (fskObj.getEnvironmentManager().isPresent()) {
@@ -333,7 +376,8 @@ public abstract class ScriptHandler implements AutoCloseable {
   protected abstract String createVectorQuery(List<String> variableNames);
 
   private void saveGeneratedResources(FskPortObject fskPortObject, File workingDirectory,
-      ExecutionContext exec) {
+      ExecutionContext exec)
+      throws ResourceFileNotFoundException, JsonFileNotFoundException, Exception {
 
     // Delete previous resources if they exist
     fskPortObject.getGeneratedResourcesDirectory().ifPresent(directory -> {
@@ -359,12 +403,13 @@ public abstract class ScriptHandler implements AutoCloseable {
     try {
       File newResourcesDirectory = FileUtil.createTempDir("generatedResources");
 
-      try {
-        if (!command.equals("c()") && !command.equals("print([])")) {
-          String[] filenames = runScript(command, exec, true);
 
-          // Copy every resource from the working directory
-          for (String filename : filenames) {
+      if (!command.equals("c()") && !command.equals("print([])")) {
+        String[] filenames = runScript(command, exec, true);
+
+        // Copy every resource from the working directory
+        for (String filename : filenames) {
+          try {
             // file parameters can come from another generatedResourceDirectory
             // from another model; in that case we use that path since it is
             // not present in the current workingDirectory
@@ -374,10 +419,10 @@ public abstract class ScriptHandler implements AutoCloseable {
             File sourceFile = sourceDir.resolve(source).toFile();
             File targetFile = new File(newResourcesDirectory, source.getFileName().toString());
             FileUtil.copy(sourceFile, targetFile, exec);
+          } catch (IOException e) {
+            throw new ResourceFileNotFoundException(filename, e);
           }
         }
-      } catch (Exception e) {
-        e.printStackTrace();
       }
 
       // Save JSON file
@@ -386,8 +431,8 @@ public abstract class ScriptHandler implements AutoCloseable {
       FileUtil.copy(sourceFile, targetFile, exec);
 
       fskPortObject.setGeneratedResourcesDirectory(newResourcesDirectory);
-    } catch (Exception e) {
-      e.printStackTrace();
+    } catch (IOException e) {
+      throw new JsonFileNotFoundException(workingDirectory.toString(), e);
     }
   }
 }

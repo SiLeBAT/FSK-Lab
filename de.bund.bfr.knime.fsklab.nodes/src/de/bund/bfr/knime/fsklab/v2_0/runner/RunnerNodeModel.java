@@ -149,25 +149,19 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
           .findFirst().ifPresent(index -> reSelectSimulation(fskObjk, index));
     }
 
-    try {
-      
-      FskSimulation combinedSim = fskObj.simulations.get(fskObj.selectedSimulationIndex);
-      List<JoinRelationAdvanced> joinRelationList = null;
-      if (fskObj instanceof CombinedFskPortObject) {
-        joinRelationList = getMapOfSourceParameters(
-            fskObj,
-            getJoinRelations((CombinedFskPortObject)fskObj, new ArrayList<JoinRelation>()),
-            null,
-            ""
-            );
-          
-      }
-     
-      runFskPortObject(fskObj, combinedSim, exec, joinRelationList, "");
-      
-    } catch (Exception e) {
-      e.printStackTrace();
+    
+    FskSimulation combinedSim = fskObj.simulations.get(fskObj.selectedSimulationIndex);
+    List<JoinRelationAdvanced> joinRelationList = null;
+    if (fskObj instanceof CombinedFskPortObject) {
+      joinRelationList = getMapOfSourceParameters(fskObj,
+          getJoinRelations((CombinedFskPortObject) fskObj, new ArrayList<JoinRelation>()), null,
+          "");
+
     }
+    
+    runFskPortObject(fskObj, combinedSim, exec, joinRelationList, "");
+      
+    
     
     try (FileInputStream fis = new FileInputStream(internalSettings.imageFile)) {
       final SvgImageContent content = new SvgImageContent(fis);
@@ -503,7 +497,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
       exec.setProgress(0.99, "Cleaning up");
       handler.cleanup(exec);
     } catch(Exception e) {
-      e.printStackTrace();
+      throw new Exception(e);
     }
       return fskObj;
   }

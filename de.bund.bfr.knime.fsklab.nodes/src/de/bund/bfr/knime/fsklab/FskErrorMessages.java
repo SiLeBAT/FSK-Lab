@@ -28,10 +28,10 @@ public class FskErrorMessages {
 
   // Warning message when a JSON file could not be written.
   // Usage: ScriptHandler.saveGeneratedResources
-  public static void jsonFileNotFoundWarning(String fileName) {
-    if (isNotNull("JSON File", fileName)) {
-      LOGGER
-          .warn("WARNING: output JSON file was not found in working directory: '" + fileName + "'");
+  public static void jsonFileNotFoundWarning(String workingDirectory) {
+    if (isNotNull("JSON File", workingDirectory)) {
+      LOGGER.warn("WARNING: output JSON file was not found in working directory: '"
+          + workingDirectory + "'");
     }
   }
 
@@ -60,6 +60,14 @@ public class FskErrorMessages {
       LOGGER.error("ERROR: there is no package called '" + pkg
           + "' nor could it be installed automatically");
       LOGGER.warn(">> " + pkg);
+    }
+  }
+
+  // Error if model script fails
+  public static void modelScriptError(String msg) {
+    if (isNotNull("Evaluation Message", msg)) {
+      LOGGER.error("ERROR: model script failed: \n");
+      LOGGER.warn(">> " + msg);
     }
   }
 

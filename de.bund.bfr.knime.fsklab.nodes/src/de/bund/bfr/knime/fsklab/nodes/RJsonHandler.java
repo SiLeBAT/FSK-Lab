@@ -1,14 +1,19 @@
 package de.bund.bfr.knime.fsklab.nodes;
 
+import de.bund.bfr.knime.fsklab.FskErrorMessages;
+import de.bund.bfr.knime.fsklab.VariableNotGlobalException;
 import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
 import de.bund.bfr.metadata.swagger.Parameter;
 import de.bund.bfr.metadata.swagger.Parameter.DataTypeEnum;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import metadata.SwaggerUtil;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.util.FileUtil;
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 public class RJsonHandler extends JsonHandler {
 
@@ -24,10 +29,10 @@ public class RJsonHandler extends JsonHandler {
     try {
       scriptHandler.runScript("library(jsonlite)", exec, false);
     } catch (Exception e) {
-    	e.printStackTrace();
-//      scriptHandler.runScript("install.packages('jsonlite', type='source', dependencies=TRUE)",
-//          exec, true);
-//      scriptHandler.runScript("library(jsonlite)", exec, true);
+      e.printStackTrace();
+      // scriptHandler.runScript("install.packages('jsonlite', type='source', dependencies=TRUE)",
+      // exec, true);
+      // scriptHandler.runScript("library(jsonlite)", exec, true);
     }
   }
 
@@ -46,10 +51,7 @@ public class RJsonHandler extends JsonHandler {
             scriptHandler.runScript("toJSON(" + p.getId() + ", auto_unbox=TRUE)", exec, true);
         String data = (results != null) ? results[0] : "";
 
-        parameterJson.addParameter(p,
-            modelId,
-            data,
-            parameterDataType,
+        parameterJson.addParameter(p, modelId, data, parameterDataType,
             SwaggerUtil.getLanguageWrittenIn(fskObj.modelMetadata));
       }
     }
@@ -57,7 +59,8 @@ public class RJsonHandler extends JsonHandler {
   }
 
   @Override
-  public void saveOutputParameters(FskPortObject fskObj, Path workingDirectory) throws Exception {
+  public void saveOutputParameters(FskPortObject fskObj, Path workingDirectory)
+      throws VariableNotGlobalException, Exception {
     StringBuilder script = new StringBuilder();
 
     String modelId = SwaggerUtil.getModelId(fskObj.modelMetadata);
@@ -66,24 +69,30 @@ public class RJsonHandler extends JsonHandler {
       if (p.getClassification() == Parameter.ClassificationEnum.OUTPUT) {
         script.append("toJSON(" + p.getId() + ", auto_unbox=TRUE)\n");
 
-        // we need to differentiate between list and dataframe:
-        Boolean isDataFrame = scriptHandler.runScript("class(" + p.getId() + ")", exec, true)[0]
-            .contains("data.frame");
-        String parameterDataType = isDataFrame ? "DataFrame" : p.getDataType().getValue();
 
-        String[] results =
-            scriptHandler.runScript("toJSON(" + p.getId() + ", auto_unbox=TRUE)", exec, true);
-        String data = (results != null) ? results[0] : "";
-        parameterJson.addParameter(p,
-            modelId,
-            data,
-            parameterDataType,
-            SwaggerUtil.getLanguageWrittenIn(fskObj.modelMetadata));
+        try {
+          // we need to differentiate between list and dataframe:
+          Boolean isDataFrame = scriptHandler.runScript("class(" + p.getId() + ")", exec, true)[0]
+              .contains("data.frame");
+          String parameterDataType = isDataFrame ? "DataFrame" : p.getDataType().getValue();
+
+          String[] results =
+              scriptHandler.runScript("toJSON(" + p.getId() + ", auto_unbox=TRUE)", exec, true);
+          String data = (results != null) ? results[0] : "";
+          parameterJson.addParameter(p, modelId, data, parameterDataType,
+              SwaggerUtil.getLanguageWrittenIn(fskObj.modelMetadata));
+        } catch (org.rosuda.REngine.REXPMismatchException e) {
+          if (e.getMessage().contains("REXPNull")) {
+            throw new VariableNotGlobalException(p.getId(), modelId, e);
+          }
         }
+      }
     }
 
     String path = workingDirectory.toString() + File.separator + JSON_FILE_NAME;
+
     MAPPER.writer().writeValue(new File(path), parameterJson);
+
   }
 
 
@@ -99,7 +108,7 @@ public class RJsonHandler extends JsonHandler {
       String targetParam) throws Exception {
 
     ParameterData parameterData = MAPPER.readValue(new File(parameterJson), ParameterData.class);
-    
+
     for (DataArray param : parameterData.getParameters()) {
       if (sourceParam.equals(param.getMetadata().getId())) {
         String language = param.getGeneratorLanguage();
