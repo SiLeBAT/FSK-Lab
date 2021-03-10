@@ -272,7 +272,7 @@ final class FSKEditorJSNodeModel
       if(originalMetadata != null)
         originalParameters = SwaggerUtil.getParameter(originalMetadata);
       
-      if(!parameters.equals(originalParameters) || m_port == null){
+      if(originalParameters.size()>0 && !parameters.equals(originalParameters) || m_port == null){
         regenerateSimulation = true;
       }
       
