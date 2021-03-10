@@ -127,9 +127,12 @@ final class FSKEditorJSNodeModel
 
   @Override
   public FSKEditorJSViewRepresentation createEmptyViewRepresentation() {
-    FSKEditorJSViewRepresentation representation = new FSKEditorJSViewRepresentation();
-    representation.setServicePort(FskPlugin.getDefault().fskService.getPort());
-    representation.setControlledVocabularyURL(PreferenceInitializer.getControlledVocabularyURL());
+    FSKEditorJSViewRepresentation representation = super.getViewRepresentation();
+    if (representation == null) {
+      representation = new FSKEditorJSViewRepresentation();
+      representation.setServicePort(FskPlugin.getDefault().fskService.getPort());
+      representation.setControlledVocabularyURL(PreferenceInitializer.getControlledVocabularyURL());
+    }
     return representation;
   }
 
@@ -210,6 +213,7 @@ final class FSKEditorJSNodeModel
 
     // Create port object
     Model metadata = null;
+    Model originalMetadata = null;
     String readme = "";
     List<String> packages = Collections.emptyList();
     List<FskSimulation> simulations = Collections.emptyList();
@@ -227,6 +231,7 @@ final class FSKEditorJSNodeModel
 
     synchronized (getLock()) {
       FSKEditorJSViewValue viewValue = getViewValue();
+      FSKEditorJSViewRepresentation viewRep = createEmptyViewRepresentation();
 
       // If executed
       if (viewValue.isCompleted()) {
@@ -249,18 +254,36 @@ final class FSKEditorJSNodeModel
         // Deserialize metadata to concrete class according to modelType
         Class<? extends Model> modelClass = SwaggerUtil.modelClasses.get(modelType);
         metadata = MAPPER.readValue(viewValue.getModelMetaData(), modelClass);
+        if(!StringUtils.isEmpty(viewRep.getModelMetadata()))
+          originalMetadata = MAPPER.readValue(viewRep.getModelMetadata(), modelClass);
+        else
+          viewRep.setModelMetadata(jsonMetadata);
       }
-
+      if(StringUtils.isEmpty(viewRep.getModelMetadata())) {
+          viewRep.setModelMetadata("");
+      }
+      boolean regenerateSimulation = false;
+      // Take parameters from view value (metadata)
+      List<Parameter> parameters = new ArrayList<>();
+      if(metadata != null)
+        parameters = SwaggerUtil.getParameter(metadata);
+      // Take original parameters from view representation (metadata)
+      List<Parameter> originalParameters = new ArrayList<>();
+      if(originalMetadata != null)
+        originalParameters = SwaggerUtil.getParameter(originalMetadata);
+      
+      if(originalParameters.size()>0 && !parameters.equals(originalParameters) || m_port == null){
+        regenerateSimulation = true;
+      }
+      
       // Take simulation from view value otherwise from input port (if connected)
       if (metadata != null && SwaggerUtil.getModelMath(metadata) != null
-          && SwaggerUtil.getParameter(metadata) != null) {
-        // Take parameters from view value (metadata)
-        List<Parameter> parameters = SwaggerUtil.getParameter(metadata);
+          && SwaggerUtil.getParameter(metadata) != null && regenerateSimulation)  {
 
-        // 2. Create new default simulation out of the view value
+        // 1. Create new default simulation out of the view value
         FskSimulation newDefaultSimulation = NodeUtils.createDefaultSimulation(parameters);
 
-        // 3. Assign newDefaultSimulation
+        // 2. Assign newDefaultSimulation
         simulations = Arrays.asList(newDefaultSimulation);
       } else if (m_port != null) {
         simulations = m_port.simulations;
