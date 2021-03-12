@@ -43,7 +43,7 @@ public class RJsonHandler extends JsonHandler {
         String parameterDataType = isDataFrame ? "DataFrame" : p.getDataType().getValue();
 
         String[] results =
-            scriptHandler.runScript("toJSON(" + p.getId() + ", auto_unbox=TRUE)", exec, true);
+            scriptHandler.runScript("toJSON(" + p.getId() + ",digits=NA, auto_unbox=TRUE)", exec, true);
         String data = (results != null) ? results[0] : "";
 
         parameterJson.addParameter(p,
@@ -72,7 +72,7 @@ public class RJsonHandler extends JsonHandler {
         String parameterDataType = isDataFrame ? "DataFrame" : p.getDataType().getValue();
 
         String[] results =
-            scriptHandler.runScript("toJSON(" + p.getId() + ", auto_unbox=TRUE)", exec, true);
+            scriptHandler.runScript("toJSON(" + p.getId() + ",digits=NA, auto_unbox=TRUE)", exec, true);
         String data = (results != null) ? results[0] : "";
         parameterJson.addParameter(p,
             modelId,
