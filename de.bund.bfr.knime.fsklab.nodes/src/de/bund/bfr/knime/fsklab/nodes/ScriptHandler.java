@@ -63,10 +63,9 @@ public abstract class ScriptHandler implements AutoCloseable {
     exec.setProgress(0.1, "Setting up output capturing");
     setupOutputCapturing(exec);
 
-    // Install needed libraries
-    if (!fskObj.packages.isEmpty()) {
-      installLibs(fskObj, exec, logger);
-    }
+    // Install needed libraries & set path to .fsk folder
+    installLibs(fskObj, exec, logger);
+    
 
     jsonHandler = JsonHandler.createHandler(this, exec);
     jsonHandler.applyJoinRelation(fskObj, joinRelationList, suffix);
