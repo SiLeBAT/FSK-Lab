@@ -365,6 +365,7 @@ class APPUI {
 				decimals			: 0,
 				initval 			: 0,
 				mousewheel			: true,
+				min					: null,
 				forcestepdivisibility : 'none',
 				step 				: 1
 			};
@@ -396,6 +397,7 @@ class APPUI {
 			if( el.hasAttribute( 'data-touchspin-postfix' ) ) {
 				touchspinDefaults.postfix = $el.data( 'touchspin-postfix' );
 			}
+			_log( touchspinDefaults );
 			// create touchspin
 			$el.TouchSpin( touchspinDefaults );
 		} );
@@ -642,7 +644,6 @@ class APPUI {
 		O._initSelect2();
 		O._initDatepicker();
 		O._initRangeslider();
-		O._initTable();
 		O._initFormValidation();
 	};
 
