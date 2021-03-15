@@ -52,6 +52,7 @@ import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
 import de.bund.bfr.knime.fsklab.nodes.environment.EnvironmentManager;
 import de.bund.bfr.knime.fsklab.preferences.PreferenceInitializer;
+import de.bund.bfr.knime.fsklab.v2_0.CombinedFskPortObject;
 import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
 import de.bund.bfr.knime.fsklab.v2_0.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.v2_0.FskSimulation;
@@ -286,7 +287,8 @@ final class FSKEditorJSNodeModel
         // 2. Assign newDefaultSimulation
         simulations = Arrays.asList(newDefaultSimulation);
       } else if (m_port != null) {
-        simulations = m_port.simulations;
+        //clone to clean the port object simulations safely later.
+        simulations = new ArrayList<>(m_port.simulations);
       }
 
       modelScript = StringUtils.defaultString(viewValue.getModelScript(), "");
@@ -304,6 +306,10 @@ final class FSKEditorJSNodeModel
       librariesSet.addAll(new RScript(modelScript).getLibraries());
       librariesSet.addAll(new RScript(visualizationScript).getLibraries());
       packages = new ArrayList<>(librariesSet);
+      
+      if(m_port instanceof CombinedFskPortObject) {
+        viewRep.setCombinedObject(true);
+      }
     }
 
     // TODO: Support resources upload
@@ -326,11 +332,17 @@ final class FSKEditorJSNodeModel
 //        }
 //      }
 //    }
-
-    FskPortObject outputPort = new FskPortObject(environmentManager, readme, packages);
-    outputPort.setModel(modelScript);
-    outputPort.setViz(visualizationScript);
+    FskPortObject outputPort;
+    if(inObjects[0] instanceof CombinedFskPortObject) {
+      outputPort = (FskPortObject) inObjects[0];
+    } else {
+      outputPort = new FskPortObject(environmentManager, readme, packages);
+      outputPort.setModel(modelScript);
+      outputPort.setViz(visualizationScript);
+    }
+    
     if (!simulations.isEmpty()) {
+      outputPort.simulations.clear();
       outputPort.simulations.addAll(simulations);
     }
 
