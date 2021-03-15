@@ -365,6 +365,7 @@ class APPUI {
 				decimals			: 0,
 				initval 			: 0,
 				mousewheel			: true,
+				forcestepdivisibility : 'none',
 				step 				: 1
 			};
 
