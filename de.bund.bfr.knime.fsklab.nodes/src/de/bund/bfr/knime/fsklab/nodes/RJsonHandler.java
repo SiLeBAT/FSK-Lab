@@ -1,14 +1,19 @@
 package de.bund.bfr.knime.fsklab.nodes;
 
+import de.bund.bfr.knime.fsklab.PackageNotFoundException;
+import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
 import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
 import de.bund.bfr.metadata.swagger.Parameter;
 import de.bund.bfr.metadata.swagger.Parameter.DataTypeEnum;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import metadata.SwaggerUtil;
+import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.util.FileUtil;
+import org.rosuda.REngine.REXPMismatchException;
 
 public class RJsonHandler extends JsonHandler {
 
@@ -20,15 +25,21 @@ public class RJsonHandler extends JsonHandler {
   }
 
   @Override
-  protected void importLibraries() throws Exception {
-    try {
-      scriptHandler.runScript("library(jsonlite)", exec, false);
-    } catch (Exception e) {
-    	e.printStackTrace();
-//      scriptHandler.runScript("install.packages('jsonlite', type='source', dependencies=TRUE)",
-//          exec, true);
-//      scriptHandler.runScript("library(jsonlite)", exec, true);
-    }
+  protected void importLibraries() throws PackageNotFoundException {
+    
+      try {
+        scriptHandler.runScript("library(jsonlite)", exec, false);
+        scriptHandler.finishOutputCapturing(exec);
+        scriptHandler.setupOutputCapturing(exec);
+      } catch (RException | CanceledExecutionException | InterruptedException
+          | REXPMismatchException | IOException e) {
+        throw new PackageNotFoundException(scriptHandler.getStdErr());
+      }
+      
+      if (!scriptHandler.getStdErr().isEmpty()) {
+        throw new PackageNotFoundException(scriptHandler.getStdErr());
+      }
+ 
   }
 
   @Override

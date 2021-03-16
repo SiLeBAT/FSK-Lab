@@ -1,15 +1,20 @@
 package de.bund.bfr.knime.fsklab.nodes;
 
+import de.bund.bfr.knime.fsklab.PackageNotFoundException;
+import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
 import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
 import de.bund.bfr.metadata.swagger.Parameter;
 import de.bund.bfr.metadata.swagger.Parameter.ClassificationEnum;
 import java.io.File;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.List;
 import metadata.SwaggerUtil;
 import org.apache.commons.io.FileUtils;
+import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
+import org.rosuda.REngine.REXPMismatchException;
 
 public class PythonJsonHandler extends JsonHandler {
 
@@ -20,12 +25,18 @@ public class PythonJsonHandler extends JsonHandler {
 
 
   @Override
-  protected void importLibraries() throws Exception {
-    // load h5py library
-    scriptHandler.runScript("import pandas", exec, false);
-    scriptHandler.runScript("import copy", exec, false);
-    scriptHandler.runScript("import json", exec, false);
-    scriptHandler.runScript("import numpy", exec, false);
+  protected void importLibraries() throws PackageNotFoundException {
+    try {
+      scriptHandler.runScript("import pandas", exec, false);
+      scriptHandler.runScript("import copy", exec, false);
+      scriptHandler.runScript("import json", exec, false);
+      scriptHandler.runScript("import numpy", exec, false);
+
+    } catch (RException | CanceledExecutionException | InterruptedException | REXPMismatchException
+        | IOException e) {
+
+      throw new PackageNotFoundException("make sure, pandas, copy, json and numpy are available.");
+    }
   }
 
   @Override
