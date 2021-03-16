@@ -170,12 +170,14 @@ public class RScriptHandler extends ScriptHandler {
   }
 
   @Override
-  public void setupOutputCapturing(ExecutionContext exec) throws Exception {
+  public void setupOutputCapturing(ExecutionContext exec)
+      throws RException, CanceledExecutionException, InterruptedException {
     executor.setupOutputCapturing(exec);
   }
 
   @Override
-  public void finishOutputCapturing(ExecutionContext exec) throws Exception {
+  public void finishOutputCapturing(ExecutionContext exec)
+      throws RException, CanceledExecutionException, InterruptedException {
     executor.finishOutputCapturing(exec);
   }
 

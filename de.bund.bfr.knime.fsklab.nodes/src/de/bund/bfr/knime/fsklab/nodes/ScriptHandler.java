@@ -197,7 +197,7 @@ public abstract class ScriptHandler implements AutoCloseable {
    *        execution
    * @throws Exception
    */
-  public abstract void setupOutputCapturing(ExecutionContext exec) throws Exception;
+  public abstract void setupOutputCapturing(ExecutionContext exec) throws RException, CanceledExecutionException, InterruptedException;
 
   /**
    * Needed if interpreter requires specific code for retrieving captured output
@@ -206,7 +206,7 @@ public abstract class ScriptHandler implements AutoCloseable {
    *        execution
    * @throws Exception
    */
-  public abstract void finishOutputCapturing(ExecutionContext exec) throws Exception;
+  public abstract void finishOutputCapturing(ExecutionContext exec) throws RException, CanceledExecutionException, InterruptedException;
 
   /**
    * Set up the way in which Eclipse and the script interpreter communicate.* @param exec KNIME way

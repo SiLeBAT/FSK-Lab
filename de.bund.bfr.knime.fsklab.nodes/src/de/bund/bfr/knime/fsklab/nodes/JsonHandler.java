@@ -13,6 +13,7 @@ import org.knime.core.node.ExecutionContext;
 import org.osgi.framework.Bundle;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.FskPlugin;
+import de.bund.bfr.knime.fsklab.PackageNotFoundException;
 import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
 import de.bund.bfr.knime.fsklab.v2_0.JoinRelationAdvanced;
 import de.bund.bfr.metadata.swagger.Parameter;
@@ -88,7 +89,7 @@ public abstract class JsonHandler {
    * 
    * @throws Exception if an error occurs running the script.
    */
-  protected abstract void importLibraries() throws Exception;
+  protected abstract void importLibraries() throws PackageNotFoundException;
 
   /**
    * Method to save input parameters in the hdf files. This needs to be called before the execution

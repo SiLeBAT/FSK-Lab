@@ -131,12 +131,12 @@ public class PythonScriptHandler extends ScriptHandler {
   }
 
   @Override
-  public void setupOutputCapturing(ExecutionContext exec) throws Exception {
+  public void setupOutputCapturing(ExecutionContext exec) {
     // can be left empty
   }
 
   @Override
-  public void finishOutputCapturing(ExecutionContext exec) throws Exception {
+  public void finishOutputCapturing(ExecutionContext exec) {
     // can be left empty
   }
 
