@@ -13,7 +13,10 @@ import org.knime.core.node.NodeLogger;
 import org.knime.core.util.FileUtil;
 import org.knime.python2.PythonVersion;
 import org.rosuda.REngine.REXPMismatchException;
+import de.bund.bfr.knime.fsklab.JsonFileNotFoundException;
 import de.bund.bfr.knime.fsklab.ModelScriptException;
+import de.bund.bfr.knime.fsklab.ResourceFileNotFoundException;
+import de.bund.bfr.knime.fsklab.VariableNotGlobalException;
 import de.bund.bfr.knime.fsklab.nodes.plot.ModelPlotter;
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
 import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
@@ -351,7 +354,8 @@ public abstract class ScriptHandler implements AutoCloseable {
   protected abstract String createVectorQuery(List<String> variableNames);
 
   private void saveGeneratedResources(FskPortObject fskPortObject, File workingDirectory,
-      ExecutionContext exec) {
+      ExecutionContext exec)
+      throws ResourceFileNotFoundException, JsonFileNotFoundException, VariableNotGlobalException {
 
     // Delete previous resources if they exist
     fskPortObject.getGeneratedResourcesDirectory().ifPresent(directory -> {
@@ -377,36 +381,43 @@ public abstract class ScriptHandler implements AutoCloseable {
     try {
       File newResourcesDirectory = FileUtil.createTempDir("generatedResources");
 
-      try {
-        if (!command.equals("c()") && !command.equals("print([])")) {
+
+      if (!command.equals("c()") && !command.equals("print([])")) {
+        try {
           String[] filenames = runScript(command, exec, true);
 
           // Copy every resource from the working directory
           for (String filename : filenames) {
-            // file parameters can come from another generatedResourceDirectory
-            // from another model; in that case we use that path since it is
-            // not present in the current workingDirectory
-            Path sourceDir = workingDirectory.toPath();
-            Path source = Paths.get(filename.trim());
-            // if a file variable has a path already attached, use that instead
-            File sourceFile = sourceDir.resolve(source).toFile();
-            File targetFile = new File(newResourcesDirectory, source.getFileName().toString());
-            FileUtil.copy(sourceFile, targetFile, exec);
+            try {
+              // file parameters can come from another generatedResourceDirectory
+              // from another model; in that case we use that path since it is
+              // not present in the current workingDirectory
+              Path sourceDir = workingDirectory.toPath();
+              Path source = Paths.get(filename.trim());
+              // if a file variable has a path already attached, use that instead
+              File sourceFile = sourceDir.resolve(source).toFile();
+              File targetFile = new File(newResourcesDirectory, source.getFileName().toString());
+              FileUtil.copy(sourceFile, targetFile, exec);
+            } catch (CanceledExecutionException | IOException e) {
+              throw new ResourceFileNotFoundException(filename);
+            }
           }
+        } catch (REXPMismatchException | IOException e) {
+          throw new VariableNotGlobalException(command,
+              SwaggerUtil.getModelId(fskPortObject.modelMetadata));
         }
-      } catch (Exception e) {
-        e.printStackTrace();
       }
 
       // Save JSON file
-      if(RunnerNodeModel.SAVETOJSON) {
+      if (RunnerNodeModel.SAVETOJSON) {
         File sourceFile = new File(workingDirectory, JsonHandler.JSON_FILE_NAME);
         File targetFile = new File(newResourcesDirectory, JsonHandler.JSON_FILE_NAME);
         FileUtil.copy(sourceFile, targetFile, exec);
       }
-        fskPortObject.setGeneratedResourcesDirectory(newResourcesDirectory);
-    } catch (Exception e) {
-      e.printStackTrace();
+      fskPortObject.setGeneratedResourcesDirectory(newResourcesDirectory);
+
+    } catch (InterruptedException | RException | CanceledExecutionException | IOException e) {
+      throw new JsonFileNotFoundException(workingDirectory.toString());
     }
   }
 }
