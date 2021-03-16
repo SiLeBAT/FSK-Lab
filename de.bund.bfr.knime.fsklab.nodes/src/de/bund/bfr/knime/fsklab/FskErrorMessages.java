@@ -45,7 +45,7 @@ public class FskErrorMessages {
    */
   public static void jsonFileNotFoundWarning(String workingDirectory) {
     if (isNotNull("JSON File", workingDirectory)) {
-      LOGGER.warn("WARNING: output JSON file was not found in working directory: '"
+      LOGGER.error("Error: output JSON file was not found in working directory: '"
           + workingDirectory + "'");
     }
   }
@@ -77,6 +77,20 @@ public class FskErrorMessages {
     }
   }
 
+  /**
+  * Error if serialization of parameter to JSON failed.
+  * {@link de.bund.bfr.knime.fsklab.ParameterJsonConversionException}
+  * 
+  * @param parameter name of the parameter that could not be serialized
+  */
+ public static void parameterJsonConversionError(String parameter) {
+   if (isNotNull("Simulation Parameter", parameter)) {
+     LOGGER.error(
+         "ERROR: Simulation Parameter cant be serialized to JSON. Make sure the data type is supported by FSK-Lab.\n");
+     LOGGER.error(">> " + parameter);
+   }
+ }
+  
   /**
    * Error if package is missing and cant be installed automatically. Usage:
    * {@link de.bund.bfr.knime.fsklab.PackageNotFoundException}
