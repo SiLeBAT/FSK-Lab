@@ -29,6 +29,7 @@ public class RunnerNodeSettings {
   private static final String CFG_RESOLUTION = "resolution";
   private static final String CFG_POINT_SIZE = "textPointSize";
   private static final String CFG_SIMULATION = "simulation";
+  private static final String CFG_SAVETOJSON = "saveToJson";
 
   /** Width of the plot. */
   public int width = 640;
@@ -41,7 +42,8 @@ public class RunnerNodeSettings {
 
   /** Selected simulation. */
   public String simulation = "";
-
+  /** Checkbox if parameters should be written to JSON file */
+  public boolean saveToJson = false;
   /**
    * The default pointsize of plotted text, interpreted as big points (1/72 inch) at {@link res}
    * ppi.
@@ -59,6 +61,7 @@ public class RunnerNodeSettings {
      * simulation).
      */
     simulation = settings.getString(CFG_SIMULATION, "");
+    saveToJson = settings.getBoolean(CFG_SAVETOJSON, false);
   }
 
   public void save(final NodeSettingsWO settings) {
@@ -67,5 +70,6 @@ public class RunnerNodeSettings {
     settings.addString(CFG_RESOLUTION, res);
     settings.addInt(CFG_POINT_SIZE, pointSize);
     settings.addString(CFG_SIMULATION, simulation);
+    settings.addBoolean(CFG_SAVETOJSON, saveToJson);
   }
 }
