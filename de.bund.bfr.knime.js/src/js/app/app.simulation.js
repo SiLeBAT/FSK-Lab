@@ -382,7 +382,7 @@ class APPSimulation {
 							}
 							// add decimals support
 							if ( decimals > 0 ) {
-								$input.attr( 'data-touchspin-decimals', true );
+								$input.attr( 'data-touchspin-decimals', decimals );
 							}
 						}
 						// add step range
