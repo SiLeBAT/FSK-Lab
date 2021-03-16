@@ -28,6 +28,7 @@ import java.util.Optional;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -57,7 +58,8 @@ public class RunnerNodeDialog extends DataAwareNodeDialogPane {
   private final SpinnerNumberModel textSizeModel;
   private final DefaultComboBoxModel<FskSimulation> simulationModel;
   private final ScriptPanel scriptPanel;
-
+  private final JCheckBox saveOutputToJsonFileCheckBock; 
+  
   public RunnerNodeDialog() {
     settings = new RunnerNodeSettings();
 
@@ -66,9 +68,8 @@ public class RunnerNodeDialog extends DataAwareNodeDialogPane {
     resolutionField = new JTextField(settings.res);
     textSizeModel = new SpinnerNumberModel(settings.pointSize, null, null, 1);
     simulationModel = new DefaultComboBoxModel<>();
-
     scriptPanel = new ScriptPanel("Preview", "", false, false);
-
+    saveOutputToJsonFileCheckBock = new JCheckBox();
     createUI();
   }
 
@@ -105,12 +106,17 @@ public class RunnerNodeDialog extends DataAwareNodeDialogPane {
     JPanel simulationSelectionPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
     simulationSelectionPanel.add(new JLabel("Simulation:"));
     simulationSelectionPanel.add(simulationField);
-
     JPanel simulationSettingsPanel = new JPanel();
     simulationSettingsPanel.setLayout(new BoxLayout(simulationSettingsPanel, BoxLayout.Y_AXIS));
     simulationSettingsPanel.add(simulationSelectionPanel);
     simulationSettingsPanel.add(scriptPanel);
-
+    
+    // Checkbox for option to save output to JSON file
+    JPanel saveToJsonFilePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    saveToJsonFilePanel.add(new JLabel("Save Output To JSON File:"));
+    saveToJsonFilePanel.add(saveOutputToJsonFileCheckBock);
+    
+    simulationSettingsPanel.add(saveToJsonFilePanel);
     addTab("Simulation settings", simulationSettingsPanel);
 
     JPanel plotSettingsPanel = new JPanel(new GridBagLayout());
@@ -181,6 +187,13 @@ public class RunnerNodeDialog extends DataAwareNodeDialogPane {
     simulationModel.removeAllElements();
     inObj.simulations.forEach(simulationModel::addElement);
     simulationModel.setSelectedItem(selectedSimulation);
+    
+    try {
+      saveOutputToJsonFileCheckBock.setSelected(settings.getBoolean("saveToJson"));
+    } catch (InvalidSettingsException e) {
+      saveOutputToJsonFileCheckBock.setSelected(false);
+    }
+    
   }
 
   @Override
@@ -195,6 +208,7 @@ public class RunnerNodeDialog extends DataAwareNodeDialogPane {
     FskSimulation selectedSimulation = (FskSimulation) simulationModel.getSelectedItem();
     this.settings.simulation = selectedSimulation.getName();
 
+    this.settings.saveToJson = saveOutputToJsonFileCheckBock.isSelected();
     this.settings.save(settings);
   }
 }

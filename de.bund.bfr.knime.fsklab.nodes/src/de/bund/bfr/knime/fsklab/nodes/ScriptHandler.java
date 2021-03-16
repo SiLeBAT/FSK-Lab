@@ -14,7 +14,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import metadata.SwaggerUtil;
 import org.knime.core.node.ExecutionContext;
@@ -95,7 +94,10 @@ public abstract class ScriptHandler implements AutoCloseable {
 
     // JsonHandler stores all input parameters before model execution
 
-    jsonHandler.saveInputParameters(fskObj);
+    if(RunnerNodeModel.SAVETOJSON) {
+      jsonHandler.saveInputParameters(fskObj);
+    }
+      
 
     exec.setProgress(0.75, "Run models script");
     runScript(fskObj.getModel(), exec, false);
@@ -131,7 +133,10 @@ public abstract class ScriptHandler implements AutoCloseable {
     saveWorkspace(fskObj, exec);
 
     // HDFHandler stores all ouput parameters in HDF file
-    jsonHandler.saveOutputParameters(fskObj, workingDirectory);
+    if(RunnerNodeModel.SAVETOJSON) {
+      jsonHandler.saveOutputParameters(fskObj, workingDirectory);
+    }
+      
 
     // Save generated resources
     saveGeneratedResources(fskObj, workingDirectory.toFile(), exec.createSubExecutionContext(1));
@@ -380,11 +385,12 @@ public abstract class ScriptHandler implements AutoCloseable {
       }
 
       // Save JSON file
-      File sourceFile = new File(workingDirectory, JsonHandler.JSON_FILE_NAME);
-      File targetFile = new File(newResourcesDirectory, JsonHandler.JSON_FILE_NAME);
-      FileUtil.copy(sourceFile, targetFile, exec);
-
-      fskPortObject.setGeneratedResourcesDirectory(newResourcesDirectory);
+      if(RunnerNodeModel.SAVETOJSON) {
+        File sourceFile = new File(workingDirectory, JsonHandler.JSON_FILE_NAME);
+        File targetFile = new File(newResourcesDirectory, JsonHandler.JSON_FILE_NAME);
+        FileUtil.copy(sourceFile, targetFile, exec);
+      }
+        fskPortObject.setGeneratedResourcesDirectory(newResourcesDirectory);
     } catch (Exception e) {
       e.printStackTrace();
     }

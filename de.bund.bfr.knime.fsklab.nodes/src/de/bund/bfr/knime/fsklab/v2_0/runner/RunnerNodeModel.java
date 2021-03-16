@@ -76,6 +76,8 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
   private static final ImagePortObjectSpec SVG_SPEC = new ImagePortObjectSpec(SvgCell.TYPE);
 
   private final RunnerNodeInternalSettings internalSettings = new RunnerNodeInternalSettings();
+  /** Config identifier saveToJson */
+  public static boolean SAVETOJSON = false;
 
   private RunnerNodeSettings nodeSettings = new RunnerNodeSettings();
   private FskPortObject fskObj = null;
@@ -360,6 +362,9 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
 
     if (fskObj instanceof CombinedFskPortObject) {
       
+      // enable saving output parameters to JSON file
+      SAVETOJSON = true;
+      
       CombinedFskPortObject comFskObj = (CombinedFskPortObject) fskObj;
 
       FskSimulation fskSimulationFirst = null;
@@ -425,6 +430,8 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
     } else {
       LOGGER.info("Running simulation: " + nodeSettings.simulation);
 
+      SAVETOJSON = nodeSettings.saveToJson;
+      
       FskSimulation fskSimulation;
       if (!nodeSettings.simulation.isEmpty()) {
         // If a simulation is configured in the settings then pick it
