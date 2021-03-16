@@ -102,6 +102,9 @@ public class ReaderNodeModel extends NoInternalsModel {
     } catch (IOException e) {
       e.printStackTrace();
     }
+    File fskxFile = new File(getDownloadedFileName());
+    if(fskxFile.exists())
+      fskxFile.delete();
   }
 
 
@@ -124,25 +127,24 @@ public class ReaderNodeModel extends NoInternalsModel {
     if (localPath != null) {
       inObject = ReaderNodeUtil.readArchive(localPath.toFile());
     }
-    // if path is an external URL the archive is downloaded to a temporary file
+    // if path is an external URL the archive is downloaded to a file in the Workflow Temp Dir. and to be removed by node's reset.
     else {
-      File temporaryFile = FileUtil.createTempFile("model", "fskx");
-      temporaryFile.delete();
-
+      File fskxFile = new File(getDownloadedFileName());
       try (
           InputStream inStream =
           FileUtil.openStreamWithTimeout(new URL(filePath.getStringValue()), 10000);
-          OutputStream outStream = new FileOutputStream(temporaryFile)) {
+          OutputStream outStream = new FileOutputStream(fskxFile)) {
         IOUtils.copy(inStream, outStream);
       }
 
-      inObject = ReaderNodeUtil.readArchive(temporaryFile);
-
-      temporaryFile.delete();
+      inObject = ReaderNodeUtil.readArchive(fskxFile);
     }
 
     return new PortObject[] {inObject};
   }
-
+  
+  private String getDownloadedFileName() {
+    return FileUtil.getWorkflowTempDir() + File.separator + NodeContext.getContext().getNodeContainer().getNameWithID() + ".fskx";
+  }
  
 }
