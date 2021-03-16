@@ -107,7 +107,6 @@ fskeditorjs = function () {
     createUI();
     */
     window.port = _rep.servicePort;
-    console.log('window.port',window.port);
     let mainContainer = $(`<div class="card"></div>`);
     $('body').html(mainContainer);
     _modalDetails = new APPMTEditableDetails( {
@@ -197,6 +196,12 @@ fskeditorjs = function () {
           _readmeCodeMirror.focus();
         }
     });
+
+    if(_rep.combinedObject){
+        $('[aria-controls="#modelScript"]').hide();
+        $('[aria-controls="#visualizationScript"]').hide();
+        $('[aria-controls="#readme"]').hide();
+    }
     
 
   }

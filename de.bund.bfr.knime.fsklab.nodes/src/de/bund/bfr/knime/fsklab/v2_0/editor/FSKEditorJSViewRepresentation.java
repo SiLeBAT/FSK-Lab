@@ -43,7 +43,16 @@ final class FSKEditorJSViewRepresentation extends JSONViewContent {
   private int servicePort;
   private String controlledVocabularyURL;
   private String modelMetadata;
+  private boolean combinedObject;
   
+  public boolean isCombinedObject() {
+    return combinedObject;
+  }
+
+  public void setCombinedObject(boolean combinedObject) {
+    this.combinedObject = combinedObject;
+  }
+
   public String getModelMetadata() {
     return modelMetadata;
   }
