@@ -13,6 +13,7 @@ import org.knime.core.node.NodeLogger;
 import org.knime.core.util.FileUtil;
 import org.knime.python2.PythonVersion;
 import org.rosuda.REngine.REXPMismatchException;
+import de.bund.bfr.knime.fsklab.ModelScriptException;
 import de.bund.bfr.knime.fsklab.nodes.plot.ModelPlotter;
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
 import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
@@ -103,8 +104,18 @@ public abstract class ScriptHandler implements AutoCloseable {
       
 
     exec.setProgress(0.75, "Run models script");
-    runScript(fskObj.getModel(), exec, false);
-
+    try {
+      runScript(fskObj.getModel(), exec, false);
+      finishOutputCapturing(exec);
+      setupOutputCapturing(exec);
+    } catch (RException | IOException e) {
+      throw new ModelScriptException(e.getMessage());
+    } finally {
+      if(!getStdErr().isEmpty()) {
+        throw new ModelScriptException(getStdErr());  
+      }
+    }
+    
     if (RunnerNodeModel.isTest) {
       List<Parameter> parameters = SwaggerUtil.getParameter(fskObj.modelMetadata);
       for (Parameter param : parameters) {
