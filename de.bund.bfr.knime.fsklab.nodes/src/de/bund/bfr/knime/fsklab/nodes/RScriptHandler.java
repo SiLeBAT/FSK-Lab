@@ -19,10 +19,12 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import metadata.SwaggerUtil;
 import org.knime.core.node.BufferedDataTable;
+import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.util.FileUtil;
 import org.rosuda.REngine.REXP;
+import org.rosuda.REngine.REXPMismatchException;
 
 public class RScriptHandler extends ScriptHandler {
 
@@ -51,7 +53,7 @@ public class RScriptHandler extends ScriptHandler {
 
   @Override
   public String[] runScript(String script, ExecutionContext exec, Boolean showErrors)
-      throws Exception {
+      throws RException, CanceledExecutionException, InterruptedException, REXPMismatchException {
     if (showErrors) {
       REXP c = executor.execute(script, exec);
       String[] execResult = c.asStrings();

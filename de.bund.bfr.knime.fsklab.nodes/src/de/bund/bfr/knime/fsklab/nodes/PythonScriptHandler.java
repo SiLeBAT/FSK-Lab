@@ -55,7 +55,7 @@ public class PythonScriptHandler extends ScriptHandler {
 
   @Override
   public String[] runScript(String script, ExecutionContext exec, Boolean showErrors)
-      throws Exception {
+      throws IOException {
     String[] output = controller.execute(script.replaceAll("<-", "="));
     if (!output[0].isEmpty())
       std_out += output[0] + "\n";
