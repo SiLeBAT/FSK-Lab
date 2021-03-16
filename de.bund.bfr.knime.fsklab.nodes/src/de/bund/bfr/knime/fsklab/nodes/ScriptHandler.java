@@ -1,6 +1,20 @@
 package de.bund.bfr.knime.fsklab.nodes;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+import org.knime.core.node.CanceledExecutionException;
+import org.knime.core.node.ExecutionContext;
+import org.knime.core.node.NodeLogger;
+import org.knime.core.util.FileUtil;
+import org.knime.python2.PythonVersion;
+import org.rosuda.REngine.REXPMismatchException;
 import de.bund.bfr.knime.fsklab.nodes.plot.ModelPlotter;
+import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
 import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
 import de.bund.bfr.knime.fsklab.v2_0.FskSimulation;
 import de.bund.bfr.knime.fsklab.v2_0.JoinRelationAdvanced;
@@ -9,18 +23,7 @@ import de.bund.bfr.knime.fsklab.v2_0.runner.RunnerNodeModel;
 import de.bund.bfr.knime.fsklab.v2_0.runner.RunnerNodeSettings;
 import de.bund.bfr.metadata.swagger.Parameter;
 import de.bund.bfr.metadata.swagger.Parameter.ClassificationEnum;
-import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 import metadata.SwaggerUtil;
-import org.knime.core.node.ExecutionContext;
-import org.knime.core.node.NodeLogger;
-import org.knime.core.util.FileUtil;
-import org.knime.python2.PythonVersion;
-
 public abstract class ScriptHandler implements AutoCloseable {
 
   protected ModelPlotter plotter;
@@ -200,7 +203,7 @@ public abstract class ScriptHandler implements AutoCloseable {
    *        execution
    * @throws Exception
    */
-  public abstract void setupOutputCapturing(ExecutionContext exec) throws Exception;
+  public abstract void setupOutputCapturing(ExecutionContext exec) throws RException, CanceledExecutionException, InterruptedException;
 
   /**
    * Needed if interpreter requires specific code for retrieving captured output
@@ -209,7 +212,7 @@ public abstract class ScriptHandler implements AutoCloseable {
    *        execution
    * @throws Exception
    */
-  public abstract void finishOutputCapturing(ExecutionContext exec) throws Exception;
+  public abstract void finishOutputCapturing(ExecutionContext exec) throws RException, CanceledExecutionException, InterruptedException;
 
   /**
    * Set up the way in which Eclipse and the script interpreter communicate.* @param exec KNIME way
@@ -221,7 +224,7 @@ public abstract class ScriptHandler implements AutoCloseable {
 
 
   public abstract String[] runScript(String script, ExecutionContext exec, Boolean showErrors)
-      throws Exception;
+      throws RException, CanceledExecutionException, InterruptedException, REXPMismatchException, IOException;
 
   /**
    * install library packages necessary for running the scripts
