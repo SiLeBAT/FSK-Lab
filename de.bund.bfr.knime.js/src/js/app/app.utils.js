@@ -99,6 +99,33 @@ var addControlledVocabulary = (input, vocabulary, port)  =>   {
 }
 
 /**
+ * Add controlled vocabulary to an input.
+ * @param {Element} input Input element
+ * @param {string} vocabulary Vocabulary name
+ */
+var addControlledVocabulary = (input, vocabulary) => {
+	knimeService.loadConditionally([],
+		() => {
+		  const request = { "vocabularyName": vocabulary};
+		  let promise = knimeService.requestViewUpdate(request);
+		  promise.progress(monitor => { /* No update */ })
+			.then(response => {
+			  items = response.vocabularyItems;
+			  if (items) {
+				$(input).typeahead({
+					source: items,
+					autoSelect: true,
+					fitToElement: true,
+					showHintOnFocus: true
+				});		
+			  }
+			}).catch(error => knimeService.logError(error));
+		},
+		(err) => console.log(err)
+	);
+}
+
+/**
  * Create an horizontal form for a metadata property. Missing values with
  * *null* or *undefined* are replaced with an empty string.
  * 

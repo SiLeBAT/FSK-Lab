@@ -218,8 +218,5 @@ fskeditorjs = function () {
       });
   }
 
-  function makeRequest(vocabularyName) {
-    knimeService.loadConditionally(["js-src/de/bund/bfr/knime/fsklab/v1.9/editor/lazyload.js"],
-    		() => window.fetchVocabulary(vocabularyName));
-  }
+
 }();

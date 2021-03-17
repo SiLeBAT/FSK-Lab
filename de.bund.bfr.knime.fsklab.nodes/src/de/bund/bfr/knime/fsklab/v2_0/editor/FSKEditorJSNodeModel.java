@@ -455,130 +455,130 @@ final class FSKEditorJSNodeModel
       try (Connection connection = DriverManager.getConnection("jdbc:h2:~/.fsk/vocabularies")) {
         if (!StringUtils.isEmpty(request.getVocabularyName())) {
           
-          FskmlObject[] items;
+          String[] items;
           switch (request.getVocabularyName()) {
             case "accreditation_procedure":
-              items = new AccreditationProcedureRepository(connection).getAll();
+              items = new AccreditationProcedureRepository(connection).getAllNames();
               break;
             case "availability":
-              items = new AvailabilityRepository(connection).getAll();
+              items = new AvailabilityRepository(connection).getAllNames();
               break;
             case "basic_process":
-              items = new BasicProcessRepository(connection).getAll();
+              items = new BasicProcessRepository(connection).getAllNames();
               break;
             case "collection_tool":
-              items = new CollectionToolRepository(connection).getAll();
+              items = new CollectionToolRepository(connection).getAllNames();
               break;
             case "country":
-              items = new CountryRepository(connection).getAll();
+              items = new CountryRepository(connection).getAllNames();
               break;
             case "fish_area":
-              items = new FishAreaRepository(connection).getAll();
+              items = new FishAreaRepository(connection).getAllNames();
               break;
             case "format":
-              items = new FormatRepository(connection).getAll();
+              items = new FormatRepository(connection).getAllNames();
               break;
             case "hazard":
-              items = new HazardRepository(connection).getAll();
+              items = new HazardRepository(connection).getAllNames();
               break;
             case "hazard_type":
-              items = new HazardTypeRepository(connection).getAll();
+              items = new HazardTypeRepository(connection).getAllNames();
               break;
             case "ind_sum":
-              items = new IndSumRepository(connection).getAll();
+              items = new IndSumRepository(connection).getAllNames();
               break;
             case "laboratory_accreditation":
-              items = new LaboratoryAccreditationRepository(connection).getAll();
+              items = new LaboratoryAccreditationRepository(connection).getAllNames();
               break;
             case "language":
-              items = new LanguageRepository(connection).getAll();
+              items = new LanguageRepository(connection).getAllNames();
               break;
             case "language_written_in":
-              items = new LanguageWrittenInRepository(connection).getAll();
+              items = new LanguageWrittenInRepository(connection).getAllNames();
               break;
             case "model_class":
-              items = new ModelClassRepository(connection).getAll();
+              items = new ModelClassRepository(connection).getAllNames();
               break;
             case "model_equation_class":
-              items = new ModelEquationClassRepository(connection).getAll();
+              items = new ModelEquationClassRepository(connection).getAllNames();
               break;
             case "model_subclass":
-              items = new ModelSubclassRepository(connection).getAll();
+              items = new ModelSubclassRepository(connection).getAllNames();
               break;
             case "packaging":
-              items = new PackagingRepository(connection).getAll();
+              items = new PackagingRepository(connection).getAllNames();
               break;
             case "parameter_classification":
-              items = new ParameterClassificationRepository(connection).getAll();
+              items = new ParameterClassificationRepository(connection).getAllNames();
               break;
             case "parameter_datatype":
-              items = new ParameterDatatypeRepository(connection).getAll();
+              items = new ParameterDatatypeRepository(connection).getAllNames();
               break;
             case "parameter_distribution":
-              items = new ParameterDistributionRepository(connection).getAll();
+              items = new ParameterDistributionRepository(connection).getAllNames();
               break;
             case "parameter_source":
-              items = new ParameterSourceRepository(connection).getAll();
+              items = new ParameterSourceRepository(connection).getAllNames();
               break;
             case "parameter_subject":
-              items = new ParameterSubjectRepository(connection).getAll();
+              items = new ParameterSubjectRepository(connection).getAllNames();
               break;
             case "population":
-              items = new PopulationRepository(connection).getAll();
+              items = new PopulationRepository(connection).getAllNames();
               break;
             case "product_matrix":
-              items = new ProductMatrixRepository(connection).getAll();
+              items = new ProductMatrixRepository(connection).getAllNames();
               break;
             case "product_treatment":
-              items = new ProductTreatmentRepository(connection).getAll();
+              items = new ProductTreatmentRepository(connection).getAllNames();
               break;
             case "production_method":
-              items = new ProductionMethodRepository(connection).getAll();
+              items = new ProductionMethodRepository(connection).getAllNames();
               break;
             case "publication_status":
-              items = new PublicationStatusRepository(connection).getAll();
+              items = new PublicationStatusRepository(connection).getAllNames();
               break;
             case "publication_type":
-              items = new PublicationTypeRepository(connection).getAll();
+              items = new PublicationTypeRepository(connection).getAllNames();
               break;
             case "region":
-              items = new RegionRepository(connection).getAll();
+              items = new RegionRepository(connection).getAllNames();
               break;
             case "right":
-              items = new RightRepository(connection).getAll();
+              items = new RightRepository(connection).getAllNames();
               break;
             case "sampling_method":
-              items = new SamplingMethodRepository(connection).getAll();
+              items = new SamplingMethodRepository(connection).getAllNames();
               break;
             case "sampling_point":
-              items = new SamplingPointRepository(connection).getAll();
+              items = new SamplingPointRepository(connection).getAllNames();
               break;
             case "sampling_program":
-              items = new SamplingProgramRepository(connection).getAll();
+              items = new SamplingProgramRepository(connection).getAllNames();
               break;
             case "sampling_strategy":
-              items = new SamplingStrategyRepository(connection).getAll();
+              items = new SamplingStrategyRepository(connection).getAllNames();
               break;
             case "software":
-              items = new SoftwareRepository(connection).getAll();
+              items = new SoftwareRepository(connection).getAllNames();
               break;
             case "source":
-              items = new SourceRepository(connection).getAll();
+              items = new SourceRepository(connection).getAllNames();
               break;
             case "status":
-              items = new StatusRepository(connection).getAll();
+              items = new StatusRepository(connection).getAllNames();
               break;
             case "unit":
-              items = new UnitRepository(connection).getAll();
+              items = new UnitRepository(connection).getAllNames();
               break;
             case "unit_category":
-              items = new UnitCategoryRepository(connection).getAll();
+              items = new UnitCategoryRepository(connection).getAllNames();
               break;
             case "technology_type":
-              items = new TechnologyTypeRepository(connection).getAll();
+              items = new TechnologyTypeRepository(connection).getAllNames();
               break;
             default:
-              items = new FskmlObject[0];
+              items = new String[0];
           } // end-switch
           response.setVocabularyItems(items);
         } // end-if

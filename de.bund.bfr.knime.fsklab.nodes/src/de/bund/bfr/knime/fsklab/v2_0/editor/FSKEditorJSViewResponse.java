@@ -10,17 +10,17 @@ import de.bund.bfr.rakip.vocabularies.domain.FskmlObject;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 public class FSKEditorJSViewResponse extends JSONViewResponse<FSKEditorJSViewRequest> {
   
-  private FskmlObject[] vocabularyItems;
+  private String[] vocabularyItems;
   
   public FSKEditorJSViewResponse(FSKEditorJSViewRequest request) {
     super(request);
   }
   
-  public FskmlObject[] getVocabularyItems() {
+  public String[] getVocabularyItems() {
     return vocabularyItems;
   }
   
-  public void setVocabularyItems(FskmlObject[] vocabularyItems) {
+  public void setVocabularyItems(String[] vocabularyItems) {
     this.vocabularyItems = vocabularyItems;
   }
 

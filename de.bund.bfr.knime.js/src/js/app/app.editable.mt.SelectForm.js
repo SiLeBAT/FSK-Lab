@@ -66,33 +66,45 @@
                             .appendTo( $field );
             O.input.val(value);
             // Add options from vocabulary. The option matching value is selected.
-            if(window._endpoints.controlledVocabularyEndpoint){
+            // if(window._endpoints.controlledVocabularyEndpoint){
                 
-                fetch(window._endpoints.controlledVocabularyEndpoint+`${vocabulary}`)
-                    .then(response => response.json())
-                    .then(data => {
-                            O.input.append(data.map(item => `<option>${item}</option>`).join(""));
+            //     fetch(window._endpoints.controlledVocabularyEndpoint+`${vocabulary}`)
+            //         .then(response => response.json())
+            //         .then(data => {
+            //                 O.input.append(data.map(item => `<option>${item}</option>`).join(""));
                         
-                }).catch(error => {
-                    if(port >= 0){
-                        fetch(`http://localhost:${port}/getAllNames/${vocabulary}`)
-                            .then(response => response.json())
-                            .then(data => {
-                                    O.input.append(data.map(item => `<option>${item}</option>`).join(""));
+            //     }).catch(error => {
+            //         if(port >= 0){
+            //             fetch(`http://localhost:${port}/getAllNames/${vocabulary}`)
+            //                 .then(response => response.json())
+            //                 .then(data => {
+            //                         O.input.append(data.map(item => `<option>${item}</option>`).join(""));
                                 
-                        });
-                    }
-                });
+            //             });
+            //         }
+            //     });
                 
-            }
-            else if(port >= 0){
-                fetch(`http://localhost:${port}/getAllNames/${vocabulary}`)
-                    .then(response => response.json())
-                    .then(data => {
-                            O.input.append(data.map(item => `<option>${item}</option>`).join(""));
+            // }
+            // else if(port >= 0){
+            //     fetch(`http://localhost:${port}/getAllNames/${vocabulary}`)
+            //         .then(response => response.json())
+            //         .then(data => {
+            //                 O.input.append(data.map(item => `<option>${item}</option>`).join(""));
                         
-                    });
-            }
+            //         });
+            // }
+
+            knimeService.loadConditionally([],
+                () => {
+                  const request = { "vocabularyName": vocabulary};
+                  let promise = knimeService.requestViewUpdate(request);
+                  promise.progress(monitor => { /* No update */ })
+                    .then(response => {
+                        O.input.append(response.vocabularyItems.map(item => `<option>${item}</option>`).join(""))
+                    }).catch(error => knimeService.logError(error));
+                },
+                (err) => console.log(err)
+            );
 
             // create validation container
             O.input.$validationContainer = $( '<div class="validation-message mt-1"></div>' )
