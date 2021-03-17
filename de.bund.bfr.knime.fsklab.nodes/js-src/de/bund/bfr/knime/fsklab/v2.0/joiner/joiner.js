@@ -464,7 +464,11 @@ joiner = function () {
                           tempSimulationInfo4[reversedModelsParamsOriginalNames4[key3]] = fourthModelSimulationInfo["parameters"][key3];
                         })
                         Object.assign(tespSimulationArray, tempSimulationInfo1, tempSimulationInfo2, tempSimulationInfo3, tempSimulationInfo4)
-                        _finalsimulationList.push({ 'name': firtModelSimulationInfo['name']+'_'+ secondModelSimulationInfo['name']+'_'+ thirdModelSimulationInfo['name']+'_'+ fourthModelSimulationInfo['name'], 'params': Object.assign({}, tespSimulationArray) });
+                        let simulationSenarioName ='defaultSimulation';
+                        if(firtModelSimulationInfo['name'] !='defaultSimulation' || secondModelSimulationInfo['name'] !='defaultSimulation' ||  thirdModelSimulationInfo['name'] !='defaultSimulation' || fourthModelSimulationInfo['name'] !='defaultSimulation'){
+                            simulationSenarioName = firtModelSimulationInfo['name']+'_'+ secondModelSimulationInfo['name']+'_'+ thirdModelSimulationInfo['name']+'_'+ fourthModelSimulationInfo['name']
+                        } 
+                        _finalsimulationList.push({ 'name': simulationSenarioName, 'params': Object.assign({}, tespSimulationArray) });
                     });
                     
 
@@ -473,7 +477,11 @@ joiner = function () {
                       tempSimulationInfo3[reversedModelsParamsOriginalNames3[key3]] =thirdModelSimulationInfo["parameters"][key3];
                     })
                     Object.assign(tespSimulationArray, tempSimulationInfo1, tempSimulationInfo2, tempSimulationInfo3);
-                    _finalsimulationList.push({ 'name': firtModelSimulationInfo['name']+'_'+ secondModelSimulationInfo['name']+'_'+ thirdModelSimulationInfo['name'], 'params': Object.assign({}, tespSimulationArray) });
+                    let simulationSenarioName ='defaultSimulation';
+                    if(firtModelSimulationInfo['name'] !='defaultSimulation' || secondModelSimulationInfo['name'] !='defaultSimulation' ||  thirdModelSimulationInfo['name'] !='defaultSimulation' ){
+                        simulationSenarioName = firtModelSimulationInfo['name']+'_'+ secondModelSimulationInfo['name']+'_'+ thirdModelSimulationInfo['name']
+                    } 
+                    _finalsimulationList.push({ 'name': simulationSenarioName, 'params': Object.assign({}, tespSimulationArray) });
                   }
                    
 
@@ -483,7 +491,11 @@ joiner = function () {
                     tempSimulationInfo2[reversedModelsParamsOriginalNames2[key3]] = secondModelSimulationInfo["parameters"][key3];
                 })
                 Object.assign(tespSimulationArray, tempSimulationInfo1, tempSimulationInfo2);
-                _finalsimulationList.push({ 'name': firtModelSimulationInfo['name']+'_'+ secondModelSimulationInfo['name'], 'params': Object.assign({}, tespSimulationArray) });
+                let simulationSenarioName ='defaultSimulation';
+                if(firtModelSimulationInfo['name'] !='defaultSimulation' || secondModelSimulationInfo['name'] !='defaultSimulation' ){
+                    simulationSenarioName = firtModelSimulationInfo['name']+'_'+ secondModelSimulationInfo['name']
+                } 
+                _finalsimulationList.push({ 'name': simulationSenarioName, 'params': Object.assign({}, tespSimulationArray) });
               }
               
             });
