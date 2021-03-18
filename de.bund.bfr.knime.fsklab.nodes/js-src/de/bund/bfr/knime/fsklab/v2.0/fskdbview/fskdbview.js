@@ -21,7 +21,7 @@ fskdbview = function () {
     let _representation;
     let _value;
     var selectionEdited = function (modelMetaDatax) {
-        if(window.selectedModels[selectionMap[selectedModelIndex]]){        
+        if(window.selectedModels && selectionMap[selectedModelIndex] && window.selectedModels[selectionMap[selectedModelIndex]]){        
             window.selectedModels[selectionMap[selectedModelIndex]]=modelMetaDatax.changeSet.added[0];
             knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c21joiner' , [{"selecteModels":window.selectedModels, "downloadURs":window.downloadURs}],{elements:[]});
         }
