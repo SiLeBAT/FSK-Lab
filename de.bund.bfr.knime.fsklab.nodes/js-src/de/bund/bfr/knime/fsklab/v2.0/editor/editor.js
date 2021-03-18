@@ -59,6 +59,7 @@ fskeditorjs = function () {
     _rep = representation;
     _val = value;
     window._endpoints.controlledVocabularyEndpoint = _rep.controlledVocabularyURL;
+    window.vocabularies = representation.vocabularies;
     //fskutil = new fskutil();
     extractAndCreateUI(value.modelMetaData);
     

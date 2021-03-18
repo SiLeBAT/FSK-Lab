@@ -99,6 +99,22 @@ var addControlledVocabulary = (input, vocabulary, port)  =>   {
 }
 
 /**
+ * Add controlled vocabulary to an input.
+ * @param {Element} input Input element
+ * @param {string} vocabularyName Vocabulary name.
+ */
+var addControlledVocabulary = (input, vocabularyName) => {
+	if (window.vocabularies[vocabularyName]) {
+		$(input).typeahead({
+			source: window.vocabularies[vocabularyName],
+			autoSelect: true,
+			fitToElement: true,
+			showHintOnFocus: true
+		});
+	}
+}
+
+/**
  * Create an horizontal form for a metadata property. Missing values with
  * *null* or *undefined* are replaced with an empty string.
  * 

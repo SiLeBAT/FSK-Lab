@@ -24,8 +24,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
@@ -34,6 +36,7 @@ import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
+import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.interactive.ViewRequestHandlingException;
@@ -110,6 +113,8 @@ final class FSKEditorJSNodeModel
     extends AbstractWizardNodeModel<FSKEditorJSViewRepresentation, FSKEditorJSViewValue>
     implements JSONViewRequestHandler<FSKEditorJSViewRequest, FSKEditorJSViewResponse>, PortObjectHolder {
 
+  private static final NodeLogger LOGGER = NodeLogger.getLogger(FSKEditorJSNodeModel.class);
+  
   private final FSKEditorJSConfig m_config = new FSKEditorJSConfig();
   private FskPortObject m_port;
 
@@ -133,7 +138,66 @@ final class FSKEditorJSNodeModel
       representation = new FSKEditorJSViewRepresentation();
       representation.setServicePort(FskPlugin.getDefault().fskService.getPort());
       representation.setControlledVocabularyURL(PreferenceInitializer.getControlledVocabularyURL());
-    }
+      
+      Map<String, String[]> vocabularies;
+      try {
+        Class.forName("org.h2.Driver");
+
+        try (Connection connection = DriverManager.getConnection("jdbc:h2:~/.fsk/vocabularies")) {
+
+          vocabularies = new HashMap<>();
+          vocabularies.put("accreditation_procedure", new AccreditationProcedureRepository(connection).getAllNames());
+          vocabularies.put("availability", new AvailabilityRepository(connection).getAllNames());
+          vocabularies.put("basic_process", new BasicProcessRepository(connection).getAllNames());
+          vocabularies.put("collection_tool", new CollectionToolRepository(connection).getAllNames());
+          vocabularies.put("country", new CountryRepository(connection).getAllNames());
+          vocabularies.put("fish_area", new FishAreaRepository(connection).getAllNames());
+          vocabularies.put("format", new FishAreaRepository(connection).getAllNames());
+          vocabularies.put("hazard", new HazardRepository(connection).getAllNames());
+          vocabularies.put("hazard_type", new HazardTypeRepository(connection).getAllNames());
+          vocabularies.put("ind_sum", new IndSumRepository(connection).getAllNames());
+          vocabularies.put("laboratory_accreditation", new LaboratoryAccreditationRepository(connection).getAllNames());
+          vocabularies.put("language", new LanguageRepository(connection).getAllNames());
+          vocabularies.put("language_written_in", new LanguageRepository(connection).getAllNames());
+          vocabularies.put("model_class", new ModelClassRepository(connection).getAllNames());
+          vocabularies.put("model_equation_class", new ModelEquationClassRepository(connection).getAllNames());
+          vocabularies.put("model_subclass", new ModelSubclassRepository(connection).getAllNames());
+          vocabularies.put("packaging", new PackagingRepository(connection).getAllNames());
+          vocabularies.put("parameter_classification", new ParameterClassificationRepository(connection).getAllNames());
+          vocabularies.put("parameter_datatype", new ParameterDatatypeRepository(connection).getAllNames());
+          vocabularies.put("parameter_distribution", new ParameterDistributionRepository(connection).getAllNames());
+          vocabularies.put("parameter_source", new ParameterSourceRepository(connection).getAllNames());
+          vocabularies.put("parameter_subject", new ParameterSubjectRepository(connection).getAllNames());
+          vocabularies.put("population", new PopulationRepository(connection).getAllNames());
+          vocabularies.put("product_matrix", new ProductMatrixRepository(connection).getAllNames());
+          vocabularies.put("product_treatment", new ProductTreatmentRepository(connection).getAllNames());
+          vocabularies.put("production_method", new ProductionMethodRepository(connection).getAllNames());
+          vocabularies.put("publication_status", new PublicationStatusRepository(connection).getAllNames());
+          vocabularies.put("publication_type", new PublicationTypeRepository(connection).getAllNames());
+          vocabularies.put("region", new RegionRepository(connection).getAllNames());
+          vocabularies.put("right", new RightRepository(connection).getAllNames());
+          vocabularies.put("sampling_method", new SamplingMethodRepository(connection).getAllNames());
+          vocabularies.put("sampling_point", new SamplingPointRepository(connection).getAllNames());
+          vocabularies.put("sampling_program", new SamplingProgramRepository(connection).getAllNames());
+          vocabularies.put("sampling_strategy", new SamplingStrategyRepository(connection).getAllNames());
+          vocabularies.put("software", new SoftwareRepository(connection).getAllNames());
+          vocabularies.put("source", new SourceRepository(connection).getAllNames());
+          vocabularies.put("status", new StatusRepository(connection).getAllNames());
+          vocabularies.put("unit", new UnitRepository(connection).getAllNames());
+          vocabularies.put("unit_category", new UnitCategoryRepository(connection).getAllNames());
+          vocabularies.put("technology_type", new TechnologyTypeRepository(connection).getAllNames());
+        } catch (SQLException err) {
+          LOGGER.warn("Error accessing vocabularies database", err);
+          vocabularies = Collections.emptyMap();
+        }
+      } catch (ClassNotFoundException err) {
+        LOGGER.warn("H2 database driver is missing", err);
+        vocabularies = Collections.emptyMap();
+      }
+      
+      representation.setVocabularies(vocabularies);
+    } // if (representation == null)
+    
     return representation;
   }
 

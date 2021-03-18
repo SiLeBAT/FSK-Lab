@@ -18,6 +18,8 @@
  */
 package de.bund.bfr.knime.fsklab.v2_0.editor;
 
+import java.util.Map;
+import java.util.Objects;
 import java.util.Random;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
@@ -44,6 +46,7 @@ final class FSKEditorJSViewRepresentation extends JSONViewContent {
   private String controlledVocabularyURL;
   private String modelMetadata;
   private boolean combinedObject;
+  private Map<String, String[]> vocabularies;
   
   public boolean isCombinedObject() {
     return combinedObject;
@@ -80,6 +83,14 @@ final class FSKEditorJSViewRepresentation extends JSONViewContent {
   public void setServicePort(int servicePort) {
     this.servicePort = servicePort;
   }
+  
+  public Map<String, String[]> getVocabularies() {
+    return vocabularies;
+  }
+  
+  public void setVocabularies(Map<String, String[]> vocabularies) {
+    this.vocabularies = vocabularies;
+  }
 
   @Override
   public void saveToNodeSettings(NodeSettingsWO settings) {}
@@ -89,7 +100,7 @@ final class FSKEditorJSViewRepresentation extends JSONViewContent {
 
   @Override
   public int hashCode() {
-    return servicePort;
+    return servicePort + Objects.hash(vocabularies);
   }
 
   @Override
@@ -103,6 +114,17 @@ final class FSKEditorJSViewRepresentation extends JSONViewContent {
     if (obj.getClass() != getClass()) {
       return false;
     }
-    return servicePort == ((FSKEditorJSViewRepresentation)obj).servicePort;
+    
+    FSKEditorJSViewRepresentation other = (FSKEditorJSViewRepresentation) obj;
+    
+    if (servicePort != other.servicePort) {
+      return false;
+    }
+    
+    if (vocabularies != null && other.vocabularies != null && vocabularies.equals(other.vocabularies)) {
+      return false;
+    }
+    
+    return true;
   }
 }

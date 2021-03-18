@@ -158,7 +158,8 @@
                 }
                 // Add autocomplete to input with vocabulary
                 if (vocabulary) {
-                    addControlledVocabulary(O.input, vocabulary, port);
+                    // addControlledVocabulary(O.input, vocabulary, port);
+                    addControlledVocabulary(O.input, vocabulary);
                 }
                 O.input.on( "blur", () => {O.validate(O.value)} );
                 // create validation container
