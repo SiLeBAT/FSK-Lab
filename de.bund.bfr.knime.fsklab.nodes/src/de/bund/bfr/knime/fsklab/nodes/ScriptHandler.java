@@ -13,7 +13,13 @@ import org.knime.core.node.NodeLogger;
 import org.knime.core.util.FileUtil;
 import org.knime.python2.PythonVersion;
 import org.rosuda.REngine.REXPMismatchException;
+import de.bund.bfr.knime.fsklab.FskErrorMessages;
+import de.bund.bfr.knime.fsklab.JsonFileNotFoundException;
+import de.bund.bfr.knime.fsklab.ModelScriptException;
+import de.bund.bfr.knime.fsklab.ResourceFileNotFoundException;
+import de.bund.bfr.knime.fsklab.VariableNotGlobalException;
 import de.bund.bfr.knime.fsklab.nodes.plot.ModelPlotter;
+import de.bund.bfr.knime.fsklab.r.client.ScriptExecutor;
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
 import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
 import de.bund.bfr.knime.fsklab.v2_0.FskSimulation;
@@ -103,8 +109,20 @@ public abstract class ScriptHandler implements AutoCloseable {
       
 
     exec.setProgress(0.75, "Run models script");
-    runScript(fskObj.getModel(), exec, false);
-
+    try {
+      runScript(fskObj.getModel(), exec, false);
+      finishOutputCapturing(exec);
+      setupOutputCapturing(exec);
+    } catch (RException | IOException e) {
+      throw new ModelScriptException(e.getMessage());
+    } finally {
+      if(!getStdErr().isEmpty()) {
+        if(getStdErr().contains(ScriptExecutor.ERROR_PREFIX)) { // needed because warnings should be ignored
+          throw new ModelScriptException(getStdErr());  
+        }
+      }
+    }
+    
     if (RunnerNodeModel.isTest) {
       List<Parameter> parameters = SwaggerUtil.getParameter(fskObj.modelMetadata);
       for (Parameter param : parameters) {
@@ -340,7 +358,8 @@ public abstract class ScriptHandler implements AutoCloseable {
   protected abstract String createVectorQuery(List<String> variableNames);
 
   private void saveGeneratedResources(FskPortObject fskPortObject, File workingDirectory,
-      ExecutionContext exec) {
+      ExecutionContext exec)
+      throws ResourceFileNotFoundException, JsonFileNotFoundException, VariableNotGlobalException {
 
     // Delete previous resources if they exist
     fskPortObject.getGeneratedResourcesDirectory().ifPresent(directory -> {
@@ -366,36 +385,45 @@ public abstract class ScriptHandler implements AutoCloseable {
     try {
       File newResourcesDirectory = FileUtil.createTempDir("generatedResources");
 
-      try {
-        if (!command.equals("c()") && !command.equals("print([])")) {
+
+      if (!command.equals("c()") && !command.equals("print([])")) {
+        try {
           String[] filenames = runScript(command, exec, true);
 
           // Copy every resource from the working directory
           for (String filename : filenames) {
-            // file parameters can come from another generatedResourceDirectory
-            // from another model; in that case we use that path since it is
-            // not present in the current workingDirectory
-            Path sourceDir = workingDirectory.toPath();
-            Path source = Paths.get(filename.trim());
-            // if a file variable has a path already attached, use that instead
-            File sourceFile = sourceDir.resolve(source).toFile();
-            File targetFile = new File(newResourcesDirectory, source.getFileName().toString());
-            FileUtil.copy(sourceFile, targetFile, exec);
+            try {
+              // file parameters can come from another generatedResourceDirectory
+              // from another model; in that case we use that path since it is
+              // not present in the current workingDirectory
+              Path sourceDir = workingDirectory.toPath();
+              Path source = Paths.get(filename.trim());
+              // if a file variable has a path already attached, use that instead
+              File sourceFile = sourceDir.resolve(source).toFile();
+              File targetFile = new File(newResourcesDirectory, source.getFileName().toString());
+              FileUtil.copy(sourceFile, targetFile, exec);
+            } catch (CanceledExecutionException | IOException e) {
+              // we only warn the user that a resource file was not found
+              // if the file is actually needed later, we will throw an exception then
+              FskErrorMessages.resourceFileNotFoundWarning(filename);
+            }
           }
+        } catch (REXPMismatchException | IOException | RException | InterruptedException e) {
+          throw new VariableNotGlobalException(command,
+              SwaggerUtil.getModelId(fskPortObject.modelMetadata));
         }
-      } catch (Exception e) {
-        e.printStackTrace();
       }
 
       // Save JSON file
-      if(RunnerNodeModel.SAVETOJSON) {
+      if (RunnerNodeModel.SAVETOJSON) {
         File sourceFile = new File(workingDirectory, JsonHandler.JSON_FILE_NAME);
         File targetFile = new File(newResourcesDirectory, JsonHandler.JSON_FILE_NAME);
         FileUtil.copy(sourceFile, targetFile, exec);
       }
-        fskPortObject.setGeneratedResourcesDirectory(newResourcesDirectory);
-    } catch (Exception e) {
-      e.printStackTrace();
+      fskPortObject.setGeneratedResourcesDirectory(newResourcesDirectory);
+
+    } catch (CanceledExecutionException | IOException e) {
+      throw new JsonFileNotFoundException(workingDirectory.toString());
     }
   }
 }
