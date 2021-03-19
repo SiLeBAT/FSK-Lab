@@ -9,6 +9,7 @@ fskdbview = function () {
         return jQuery(a).text().toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
     };
     window.selectedModels = [];
+    let selectionMap = {};
     let selectedModelIndex = -1;
     window.downloadURs = [];
     window._endpoint;
@@ -20,9 +21,9 @@ fskdbview = function () {
     let _representation;
     let _value;
     var selectionEdited = function (modelMetaDatax) {
-		if(window.selectedModels[selectedModelIndex]){        
-	        window.selectedModels[selectedModelIndex]=modelMetaDatax.changeSet.added[0];
-	        knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c21joiner' , [{"selecteModels":window.selectedModels, "downloadURs":window.downloadURs}],{elements:[]});
+        if(window.selectedModels && selectionMap[selectedModelIndex] && window.selectedModels[selectionMap[selectedModelIndex]]){        
+            window.selectedModels[selectionMap[selectedModelIndex]]=modelMetaDatax.changeSet.added[0];
+            knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c21joiner' , [{"selecteModels":window.selectedModels, "downloadURs":window.downloadURs}],{elements:[]});
         }
         _app._mainTable._metadata[selectedModelIndex] = modelMetaDatax.changeSet.added[0];
         _app._mainTable._refresh(selectedModelIndex, modelMetaDatax.changeSet.added[0]);
@@ -306,6 +307,7 @@ fskdbview = function () {
                                     }).then(function(datavis) {
                                         _representation.metadata[rowIndex]['visualization'] = datavis; // this will be a string
                                         // save selected model
+                                        selectionMap[rowIndex] = window.selectedModels.length;
                                         window.selectedModels.push(_representation.metadata[rowIndex]);
                                         _value.selection.push(_representation.table.rows[rowIndex].rowKey);
                                         // emit selection event
@@ -350,6 +352,7 @@ fskdbview = function () {
                         });	
                         knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c21joiner' ,
                         		[{"selecteModels":window.selectedModels, "downloadURs":window.downloadURs}],{elements:[]});
+                        delete selectionMap[rowIndex];
                           
 					},
 					updateFilter 	: ( O, filtered ) => {
