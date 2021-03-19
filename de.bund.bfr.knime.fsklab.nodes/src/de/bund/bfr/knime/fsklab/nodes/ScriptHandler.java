@@ -13,6 +13,7 @@ import org.knime.core.node.NodeLogger;
 import org.knime.core.util.FileUtil;
 import org.knime.python2.PythonVersion;
 import org.rosuda.REngine.REXPMismatchException;
+import de.bund.bfr.knime.fsklab.FskErrorMessages;
 import de.bund.bfr.knime.fsklab.JsonFileNotFoundException;
 import de.bund.bfr.knime.fsklab.ModelScriptException;
 import de.bund.bfr.knime.fsklab.ResourceFileNotFoundException;
@@ -399,10 +400,12 @@ public abstract class ScriptHandler implements AutoCloseable {
               File targetFile = new File(newResourcesDirectory, source.getFileName().toString());
               FileUtil.copy(sourceFile, targetFile, exec);
             } catch (CanceledExecutionException | IOException e) {
-              throw new ResourceFileNotFoundException(filename);
+              // we only warn the user that a resource file was not found
+              // if the file is actually needed later, we will throw an exception then
+              FskErrorMessages.resourceFileNotFoundWarning(filename);
             }
           }
-        } catch (REXPMismatchException | IOException e) {
+        } catch (REXPMismatchException | IOException | RException | InterruptedException e) {
           throw new VariableNotGlobalException(command,
               SwaggerUtil.getModelId(fskPortObject.modelMetadata));
         }
@@ -416,7 +419,7 @@ public abstract class ScriptHandler implements AutoCloseable {
       }
       fskPortObject.setGeneratedResourcesDirectory(newResourcesDirectory);
 
-    } catch (InterruptedException | RException | CanceledExecutionException | IOException e) {
+    } catch (CanceledExecutionException | IOException e) {
       throw new JsonFileNotFoundException(workingDirectory.toString());
     }
   }
