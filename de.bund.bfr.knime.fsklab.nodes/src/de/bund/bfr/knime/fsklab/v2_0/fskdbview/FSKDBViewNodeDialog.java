@@ -18,7 +18,12 @@
  */
 package de.bund.bfr.knime.fsklab.v2_0.fskdbview;
 
+import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.FlowVariableModel;
+import org.knime.core.node.InvalidSettingsException;
+import org.knime.core.node.NodeSettingsRO;
+import org.knime.core.node.NodeSettingsWO;
+import org.knime.core.node.NotConfigurableException;
 import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
 import org.knime.core.node.defaultnodesettings.DialogComponentNumber;
 import org.knime.core.node.defaultnodesettings.DialogComponentString;
@@ -34,8 +39,10 @@ import org.knime.core.node.workflow.FlowVariable;
  * 
  */
 public class FSKDBViewNodeDialog extends DefaultNodeSettingsPane {
-
+  DialogComponentString repository ;
+  DialogComponentNumber maxSelectionNumber;
   protected FSKDBViewNodeDialog() {
+    
     /*
      * The DefaultNodeSettingsPane provides methods to add simple standard components to the dialog
      * pane via the addDialogComponent(...) method.
@@ -49,12 +56,30 @@ public class FSKDBViewNodeDialog extends DefaultNodeSettingsPane {
         createFlowVariableModel(FSKDBViewNodeModel.MAX_SELECTION_NUMBER, FlowVariable.Type.INTEGER);
 
     // Add a new String component to the dialog for Repository URL.
-    addDialogComponent(new DialogComponentString(FSKDBViewNodeModel.m_repositoryLocationSettings,
-        "Repository URL", true, 30, repositoryVariable));
-
+    SettingsModelString m_repositoryLocationSettings =
+        FSKDBViewNodeModel.createRepositoryLocationSettingsModel();
+    repository =  new DialogComponentString(m_repositoryLocationSettings,
+        "Repository URL", true, 30, repositoryVariable);
+    addDialogComponent(repository);
+    
     // Add a new Number component to the dialog for the number of models allowed to be selected.
-    addDialogComponent(new DialogComponentNumber(FSKDBViewNodeModel.m_maxSelectionNumberSettings,
-        "Max Selection Number", 1, maxSelectionNumberVariable));
+    SettingsModelNumber m_maxSelectionNumberSettings =
+        FSKDBViewNodeModel.createMaxSelectionNumberSettingsModel();
+    maxSelectionNumber = new DialogComponentNumber(m_maxSelectionNumberSettings,
+        "Max Selection Number", 1, maxSelectionNumberVariable);
+    addDialogComponent(maxSelectionNumber);
+  }
+  @Override
+  public void saveAdditionalSettingsTo(final NodeSettingsWO settings)
+      throws InvalidSettingsException {
+    repository.saveSettingsTo(settings);
+    maxSelectionNumber.saveSettingsTo(settings);
+  }
+  
+  public void loadAdditionalSettingsFrom(final NodeSettingsRO settings,
+      final DataTableSpec[] specs) throws NotConfigurableException {
+    repository.loadSettingsFrom(settings, specs);
+    maxSelectionNumber.loadSettingsFrom(settings, specs);
+    
   }
 }
-
