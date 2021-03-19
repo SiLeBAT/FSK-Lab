@@ -1,4 +1,4 @@
-var _endpoint = window._endpoint || 'https://knime.bfr.berlin/backend/';//http://localhost:8080/' //'https://knime.bfr.berlin/landingpage/';
+var _endpoint = window._endpoint || 'https://knime.bfr.berlin/landingpage/';//http://localhost:8080/' //'https://knime.bfr.berlin/backend/';
 window._endpoints 	= {
 	metadata		: _endpoint + 'metadata/',
 	image			: _endpoint + 'image/',
