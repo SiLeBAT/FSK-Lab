@@ -2,6 +2,7 @@ package de.bund.bfr.knime.fsklab.nodes;
 
 import de.bund.bfr.knime.fsklab.PackageNotFoundException;
 import de.bund.bfr.knime.fsklab.VariableNotGlobalException;
+import de.bund.bfr.knime.fsklab.r.client.ScriptExecutor;
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
 import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
 import de.bund.bfr.metadata.swagger.Parameter;
@@ -38,9 +39,10 @@ public class RJsonHandler extends JsonHandler {
       }
       
       if (!scriptHandler.getStdErr().isEmpty()) {
-        throw new PackageNotFoundException(scriptHandler.getStdErr());
+        if(scriptHandler.getStdErr().contains(ScriptExecutor.ERROR_PREFIX)) {
+          throw new PackageNotFoundException(scriptHandler.getStdErr());  
+        }
       }
- 
   }
 
   @Override

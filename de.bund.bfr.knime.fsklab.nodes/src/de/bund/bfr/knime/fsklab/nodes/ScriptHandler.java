@@ -19,6 +19,7 @@ import de.bund.bfr.knime.fsklab.ModelScriptException;
 import de.bund.bfr.knime.fsklab.ResourceFileNotFoundException;
 import de.bund.bfr.knime.fsklab.VariableNotGlobalException;
 import de.bund.bfr.knime.fsklab.nodes.plot.ModelPlotter;
+import de.bund.bfr.knime.fsklab.r.client.ScriptExecutor;
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
 import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
 import de.bund.bfr.knime.fsklab.v2_0.FskSimulation;
@@ -116,7 +117,9 @@ public abstract class ScriptHandler implements AutoCloseable {
       throw new ModelScriptException(e.getMessage());
     } finally {
       if(!getStdErr().isEmpty()) {
-        throw new ModelScriptException(getStdErr());  
+        if(getStdErr().contains(ScriptExecutor.ERROR_PREFIX)) { // needed because warnings should be ignored
+          throw new ModelScriptException(getStdErr());  
+        }
       }
     }
     
