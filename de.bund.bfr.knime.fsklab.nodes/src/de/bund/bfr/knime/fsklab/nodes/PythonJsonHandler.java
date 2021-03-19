@@ -1,12 +1,15 @@
 package de.bund.bfr.knime.fsklab.nodes;
 
 import de.bund.bfr.knime.fsklab.PackageNotFoundException;
+import de.bund.bfr.knime.fsklab.ParameterJsonConversionException;
+import de.bund.bfr.knime.fsklab.VariableNotGlobalException;
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
 import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
 import de.bund.bfr.metadata.swagger.Parameter;
 import de.bund.bfr.metadata.swagger.Parameter.ClassificationEnum;
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.List;
@@ -69,27 +72,33 @@ public class PythonJsonHandler extends JsonHandler {
   }
 
   @Override
-  public void saveOutputParameters(FskPortObject fskObj, Path workingDirectory) throws Exception {
+  public void saveOutputParameters(FskPortObject fskObj, Path workingDirectory)
+      throws VariableNotGlobalException, IOException, ParameterJsonConversionException,
+      URISyntaxException {
     // create script to store variables in hdf5 file
 
     String modelId = SwaggerUtil.getModelId(fskObj.modelMetadata);
     List<Parameter> parameters = SwaggerUtil.getParameter(fskObj.modelMetadata);
     for (Parameter p : parameters) {
       if (p.getClassification() == Parameter.ClassificationEnum.OUTPUT) {
-        StringBuilder script = new StringBuilder();
-        script.append("#JSON_PARAMETER_OUTUT\n");
-        convertParamToJsonSerializable(p.getId(), Parameter.ClassificationEnum.OUTPUT);
-        script.append("print(toSerializable)"); // important to get a return from controller
-        String[] results = scriptHandler.runScript(script.toString(), exec, true);
-        String data = (results != null) ? results[0] : "";
-        Boolean isDataFrame = scriptHandler.runScript("print(type(" + p.getId() + ").__name__)", exec, true)[0]
-            .contains("DataFrame");
-        String parameterDataType = isDataFrame ? "DataFrame" : p.getDataType().getValue();
-        parameterJson.addParameter(p,
-            modelId,
-            data,
-            parameterDataType,
-            SwaggerUtil.getLanguageWrittenIn(fskObj.modelMetadata));
+        try {
+          StringBuilder script = new StringBuilder();
+          script.append("#JSON_PARAMETER_OUTUT\n");
+          convertParamToJsonSerializable(p.getId(), Parameter.ClassificationEnum.OUTPUT);
+          script.append("print(toSerializable)"); // important to get a return from controller
+          String[] results = scriptHandler.runScript(script.toString(), exec, true);
+          String data = (results != null) ? results[0] : "";
+          Boolean isDataFrame =
+              scriptHandler.runScript("print(type(" + p.getId() + ").__name__)", exec, true)[0]
+                  .contains("DataFrame");
+          String parameterDataType = isDataFrame ? "DataFrame" : p.getDataType().getValue();
+          parameterJson.addParameter(p, modelId, data, parameterDataType,
+              SwaggerUtil.getLanguageWrittenIn(fskObj.modelMetadata));
+        } catch (RException | CanceledExecutionException | InterruptedException
+            | REXPMismatchException | IOException e) {
+          // TODO Auto-generated catch block
+          throw new VariableNotGlobalException(p.getId(), modelId);
+        }
       }
     }
     String path = workingDirectory.toString() + File.separator + JSON_FILE_NAME;
@@ -144,7 +153,7 @@ public class PythonJsonHandler extends JsonHandler {
 
 
   private void convertParamToJsonSerializable(String parameter, ClassificationEnum classification)
-      throws Exception {
+      throws ParameterJsonConversionException, URISyntaxException {
     StringBuilder script = new StringBuilder();
 
     if (!classification.equals(Parameter.ClassificationEnum.OUTPUT)) {
@@ -157,10 +166,14 @@ public class PythonJsonHandler extends JsonHandler {
       script.append("toSerializable = " + parameter + "\n");
     }
     script.append("toSerializable = " + parameter + "\n");
-    File file = getResource("data/convertToJsonSerializable.py");
-    script.append(FileUtils.readFileToString(file, StandardCharsets.UTF_8));
-
-    scriptHandler.runScript(script.toString(), exec, false);
+    try {
+      File file = getResource("data/convertToJsonSerializable.py");
+      script.append(FileUtils.readFileToString(file, StandardCharsets.UTF_8));
+      scriptHandler.runScript(script.toString(), exec, false);
+    } catch (RException | CanceledExecutionException | InterruptedException
+        | REXPMismatchException | IOException e) {
+      throw new ParameterJsonConversionException(parameter);
+    }
 
   }
 

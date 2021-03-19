@@ -168,7 +168,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
       runFskPortObject(fskObj, combinedSim, exec, joinRelationList, "");
       
     } catch (Exception e) {
-      e.printStackTrace();
+      throw new Exception(e.getLocalizedMessage(), e);
     }
     
     try (FileInputStream fis = new FileInputStream(internalSettings.imageFile)) {
@@ -510,7 +510,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
       exec.setProgress(0.99, "Cleaning up");
       handler.cleanup(exec);
     } catch(Exception e) {
-      e.printStackTrace();
+      throw new Exception(e.getLocalizedMessage(), e);
     }
       return fskObj;
   }

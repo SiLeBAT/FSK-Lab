@@ -14,6 +14,8 @@ import org.osgi.framework.Bundle;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.PackageNotFoundException;
+import de.bund.bfr.knime.fsklab.ParameterJsonConversionException;
+import de.bund.bfr.knime.fsklab.VariableNotGlobalException;
 import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
 import de.bund.bfr.knime.fsklab.v2_0.JoinRelationAdvanced;
 import de.bund.bfr.metadata.swagger.Parameter;
@@ -108,7 +110,8 @@ public abstract class JsonHandler {
    * @throws Exception if an error occurs running the script.
    */
   public abstract void saveOutputParameters(FskPortObject fskObj, Path workingDirectory)
-      throws Exception;
+      throws VariableNotGlobalException, IOException, ParameterJsonConversionException,
+      URISyntaxException;
 
   /**
    * Method to load input parameters into the workspace of the currently active (to be executed)

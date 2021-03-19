@@ -1,6 +1,7 @@
 package de.bund.bfr.knime.fsklab.nodes;
 
 import de.bund.bfr.knime.fsklab.PackageNotFoundException;
+import de.bund.bfr.knime.fsklab.VariableNotGlobalException;
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
 import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
 import de.bund.bfr.metadata.swagger.Parameter;
@@ -68,31 +69,37 @@ public class RJsonHandler extends JsonHandler {
   }
 
   @Override
-  public void saveOutputParameters(FskPortObject fskObj, Path workingDirectory) throws Exception {
+  public void saveOutputParameters(FskPortObject fskObj, Path workingDirectory)
+      throws VariableNotGlobalException, IOException {
     StringBuilder script = new StringBuilder();
 
     String modelId = SwaggerUtil.getModelId(fskObj.modelMetadata);
     List<Parameter> parameters = SwaggerUtil.getParameter(fskObj.modelMetadata);
     for (Parameter p : parameters) {
       if (p.getClassification() == Parameter.ClassificationEnum.OUTPUT) {
-        script.append("toJSON(" + p.getId() + ", auto_unbox=TRUE)\n");
+        try {
 
-        // we need to differentiate between list and dataframe:
-        Boolean isDataFrame = scriptHandler.runScript("class(" + p.getId() + ")", exec, true)[0]
-            .contains("data.frame");
-        String parameterDataType = isDataFrame ? "DataFrame" : p.getDataType().getValue();
+          script.append("toJSON(" + p.getId() + ", auto_unbox=TRUE)\n");
 
-        String[] results =
-            scriptHandler.runScript("toJSON(" + p.getId() + ",digits=NA, auto_unbox=TRUE)", exec, true);
-        String data = (results != null) ? results[0] : "";
-        parameterJson.addParameter(p,
-            modelId,
-            data,
-            parameterDataType,
-            SwaggerUtil.getLanguageWrittenIn(fskObj.modelMetadata));
+          // we need to differentiate between list and dataframe:
+          Boolean isDataFrame;
+          isDataFrame = scriptHandler.runScript("class(" + p.getId() + ")", exec, true)[0]
+              .contains("data.frame");
+
+          String parameterDataType = isDataFrame ? "DataFrame" : p.getDataType().getValue();
+
+          String[] results = scriptHandler
+              .runScript("toJSON(" + p.getId() + ",digits=NA, auto_unbox=TRUE)", exec, true);
+          String data = (results != null) ? results[0] : "";
+          parameterJson.addParameter(p, modelId, data, parameterDataType,
+              SwaggerUtil.getLanguageWrittenIn(fskObj.modelMetadata));
+        } catch (RException | CanceledExecutionException | InterruptedException
+            | REXPMismatchException | IOException e) {
+          
+          throw new VariableNotGlobalException(p.getId(), modelId);
         }
+      }
     }
-
     String path = workingDirectory.toString() + File.separator + JSON_FILE_NAME;
     MAPPER.writer().writeValue(new File(path), parameterJson);
   }
@@ -167,10 +174,10 @@ public class RJsonHandler extends JsonHandler {
     String converted = "";
 
 
-    String sizes =
-        scriptHandler.runScript("length(unique(lapply(" + data + ",length)))", exec, true)[0];
-    String classes =
-        scriptHandler.runScript("length(unique(lapply(" + data + ",class)))", exec, true)[0];
+//    String sizes =
+//        scriptHandler.runScript("length(unique(lapply(" + data + ",length)))", exec, true)[0];
+//    String classes =
+//        scriptHandler.runScript("length(unique(lapply(" + data + ",class)))", exec, true)[0];
     if (type.equals("DataFrame")) {
       if (language.startsWith("Python")) {
         // unlist columns to restore their original structure
