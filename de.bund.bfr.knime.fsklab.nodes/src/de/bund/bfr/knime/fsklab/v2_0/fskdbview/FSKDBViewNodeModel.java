@@ -94,7 +94,7 @@ public class FSKDBViewNodeModel
    * at the comments in the constructor of the {@link FSKDBViewNodeDialog} as the settings models
    * are also used to create simple dialogs.
    */
-   static final SettingsModelString m_repositoryLocationSettings =
+  SettingsModelString m_repositoryLocationSettings =
       createRepositoryLocationSettingsModel();
 
 
@@ -132,7 +132,7 @@ public class FSKDBViewNodeModel
    * selected is a number. Also have a look at the comments in the constructor of the
    * {@link FSKDBViewNodeDialog} as the settings models are also used to create simple dialogs.
    */
-  static final SettingsModelNumber m_maxSelectionNumberSettings =
+  SettingsModelNumber m_maxSelectionNumberSettings =
       createMaxSelectionNumberSettingsModel();
   
   final SettingsModelStringArray selectionSettings =
