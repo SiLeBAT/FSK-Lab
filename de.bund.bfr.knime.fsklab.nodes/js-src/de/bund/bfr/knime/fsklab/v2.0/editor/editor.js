@@ -50,6 +50,8 @@ fskeditorjs = function () {
     _metadatax.modelscript= _modelCodeMirror ? _modelCodeMirror.getValue() : _val.modelScript;
     _metadatax.visualization = _visualizationCodeMirror ? _visualizationCodeMirror.getValue() : _val.visualizationScript;
     knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c21EditorSaved' , [_metadatax],{elements:[]}) 
+    // fix related to a bug in knime 4.0 interactivity service where it's empty the sevice load'
+    knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c21EditorSaved' , [],{elements:[]}) 
   }
   view.init = function (representation, value) {
     //subscribe to events emitted by FSK DB View

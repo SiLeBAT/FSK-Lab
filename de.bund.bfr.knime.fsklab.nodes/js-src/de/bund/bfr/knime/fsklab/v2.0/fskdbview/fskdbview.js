@@ -20,13 +20,16 @@ fskdbview = function () {
     
     let _representation;
     let _value;
-    var selectionEdited = function (modelMetaDatax) {
-        if(window.selectedModels && selectionMap[selectedModelIndex] && window.selectedModels[selectionMap[selectedModelIndex]]){        
-            window.selectedModels[selectionMap[selectedModelIndex]]=modelMetaDatax.changeSet.added[0];
+     var selectionEdited = function (modelMetaDatax) {
+        if(!modelMetaDatax.changeSet.added)
+            return;
+        let selectedEditedModel = JSON.parse(JSON.stringify(modelMetaDatax.changeSet.added[0]));
+        if(window.selectedModels && selectionMap[selectedModelIndex] != undefined && window.selectedModels[selectionMap[selectedModelIndex]]){        
+            window.selectedModels[selectionMap[selectedModelIndex]] = selectedEditedModel;
             knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c21joiner' , [{"selecteModels":window.selectedModels, "downloadURs":window.downloadURs}],{elements:[]});
         }
-        _app._mainTable._metadata[selectedModelIndex] = modelMetaDatax.changeSet.added[0];
-        _app._mainTable._refresh(selectedModelIndex, modelMetaDatax.changeSet.added[0]);
+        _app._mainTable._metadata[selectedModelIndex] = selectedEditedModel;
+        _app._mainTable._refresh(selectedModelIndex, selectedEditedModel);
     }
                                
     view.init = function (representation, value) { 
@@ -174,7 +177,6 @@ fskdbview = function () {
                                             return responsevis.text();
                                         }).then(function(datavis) {
                                             selectedModel['visualization'] = datavis; // this will be a string
-                                            window.downloadURs.push(window._endpoints.download+modelIndex);
                                             knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c215846e1' , [selectedModel],{elements:[]}) 
                                         });
                                     });
