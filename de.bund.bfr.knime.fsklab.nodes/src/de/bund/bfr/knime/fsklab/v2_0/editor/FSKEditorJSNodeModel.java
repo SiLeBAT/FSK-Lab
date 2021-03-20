@@ -32,20 +32,16 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import org.apache.commons.lang3.StringUtils;
-import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
-import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
-import org.knime.core.node.interactive.ViewRequestHandlingException;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectHolder;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.web.ValidationError;
-import org.knime.js.core.JSONViewRequestHandler;
 import org.knime.js.core.node.AbstractWizardNodeModel;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -68,13 +64,11 @@ import de.bund.bfr.rakip.vocabularies.data.BasicProcessRepository;
 import de.bund.bfr.rakip.vocabularies.data.CollectionToolRepository;
 import de.bund.bfr.rakip.vocabularies.data.CountryRepository;
 import de.bund.bfr.rakip.vocabularies.data.FishAreaRepository;
-import de.bund.bfr.rakip.vocabularies.data.FormatRepository;
 import de.bund.bfr.rakip.vocabularies.data.HazardRepository;
 import de.bund.bfr.rakip.vocabularies.data.HazardTypeRepository;
 import de.bund.bfr.rakip.vocabularies.data.IndSumRepository;
 import de.bund.bfr.rakip.vocabularies.data.LaboratoryAccreditationRepository;
 import de.bund.bfr.rakip.vocabularies.data.LanguageRepository;
-import de.bund.bfr.rakip.vocabularies.data.LanguageWrittenInRepository;
 import de.bund.bfr.rakip.vocabularies.data.ModelClassRepository;
 import de.bund.bfr.rakip.vocabularies.data.ModelEquationClassRepository;
 import de.bund.bfr.rakip.vocabularies.data.ModelSubclassRepository;
@@ -102,7 +96,6 @@ import de.bund.bfr.rakip.vocabularies.data.StatusRepository;
 import de.bund.bfr.rakip.vocabularies.data.TechnologyTypeRepository;
 import de.bund.bfr.rakip.vocabularies.data.UnitCategoryRepository;
 import de.bund.bfr.rakip.vocabularies.data.UnitRepository;
-import de.bund.bfr.rakip.vocabularies.domain.FskmlObject;
 import metadata.SwaggerUtil;
 
 
@@ -111,7 +104,7 @@ import metadata.SwaggerUtil;
  */
 final class FSKEditorJSNodeModel
     extends AbstractWizardNodeModel<FSKEditorJSViewRepresentation, FSKEditorJSViewValue>
-    implements JSONViewRequestHandler<FSKEditorJSViewRequest, FSKEditorJSViewResponse>, PortObjectHolder {
+    implements PortObjectHolder {
 
   private static final NodeLogger LOGGER = NodeLogger.getLogger(FSKEditorJSNodeModel.class);
   
@@ -502,161 +495,5 @@ final class FSKEditorJSNodeModel
     m_port.getEnvironmentManager().ifPresent(value::setEnvironment);
     
     // Cannot assign server name, completed and validation errors
-  }
-  
-  @Override
-  public FSKEditorJSViewResponse handleRequest(FSKEditorJSViewRequest request, ExecutionMonitor exec)
-          throws ViewRequestHandlingException, InterruptedException, CanceledExecutionException {
-
-      final FSKEditorJSViewResponse response = new FSKEditorJSViewResponse(request);
-      
-      try {
-        Class.forName("org.h2.Driver");
-      } catch (ClassNotFoundException exception) {
-        return response;
-      }
-      
-      try (Connection connection = DriverManager.getConnection("jdbc:h2:~/.fsk/vocabularies")) {
-        if (!StringUtils.isEmpty(request.getVocabularyName())) {
-          
-          FskmlObject[] items;
-          switch (request.getVocabularyName()) {
-            case "accreditation_procedure":
-              items = new AccreditationProcedureRepository(connection).getAll();
-              break;
-            case "availability":
-              items = new AvailabilityRepository(connection).getAll();
-              break;
-            case "basic_process":
-              items = new BasicProcessRepository(connection).getAll();
-              break;
-            case "collection_tool":
-              items = new CollectionToolRepository(connection).getAll();
-              break;
-            case "country":
-              items = new CountryRepository(connection).getAll();
-              break;
-            case "fish_area":
-              items = new FishAreaRepository(connection).getAll();
-              break;
-            case "format":
-              items = new FormatRepository(connection).getAll();
-              break;
-            case "hazard":
-              items = new HazardRepository(connection).getAll();
-              break;
-            case "hazard_type":
-              items = new HazardTypeRepository(connection).getAll();
-              break;
-            case "ind_sum":
-              items = new IndSumRepository(connection).getAll();
-              break;
-            case "laboratory_accreditation":
-              items = new LaboratoryAccreditationRepository(connection).getAll();
-              break;
-            case "language":
-              items = new LanguageRepository(connection).getAll();
-              break;
-            case "language_written_in":
-              items = new LanguageWrittenInRepository(connection).getAll();
-              break;
-            case "model_class":
-              items = new ModelClassRepository(connection).getAll();
-              break;
-            case "model_equation_class":
-              items = new ModelEquationClassRepository(connection).getAll();
-              break;
-            case "model_subclass":
-              items = new ModelSubclassRepository(connection).getAll();
-              break;
-            case "packaging":
-              items = new PackagingRepository(connection).getAll();
-              break;
-            case "parameter_classification":
-              items = new ParameterClassificationRepository(connection).getAll();
-              break;
-            case "parameter_datatype":
-              items = new ParameterDatatypeRepository(connection).getAll();
-              break;
-            case "parameter_distribution":
-              items = new ParameterDistributionRepository(connection).getAll();
-              break;
-            case "parameter_source":
-              items = new ParameterSourceRepository(connection).getAll();
-              break;
-            case "parameter_subject":
-              items = new ParameterSubjectRepository(connection).getAll();
-              break;
-            case "population":
-              items = new PopulationRepository(connection).getAll();
-              break;
-            case "product_matrix":
-              items = new ProductMatrixRepository(connection).getAll();
-              break;
-            case "product_treatment":
-              items = new ProductTreatmentRepository(connection).getAll();
-              break;
-            case "production_method":
-              items = new ProductionMethodRepository(connection).getAll();
-              break;
-            case "publication_status":
-              items = new PublicationStatusRepository(connection).getAll();
-              break;
-            case "publication_type":
-              items = new PublicationTypeRepository(connection).getAll();
-              break;
-            case "region":
-              items = new RegionRepository(connection).getAll();
-              break;
-            case "right":
-              items = new RightRepository(connection).getAll();
-              break;
-            case "sampling_method":
-              items = new SamplingMethodRepository(connection).getAll();
-              break;
-            case "sampling_point":
-              items = new SamplingPointRepository(connection).getAll();
-              break;
-            case "sampling_program":
-              items = new SamplingProgramRepository(connection).getAll();
-              break;
-            case "sampling_strategy":
-              items = new SamplingStrategyRepository(connection).getAll();
-              break;
-            case "software":
-              items = new SoftwareRepository(connection).getAll();
-              break;
-            case "source":
-              items = new SourceRepository(connection).getAll();
-              break;
-            case "status":
-              items = new StatusRepository(connection).getAll();
-              break;
-            case "unit":
-              items = new UnitRepository(connection).getAll();
-              break;
-            case "unit_category":
-              items = new UnitCategoryRepository(connection).getAll();
-              break;
-            case "technology_type":
-              items = new TechnologyTypeRepository(connection).getAll();
-              break;
-            default:
-              items = new FskmlObject[0];
-          } // end-switch
-          response.setVocabularyItems(items);
-        } // end-if
-      } // end-try
-      catch (SQLException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
-
-      return response;
-  }
-
-  @Override
-  public FSKEditorJSViewRequest createEmptyViewRequest() {
-      return new FSKEditorJSViewRequest();
   }
 }
