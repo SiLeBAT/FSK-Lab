@@ -168,11 +168,23 @@ fskeditorjs = function () {
      _modelCodeMirror = createCodeMirror("modelScriptArea", "text/x-rsrc");
      _visualizationCodeMirror = createCodeMirror("visualizationScriptArea", "text/x-rsrc");
      _readmeCodeMirror = createCodeMirror("readmeArea", "text/x-markdown");
-    
-     _modelCodeMirror.on("blur", () => { _modelCodeMirror.focus(); });
-     _visualizationCodeMirror.on("blur", () => { _visualizationCodeMirror.focus(); });
-     _readmeCodeMirror.on("blur", () => { _readmeCodeMirror.focus(); });
-    
+     let doScriptSave = () => { 
+        _metadata = _modalDetails._modelHandler.metaData;
+        doSave(_metadata)
+      };
+      
+     _modelCodeMirror.on("blur", () => { 
+        _modelCodeMirror.focus();
+        doScriptSave();
+      });
+     _visualizationCodeMirror.on("blur", () => { 
+        _visualizationCodeMirror.focus();
+        doScriptSave();
+      });
+     _readmeCodeMirror.on("blur", () => { 
+        _readmeCodeMirror.focus();
+        doScriptSave();
+      });
     
      $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
          if (e.currentTarget.text == 'Model') {
