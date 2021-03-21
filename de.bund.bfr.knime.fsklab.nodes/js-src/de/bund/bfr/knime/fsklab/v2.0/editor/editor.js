@@ -164,41 +164,28 @@ fskeditorjs = function () {
     $('#modelScriptArea').val(modelscript || _val.modelScript);
     $('#visualizationScriptArea').val(visualization || _val.visualizationScript);
     $('#readmeArea').val(_val.readme);
-    let require_config = {
-      packages: [{
-        name: "codemirror",
-        location: "codemirror/",
-        main: "lib/codemirror"
-      }]
-    };
-
-    knimeService.loadConditionally(
-      ["codemirror", "codemirror/mode/r/r", "codemirror/mode/markdown/markdown"],
-      (arg) => {
-        window.CodeMirror = arg[0];
-        _modelCodeMirror = createCodeMirror("modelScriptArea", "text/x-rsrc");
-        _visualizationCodeMirror = createCodeMirror("visualizationScriptArea", "text/x-rsrc");
-        _readmeCodeMirror = createCodeMirror("readmeArea", "text/x-markdown");
-
-        _modelCodeMirror.on("blur", () => { _modelCodeMirror.focus(); });
-        _visualizationCodeMirror.on("blur", () => { _visualizationCodeMirror.focus(); });
-        _readmeCodeMirror.on("blur", () =>{ _readmeCodeMirror.focus(); });
-      },
-      (err) => console.log("knimeService failed to install " + err),
-      require_config);
-
-    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-        if(e.currentTarget.text == 'Model'){
-          _modelCodeMirror.refresh(); 
-          _modelCodeMirror.focus();
-        }else if(e.currentTarget.text == 'Visualization'){
-          _visualizationCodeMirror.refresh();
-          _visualizationCodeMirror.focus();
-        }else if(e.currentTarget.text == 'Readme'){
-          _readmeCodeMirror.refresh();
-          _readmeCodeMirror.focus();
-        }
-    });
+    
+     _modelCodeMirror = createCodeMirror("modelScriptArea", "text/x-rsrc");
+     _visualizationCodeMirror = createCodeMirror("visualizationScriptArea", "text/x-rsrc");
+     _readmeCodeMirror = createCodeMirror("readmeArea", "text/x-markdown");
+    
+     _modelCodeMirror.on("blur", () => { _modelCodeMirror.focus(); });
+     _visualizationCodeMirror.on("blur", () => { _visualizationCodeMirror.focus(); });
+     _readmeCodeMirror.on("blur", () => { _readmeCodeMirror.focus(); });
+    
+    
+     $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+         if (e.currentTarget.text == 'Model') {
+             _modelCodeMirror.refresh();
+             _modelCodeMirror.focus();
+         } else if (e.currentTarget.text == 'Visualization') {
+             _visualizationCodeMirror.refresh();
+             _visualizationCodeMirror.focus();
+         } else if (e.currentTarget.text == 'Readme') {
+             _readmeCodeMirror.refresh();
+             _readmeCodeMirror.focus();
+         }
+     });
 
     if(_rep.combinedObject){
         $('[aria-controls="#modelScript"]').hide();
@@ -212,7 +199,7 @@ fskeditorjs = function () {
   // Create a CodeMirror for a given text area
   function createCodeMirror(textAreaId, language) {
 
-    return window.CodeMirror.fromTextArea(document.getElementById(textAreaId),
+    return CodeMirror.fromTextArea(document.getElementById(textAreaId),
       {
         lineNumbers: true,
         lineWrapping: true,
