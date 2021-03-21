@@ -69,6 +69,7 @@ import de.bund.bfr.rakip.vocabularies.data.HazardTypeRepository;
 import de.bund.bfr.rakip.vocabularies.data.IndSumRepository;
 import de.bund.bfr.rakip.vocabularies.data.LaboratoryAccreditationRepository;
 import de.bund.bfr.rakip.vocabularies.data.LanguageRepository;
+import de.bund.bfr.rakip.vocabularies.data.LanguageWrittenInRepository;
 import de.bund.bfr.rakip.vocabularies.data.ModelClassRepository;
 import de.bund.bfr.rakip.vocabularies.data.ModelEquationClassRepository;
 import de.bund.bfr.rakip.vocabularies.data.ModelSubclassRepository;
@@ -151,7 +152,7 @@ final class FSKEditorJSNodeModel
           vocabularies.put("ind_sum", new IndSumRepository(connection).getAllNames());
           vocabularies.put("laboratory_accreditation", new LaboratoryAccreditationRepository(connection).getAllNames());
           vocabularies.put("language", new LanguageRepository(connection).getAllNames());
-          vocabularies.put("language_written_in", new LanguageRepository(connection).getAllNames());
+          vocabularies.put("language_written_in", new LanguageWrittenInRepository(connection).getAllNames());
           vocabularies.put("model_class", new ModelClassRepository(connection).getAllNames());
           vocabularies.put("model_equation_class", new ModelEquationClassRepository(connection).getAllNames());
           vocabularies.put("model_subclass", new ModelSubclassRepository(connection).getAllNames());
