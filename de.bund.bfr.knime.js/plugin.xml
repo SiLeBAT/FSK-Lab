@@ -33,9 +33,10 @@
      </webResourceBundle>
      
      <webResourceBundle name="codemirror" version="5.49.2" webResourceBundleID="codemirror_5.49.2"
-       usesDefine="true" debug="false">    
+        debug="false">    
        <webResource relativePathSource="js-lib/codemirror-5.49.2/" relativePathTarget="codemirror" />
        <importResource relativePath="codemirror/lib/codemirror.css" type="CSS" />
+       <importResource relativePath="codemirror/lib/codemirror.js" type="JAVASCRIPT" />
      </webResourceBundle>
      
      <webResourceBundle name="JointJS" version="3.1.1" webResourceBundleID="JointJS_3.1.1" debug="false">
