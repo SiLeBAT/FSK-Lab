@@ -123,9 +123,12 @@ public class FskErrorMessages {
     if (isNotNull("Evaluation Message", msg)) {
       LOGGER.error("ERROR: model script failed: \n");
       LOGGER.warn(">> " + msg);
+      return msg;
+    } else {
+      return objectNullMessage(msg);
     }
     
-    return msg;
+    
   }
 
   private static boolean isNotNull(String errorType, Object obj) {
