@@ -36,6 +36,9 @@ fskeditorjs = function () {
     //}
   }
   let doSave = function(_metadatax){
+	 _metadatax.modelMath.parameter.forEach(param => {
+		param.classification = param.classification.toUpperCase()
+		});
     _metadatax.modelMath.parameter.forEach(param => {
       if(param.classification != "OUTPUT"){ 
         _simulation.forEach(simulation => {
