@@ -207,11 +207,7 @@ public class RConnectionFactory {
 		if (!commandFile.canExecute()) {
 			throw new IOException("Command is not an executable: " + cmd);
 		}
-
-		createFskLibrary();
-		backupProfile();
-		configureProfile();
-
+		
 		RInstance rInstance = null;
 		try {
 			final Process p = launchRserveProcess(command, host, port);
@@ -336,26 +332,20 @@ public class RConnectionFactory {
 		// m_initialized was false, we need to initialized.
 
 		/** Cleanup remaining Rserve processes on VM exit. */
-		Runtime.getRuntime().addShutdownHook(new Thread("R Processes Cleanup") {
-			@Override
-			public void run() {
-				synchronized (m_resources) {
-					m_resources.stream()
-							.filter(resource -> resource != null && resource.getUnderlyingRInstance() != null)
-							.forEach(resource -> resource.destroy(false));
-					try {
-						restoreProfile();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		});
+		/*
+		 * Runtime.getRuntime().addShutdownHook(new Thread("R Processes Cleanup") {
+		 * 
+		 * @Override public void run() { synchronized (m_resources) {
+		 * m_resources.stream() .filter(resource -> resource != null &&
+		 * resource.getUnderlyingRInstance() != null) .forEach(resource ->
+		 * resource.destroy(false)); try { restoreProfile(); } catch (IOException e) {
+		 * e.printStackTrace(); } } } });
+		 */
 
 		// m_initialized already set to true in compareAndSet
 	}
 
-	private static void createFskLibrary() throws IOException {
+	public static void createFskLibrary() throws IOException {
 
 		Path userFolder = Paths.get(System.getProperty("user.home"));
 		Path fskFolder = userFolder.resolve(".fsk");
@@ -371,7 +361,7 @@ public class RConnectionFactory {
 		}
 	}
 
-	private static void configureProfile() throws IOException {
+	public static void configureProfile() throws IOException {
 
 		Path userFolder = Paths.get(System.getProperty("user.home"));
 		Path installPath = userFolder.resolve(".fsk/library");
@@ -391,7 +381,7 @@ public class RConnectionFactory {
 		FileUtils.writeLines(rprofile.toFile(), lines);
 	}
 
-	private static void backupProfile() throws IOException {
+	public static void backupProfile() throws IOException {
 		// Only backup on the first call to backupProfile when originalProfile is null
 		if (originalProfile == null) {
 			Path documentsFolder = FileSystemView.getFileSystemView().getDefaultDirectory().toPath();
@@ -405,7 +395,7 @@ public class RConnectionFactory {
 		}
 	}
 
-	private static void restoreProfile() throws IOException {
+	public static void restoreProfile() throws IOException {
 		Path documentsFolder = FileSystemView.getFileSystemView().getDefaultDirectory().toPath();
 		Path rprofile = documentsFolder.resolve(".Rprofile");
 
