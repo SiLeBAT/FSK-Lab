@@ -13,13 +13,21 @@ public class FskErrorMessages {
    * 
    * @param variableName name of the missing variable
    * @param modelId ID of model currently executed
+   * @return error/warning message
    */
-  public static void variableNotGlobalWarning(String variableName, String modelId) {
+  public static String variableNotGlobalWarning(String variableName, String modelId) {
     if (isNotNull("Variable", variableName) && isNotNull("Model ID", modelId)) {
-      LOGGER.warn("WARNING: OUTPUT parameter '" + variableName + "' of model '" + modelId
+      String msg ="WARNING: OUTPUT parameter '" + variableName + "' of model '" + modelId
           + "' not available in workspace after execution. Make sure"
-          + " all output variables are global in the model script.");
+          + " all output variables are global in the model script.";
+      LOGGER.warn(msg);
+      return msg;
+    } else {
+      if (isNotNull("Variable", variableName)) {
+        return objectNullMessage(modelId);
+      }
     }
+    return objectNullMessage(variableName);
   }
 
   /**
@@ -109,12 +117,18 @@ public class FskErrorMessages {
    * Error if model script fails Usage: {@link de.bund.bfr.knime.fsklab.ModelScriptException}
    * 
    * @param msg detailed error message containing the lines of the model script that failed.
-   */
-  public static void modelScriptError(String msg) {
+   * @return error message
+   */ 
+  public static String modelScriptError(String msg) {
     if (isNotNull("Evaluation Message", msg)) {
       LOGGER.error("ERROR: model script failed: \n");
       LOGGER.warn(">> " + msg);
+      return msg;
+    } else {
+      return objectNullMessage(msg);
     }
+    
+    
   }
 
   private static boolean isNotNull(String errorType, Object obj) {
@@ -123,5 +137,8 @@ public class FskErrorMessages {
       return false;
     }
     return true;
+  }
+  private static String objectNullMessage(String errorType) {
+    return errorType + " cant be accessed. The object is undefined (null)";
   }
 }

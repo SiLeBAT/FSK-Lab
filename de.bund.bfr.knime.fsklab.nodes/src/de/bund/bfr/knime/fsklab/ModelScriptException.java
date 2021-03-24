@@ -19,8 +19,7 @@ public class ModelScriptException extends Exception {
    */
   public ModelScriptException(String msg) {
 
-    // super(err);
-    FskErrorMessages.modelScriptError(msg);
+    super(FskErrorMessages.modelScriptError(msg));
 
   }
 
