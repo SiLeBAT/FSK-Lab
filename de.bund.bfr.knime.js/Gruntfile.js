@@ -97,7 +97,7 @@ module.exports = function (grunt) {
 					'src/css/**/*.css',
 					'src/build/css/*.build.css'
 				],
-				dest: 'src/build/css/styles.css'
+				dest: 'js-lib/bfr/fskapp/css/styles.css'
 			}
 		},
 		jshint: {

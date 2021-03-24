@@ -108,7 +108,8 @@ var addControlledVocabulary = (input, vocabularyName) => {
 		$(input).typeahead({
 			source: window.vocabularies[vocabularyName],
 			autoSelect: true,
-			fitToElement: true,
+            items: 9999,
+			fitToElement: false,
 			showHintOnFocus: true
 		});
 	}
