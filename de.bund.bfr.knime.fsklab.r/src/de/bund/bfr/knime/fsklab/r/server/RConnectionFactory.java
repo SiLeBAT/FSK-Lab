@@ -368,7 +368,9 @@ public class RConnectionFactory {
 
 		// Configure .rprofile
 		List<String> lines = new ArrayList<>();
-		lines.add(".libPaths(c('" + FilenameUtils.separatorsToUnix(installPath.toString()) + "', .libPaths()))");
+		
+		//lines.add(".libPaths(c('" + FilenameUtils.separatorsToUnix(installPath.toString()) + "', .libPaths()))");
+		lines.add(".libPaths(c('" + FilenameUtils.separatorsToUnix(installPath.toString()) + "'))");
 
 		// Do not execute unpackPkgZip on Linux. It causes trouble on the VRE.
 		if (!Platform.isLinux()) {
