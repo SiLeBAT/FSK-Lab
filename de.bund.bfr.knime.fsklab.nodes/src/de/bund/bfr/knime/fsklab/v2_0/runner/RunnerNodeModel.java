@@ -77,7 +77,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
 
   private final RunnerNodeInternalSettings internalSettings = new RunnerNodeInternalSettings();
   /** Config identifier saveToJson */
-  public static boolean SAVETOJSON = false;
+  private boolean saveToJsonChecked = false;
 
   private RunnerNodeSettings nodeSettings = new RunnerNodeSettings();
   private FskPortObject fskObj = null;
@@ -363,7 +363,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
     if (fskObj instanceof CombinedFskPortObject) {
       
       // enable saving output parameters to JSON file
-      SAVETOJSON = true;
+      saveToJsonChecked = true;
       
       CombinedFskPortObject comFskObj = (CombinedFskPortObject) fskObj;
 
@@ -430,7 +430,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
     } else {
       LOGGER.info("Running simulation: " + nodeSettings.simulation);
 
-      SAVETOJSON = nodeSettings.saveToJson;
+      saveToJsonChecked = nodeSettings.saveToJson;
       
       FskSimulation fskSimulation;
       if (!nodeSettings.simulation.isEmpty()) {
@@ -487,6 +487,8 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
     try (ScriptHandler handler = ScriptHandler
         .createHandler(SwaggerUtil.getLanguageWrittenIn(fskObj.modelMetadata), fskObj.packages)) {
      
+      // give handler info from checkBox that he needs to save parameter data to JSON 
+      handler.setSaveToJsonChecked(saveToJsonChecked);
       handler.runSnippet(fskObj, simulation, exec, LOGGER, internalSettings.imageFile, joinRelationList, suffix);
   
       // process the return value of error capturing and update error and
