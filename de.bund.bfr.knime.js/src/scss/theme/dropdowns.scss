@@ -32,3 +32,8 @@
 .dropdown-divider {
 	border-top: 2px solid $bfr-line-color;
 }
+
+ul.typeahead.dropdown-menu {
+    max-height: 150px;
+    overflow: auto;
+}
