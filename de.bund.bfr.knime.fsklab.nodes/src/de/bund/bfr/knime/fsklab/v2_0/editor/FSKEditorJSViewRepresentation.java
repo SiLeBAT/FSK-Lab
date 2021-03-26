@@ -31,7 +31,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 @JsonAutoDetect
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 final class FSKEditorJSViewRepresentation extends JSONViewContent {
-
+  
   public final int pseudoIdentifier = (new Random()).nextInt();
 
   /**
@@ -48,6 +48,7 @@ final class FSKEditorJSViewRepresentation extends JSONViewContent {
   private boolean combinedObject;
   private Map<String, String[]> vocabularies;
   
+
   public boolean isCombinedObject() {
     return combinedObject;
   }

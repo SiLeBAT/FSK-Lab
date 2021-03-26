@@ -586,7 +586,6 @@ class APPTableMT extends APPTable {
 	_updateSet( name, data ) {
 		let O = this;
 		 _log( 'TABLE MT / _updateSet' );
-		console.log(O._sets, name, data);
 		if ( name ) {
 			O._sets[name].add( data ) ;
 		}

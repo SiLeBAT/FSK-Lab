@@ -14,32 +14,47 @@ import com.sun.jna.Platform;
 import de.bund.bfr.fskml.FSKML;
 import de.bund.bfr.knime.fsklab.v2_0.FskSimulation;
 import de.bund.bfr.knime.fsklab.v2_0.editor.FSKEditorJSNodeDialog.ModelType;
+import de.bund.bfr.metadata.swagger.Assay;
 import de.bund.bfr.metadata.swagger.ConsumptionModel;
+import de.bund.bfr.metadata.swagger.Contact;
 import de.bund.bfr.metadata.swagger.DataModel;
+import de.bund.bfr.metadata.swagger.DietaryAssessmentMethod;
 import de.bund.bfr.metadata.swagger.DoseResponseModel;
 import de.bund.bfr.metadata.swagger.DoseResponseModelGeneralInformation;
+import de.bund.bfr.metadata.swagger.Exposure;
 import de.bund.bfr.metadata.swagger.ExposureModel;
 import de.bund.bfr.metadata.swagger.GenericModel;
+import de.bund.bfr.metadata.swagger.GenericModelDataBackground;
 import de.bund.bfr.metadata.swagger.GenericModelGeneralInformation;
 import de.bund.bfr.metadata.swagger.GenericModelModelMath;
+import de.bund.bfr.metadata.swagger.GenericModelScope;
+import de.bund.bfr.metadata.swagger.Hazard;
 import de.bund.bfr.metadata.swagger.HealthModel;
+import de.bund.bfr.metadata.swagger.Laboratory;
 import de.bund.bfr.metadata.swagger.Model;
 import de.bund.bfr.metadata.swagger.ModelCategory;
+import de.bund.bfr.metadata.swagger.ModelEquation;
 import de.bund.bfr.metadata.swagger.OtherModel;
 import de.bund.bfr.metadata.swagger.OtherModelGeneralInformation;
 import de.bund.bfr.metadata.swagger.Parameter;
 import de.bund.bfr.metadata.swagger.Parameter.ClassificationEnum;
+import de.bund.bfr.metadata.swagger.PopulationGroup;
 import de.bund.bfr.metadata.swagger.PredictiveModel;
 import de.bund.bfr.metadata.swagger.PredictiveModelGeneralInformation;
 import de.bund.bfr.metadata.swagger.ProcessModel;
+import de.bund.bfr.metadata.swagger.Product;
 import de.bund.bfr.metadata.swagger.QraModel;
+import de.bund.bfr.metadata.swagger.QualityMeasures;
+import de.bund.bfr.metadata.swagger.Reference;
 import de.bund.bfr.metadata.swagger.RiskModel;
+import de.bund.bfr.metadata.swagger.Study;
+import de.bund.bfr.metadata.swagger.StudySample;
 import de.bund.bfr.metadata.swagger.ToxicologicalModel;
 
 public class NodeUtils {
 
   public static final String DEFAULT_SIMULATION = "defaultSimulation";
-  
+
   // used by Writer & Reader to identify Join-Relations in the SBML File
   public static final String METADATA_COMMAND_VALUE = "commandValue";
 
@@ -118,6 +133,34 @@ public class NodeUtils {
     }
   }
 
+  /** Initialize and return an empty Generic model using the fluent API of the generated Swagger Models */
+  public static Model initializeGenericModell() {
+      return new GenericModel()
+          .generalInformation(new GenericModelGeneralInformation()
+              .modelCategory(new ModelCategory().modelClass("Generic model"))
+              .addAuthorItem(new Contact())
+              .addCreatorItem(new Contact())
+              .addReferenceItem(new Reference()))
+          .dataBackground(new GenericModelDataBackground()
+              .study(new Study())
+              .addAssayItem(new Assay())
+              .addDietaryAssessmentMethodItem(new DietaryAssessmentMethod())
+              .addLaboratoryItem(new Laboratory())
+              .addStudySampleItem(new StudySample()))
+          .scope(new GenericModelScope()
+              .addHazardItem(new Hazard())
+              .addPopulationGroupItem(new PopulationGroup())
+              .addProductItem(new Product())
+              .addSpatialInformationItem(""))
+          .modelMath(new GenericModelModelMath()
+              .addEventItem("")
+              .addExposureItem(new Exposure())
+              .addModelEquationItem(new ModelEquation())
+              .addParameterItem(new Parameter())
+              .addQualityMeasuresItem(new QualityMeasures()))
+          .modelType("genericModel");
+  }
+
   /** Initialize and return a model for the passed type. */
   public static Model initializeModel(ModelType modelType) {
 
@@ -126,7 +169,7 @@ public class NodeUtils {
           .generalInformation(new GenericModelGeneralInformation()
               .modelCategory(new ModelCategory().modelClass("Generic model")))
           .modelType("genericModel");
-    
+
     switch (modelType) {
       case genericModel:
         return new GenericModel().modelMath(new GenericModelModelMath())

@@ -15,8 +15,10 @@ joiner = function () {
   let _simulationMap={};
   let _finalsimulationList = [];
   let _ignoreSelectSimulation;
-
-
+  let _genericModelReference = {};
+  let _vocabularies = {};
+  let _UIInformation = {};
+  
   /** JointJS graph. */
   let _graph;
 
@@ -105,6 +107,22 @@ joiner = function () {
       fourthModel: {}
     }
   }
+  function makeVocabullaryMap() {
+    for (key in ui) {
+        if (ui.hasOwnProperty(key)) {
+            ui[key].forEach(value => {
+                if (value.hasOwnProperty('vocabulary')) {
+                    delete value['description']
+                    delete value['label']
+                    delete value['required']
+                    _vocabularies[value['id']] = value['vocabulary'];
+                }
+                _UIInformation[value['id']] = value['type'];
+            });
+        }
+    }
+  }
+  
   let selectionChanged = function (modelMetaData) {
     cleanUp();
     let _modelColectionSuffixed =  addSuffixToParameters(JSON.parse(JSON.stringify(modelMetaData.changeSet.added[0]["selecteModels"])));
@@ -129,7 +147,45 @@ joiner = function () {
     
     
   }
+ 
+  function iterateAndExtend(reference, model1, model2, model3, model4) {
+    for (var property in reference) {
+        if (model1[property]) {
+            if (typeof  model1[property] === 'object' &&  model1[property] !== null ) {
+                reference[property] = iterateAndExtend(reference[property] ? reference[property] : {}
+                    , model1[property] ? model1[property] : {}
+                    , model2[property] ? model2[property] : {}
+                    , model3[property] ? model3[property] : {}
+                    , model4[property] ? model4[property] : {});
+            } else if (property == 'modelType') {
+                //do nothing 
+            } else if (_vocabularies.hasOwnProperty(property)) {
+                reference[property] = model1[property];
+            } else if (_UIInformation[property] === 'date' || _UIInformation[property] === 'email') {
+                reference[property] = model1[property];
+            } else if (_UIInformation[property] === 'url') {
+                reference[property] = model1[property] + ' ' + model2[property] + ' ' + model3[property] + ' ' + model4[property];
+            } else if (_UIInformation[property] === 'date-array' || _UIInformation[property] === 'text-array') {
+                reference[property] = [].concat(model1[property] ? model1[property] : []
+                    , model2[property] ? model2[property] : []
+                    , model3[property] ? model3[property] : []
+                    , model4[property] ? model4[property] : []);
+            } else if (_UIInformation[property] === 'boolean') {
+                reference[property] = model1[property] && model2[property] && model3[property] && model4[property];
+            } else if (_UIInformation[property] && _UIInformation[property] === 'text' || _UIInformation[property] === 'long-text') {
+                reference[property] = (model1[property] ? model1[property] : '') +
+                    (model2[property] ? model2[property] : '') +
+                    (model3[property] ? model3[property] : '') +
+                    (model4[property] ? model4[property] : '');
+            } else if (_UIInformation[property] === 'number') {
+                reference[property] = model1[property];
+            }
+        }  
+    }
+    return reference;
+  }
   view.init = function (representation, value) {
+    _genericModelReference = JSON.parse(representation.genericModelReference);
     _value = value;
     _graphObject = JSON.parse(_value.jsonRepresentation)
     _joinerModelsData = representation.joinerModelsData;
@@ -138,6 +194,7 @@ joiner = function () {
     _modelsParamsOriginalNames = _joinerModelsData.modelsParamsOriginalNames;
     //subscribe to events emitted by FSK DB View
     knimeService.subscribeToSelection('b800db46-4e25-4f77-bcc6-db0c21joiner', selectionChanged);
+    makeVocabullaryMap();
     if (value.modelMetaData) {
       _metadata = JSON.parse(value.modelMetaData);
     } else {
@@ -242,76 +299,9 @@ joiner = function () {
             });
         });     
         _value.joinerModelsData.joinedSimulation = _finalsimulationList;
-        if (modelsPool.firstModel['metadata'] && modelsPool.secondModel['metadata']) {
-          fetch("http://localhost:" + _representation.servicePort + "/joinMetadata", {
-            method: "post",
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            },
-
-            //make sure to serialize your JSON body
-            body: JSON.stringify([
-              modelsPool.firstModel['metadata'],
-              modelsPool.secondModel['metadata']
-            ])
-          })
-            .then((response) => response.json())
-            .then((responseText) => {
-              if (modelsPool.thirdModel['metadata']) {
-                fetch("http://localhost:" + _representation.servicePort + "/joinMetadata", {
-                  method: "post",
-                  headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                  },
-
-                  //make sure to serialize your JSON body
-                  body: JSON.stringify([
-                    responseText,
-                    modelsPool.thirdModel['metadata']
-                  ])
-                })
-                  .then((response) => response.json())
-                  .then((responseText) => {
-                    if (modelsPool.fourthModel['metadata']) {
-                        fetch("http://localhost:" + _representation.servicePort + "/joinMetadata", {
-                          method: "post",
-                          headers: {
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json'
-                          },
-
-                          //make sure to serialize your JSON body
-                          body: JSON.stringify([
-                            responseText,
-                            modelsPool.fourthModel['metadata']
-                          ])
-                        })
-                        .then((response) => response.json())
-                        .then((responseText) => {
-                          _value.modelMetaData = JSON.stringify(responseText);
-                        })
-                        .catch((error) => {
-                          console.error(error);
-                        });
-                    } else {
-                     _value.modelMetaData = JSON.stringify(responseText);
-                    }
-                  })
-                  .catch((error) => {
-                    console.error(error);
-                  });
-              }
-              else {
-                 _value.modelMetaData = JSON.stringify(responseText);
-              }
-            })
-            .catch((error) => {
-              console.error(error);
-            });
-        }
-
+        
+        _value.modelMetaData = iterateAndExtend(_genericModelReference ,modelsPool.firstModel['metadata'], modelsPool.secondModel['metadata'],
+                     modelsPool.thirdModel['metadata'] ,modelsPool.fourthModel['metadata']);
         _value.joinRelations.forEach((relation) => {
           delete relation.sourceModel;
           delete relation.targetModel;
