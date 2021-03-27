@@ -73,7 +73,7 @@
 
                 // label
                 $label = $( '<label class="col-form-label col-form-label-sm col-9 col-xs-3 order-1 sim-param-label"></label>' )
-                    .attr( 'for', 'input_'+ name )
+                    .attr( 'for', 'input_'+ name.replace(/[\W_]+/g,"_") )
                     .appendTo( $formGroup );
                 $label.text(name+(mandatory?"*":""));
                 
@@ -93,9 +93,9 @@
                     // action metadata list
                     let $actionMetadata = $( '<button class="action action-pure float-right" type="button"><i class="feather icon-info"></i></button>' )
                         .attr( 'data-toggle', 'collapse' )
-                        .attr( 'data-target', '#metadata_'+ name )
+                        .attr( 'data-target', '#metadata_'+ name.replace(/[\W_]+/g,"_") )
                         .attr( 'aria-expanded', false )
-                        .attr( 'aria-controls', 'metadata_'+ name )
+                        .attr( 'aria-controls', 'metadata_'+ name.replace(/[\W_]+/g,"_") )
                         .attr( 'title', 'Show Metadata' )
                         .appendTo( $actions );
                 }
@@ -113,7 +113,7 @@
                             .appendTo( $field );
 
                         O.input = $( '<input type="text" />' )
-                            .attr( 'id', 'input_'+ name )
+                            .attr( 'id', 'input_'+ name.replace(/[\W_]+/g,"_") )
                             .attr( 'aria-invalid', false )
                             .attr( 'data-min', parseFloat(Number.MIN_SAFE_INTEGER) ) // min value
                             .attr( 'data-max', parseFloat(Number.MAX_SAFE_INTEGER) ) // max value
@@ -133,14 +133,14 @@
                     //<input class="custom-control-input" type="checkbox" id="switchExample1" name="switchExample1" checked />
                     else if ( type == 'boolean' ) {
                         O.input = $( '<input type="checkbox" class="form-control form-control-sm" />' )
-                            .attr( 'id', 'input_'+ name )
+                            .attr( 'id', 'input_'+ name.replace(/[\W_]+/g,"_") )
                             .appendTo( $field );
 
                     }
                     // string or others
                     else {
                         O.input = $( '<input type="text" class="form-control form-control-sm" />' )
-                            .attr( 'id', 'input_'+ name )
+                            .attr( 'id', 'input_'+ name.replace(/[\W_]+/g,"_") )
                             .appendTo( $field );
                     }
                 }
@@ -170,7 +170,7 @@
                 if (helperText) {
                     // metadata table
                     let $metadataContainer = $( '<div class="collapse param-metadata"></div>' )
-                        .attr( 'id', 'metadata_'+ name )
+                        .attr( 'id', 'metadata_'+ name.replace(/[\W_]+/g,"_") )
                         .attr( 'aria-expanded', false )
                         .appendTo( $field );
 

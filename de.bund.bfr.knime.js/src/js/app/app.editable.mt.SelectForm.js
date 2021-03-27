@@ -34,7 +34,7 @@
 
             // label
             let $label = $( '<label class="col-form-label col-form-label-sm col-9 col-xs-3 order-1 sim-param-label"></label>' )
-                .attr( 'for', 'selectInput_'+ name )
+                .attr( 'for', 'selectInput_'+ name.replace(/[\W_]+/g,"_") )
                 .appendTo( $formGroup );
             $label.text(name+(mandatory?"*":""));
             
@@ -54,15 +54,15 @@
                 // action metadata list
                 let $actionMetadata = $( '<button class="action action-pure float-right" type="button"><i class="feather icon-info"></i></button>' )
                     .attr( 'data-toggle', 'collapse' )
-                    .attr( 'data-target', '#paramMetadata_'+ name )
+                    .attr( 'data-target', '#paramMetadata_'+ name.replace(/[\W_]+/g,"_") )
                     .attr( 'aria-expanded', false )
-                    .attr( 'aria-controls', 'paramMetadata_'+ name )
+                    .attr( 'aria-controls', 'paramMetadata_'+ name.replace(/[\W_]+/g,"_") )
                     .attr( 'title', 'Show Metadata' )
                     .appendTo( $actions );
             }
 
             O.input  = $( '<select class="form-control form-control-sm" style="width: 100%;" data-sel2 data-placeholder="Select…"/>' )
-                      .attr( 'id', 'selectInput_'+ name )
+                      .attr( 'id', 'selectInput_'+ name.replace(/[\W_]+/g,"_") )
                             .appendTo( $field );
             O.input.val(value);
             // Add options from vocabulary. The option matching value is selected.
@@ -106,7 +106,7 @@
             if (helperText) {
                 // metadata table
                 let $metadataContainer = $( '<div class="collapse param-metadata"></div>' )
-                    .attr( 'id', 'paramMetadata_'+ name )
+                    .attr( 'id', 'paramMetadata_'+ name.replace(/[\W_]+/g,"_") )
                     .attr( 'aria-expanded', false )
                     .appendTo( $field );
 
