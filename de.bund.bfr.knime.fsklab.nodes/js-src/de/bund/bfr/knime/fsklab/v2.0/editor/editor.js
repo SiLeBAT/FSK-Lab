@@ -157,7 +157,6 @@ fskeditorjs = function () {
 
   view.getComponentValue = () => {
     _metadata = _modalDetails._modelHandler.metaData;
-    console.log(_metadata);
     removeUndefinedFromJson(_metadata);
     delete _metadata['simulation'];
     delete _metadata['modelscript'];
