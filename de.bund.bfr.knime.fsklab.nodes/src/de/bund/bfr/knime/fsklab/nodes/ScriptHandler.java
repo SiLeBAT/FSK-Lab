@@ -34,7 +34,15 @@ public abstract class ScriptHandler implements AutoCloseable {
 
   protected ModelPlotter plotter;
   protected JsonHandler jsonHandler;
-
+  private boolean saveToJsonChecked = false;
+  /**
+   * Setter method to decide if parameters should be written to JSON 
+   * @param saveToJsonChecked the value from the Runner "save to 
+   * json file" checkbox.
+   */
+  public final void setSaveToJsonChecked(boolean saveToJsonChecked) {
+    this.saveToJsonChecked = saveToJsonChecked;
+  }
   /**
    * This template method runs a snippet of script code. It does not save the stdOutput or the
    * stdErrOutput. After running this method, "cleanup" has to be called in order to close the
@@ -103,7 +111,7 @@ public abstract class ScriptHandler implements AutoCloseable {
 
     // JsonHandler stores all input parameters before model execution
 
-    if(RunnerNodeModel.SAVETOJSON) {
+    if(saveToJsonChecked) {
       jsonHandler.saveInputParameters(fskObj);
     }
       
@@ -154,7 +162,7 @@ public abstract class ScriptHandler implements AutoCloseable {
     saveWorkspace(fskObj, exec);
 
     // HDFHandler stores all ouput parameters in HDF file
-    if(RunnerNodeModel.SAVETOJSON) {
+    if(saveToJsonChecked) {
       jsonHandler.saveOutputParameters(fskObj, workingDirectory);
     }
       
@@ -415,7 +423,7 @@ public abstract class ScriptHandler implements AutoCloseable {
       }
 
       // Save JSON file
-      if (RunnerNodeModel.SAVETOJSON) {
+      if (saveToJsonChecked) {
         File sourceFile = new File(workingDirectory, JsonHandler.JSON_FILE_NAME);
         File targetFile = new File(newResourcesDirectory, JsonHandler.JSON_FILE_NAME);
         FileUtil.copy(sourceFile, targetFile, exec);
