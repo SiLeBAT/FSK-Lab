@@ -147,32 +147,50 @@ joiner = function () {
     
     
   }
- 
+  
+  var _isUndefined = ( val ) => typeof val === typeof undefined ? true : false;
+
+  var _isNull = ( val ) => val == null ? true : false;
+  /**
+   * A function join the metadata of all availible joined models
+   */
   function iterateAndExtend(reference, model1, model2, model3, model4) {
     for (var property in reference) {
-        if (model1[property]) {
-            if (typeof  model1[property] === 'object' &&  model1[property] !== null ) {
+        let holderModel = model1[property]?model1:(model2[property]?model2:(model3[property]?model3:model4[property]));
+        
+        if (holderModel && holderModel[property]) {
+            if($.isArray(holderModel[property])){
+                if(property == 'creationDate'){
+                    reference[property] = model1[property];
+                }else{
+                    reference[property] = [].concat(model1[property] ? model1[property] : []
+                        , model2[property] ? model2[property] : []
+                        , model3[property] ? model3[property] : []
+                        , model4[property] ? model4[property] : []);
+                }
+            }else if (typeof  holderModel[property] === 'object' &&  holderModel[property] !== null ) {
                 reference[property] = iterateAndExtend(reference[property] ? reference[property] : {}
-                    , model1[property] ? model1[property] : {}
-                    , model2[property] ? model2[property] : {}
-                    , model3[property] ? model3[property] : {}
-                    , model4[property] ? model4[property] : {});
-            } else if (property == 'modelType') {
+                    , model1 && model1[property] ? model1[property] : {}
+                    , model2 && model2[property] ? model2[property] : {}
+                    , model3 && model3[property] ? model3[property] : {}
+                    , model4 && model4[property] ? model4[property] : {});
+            }
+             else if (property == 'modelType') {
                 //do nothing 
             } else if (_vocabularies.hasOwnProperty(property)) {
                 reference[property] = model1[property];
             } else if (_UIInformation[property] === 'date' || _UIInformation[property] === 'email') {
                 reference[property] = model1[property];
             } else if (_UIInformation[property] === 'url') {
-                reference[property] = model1[property] + ' ' + model2[property] + ' ' + model3[property] + ' ' + model4[property];
+                reference[property] = model1[property] + ' ' + model2[property] ? model2[property] : '' + ' ' + model3[property] ? model3[property] : '' + ' ' + model4[property] ? model4[property] : '';
             } else if (_UIInformation[property] === 'date-array' || _UIInformation[property] === 'text-array') {
                 reference[property] = [].concat(model1[property] ? model1[property] : []
                     , model2[property] ? model2[property] : []
                     , model3[property] ? model3[property] : []
                     , model4[property] ? model4[property] : []);
             } else if (_UIInformation[property] === 'boolean') {
-                reference[property] = model1[property] && model2[property] && model3[property] && model4[property];
-            } else if (_UIInformation[property] && _UIInformation[property] === 'text' || _UIInformation[property] === 'long-text') {
+                reference[property] = model1[property] && model2[property] ? model2[property] : true &&  model3[property] ? model3[property] : true &&  model4[property] ? model4[property] : true;
+            } else if (_UIInformation[property] === 'text' || _UIInformation[property] === 'long-text') {
                 reference[property] = (model1[property] ? model1[property] : '') +
                     (model2[property] ? model2[property] : '') +
                     (model3[property] ? model3[property] : '') +
@@ -180,10 +198,19 @@ joiner = function () {
             } else if (_UIInformation[property] === 'number') {
                 reference[property] = model1[property];
             }
-        }  
+            
+            if(_isUndefined(reference[property]) || _isNull(reference[property]) ||
+                    !isValidModel(reference[property])){
+                 delete reference[property]
+            }
+             
+        }  else if (!reference[property]){
+            delete reference[property]
+        }
     }
     return reference;
   }
+  
   view.init = function (representation, value) {
     _genericModelReference = JSON.parse(representation.genericModelReference);
     _value = value;
@@ -299,9 +326,14 @@ joiner = function () {
             });
         });     
         _value.joinerModelsData.joinedSimulation = _finalsimulationList;
-        
-        _value.modelMetaData = iterateAndExtend(_genericModelReference ,modelsPool.firstModel['metadata'], modelsPool.secondModel['metadata'],
-                     modelsPool.thirdModel['metadata'] ,modelsPool.fourthModel['metadata']);
+        if(isValidModel( modelsPool.secondModel)){
+            _genericModelReference = iterateAndExtend(_genericModelReference ,modelsPool.firstModel['metadata'], modelsPool.secondModel['metadata'],
+                         modelsPool.thirdModel['metadata'] ,modelsPool.fourthModel['metadata']);
+         }else if(isValidModel( modelsPool.firstModel)){
+            _genericModelReference = modelsPool.firstModel['metadata']
+         }    
+        _value.modelMetaData = JSON.stringify(_genericModelReference);
+         
         _value.joinRelations.forEach((relation) => {
           delete relation.sourceModel;
           delete relation.targetModel;
@@ -330,7 +362,6 @@ joiner = function () {
     _value.svgRepresentation = this.getSVG();
     if(_graph)
      _value.jsonRepresentation = JSON.stringify(_graph.toJSON());
-    
     return _value;
   };
 
