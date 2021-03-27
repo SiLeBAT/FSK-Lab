@@ -115,7 +115,7 @@ joiner = function () {
                     delete value['description']
                     delete value['label']
                     delete value['required']
-                    _vocabularies[value['id']] = value['vocabulary'];
+                    _vocabularies[key+value['id']] = value['vocabulary'];
                 }
                 _UIInformation[value['id']] = value['type'];
             });
@@ -154,11 +154,12 @@ joiner = function () {
   /**
    * A function join the metadata of all availible joined models
    */
-  function iterateAndExtend(reference, model1, model2, model3, model4) {
+  function iterateAndExtend(reference, model1, model2, model3, model4,vocabularyReferencekey) {
     for (var property in reference) {
         let holderModel = model1[property]?model1:(model2[property]?model2:(model3[property]?model3:model4[property]));
         
         if (holderModel && holderModel[property]) {
+            console.log(vocabularyReferencekey+property, _vocabularies.hasOwnProperty(vocabularyReferencekey+property));
             if($.isArray(holderModel[property])){
                 if(property == 'creationDate'){
                     reference[property] = model1[property];
@@ -173,11 +174,11 @@ joiner = function () {
                     , model1 && model1[property] ? model1[property] : {}
                     , model2 && model2[property] ? model2[property] : {}
                     , model3 && model3[property] ? model3[property] : {}
-                    , model4 && model4[property] ? model4[property] : {});
+                    , model4 && model4[property] ? model4[property] : {},property);
             }
              else if (property == 'modelType') {
                 //do nothing 
-            } else if (_vocabularies.hasOwnProperty(property)) {
+            } else if (_vocabularies.hasOwnProperty(vocabularyReferencekey+property) ) {
                 reference[property] = model1[property];
             } else if (_UIInformation[property] === 'date' || _UIInformation[property] === 'email') {
                 reference[property] = model1[property];
@@ -327,8 +328,10 @@ joiner = function () {
         });     
         _value.joinerModelsData.joinedSimulation = _finalsimulationList;
         if(isValidModel( modelsPool.secondModel)){
+            console.log(_vocabularies);
             _genericModelReference = iterateAndExtend(_genericModelReference ,modelsPool.firstModel['metadata'], modelsPool.secondModel['metadata'],
-                         modelsPool.thirdModel['metadata'] ,modelsPool.fourthModel['metadata']);
+                         modelsPool.thirdModel['metadata'] ,modelsPool.fourthModel['metadata'],'');
+            console.log(_genericModelReference);
          }else if(isValidModel( modelsPool.firstModel)){
             _genericModelReference = modelsPool.firstModel['metadata']
          }    
