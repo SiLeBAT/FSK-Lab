@@ -142,8 +142,6 @@
         }
         onblurHandler(){
             let O = this;
-            let closestForm = O.input.closest( "form" );
-            let attr = closestForm.attr('no-immidiate-submit' );
             let can_emit_Event = typeof attr === typeof undefined || attr === false;
             _log( ' onblurHandler' + can_emit_Event );
             if ( can_emit_Event ) { 
