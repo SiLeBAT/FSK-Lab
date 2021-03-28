@@ -15,8 +15,10 @@ joiner = function () {
   let _simulationMap={};
   let _finalsimulationList = [];
   let _ignoreSelectSimulation;
-
-
+  let _genericModelReference = {};
+  let _vocabularies = {};
+  let _UIInformation = {};
+  
   /** JointJS graph. */
   let _graph;
 
@@ -105,6 +107,22 @@ joiner = function () {
       fourthModel: {}
     }
   }
+  function makeVocabullaryMap() {
+    for (key in ui) {
+        if (ui.hasOwnProperty(key)) {
+            ui[key].forEach(value => {
+                if (value.hasOwnProperty('vocabulary')) {
+                    delete value['description']
+                    delete value['label']
+                    delete value['required']
+                    _vocabularies[key+value['id']] = value['vocabulary'];
+                }
+                _UIInformation[value['id']] = value['type'];
+            });
+        }
+    }
+  }
+  
   let selectionChanged = function (modelMetaData) {
     cleanUp();
     let _modelColectionSuffixed =  addSuffixToParameters(JSON.parse(JSON.stringify(modelMetaData.changeSet.added[0]["selecteModels"])));
@@ -129,7 +147,73 @@ joiner = function () {
     
     
   }
+  
+  var _isUndefined = ( val ) => typeof val === typeof undefined ? true : false;
+
+  var _isNull = ( val ) => val == null ? true : false;
+  /**
+   * A function join the metadata of all availible joined models
+   */
+  function iterateAndExtend(reference, model1, model2, model3, model4,vocabularyReferencekey) {
+    for (var property in reference) {
+        let holderModel = model1[property]?model1:(model2[property]?model2:(model3[property]?model3:model4[property]));
+        
+        if (holderModel && holderModel[property]) {
+            console.log(vocabularyReferencekey+property, _vocabularies.hasOwnProperty(vocabularyReferencekey+property));
+            if($.isArray(holderModel[property])){
+                if(property == 'creationDate'){
+                    reference[property] = model1[property];
+                }else{
+                    reference[property] = [].concat(model1[property] ? model1[property] : []
+                        , model2[property] ? model2[property] : []
+                        , model3[property] ? model3[property] : []
+                        , model4[property] ? model4[property] : []);
+                }
+            }else if (typeof  holderModel[property] === 'object' &&  holderModel[property] !== null ) {
+                reference[property] = iterateAndExtend(reference[property] ? reference[property] : {}
+                    , model1 && model1[property] ? model1[property] : {}
+                    , model2 && model2[property] ? model2[property] : {}
+                    , model3 && model3[property] ? model3[property] : {}
+                    , model4 && model4[property] ? model4[property] : {},property);
+            }
+             else if (property == 'modelType') {
+                //do nothing 
+            } else if (_vocabularies.hasOwnProperty(vocabularyReferencekey+property) ) {
+                reference[property] = model1[property];
+            } else if (_UIInformation[property] === 'date' || _UIInformation[property] === 'email') {
+                reference[property] = model1[property];
+            } else if (_UIInformation[property] === 'url') {
+                reference[property] = model1[property] + ' ' + model2[property] ? model2[property] : '' + ' ' + model3[property] ? model3[property] : '' + ' ' + model4[property] ? model4[property] : '';
+            } else if (_UIInformation[property] === 'date-array' || _UIInformation[property] === 'text-array') {
+                reference[property] = [].concat(model1[property] ? model1[property] : []
+                    , model2[property] ? model2[property] : []
+                    , model3[property] ? model3[property] : []
+                    , model4[property] ? model4[property] : []);
+            } else if (_UIInformation[property] === 'boolean') {
+                reference[property] = model1[property] && model2[property] ? model2[property] : true &&  model3[property] ? model3[property] : true &&  model4[property] ? model4[property] : true;
+            } else if (_UIInformation[property] === 'text' || _UIInformation[property] === 'long-text') {
+                reference[property] = (model1[property] ? model1[property] : '') +
+                    (model2[property] ? model2[property] : '') +
+                    (model3[property] ? model3[property] : '') +
+                    (model4[property] ? model4[property] : '');
+            } else if (_UIInformation[property] === 'number') {
+                reference[property] = model1[property];
+            }
+            
+            if(_isUndefined(reference[property]) || _isNull(reference[property]) ||
+                    !isValidModel(reference[property])){
+                 delete reference[property]
+            }
+             
+        }  else if (!reference[property]){
+            delete reference[property]
+        }
+    }
+    return reference;
+  }
+  
   view.init = function (representation, value) {
+    _genericModelReference = JSON.parse(representation.genericModelReference);
     _value = value;
     _graphObject = JSON.parse(_value.jsonRepresentation)
     _joinerModelsData = representation.joinerModelsData;
@@ -138,6 +222,7 @@ joiner = function () {
     _modelsParamsOriginalNames = _joinerModelsData.modelsParamsOriginalNames;
     //subscribe to events emitted by FSK DB View
     knimeService.subscribeToSelection('b800db46-4e25-4f77-bcc6-db0c21joiner', selectionChanged);
+    makeVocabullaryMap();
     if (value.modelMetaData) {
       _metadata = JSON.parse(value.modelMetaData);
     } else {
@@ -242,76 +327,16 @@ joiner = function () {
             });
         });     
         _value.joinerModelsData.joinedSimulation = _finalsimulationList;
-        if (modelsPool.firstModel['metadata'] && modelsPool.secondModel['metadata']) {
-          fetch("http://localhost:" + _representation.servicePort + "/joinMetadata", {
-            method: "post",
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            },
-
-            //make sure to serialize your JSON body
-            body: JSON.stringify([
-              modelsPool.firstModel['metadata'],
-              modelsPool.secondModel['metadata']
-            ])
-          })
-            .then((response) => response.json())
-            .then((responseText) => {
-              if (modelsPool.thirdModel['metadata']) {
-                fetch("http://localhost:" + _representation.servicePort + "/joinMetadata", {
-                  method: "post",
-                  headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                  },
-
-                  //make sure to serialize your JSON body
-                  body: JSON.stringify([
-                    responseText,
-                    modelsPool.thirdModel['metadata']
-                  ])
-                })
-                  .then((response) => response.json())
-                  .then((responseText) => {
-                    if (modelsPool.fourthModel['metadata']) {
-                        fetch("http://localhost:" + _representation.servicePort + "/joinMetadata", {
-                          method: "post",
-                          headers: {
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json'
-                          },
-
-                          //make sure to serialize your JSON body
-                          body: JSON.stringify([
-                            responseText,
-                            modelsPool.fourthModel['metadata']
-                          ])
-                        })
-                        .then((response) => response.json())
-                        .then((responseText) => {
-                          _value.modelMetaData = JSON.stringify(responseText);
-                        })
-                        .catch((error) => {
-                          console.error(error);
-                        });
-                    } else {
-                     _value.modelMetaData = JSON.stringify(responseText);
-                    }
-                  })
-                  .catch((error) => {
-                    console.error(error);
-                  });
-              }
-              else {
-                 _value.modelMetaData = JSON.stringify(responseText);
-              }
-            })
-            .catch((error) => {
-              console.error(error);
-            });
-        }
-
+        if(isValidModel( modelsPool.secondModel)){
+            console.log(_vocabularies);
+            _genericModelReference = iterateAndExtend(_genericModelReference ,modelsPool.firstModel['metadata'], modelsPool.secondModel['metadata'],
+                         modelsPool.thirdModel['metadata'] ,modelsPool.fourthModel['metadata'],'');
+            console.log(_genericModelReference);
+         }else if(isValidModel( modelsPool.firstModel)){
+            _genericModelReference = modelsPool.firstModel['metadata']
+         }    
+        _value.modelMetaData = JSON.stringify(_genericModelReference);
+         
         _value.joinRelations.forEach((relation) => {
           delete relation.sourceModel;
           delete relation.targetModel;
@@ -320,6 +345,14 @@ joiner = function () {
 
         }catch (err){console.log(err);}
       } else {
+       if(isValidModel( modelsPool.secondModel)){
+          _genericModelReference = iterateAndExtend(_genericModelReference ,JSON.parse(modelsPool.firstModel['metadata'][0]), JSON.parse(modelsPool.secondModel['metadata'][0]),
+                                    modelsPool.thirdModel['metadata']?JSON.parse(modelsPool.thirdModel['metadata'][0] ):undefined,
+                                    modelsPool.fourthModel['metadata']?JSON.parse(modelsPool.fourthModel['metadata'][0],''):undefined);
+       }else if(isValidModel( modelsPool.firstModel)){
+          _genericModelReference = modelsPool.firstModel['metadata']
+       }  
+      _value.modelMetaData = JSON.stringify(_genericModelReference);
       _value.joinerModelsData.firstModel = modelsPool.firstModel['metadata'];
       _value.joinerModelsData.secondModel = modelsPool.secondModel['metadata'];
       _value.joinerModelsData.thirdModel = modelsPool.thirdModel['metadata'];
@@ -340,7 +373,6 @@ joiner = function () {
     _value.svgRepresentation = this.getSVG();
     if(_graph)
      _value.jsonRepresentation = JSON.stringify(_graph.toJSON());
-    
     return _value;
   };
 

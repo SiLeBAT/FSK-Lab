@@ -52,51 +52,7 @@ var createSubMenu = (name, submenus)  =>   {
 	</li>`;
 }
 
-/**
- * Add controlled vocabulary to an input.
- * @param {Element} input Input element
- * @param {Array} vocabulary String array with vocabulary terms.
- */
-var addControlledVocabulary = (input, vocabulary, port)  =>   {
-	if(window._endpoints.controlledVocabularyEndpoint){
-		
-		fetch(window._endpoints.controlledVocabularyEndpoint+`${vocabulary}`)
-			.then(response => response.json())
-			.then(data => {
-				$(input).typeahead({
-					source: data,
-					autoSelect: true,
-					fitToElement: true,
-					showHintOnFocus: true
-				});				
-			}).catch(error => {
-				if(port >= 0){
-					fetch(`http://localhost:${port}/getAllNames/${vocabulary}`)
-						.then(response => response.json())
-						.then(data => {
-							$(input).typeahead({
-								source: data,
-								autoSelect: true,
-								fitToElement: true,
-								showHintOnFocus: true
-							});				
-						});
-				}
-			});
-		
-	} else if(port >= 0){
-		fetch(`http://localhost:${port}/getAllNames/${vocabulary}`)
-			.then(response => response.json())
-			.then(data => {
-				$(input).typeahead({
-					source: data,
-					autoSelect: true,
-					fitToElement: true,
-					showHintOnFocus: true
-				});				
-			});
-	}
-}
+
 
 /**
  * Add controlled vocabulary to an input.

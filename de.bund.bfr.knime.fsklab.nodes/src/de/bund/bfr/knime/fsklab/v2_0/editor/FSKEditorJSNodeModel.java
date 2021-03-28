@@ -129,10 +129,7 @@ final class FSKEditorJSNodeModel
   public FSKEditorJSViewRepresentation createEmptyViewRepresentation() {
     FSKEditorJSViewRepresentation representation = super.getViewRepresentation();
     if (representation == null) {
-      representation = new FSKEditorJSViewRepresentation();
-      representation.setServicePort(FskPlugin.getDefault().fskService.getPort());
-      representation.setControlledVocabularyURL(PreferenceInitializer.getControlledVocabularyURL());
-      
+      representation = new FSKEditorJSViewRepresentation();      
       Map<String, String[]> vocabularies;
       try {
         Class.forName("org.h2.Driver");

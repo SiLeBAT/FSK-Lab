@@ -25,10 +25,15 @@ import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.js.core.JSONViewContent;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.FskPlugin;
+import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
+import de.bund.bfr.knime.fsklab.v2_0.editor.FSKEditorJSNodeDialog.ModelType;
+import de.bund.bfr.metadata.swagger.GenericModel;
 
 
 @JsonAutoDetect
@@ -48,15 +53,16 @@ final class JoinerViewRepresentation extends JSONViewContent {
    * port cannot be available in the future. So it is assigned during runtime by the node model.
    * </p>
    */
-  private int servicePort;
+  public String genericModelReference ;
   
-  public int getServicePort() {
-    return servicePort;
+  public JoinerViewRepresentation() {
+    try {
+      genericModelReference = FskPlugin.getDefault().MAPPER104DEFAULT. writeValueAsString( NodeUtils.initializeGenericModell() );
+    } catch (JsonProcessingException e) {
+      e.printStackTrace();
+    }
   }
   
-  public void setServicePort(int servicePort) {
-    this.servicePort = servicePort;
-  }
   @Override
   public void saveToNodeSettings(NodeSettingsWO settings) {
     try {
