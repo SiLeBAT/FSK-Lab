@@ -48,7 +48,7 @@ fskeditorjs = function () {
             	if(obj[k] === "-") {
             		delete obj[k];
 	            } else {
-	            	if(obj[k].includes("-undefined")) { // for dates that are un-serializible 
+	            	if((typeof obj[k] === 'string' || obj[k] instanceof String) && obj[k].includes("-undefined")) { // for dates that are un-serializible 
 	            		obj[k] = "";
 	            		delete obj[k];
 		            }
