@@ -62,7 +62,6 @@ fskeditorjs = function () {
 		param.classification = param.classification.toUpperCase()
 		});
 	 removeUndefinedFromJson(_metadata);
-     console.log(_simulation);
     _metadatax.modelMath.parameter.forEach(param => {
       if(param.classification != "OUTPUT" && _simulation){ 
         _simulation.forEach(simulation => {

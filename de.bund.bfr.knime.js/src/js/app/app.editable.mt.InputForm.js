@@ -131,8 +131,9 @@
                     }
                     // string or others
                     //<input class="custom-control-input" type="checkbox" id="switchExample1" name="switchExample1" checked />
-                    else if ( type == 'boolean' ) {
-                        O.input = $( '<input type="checkbox" class="form-control form-control-sm" />' )
+                    else if ( type == 'checkbox' ) {
+                        console.log(name.replace(/[\W_]+/g,"_"));
+                        O.input = $( '<input type="checkbox" class="form-control form-control-sm text-left" style="width: auto;" />' )
                             .attr( 'id', 'input_'+ name.replace(/[\W_]+/g,"_") )
                             .appendTo( $field );
 
@@ -144,17 +145,11 @@
                             .appendTo( $field );
                     }
                 }
-                if (type === "date" && typeof (value) != "string") {
-                    let day = ("" + value[2]).length > 1 ? ("" + value[2]) : ("0" + value[2]);
-                    let month = ("" + value[1]).length > 1 ? ("" + value[1]) : ("0" + value[1]);
-                    O.input.val(value[0] + "-" + month + "-" + day);
-                    
-                } else {
-                    O.input.val(value);
-                }
+                
+                O.input.val(value);
                 if (type === "date"){
-                    //O.input.attr('type','date');
-                    O.input.attr('data-datepicker','');
+                    O.input.attr('type','date');
+                    //O.input.attr('data-datepicker','');
                 }
                 // Add autocomplete to input with vocabulary
                 if (vocabulary) {
@@ -197,7 +192,8 @@
 
         set value(newValue) {
             let O = this;
-            O.input.val( newValue );
+            O.type !== "checkbox" ? O.val( newValue ): O.input.selected(newValue);
+            //O.input.val( newValue );
         }
 
         clear() {
