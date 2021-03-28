@@ -21,7 +21,7 @@
             O.helperText = helperText;
             
             O.textarea = $( '<textarea row="6" class="form-control form-control-sm" />' )
-                            .attr( 'id', 'area_'+ name );
+                            .attr( 'id', 'area_'+ name.replace(/[\W_]+/g,"_") );
             O._create(name, mandatory, helperText, value);
         }
 
@@ -38,7 +38,7 @@
 
             // label
             let $label = $( '<label class="col-form-label col-form-label-sm col-9 col-xs-3 order-1 sim-param-label"></label>' )
-                .attr( 'for', 'areaInput_'+ name )
+                .attr( 'for', 'areaInput_'+ name.replace(/[\W_]+/g,"_") )
                 .appendTo( $formGroup );
             $label.text(name+(mandatory?"*":""));
             
@@ -58,15 +58,15 @@
                 // action metadata list
                 let $actionMetadata = $( '<button class="action action-pure float-right" type="button"><i class="feather icon-info"></i></button>' )
                     .attr( 'data-toggle', 'collapse' )
-                    .attr( 'data-target', '#paramMetadata_'+ name )
+                    .attr( 'data-target', '#paramMetadata_'+ name.replace(/[\W_]+/g,"_") )
                     .attr( 'aria-expanded', false )
-                    .attr( 'aria-controls', 'paramMetadata_'+ name )
+                    .attr( 'aria-controls', 'paramMetadata_'+ name.replace(/[\W_]+/g,"_") )
                     .attr( 'title', 'Show Metadata' )
                     .appendTo( $actions );
             }
 
             O.input  = $( '<textarea type="text" row="6" class="form-control" />' )
-                      .attr( 'id', 'areaInput_'+ name )
+                      .attr( 'id', 'areaInput_'+ name.replace(/[\W_]+/g,"_") )
                             .appendTo( $field );
             O.input.val(value);
 
@@ -78,7 +78,7 @@
             if (helperText) {
                 // metadata table
                 let $metadataContainer = $( '<div class="collapse param-metadata"></div>' )
-                    .attr( 'id', 'paramMetadata_'+ name )
+                    .attr( 'id', 'paramMetadata_'+ name.replace(/[\W_]+/g,"_") )
                     .attr( 'aria-expanded', false )
                     .appendTo( $field );
 
