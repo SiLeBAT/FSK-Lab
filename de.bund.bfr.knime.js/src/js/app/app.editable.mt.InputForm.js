@@ -249,17 +249,16 @@
 			
             }else {
                 isValid = O.input.val() ? true : false;
-                if(!isValid)
+                if(!isValid){
                     O.input.$validationContainer.text("required");
+                }
                 // check if mail has correct structure
                 if(isValid && O.type === "email"){
-                    let re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\ ".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-                    isValid =  re.test(O.input.value);
+                    isValid= /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(O.input.val());
                     O.input.$validationContainer.text("Not a valid email value");
                 }
 
             }
-            
             if (!isValid) {
                 O.input.parents( '.form-group' ).addClass( 'has-error' );
 			    O.input.$validationContainer.addClass( 'is-invalid' );
