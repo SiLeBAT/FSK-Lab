@@ -345,6 +345,14 @@ joiner = function () {
 
         }catch (err){console.log(err);}
       } else {
+       if(isValidModel( modelsPool.secondModel)){
+          _genericModelReference = iterateAndExtend(_genericModelReference ,JSON.parse(modelsPool.firstModel['metadata'][0]), JSON.parse(modelsPool.secondModel['metadata'][0]),
+                                    modelsPool.thirdModel['metadata']?JSON.parse(modelsPool.thirdModel['metadata'][0] ):undefined,
+                                    modelsPool.fourthModel['metadata']?JSON.parse(modelsPool.fourthModel['metadata'][0],''):undefined);
+       }else if(isValidModel( modelsPool.firstModel)){
+          _genericModelReference = modelsPool.firstModel['metadata']
+       }  
+      _value.modelMetaData = JSON.stringify(_genericModelReference);
       _value.joinerModelsData.firstModel = modelsPool.firstModel['metadata'];
       _value.joinerModelsData.secondModel = modelsPool.secondModel['metadata'];
       _value.joinerModelsData.thirdModel = modelsPool.thirdModel['metadata'];
