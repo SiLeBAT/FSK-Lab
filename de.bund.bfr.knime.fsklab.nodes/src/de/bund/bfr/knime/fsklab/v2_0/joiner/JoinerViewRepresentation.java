@@ -53,7 +53,6 @@ final class JoinerViewRepresentation extends JSONViewContent {
    * port cannot be available in the future. So it is assigned during runtime by the node model.
    * </p>
    */
-  private int servicePort;
   public String genericModelReference ;
   
   public JoinerViewRepresentation() {
@@ -63,13 +62,7 @@ final class JoinerViewRepresentation extends JSONViewContent {
       e.printStackTrace();
     }
   }
-  public int getServicePort() {
-    return servicePort;
-  }
   
-  public void setServicePort(int servicePort) {
-    this.servicePort = servicePort;
-  }
   @Override
   public void saveToNodeSettings(NodeSettingsWO settings) {
     try {

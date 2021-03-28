@@ -34,16 +34,6 @@ final class FSKEditorJSViewRepresentation extends JSONViewContent {
   
   public final int pseudoIdentifier = (new Random()).nextInt();
 
-  /**
-   * Port number where FSK-Service is running.
-   * 
-   * <p>
-   * The service port number is to not be saved to settings as it depends on the computer. The same
-   * port cannot be available in the future. So it is assigned during runtime by the node model.
-   * </p>
-   */
-  private int servicePort;
-  private String controlledVocabularyURL;
   private String modelMetadata;
   private boolean combinedObject;
   private Map<String, String[]> vocabularies;
@@ -64,26 +54,6 @@ final class FSKEditorJSViewRepresentation extends JSONViewContent {
   public void setModelMetadata(String modelMetadata) {
     this.modelMetadata = modelMetadata;
   }
-
-  public String getControlledVocabularyURL() {
-    return controlledVocabularyURL;
-  }
-
-  public void setControlledVocabularyURL(String controlledVocabularyURL) {
-    this.controlledVocabularyURL = controlledVocabularyURL;
-  }
-
-  public FSKEditorJSViewRepresentation() {
-    servicePort = 0;
-  }
-  
-  public int getServicePort() {
-    return servicePort;
-  }
-  
-  public void setServicePort(int servicePort) {
-    this.servicePort = servicePort;
-  }
   
   public Map<String, String[]> getVocabularies() {
     return vocabularies;
@@ -101,7 +71,7 @@ final class FSKEditorJSViewRepresentation extends JSONViewContent {
 
   @Override
   public int hashCode() {
-    return servicePort + Objects.hash(vocabularies);
+    return  Objects.hash(vocabularies);
   }
 
   @Override
@@ -117,10 +87,6 @@ final class FSKEditorJSViewRepresentation extends JSONViewContent {
     }
     
     FSKEditorJSViewRepresentation other = (FSKEditorJSViewRepresentation) obj;
-    
-    if (servicePort != other.servicePort) {
-      return false;
-    }
     
     if (vocabularies != null && other.vocabularies != null && vocabularies.equals(other.vocabularies)) {
       return false;

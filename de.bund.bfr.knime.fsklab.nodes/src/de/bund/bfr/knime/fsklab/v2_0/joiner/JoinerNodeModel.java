@@ -171,7 +171,6 @@ public final class JoinerNodeModel
       if (representation == null) {
         representation = createEmptyViewRepresentation();
       }
-      representation.setServicePort(FskPlugin.getDefault().fskService.getPort());
 
       JoinerModelsData joinerModelsData = representation.joinerModelsData;
 
