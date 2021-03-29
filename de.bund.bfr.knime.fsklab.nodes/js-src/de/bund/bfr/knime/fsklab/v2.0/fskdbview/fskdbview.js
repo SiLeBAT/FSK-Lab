@@ -323,7 +323,7 @@ fskdbview = function () {
                             }else{
                                 // save selected model
                                 window.selectedModels.push(rowData.modelMetadata);
-                                _value.selection.push(rowIndex);
+                                _value.selection.push(_representation.table.rows[rowIndex].rowKey);
                                 // emit selection event
                                 knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c21joiner' ,
                                 		[{"selecteModels":window.selectedModels, "downloadURs":[]}] /*[window.selectedModels]*/,{elements:[]})  
