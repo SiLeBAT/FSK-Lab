@@ -132,7 +132,6 @@
                     // string or others
                     //<input class="custom-control-input" type="checkbox" id="switchExample1" name="switchExample1" checked />
                     else if ( type == 'checkbox' ) {
-                        console.log(name.replace(/[\W_]+/g,"_"));
                         O.input = $( '<input type="checkbox" class="form-control form-control-sm text-left" style="width: auto;" />' )
                             .attr( 'id', 'input_'+ name.replace(/[\W_]+/g,"_") )
                             .appendTo( $field );
@@ -145,12 +144,22 @@
                             .appendTo( $field );
                     }
                 }
-                
-                O.input.val(value);
                 if (type === "date"){
                     O.input.attr('type','date');
                     //O.input.attr('data-datepicker','');
                 }
+                
+                if (type === "date" && typeof (value) != "string") {
+                    let day = ("" + value[2]).length > 1 ? ("" + value[2]) : ("0" + value[2]);
+                    let month = ("" + value[1]).length > 1 ? ("" + value[1]) : ("0" + value[1]);
+                    O.input.val(value[0] + "-" + month + "-" + day);
+                    
+                }else if(type === "checkbox" ){
+                    O.input.checked = value 
+                }else{
+                    O.input.val(value);
+                }
+                
                 // Add autocomplete to input with vocabulary
                 if (vocabulary) {
                     // addControlledVocabulary(O.input, vocabulary, port);
@@ -185,20 +194,33 @@
                     let month = ("" + value[1]).length > 1 ? ("" + value[1]) : ("0" + value[1]);
                     return value[0] + "-" + month + "-" + day;
                 }
+            }else if(O.type === "checkbox" ){
+                console.log(O.input.is(":checked"));
+                return O.input.is(":checked"); 
             }
-            else
-                return O.type !== "checkbox" ? O.input.val(): O.input.checked;
+            else{
+                return O.input.val();
+            }
         }
 
         set value(newValue) {
+            console.log(newValue);
             let O = this;
-            O.type !== "checkbox" ? O.val( newValue ): O.input.selected(newValue);
-            //O.input.val( newValue );
+             if(O.type === "checkbox" ){
+                console.log(newValue);
+                O.input.checked = newValue 
+            }
+            else{
+                O.val( newValue );
+            }
         }
 
         clear() {
             let O = this;
-            O.input.val( "" );
+            if(O.type !== "checkbox" )
+                O.input.val( "" );
+            else
+                O.input.checked = false;
 
             if (O.input.$validationContainer) {
                 O.input.$validationContainer.css("display", "none") ;

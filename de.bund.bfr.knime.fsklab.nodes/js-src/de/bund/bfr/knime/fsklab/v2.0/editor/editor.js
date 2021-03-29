@@ -36,32 +36,12 @@ fskeditorjs = function () {
     //}
   }
   
-  // Parse entire json object to remove data that is undefined or has a wrong date 
-  let removeUndefinedFromJson = function (obj) {
-	  for(var k in obj) {
-        if(obj[k] instanceof Object) {
-        	removeUndefinedFromJson(obj[k]);
-        } else {
-            if(typeof(obj[k]) == "undefined") {
-	           	delete obj[k];
-	        } else {
-            	if(obj[k] === "-") {
-            		delete obj[k];
-	            } else {
-	            	if((typeof obj[k] === 'string' || obj[k] instanceof String) && obj[k].includes("-undefined")) { // for dates that are un-serializible 
-	            		obj[k] = "";
-	            		delete obj[k];
-		            }
-	            }	
-            }
-        };
-	  }
-	};
+  
   let doSave = function(_metadatax){
-	 _metadatax.modelMath.parameter.forEach(param => {
+    console.log(_metadatax);
+	_metadatax.modelMath.parameter.forEach(param => {
 		param.classification = param.classification.toUpperCase()
-		});
-	 removeUndefinedFromJson(_metadata);
+	});
     _metadatax.modelMath.parameter.forEach(param => {
       if(param.classification != "OUTPUT" && _simulation){ 
         _simulation.forEach(simulation => {
@@ -156,7 +136,6 @@ fskeditorjs = function () {
 
   view.getComponentValue = () => {
     _metadata = _modalDetails._modelHandler.metaData;
-    removeUndefinedFromJson(_metadata);
     delete _metadata['simulation'];
     delete _metadata['modelscript'];
     delete _metadata['visualization'];

@@ -52,7 +52,16 @@ class SimpleTable {
         let input = document.createElement("input");
         input.type = O.type;
         input.className = "form-control";
-        input.value = value;
+        if ($(input).attr('type') === "date" && typeof (value) != "string") {
+            let day = ("" + value[2]).length > 1 ? ("" + value[2]) : ("0" + value[2]);
+            let month = ("" + value[1]).length > 1 ? ("" + value[1]) : ("0" + value[1]);
+            $(input).val(value[0] + "-" + month + "-" + day);
+            
+        }else if($(input).is(':checkbox')){
+            $(input).checked = value 
+        }else{
+            $(input).val(value);
+        }
 
         // Add autocomplete to input with vocabulary
         if (O.vocabulary) {
