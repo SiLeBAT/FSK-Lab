@@ -9,7 +9,9 @@ import de.bund.bfr.metadata.swagger.Parameter;
 import de.bund.bfr.metadata.swagger.Parameter.DataTypeEnum;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import metadata.SwaggerUtil;
 import org.knime.core.node.CanceledExecutionException;
@@ -52,22 +54,32 @@ public class RJsonHandler extends JsonHandler {
     List<Parameter> parameters = SwaggerUtil.getParameter(fskObj.modelMetadata);
     for (Parameter p : parameters) {
       if (p.getClassification() != Parameter.ClassificationEnum.OUTPUT) {
-        Boolean isDataFrame = scriptHandler.runScript("class(" + p.getId() + ")", exec, true)[0]
-            .contains("data.frame");
-        String parameterDataType = isDataFrame ? "DataFrame" : p.getDataType().getValue();
-
-        String[] results =
-            scriptHandler.runScript("toJSON(" + p.getId() + ",digits=NA, auto_unbox=TRUE)", exec, true);
-        String data = (results != null) ? results[0] : "";
-
-        parameterJson.addParameter(p,
-            modelId,
-            data,
-            parameterDataType,
-            SwaggerUtil.getLanguageWrittenIn(fskObj.modelMetadata));
+        File temp = FileUtil.createTempFile("temp_parameters", ".json");
+        try {
+          Boolean isDataFrame = scriptHandler.runScript("class(" + p.getId() + ")", exec, true)[0]
+              .contains("data.frame");
+          String parameterDataType = isDataFrame ? "DataFrame" : p.getDataType().getValue();
+  
+          scriptHandler.runScript("write_json(" + p.getId() + ",'" + temp.getAbsolutePath().replaceAll("\\\\", "/") + "',digits=NA, auto_unbox=TRUE)", exec, false);
+          String[] check = scriptHandler.runScript("print('ok')", exec, true);
+          //String data = (results != null) ? results[0] : "";
+          String results = new String ( Files.readAllBytes( Paths.get(temp.getAbsolutePath()) ) );
+          String data = (results != null) ? results : "";
+  
+          parameterJson.addParameter(p,
+              modelId,
+              data,
+              parameterDataType,
+              SwaggerUtil.getLanguageWrittenIn(fskObj.modelMetadata));
+        } catch (RException | CanceledExecutionException | InterruptedException
+            | REXPMismatchException | IOException e) {
+          
+          throw new VariableNotGlobalException(p.getId(), modelId);
+        } finally {
+          FileUtil.deleteRecursively(temp);
+        }
       }
     }
-
   }
 
   @Override
@@ -78,7 +90,9 @@ public class RJsonHandler extends JsonHandler {
     String modelId = SwaggerUtil.getModelId(fskObj.modelMetadata);
     List<Parameter> parameters = SwaggerUtil.getParameter(fskObj.modelMetadata);
     for (Parameter p : parameters) {
+      
       if (p.getClassification() == Parameter.ClassificationEnum.OUTPUT) {
+        File temp = FileUtil.createTempFile("temp_parameters", ".json");
         try {
 
           script.append("toJSON(" + p.getId() + ", auto_unbox=TRUE)\n");
@@ -89,16 +103,18 @@ public class RJsonHandler extends JsonHandler {
               .contains("data.frame");
 
           String parameterDataType = isDataFrame ? "DataFrame" : p.getDataType().getValue();
-
-          String[] results = scriptHandler
-              .runScript("toJSON(" + p.getId() + ",digits=NA, auto_unbox=TRUE)", exec, true);
-          String data = (results != null) ? results[0] : "";
+          scriptHandler.runScript("write_json(" + p.getId() + ",'" + temp.getAbsolutePath().replaceAll("\\\\", "/") + "',digits=NA, auto_unbox=TRUE)", exec, false);
+          String[] check = scriptHandler.runScript("print('ok')", exec, true);
+          String results = new String ( Files.readAllBytes( Paths.get(temp.getAbsolutePath()) ) );
+          String data = (results != null) ? results : "";
           parameterJson.addParameter(p, modelId, data, parameterDataType,
               SwaggerUtil.getLanguageWrittenIn(fskObj.modelMetadata));
         } catch (RException | CanceledExecutionException | InterruptedException
             | REXPMismatchException | IOException e) {
           
           throw new VariableNotGlobalException(p.getId(), modelId);
+        } finally {
+          FileUtil.deleteRecursively(temp);
         }
       }
     }
