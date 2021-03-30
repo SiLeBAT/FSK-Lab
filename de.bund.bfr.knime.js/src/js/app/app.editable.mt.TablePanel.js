@@ -239,13 +239,12 @@
         save(index, originalData) {
             let O = this;
             originalData.el ?delete originalData.el:null;
-            O.data.splice(index, 1);
             O.panelTable._tableData.splice(index, 1);
             let row = $(O.panelTable._$tbody).find('tr').eq(index);
             row.find('td').each(function() {
                 $(this).html(originalData[$(this).attr('data-id')]);
             });
-            O.data.push(originalData); // add data
+            O.data.splice(index, 1,originalData); // replace data
             O.panelTable._tableData.push(originalData);
             window.editEventBus.broadcast('MetadataChanged');
         }
