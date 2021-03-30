@@ -216,24 +216,35 @@
                 keys.push(key.field);
             })
             for(indexx in keys){
-                dialog.inputs[keys[indexx]].input.val(originalData.cells[indexx]);
+                let input = dialog.inputs[keys[indexx]].input
+                
+                if (input.attr('type') === "date") {
+                    let value = originalData.cells[indexx]
+                    let day = ("" + value[2]).length > 1 ? ("" + value[2]) : ("0" + value[2]);
+                    let month = ("" + value[1]).length > 1 ? ("" + value[1]) : ("0" + value[1]);
+                    dialog.inputs[keys[indexx]].input.val(value[0] + "-" + month + "-" + day);
+                    
+                }else if(input.is(':checkbox')){
+                    dialog.inputs[keys[indexx]].input.prop('checked', originalData.cells[indexx]);  
+                }else{
+                    dialog.inputs[keys[indexx]].input.val(originalData.cells[indexx]);
+                }
             }
            
             dialog.editedRow = index;
             $(dialog.modal).modal('show');
-            window.editEventBus.broadcast('MetadataChanged');
+            //window.editEventBus.broadcast('MetadataChanged');
         }
        
         save(index, originalData) {
             let O = this;
             originalData.el ?delete originalData.el:null;
-            O.data.splice(index, 1);
             O.panelTable._tableData.splice(index, 1);
             let row = $(O.panelTable._$tbody).find('tr').eq(index);
             row.find('td').each(function() {
                 $(this).html(originalData[$(this).attr('data-id')]);
             });
-            O.data.push(originalData); // add data
+            O.data.splice(index, 1,originalData); // replace data
             O.panelTable._tableData.push(originalData);
             window.editEventBus.broadcast('MetadataChanged');
         }
