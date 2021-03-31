@@ -40,6 +40,11 @@ public class FSKDBViewRepresentation extends JSONViewContent {
   private JSONDataTable m_table;
   private String m_remoteRepositoryURL;
   private int m_MaxSelectionNumber;
+  private boolean showDownloadButtonChecked;
+  private boolean showDetailsButtonChecked;
+  private boolean showExecuteButtonChecked;
+  private boolean showHeaderButtonChecked;
+
   private String[] m_selection = {};
   public String getTableID() {
     return m_tableID;
@@ -92,6 +97,39 @@ public class FSKDBViewRepresentation extends JSONViewContent {
   public void setSelection(final String[] selection) {
     m_selection = selection;
   }
+  
+  public boolean isShowDownloadButtonChecked() {
+    return showDownloadButtonChecked;
+  }
+
+  public void setShowDownloadButtonChecked(boolean showDownloadButtonChecked) {
+    this.showDownloadButtonChecked = showDownloadButtonChecked;
+  }
+
+  public boolean isShowDetailsButtonChecked() {
+    return showDetailsButtonChecked;
+  }
+
+  public void setShowDetailsButtonChecked(boolean showDetailsButtonChecked) {
+    this.showDetailsButtonChecked = showDetailsButtonChecked;
+  }
+
+  public boolean isShowExecuteButtonChecked() {
+    return showExecuteButtonChecked;
+  }
+
+  public void setShowExecuteButtonChecked(boolean showExecuteButtonChecked) {
+    this.showExecuteButtonChecked = showExecuteButtonChecked;
+  }
+
+  public boolean isShowHeaderButtonChecked() {
+    return showHeaderButtonChecked;
+  }
+
+  public void setShowHeaderButtonChecked(boolean showHeaderButtonChecked) {
+    this.showHeaderButtonChecked = showHeaderButtonChecked;
+  }
+
   
   /**
    * {@inheritDoc}

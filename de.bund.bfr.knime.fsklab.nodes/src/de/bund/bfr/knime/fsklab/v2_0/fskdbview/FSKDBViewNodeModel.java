@@ -36,6 +36,7 @@ import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
+import org.knime.core.node.defaultnodesettings.SettingsModelBoolean;
 import org.knime.core.node.defaultnodesettings.SettingsModelIntegerBounded;
 import org.knime.core.node.defaultnodesettings.SettingsModelNumber;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
@@ -78,6 +79,10 @@ public class FSKDBViewNodeModel
    * the dialog.
    */
   static final String KEY_REPOSITORY_LOCATION = "repository_location";
+  static final String KEY_SHOW_DOWNLOAD_BUTTON = "download_button";
+  static final String KEY_SHOW_DETAILS_BUTTON = "details_button";
+  static final String KEY_SHOW_EXECUTE_BUTTON = "execute_button";
+  static final String KEY_SHOW_HEADER = "header";
 
   /**
    * The default online repository URL String.
@@ -135,6 +140,15 @@ public class FSKDBViewNodeModel
   SettingsModelNumber m_maxSelectionNumberSettings =
       createMaxSelectionNumberSettingsModel();
   
+  SettingsModelBoolean m_showDownloadSettings =
+      createShowDownloadButtonSettingsModel();
+  SettingsModelBoolean m_showDetailsSettings =
+      createShowDetailsButtonSettingsModel();
+  SettingsModelBoolean m_showExecuteSettings =
+      createShowExecuteButtonSettingsModel();
+  SettingsModelBoolean m_showHeaderSettings =
+      createShowHeaderButtonSettingsModel();
+  
   final SettingsModelStringArray selectionSettings =
       createSelectionSettingsModel();
 
@@ -153,6 +167,22 @@ public class FSKDBViewNodeModel
         4);
   }
   
+  static SettingsModelBoolean createShowDownloadButtonSettingsModel() {
+    return new SettingsModelBoolean(KEY_SHOW_DOWNLOAD_BUTTON, false);
+  }
+  
+  static SettingsModelBoolean createShowExecuteButtonSettingsModel() {
+    return new SettingsModelBoolean(KEY_SHOW_EXECUTE_BUTTON, false);
+  }
+  
+  static SettingsModelBoolean createShowDetailsButtonSettingsModel() {
+    return new SettingsModelBoolean(KEY_SHOW_DETAILS_BUTTON, false);
+  }
+  
+  static SettingsModelBoolean createShowHeaderButtonSettingsModel() {
+    return new SettingsModelBoolean(KEY_SHOW_HEADER, false);
+  }
+  
   static SettingsModelStringArray createSelectionSettingsModel() {
     return new SettingsModelStringArray(SELECTION, new String[0])  ;
   }
@@ -164,6 +194,10 @@ public class FSKDBViewNodeModel
   protected void saveSettingsTo(final NodeSettingsWO settings) {
     m_repositoryLocationSettings.saveSettingsTo(settings);
     m_maxSelectionNumberSettings.saveSettingsTo(settings);
+    m_showDownloadSettings.saveSettingsTo(settings);
+    m_showDetailsSettings.saveSettingsTo(settings);
+    m_showExecuteSettings.saveSettingsTo(settings);
+    m_showHeaderSettings.saveSettingsTo(settings);
     FSKDBViewValue viewValue = getViewValue();
     if (viewValue != null && viewValue.getSelection() != null && viewValue.getSelection().length > 0) {
       selectionSettings.setStringArrayValue(viewValue.getSelection());
@@ -180,6 +214,10 @@ public class FSKDBViewNodeModel
       throws InvalidSettingsException {
     m_repositoryLocationSettings.loadSettingsFrom(settings);
     m_maxSelectionNumberSettings.loadSettingsFrom(settings);
+    m_showDownloadSettings.loadSettingsFrom(settings);
+    m_showDetailsSettings.loadSettingsFrom(settings);
+    m_showExecuteSettings.loadSettingsFrom(settings);
+    m_showHeaderSettings.loadSettingsFrom(settings);
     if(settings.containsKey(SELECTION))
       selectionSettings.loadSettingsFrom(settings);
   }
@@ -191,6 +229,10 @@ public class FSKDBViewNodeModel
   protected void validateSettings(final NodeSettingsRO settings) throws InvalidSettingsException {
     m_repositoryLocationSettings.validateSettings(settings);
     m_maxSelectionNumberSettings.validateSettings(settings);
+    m_showDownloadSettings.validateSettings(settings);
+    m_showDetailsSettings.validateSettings(settings);
+    m_showExecuteSettings.validateSettings(settings);
+    m_showHeaderSettings.validateSettings(settings);
     if(settings.containsKey(SELECTION))
       selectionSettings.validateSettings(settings);
   }
@@ -281,6 +323,14 @@ public class FSKDBViewNodeModel
       representation.setRemoteRepositoryURL(m_repositoryLocationSettings.getStringValue());
       representation.setMaxSelectionNumber(
           ((SettingsModelIntegerBounded) m_maxSelectionNumberSettings).getIntValue());
+      representation.setShowDownloadButtonChecked(
+          ((SettingsModelBoolean) m_showDownloadSettings).getBooleanValue());
+      representation.setShowDetailsButtonChecked(
+          ((SettingsModelBoolean) m_showDetailsSettings).getBooleanValue());
+      representation.setShowExecuteButtonChecked(
+          ((SettingsModelBoolean) m_showExecuteSettings).getBooleanValue());
+      representation.setShowHeaderButtonChecked(
+          ((SettingsModelBoolean) m_showHeaderSettings).getBooleanValue());
       representation.setSelection(
           ((SettingsModelStringArray) selectionSettings).getStringArrayValue());
       FSKDBViewValue fskdbViewValue = getViewValue();
