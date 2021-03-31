@@ -273,33 +273,7 @@ fskdbview = function () {
                     formatter   : '_uploadDate' // _formatter subroutine
                 }
             ],
-            rowActions      : [
-                {
-                    type            : 'modal',
-                    idPrefix        : 'mtActionDetails_',
-                    icon            : 'icon-eye',
-                    title           : 'Details',
-                    target          : '#mtModalDetails'
-                },
-                {
-                    type            : 'link',
-                    idPrefix        : 'mtActionDownload_',
-                    icon            : 'icon-download',
-                    title           : 'Download',
-                    on              : {
-                        click           : ( O, $action, rowIndex, rowData ) => {
-                            window.open( _endpoints.download + rowIndex, '_blank' );
-                        }
-                    }
-                },
-                {
-                    type            : 'modal',
-                    idPrefix        : 'mtActionSim_',
-                    icon            : 'icon-play',
-                    title           : 'Simulation',
-                    target          : '#mtModalSim'
-                }
-            ],
+            rowActions      : [],
             on              : {         
                 afterInit       : ( O ) => {
                     _log( 'on > afterInit', 'hook' ); // example hook output
@@ -382,6 +356,39 @@ fskdbview = function () {
             }
         }
     };
+    
+    
+    if(_representation.showDetailsButtonChecked == "true"){
+        _WebRepositoryVars.mainTable.rowActions.push({
+                    type            : 'modal',
+                    idPrefix        : 'mtActionDetails_',
+                    icon            : 'icon-eye',
+                    title           : 'Details',
+                    target          : '#mtModalDetails'
+                });
+    }
+    if(_representation.showExecuteButtonChecked == "true"){
+        _WebRepositoryVars.mainTable.rowActions.push({
+                    type            : 'modal',
+                    idPrefix        : 'mtActionSim_',
+                    icon            : 'icon-play',
+                    title           : 'Simulation',
+                    target          : '#mtModalSim'
+                });
+    }
+    if(_representation.showDownloadButtonChecked == "true"){
+        _WebRepositoryVars.mainTable.rowActions.push({
+                    type            : 'link',
+                    idPrefix        : 'mtActionDownload_',
+                    icon            : 'icon-download',
+                    title           : 'Download',
+                    on              : {
+                        click           : ( O, $action, rowIndex, rowData ) => {
+                            window.open( _endpoints.download + rowIndex, '_blank' );
+                        }
+                    }
+                });
+    }
     _appVars = {
             header              : false,
             mainTable           : {
