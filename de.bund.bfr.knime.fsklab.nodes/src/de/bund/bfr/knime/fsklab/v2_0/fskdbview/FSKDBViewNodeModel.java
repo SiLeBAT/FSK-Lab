@@ -214,10 +214,12 @@ public class FSKDBViewNodeModel
       throws InvalidSettingsException {
     m_repositoryLocationSettings.loadSettingsFrom(settings);
     m_maxSelectionNumberSettings.loadSettingsFrom(settings);
-    m_showDownloadSettings.loadSettingsFrom(settings);
-    m_showDetailsSettings.loadSettingsFrom(settings);
-    m_showExecuteSettings.loadSettingsFrom(settings);
-    m_showHeaderSettings.loadSettingsFrom(settings);
+    if(settings.containsKey(KEY_SHOW_DOWNLOAD_BUTTON)) {
+      m_showDownloadSettings.loadSettingsFrom(settings);
+      m_showDetailsSettings.loadSettingsFrom(settings);
+      m_showExecuteSettings.loadSettingsFrom(settings);
+      m_showHeaderSettings.loadSettingsFrom(settings);
+    }
     if(settings.containsKey(SELECTION))
       selectionSettings.loadSettingsFrom(settings);
   }
@@ -229,10 +231,12 @@ public class FSKDBViewNodeModel
   protected void validateSettings(final NodeSettingsRO settings) throws InvalidSettingsException {
     m_repositoryLocationSettings.validateSettings(settings);
     m_maxSelectionNumberSettings.validateSettings(settings);
-    m_showDownloadSettings.validateSettings(settings);
-    m_showDetailsSettings.validateSettings(settings);
-    m_showExecuteSettings.validateSettings(settings);
-    m_showHeaderSettings.validateSettings(settings);
+    if(settings.containsKey(KEY_SHOW_DOWNLOAD_BUTTON)) {
+      m_showDownloadSettings.validateSettings(settings);
+      m_showDetailsSettings.validateSettings(settings);
+      m_showExecuteSettings.validateSettings(settings);
+      m_showHeaderSettings.validateSettings(settings);
+    }
     if(settings.containsKey(SELECTION))
       selectionSettings.validateSettings(settings);
   }
