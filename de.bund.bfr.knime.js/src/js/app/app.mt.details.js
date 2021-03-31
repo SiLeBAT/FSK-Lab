@@ -578,12 +578,23 @@ class APPMTDetails {
 		let modelHandler = null;
 
 		if( modelMetadata ) {
-
 			// get plot image
-			const imgUrl = await _fetchData._blob( _endpoints.image, modelMetadata.generalInformation.identifier );// O._app._getImage( modelMetadata.generalInformation.identifier );
-			const modelScript = await _fetchData._content( _endpoints.modelScript, modelId );// O._app._getImage( modelMetadata.generalInformation.identifier );
-			const visScript = await _fetchData._content( _endpoints.visScript, modelId );// O._app._getImage( modelMetadata.generalInformation.identifier );
-			// get appropiate modelMetadata modelHandler for the model type.
+            
+            let imgUrl = await _fetchData._blob( _endpoints.image, modelMetadata.generalInformation.identifier );// O._app._getImage( modelMetadata.generalInformation.identifier );
+            let modelScript;
+            let visScript;
+			if(!modelMetadata.modelscript){
+               modelScript = await _fetchData._content( _endpoints.modelScript, modelId );// O._app._getImage( modelMetadata.generalInformation.identifier );
+            }else{
+               modelScript = modelMetadata.modelscript;
+            }
+            if(!modelMetadata.visualization){
+               visScript = await _fetchData._content( _endpoints.visScript, modelId );// O._app._getImage( modelMetadata.generalInformation.identifier );
+            }else{
+               visScript = modelMetadata.visualization;
+            }
+            
+            // get appropiate modelMetadata modelHandler for the model type.
 			if ( modelMetadata.modelType === 'genericModel' ) {
 				modelHandler = new GenericModel( modelMetadata, imgUrl, false,  modelScript, visScript );
 			}

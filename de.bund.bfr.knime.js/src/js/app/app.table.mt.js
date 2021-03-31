@@ -7,7 +7,7 @@ date: 06.12.2020
 */
 
 class APPTableMT extends APPTable {
-	constructor ( settings, $container, metadata ) {
+	constructor ( settings, $container, metadata, uploadDates, executionTimes ) {
 		// defaults maintable
 		let tableSettings = $.extend( true, {}, {
 			classes 		: 'table-main',
@@ -27,7 +27,7 @@ class APPTableMT extends APPTable {
 				updateFilter	: null
 			}
 		}, settings );
-		super( tableSettings, $container, metadata );
+		super( tableSettings, $container, metadata, uploadDates, executionTimes  );
 		
 	}
 
@@ -134,7 +134,6 @@ class APPTableMT extends APPTable {
 		rowData.el.find('td[data-label="Model"]' ).html( modelName );
 		let software = O._getData( modelMetadata, 'generalInformation', 'software' );
 		rowData.el.find('td[data-label="Software"]' ).html( software );
-		console.log('_refresh',rowData );
 		let environment = O._getScopeData( modelMetadata, 'scope', 'product', 'productName' );
 		rowData.el.find('td[data-label="Environment"]' ).html( environment );
 		let hazard = O._getScopeData( modelMetadata, 'scope', 'hazard', 'hazardName' );
@@ -168,13 +167,11 @@ class APPTableMT extends APPTable {
 		O._uploadDates = await _fetchData._array( window._endpoints.uploadDate, O._metadata.length ); //O._app._getUploadDates( window._endpoints.uploadDate, O._metadata.length );
 		O._executionTimes = await _fetchData._array( window._endpoints.executionTime, O._metadata.length ); //O._app._getExecutionTimes( window._endpoints.executionTime, O._metadata.length );
 
-
 		_log( O._tableData );
 	}
 	async _prepareDataTable(){
 		_log( 'TABLE MAIN / _prepareDataTable', 'primary' );
 		let O = this;
-		console.log( O._metadata);
 		// prepare table data
 		O._tableData = [];
 

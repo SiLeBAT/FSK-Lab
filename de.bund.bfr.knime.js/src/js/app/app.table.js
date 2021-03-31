@@ -7,7 +7,7 @@ date: 07.12.2020
 */
 
 class APPTable {
-	constructor(settings, $container, metadata) {
+	constructor(settings, $container, metadata, uploadDates, executionTimes) {
 		let O = this;
 		O._$container = $container;
 		O._$wrapper = null;
@@ -36,6 +36,8 @@ class APPTable {
 			}
 		}, settings);
 		O._metadata = metadata;
+        O._uploadDates = uploadDates;
+        O._executionTimes = executionTimes;
 		// basic init actions
 		O._create();
 
