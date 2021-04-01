@@ -315,43 +315,65 @@ fskdbview = function () {
                     _log( O );
                     _log( tableData );
                 },
-                selectRow: (O, rowIndex, rowData) => {
-                    if (window.selectedModels.length >= _representation.maxSelectionNumber) {
-                        $(this).prop("checked", false);
-                        return;
-                    }
-                    this.checked = true;
-                    $(this).closest("tr").css("background-color", "#e1e3e8");
-                    //fetch scripts
-                    window.selectedModels.push(rowData.modelMetadata);
-                    _value.selection.push(_representation.table.rows[rowIndex].rowKey);
+                selectRow       : ( O, rowIndex, rowData ) => {
+                            if (window.selectedModels.length >= _representation.maxSelectionNumber) {
+                                $(this).prop("checked", false);
+                                return;
+                            }
+                            this.checked = true;
+                            $(this).closest("tr").css("background-color", "#e1e3e8");
+                            //fetch scripts
+                            const modelscript =  fetch(window._endpoints.modelscriptEndpoint + rowIndex);
+                            modelscript.then(function(response) {
+                                return response.text();
+                            }).then(function(data) {
+                                _representation.metadata[rowIndex]['modelscript'] = data; // this will be a string
+                                const visualizationscript =  fetch(window._endpoints.visualizationscriptEndpoint + rowIndex);
+                                visualizationscript.then(function(responsevis) {
+                                    return responsevis.text();
+                                }).then(function(datavis) {
+                                    _representation.metadata[rowIndex]['visualization'] = datavis; // this will be a string
+                                    // save selected model
+                                    selectionMap[rowIndex] = window.selectedModels.length;
+                                    window.selectedModels.push(_representation.metadata[rowIndex]);
+                                    _value.selection.push(_representation.table.rows[rowIndex].rowKey);
+                                    // emit selection event
+                                    window.downloadURs.push(window._endpoints.download+rowIndex);
+                                    knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c21joiner' ,
+                                            [{"selecteModels":window.selectedModels, "downloadURs":window.downloadURs}]
+                                    /* [window.selectedModels,window.downloadURs]*/,{elements:[]}) 
+                                    console.log('xxxxxxxxxxxxxxxx',window.selectedModels); 
+                                });
+                            });
+                        
 
-
-
-                },
-                deselectRow: (O, rowIndex, rowData) => {
-                    _log('on > deselectRow', 'hook'); // example hook output
-                    _log(O);
-                    _log(rowIndex);
-                    _log(rowData);
-                    this.checked = false;
-                    $(this).closest("tr").css("background-color", "transparent");
-                    
-                    //filter out the model if the Checkbox is unchecked
-                    window.selectedModels = window.selectedModels.filter(function (value, index, arr) {
-                        let selectedModelID = getData(_representation.metadata[rowIndex], "generalInformation", "identifier")
-                        let currentModelId = getData(value, "generalInformation", "identifier");
-                        return selectedModelID != currentModelId;
-                    });
-                    
-                    _value.selection = _value.selection.filter(function (value, index, arr) {
-                        let indexToBeSelected = value.replace("Row","").replace("#","");
-                        return indexToBeSelected != rowIndex;
-                    }); 
-                    knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c21joiner' ,
-                            [{"selecteModels":window.selectedModels, "downloadURs":window.downloadURs}],{elements:[]});
-                    delete selectionMap[rowIndex];
-                },
+                        
+                    },
+                    deselectRow     : ( O, rowIndex, rowData ) => {
+                        _log( 'on > deselectRow', 'hook' ); 
+                        _log( O );
+                        _log( rowIndex );
+                        _log( rowData );
+                        
+                        this.checked = false;
+                        $(this).closest("tr").css("background-color", "transparent");
+                        
+                        //filter out the model if the Checkbox is unchecked
+                        window.selectedModels = window.selectedModels.filter(function (value, index, arr) {
+                            let selectedModelID = getData(_representation.metadata[rowIndex], "generalInformation", "identifier")
+                            let currentModelId = getData(value, "generalInformation", "identifier");
+                            return selectedModelID != currentModelId;
+                        });
+                        
+                        _value.selection = _value.selection.filter(function (value, index, arr) {
+                            let indexToBeSelected = value.replace("Row","").replace("#","");
+                            return indexToBeSelected != rowIndex;
+                        }); 
+                        knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c21joiner' ,
+                                [{"selecteModels":window.selectedModels, "downloadURs":window.downloadURs}],{elements:[]});
+                        delete selectionMap[rowIndex];
+                          
+                    },
                 updateFilter    : ( O, filtered ) => {
                     _log( 'on > updateFilter', 'hook' ); // example hook output
                     _log( O );
