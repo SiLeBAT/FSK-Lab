@@ -150,21 +150,24 @@ class APPSimulation {
 			} );	
 
 		// col divider
-		$( '<div class="col-divider ml-auto ml-xs-0"></div>' )
-			.appendTo( O._$simSelectActions );
+		
+        if(!window.noExecution){
+            $( '<div class="col-divider ml-auto ml-xs-0"></div>' )
+            .appendTo( O._$simSelectActions );
 
-		// action group 2
-		let $actionGroup2 = $( '<div class="col-auto sim-select-actions-group"></div>' )
-			.appendTo( O._$simSelectActions );
-
-		O._$simActionRun = $( '<button type="button" class="btn btn-icon btn-outline-light ml-1"><i class="feather icon-play"></i></button>' )
-			.attr( 'id', 'simActionRun' )
-			.attr( 'data-tooltip', '' )
-			.attr( 'title', 'Run simulation' )
-			.appendTo( $actionGroup2 )
-			.on( 'click', ( event ) => {
-				O._runModelView();
-			} );
+            // action group 2
+            let $actionGroup2 = $( '<div class="col-auto sim-select-actions-group"></div>' )
+            .appendTo( O._$simSelectActions );
+            
+    		O._$simActionRun = $( '<button type="button" class="btn btn-icon btn-outline-light ml-1"><i class="feather icon-play"></i></button>' )
+    			.attr( 'id', 'simActionRun' )
+    			.attr( 'data-tooltip', '' )
+    			.attr( 'title', 'Run simulation' )
+    			.appendTo( $actionGroup2 )
+    			.on( 'click', ( event ) => {
+    				O._runModelView();
+    			} );
+        }
 
 		O._$simSelectActions
 			.wrapInner( '<div class="row justify-content-end align-items-center"></div>' );

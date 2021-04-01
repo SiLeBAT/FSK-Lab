@@ -79,9 +79,13 @@ fskdbview = function () {
         $(document).ready(() => {
             let rootDiv = $('<div />').appendTo('body');
             
-            if(_representation.showHeaderButtonChecked == "true"){
+            if(_representation.showHeaderButtonChecked == "true" && _representation.table && _representation.table.rows && _representation.table.rows.length > 0){
+                _app = new APPLandingpage(_WebRepositoryVars, rootDiv);
+            }
+            else if(_representation.showHeaderButtonChecked == "true" && !_representation.table ){
                 _app = new APPLandingpage(_WebRepositoryVars, rootDiv, metadata, uploadDates, executionTimes);
-            }else{
+            }
+            else{
                 _app = new APPLandingpage(_appVars, rootDiv, metadata);
             }
         });
