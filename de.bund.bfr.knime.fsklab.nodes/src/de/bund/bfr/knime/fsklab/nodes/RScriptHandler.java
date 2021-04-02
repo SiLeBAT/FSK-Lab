@@ -19,7 +19,7 @@ import de.bund.bfr.knime.fsklab.nodes.plot.Ggplot2Plotter;
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
 import de.bund.bfr.knime.fsklab.r.client.LibRegistry;
 import de.bund.bfr.knime.fsklab.r.client.RController;
-import de.bund.bfr.knime.fsklab.r.client.RprofileManager;
+import de.bund.bfr.knime.fsklab.r.client.RManager;
 import de.bund.bfr.knime.fsklab.r.client.ScriptExecutor;
 import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
 import de.bund.bfr.knime.fsklab.v2_0.FskSimulation;
@@ -38,7 +38,7 @@ public class RScriptHandler extends ScriptHandler {
   }
 
   public RScriptHandler(List<String> packages) throws RException, IOException {
-    RprofileManager.subscribe();
+    RManager.subscribe();
     this.controller = new RController();
     this.executor = new ScriptExecutor(controller);
 
@@ -56,7 +56,9 @@ public class RScriptHandler extends ScriptHandler {
 
   @Override
   public String[] runScript(String script, ExecutionContext exec, Boolean showErrors)
-      throws RException, CanceledExecutionException, InterruptedException, REXPMismatchException {
+      throws RException, CanceledExecutionException, InterruptedException, REXPMismatchException, IOException {
+    REXP c1 = executor.execute(" Sys.getpid()", exec);
+    RManager.storeExecutorProcessID(this.executor.hashCode() ,c1.asString());
     if (showErrors) {
       REXP c = executor.execute(script, exec);
       String[] execResult = c.asStrings();
@@ -206,7 +208,7 @@ public class RScriptHandler extends ScriptHandler {
   @Override
   public void close() throws Exception {
     controller.close();
-    RprofileManager.unSubscribe();
+    RManager.unSubscribe(this.executor.hashCode());
 
   }
 
