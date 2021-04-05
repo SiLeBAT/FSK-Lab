@@ -14,4 +14,5 @@ window._endpoints 	= {
 	controlledVocabularyEndpoint:'https://knime.bfr.berlin/'
 };
 window._debug = true;
+window.noExecution = true;
 window.editEventBus = new EventObserver();

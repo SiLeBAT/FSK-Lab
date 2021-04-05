@@ -39,10 +39,19 @@ import org.knime.core.node.workflow.FlowVariable;
  * 
  */
 public class FSKDBViewNodeDialog extends DefaultNodeSettingsPane {
-  DialogComponentString repository ;
+  DialogComponentString repository;
   DialogComponentNumber maxSelectionNumber;
+  DialogComponentString showDownloadButton;
+  DialogComponentString showDetailsButton;
+  DialogComponentString showExecuteButton;
+  DialogComponentString showHeader;
+  DialogComponentString sandwichList;
+  DialogComponentString title;
+
+
+
   protected FSKDBViewNodeDialog() {
-    
+
     /*
      * The DefaultNodeSettingsPane provides methods to add simple standard components to the dialog
      * pane via the addDialogComponent(...) method.
@@ -55,31 +64,96 @@ public class FSKDBViewNodeDialog extends DefaultNodeSettingsPane {
     FlowVariableModel maxSelectionNumberVariable =
         createFlowVariableModel(FSKDBViewNodeModel.MAX_SELECTION_NUMBER, FlowVariable.Type.INTEGER);
 
+    FlowVariableModel showDownloadVariable = createFlowVariableModel(
+        FSKDBViewNodeModel.KEY_SHOW_DOWNLOAD_BUTTON, FlowVariable.Type.STRING);
+    FlowVariableModel showDetailsVariable = createFlowVariableModel(
+        FSKDBViewNodeModel.KEY_SHOW_DETAILS_BUTTON, FlowVariable.Type.STRING);
+    FlowVariableModel showExecuteVariable = createFlowVariableModel(
+        FSKDBViewNodeModel.KEY_SHOW_EXECUTE_BUTTON, FlowVariable.Type.STRING);
+    FlowVariableModel showHeaderVariable =
+        createFlowVariableModel(FSKDBViewNodeModel.KEY_SHOW_HEADER, FlowVariable.Type.STRING);
+
+    FlowVariableModel sandwichListVariable =
+        createFlowVariableModel(FSKDBViewNodeModel.KEY_SANDWICH_LIST, FlowVariable.Type.STRING);
+    FlowVariableModel titleVariable =
+        createFlowVariableModel(FSKDBViewNodeModel.KEY_TITLE, FlowVariable.Type.STRING);
+
+
     // Add a new String component to the dialog for Repository URL.
     SettingsModelString m_repositoryLocationSettings =
         FSKDBViewNodeModel.createRepositoryLocationSettingsModel();
-    repository =  new DialogComponentString(m_repositoryLocationSettings,
-        "Repository URL", true, 30, repositoryVariable);
+    repository = new DialogComponentString(m_repositoryLocationSettings, "Repository URL", true, 30,
+        repositoryVariable);
     addDialogComponent(repository);
-    
     // Add a new Number component to the dialog for the number of models allowed to be selected.
     SettingsModelNumber m_maxSelectionNumberSettings =
         FSKDBViewNodeModel.createMaxSelectionNumberSettingsModel();
     maxSelectionNumber = new DialogComponentNumber(m_maxSelectionNumberSettings,
         "Max Selection Number", 1, maxSelectionNumberVariable);
     addDialogComponent(maxSelectionNumber);
+
+    SettingsModelString m_TitleSettings = FSKDBViewNodeModel.createTitleSettingsModel();
+    title = new DialogComponentString(m_TitleSettings, "Repository Title", true, 30, titleVariable);
+    addDialogComponent(title);
+
+    SettingsModelString m_SandwichListSettings =
+        FSKDBViewNodeModel.createSandwichListnSettingsModel();
+    sandwichList = new DialogComponentString(m_SandwichListSettings, "Sandwich Info", true, 30,
+        sandwichListVariable);
+    addDialogComponent(sandwichList);
+
+    SettingsModelString m_showDownloadButtonSettings =
+        FSKDBViewNodeModel.createShowDownloadButtonSettingsModel();
+    showDownloadButton = new DialogComponentString(m_showDownloadButtonSettings,
+        "Show Download Button", true, 30, showDownloadVariable);
+    addDialogComponent(showDownloadButton);
+
+    SettingsModelString m_showDetailsButtonSettings =
+        FSKDBViewNodeModel.createShowDetailsButtonSettingsModel();
+    showDetailsButton = new DialogComponentString(m_showDetailsButtonSettings,
+        "Show Details Button", true, 30, showDetailsVariable);
+    addDialogComponent(showDetailsButton);
+
+    SettingsModelString m_showExecuteButtonSettings =
+        FSKDBViewNodeModel.createShowExecuteButtonSettingsModel();
+    showExecuteButton = new DialogComponentString(m_showExecuteButtonSettings,
+        "Show Execute Button", true, 30, showExecuteVariable);
+    addDialogComponent(showExecuteButton);
+
+    SettingsModelString m_showHeaderButtonSettings =
+        FSKDBViewNodeModel.createShowHeaderButtonSettingsModel();
+    showHeader = new DialogComponentString(m_showHeaderButtonSettings, "Show Header Button", true,
+        30, showHeaderVariable);
+    addDialogComponent(showHeader);
+
+
   }
+
   @Override
   public void saveAdditionalSettingsTo(final NodeSettingsWO settings)
       throws InvalidSettingsException {
     repository.saveSettingsTo(settings);
     maxSelectionNumber.saveSettingsTo(settings);
+    showDownloadButton.saveSettingsTo(settings);
+    showDetailsButton.saveSettingsTo(settings);
+    showExecuteButton.saveSettingsTo(settings);
+    showHeader.saveSettingsTo(settings);
+    title.saveSettingsTo(settings);
+    sandwichList.saveSettingsTo(settings);
   }
-  
-  public void loadAdditionalSettingsFrom(final NodeSettingsRO settings,
-      final DataTableSpec[] specs) throws NotConfigurableException {
+
+  public void loadAdditionalSettingsFrom(final NodeSettingsRO settings, final DataTableSpec[] specs)
+      throws NotConfigurableException {
     repository.loadSettingsFrom(settings, specs);
     maxSelectionNumber.loadSettingsFrom(settings, specs);
-    
+    if (settings.containsKey(FSKDBViewNodeModel.KEY_SHOW_DOWNLOAD_BUTTON)) {
+      showDownloadButton.loadSettingsFrom(settings, specs);
+      showDetailsButton.loadSettingsFrom(settings, specs);
+      showExecuteButton.loadSettingsFrom(settings, specs);
+      showHeader.loadSettingsFrom(settings, specs);
+      title.loadSettingsFrom(settings, specs);
+      sandwichList.loadSettingsFrom(settings, specs);
+    }
+
   }
 }

@@ -20,6 +20,7 @@ package de.bund.bfr.knime.fsklab.v2_0.fskdbview;
 
 import java.util.Arrays;
 import java.util.List;
+import org.json.JSONArray;
 import org.knime.core.data.DataCell;
 import org.knime.core.data.DataRow;
 import org.knime.core.data.DataTable;
@@ -42,6 +43,7 @@ import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.defaultnodesettings.SettingsModelStringArray;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortType;
+import org.knime.core.node.util.CheckUtils;
 import org.knime.core.node.web.ValidationError;
 import org.knime.js.core.JSONDataTable;
 import org.knime.js.core.JSONDataTable.JSONDataTableRow;
@@ -78,6 +80,12 @@ public class FSKDBViewNodeModel
    * the dialog.
    */
   static final String KEY_REPOSITORY_LOCATION = "repository_location";
+  static final String KEY_SHOW_DOWNLOAD_BUTTON = "download_button";
+  static final String KEY_SHOW_DETAILS_BUTTON = "details_button";
+  static final String KEY_SHOW_EXECUTE_BUTTON = "execute_button";
+  static final String KEY_SHOW_HEADER = "header";
+  static final String KEY_SANDWICH_LIST = "sandwichList";
+  static final String KEY_TITLE = "tilte";
 
   /**
    * The default online repository URL String.
@@ -94,8 +102,9 @@ public class FSKDBViewNodeModel
    * at the comments in the constructor of the {@link FSKDBViewNodeDialog} as the settings models
    * are also used to create simple dialogs.
    */
-  SettingsModelString m_repositoryLocationSettings =
-      createRepositoryLocationSettingsModel();
+  SettingsModelString m_repositoryLocationSettings = createRepositoryLocationSettingsModel();
+  SettingsModelString m_TitleSettings = createTitleSettingsModel();
+  SettingsModelString m_SandwichListSettings = createSandwichListnSettingsModel();
 
 
   /**
@@ -132,11 +141,14 @@ public class FSKDBViewNodeModel
    * selected is a number. Also have a look at the comments in the constructor of the
    * {@link FSKDBViewNodeDialog} as the settings models are also used to create simple dialogs.
    */
-  SettingsModelNumber m_maxSelectionNumberSettings =
-      createMaxSelectionNumberSettingsModel();
-  
-  final SettingsModelStringArray selectionSettings =
-      createSelectionSettingsModel();
+  SettingsModelNumber m_maxSelectionNumberSettings = createMaxSelectionNumberSettingsModel();
+
+  SettingsModelString m_showDownloadSettings = createShowDownloadButtonSettingsModel();
+  SettingsModelString m_showDetailsSettings = createShowDetailsButtonSettingsModel();
+  SettingsModelString m_showExecuteSettings = createShowExecuteButtonSettingsModel();
+  SettingsModelString m_showHeaderSettings = createShowHeaderButtonSettingsModel();
+
+  final SettingsModelStringArray selectionSettings = createSelectionSettingsModel();
 
 
   /**
@@ -152,9 +164,34 @@ public class FSKDBViewNodeModel
     return new SettingsModelIntegerBounded(MAX_SELECTION_NUMBER, DEFAULT_MAX_SELECTION_NUMBER, 2,
         4);
   }
-  
+
+  static SettingsModelString createShowDownloadButtonSettingsModel() {
+    return new SettingsModelString(KEY_SHOW_DOWNLOAD_BUTTON, "false");
+  }
+
+  static SettingsModelString createShowExecuteButtonSettingsModel() {
+    return new SettingsModelString(KEY_SHOW_EXECUTE_BUTTON, "false");
+  }
+
+  static SettingsModelString createShowDetailsButtonSettingsModel() {
+    return new SettingsModelString(KEY_SHOW_DETAILS_BUTTON, "false");
+  }
+
+  static SettingsModelString createShowHeaderButtonSettingsModel() {
+    return new SettingsModelString(KEY_SHOW_HEADER, "false");
+  }
+
   static SettingsModelStringArray createSelectionSettingsModel() {
-    return new SettingsModelStringArray(SELECTION, new String[0])  ;
+    return new SettingsModelStringArray(SELECTION, new String[0]);
+  }
+
+  static SettingsModelString createSandwichListnSettingsModel() {
+    return new SettingsModelString(KEY_SANDWICH_LIST,
+        "[{\"title\":\"RAKIP Model Repository (login)\",\"href\":\"https://knime.bfr.berlin/knime/#/RAKIP-Web/7._FSK_Repository_Model_Runner&run\"},{\"title\":\"Infos\",\"href\":\"#\"},{\"title\":\"Imprint\",\"href\":\"#\"},{\"title\":\"Privacy Policy\",\"href\":\"#\"}]");
+  }
+
+  static SettingsModelString createTitleSettingsModel() {
+    return new SettingsModelString(KEY_TITLE, "FSK-Web Landing Page");
   }
 
   /**
@@ -163,11 +200,18 @@ public class FSKDBViewNodeModel
   @Override
   protected void saveSettingsTo(final NodeSettingsWO settings) {
     m_repositoryLocationSettings.saveSettingsTo(settings);
+    m_SandwichListSettings.saveSettingsTo(settings);
+    m_TitleSettings.saveSettingsTo(settings);
     m_maxSelectionNumberSettings.saveSettingsTo(settings);
+    m_showDownloadSettings.saveSettingsTo(settings);
+    m_showDetailsSettings.saveSettingsTo(settings);
+    m_showExecuteSettings.saveSettingsTo(settings);
+    m_showHeaderSettings.saveSettingsTo(settings);
     FSKDBViewValue viewValue = getViewValue();
-    if (viewValue != null && viewValue.getSelection() != null && viewValue.getSelection().length > 0) {
+    if (viewValue != null && viewValue.getSelection() != null
+        && viewValue.getSelection().length > 0) {
       selectionSettings.setStringArrayValue(viewValue.getSelection());
-      
+
     }
     selectionSettings.saveSettingsTo(settings);
   }
@@ -180,7 +224,15 @@ public class FSKDBViewNodeModel
       throws InvalidSettingsException {
     m_repositoryLocationSettings.loadSettingsFrom(settings);
     m_maxSelectionNumberSettings.loadSettingsFrom(settings);
-    if(settings.containsKey(SELECTION))
+    if (settings.containsKey(KEY_SHOW_DOWNLOAD_BUTTON)) {
+      m_showDownloadSettings.loadSettingsFrom(settings);
+      m_showDetailsSettings.loadSettingsFrom(settings);
+      m_showExecuteSettings.loadSettingsFrom(settings);
+      m_showHeaderSettings.loadSettingsFrom(settings);
+      m_SandwichListSettings.loadSettingsFrom(settings);
+      m_TitleSettings.loadSettingsFrom(settings);
+    }
+    if (settings.containsKey(SELECTION))
       selectionSettings.loadSettingsFrom(settings);
   }
 
@@ -191,7 +243,35 @@ public class FSKDBViewNodeModel
   protected void validateSettings(final NodeSettingsRO settings) throws InvalidSettingsException {
     m_repositoryLocationSettings.validateSettings(settings);
     m_maxSelectionNumberSettings.validateSettings(settings);
-    if(settings.containsKey(SELECTION))
+    if (settings.containsKey(KEY_SHOW_DOWNLOAD_BUTTON)) {
+      CheckUtils.checkState(
+          settings.getString(KEY_SHOW_DOWNLOAD_BUTTON).equalsIgnoreCase("true")
+              || settings.getString(KEY_SHOW_DOWNLOAD_BUTTON).equalsIgnoreCase("false"),
+          "Only Boolean Values are allowed for show Download Button");
+      CheckUtils.checkState(
+          settings.getString(KEY_SHOW_DETAILS_BUTTON).equalsIgnoreCase("true")
+              || settings.getString(KEY_SHOW_DETAILS_BUTTON).equalsIgnoreCase("false"),
+          "Only Boolean Values are allowed for show Details Button");
+      CheckUtils.checkState(
+          settings.getString(KEY_SHOW_EXECUTE_BUTTON).equalsIgnoreCase("true")
+              || settings.getString(KEY_SHOW_EXECUTE_BUTTON).equalsIgnoreCase("false"),
+          "Only Boolean Values are allowed for show Execute Button");
+      CheckUtils.checkState(
+          settings.getString(KEY_SHOW_HEADER).equalsIgnoreCase("true")
+              || settings.getString(KEY_SHOW_HEADER).equalsIgnoreCase("false"),
+          "Only Boolean Values are allowed for show Header Button");
+      boolean isSandwichListValid = false;
+      try {
+
+        new JSONArray(settings.getString(KEY_SANDWICH_LIST));
+      } catch (Exception ex) {
+        isSandwichListValid = true;
+      }
+      CheckUtils.checkState(isSandwichListValid == false, "Sandich List is not a valid JSON Array");
+      m_SandwichListSettings.validateSettings(settings);
+      m_TitleSettings.validateSettings(settings);
+    }
+    if (settings.containsKey(SELECTION))
       selectionSettings.validateSettings(settings);
   }
 
@@ -204,14 +284,14 @@ public class FSKDBViewNodeModel
         representation = createEmptyViewRepresentation();
       }
     }
-    representation.setSelection(
-        ((SettingsModelStringArray) selectionSettings).getStringArrayValue());
-    if(representation.getTable() == null) {
+    representation
+        .setSelection(((SettingsModelStringArray) selectionSettings).getStringArrayValue());
+    if (representation.getTable() == null) {
       representation.setTable(emptyJSONTable);
     }
     return representation;
   }
-  
+
   @Override
   public FSKDBViewRepresentation createEmptyViewRepresentation() {
     return new FSKDBViewRepresentation();
@@ -279,12 +359,23 @@ public class FSKDBViewNodeModel
     synchronized (getLock()) {
       FSKDBViewRepresentation representation = getViewRepresentation();
       representation.setRemoteRepositoryURL(m_repositoryLocationSettings.getStringValue());
+      representation.setSandwichList(m_SandwichListSettings.getStringValue());
+      representation.setTitle(m_TitleSettings.getStringValue());
       representation.setMaxSelectionNumber(
           ((SettingsModelIntegerBounded) m_maxSelectionNumberSettings).getIntValue());
-      representation.setSelection(
-          ((SettingsModelStringArray) selectionSettings).getStringArrayValue());
+      representation.setShowDownloadButtonChecked(
+          ((SettingsModelString) m_showDownloadSettings).getStringValue());
+      representation.setShowDetailsButtonChecked(
+          ((SettingsModelString) m_showDetailsSettings).getStringValue());
+      representation.setShowExecuteButtonChecked(
+          ((SettingsModelString) m_showExecuteSettings).getStringValue());
+      representation.setShowHeaderButtonChecked(
+          ((SettingsModelString) m_showHeaderSettings).getStringValue());
+      representation
+          .setSelection(((SettingsModelStringArray) selectionSettings).getStringArrayValue());
       FSKDBViewValue fskdbViewValue = getViewValue();
-      if (fskdbViewValue != null && fskdbViewValue.getSelection() != null && fskdbViewValue.getSelection().length > 0) {
+      if (fskdbViewValue != null && fskdbViewValue.getSelection() != null
+          && fskdbViewValue.getSelection().length > 0) {
         selectionSettings.setStringArrayValue(fskdbViewValue.getSelection());
       }
       if (fskdbViewValue.getTable() != null) {

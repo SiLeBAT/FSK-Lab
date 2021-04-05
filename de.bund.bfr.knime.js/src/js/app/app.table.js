@@ -7,7 +7,7 @@ date: 07.12.2020
 */
 
 class APPTable {
-	constructor(settings, $container, metadata) {
+	constructor(settings, $container, metadata, uploadDates, executionTimes) {
 		let O = this;
 		O._$container = $container;
 		O._$wrapper = null;
@@ -36,6 +36,8 @@ class APPTable {
 			}
 		}, settings);
 		O._metadata = metadata;
+        O._uploadDates = uploadDates;
+        O._executionTimes = executionTimes;
 		// basic init actions
 		O._create();
 
@@ -132,7 +134,9 @@ class APPTable {
 
 				// create action element
 				let $action = $('<button class="action action-outline-secondary"></button>')
-					.attr('id', action.idPrefix + rowIndex);
+					.attr('id', action.idPrefix + rowIndex)
+                    .attr('hidden', action.hidden )
+                    .attr('role', action.role );
 				// .appendTo( $tdActions );
 
 				// create action icon

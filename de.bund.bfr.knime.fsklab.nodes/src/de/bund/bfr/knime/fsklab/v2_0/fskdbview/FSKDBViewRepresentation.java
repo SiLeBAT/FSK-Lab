@@ -25,7 +25,6 @@ import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.js.core.JSONDataTable;
 import org.knime.js.core.JSONViewContent;
-
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
@@ -40,7 +39,66 @@ public class FSKDBViewRepresentation extends JSONViewContent {
   private JSONDataTable m_table;
   private String m_remoteRepositoryURL;
   private int m_MaxSelectionNumber;
+  private String showDownloadButtonChecked;
+  private String showDetailsButtonChecked;
+  private String showExecuteButtonChecked;
+  private String showHeaderButtonChecked;
+  private String sandwichList;
+
+  public String getShowDownloadButtonChecked() {
+    return showDownloadButtonChecked;
+  }
+
+  public void setShowDownloadButtonChecked(String showDownloadButtonChecked) {
+    this.showDownloadButtonChecked = showDownloadButtonChecked;
+  }
+
+  public String getShowDetailsButtonChecked() {
+    return showDetailsButtonChecked;
+  }
+
+  public void setShowDetailsButtonChecked(String showDetailsButtonChecked) {
+    this.showDetailsButtonChecked = showDetailsButtonChecked;
+  }
+
+  public String getShowExecuteButtonChecked() {
+    return showExecuteButtonChecked;
+  }
+
+  public void setShowExecuteButtonChecked(String showExecuteButtonChecked) {
+    this.showExecuteButtonChecked = showExecuteButtonChecked;
+  }
+
+  public String getShowHeaderButtonChecked() {
+    return showHeaderButtonChecked;
+  }
+
+  public void setShowHeaderButtonChecked(String showHeaderButtonChecked) {
+    this.showHeaderButtonChecked = showHeaderButtonChecked;
+  }
+
+
+
+  public String getSandwichList() {
+    return sandwichList;
+  }
+
+  public void setSandwichList(String sandwichList) {
+    this.sandwichList = sandwichList;
+  }
+
+  public String getTitle() {
+    return title;
+  }
+
+  public void setTitle(String title) {
+    this.title = title;
+  }
+
+  private String title;
+
   private String[] m_selection = {};
+
   public String getTableID() {
     return m_tableID;
   }
@@ -70,7 +128,7 @@ public class FSKDBViewRepresentation extends JSONViewContent {
   public void setRemoteRepositoryURL(String remoteRepositoryURL) {
     this.m_remoteRepositoryURL = remoteRepositoryURL;
   }
-  
+
   public int getMaxSelectionNumber() {
     return m_MaxSelectionNumber;
   }
@@ -78,7 +136,7 @@ public class FSKDBViewRepresentation extends JSONViewContent {
   public void setMaxSelectionNumber(int maxSelctionNumber) {
     this.m_MaxSelectionNumber = maxSelctionNumber;
   }
-  
+
   /**
    * @return the selection
    */
@@ -92,7 +150,7 @@ public class FSKDBViewRepresentation extends JSONViewContent {
   public void setSelection(final String[] selection) {
     m_selection = selection;
   }
-  
+
   /**
    * {@inheritDoc}
    */

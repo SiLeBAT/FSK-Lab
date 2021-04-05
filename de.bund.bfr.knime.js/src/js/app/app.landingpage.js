@@ -7,9 +7,11 @@ date: 04.12.2020
 */
 
 class APPLandingpage {
-	constructor ( settings, $container, metadata ) {
+	constructor ( settings, $container, metadata, uploadDates, executionTimes  ) {
 		let O = this;
 		O._metadata = metadata;
+        O._uploadDates = uploadDates;
+        O._executionTimes = executionTimes;
 		O._$container = $container;
 		O._debug = true;
 		// defaults
@@ -75,7 +77,7 @@ class APPLandingpage {
 					executionTimes 	: O._executionTimes
 				},
 			}, O.opts.mainTable );
-			O._mainTable = new APPTableMT( mtSettings, O._$container, O._metadata );
+			O._mainTable = new APPTableMT( mtSettings, O._$container, O._metadata,O._uploadDates, O._executionTimes  );
 
 			// tooltips
 			_appUI._initTooltips();

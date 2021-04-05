@@ -483,7 +483,7 @@ class APPMTDetails {
 			// title
 			$panel.append( '<div class="panel-heading">'+ menu.label +'</div>' );
 
-			let $plot = $( '<figure class="figure"><img src="'+ modelHandler._img +'" /></figure>' )
+			let $plot = $( '<figure class="figure"><svg width = "100%" height = "1500" >"'+ modelHandler._img +'" </svg></figure>' )
 				.appendTo( $panel )
 				.wrap( '<div class="panel-plot"></div>' );
 
@@ -578,12 +578,22 @@ class APPMTDetails {
 		let modelHandler = null;
 
 		if( modelMetadata ) {
-
 			// get plot image
-			const imgUrl = await _fetchData._blob( _endpoints.image, modelMetadata.generalInformation.identifier );// O._app._getImage( modelMetadata.generalInformation.identifier );
-			const modelScript = await _fetchData._content( _endpoints.modelScript, modelId );// O._app._getImage( modelMetadata.generalInformation.identifier );
-			const visScript = await _fetchData._content( _endpoints.visScript, modelId );// O._app._getImage( modelMetadata.generalInformation.identifier );
-			// get appropiate modelMetadata modelHandler for the model type.
+            //never create a local file via _blob as this will not work for Knime server if used in node
+            let imgUrl = await _fetchData._content( window._endpoints.image , modelMetadata.generalInformation.identifier );// O._app._getImage( modelMetadata.generalInformation.identifier );
+            let modelScript;
+            let visScript;
+			if(!modelMetadata.modelscript && modelMetadata.modelscript!=""){
+               modelScript = await _fetchData._content( window._endpoints.modelscriptEndpoint, modelId );// O._app._getImage( modelMetadata.generalInformation.identifier );
+            }else{
+               modelScript = modelMetadata.modelscript;
+            }
+            if(!modelMetadata.visualization && modelMetadata.visualization!=""){
+               visScript = await _fetchData._content( window._endpoints.visualizationscriptEndpoint, modelId );// O._app._getImage( modelMetadata.generalInformation.identifier );
+            }else{
+               visScript = modelMetadata.visualization;
+            }
+            // get appropiate modelMetadata modelHandler for the model type.
 			if ( modelMetadata.modelType === 'genericModel' ) {
 				modelHandler = new GenericModel( modelMetadata, imgUrl, false,  modelScript, visScript );
 			}
