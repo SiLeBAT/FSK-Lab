@@ -134,7 +134,9 @@ class APPTable {
 
 				// create action element
 				let $action = $('<button class="action action-outline-secondary"></button>')
-					.attr('id', action.idPrefix + rowIndex);
+					.attr('id', action.idPrefix + rowIndex)
+                    .attr('hidden', action.hidden )
+                    .attr('role', action.role );
 				// .appendTo( $tdActions );
 
 				// create action icon

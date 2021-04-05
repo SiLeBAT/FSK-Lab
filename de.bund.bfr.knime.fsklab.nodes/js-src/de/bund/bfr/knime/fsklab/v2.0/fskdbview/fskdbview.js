@@ -18,12 +18,14 @@ fskdbview = function () {
     let uploadDates =[];
     let executionTimes = [];
     let _app;
-
     // These sets are used with the th-filters
     let _lazySriptsfetching = false;
-    
+    let editorAvailable = false;
     let _representation;
     let _value;
+    let initiated = function(){
+        editorAvailable =  true;
+    }
      var selectionEdited = function (modelMetaDatax) {
         if(!modelMetaDatax.changeSet.added)
             return;
@@ -37,8 +39,9 @@ fskdbview = function () {
     }
                                
     view.init = function (representation, value) { 
+        
+        knimeService.subscribeToSelection('b800db46-4e25-4f77-bcc6-db0c21GlobalEditor', initiated);
         _representation = representation;
-        createVars();
         knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c21GlobalInit' , [{"tableID":_representation.tableID}],{elements:[]})
         _value = value;
         parent.tableID = _representation.tableID;
@@ -61,6 +64,7 @@ fskdbview = function () {
             simulationsEndpoint: window._endpoint + "simulations/"
 		};
         createDBViewUI();
+        
     };
     
     view.getComponentValue = function () {
@@ -78,11 +82,20 @@ fskdbview = function () {
         
         $(document).ready(() => {
             let rootDiv = $('<div />').appendTo('body');
-            
-            if(_representation.showHeaderButtonChecked == "true" && _representation.table && _representation.table.rows && _representation.table.rows.length > 0){
+            createVars();
+            let webRepositoryFlag = false;
+            if( _representation.showHeaderButtonChecked == "true" ||
+                _representation.showDetailsButtonChecked == "true" || 
+                _representation.showExecuteButtonChecked == "true" || 
+                _representation.showDownloadButtonChecked == "true" ){
+                    
+                webRepositoryFlag = true;
+                
+            }
+            if(webRepositoryFlag && _representation.table && _representation.table.rows && _representation.table.rows.length > 0){
                 _app = new APPLandingpage(_WebRepositoryVars, rootDiv);
             }
-            else if(_representation.showHeaderButtonChecked == "true" && !_representation.table ){
+            else if(webRepositoryFlag && !_representation.table ){
                 _app = new APPLandingpage(_WebRepositoryVars, rootDiv, metadata, uploadDates, executionTimes);
             }
             else{
@@ -165,7 +178,6 @@ fskdbview = function () {
        _WebRepositoryVars = {
         header          : {
             brand           : {
-                logo            : 'js-lib/bfr/fskapp/img/RAKIP_logo.jpg' , // or  'js-lib/bfr/fskapp/img/bfr_logo.gif'
                 title           : _representation.title // false or ''
             },
             nav             : $.parseJSON(_representation.sandwichList)
@@ -314,6 +326,20 @@ fskdbview = function () {
                     _log( 'on > afterPopulate', 'hook' ); // example hook output
                     _log( O );
                     _log( tableData );
+                    if(editorAvailable){
+                        $('button[role="mtActionEdit"]').each(function() {
+                            // `this` is the div
+                            $(this).attr('hidden',false );
+                        });
+                        $('button[role="mtActionDetails"]').each(function() {
+                            // `this` is the div
+                            $(this).attr('hidden',true );
+                        });
+                        $('button[role="mtActionSim"]').each(function() {
+                            // `this` is the div
+                            $(this).attr('hidden',true );
+                        });
+                    }
                 },
                 selectRow       : ( O, rowIndex, rowData ) => {
                             if (window.selectedModels.length >= _representation.maxSelectionNumber) {
@@ -342,7 +368,6 @@ fskdbview = function () {
                                     knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c21joiner' ,
                                             [{"selecteModels":window.selectedModels, "downloadURs":window.downloadURs}]
                                     /* [window.selectedModels,window.downloadURs]*/,{elements:[]}) 
-                                    console.log('xxxxxxxxxxxxxxxx',window.selectedModels); 
                                 });
                             });
                         
@@ -382,12 +407,15 @@ fskdbview = function () {
             }
         }
     };
-    
+    if(_representation.showHeaderButtonChecked == "true"){
+        _WebRepositoryVars.header.brand.logo = 'js-lib/bfr/fskapp/img/RAKIP_logo.jpg' ; // or  'js-lib/bfr/fskapp/img/bfr_logo.gif'
+    }
     
     if(_representation.showDetailsButtonChecked == "true"){
         _WebRepositoryVars.mainTable.rowActions.push({
                     type            : 'modal',
                     idPrefix        : 'mtActionDetails_',
+                    role            : "mtActionDetails",
                     icon            : 'icon-eye',
                     title           : 'Details',
                     target          : '#mtModalDetails'
@@ -397,24 +425,68 @@ fskdbview = function () {
         _WebRepositoryVars.mainTable.rowActions.push({
                     type            : 'modal',
                     idPrefix        : 'mtActionSim_',
+                    role            : "mtActionSim",
                     icon            : 'icon-play',
                     title           : 'Simulation',
                     target          : '#mtModalSim'
                 });
     }
-    if(_representation.showDownloadButtonChecked == "true"){
+    if (_representation.showDownloadButtonChecked == "true") {
         _WebRepositoryVars.mainTable.rowActions.push({
-                    type            : 'link',
-                    idPrefix        : 'mtActionDownload_',
-                    icon            : 'icon-download',
-                    title           : 'Download',
-                    on              : {
-                        click           : ( O, $action, rowIndex, rowData ) => {
-                            window.open( _endpoints.download + rowIndex, '_blank' );
-                        }
-                    }
-                });
+            type: 'link',
+            idPrefix: 'mtActionDownload_',
+            icon: 'icon-download',
+            title: 'Download',
+            on: {
+                click: (O, $action, rowIndex, rowData) => {
+                    window.open(_endpoints.download + rowIndex, '_blank');
+                }
+            }
+        });
     }
+
+
+    _WebRepositoryVars.mainTable.rowActions.push({
+        type: 'link',
+        idPrefix: 'mtActionEdit_',
+        role: "mtActionEdit",
+        icon: 'icon-edit-2',
+        hidden: true,
+        title: 'Edit',
+        on: {
+            click: (O, $action, modelIndex, rowData) => {
+                _log('on > clickEdit', 'hook');
+                _log(O);
+                _log($action);
+                _log(modelIndex);
+                _log(rowData);
+                selectedModelIndex = modelIndex;
+                // emit selection event
+                let selectedModel = rowData.modelMetadata;
+                //fetch scripts
+                if (_lazySriptsfetching) {
+                    const modelscript = fetch(window._endpoints.modelscriptEndpoint + modelIndex);
+                    modelscript.then(function(response) {
+                        return response.text();
+                    }).then(function(data) {
+                        selectedModel['modelscript'] = data; // this will be a string
+                        const visualizationscript = fetch(window._endpoints.visualizationscriptEndpoint + modelIndex);
+                        visualizationscript.then(function(responsevis) {
+                            return responsevis.text();
+                        }).then(function(datavis) {
+                            selectedModel['visualization'] = datavis; // this will be a string
+                            knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c215846e1', [selectedModel], { elements: [] })
+                        });
+                    });
+
+                } else {
+                    knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c215846e1', [selectedModel], { elements: [] })
+                }
+            }
+        }
+    });
+    
+    
     _appVars = {
             header              : false,
             mainTable           : {

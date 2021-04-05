@@ -30,12 +30,6 @@ fskeditorjs = function () {
     _visualizationCodeMirror.setValue(selectedModel.visualization);
 
   }
-  let initiated = function(event){
-    //if(parent.tableID){
-    //  $('#saveButton').show();
-    //}
-  }
-  
   
   let doSave = function(_metadatax){
     console.log(_metadatax);
@@ -60,9 +54,10 @@ fskeditorjs = function () {
     knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c21EditorSaved' , [],{elements:[]}) 
   }
   view.init = function (representation, value) {
+    knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c21GlobalEditor' , [{"editorAvailable":true}],{elements:[]})
+    
     //subscribe to events emitted by FSK DB View
     knimeService.subscribeToSelection('b800db46-4e25-4f77-bcc6-db0c215846e1', selectionChanged);
-    knimeService.subscribeToSelection('b800db46-4e25-4f77-bcc6-db0c21GlobalInit', initiated);
     
     _rep = representation;
     _val = value;
