@@ -18,6 +18,8 @@
  */
 package de.bund.bfr.knime.fsklab.v2_0.reader;
 
+import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
+import de.bund.bfr.knime.fsklab.v2_0.FskPortObjectSpec;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -42,8 +44,6 @@ import org.knime.core.node.workflow.NodeContext;
 import org.knime.core.node.workflow.WorkflowContext;
 import org.knime.core.node.workflow.WorkflowManager;
 import org.knime.core.util.FileUtil;
-import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
-import de.bund.bfr.knime.fsklab.v2_0.FskPortObjectSpec;
 
 
 public class ReaderNodeModel extends NoInternalsModel {
@@ -135,8 +135,10 @@ public class ReaderNodeModel extends NoInternalsModel {
           FileUtil.openStreamWithTimeout(new URL(filePath.getStringValue()), 10000);
           OutputStream outStream = new FileOutputStream(fskxFile)) {
         IOUtils.copy(inStream, outStream);
+        this.pushFlowVariableString("lokalModelPath", "knime://knime.workflow/" + fskxFile.getName());
       }
 
+      
       inObject = ReaderNodeUtil.readArchive(fskxFile);
     }
 
