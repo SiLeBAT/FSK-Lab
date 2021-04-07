@@ -22,4 +22,4 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations;bundle-version="2
 Export-Package: de.bund.bfr.knime.fsklab.service
 Bundle-ClassPath: .,
  spark-core-2.9.1.jar,
- vocabularies-2.0.0.jar
+ vocabularies-2.0.1.jar
