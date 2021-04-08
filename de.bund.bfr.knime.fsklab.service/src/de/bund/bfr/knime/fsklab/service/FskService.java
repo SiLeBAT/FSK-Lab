@@ -333,7 +333,7 @@ public class FskService implements Runnable {
 			Bundle bundle = Platform.getBundle("de.bund.bfr.knime.fsklab.service");
 			
 			File temporaryFile = File.createTempFile("vocabularies", ".jar");
-			URL bundleUrl = bundle.getEntry("/vocabularies-2.0.0.jar");
+			URL bundleUrl = bundle.getEntry("/vocabularies-2.0.2.jar");
 			
 			try {
 				// Extract vocabularies jar from bundle to a temporary file
