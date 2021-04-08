@@ -132,7 +132,7 @@ const ui = {
         "label": "Email",
         "type": "email",
         "description": "The address for eletronic mail communication.",
-        "required": true
+        "required": false
     }, {
         "id": "telephone",
         "label": "Telephone",

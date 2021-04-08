@@ -270,12 +270,15 @@
                 if(!isValid){
                     O.input.$validationContainer.text("required");
                 }
-                // check if mail has correct structure
-                if(isValid && O.type === "email"){
-                    isValid= /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(O.input.val());
-                    O.input.$validationContainer.text("Not a valid email value");
-                }
+                
 
+            }
+			// check if mail has correct structure, provided there is a value
+            if(O.input.val() && O.type === "email"){
+				if(O.input.val().trim()){
+					isValid= /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(O.input.val());
+                	O.input.$validationContainer.text("Not a valid email value");	
+				}
             }
             if (!isValid) {
                 O.input.parents( '.form-group' ).addClass( 'has-error' );
