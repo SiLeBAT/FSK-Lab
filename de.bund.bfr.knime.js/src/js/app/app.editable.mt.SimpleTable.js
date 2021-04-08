@@ -52,7 +52,7 @@ class SimpleTable {
         let input = document.createElement("input");
         input.type = O.type;
         input.className = "form-control";
-        if ($(input).attr('type') === "date" && typeof (value) != "string") {
+        if ($(input).attr('type') === "date" && typeof (value) != "string" && value !== null) {
             let day = ("" + value[2]).length > 1 ? ("" + value[2]) : ("0" + value[2]);
             let month = ("" + value[1]).length > 1 ? ("" + value[1]) : ("0" + value[1]);
             $(input).val(value[0] + "-" + month + "-" + day);
