@@ -372,6 +372,8 @@ joiner = function () {
     }
     d3.select("svg").selectAll(".link-tools").remove();
     d3.select("svg").selectAll(".marker-arrowhead-group").remove();
+    d3.select("svg").selectAll("title").remove();
+    d3.select("svg").selectAll("foreignObject").remove();
     _value.svgRepresentation = this.getSVG();
     if(_graph)
      _value.jsonRepresentation = JSON.stringify(_graph.toJSON());
