@@ -266,15 +266,19 @@
 				}
 			
             }else {
-                isValid = O.input.val() ? true : false;
+				
+				isValid = O.input.val() ? true : false;
+				if(O.type === "email"){
+					isValid = true;	
+				}
                 if(!isValid){
                     O.input.$validationContainer.text("required");
                 }
                 // check if mail has correct structure
-                if(isValid && O.type === "email"){
-                    isValid= /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(O.input.val());
-                    O.input.$validationContainer.text("Not a valid email value");
-                }
+                //if(isValid && O.type === "email"){
+                //    isValid= /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(O.input.val());
+                //    O.input.$validationContainer.text("Not a valid email value");
+                //}
 
             }
             if (!isValid) {
