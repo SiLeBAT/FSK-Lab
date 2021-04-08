@@ -370,6 +370,8 @@ joiner = function () {
         });  
       _value.joinerModelsData.joinedSimulation = _finalsimulationList;
     }
+    d3.select("svg").selectAll(".link-tools").remove();
+    d3.select("svg").selectAll(".marker-arrowhead-group").remove();
     _value.svgRepresentation = this.getSVG();
     if(_graph)
      _value.jsonRepresentation = JSON.stringify(_graph.toJSON());

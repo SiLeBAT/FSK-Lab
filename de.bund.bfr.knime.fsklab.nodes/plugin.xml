@@ -163,6 +163,7 @@
 	   <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/v2.0/joiner/joiner.css" type="CSS" />
 	   <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/v2.0/joiner/joiner.js" type="JAVASCRIPT" />
 	   
+	   <webDependency webResourceBundleID="d3_6.6.2" />
 	   <webDependency webResourceBundleID="JointJS_3.1.1" />
 	   <webDependency webResourceBundleID="bootstrap_3.3.6" />
        <webDependency webResourceBundleID="bootstrap3_typeahead_4.0.2" />
