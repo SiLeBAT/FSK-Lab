@@ -371,7 +371,9 @@ joiner = function () {
       _value.joinerModelsData.joinedSimulation = _finalsimulationList;
     }
     d3.select("svg").selectAll(".link-tools").remove();
-    d3.select("svg").selectAll(".marker-arrowhead-group").remove();
+    d3.select("svg").selectAll(".marker-arrowhead-group-source").remove();
+    d3.select("svg").selectAll(".marker-arrowheads").attr("style", "fill-opacity: .5;");
+    d3.select("svg").selectAll(".connection").attr("stroke-opacity", "0.5");
     d3.select("svg").selectAll("title").remove();
     d3.select("svg").selectAll("foreignObject").remove();
     _value.svgRepresentation = this.getSVG();
