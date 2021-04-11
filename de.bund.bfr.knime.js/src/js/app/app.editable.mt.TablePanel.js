@@ -228,6 +228,9 @@
                     dialog.inputs[keys[indexx]].input.prop('checked', originalData.cells[indexx]);  
                 }else{
                     dialog.inputs[keys[indexx]].input.val(originalData.cells[indexx]);
+                    if(dialog.inputs[keys[indexx]].input.trigger){
+                        dialog.inputs[keys[indexx]].input.trigger('change');
+                    }
                 }
             }
            
