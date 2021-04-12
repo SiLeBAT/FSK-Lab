@@ -513,7 +513,7 @@ class APPMTDetails {
 
 			// title
 			$panel.append( '<div class="panel-heading">'+ menu.label +'</div>' );
-			let $script = $( '<pre class="brush: js;"></pre>' )
+			let $script = $( '<pre class="precss"></pre>' )
 				.appendTo( $panel )
 				.wrap( '<div class="panel-plot"></div>' );
 
@@ -550,7 +550,7 @@ class APPMTDetails {
 
 			// title
 			$panel.append( '<div class="panel-heading">'+ menu.label +'</div>' );
-			let $script = $( '<pre class="brush: js;"></pre>' )
+			let $script = $( '<pre class="precss"></pre>' )
 				.appendTo( $panel )
 				.wrap( '<div class="panel-plot"></div>' );
 
