@@ -1,21 +1,5 @@
 package metadata;
 
-import java.io.StringReader;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.TreeMap;
-
-import javax.json.Json;
-import javax.json.JsonObject;
-
-import org.threeten.bp.LocalDate;
-
 import de.bund.bfr.metadata.swagger.ConsumptionModel;
 import de.bund.bfr.metadata.swagger.DataModel;
 import de.bund.bfr.metadata.swagger.DoseResponseModel;
@@ -32,6 +16,19 @@ import de.bund.bfr.metadata.swagger.QraModel;
 import de.bund.bfr.metadata.swagger.Reference.PublicationTypeEnum;
 import de.bund.bfr.metadata.swagger.RiskModel;
 import de.bund.bfr.metadata.swagger.ToxicologicalModel;
+import java.io.StringReader;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.TreeMap;
+import javax.json.Json;
+import javax.json.JsonObject;
+import org.threeten.bp.LocalDate;
 
 public class SwaggerUtil {
 
@@ -757,7 +754,7 @@ public class SwaggerUtil {
 		} else if (modelType.equalsIgnoreCase("toxicologicalModel")) {
 			((ToxicologicalModel) model).getGeneralInformation().setName(name);
 		} else if (modelType.equalsIgnoreCase("doseResponseModel")) {
-			((DoseResponseModel) model).getGeneralInformation().getModelName();
+			((DoseResponseModel) model).getGeneralInformation().setModelName(name);
 		} else if (modelType.equalsIgnoreCase("processModel")) {
 			((ProcessModel) model).getGeneralInformation().setName(name);
 		} else if (modelType.equalsIgnoreCase("consumptionModel")) {
@@ -770,7 +767,35 @@ public class SwaggerUtil {
 			((HealthModel) model).getGeneralInformation().setName(name);
 		}
 	}
+	public static void setModelID(Model model, String name) {
 
+		final String modelType = model.getModelType();
+		if (modelType.equalsIgnoreCase("genericModel")) {
+			((GenericModel) model).getGeneralInformation().setIdentifier(name);
+		} else if (modelType.equalsIgnoreCase("dataModel")) {
+			((DataModel) model).getGeneralInformation().setIdentifier(name);
+		} else if (modelType.equalsIgnoreCase("predictiveModel")) {
+			((PredictiveModel) model).getGeneralInformation().setIdentifier(name);
+		} else if (modelType.equalsIgnoreCase("otherModel")) {
+			((OtherModel) model).getGeneralInformation().setIdentifier(name);
+		} else if (modelType.equalsIgnoreCase("exposureModel")) {
+			((ExposureModel) model).getGeneralInformation().setIdentifier(name);
+		} else if (modelType.equalsIgnoreCase("toxicologicalModel")) {
+			((ToxicologicalModel) model).getGeneralInformation().setIdentifier(name);
+		} else if (modelType.equalsIgnoreCase("doseResponseModel")) {
+			((DoseResponseModel) model).getGeneralInformation().setIdentifier(name);
+		} else if (modelType.equalsIgnoreCase("processModel")) {
+			((ProcessModel) model).getGeneralInformation().setIdentifier(name);
+		} else if (modelType.equalsIgnoreCase("consumptionModel")) {
+			((ConsumptionModel) model).getGeneralInformation().setIdentifier(name);
+		} else if (modelType.equalsIgnoreCase("riskModel")) {
+			((RiskModel) model).getGeneralInformation().setIdentifier(name);
+		} else if (modelType.equalsIgnoreCase("qraModel")) {
+			((QraModel) model).getGeneralInformation().setIdentifier(name);
+		} else if (modelType.equalsIgnoreCase("healthModel")) {
+			((HealthModel) model).getGeneralInformation().setIdentifier(name);
+		}
+	}
 	public static Object getGeneralInformation(Model model) {
 		Object information;
 
