@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 import org.apache.commons.lang3.StringUtils;
 import org.knime.core.node.ExecutionContext;
@@ -404,6 +405,18 @@ final class FSKEditorJSNodeModel
     outputPort.modelMetadata =
         metadata != null ? metadata : NodeUtils.initializeModel(ModelType.genericModel);
 
+    try {
+      if(SwaggerUtil.getModelId(outputPort.modelMetadata) != null) {
+        UUID uuid = UUID.fromString(SwaggerUtil.getModelId(outputPort.modelMetadata));  
+      } else {
+        UUID uuid = UUID.randomUUID();
+        SwaggerUtil.setModelID(outputPort.modelMetadata, uuid.toString());  
+      }
+    }catch (IllegalArgumentException exception){
+      UUID uuid = UUID.randomUUID();
+      SwaggerUtil.setModelID(outputPort.modelMetadata, uuid.toString());
+    }
+    
     return new PortObject[] {outputPort};
   }
 
