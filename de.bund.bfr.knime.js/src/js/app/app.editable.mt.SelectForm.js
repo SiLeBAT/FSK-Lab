@@ -64,7 +64,6 @@
             O.input  = $( '<select class="form-control form-control-sm" style="width: 100%;" data-sel2 data-placeholder="Select…"/>' )
                       .attr( 'id', 'selectInput_'+ name.replace(/[\W_]+/g,"_") )
                             .appendTo( $field );
-            O.input.val(value);
             // Add options from vocabulary. The option matching value is selected.
             // if(window._endpoints.controlledVocabularyEndpoint){
                 
@@ -97,7 +96,8 @@
                 let html = window.vocabularies[vocabulary].map(item => `<option>${item}</option>`).join("");
                 O.input.append(html);
             }
-
+            O.input.val(value);
+            O.input.trigger('change');
             // create validation container
             O.input.$validationContainer = $( '<div class="validation-message mt-1"></div>' )
             .appendTo( $field );
