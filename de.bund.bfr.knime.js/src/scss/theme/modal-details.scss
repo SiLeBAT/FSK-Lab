@@ -32,30 +32,4 @@
 	}
 }
 
-pre {
-	tab-size: 4;
-	counter-reset: line;
-	padding: 0;
-	color: rgb(255, 255, 255);
-	background-color: rgb(255, 255, 255);
-	font-size: 16px;
-	line-height: 16px;
-}
-pre {
-	background: #ffffff; 
-	color: #303030;
-	padding: 10px 16px;
-  }
-  pre span {
-	display: block;
-	line-height: 1.5rem;
-  }
-  pre span:before {
-	counter-increment: line;
-	content: counter(line);
-	display: inline-block;
-	border-right: 1px solid #ddd;
-	padding: 0 .5em;
-	margin-right: .5em;
-	color: #888
-  }
+
