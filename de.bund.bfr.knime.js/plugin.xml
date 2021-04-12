@@ -21,6 +21,11 @@
        <importResource relativePath="js-lib/lodash/lodash.min.js" type="JAVASCRIPT" />
      </webResourceBundle>
      
+      <webResourceBundle name="d3" version="6.6.2" webResourceBundleID="d3_6.6.2" debug="false">
+       <webResource relativePathSource="js-lib/d3" relativePathTarget="js-lib/d3" />
+       <importResource relativePath="js-lib/d3/d3.js" type="JAVASCRIPT" />
+     </webResourceBundle>
+     
      <webResourceBundle name="underscore" version="1.9.1" webResourceBundleID="underscore_1.9.1" debug="false">
        <webResource relativePathSource="js-lib/underscore" relativePathTarget="js-lib/underscore" />
        <importResource relativePath="js-lib/underscore/underscore-min.js" type="JAVASCRIPT" />
