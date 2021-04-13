@@ -30,12 +30,14 @@ fskeditorjs = function () {
     _visualizationCodeMirror.setValue(selectedModel.visualization);
 
   }
-  
+  let camelize = function (str) {
+	  return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(word, index) {
+		    return index === 0 ? word.toUpperCase() : word.toLowerCase();
+		  }).replace(/\s+/g, '');
+		}
   let doSave = function(_metadatax){
     console.log(_metadatax);
-	_metadatax.modelMath.parameter.forEach(param => {
-		param.classification = param.classification.toUpperCase()
-	});
+    
     _metadatax.modelMath.parameter.forEach(param => {
       if(param.classification != "OUTPUT" && _simulation){ 
         _simulation.forEach(simulation => {
@@ -89,6 +91,9 @@ fskeditorjs = function () {
       _metadata.scope = metaData.scope ? metaData.scope : {};
       _metadata.dataBackground = metaData.dataBackground ? metaData.dataBackground : {};
       _metadata.modelMath = metaData.modelMath ? metaData.modelMath : {};
+      _metadata.modelMath.parameter.forEach(param => {
+  		param.classification = camelize(param.classification)
+  	});
       _metadata.modelType = metaData.modelType;
     }
     /*
@@ -135,6 +140,9 @@ fskeditorjs = function () {
     delete _metadata['modelscript'];
     delete _metadata['visualization'];
     delete _metadata['Location'];
+    _metadata.modelMath.parameter.forEach(param => {
+		param.classification = param.classification.toUpperCase()
+	});
     let metaDataString = JSON.stringify(_metadata);
 
     // If the code mirrors are not created yet, use the original scripts.
