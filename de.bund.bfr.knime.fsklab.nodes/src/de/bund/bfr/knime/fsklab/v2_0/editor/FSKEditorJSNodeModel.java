@@ -18,31 +18,6 @@
  */
 package de.bund.bfr.knime.fsklab.v2_0.editor;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicLong;
-import org.apache.commons.lang3.StringUtils;
-import org.knime.core.node.ExecutionContext;
-import org.knime.core.node.InvalidSettingsException;
-import org.knime.core.node.NodeLogger;
-import org.knime.core.node.NodeSettingsRO;
-import org.knime.core.node.NodeSettingsWO;
-import org.knime.core.node.port.PortObject;
-import org.knime.core.node.port.PortObjectHolder;
-import org.knime.core.node.port.PortObjectSpec;
-import org.knime.core.node.port.PortType;
-import org.knime.core.node.web.ValidationError;
-import org.knime.js.core.node.AbstractWizardNodeModel;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -50,7 +25,6 @@ import de.bund.bfr.fskml.RScript;
 import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
 import de.bund.bfr.knime.fsklab.nodes.environment.EnvironmentManager;
-import de.bund.bfr.knime.fsklab.preferences.PreferenceInitializer;
 import de.bund.bfr.knime.fsklab.v2_0.CombinedFskPortObject;
 import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
 import de.bund.bfr.knime.fsklab.v2_0.FskPortObjectSpec;
@@ -97,7 +71,33 @@ import de.bund.bfr.rakip.vocabularies.data.StatusRepository;
 import de.bund.bfr.rakip.vocabularies.data.TechnologyTypeRepository;
 import de.bund.bfr.rakip.vocabularies.data.UnitCategoryRepository;
 import de.bund.bfr.rakip.vocabularies.data.UnitRepository;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicLong;
 import metadata.SwaggerUtil;
+import org.apache.commons.lang3.StringUtils;
+import org.knime.core.node.ExecutionContext;
+import org.knime.core.node.InvalidSettingsException;
+import org.knime.core.node.NodeLogger;
+import org.knime.core.node.NodeSettingsRO;
+import org.knime.core.node.NodeSettingsWO;
+import org.knime.core.node.port.PortObject;
+import org.knime.core.node.port.PortObjectHolder;
+import org.knime.core.node.port.PortObjectSpec;
+import org.knime.core.node.port.PortType;
+import org.knime.core.node.web.ValidationError;
+import org.knime.js.core.node.AbstractWizardNodeModel;
 
 
 /**
@@ -403,7 +403,19 @@ final class FSKEditorJSNodeModel
 
     outputPort.modelMetadata =
         metadata != null ? metadata : NodeUtils.initializeModel(ModelType.genericModel);
-
+    // Apply UUID to model as an identifier
+    try {
+      // check if model already has a UUID
+      if(SwaggerUtil.getModelId(outputPort.modelMetadata) != null) {
+        UUID uuid = UUID.fromString(SwaggerUtil.getModelId(outputPort.modelMetadata));  
+      } else {
+        UUID uuid = UUID.randomUUID();
+        SwaggerUtil.setModelId(outputPort.modelMetadata, uuid.toString());  
+      }
+    }catch (IllegalArgumentException exception){
+      UUID uuid = UUID.randomUUID();
+      SwaggerUtil.setModelId(outputPort.modelMetadata, uuid.toString());
+    }
     return new PortObject[] {outputPort};
   }
 
@@ -445,6 +457,7 @@ final class FSKEditorJSNodeModel
     m_port = (FskPortObject) portObjects[0];
   }
 
+  @Override
   public void setHideInWizard(boolean hide) {
   }
 
