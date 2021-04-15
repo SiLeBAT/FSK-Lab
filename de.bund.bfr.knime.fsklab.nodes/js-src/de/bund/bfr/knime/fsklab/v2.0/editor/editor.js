@@ -20,7 +20,7 @@ fskeditorjs = function () {
   var _simulation;
 
   let handler;
-  let selectionChanged = function (modelMetaData) {	
+  let selectionChanged = function (modelMetaData) { 
     window._debug = false;
     let selectedModel = modelMetaData.changeSet.added[0];
     _location = selectedModel.Location;
@@ -31,12 +31,11 @@ fskeditorjs = function () {
 
   }
   let camelize = function (str) {
-	  return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(word, index) {
-		    return index === 0 ? word.toUpperCase() : word.toLowerCase();
-		  }).replace(/\s+/g, '');
-		}
+      return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(word, index) {
+            return index === 0 ? word.toUpperCase() : word.toLowerCase();
+          }).replace(/\s+/g, '');
+        }
   let doSave = function(_metadatax){
-    console.log(_metadatax);
     
     _metadatax.modelMath.parameter.forEach(param => {
       if(param.classification != "OUTPUT" && _simulation){ 
@@ -92,8 +91,8 @@ fskeditorjs = function () {
       _metadata.dataBackground = metaData.dataBackground ? metaData.dataBackground : {};
       _metadata.modelMath = metaData.modelMath ? metaData.modelMath : {};
       _metadata.modelMath.parameter.forEach(param => {
-  		param.classification = camelize(param.classification)
-  	});
+        param.classification = camelize(param.classification)
+    });
       _metadata.modelType = metaData.modelType;
     }
     /*
@@ -119,10 +118,10 @@ fskeditorjs = function () {
     let mainContainer = $(`<div class="card"></div>`);
     $('body').html(mainContainer);
     _modalDetails = new APPMTEditableDetails( {
-                        data 		  : {},
-                        id 			  : 'mtModalDetails',
-                        classes 	: 'modal-details',
-                        type 		  : 'mtDetails'
+                        data          : {},
+                        id            : 'mtModalDetails',
+                        classes     : 'modal-details',
+                        type          : 'mtDetails'
                       }, mainContainer );
     _modalDetails._createModelMetadataContent();
     await _modalDetails._updateContent(_metadata, 0);
@@ -141,8 +140,8 @@ fskeditorjs = function () {
     delete _metadata['visualization'];
     delete _metadata['Location'];
     _metadata.modelMath.parameter.forEach(param => {
-		param.classification = param.classification.toUpperCase()
-	});
+        param.classification = param.classification.toUpperCase()
+    });
     let metaDataString = JSON.stringify(_metadata);
 
     // If the code mirrors are not created yet, use the original scripts.
@@ -157,10 +156,73 @@ fskeditorjs = function () {
       validationErrors: [],
       modelType: _metadata.modelType
     };
+    const ajv = new Ajv({allErrors:true});
+    let referenceSchema = prepareSchema(window.modelSchema, _metadata.modelType);
+    const validate = ajv.compile(referenceSchema)
+    validate(deleteEmptyValues(JSON.parse(JSON.stringify(_metadata))))
     
+    viewValue.validationErrors = validate.errors.map(errorItem => {
+        return JSON.stringify(errorItem)
+    });
     return viewValue;
+    
   };
-
+  function deleteEmptyValues(modeData) {
+    for (property in modeData) {
+            if($.isArray(modeData[property]) && modeData[property].length == 0){
+                console.log(property,typeof  modeData[property]);
+                delete modeData[property];
+            }else if (typeof  modeData[property] === "string" && modeData[property]== '' ) {
+                console.log(property,typeof  modeData[property]);
+                delete modeData[property];
+            }
+            else if (typeof  modeData[property] === 'object' &&  modeData[property] !== null ) {
+                deleteEmptyValues(modeData[property])
+            }
+    }
+    return modeData;
+  }
+  function prepareSchema(mainSchema, modelType){
+     let resolvedValue = {properties:{}};
+     let modeTypeKey = modelType.charAt(0).toUpperCase() + modelType.slice(1);
+     let preSchema = mainSchema.definitions[modeTypeKey];
+     resolvedValue.type = preSchema.allOf[1].type
+     $.each(preSchema.allOf[1].properties, function (key, value) {
+        resolve(mainSchema,key ,modeTypeKey ,value, resolvedValue);
+     });
+     return resolvedValue;
+  }
+  function resolve(mainSchema, key,modeTypeKey, currentSchemaElement, resolvedValue){
+    
+    if(currentSchemaElement.hasOwnProperty('$ref') ){
+        let schemaKey = currentSchemaElement['$ref'].replace('#/definitions/','');
+        resolvedKey = schemaKey.charAt(0).toUpperCase() + schemaKey.slice(1);
+        currentSchemaElement = mainSchema.definitions[resolvedKey];
+        $.each(currentSchemaElement.properties, function (childKey, childValue) {
+            resolve(mainSchema,childKey, modeTypeKey , childValue, currentSchemaElement);
+        });
+        let elementKey = schemaKey.replace(modeTypeKey,'');
+        elementKey = elementKey.charAt(0).toLowerCase() + elementKey.slice(1)
+        resolvedValue.properties[elementKey] = currentSchemaElement
+    }else if(currentSchemaElement.type == 'array' && currentSchemaElement.items && currentSchemaElement.items.hasOwnProperty('$ref') ){
+        let schemaKey = currentSchemaElement.items['$ref'].replace('#/definitions/','');
+        resolvedKey = schemaKey.charAt(0).toUpperCase() + schemaKey.slice(1);
+        let elementKey = schemaKey.replace(modeTypeKey,'');
+        elementKey = elementKey.charAt(0).toLowerCase() + elementKey.slice(1)
+        resolvedValue.properties[key]={};
+        resolvedValue.properties[key].items = mainSchema.definitions[resolvedKey]
+        resolvedValue.properties[key].type = 'array'
+        $.each(resolvedValue.properties[key].items.properties, function (childKey, childValue) {
+            resolve(mainSchema,childKey, modeTypeKey , childValue, resolvedValue.properties[key].items);
+        });
+    }else{
+        $.each(currentSchemaElement.properties, function (childKey, childValue) {
+            resolve(mainSchema, childKey, modeTypeKey , childValue, currentSchemaElement);
+        });
+        resolvedValue.properties[key] = currentSchemaElement
+        
+    }
+  }
   view.validate = () => {
     // return handler.validate();
     return true;
@@ -231,6 +293,6 @@ fskeditorjs = function () {
 
   function makeRequest(vocabularyName) {
     knimeService.loadConditionally(["js-src/de/bund/bfr/knime/fsklab/v1.9/editor/lazyload.js"],
-    		() => window.fetchVocabulary(vocabularyName));
+            () => window.fetchVocabulary(vocabularyName));
   }
 }();
