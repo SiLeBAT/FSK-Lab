@@ -170,10 +170,8 @@ fskeditorjs = function () {
   function deleteEmptyValues(modeData) {
     for (property in modeData) {
             if($.isArray(modeData[property]) && modeData[property].length == 0){
-                console.log(property,typeof  modeData[property]);
                 delete modeData[property];
             }else if (typeof  modeData[property] === "string" && modeData[property]== '' ) {
-                console.log(property,typeof  modeData[property]);
                 delete modeData[property];
             }
             else if (typeof  modeData[property] === 'object' &&  modeData[property] !== null ) {
