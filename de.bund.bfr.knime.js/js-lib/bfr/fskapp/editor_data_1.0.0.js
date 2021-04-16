@@ -799,7 +799,7 @@ const ui = {
         "id": "value",
         "label": "Value",
         "type": "text",
-        "description": "A default value for the parameter. This is mandatory (needs to be provided) for all parameters of type 'Input'"
+        "description": "A default value for the parameter. This is mandatory (needs to be provided) for all parameters of type 'Input' and 'Constant'"
     },
     {
         "id": "reference",
