@@ -140,7 +140,8 @@
        <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/v2.0/editor/editor.js" type="JAVASCRIPT" />
        <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/v2.0/editor/lazyload.js" type="JAVASCRIPT" />
        <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/v2.0/editor/editor.css" type="CSS" />
-
+       
+       <webDependency webResourceBundleID="ajv_5.5.2"></webDependency>
        <webDependency webResourceBundleID="codemirror_5.49.2"></webDependency>
        <webDependency webResourceBundleID="jQuery_3.3.1" />
 	   <webDependency webResourceBundleID="app_1.0.0" />

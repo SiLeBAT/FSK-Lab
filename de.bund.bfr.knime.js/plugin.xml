@@ -26,6 +26,11 @@
        <importResource relativePath="js-lib/d3/d3.js" type="JAVASCRIPT" />
      </webResourceBundle>
      
+     <webResourceBundle name="ajv" version="5.5.2" webResourceBundleID="ajv_5.5.2" debug="false">
+       <webResource relativePathSource="js-lib/ajv" relativePathTarget="js-lib/ajv" />
+       <importResource relativePath="js-lib/ajv/ajv.min.js" type="JAVASCRIPT" />
+     </webResourceBundle>
+     
      <webResourceBundle name="underscore" version="1.9.1" webResourceBundleID="underscore_1.9.1" debug="false">
        <webResource relativePathSource="js-lib/underscore" relativePathTarget="js-lib/underscore" />
        <importResource relativePath="js-lib/underscore/underscore-min.js" type="JAVASCRIPT" />
