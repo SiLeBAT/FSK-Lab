@@ -261,13 +261,12 @@ class WriterNodeModel extends NoInternalsModel {
       addParameterScript(archive, sim, filePrefix, scriptHandler);
     }
 
-    // TODO: THIS DOES NOT WORK IN WINDOWS: png file cant be opened without renaming the file to .svg  
-    // Add PNG plot. If file is not set (empty string) or does not exist then skip\
+    // Add SVG plot. If file is not set (empty string) or does not exist then skip
     // this step.
     File plotFile = new File(fskObj.getPlot());
     if (plotFile.exists()) {
-      URI uri = URI.create("http://purl.org/NET/mediatypes/image/png");
-      archive.addEntry(plotFile, filePrefix + "plot.png", uri);
+      URI uri = URI.create("https://www.iana.org/assignments/media-types/image/svg+xml");
+      archive.addEntry(plotFile, filePrefix + "plot.svg", uri);
     }
 
     // Add readme. Entry has a README annotation to distinguish of other
