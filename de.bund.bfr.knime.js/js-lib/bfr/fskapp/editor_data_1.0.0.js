@@ -930,13 +930,13 @@ const _genericModelScope = {
             id: "temporalInformation",
             label: "Temporal information",
             type: "long-text",
-            description: "Spatial information (area) on which the model or data applies"
+            description: "Temporal information on which the model or data applies / An interval of time that is named or defined by its start and end dates (period of study)"
         },
         {
             id: "spatialInformation",
             label: "Spatial information",
             type: "text-array",
-            description: "" // TODO: spatial information description
+            description: "Spatial information (area) on which the model or data applies"
         }
     ],
     product: ui.product,
@@ -945,7 +945,6 @@ const _genericModelScope = {
 };
 
 const _exposureModelScope = {
-    // scope
     scope: [
         {
             id: "generalComment",
@@ -957,13 +956,13 @@ const _exposureModelScope = {
             id: "temporalInformation",
             label: "Temporal information",
             type: "long-text",
-            description: "Spatial information (area) on which the model or data applies"
+            description: "Temporal information on which the model or data applies / An interval of time that is named or defined by its start and end dates (period of study)"
         },
         {
             id: "spatialInformation",
             label: "Spatial information",
             type: "text-array",
-            description: "" // TODO: spatial information description
+            description: "Spatial information (area) on which the model or data applies"
         }
     ],
     product: ui.product,
@@ -1329,7 +1328,6 @@ const schemas = {
 
     predictiveModel: {
 
-        // scope
         scope: [
             {
                 id: "generalComment",
@@ -1341,13 +1339,13 @@ const schemas = {
                 id: "temporalInformation",
                 label: "Temporal information",
                 type: "text",
-                description: "Spatial information (area) on which the model or data applies"
+                description: "Temporal information on which the model or data applies / An interval of time that is named or defined by its start and end dates (period of study)"
             },
             {
                 id: "spatialInformation",
                 label: "Spatial information",
                 type: "text-array",
-                description: "" // TODO: spatial information description
+                description: "Spatial information (area) on which the model or data applies"
             }
         ],
         product: ui.product,
@@ -1465,7 +1463,6 @@ const schemas = {
         reference: ui.reference,
         modelCategory: ui.modelCategory,
 
-        // scope
         scope: [
             {
                 id: "generalComment",
@@ -1477,13 +1474,13 @@ const schemas = {
                 id: "temporalInformation",
                 label: "Temporal information",
                 type: "text",
-                description: "Spatial information (area) on which the model or data applies"
+                description: "Temporal information on which the model or data applies / An interval of time that is named or defined by its start and end dates (period of study)"
             },
             {
                 id: "spatialInformation",
                 label: "Spatial information",
                 type: "text-array",
-                description: "" // TODO: spatial information description
+                description: "Spatial information (area) on which the model or data applies"
             }
         ],
         product: ui.product,
@@ -1626,7 +1623,6 @@ const schemas = {
         contact: ui.contact,
         reference: ui.reference,
 
-        // Scope
         scope: [
             {
                 id: "generalComment",
@@ -1638,13 +1634,13 @@ const schemas = {
                 id: "temporalInformation",
                 label: "Temporal information",
                 type: "text",
-                description: "Temporal information on which the model applies / An interval of time that is named or defined by its start and end dates (period of study)"
+                description: "Temporal information on which the model or data applies / An interval of time that is named or defined by its start and end dates (period of study)"
             },
             {
                 id: "spatialInformation",
                 label: "Spatial information",
                 type: "text",
-                description: "Spatial information (area) on which the model applies"
+                description: "Spatial information (area) on which the model or data applies"
             }
         ],
         hazard: ui.hazard,
@@ -1673,7 +1669,6 @@ const schemas = {
 
     toxicologicalModel: {
 
-        // scope
         scope: [
             {
                 id: "generalComment",
@@ -1685,13 +1680,13 @@ const schemas = {
                 id: "temporalInformation",
                 label: "Temporal information",
                 type: "text",
-                description: "Spatial information (area) on which the model or data applies"
+                description: "Temporal information on which the model or data applies / An interval of time that is named or defined by its start and end dates (period of study)"
             },
             {
                 id: "spatialInformation",
                 label: "Spatial information",
                 type: "text-array",
-                description: "" // TODO: spatial information description
+                description: "Spatial information (area) on which the model or data applies"
             }
         ],
         hazard: ui.hazard,
@@ -1702,7 +1697,6 @@ const schemas = {
 
     processModel: {
 
-        // scope
         scope: [
             {
                 id: "generalComment",
@@ -1714,13 +1708,13 @@ const schemas = {
                 id: "temporalInformation",
                 label: "Temporal information",
                 type: "text",
-                description: "Spatial information (area) on which the model or data applies"
+                description: "Temporal information on which the model or data applies / An interval of time that is named or defined by its start and end dates (period of study)"
             },
             {
                 id: "spatialInformation",
                 label: "Spatial information",
                 type: "text-array",
-                description: "" // TODO: spatial information description
+                description: "Spatial information (area) on which the model or data applies"
             }
         ],
         product: ui.product,
@@ -1729,7 +1723,6 @@ const schemas = {
 
     consumptionModel: {
 
-        // scope
         scope: [
             {
                 id: "generalComment",
@@ -1741,13 +1734,13 @@ const schemas = {
                 id: "temporalInformation",
                 label: "Temporal information",
                 type: "text",
-                description: "Spatial information (area) on which the model or data applies"
+                description: "Temporal information on which the model or data applies / An interval of time that is named or defined by its start and end dates (period of study)"
             },
             {
                 id: "spatialInformation",
                 label: "Spatial information",
                 type: "text-array",
-                description: "" // TODO: spatial information description
+                description: "Spatial information (area) on which the model or data applies"
             }
         ],
         product: ui.product,
@@ -1763,7 +1756,6 @@ const schemas = {
 
     healthModel: {
 
-        // scope
         scope: [
             {
                 id: "generalComment",
@@ -1775,13 +1767,13 @@ const schemas = {
                 id: "temporalInformation",
                 label: "Temporal information",
                 type: "text",
-                description: "Spatial information (area) on which the model or data applies"
+                description: "Temporal information on which the model or data applies / An interval of time that is named or defined by its start and end dates (period of study)"
             },
             {
                 id: "spatialInformation",
                 label: "Spatial information",
                 type: "text-array",
-                description: "" // TODO: spatial information description
+                description: "Spatial information (area) on which the model or data applies"
             }
         ],
         hazard: ui.hazard,
