@@ -688,7 +688,7 @@ public final class JoinerNodeModel
             jThirdInputPort);
         fskID_to_fskObject.put(SwaggerUtil.getModelName(jFourthInputPort.modelMetadata),
             jFourthInputPort);
-
+        fskID_to_fskObject.remove(null);
         outObj = createCombinedFskPortObject(jFirstInputPort, jSecondInputPort, jThirdInputPort,
             jFourthInputPort);
        
@@ -735,15 +735,11 @@ public final class JoinerNodeModel
       }
 
 
-      // add all possible simulations to combined object
-      //JoinerNodeUtil.createAllPossibleSimulations(firstInputPort, secondInputPort, outObj);
 
       // remove suffix from original parameters since they are needed with their original id for the
       // scripts
       // remove the suffix for four models joining
-      if (value.joinRelations != null) {
         resetParameterId(outObj, 0);
-      }
       svgImageFromView = createImagePortObjectFromView(value.svgRepresentation,"");
     }
 
@@ -967,6 +963,7 @@ public final class JoinerNodeModel
   private static FskPortObject getFSKObjectFromStringArray(Optional<EnvironmentManager> manager,
       String[] model, String modelType,Map<String, FskPortObject> fskID_to_fskObject) throws IOException {
     FskPortObject portObject = null;
+    
     if (StringUtils.isNotEmpty(model[6])) {
       String fileZip = FileUtil.getWorkflowTempDir() +File.separator+ model[7] + ".fskx";
       File f = new File(fileZip);
