@@ -11,7 +11,7 @@ joiner = function () {
   let _value;
   let _joinerModelsData;
   let _modelScriptTree;
-  let _modelsParamsOriginalNames;
+  let _modelsParamsOriginalNames = {};
   let _simulationMap={};
   let _finalsimulationList = [];
   let _ignoreSelectSimulation;
@@ -219,7 +219,10 @@ joiner = function () {
     _joinerModelsData = representation.joinerModelsData;
     
     _representation = representation;
-    _modelsParamsOriginalNames = _joinerModelsData.modelsParamsOriginalNames;
+    trimModelName(_joinerModelsData);
+    $.each(_joinerModelsData.modelsParamsOriginalNames, (key, value) => {
+        _modelsParamsOriginalNames[key.trim()] = value;
+    })
     //subscribe to events emitted by FSK DB View
     knimeService.subscribeToSelection('b800db46-4e25-4f77-bcc6-db0c21joiner', selectionChanged);
     makeVocabullaryMap();
@@ -256,6 +259,44 @@ joiner = function () {
     return Object.keys(model).length !== 0;
   }
 
+  trimModelName = (joinerModelsData) => {
+    try{
+        if(joinerModelsData.firstModel && joinerModelsData.firstModel[0]){
+            joinerModelsData.firstModel[0] = fixModelMetadata(joinerModelsData.firstModel[0]);
+            joinerModelsData.firstModelName = joinerModelsData.firstModelName?joinerModelsData.firstModelName.trim():joinerModelsData.firstModelName;
+    
+            
+        }
+        if(joinerModelsData.secondModel && joinerModelsData.secondModel[0]){
+            joinerModelsData.secondModel[0] = fixModelMetadata(joinerModelsData.secondModel[0]);
+            joinerModelsData.secondModelName = joinerModelsData.secondModelName?joinerModelsData.secondModelName.trim():joinerModelsData.secondModelName;
+    
+            
+        }
+        if(joinerModelsData.thirdModel && joinerModelsData.thirdModel[0]){
+            joinerModelsData.thirdModel[0] = fixModelMetadata(joinerModelsData.thirdModel[0]);
+            joinerModelsData.thirdModelName = joinerModelsData.thirdModelName?joinerModelsData.thirdModelName.trim():joinerModelsData.thirdModelName;
+            
+        }
+        if(joinerModelsData.fourthModel && joinerModelsData.fourthModel[0]){
+            joinerModelsData.fourthModel[0] = fixModelMetadata(joinerModelsData.fourthModel[0]);
+            joinerModelsData.fourthModelName = joinerModelsData.fourthModelName?joinerModelsData.fourthModelName.trim():joinerModelsData.fourthModelName;
+        }
+    }catch(err){
+        console.log(err);
+    }
+    
+  }
+  fixModelMetadata = (metadata) => {
+    let jsonMetadata = JSON.parse(metadata);
+    try{
+        if(jsonMetadata.generalInformation.name)
+            jsonMetadata.generalInformation.name = jsonMetadata.generalInformation.name.trim();
+    }catch(err){
+        console.log(err);
+    }
+    return  JSON.stringify(jsonMetadata);
+   }
   view.getComponentValue = function () {
     if (!isValidModel(_value.joinerModelsData)) {
       _value.joinerModelsData = {
