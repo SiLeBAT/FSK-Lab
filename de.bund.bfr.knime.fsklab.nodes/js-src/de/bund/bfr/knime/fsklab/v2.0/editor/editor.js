@@ -199,7 +199,7 @@ fskeditorjs = function () {
         $.each(currentSchemaElement.properties, function (childKey, childValue) {
             resolve(mainSchema,childKey, modeTypeKey , childValue, currentSchemaElement);
         });
-        let elementKey = schemaKey.replace(modeTypeKey,'');
+        let elementKey = schemaKey.replace(modeTypeKey+'_','').replace(modeTypeKey,'');
         elementKey = elementKey.charAt(0).toLowerCase() + elementKey.slice(1)
         resolvedValue.properties[elementKey] = currentSchemaElement
     }else if(currentSchemaElement.type == 'array' && currentSchemaElement.items && currentSchemaElement.items.hasOwnProperty('$ref') ){
