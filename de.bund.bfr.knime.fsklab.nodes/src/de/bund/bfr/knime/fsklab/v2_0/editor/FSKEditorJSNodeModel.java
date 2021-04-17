@@ -314,10 +314,12 @@ final class FSKEditorJSNodeModel
         metadata = MAPPER.readValue(viewValue.getModelMetaData(), modelClass);
         if(!StringUtils.isEmpty(viewRep.getModelMetadata())) {
           if( m_config.getModelType().equals(modelType)) {
-            originalMetadata =  new ConversionUtils().convertModel(MAPPER.readTree(viewRep.getModelMetadata()),
+            metadata =  new ConversionUtils().convertModel(MAPPER.readTree(viewRep.getModelMetadata()),
                   ConversionUtils.ModelClass.valueOf(m_config.getModelType()));
+            viewRep.setModelMetadata(MAPPER.writeValueAsString(metadata));
+            viewValue.setModelMetaData(MAPPER.writeValueAsString(metadata));
           }else {
-            originalMetadata = MAPPER.readValue(viewRep.getModelMetadata(), modelClass);
+            metadata = MAPPER.readValue(viewRep.getModelMetadata(), modelClass);
           }
          
         }
@@ -325,9 +327,10 @@ final class FSKEditorJSNodeModel
           if(!StringUtils.isEmpty(portObjectModelType) && !portObjectModelType.equals(modelType)) {
             String json = MAPPER.writeValueAsString(((FskPortObject)inObjects[0]).modelMetadata);
             JsonNode portMetadata = MAPPER.readTree(json);
-            Model convertedModel = new ConversionUtils().convertModel(portMetadata,
+            metadata = new ConversionUtils().convertModel(portMetadata,
                 ConversionUtils.ModelClass.valueOf(m_config.getModelType()));
-            viewRep.setModelMetadata(MAPPER.writeValueAsString(convertedModel));
+            viewRep.setModelMetadata(MAPPER.writeValueAsString(metadata));
+            viewValue.setModelMetaData(MAPPER.writeValueAsString(metadata));
           }else {
             viewRep.setModelMetadata(jsonMetadata);
           }
