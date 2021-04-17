@@ -18,6 +18,32 @@
  */
 package de.bund.bfr.knime.fsklab.v2_0.editor;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicLong;
+import org.apache.commons.lang3.StringUtils;
+import org.knime.core.node.ExecutionContext;
+import org.knime.core.node.InvalidSettingsException;
+import org.knime.core.node.NodeLogger;
+import org.knime.core.node.NodeSettingsRO;
+import org.knime.core.node.NodeSettingsWO;
+import org.knime.core.node.port.PortObject;
+import org.knime.core.node.port.PortObjectHolder;
+import org.knime.core.node.port.PortObjectSpec;
+import org.knime.core.node.port.PortType;
+import org.knime.core.node.web.ValidationError;
+import org.knime.js.core.node.AbstractWizardNodeModel;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -71,33 +97,8 @@ import de.bund.bfr.rakip.vocabularies.data.StatusRepository;
 import de.bund.bfr.rakip.vocabularies.data.TechnologyTypeRepository;
 import de.bund.bfr.rakip.vocabularies.data.UnitCategoryRepository;
 import de.bund.bfr.rakip.vocabularies.data.UnitRepository;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.atomic.AtomicLong;
+import metadata.ConversionUtils;
 import metadata.SwaggerUtil;
-import org.apache.commons.lang3.StringUtils;
-import org.knime.core.node.ExecutionContext;
-import org.knime.core.node.InvalidSettingsException;
-import org.knime.core.node.NodeLogger;
-import org.knime.core.node.NodeSettingsRO;
-import org.knime.core.node.NodeSettingsWO;
-import org.knime.core.node.port.PortObject;
-import org.knime.core.node.port.PortObjectHolder;
-import org.knime.core.node.port.PortObjectSpec;
-import org.knime.core.node.port.PortType;
-import org.knime.core.node.web.ValidationError;
-import org.knime.js.core.node.AbstractWizardNodeModel;
 
 
 /**
@@ -262,9 +263,10 @@ final class FSKEditorJSNodeModel
   @Override
   protected PortObject[] performExecute(PortObject[] inObjects, ExecutionContext exec)
       throws Exception {
-
+    String portObjectModelType = "";
     if (inObjects[0] != null) {
       setInternalPortObjects(inObjects);
+      portObjectModelType = ((FskPortObject)inObjects[0]).modelMetadata.getModelType();
     }
 
     // Create port object
@@ -310,10 +312,26 @@ final class FSKEditorJSNodeModel
         // Deserialize metadata to concrete class according to modelType
         Class<? extends Model> modelClass = SwaggerUtil.modelClasses.get(modelType);
         metadata = MAPPER.readValue(viewValue.getModelMetaData(), modelClass);
-        if(!StringUtils.isEmpty(viewRep.getModelMetadata()))
-          originalMetadata = MAPPER.readValue(viewRep.getModelMetadata(), modelClass);
-        else
-          viewRep.setModelMetadata(jsonMetadata);
+        if(!StringUtils.isEmpty(viewRep.getModelMetadata())) {
+          if( m_config.getModelType().equals(modelType)) {
+            originalMetadata =  new ConversionUtils().convertModel(MAPPER.readTree(viewRep.getModelMetadata()),
+                  ConversionUtils.ModelClass.valueOf(m_config.getModelType()));
+          }else {
+            originalMetadata = MAPPER.readValue(viewRep.getModelMetadata(), modelClass);
+          }
+         
+        }
+        else {
+          if(!StringUtils.isEmpty(portObjectModelType) && !portObjectModelType.equals(modelType)) {
+            String json = MAPPER.writeValueAsString(((FskPortObject)inObjects[0]).modelMetadata);
+            JsonNode portMetadata = MAPPER.readTree(json);
+            Model convertedModel = new ConversionUtils().convertModel(portMetadata,
+                ConversionUtils.ModelClass.valueOf(m_config.getModelType()));
+            viewRep.setModelMetadata(MAPPER.writeValueAsString(convertedModel));
+          }else {
+            viewRep.setModelMetadata(jsonMetadata);
+          }
+        }
       }
       if(StringUtils.isEmpty(viewRep.getModelMetadata())) {
           viewRep.setModelMetadata("");

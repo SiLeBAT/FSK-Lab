@@ -21,6 +21,7 @@ import de.bund.bfr.metadata.swagger.DataModel;
 import de.bund.bfr.metadata.swagger.DietaryAssessmentMethod;
 import de.bund.bfr.metadata.swagger.DoseResponseModel;
 import de.bund.bfr.metadata.swagger.DoseResponseModelGeneralInformation;
+import de.bund.bfr.metadata.swagger.DoseResponseModelModelMath;
 import de.bund.bfr.metadata.swagger.Exposure;
 import de.bund.bfr.metadata.swagger.ExposureModel;
 import de.bund.bfr.metadata.swagger.GenericModel;
@@ -36,11 +37,13 @@ import de.bund.bfr.metadata.swagger.ModelCategory;
 import de.bund.bfr.metadata.swagger.ModelEquation;
 import de.bund.bfr.metadata.swagger.OtherModel;
 import de.bund.bfr.metadata.swagger.OtherModelGeneralInformation;
+import de.bund.bfr.metadata.swagger.OtherModelModelMath;
 import de.bund.bfr.metadata.swagger.Parameter;
 import de.bund.bfr.metadata.swagger.Parameter.ClassificationEnum;
 import de.bund.bfr.metadata.swagger.PopulationGroup;
 import de.bund.bfr.metadata.swagger.PredictiveModel;
 import de.bund.bfr.metadata.swagger.PredictiveModelGeneralInformation;
+import de.bund.bfr.metadata.swagger.PredictiveModelModelMath;
 import de.bund.bfr.metadata.swagger.ProcessModel;
 import de.bund.bfr.metadata.swagger.Product;
 import de.bund.bfr.metadata.swagger.QraModel;
@@ -179,57 +182,57 @@ public class NodeUtils {
       case dataModel:
         return new DataModel().modelType("dataModel");
       case consumptionModel:
-        return new ConsumptionModel()
+        return new ConsumptionModel().modelMath(new PredictiveModelModelMath())
             .generalInformation(new PredictiveModelGeneralInformation()
                 .modelCategory(new ModelCategory().modelClass("Consumption model")))
             .modelType("consumptionModel");
       case doseResponseModel:
-        return new DoseResponseModel()
+        return new DoseResponseModel().modelMath(new DoseResponseModelModelMath())
             .generalInformation(new DoseResponseModelGeneralInformation()
                 .modelCategory(new ModelCategory().modelClass("Dose-response model")))
             .modelType("doseResponseModel");
       case exposureModel:
-        return new ExposureModel()
+        return new ExposureModel().modelMath(new GenericModelModelMath())
             .generalInformation(new PredictiveModelGeneralInformation()
                 .modelCategory(new ModelCategory().modelClass("Exposure model")))
             .modelType("exposureModel");
       case healthModel:
-        return new HealthModel()
+        return new HealthModel().modelMath(new GenericModelModelMath())
             .generalInformation(new PredictiveModelGeneralInformation()
                 .modelCategory(new ModelCategory().modelClass("Health metrics model")))
             .modelType("healthModel");
       case otherModel:
-        return new OtherModel()
+        return new OtherModel().modelMath(new OtherModelModelMath())
             .generalInformation(new OtherModelGeneralInformation()
                 .modelCategory(new ModelCategory().modelClass("Other empirical models")))
             .modelType("otherModel");
       case predictiveModel:
-        return new PredictiveModel()
+        return new PredictiveModel().modelMath(new PredictiveModelModelMath())
             .generalInformation(new PredictiveModelGeneralInformation()
                 .modelCategory(new ModelCategory().modelClass("Predictive model")))
             .modelType("predictiveModel");
       case processModel:
-        return new ProcessModel()
+        return new ProcessModel().modelMath(new PredictiveModelModelMath())
             .generalInformation(new PredictiveModelGeneralInformation()
                 .modelCategory(new ModelCategory().modelClass("Process model")))
             .modelType("processModel");
       case qraModel:
-        return new QraModel()
+        return new QraModel().modelMath(new GenericModelModelMath())
             .generalInformation(new PredictiveModelGeneralInformation()
                 .modelCategory(new ModelCategory().modelClass("Quantitative risk assessment")))
             .modelType("qraModel");
       case riskModel:
-        return new RiskModel()
+        return new RiskModel().modelMath(new GenericModelModelMath())
             .generalInformation(new PredictiveModelGeneralInformation()
                 .modelCategory(new ModelCategory().modelClass("Risk characterization model")))
             .modelType("riskModel");
       case toxicologicalModel:
-        return new ToxicologicalModel()
+        return new ToxicologicalModel().modelMath(new GenericModelModelMath())
             .generalInformation(new PredictiveModelGeneralInformation()
                 .modelCategory(new ModelCategory().modelClass("Toxicological reference value")))
             .modelType("toxicologicalModel");
       default:
-        return new GenericModel()
+        return new GenericModel().modelMath(new GenericModelModelMath())
             .generalInformation(new GenericModelGeneralInformation()
                 .modelCategory(new ModelCategory().modelClass("Generic model")))
             .modelType("genericModel");
