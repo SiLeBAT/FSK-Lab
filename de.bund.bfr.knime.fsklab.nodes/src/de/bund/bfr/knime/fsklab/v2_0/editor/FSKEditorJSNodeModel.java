@@ -313,13 +313,27 @@ final class FSKEditorJSNodeModel
         Class<? extends Model> modelClass = SwaggerUtil.modelClasses.get(modelType);
         metadata = MAPPER.readValue(viewValue.getModelMetaData(), modelClass);
         if(!StringUtils.isEmpty(viewRep.getModelMetadata())) {
-          if( m_config.getModelType().equals(modelType)) {
+          JsonNode repMetadataNode = MAPPER.readTree(viewRep.getModelMetadata());
+          String repModelType = repMetadataNode.get("modelType").asText("genericModel");
+          if(!m_config.getModelType().equals(repModelType)) {
             metadata =  new ConversionUtils().convertModel(MAPPER.readTree(viewRep.getModelMetadata()),
                   ConversionUtils.ModelClass.valueOf(m_config.getModelType()));
             viewRep.setModelMetadata(MAPPER.writeValueAsString(metadata));
             viewValue.setModelMetaData(MAPPER.writeValueAsString(metadata));
-          }else {
-            metadata = MAPPER.readValue(viewRep.getModelMetadata(), modelClass);
+            
+
+          }else if(!StringUtils.isEmpty(portObjectModelType) && !portObjectModelType.equals(modelType)) {
+            String json = MAPPER.writeValueAsString(((FskPortObject)inObjects[0]).modelMetadata);
+            JsonNode portMetadata = MAPPER.readTree(json);
+            metadata = new ConversionUtils().convertModel(portMetadata,
+                ConversionUtils.ModelClass.valueOf(m_config.getModelType()));
+            
+            copyConnectedNodeToView("", viewValue);
+            viewRep.setModelMetadata(MAPPER.writeValueAsString(metadata));
+            viewValue.setModelMetaData(MAPPER.writeValueAsString(metadata));
+          }
+          else {
+            metadata = MAPPER.readValue(viewValue.getModelMetaData(), modelClass);
           }
          
         }
@@ -329,6 +343,9 @@ final class FSKEditorJSNodeModel
             JsonNode portMetadata = MAPPER.readTree(json);
             metadata = new ConversionUtils().convertModel(portMetadata,
                 ConversionUtils.ModelClass.valueOf(m_config.getModelType()));
+            
+            if(inObjects[0] != null)
+              copyConnectedNodeToView("", viewValue);
             viewRep.setModelMetadata(MAPPER.writeValueAsString(metadata));
             viewValue.setModelMetaData(MAPPER.writeValueAsString(metadata));
           }else {
