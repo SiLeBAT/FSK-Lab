@@ -344,8 +344,7 @@ final class FSKEditorJSNodeModel
             metadata = new ConversionUtils().convertModel(portMetadata,
                 ConversionUtils.ModelClass.valueOf(m_config.getModelType()));
             
-            if(inObjects[0] != null)
-              copyConnectedNodeToView("", viewValue);
+            copyConnectedNodeToView("", viewValue);
             viewRep.setModelMetadata(MAPPER.writeValueAsString(metadata));
             viewValue.setModelMetaData(MAPPER.writeValueAsString(metadata));
           }else {
