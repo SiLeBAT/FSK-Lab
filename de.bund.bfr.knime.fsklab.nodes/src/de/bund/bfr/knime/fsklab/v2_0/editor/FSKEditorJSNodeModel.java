@@ -32,6 +32,7 @@ import de.bund.bfr.knime.fsklab.v2_0.FskSimulation;
 import de.bund.bfr.knime.fsklab.v2_0.editor.FSKEditorJSNodeDialog.ModelType;
 import de.bund.bfr.metadata.swagger.Model;
 import de.bund.bfr.metadata.swagger.Parameter;
+import de.bund.bfr.metadata.swagger.Parameter.ClassificationEnum;
 import de.bund.bfr.rakip.vocabularies.data.AccreditationProcedureRepository;
 import de.bund.bfr.rakip.vocabularies.data.AvailabilityRepository;
 import de.bund.bfr.rakip.vocabularies.data.BasicProcessRepository;
@@ -329,7 +330,13 @@ final class FSKEditorJSNodeModel
         originalParameters = SwaggerUtil.getParameter(originalMetadata);
       
       if(originalParameters.size()>0 && !parameters.equals(originalParameters) || m_port == null){
-        regenerateSimulation = true;
+        List<Parameter> nonCommonElements = new ArrayList(parameters);
+        nonCommonElements.removeAll(originalParameters);
+        for(Parameter p: nonCommonElements) {
+          if(!p.getClassification().equals(ClassificationEnum.OUTPUT)) {
+            regenerateSimulation = true;
+          }
+        }
       }
       
       // Take simulation from view value otherwise from input port (if connected)
