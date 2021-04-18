@@ -13,6 +13,33 @@
 	</parent>
 	<build>
 		<plugins>
+		    <plugin>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-codegen-maven-plugin</artifactId>
+                <version>2.4.19</version>
+                <executions>
+                    <execution>
+                        <id>convert</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${basedir}/../de.bund.bfr.knime.fsklab.metadata.model/resources/model.yaml</inputSpec>
+            
+                            <!-- Output directory, relative to the project directory. Default is ${project.build.directory}/generated-sources/swagger -->
+                            <output>specs</output>
+            
+                            <!-- Use "swagger" to convert YAML->JSON or "swagger-yaml" to convert JSON->YAML -->
+                            <language>swagger</language>
+                            <configOptions>
+                                <!-- Default output file name is swagger.json or swagger.yaml -->
+                                <outputFile>SPOT.json</outputFile>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 			<plugin>
 				<groupId>com.github.eirslett</groupId>
 				<artifactId>frontend-maven-plugin</artifactId>

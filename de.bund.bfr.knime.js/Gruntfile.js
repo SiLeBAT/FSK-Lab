@@ -70,7 +70,9 @@ module.exports = function (grunt) {
 					'src/js/app/app.table.js',
 					'src/js/app/app.table.mt.js',
 					'src/js/app/app.ui.js',
-					'src/js/app/app.landingpage.js'
+					'src/js/app/app.landingpage.js',
+                    'specs/template.js',
+                    'specs/SPOT.json'
 				],
 				dest: 'src/build/js/app.build.js'
 			},
