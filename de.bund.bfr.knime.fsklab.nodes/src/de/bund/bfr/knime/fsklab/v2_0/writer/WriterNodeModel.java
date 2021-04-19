@@ -18,6 +18,32 @@
  */
 package de.bund.bfr.knime.fsklab.v2_0.writer;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.threetenbp.ThreeTenModule;
+import de.bund.bfr.fskml.FSKML;
+import de.bund.bfr.fskml.FskMetaDataObject;
+import de.bund.bfr.fskml.FskMetaDataObject.ResourceType;
+import de.bund.bfr.fskml.sedml.SourceScript;
+import de.bund.bfr.knime.fsklab.FskPlugin;
+import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
+import de.bund.bfr.knime.fsklab.nodes.ScriptHandler;
+import de.bund.bfr.knime.fsklab.nodes.WriterNodeUtils;
+import de.bund.bfr.knime.fsklab.r.client.LibRegistry;
+import de.bund.bfr.knime.fsklab.v2_0.CombinedFskPortObject;
+import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
+import de.bund.bfr.knime.fsklab.v2_0.FskSimulation;
+import de.bund.bfr.knime.fsklab.v2_0.JoinRelation;
+import de.bund.bfr.metadata.swagger.Model;
+import de.bund.bfr.metadata.swagger.Parameter;
+import de.unirostock.sems.cbarchive.ArchiveEntry;
+import de.unirostock.sems.cbarchive.CombineArchive;
+import de.unirostock.sems.cbarchive.meta.DefaultMetaDataObject;
+import de.unirostock.sems.cbarchive.meta.MetaDataObject;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -33,6 +59,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.xml.stream.XMLStreamException;
+import metadata.SwaggerUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
@@ -75,33 +102,6 @@ import org.sbml.jsbml.ext.comp.Submodel;
 import org.sbml.jsbml.xml.XMLAttributes;
 import org.sbml.jsbml.xml.XMLNode;
 import org.sbml.jsbml.xml.XMLTriple;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.threetenbp.ThreeTenModule;
-import de.bund.bfr.fskml.FSKML;
-import de.bund.bfr.fskml.FskMetaDataObject;
-import de.bund.bfr.fskml.FskMetaDataObject.ResourceType;
-import de.bund.bfr.fskml.sedml.SourceScript;
-import de.bund.bfr.knime.fsklab.FskPlugin;
-import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
-import de.bund.bfr.knime.fsklab.nodes.ScriptHandler;
-import de.bund.bfr.knime.fsklab.nodes.WriterNodeUtils;
-import de.bund.bfr.knime.fsklab.r.client.LibRegistry;
-import de.bund.bfr.knime.fsklab.v2_0.CombinedFskPortObject;
-import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
-import de.bund.bfr.knime.fsklab.v2_0.FskSimulation;
-import de.bund.bfr.knime.fsklab.v2_0.JoinRelation;
-import de.bund.bfr.metadata.swagger.Model;
-import de.bund.bfr.metadata.swagger.Parameter;
-import de.unirostock.sems.cbarchive.ArchiveEntry;
-import de.unirostock.sems.cbarchive.CombineArchive;
-import de.unirostock.sems.cbarchive.meta.DefaultMetaDataObject;
-import de.unirostock.sems.cbarchive.meta.MetaDataObject;
-import metadata.SwaggerUtil;
 
 class WriterNodeModel extends NoInternalsModel {
 
@@ -279,20 +279,37 @@ class WriterNodeModel extends NoInternalsModel {
   private static void writeCombinedObject(CombinedFskPortObject fskObj, CombineArchive archive,
       Map<String, URI> URIS, String filePrefix, ScriptHandler scriptHandler) throws Exception {
     filePrefix = filePrefix + normalizeName(fskObj) + System.getProperty("file.separator");
+    
     FskPortObject ffskObj = fskObj.getFirstFskPortObject();
-    if (ffskObj instanceof CombinedFskPortObject) {
-      writeCombinedObject((CombinedFskPortObject) ffskObj, archive, URIS, filePrefix, scriptHandler);
-    } else {
-      writeFSKObject(ffskObj, archive,
-          filePrefix + normalizeName(ffskObj) + System.getProperty("file.separator"), URIS, scriptHandler);
+    try (ScriptHandler singleScriptHandler = ScriptHandler
+        .createHandler(SwaggerUtil.getLanguageWrittenIn(ffskObj.modelMetadata), ffskObj.packages)) {
+
+      if (ffskObj instanceof CombinedFskPortObject) {
+        writeCombinedObject((CombinedFskPortObject) ffskObj, archive, URIS, filePrefix,
+            singleScriptHandler);
+      } else {
+        writeFSKObject(ffskObj, archive,
+            filePrefix + normalizeName(ffskObj) + System.getProperty("file.separator"), URIS,
+            singleScriptHandler);
+      }
+    } catch (Exception e) {
+      throw new Exception(e.getLocalizedMessage(), e);
     }
 
     FskPortObject sfskObj = fskObj.getSecondFskPortObject();
-    if (sfskObj instanceof CombinedFskPortObject) {
-      writeCombinedObject((CombinedFskPortObject) sfskObj, archive, URIS, filePrefix, scriptHandler);
-    } else {
-      writeFSKObject(sfskObj, archive,
-          filePrefix + normalizeName(sfskObj) + System.getProperty("file.separator"), URIS, scriptHandler);
+    try (ScriptHandler singleScriptHandler = ScriptHandler
+        .createHandler(SwaggerUtil.getLanguageWrittenIn(sfskObj.modelMetadata), sfskObj.packages)) {
+
+      if (sfskObj instanceof CombinedFskPortObject) {
+        writeCombinedObject((CombinedFskPortObject) sfskObj, archive, URIS, filePrefix,
+            singleScriptHandler);
+      } else {
+        writeFSKObject(sfskObj, archive,
+            filePrefix + normalizeName(sfskObj) + System.getProperty("file.separator"), URIS,
+            singleScriptHandler);
+      }
+    } catch (Exception e) {
+      throw new Exception(e.getLocalizedMessage(), e);
     }
     
     // Adds R workspace file
