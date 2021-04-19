@@ -9,15 +9,42 @@
 
 	<fullDescription>
 		<intro>
-
+            This node visualizes FSK models as a HTML Table.
+            The source of this metadata can be read from remote repository which can be set via the "Repository URL" option in the setting window.
+            Also this metadata can be provided as KNIME table via the input port.<br/>
+            <br/>
+            <a href="https://kni.me/w/hvgtZc8MYdY7scqc">Example Workflow</a>
+            <br/>
+            <br/>
 		</intro>
+		<option name="Repository location">
+            By default refers to <a href="https://knime.bfr.berlin/landingpage/">https://knime.bfr.berlin/landingpage/</a>
+        </option>
+        <option name="Max Selection Number">
+            Sets the maximum number of models, can be selected
+        </option>
+        <option name="Show Download Button">
+            set to true if you like to show the download button in each row in the HTML table.
+        </option>
+        <option name="Show Details Button">
+            set to true if you like to show the Details button in each row in the HTML table.
+            which opens a modal to show more details about the the current FSK model.
+        </option>
+        <option name="Show Execute Button">
+            set to true if you like to show the execute button in each row in the HTML table.
+            the model then will be executed on the remote server.
+        </option>
+        <option name="Show Header Button">
+            set to true if you like to show the header button in each row in the HTML table.
+        </option>
 	</fullDescription>
 	<interactiveView name="FSK DB View">
 		JavaScript view to visualize FSK models as a HTML Table.
 	</interactiveView>
+	
 	<ports>
 		<inPort name="FSK Metadata Table" index="0">Input FSK Metadata
-			Table</inPort>
+			Table(optional)</inPort>
 		<outPort name="FSK Metadata Table" index="0">Output FSK Metadata
 			Table</outPort>
 	</ports>
