@@ -279,6 +279,7 @@ class WriterNodeModel extends NoInternalsModel {
   private static void writeCombinedObject(CombinedFskPortObject fskObj, CombineArchive archive,
       Map<String, URI> URIS, String filePrefix, ScriptHandler scriptHandler) throws Exception {
     filePrefix = filePrefix + normalizeName(fskObj) + System.getProperty("file.separator");
+    
     FskPortObject ffskObj = fskObj.getFirstFskPortObject();
     try (ScriptHandler singleScriptHandler = ScriptHandler
         .createHandler(SwaggerUtil.getLanguageWrittenIn(ffskObj.modelMetadata), ffskObj.packages)) {
@@ -295,7 +296,6 @@ class WriterNodeModel extends NoInternalsModel {
       throw new Exception(e.getLocalizedMessage(), e);
     }
 
-
     FskPortObject sfskObj = fskObj.getSecondFskPortObject();
     try (ScriptHandler singleScriptHandler = ScriptHandler
         .createHandler(SwaggerUtil.getLanguageWrittenIn(sfskObj.modelMetadata), sfskObj.packages)) {
@@ -307,11 +307,11 @@ class WriterNodeModel extends NoInternalsModel {
         writeFSKObject(sfskObj, archive,
             filePrefix + normalizeName(sfskObj) + System.getProperty("file.separator"), URIS,
             singleScriptHandler);
-
       }
     } catch (Exception e) {
       throw new Exception(e.getLocalizedMessage(), e);
     }
+    
     // Adds R workspace file
     if (fskObj.getWorkspace() != null) {
       addWorkspace(archive, fskObj.getWorkspace(), filePrefix);
@@ -333,133 +333,131 @@ class WriterNodeModel extends NoInternalsModel {
   @Override
   protected PortObject[] execute(PortObject[] inObjects, ExecutionContext exec) throws Exception {
     FskPortObject in = (FskPortObject) inObjects[0];
+    try (ScriptHandler scriptHandler = ScriptHandler
+        .createHandler(SwaggerUtil.getLanguageWrittenIn(in.modelMetadata), in.packages)) {
+      
+      
+      
+      URL url = FileUtil.toURL(filePath.getStringValue());
+      File localPath = FileUtil.getFileFromURL(url);
 
+      if (localPath != null) {
+        localPath.delete();
+        writeArchive(localPath, in, exec, scriptHandler);
+      } else {
 
+        // Creates archive in temporary archive file
+        File archiveFile = FileUtil.createTempFile("model", "fskx");
 
-    URL url = FileUtil.toURL(filePath.getStringValue());
-    File localPath = FileUtil.getFileFromURL(url);
+        // The file is deleted since we need the path only for the COMBINE archive
+        archiveFile.delete();
 
-    if (localPath != null) {
-      localPath.delete();
-      writeArchive(localPath, in, exec);
-    } else {
+        // Writes COMBINE archive
+        writeArchive(archiveFile, in, exec, scriptHandler);
 
-      // Creates archive in temporary archive file
-      File archiveFile = FileUtil.createTempFile("model", "fskx");
+        // Copies temporary file to output stream
+        try (OutputStream os = FileUtil.openOutputConnection(url, "PUT").getOutputStream()) {
+          Files.copy(archiveFile.toPath(), os);
+        }
 
-      // The file is deleted since we need the path only for the COMBINE archive
-      archiveFile.delete();
-
-      // Writes COMBINE archive
-      writeArchive(archiveFile, in, exec);
-
-      // Copies temporary file to output stream
-      try (OutputStream os = FileUtil.openOutputConnection(url, "PUT").getOutputStream()) {
-        Files.copy(archiveFile.toPath(), os);
+        // Deletes temporary file
+        archiveFile.delete();
       }
 
-      // Deletes temporary file
-      archiveFile.delete();
+      
+    } catch(Exception e) {
+      throw new Exception(e.getLocalizedMessage(), e);
     }
-
-
-
+    
     return new PortObject[] {};
   }
 
   private static void writeArchive(File archiveFile, FskPortObject portObject,
-      ExecutionContext exec) throws Exception {
-    
-    try (ScriptHandler scriptHandler = ScriptHandler.createHandler(
-        SwaggerUtil.getLanguageWrittenIn(portObject.modelMetadata), portObject.packages)) {
+      ExecutionContext exec, ScriptHandler scriptHandler) throws Exception {
 
-      Map<String, URI> URIS = FSKML.getURIS(1, 0, 12);
+    Map<String, URI> URIS = FSKML.getURIS(1, 0, 12);
 
-      try (final CombineArchive archive = new CombineArchive(archiveFile)) {
+    try (final CombineArchive archive = new CombineArchive(archiveFile)) {
 
+      if (portObject instanceof CombinedFskPortObject) {
+        writeCombinedObject((CombinedFskPortObject) portObject, archive, URIS, "", scriptHandler);
+      } else {
+        writeFSKObject(portObject, archive, "", URIS, scriptHandler);
+      }
+
+      // Add SBML document
+      {
+        SBMLDocument sbmlDocument = createSBML(portObject, archive, "model", URIS, "");
+
+        // Create temporary file and write sbmlDocument into it
+        File temporaryFile = File.createTempFile("connections", ".sbml");
+        SBMLWriter.write(sbmlDocument, temporaryFile, null, null);
+
+        String targetName;
         if (portObject instanceof CombinedFskPortObject) {
-          writeCombinedObject((CombinedFskPortObject) portObject, archive, URIS, "", scriptHandler);
+          targetName = normalizeName(portObject) + "/" + sbmlDocument.getModel().getId() + ".sbml";
         } else {
-          writeFSKObject(portObject, archive, "", URIS, scriptHandler);
+          targetName = sbmlDocument.getModel().getId() + ".sbml";
         }
 
-        // Add SBML document
-        {
-          SBMLDocument sbmlDocument = createSBML(portObject, archive, "model", URIS, "");
+        archive.addEntry(temporaryFile, targetName, URIS.get("sbml"));
+      }
 
-          // Create temporary file and write sbmlDocument into it
-          File temporaryFile = File.createTempFile("connections", ".sbml");
-          SBMLWriter.write(sbmlDocument, temporaryFile, null, null);
+      final URI libUri = NodeUtils.getLibURI();
+      List<String> missingPackages = new ArrayList<>();
+      List<VersionedPackage> versionedPackages = new ArrayList<>(portObject.packages.size());
 
-          String targetName;
-          if (portObject instanceof CombinedFskPortObject) {
-            targetName =
-                normalizeName(portObject) + "/" + sbmlDocument.getModel().getId() + ".sbml";
-          } else {
-            targetName = sbmlDocument.getModel().getId() + ".sbml";
-          }
-
-          archive.addEntry(temporaryFile, targetName, URIS.get("sbml"));
-        }
-
-        final URI libUri = NodeUtils.getLibURI();
-        List<String> missingPackages = new ArrayList<>();
-        List<VersionedPackage> versionedPackages = new ArrayList<>(portObject.packages.size());
-
-        // Get versions of R packages
-        for (String packageName : portObject.packages) {
-          String command = scriptHandler.getPackageVersionCommand(packageName);
-
-          try {
-            String packageVersion = scriptHandler.runScript(command, exec, true)[0];
-            versionedPackages.add(new VersionedPackage(packageName, packageVersion));
-
-            Path path = LibRegistry.instance().getPath(packageName);
-            if (path != null) {
-              File file = path.toFile();
-              archive.addEntry(file, file.getName(), libUri);
-            }
-          } catch (Exception err) {
-            missingPackages.add(packageName);
-          }
-        }
-
-        // Try to retrieve versions of missing packages from the repository
-        if (!missingPackages.isEmpty()) {
-          String command = scriptHandler.getPackageVersionCommand(missingPackages);
-
-          try {
-            String[] execResult = scriptHandler.runScript(command, exec, true);
-
-            for (int index = 0; index < missingPackages.size(); index++) {
-              String packageName = missingPackages.get(index);
-              String packageVersion = execResult[missingPackages.size() + index];
-              versionedPackages.add(new VersionedPackage(packageName, packageVersion));
-            }
-          } catch (Exception err) {
-            // If not able to get package versions from repository, then only add the
-            // package names
-            LOGGER.info("not able to get package version for: " + missingPackages);
-            missingPackages.stream().map(name -> new VersionedPackage(name, ""))
-                .forEach(versionedPackages::add);
-          }
-        }
-
-        final String language = StringUtils
-            .defaultIfBlank(SwaggerUtil.getLanguageWrittenIn(portObject.modelMetadata), "R");
-        PackagesInfo packagesInfo = new PackagesInfo(language, versionedPackages);
+      // Get versions of R packages
+      for (String packageName : portObject.packages) {
+        String command = scriptHandler.getPackageVersionCommand(packageName);
 
         try {
-          String jsonString = FskPlugin.getDefault().MAPPER104.writeValueAsString(packagesInfo);
-          addPackagesFile(archive, jsonString, "packages.json");
-        } catch (Exception err) {
-          // do nothing
-        }
+          String packageVersion = scriptHandler.runScript(command, exec, true)[0];
+          versionedPackages.add(new VersionedPackage(packageName, packageVersion));
 
-        archive.pack();
+          Path path = LibRegistry.instance().getPath(packageName);
+          if (path != null) {
+            File file = path.toFile();
+            archive.addEntry(file, file.getName(), libUri);
+          }
+        } catch (Exception err) {
+          missingPackages.add(packageName);
+        }
       }
-    } catch (Exception e) {
-      throw new Exception(e.getLocalizedMessage(), e);
+
+      // Try to retrieve versions of missing packages from the repository
+      if (!missingPackages.isEmpty()) {
+        String command = scriptHandler.getPackageVersionCommand(missingPackages);
+
+        try {
+          String[] execResult = scriptHandler.runScript(command, exec, true);
+
+          for (int index = 0; index < missingPackages.size(); index++) {
+            String packageName = missingPackages.get(index);
+            String packageVersion = execResult[missingPackages.size() + index];
+            versionedPackages.add(new VersionedPackage(packageName, packageVersion));
+          }
+        } catch (Exception err) {
+          // If not able to get package versions from repository, then only add the
+          // package names
+          LOGGER.info("not able to get package version for: " + missingPackages);
+          missingPackages.stream().map(name -> new VersionedPackage(name, ""))
+              .forEach(versionedPackages::add);
+        }
+      }
+      
+      final String language = StringUtils.defaultIfBlank(
+          SwaggerUtil.getLanguageWrittenIn(portObject.modelMetadata), "R");
+      PackagesInfo packagesInfo = new PackagesInfo(language, versionedPackages);
+
+      try {
+        String jsonString = FskPlugin.getDefault().MAPPER104.writeValueAsString(packagesInfo);
+        addPackagesFile(archive, jsonString, "packages.json");
+      } catch (Exception err) {
+        // do nothing
+      }
+      
+      archive.pack();
     }
   }
 
