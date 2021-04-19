@@ -315,7 +315,7 @@ final class FSKEditorJSNodeModel
         if(!StringUtils.isEmpty(viewRep.getModelMetadata())) {
           JsonNode repMetadataNode = MAPPER.readTree(viewRep.getModelMetadata());
           String repModelType = repMetadataNode.get("modelType").asText("genericModel");
-          if(!m_config.getModelType().equals(repModelType)) {
+          if(m_config.getModelType() != null &&  !m_config.getModelType().equals(repModelType)) {
             metadata =  new ConversionUtils().convertModel(MAPPER.readTree(viewRep.getModelMetadata()),
                   ConversionUtils.ModelClass.valueOf(m_config.getModelType()));
             viewRep.setModelMetadata(MAPPER.writeValueAsString(metadata));
