@@ -18,7 +18,7 @@
             <br/>
 		</intro>
 		<option name="Repository location">
-            By default refers to <a href="https://knime.bfr.berlin/landingpage">https://knime.bfr.berlin/landingpage</a>
+            By default refers to <a href="https://knime.bfr.berlin/landingpage/">https://knime.bfr.berlin/landingpage/</a>
         </option>
         <option name="Max Selection Number">
             Sets the maximum number of models, can be selected
