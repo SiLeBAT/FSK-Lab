@@ -6,6 +6,7 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import org.apache.commons.io.FileUtils;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.workflow.FlowVariable;
@@ -18,6 +19,7 @@ import de.bund.bfr.metadata.swagger.Assay;
 import de.bund.bfr.metadata.swagger.ConsumptionModel;
 import de.bund.bfr.metadata.swagger.Contact;
 import de.bund.bfr.metadata.swagger.DataModel;
+import de.bund.bfr.metadata.swagger.DataModelGeneralInformation;
 import de.bund.bfr.metadata.swagger.DietaryAssessmentMethod;
 import de.bund.bfr.metadata.swagger.DoseResponseModel;
 import de.bund.bfr.metadata.swagger.DoseResponseModelGeneralInformation;
@@ -164,12 +166,18 @@ public class NodeUtils {
           .modelType("genericModel");
   }
 
-  /** Initialize and return a model for the passed type. */
+  /**
+   * Initialise and return a model for the passed type. The model is initialised
+   * with an UUID and its model class.
+   */
   public static Model initializeModel(ModelType modelType) {
+    
+    String modelId = UUID.randomUUID().toString();
 
     if (modelType == null)
       return new GenericModel()
           .generalInformation(new GenericModelGeneralInformation()
+              .identifier(modelId)
               .modelCategory(new ModelCategory().modelClass("Generic model")))
           .modelType("genericModel");
 
@@ -177,63 +185,77 @@ public class NodeUtils {
       case genericModel:
         return new GenericModel().modelMath(new GenericModelModelMath())
             .generalInformation(new GenericModelGeneralInformation()
+                .identifier(modelId)
                 .modelCategory(new ModelCategory().modelClass("Generic model")))
             .modelType("genericModel");
       case dataModel:
-        return new DataModel().modelType("dataModel");
+        return new DataModel()
+            .generalInformation(new DataModelGeneralInformation().identifier(modelId))
+            .modelType("dataModel");
       case consumptionModel:
         return new ConsumptionModel().modelMath(new PredictiveModelModelMath())
             .generalInformation(new PredictiveModelGeneralInformation()
+                .identifier(modelId)
                 .modelCategory(new ModelCategory().modelClass("Consumption model")))
             .modelType("consumptionModel");
       case doseResponseModel:
         return new DoseResponseModel().modelMath(new DoseResponseModelModelMath())
             .generalInformation(new DoseResponseModelGeneralInformation()
+                .identifier(modelId)
                 .modelCategory(new ModelCategory().modelClass("Dose-response model")))
             .modelType("doseResponseModel");
       case exposureModel:
         return new ExposureModel().modelMath(new GenericModelModelMath())
             .generalInformation(new PredictiveModelGeneralInformation()
+                .identifier(modelId)
                 .modelCategory(new ModelCategory().modelClass("Exposure model")))
             .modelType("exposureModel");
       case healthModel:
         return new HealthModel().modelMath(new GenericModelModelMath())
             .generalInformation(new PredictiveModelGeneralInformation()
+                .identifier(modelId)
                 .modelCategory(new ModelCategory().modelClass("Health metrics model")))
             .modelType("healthModel");
       case otherModel:
         return new OtherModel().modelMath(new OtherModelModelMath())
             .generalInformation(new OtherModelGeneralInformation()
+                .identifier(modelId)
                 .modelCategory(new ModelCategory().modelClass("Other empirical models")))
             .modelType("otherModel");
       case predictiveModel:
         return new PredictiveModel().modelMath(new PredictiveModelModelMath())
             .generalInformation(new PredictiveModelGeneralInformation()
+                .identifier(modelId)
                 .modelCategory(new ModelCategory().modelClass("Predictive model")))
             .modelType("predictiveModel");
       case processModel:
         return new ProcessModel().modelMath(new PredictiveModelModelMath())
             .generalInformation(new PredictiveModelGeneralInformation()
+                .identifier(modelId)
                 .modelCategory(new ModelCategory().modelClass("Process model")))
             .modelType("processModel");
       case qraModel:
         return new QraModel().modelMath(new GenericModelModelMath())
             .generalInformation(new PredictiveModelGeneralInformation()
+                .identifier(modelId)
                 .modelCategory(new ModelCategory().modelClass("Quantitative risk assessment")))
             .modelType("qraModel");
       case riskModel:
         return new RiskModel().modelMath(new GenericModelModelMath())
             .generalInformation(new PredictiveModelGeneralInformation()
+                .identifier(modelId)
                 .modelCategory(new ModelCategory().modelClass("Risk characterization model")))
             .modelType("riskModel");
       case toxicologicalModel:
         return new ToxicologicalModel().modelMath(new GenericModelModelMath())
             .generalInformation(new PredictiveModelGeneralInformation()
+                .identifier(modelId)
                 .modelCategory(new ModelCategory().modelClass("Toxicological reference value")))
             .modelType("toxicologicalModel");
       default:
         return new GenericModel().modelMath(new GenericModelModelMath())
             .generalInformation(new GenericModelGeneralInformation()
+                .identifier(modelId)
                 .modelCategory(new ModelCategory().modelClass("Generic model")))
             .modelType("genericModel");
     }
