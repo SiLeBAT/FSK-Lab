@@ -183,12 +183,14 @@ public class ConversionUtils {
 
 	private JsonNode convert(JsonNode originalMetadata, Map<String, Object> originalClass,
 			Map<String, Object> targetClass) {
-
+  	    if(originalMetadata == null) {
+          return null;
+        }
 		Map<String, Object> originalProperties = getProperties(originalClass);
 		Map<String, Object> targetProperties = getProperties(targetClass);
 
 		ObjectNode node = MAPPER.createObjectNode();
-
+		
 		Iterator<Entry<String, JsonNode>> fields = originalMetadata.fields();
 		while (fields.hasNext()) {
 			Entry<String, JsonNode> field = fields.next();
