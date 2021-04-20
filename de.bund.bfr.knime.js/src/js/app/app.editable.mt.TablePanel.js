@@ -237,21 +237,27 @@
             })
             for(indexx in keys){
                 let input = dialog.inputs[keys[indexx]].input
-                
-                if (input.attr('type') === "date") {
-                    let value = originalData.cells[indexx]
-                    let day = ("" + value[2]).length > 1 ? ("" + value[2]) : ("0" + value[2]);
-                    let month = ("" + value[1]).length > 1 ? ("" + value[1]) : ("0" + value[1]);
-                    dialog.inputs[keys[indexx]].input.val(value[0] + "-" + month + "-" + day);
-                    
-                }else if(input.is(':checkbox')){
-                    dialog.inputs[keys[indexx]].input.prop('checked', originalData.cells[indexx]);  
-                }else{
-                    dialog.inputs[keys[indexx]].input.val(originalData.cells[indexx]);
-                    if(dialog.inputs[keys[indexx]].input.trigger){
-                        dialog.inputs[keys[indexx]].input.trigger('change');
+                if(input){
+                    if ( input.attr('type') === "date") {
+                        let value = originalData.cells[indexx]
+                        if(value){
+                            let day = ("" + value[2]).length > 1 ? ("" + value[2]) : ("0" + value[2]);
+                            let month = ("" + value[1]).length > 1 ? ("" + value[1]) : ("0" + value[1]);
+                            dialog.inputs[keys[indexx]].input.val(value[0] + "-" + month + "-" + day);
+                        }
+                    }else if(input.attr('type') === "checkbox"){
+                        dialog.inputs[keys[indexx]].input.prop('checked', originalData.cells[indexx] );  
+                    }else{
+                        dialog.inputs[keys[indexx]].input.val(originalData.cells[indexx]);
+                        if(dialog.inputs[keys[indexx]].input.trigger){
+                            dialog.inputs[keys[indexx]].input.trigger('change');
+                        }
                     }
-                }
+               }else if(Array.isArray(originalData.cells[indexx]) && dialog.inputs[keys[indexx]].simpleTable){
+                   $.each(originalData.cells[indexx],function(j,val){
+                        dialog.inputs[keys[indexx]].simpleTable._createRow(val);
+                   })
+               }
             }
            
             dialog.editedRow = index;
@@ -261,6 +267,7 @@
        
         save(index, originalData) {
             let O = this;
+            console.log(originalData);
             O.add(originalData, index, true);
         }
         remove(index) {
