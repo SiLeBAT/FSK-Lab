@@ -200,12 +200,32 @@
                 $panel.data('table', O.panelTable);
             return $panel;
         }
-        add(data) {
+        add(data,index,isEdit) {
             let O = this;
             data.el ?delete data.el:null;
-            O.panelTable._tableData.push(data); // add data
-            O.data.push(data); // add data
-            O.panelTable.addRow(O.panelTable._tableData.length-1,data,false);
+            
+            let keys = [];
+            $.each(O.panelTable.opts.cols,function(index,key){
+                keys.push(key.field);
+            })
+            // set table row data
+            let rowData = {
+                cells: []
+            };
+            // cells
+            $.each(data, (j, value) => {
+                // cell each prop
+                rowData.cells.push(value);
+            });
+            if(isEdit){
+                O.panelTable._tableData.splice(index, 1, rowData);
+                O.data.splice(index, 1, data); // add data
+                O.panelTable.addRow(index, rowData, O.panelTable._tableData,'true',isEdit);
+            }else{
+                O.panelTable._tableData.push(rowData); 
+                O.data.push(data);// add data
+                O.panelTable.addRow(O.panelTable._tableData.length-1, rowData, O.panelTable._tableData,'true',false);
+            }
             window.editEventBus.broadcast('MetadataChanged');
         }
 
@@ -241,15 +261,7 @@
        
         save(index, originalData) {
             let O = this;
-            originalData.el ?delete originalData.el:null;
-            O.panelTable._tableData.splice(index, 1);
-            let row = $(O.panelTable._$tbody).find('tr').eq(index);
-            row.find('td').each(function() {
-                $(this).html(originalData[$(this).attr('data-id')]);
-            });
-            O.data.splice(index, 1,originalData); // replace data
-            O.panelTable._tableData.push(originalData);
-            window.editEventBus.broadcast('MetadataChanged');
+            O.add(originalData, index, true);
         }
         remove(index) {
             let O = this;
