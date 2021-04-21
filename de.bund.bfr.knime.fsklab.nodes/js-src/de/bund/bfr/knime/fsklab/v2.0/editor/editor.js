@@ -36,8 +36,10 @@ fskeditorjs = function () {
           }).replace(/\s+/g, '');
         }
   let doSave = function(_metadatax){
+    _metadatax = JSON.parse(JSON.stringify(_metadatax));
     
     _metadatax.modelMath.parameter.forEach(param => {
+      param.classification = param.classification.toUpperCase();
       if(param.classification != "OUTPUT" && _simulation){ 
         _simulation.forEach(simulation => {
             if(Object.keys(simulation.parameters).indexOf(param.id) < 0){
