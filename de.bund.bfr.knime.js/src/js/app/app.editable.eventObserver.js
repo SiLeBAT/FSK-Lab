@@ -9,15 +9,20 @@ class EventObserver {
     constructor() {
         let O = this;
         O.observers = []; //list of observed events (callback functions)
+        O.registeredID = [];
     }
 
     subscribe(id, observer) {
         let O = this;
         //add new events
-        O.observers.push({
-            id: id,
-            callback: observer
-        }); //get list of observed events and push new item to array
+        console.log(id, observer);
+        if(!O.registeredID.includes(id) ){
+            O.observers.push({
+                id: id,
+                callback: observer
+            }); //get list of observed events and push new item to array
+            O.registeredID.push(id);
+        }
     }
 
     unsubscribe(observer) {
