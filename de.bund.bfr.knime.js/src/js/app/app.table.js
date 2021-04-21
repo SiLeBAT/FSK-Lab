@@ -53,14 +53,18 @@ class APPTable {
 		this._opts = $.extend(true, {}, this.opts, settings);
 	}
 
-	addRow( rowIndex, rowData, tableData, isMainTable) {
+	addRow( rowIndex, rowData, tableData, isMainTable, isEdit) {
 		
 		let O = this;
+        console.log(rowIndex,rowData, tableData, isMainTable, isEdit);
 		tableData = O._tableData
 		// row
-		let $tr = $('<tr data-row-id="' + rowIndex + '"></tr>')
-			.appendTo(O._$tbody);
-
+		let $tr = $('<tr data-row-id="' + rowIndex + '"></tr>');			
+        
+        if(isEdit)
+            O._$tbody.find( 'tr:nth('+(rowIndex)+')').replaceWith($tr);
+        else
+            $tr.appendTo(O._$tbody);
 		// rows selectable
 		if (O.opts.rowSelectable) {
 
@@ -181,7 +185,7 @@ class APPTable {
 			// wrap actions with inner container of td
 			$tdActions.wrapInner('<div class="td-actions-container"></div>');
 		}
-		O.totalRows = rowIndex;
+		O.totalRows = O._$tbody.find( 'tr').length;
 	}
 	/**
 	 * CREATE TABLE HEAD

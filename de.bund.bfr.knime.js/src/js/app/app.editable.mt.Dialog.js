@@ -112,7 +112,11 @@
                 let data = {};
                 for (const inputId in O.inputs) {
                     let currentInput = O.inputs[inputId];
-                    data[inputId] = currentInput.type != "checkbox" ? $(currentInput.input[0]).val() : $(currentInput.input[0]).is(":checked"); // Save input value
+                    if(currentInput.type&&currentInput.type == "checkbox"){
+                        data[inputId] = $(currentInput.input[0]).is(":checked");
+                    }else{
+                        data[inputId] = currentInput.value; // Save input value
+                    }
                     currentInput.clear(); // Clear input
                 }
 

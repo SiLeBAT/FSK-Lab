@@ -196,7 +196,7 @@
                 }
             }else if(O.type === "checkbox" ){
                 console.log(O.input.is(":checked"));
-                return O.input.is(":checked"); 
+                return O.input.is(":checked")?"true":"false"; 
             }
             else{
                 return O.input.val();
@@ -204,11 +204,10 @@
         }
 
         set value(newValue) {
-            console.log(newValue);
             let O = this;
              if(O.type === "checkbox" ){
                 console.log(newValue);
-                O.input.checked = newValue 
+                O.input.selected(newValue=='true'?true:false); 
             }
             else{
                 O.val( newValue );
