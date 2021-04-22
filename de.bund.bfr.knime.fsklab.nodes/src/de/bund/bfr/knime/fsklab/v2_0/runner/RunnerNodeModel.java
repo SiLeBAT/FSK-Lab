@@ -181,8 +181,8 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
       this.pushFlowVariableString("generatedResources",
           fskObj.getGeneratedResourcesDirectory().get().getAbsolutePath());
     }
-
-    if(StringUtils.isBlank(fskObj.getViz())) {
+    
+    if(isVisScriptEmpty(fskObj)) {
       LOGGER.warn("There is no visualization script");
       String noImage = "<?xml version=\"1.0\"?>\n"
           + "<svg xmlns=\"http://www.w3.org/2000/svg\"\n"
@@ -216,7 +216,17 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
       return new PortObject[] {fskObj};
     }
   }
-
+  private boolean isVisScriptEmpty(FskPortObject fskObject) {
+    if (fskObject instanceof CombinedFskPortObject) {
+      return isVisScriptEmpty(((CombinedFskPortObject)fskObject).getSecondFskPortObject());
+    }else {
+      if(StringUtils.isBlank(fskObject.getViz())) {
+        return true;
+      }else {
+        return false;
+      }
+    }
+  }
   private void createTopLevelJsonFile(CombinedFskPortObject fskObj,
      ExecutionContext exec) throws Exception {
 
