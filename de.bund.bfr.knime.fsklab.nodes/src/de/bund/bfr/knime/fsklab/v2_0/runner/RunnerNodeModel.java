@@ -21,6 +21,8 @@ package de.bund.bfr.knime.fsklab.v2_0.runner;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -171,27 +173,54 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
       throw new Exception(e.getLocalizedMessage(), e);
     }
     
+    // make path to JSON parameters available by adding a flow-variable
+    if (fskObj.getGeneratedResourcesDirectory().isPresent()) {
+      this.pushFlowVariableString("generatedResources",
+          fskObj.getGeneratedResourcesDirectory().get().getAbsolutePath());
+    }
+    
+    // create a parameter.json for the top level combined model
+    if (fskObj instanceof CombinedFskPortObject) {
+      createTopLevelJsonFile((CombinedFskPortObject) fskObj, exec);
+    }
+    
     try (FileInputStream fis = new FileInputStream(internalSettings.imageFile)) {
       final SvgImageContent content = new SvgImageContent(fis);
+      
+      //check if the plot is valid, exception will be thrown if it isn't.
+      //this will be handled by generating a default a SVG plot in the catch block.
+      content.toImageCell();
+      
       ImagePortObject imgObj = new ImagePortObject(content, SVG_SPEC);
-      // create a parameter.json for the top level combined model
-      if (fskObj instanceof CombinedFskPortObject) {
-        createTopLevelJsonFile((CombinedFskPortObject) fskObj, exec);
-      }
-
-      // make path to JSON parameters available by adding a flow-variable
-      if (fskObj.getGeneratedResourcesDirectory().isPresent()) {
-        this.pushFlowVariableString("generatedResources",
-            fskObj.getGeneratedResourcesDirectory().get().getAbsolutePath());
-      }
-
+      
       return new PortObject[] {fskObj, imgObj};
-    } catch (IOException e) {
+      
+    } catch (Exception e) {
       LOGGER.warn("There is no image created");
-      return new PortObject[] {fskObj};
+      String noImage = "<?xml version=\"1.0\"?>\n"
+          + "<svg xmlns=\"http://www.w3.org/2000/svg\"\n"
+          + "     height=\"300px\" width=\"300px\"\n"
+          + "     version=\"1.1\"\n"
+          + "     viewBox=\"-300 -300 600 600\"\n"
+          + "     font-family=\"Bitstream Vera Sans,Liberation Sans, Arial, sans-serif\"\n"
+          + "     font-size=\"72\"\n"
+          + "     text-anchor=\"middle\" >\n"
+          + "  \n"
+          + "  <circle stroke=\"#AAA\" stroke-width=\"10\" r=\"280\" fill=\"#FFF\"/>\n"
+          + "  <text style=\"fill:#444;\">\n"
+          + "    <tspan x=\"0\" y=\"-8\">NO PLOT</tspan><tspan x=\"0\" y=\"80\">AVAILABLE</tspan>\n"
+          + "  </text>\n"
+          + "</svg>";
+      Files.write(Paths.get(internalSettings.imageFile.getPath()), noImage.getBytes());
+      try (FileInputStream fis = new FileInputStream(internalSettings.imageFile)) {
+        final SvgImageContent content = new SvgImageContent(fis);
+        ImagePortObject imgObj = new ImagePortObject(content, SVG_SPEC);
+        fskObj.setPlot(internalSettings.imageFile.getPath());
+        return new PortObject[] {fskObj, imgObj};
+      }
     }
   }
-
+  
   private void createTopLevelJsonFile(CombinedFskPortObject fskObj,
      ExecutionContext exec) throws Exception {
 
