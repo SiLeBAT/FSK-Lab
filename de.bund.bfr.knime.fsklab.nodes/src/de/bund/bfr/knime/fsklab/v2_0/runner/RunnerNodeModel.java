@@ -172,31 +172,18 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
     } catch (Exception e) {
       throw new Exception(e.getLocalizedMessage(), e);
     }
-    
+    if (fskObj instanceof CombinedFskPortObject) {
+      createTopLevelJsonFile((CombinedFskPortObject) fskObj, exec);
+    }
+
     // make path to JSON parameters available by adding a flow-variable
     if (fskObj.getGeneratedResourcesDirectory().isPresent()) {
       this.pushFlowVariableString("generatedResources",
           fskObj.getGeneratedResourcesDirectory().get().getAbsolutePath());
     }
-    
-    // create a parameter.json for the top level combined model
-    if (fskObj instanceof CombinedFskPortObject) {
-      createTopLevelJsonFile((CombinedFskPortObject) fskObj, exec);
-    }
-    
-    try (FileInputStream fis = new FileInputStream(internalSettings.imageFile)) {
-      final SvgImageContent content = new SvgImageContent(fis);
-      
-      //check if the plot is valid, exception will be thrown if it isn't.
-      //this will be handled by generating a default a SVG plot in the catch block.
-      content.toImageCell();
-      
-      ImagePortObject imgObj = new ImagePortObject(content, SVG_SPEC);
-      
-      return new PortObject[] {fskObj, imgObj};
-      
-    } catch (Exception e) {
-      LOGGER.warn("There is no image created");
+
+    if(StringUtils.isBlank(fskObj.getViz())) {
+      LOGGER.warn("There is no visualization script");
       String noImage = "<?xml version=\"1.0\"?>\n"
           + "<svg xmlns=\"http://www.w3.org/2000/svg\"\n"
           + "     height=\"300px\" width=\"300px\"\n"
@@ -219,8 +206,17 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
         return new PortObject[] {fskObj, imgObj};
       }
     }
+    try (FileInputStream fis = new FileInputStream(internalSettings.imageFile)) {
+      final SvgImageContent content = new SvgImageContent(fis);
+      ImagePortObject imgObj = new ImagePortObject(content, SVG_SPEC);
+      // create a parameter.json for the top level combined model
+      return new PortObject[] {fskObj, imgObj};
+    } catch (IOException e) {
+      LOGGER.warn("There is no image created");
+      return new PortObject[] {fskObj};
+    }
   }
-  
+
   private void createTopLevelJsonFile(CombinedFskPortObject fskObj,
      ExecutionContext exec) throws Exception {
 
