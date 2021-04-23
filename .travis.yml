@@ -33,15 +33,14 @@ after_success:
 deploy:
 - provider: script
   skip_cleanup: true # to upload artifacts created during the build
-  script: bash bintray.sh
-  on: test
-- provider: script
-  skip_cleanup: true
-  script: bash bintray_development.sh
-  on: development
-- provider: script
-  skip_cleanup: true # to upload artifacts created during the build
-  script: bash bintray_nightly.sh
-  on: 
-    branch: master
-    condition: $TRAVIS_EVENT_TYPE = cron
+  script: bash gitlab.sh
+  on:
+    branch: release
+
+# TODO: nightly build
+# - provider: script
+#   skip_cleanup: true # to upload artifacts created during the build
+#   script: bash bintray_nightly.sh
+#   on: 
+#     branch: master
+#     condition: $TRAVIS_EVENT_TYPE = cron
