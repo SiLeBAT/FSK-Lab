@@ -824,10 +824,15 @@ public class ReaderNodeUtil {
     List<FskSimulation> simulations = new ArrayList<>(sedml.getModels().size());
     for (org.jlibsedml.Model model : sedml.getModels()) {
 
-      Map<String, String> params = model.getListOfChanges().stream()
+   // linked hash map needed to preserve order of parameters
+      LinkedHashMap<String, String> params = model.getListOfChanges()
+          .stream()
           .filter(change -> change.getChangeKind().equals(SEDMLTags.CHANGE_ATTRIBUTE_KIND))
-          .map(change -> (ChangeAttribute) change).collect(Collectors
-              .toMap(change -> change.getTargetXPath().toString(), ChangeAttribute::getNewValue));
+          .map(change -> (ChangeAttribute) change)
+          .collect(
+            LinkedHashMap::new,
+            (map, item) -> map.put(item.getTargetXPath().toString(), item.getNewValue()),
+            Map::putAll); 
 
       FskSimulation sim = new FskSimulation(model.getId());
       sim.getParameters().putAll(params);
