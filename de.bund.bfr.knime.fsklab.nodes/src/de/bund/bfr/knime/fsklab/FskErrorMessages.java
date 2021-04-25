@@ -29,6 +29,32 @@ public class FskErrorMessages {
     }
     return objectNullMessage(variableName);
   }
+  
+  /**
+   * Warning message when a variable that should be accessible as a file but is either 
+   * not available in the workspace or just a script command reading 
+   * a file, e.g. "read.csv("file.csv") 
+   * 
+   *  
+   * @param variableName name of the file variable
+   * @param modelId ID of model currently executed
+   * @return error/warning message
+   */
+  public static String variableAccessWarning(String variableName, String modelId) {
+    if (isNotNull("Variable", variableName) && isNotNull("Model ID", modelId)) {
+      String msg ="WARNING: FILE parameter '" + variableName + "' of model '" + modelId
+          + "' is not accessible as a filename. Make sure the variable is global and check "
+          + "its value. File parameters should only have their file name + extension as a value";
+      LOGGER.warn(msg);
+      return msg;
+    } else {
+      if (isNotNull("Variable", variableName)) {
+        return objectNullMessage(modelId);
+      }
+    }
+    return objectNullMessage(variableName);
+  }
+  
 
   /**
    * Warning message when a generated resource (OUTPUT FILE) was not found. Usage:

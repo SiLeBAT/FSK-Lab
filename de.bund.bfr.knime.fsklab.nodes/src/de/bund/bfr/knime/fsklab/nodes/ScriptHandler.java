@@ -417,8 +417,14 @@ public abstract class ScriptHandler implements AutoCloseable {
             }
           }
         } catch (REXPMismatchException | IOException | RException | InterruptedException e) {
-          throw new VariableNotGlobalException(command,
+
+          FskErrorMessages.variableAccessWarning(command, 
               SwaggerUtil.getModelId(fskPortObject.modelMetadata));
+
+          if (saveToJsonChecked) {
+            throw new VariableNotGlobalException(command,
+                SwaggerUtil.getModelId(fskPortObject.modelMetadata));  
+          } 
         }
       }
 
