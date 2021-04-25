@@ -952,7 +952,13 @@ class APPSimulation {
 				// check range for integers and doubles
 				if ( field.param.dataType.toLowerCase() === 'integer' 
 					|| field.param.dataType.toLowerCase() === 'double' ) {
-
+                    
+                    if ( field.param.dataType.toLowerCase === 'integer' && fieldValue.indexOf('.') > 0 ){
+                        return {
+                                input   : field.input,
+                                msg     : 'Invalid integer value'
+                            };
+                    }
 					if ( field.param.minValue && parseFloat( field.param.minValue ) > fieldValue ) {
 						return {
 							input  	: field.input,
