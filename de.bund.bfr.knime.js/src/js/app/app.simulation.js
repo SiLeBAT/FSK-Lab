@@ -55,6 +55,8 @@ class APPSimulation {
 		// nav
 		O._$modalNav = $( '<div class="modal-body sim-select"></div>' )
 			.appendTo( O._$container );
+        O._$globalValidation = $( '<ul class="col-12 errorMessages"></ul>' )
+            .appendTo( O._$container );
 
 		// navbar
 		O._$navBar = $( '<nav class="navbar">' )
@@ -846,7 +848,8 @@ class APPSimulation {
 	async _validateSimForm () {
 		let O = this;
 		_log( 'PANEL SIM / _validateSimForm' );
-		
+		O._$globalValidation.empty(); 
+
 		let validationErrors = [];
 		// remove error classes
 		$( '.has-error' ).removeClass( 'has-error' );
@@ -873,11 +876,15 @@ class APPSimulation {
 			error.input.addClass( 'is-invalid' );
 
 			error.input.$validationContainer.text( error.msg );
+            
+            $( '<li>'+error.msg+'</li>' )
+                .appendTo( O._$globalValidation );
 			// let $errorMsg = $( '<div class="alert alert-danger alert-xs"></div>' )
 			// 	.appendTo( error.input.$validationContainer )
 			// 	.text( error.msg );
 
 		} );
+        O._$globalValidation.show();
 
 		_log( validationErrors );
 
