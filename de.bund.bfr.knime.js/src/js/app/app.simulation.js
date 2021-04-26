@@ -330,7 +330,7 @@ class APPSimulation {
 						.appendTo( $inputGroup );
 
 					// rangeslider single, if min/max
-					if ( param.minValue && param.maxValue ) {
+					if ( param.minValue && param.maxValue  && param.minValue != "-" && param.maxValue != "-") {
 
 						let step = 1;
 						// calc decimals for slider steps depending on min-max values
