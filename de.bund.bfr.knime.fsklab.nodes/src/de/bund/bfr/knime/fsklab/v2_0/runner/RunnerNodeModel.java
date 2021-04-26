@@ -565,4 +565,8 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
   public void setInternalPortObjects(PortObject[] portObjects) {
     fskObj = (FskPortObject) portObjects[0];
   }
+  File getResultImage() {
+    return  internalSettings.imageFile;
+  }
+  
 }

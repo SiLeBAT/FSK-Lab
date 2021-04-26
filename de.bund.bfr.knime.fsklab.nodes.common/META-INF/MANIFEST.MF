@@ -22,5 +22,7 @@ Export-Package:
  de.bund.bfr.knime.fsklab.nodes.common.ui,
  de.bund.bfr.knime.fsklab.nodes.plot
 Bundle-ClassPath: .,
- libs/bfr-swing-1.0-SNAPSHOT.jar
+ libs/bfr-swing-1.0-SNAPSHOT.jar,
+ libs/batik-all-1_6.jar,
+ libs/xerces-2.9.0.jar
 Bundle-Vendor: German Federal Institute for Risk Assessment (BfR)

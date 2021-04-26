@@ -31,12 +31,12 @@ public class RunnerNodeFactory extends NodeFactory<RunnerNodeModel> {
 
   @Override
   protected int getNrNodeViews() {
-    return 0;
+    return 1;
   }
 
   @Override
   public NodeView<RunnerNodeModel> createNodeView(int viewIndex, RunnerNodeModel nodeModel) {
-    return null;
+    return new RunnerNodeView(nodeModel);
   }
 
   @Override

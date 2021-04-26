@@ -18,10 +18,14 @@
  */
 package de.bund.bfr.knime.fsklab.nodes.common.ui;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.Image;
+import java.io.File;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import org.apache.batik.swing.JSVGCanvas;
 
 /**
  * Displays the R result image.
@@ -50,6 +54,17 @@ public class RPlotterViewPanel extends JPanel {
       m_label.setIcon(new ImageIcon(image));
     }
 
+    repaint();
+  }
+  /** @param image The new image or null to display. */
+  public void update(final File file) {
+    this.setLayout(new BorderLayout());
+    this.setPreferredSize(new Dimension(800, 800));
+    JSVGCanvas svg = new JSVGCanvas();
+    // location of the SVG File
+    svg.setURI(file.toURI().toASCIIString());
+    this.add(svg,BorderLayout.CENTER);
+    m_label.setText(null);
     repaint();
   }
 }
