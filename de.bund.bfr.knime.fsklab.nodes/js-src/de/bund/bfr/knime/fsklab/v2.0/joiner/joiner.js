@@ -130,13 +130,13 @@ joiner = function () {
     let keys = ['firstModel','secondModel','thirdModel','fourthModel']; 
     _graph.clear();
     $.each(_modelColectionSuffixed,function(index,selectedModel){
-      _modelsParamsOriginalNames[selectedModel.generalInformation.name.trim()] = buildOldNewParamName(_modelColectionSuffixed[index].modelMath.parameter, modelMetaData.changeSet.added[0]["selecteModels"][index].modelMath.parameter);
-      _modelColectionWithoutSuffixedmap[selectedModel.generalInformation.name.trim()] = modelMetaData.changeSet.added[0]["selecteModels"][index].modelMath.parameter;
+      _modelsParamsOriginalNames[escapeHtmlChars(selectedModel.generalInformation.name.trim())] = buildOldNewParamName(_modelColectionSuffixed[index].modelMath.parameter, modelMetaData.changeSet.added[0]["selecteModels"][index].modelMath.parameter);
+      _modelColectionWithoutSuffixedmap[escapeHtmlChars(selectedModel.generalInformation.name.trim())] = modelMetaData.changeSet.added[0]["selecteModels"][index].modelMath.parameter;
       delete _modelColectionSuffixed[index]['modelscript'];
       delete _modelColectionSuffixed[index]['visualization'];
       delete _modelColectionSuffixed[index]['Location'];
       delete _modelColectionSuffixed[index]['simulation'];
-      editModelsPool(keys[index], _modelColectionSuffixed[index].modelMath.parameter, selectedModel.generalInformation.name.trim(), _modelColectionSuffixed[index], selectedModel.modelType 
+      editModelsPool(keys[index], _modelColectionSuffixed[index].modelMath.parameter, escapeHtmlChars(selectedModel.generalInformation.name.trim()), _modelColectionSuffixed[index], selectedModel.modelType 
                     ,JSON.stringify(modelMetaData.changeSet.added[0]["selecteModels"][index]['modelscript'])
                     ,JSON.stringify(modelMetaData.changeSet.added[0]["selecteModels"][index]['visualization'])
                     ,JSON.stringify(modelMetaData.changeSet.added[0]["selecteModels"][index]['Location'])
@@ -221,7 +221,7 @@ joiner = function () {
     _representation = representation;
     trimModelName(_joinerModelsData);
     $.each(_joinerModelsData.modelsParamsOriginalNames, (key, value) => {
-        _modelsParamsOriginalNames[key.trim()] = value;
+        _modelsParamsOriginalNames[escapeHtmlChars(key.trim())] = value;
     })
     //subscribe to events emitted by FSK DB View
     knimeService.subscribeToSelection('b800db46-4e25-4f77-bcc6-db0c21joiner', selectionChanged);
@@ -255,32 +255,43 @@ joiner = function () {
     //_paper.scaleContentToFit();
     window.toogle = true;
   }
+  
   function isValidModel(model) {
     return Object.keys(model).length !== 0;
   }
-
+  
+  function escapeHtmlChars(text) {
+     return text
+          .replace(/&/g, "")
+          .replace(/</g, "")
+          .replace(/>/g, "")
+          .replace(/"/g, "")
+          .replace(/'/g, "");
+  }
+  
   trimModelName = (joinerModelsData) => {
     try{
         if(joinerModelsData.firstModel && joinerModelsData.firstModel[0]){
             joinerModelsData.firstModel[0] = fixModelMetadata(joinerModelsData.firstModel[0]);
             joinerModelsData.firstModelName = joinerModelsData.firstModelName?joinerModelsData.firstModelName.trim():joinerModelsData.firstModelName;
-    
+            joinerModelsData.firstModelName = escapeHtmlChars(joinerModelsData.firstModelName);
             
         }
         if(joinerModelsData.secondModel && joinerModelsData.secondModel[0]){
             joinerModelsData.secondModel[0] = fixModelMetadata(joinerModelsData.secondModel[0]);
             joinerModelsData.secondModelName = joinerModelsData.secondModelName?joinerModelsData.secondModelName.trim():joinerModelsData.secondModelName;
-    
+            joinerModelsData.secondModelName = escapeHtmlChars(joinerModelsData.secondModelName);
             
         }
         if(joinerModelsData.thirdModel && joinerModelsData.thirdModel[0]){
             joinerModelsData.thirdModel[0] = fixModelMetadata(joinerModelsData.thirdModel[0]);
             joinerModelsData.thirdModelName = joinerModelsData.thirdModelName?joinerModelsData.thirdModelName.trim():joinerModelsData.thirdModelName;
-            
+            joinerModelsData.thirdModelName = escapeHtmlChars(joinerModelsData.thirdModelName);
         }
         if(joinerModelsData.fourthModel && joinerModelsData.fourthModel[0]){
             joinerModelsData.fourthModel[0] = fixModelMetadata(joinerModelsData.fourthModel[0]);
             joinerModelsData.fourthModelName = joinerModelsData.fourthModelName?joinerModelsData.fourthModelName.trim():joinerModelsData.fourthModelName;
+            joinerModelsData.fourthModelName = escapeHtmlChars(joinerModelsData.fourthModelName);
         }
     }catch(err){
         console.log(err);
@@ -291,7 +302,7 @@ joiner = function () {
     let jsonMetadata = JSON.parse(metadata);
     try{
         if(jsonMetadata.generalInformation.name)
-            jsonMetadata.generalInformation.name = jsonMetadata.generalInformation.name.trim();
+            jsonMetadata.generalInformation.name = escapeHtmlChars(jsonMetadata.generalInformation.name.trim());
     }catch(err){
         console.log(err);
     }
@@ -431,7 +442,7 @@ joiner = function () {
   };
 
   function editModelsPool(key, modelParameters, modelName, individualMetadata, modelType, modelScript, vis, Location, simulation, downloadURL) {
-    _simulationMap[modelName.trim()] = { "selectedSimulation": "defaultSimulation", "simulationList":simulation };
+    _simulationMap[escapeHtmlChars(modelName.trim())] = { "selectedSimulation": "defaultSimulation", "simulationList":simulation };
     updatesFinalSimulation();
     modelsPool[key]['modelScript'] = modelScript;
     modelsPool[key]['simulation'] = simulation;
