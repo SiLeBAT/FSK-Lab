@@ -18,7 +18,14 @@ fskeditorjs = function () {
   var _readmeCodeMirror;
   var _location;
   var _simulation;
-
+  var resourcesFiles = [];
+  var JWT;
+  var server;
+  var timeStampInMs = window.performance && window.performance.now
+            && window.performance.timing
+            && window.performance.timing.navigationStart ? window.performance
+            .now()
+            + window.performance.timing.navigationStart : Date.now();
   let handler;
   let selectionChanged = function (modelMetaData) { 
     window._debug = false;
@@ -71,6 +78,150 @@ fskeditorjs = function () {
     
     // TODO: remove this test for the vocabularies
     // makeRequest("source");
+  }
+  function initResourcesTab(){
+    if (window.location.protocol != '' && window.location.host != '') {
+        // send AJAX request to acquire the JWT for the currently logged in
+        // user. Subsequent requests need to carry the token in the
+        // “Authorization” header
+        
+        server = window.location.protocol + "//" + window.location.host
+        var xhttp = new XMLHttpRequest();
+
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                JWT = this.responseText;
+            }
+        };
+        xhttp.open("GET", server + "/knime/rest/session", true);
+        xhttp.send();
+        // create temp folder for the current running instance of the
+        // worklflow on the server
+        // this folder will be removed after coping all the content inside
+        // to the fsk object working directory.
+        var anotherxhttp = new XMLHttpRequest();
+
+        anotherxhttp.open("put", server
+                + "/knime/rest/v4/repository/jsEditorTempFolder"
+                + timeStampInMs, true);
+        anotherxhttp.setRequestHeader("Authorization", "Bearer" + JWT);
+        anotherxhttp.send();
+        let inputFile = $('#filesInput');
+        let button = $('#filesButton');
+        let buttonSubmit = $('#uploadButton');
+        let filesContainer = $('#filesArea');
+        let files = [];
+        let fileIDMap = {}
+        let fileUploadAJAXMap = {}
+    
+        inputFile
+            .change(function () {
+                let newFiles = [];
+                for (let index = 0; index < inputFile[0].files.length; index++) {
+                    let file = inputFile[0].files[index];
+                    newFiles.push(file);
+                    files.push(file);
+                    console.log(file);
+                }
+                for (let index = 0; index < newFiles.length; index++) {
+                    let file = newFiles[index];
+                    var ID = function () {
+                        return '_'
+                            + Math.random().toString(36).substr(2,
+                                9);
+                    }();
+                    let fileElement = $("<p>"
+                        + file.name
+                        + "</p><progress id='"
+                        + ID
+                        + "' value='0' max='100' style='width:300px;'>");
+    
+                    fileElement.data('fileData', file);
+                    filesContainer.append(fileElement);
+                    fileIDMap[file.name] = ID
+                    fileElement.click(function (event) {
+                        let fileElement = $(event.target);
+                        let indexToRemove = files.indexOf(fileElement
+                            .data('fileData'));
+                        fileElement.remove();
+                        $("#" + fileIDMap[fileElement.html()]).remove()
+                        files.splice(indexToRemove, 1);
+                        fileUploadAJAXMap[fileElement.html()].abort();
+                    });
+                    fileUploadAJAXMap[file.name] = $
+                        .ajax({
+                            url: server
+                                + "/knime/rest/v4/repository/jsEditorTempFolder"
+                                + timeStampInMs + "/"
+                                + file.name + ":data",
+                            xhr: function () {
+                                var myXhr = $.ajaxSettings.xhr();
+                                if (myXhr.upload) {
+                                    myXhr.upload
+                                        .addEventListener(
+                                            'progress',
+                                            function (e) {
+    
+                                                if (e.lengthComputable) {
+                                                    var max = e.total;
+                                                    var current = e.loaded;
+    
+                                                    var Percentage = (current * 100)
+                                                        / max;
+    
+                                                    $(
+                                                        "#"
+                                                        + fileIDMap[file.name])
+                                                        .attr(
+                                                            'value',
+                                                            Percentage);
+    
+                                                    if (Percentage >= 100) {
+                                                        // process
+                                                        // completed
+                                                    }
+                                                }
+                                            }, false);
+                                }
+                                return myXhr;
+                            },
+                            headers: {
+                                Authorization: "Bearer" + JWT
+                            },
+                            data: file,
+                            type: 'put',
+                            success: function (data) {
+                                console.log('SUCCESS !!!', data);
+                                resourcesFiles
+                                    .push("knime://knime.mountpoint"
+                                        + data.path);
+                            },
+                            error: function (data) {
+                                console.log('ERROR !!!', data);
+                            },
+                            cache: false,
+                            processData: false,
+                            contentType: false
+                        });
+                }
+    
+            });
+    
+        button.click(function() {
+            inputFile.click();
+        });
+    
+        buttonSubmit.click(function () {
+            let formData = new FormData();
+            for (let index = 0; index < files.length; index++) {
+                let file = files[index];
+                formData.append('file', file);
+            }
+    
+        });
+        $('#Resources').show();
+    }
+    
   }
   async function  extractAndCreateUI(modelMetaData, modelscript, visualization){
     if (!modelMetaData || modelMetaData == "null" || modelMetaData == "") {
@@ -128,6 +279,7 @@ fskeditorjs = function () {
     _modalDetails._createModelMetadataContent();
     await _modalDetails._updateContent(_metadata, 0);
     createUI(modelscript, visualization);
+    initResourcesTab();
     window.editEventBus.subscribe('EditorJS',(event) =>{
       _metadata = _modalDetails._modelHandler.metaData;
       doSave(_metadata)
@@ -166,6 +318,7 @@ fskeditorjs = function () {
     viewValue.validationErrors = validate.errors.map(errorItem => {
         return JSON.stringify(errorItem)
     });
+    viewValue.resourcesFiles = resourcesFiles;
     return viewValue;
     
   };
