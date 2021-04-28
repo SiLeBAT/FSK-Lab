@@ -57,6 +57,7 @@ class FSKEditorJSViewValue extends JSONViewContent {
   private String[] validationErrors;
   private String modelType;
   private String[] resourcesFiles;
+  private String parentResourcesFolder;
 
   public FSKEditorJSViewValue() {
     modelScript = "";
@@ -222,6 +223,13 @@ class FSKEditorJSViewValue extends JSONViewContent {
     this.resourcesFiles = resourcesFiles;
   }
   
+  public String getParentResourcesFolder() {
+    return parentResourcesFolder;
+  }
+
+  public void setParentResourcesFolder(String parentResourcesFolder) {
+    this.parentResourcesFolder = parentResourcesFolder;
+  }
   /**
    * Utility check for checking quickly if this view value is empty. A view value with all its
    * mandatory properties not set is considered empty.

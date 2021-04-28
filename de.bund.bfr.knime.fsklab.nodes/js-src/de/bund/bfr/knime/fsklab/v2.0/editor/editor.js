@@ -19,6 +19,7 @@ fskeditorjs = function () {
   var _location;
   var _simulation;
   var resourcesFiles = [];
+  var parentResourcesFolder;
   var JWT;
   var server;
   var timeStampInMs = window.performance && window.performance.now
@@ -100,9 +101,13 @@ fskeditorjs = function () {
         // this folder will be removed after coping all the content inside
         // to the fsk object working directory.
         var anotherxhttp = new XMLHttpRequest();
-
+        anotherxhttp.onreadystatechange = function(response) {
+           console.log(response);
+        };
+        parentResourcesFolder = "knime://knime.mountpoint/tempResources/jsEditorTempFolder"
+                + timeStampInMs;
         anotherxhttp.open("put", server
-                + "/knime/rest/v4/repository/jsEditorTempFolder"
+                + "/knime/rest/v4/repository/tempResources/jsEditorTempFolder"
                 + timeStampInMs, true);
         anotherxhttp.setRequestHeader("Authorization", "Bearer" + JWT);
         anotherxhttp.send();
@@ -130,28 +135,41 @@ fskeditorjs = function () {
                             + Math.random().toString(36).substr(2,
                                 9);
                     }();
-                    let fileElement = $("<p>"
+                    let fileElement = $("<div ><hr/><p>"
                         + file.name
                         + "</p><progress id='"
                         + ID
-                        + "' value='0' max='100' style='width:300px;'>");
+                        + "' value='0' max='100' style='width:300px;'/><button idFile='"+ file.name+"' type='button' >delete</button></div>");
     
                     fileElement.data('fileData', file);
                     filesContainer.append(fileElement);
                     fileIDMap[file.name] = ID
-                    fileElement.click(function (event) {
+                    $("[idFile='"+file.name+"']").click(function (event) {
                         let fileElement = $(event.target);
                         let indexToRemove = files.indexOf(fileElement
                             .data('fileData'));
-                        fileElement.remove();
-                        $("#" + fileIDMap[fileElement.html()]).remove()
+                        console.log(indexToRemove,$( this ).attr('idFile') );
+                        $.ajax({
+                            type: "DELETE",
+                            url: server
+                                + "/knime/rest/v4/repository/tempResources/jsEditorTempFolder"
+                                + timeStampInMs + "/"
+                                + $( this ).attr('idFile') + "?deletePermanently",
+                            
+                            success: function(msg){
+                            
+                            }
+                        });
+                        $( this ).parent().remove();
+                        //$("#" + fileIDMap[fileElement.html()]).remove()
                         files.splice(indexToRemove, 1);
-                        fileUploadAJAXMap[fileElement.html()].abort();
+                        fileUploadAJAXMap[$( this ).attr('idFile') ].abort();
+                        
                     });
                     fileUploadAJAXMap[file.name] = $
                         .ajax({
                             url: server
-                                + "/knime/rest/v4/repository/jsEditorTempFolder"
+                                + "/knime/rest/v4/repository/tempResources/jsEditorTempFolder"
                                 + timeStampInMs + "/"
                                 + file.name + ":data",
                             xhr: function () {
@@ -191,7 +209,6 @@ fskeditorjs = function () {
                             data: file,
                             type: 'put',
                             success: function (data) {
-                                console.log('SUCCESS !!!', data);
                                 resourcesFiles
                                     .push("knime://knime.mountpoint"
                                         + data.path);
@@ -319,6 +336,7 @@ fskeditorjs = function () {
         return JSON.stringify(errorItem)
     });
     viewValue.resourcesFiles = resourcesFiles;
+    viewValue.parentResourcesFolder = parentResourcesFolder;
     return viewValue;
     
   };

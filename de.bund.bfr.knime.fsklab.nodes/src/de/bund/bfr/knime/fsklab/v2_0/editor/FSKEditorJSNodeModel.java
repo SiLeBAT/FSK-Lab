@@ -323,23 +323,24 @@ final class FSKEditorJSNodeModel
         for (String fileRequestString : viewValue.getResourcesFiles()) {
           downloadFileToWorkingDir(fileRequestString, workingDirectory.get().toString());
         }
-        // delete the parent folder of the uploaded files after moving them to the working
-        // directory.
-        // parentFolderPath is always uses KNIME protocol
-        String firstFile = viewValue.getResourcesFiles()[0];
-        String parentFolderPath = firstFile.substring(0, firstFile.lastIndexOf("/"));
+      }
+      // delete the parent folder of the uploaded files after moving them to the working
+      // directory.
+      // parentFolderPath is always uses KNIME protocol
+      setWarningMessage("JS EDITOR  ParentResourcesFolder: " + viewValue.getParentResourcesFolder());
+
+      if(!StringUtils.isBlank(viewValue.getParentResourcesFolder())){
         BundleContext ctx =
             FrameworkUtil.getBundle(IRemoteFileUtilsService.class).getBundleContext();
         ServiceReference<IRemoteFileUtilsService> ref =
             ctx.getServiceReference(IRemoteFileUtilsService.class);
         if (ref != null) {
           try {
-            ctx.getService(ref).delete(new URL(parentFolderPath));
+            ctx.getService(ref).delete(new URL(viewValue.getParentResourcesFolder()));
           } finally {
             ctx.ungetService(ref);
           }
         }
-
       }
       // If executed
       if (viewValue.isCompleted()) {
