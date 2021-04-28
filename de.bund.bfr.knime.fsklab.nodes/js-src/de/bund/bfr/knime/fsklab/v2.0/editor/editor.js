@@ -101,9 +101,6 @@ fskeditorjs = function () {
         // this folder will be removed after coping all the content inside
         // to the fsk object working directory.
         var anotherxhttp = new XMLHttpRequest();
-        anotherxhttp.onreadystatechange = function(response) {
-           console.log(response);
-        };
         parentResourcesFolder = "knime://knime.mountpoint/tempResources/jsEditorTempFolder"
                 + timeStampInMs;
         anotherxhttp.open("put", server
@@ -126,7 +123,6 @@ fskeditorjs = function () {
                     let file = inputFile[0].files[index];
                     newFiles.push(file);
                     files.push(file);
-                    console.log(file);
                 }
                 for (let index = 0; index < newFiles.length; index++) {
                     let file = newFiles[index];
@@ -148,7 +144,6 @@ fskeditorjs = function () {
                         let fileElement = $(event.target);
                         let indexToRemove = files.indexOf(fileElement
                             .data('fileData'));
-                        console.log(indexToRemove,$( this ).attr('idFile') );
                         $.ajax({
                             type: "DELETE",
                             url: server
