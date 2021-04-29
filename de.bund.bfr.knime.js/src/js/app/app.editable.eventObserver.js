@@ -15,7 +15,6 @@ class EventObserver {
     subscribe(id, observer) {
         let O = this;
         //add new events
-        console.log(id, observer);
         if(!O.registeredID.includes(id) ){
             O.observers.push({
                 id: id,

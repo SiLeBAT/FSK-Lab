@@ -18,6 +18,15 @@
  */
 package de.bund.bfr.knime.fsklab.v2_0.editor;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -32,6 +41,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
@@ -43,7 +53,12 @@ import org.knime.core.node.port.PortObjectHolder;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.web.ValidationError;
+import org.knime.core.util.FileUtil;
+import org.knime.core.util.IRemoteFileUtilsService;
 import org.knime.js.core.node.AbstractWizardNodeModel;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkUtil;
+import org.osgi.framework.ServiceReference;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -51,6 +66,7 @@ import de.bund.bfr.fskml.RScript;
 import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
 import de.bund.bfr.knime.fsklab.nodes.environment.EnvironmentManager;
+import de.bund.bfr.knime.fsklab.nodes.environment.ExistingEnvironmentManager;
 import de.bund.bfr.knime.fsklab.v2_0.CombinedFskPortObject;
 import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
 import de.bund.bfr.knime.fsklab.v2_0.FskPortObjectSpec;
@@ -291,7 +307,41 @@ final class FSKEditorJSNodeModel
     synchronized (getLock()) {
       FSKEditorJSViewValue viewValue = getViewValue();
       FSKEditorJSViewRepresentation viewRep = createEmptyViewRepresentation();
+      LOGGER.info("JS EDITOR  " + viewValue.getResourcesFiles());
+      // resources files via fskEditorProxyValue will be available only in the online mode of the JS
+      // editor
+      if (viewValue.getResourcesFiles() != null
+          && viewValue.getResourcesFiles().length != 0) {
+        FskPortObject fskObj= ((FskPortObject)inObjects[0]);
+        Optional<Path> workingDirectory;
+        if (fskObj != null &&fskObj.getEnvironmentManager().isPresent()) {
+          workingDirectory = fskObj.getEnvironmentManager().get().getEnvironment();
+        } else {
+          workingDirectory = Optional.of(Files.createTempDirectory("workingDirectory"));
+        }
+        environmentManager = Optional.of(new ExistingEnvironmentManager(workingDirectory.get().toString()));
+        for (String fileRequestString : viewValue.getResourcesFiles()) {
+          downloadFileToWorkingDir(fileRequestString, workingDirectory.get().toString());
+        }
+      }
+      // delete the parent folder of the uploaded files after moving them to the working
+      // directory.
+      // parentFolderPath is always uses KNIME protocol
+      setWarningMessage("JS EDITOR  ParentResourcesFolder: " + viewValue.getParentResourcesFolder());
 
+      if(!StringUtils.isBlank(viewValue.getParentResourcesFolder())){
+        BundleContext ctx =
+            FrameworkUtil.getBundle(IRemoteFileUtilsService.class).getBundleContext();
+        ServiceReference<IRemoteFileUtilsService> ref =
+            ctx.getServiceReference(IRemoteFileUtilsService.class);
+        if (ref != null) {
+          try {
+            ctx.getService(ref).delete(new URL(viewValue.getParentResourcesFolder()));
+          } finally {
+            ctx.ungetService(ref);
+          }
+        }
+      }
       // If executed
       if (viewValue.isCompleted()) {
         setWarningMessage("Output Parameters are not configured correctly");
@@ -551,5 +601,28 @@ final class FSKEditorJSNodeModel
     m_port.getEnvironmentManager().ifPresent(value::setEnvironment);
     
     // Cannot assign server name, completed and validation errors
+  }
+  
+  
+  /**
+   * Downloads a file from a URL.The code here is considering that the fileURL is using KNIME
+   * Protocol
+   * 
+   * @param fileURL HTTP URL of the file to be downloaded
+   * @param workingDir path of the directory to save the file
+   * @throws IOException
+   * @throws URISyntaxException
+   * @throws InvalidSettingsException
+   */
+  public void downloadFileToWorkingDir(String fileURL, String workingDir)
+      throws IOException, URISyntaxException, InvalidSettingsException {
+    String fileName = fileURL.substring(fileURL.lastIndexOf("/") + 1, fileURL.length());
+    String destinationPath = workingDir + File.separator + fileName;
+    File fileTodownload = new File(destinationPath);
+    LOGGER.info("JS EDITOR  path to write to: " + destinationPath);
+    try (InputStream inStream = FileUtil.openInputStream(fileURL);
+        OutputStream outStream = new FileOutputStream(fileTodownload)) {
+      IOUtils.copy(inStream, outStream);
+    }
   }
 }

@@ -124,7 +124,10 @@ class ModelHandler {
 			},
 			readme 			:  {
 				type 			: 'readme'
-			}
+			},
+            resources       :  {
+                type            : "resources"
+            }
 		}		
 	}
 } 
@@ -254,7 +257,12 @@ class GenericModel extends ModelHandler {
 				label	: "Readme",
 				id		: 'readme',
 				submenus : []
-			}
+			},
+            {
+                label   : "Resources",
+                id      : 'resources',
+                submenus : []
+            }
 		];
 		super._create();
 	}
@@ -445,7 +453,12 @@ class DataModel extends ModelHandler {
 				label	: "Readme",
 				id		: 'readme',
 				submenus : []
-			}	
+			},
+            {
+                label   : "Resources",
+                id      : 'resources',
+                submenus : []
+            }	
 		];
 		super._create();
 	}
@@ -607,7 +620,12 @@ class PredictiveModel extends ModelHandler {
 				label	: "Readme",
 				id		: 'readme',
 				submenus : []
-			}	
+			},
+            {
+                label   : "Resources",
+                id      : 'resources',
+                submenus : []
+            }	
 		];
 		super._create();
 	}
@@ -795,7 +813,12 @@ class OtherModel extends ModelHandler {
 				label	: "Readme",
 				id		: 'readme',
 				submenus : []
-			}	
+			},
+            {
+                label   : "Resources",
+                id      : 'resources',
+                submenus : []
+            }
 		];
 		super._create();
 	}
@@ -985,7 +1008,12 @@ class DoseResponseModel extends ModelHandler {
 				label	: "Readme",
 				id		: 'readme',
 				submenus : []
-			}	
+			},
+            {
+                label   : "Resources",
+                id      : 'resources',
+                submenus : []
+            }
 		];
 		super._create();
 	}
@@ -1175,7 +1203,12 @@ class ToxicologicalModel extends ModelHandler {
 				label	: "Readme",
 				id		: 'readme',
 				submenus : []
-			}	
+			},
+            {
+                label   : "Resources",
+                id      : 'resources',
+                submenus : []
+            }	
 		];
 		super._create();
 	}
@@ -1375,7 +1408,12 @@ class ExposureModel extends ModelHandler {
 				label	: "Readme",
 				id		: 'readme',
 				submenus : []
-			}	
+			},
+            {
+                label   : "Resources",
+                id      : 'resources',
+                submenus : []
+            }
 		];
 		super._create();
 	}
@@ -1558,7 +1596,12 @@ class ProcessModel extends ModelHandler {
 				label	: "Readme",
 				id		: 'readme',
 				submenus : []
-			}	
+			},
+            {
+                label   : "Resources",
+                id      : 'resources',
+                submenus : []
+            }	
 		];
 		super._create();
 	}
@@ -1738,7 +1781,12 @@ class ConsumptionModel extends ModelHandler {
 				label	: "Readme",
 				id		: 'readme',
 				submenus : []
-			}	
+			},
+            {
+                label   : "Resources",
+                id      : 'resources',
+                submenus : []
+            }	
 		];
 		super._create();
 	}
@@ -1932,7 +1980,12 @@ class HealthModel extends ModelHandler {
 				label	: "Readme",
 				id		: 'readme',
 				submenus : []
-			}
+			},
+            {
+                label   : "Resources",
+                id      : 'resources',
+                submenus : []
+            }
 		];
 		super._create();
 	}
@@ -2135,7 +2188,12 @@ class RiskModel extends ModelHandler {
 				label	: "Readme",
 				id		: 'readme',
 				submenus : []
-			}	
+			},
+            {
+                label   : "Resources",
+                id      : 'resources',
+                submenus : []
+            }	
 		];
 		super._create();
 	}
@@ -2343,7 +2401,12 @@ class QraModel extends ModelHandler {
 				label	: "Readme",
 				id		: 'readme',
 				submenus : []
-			}
+			},
+            {
+                label   : "Resources",
+                id      : 'resources',
+                submenus : []
+            }
 		];
 		super._create();
 	}
