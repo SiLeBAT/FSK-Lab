@@ -314,7 +314,6 @@ final class FSKEditorJSNodeModel
         Class<? extends Model> modelClass = SwaggerUtil.modelClasses.get(modelType);
         metadata = MAPPER.readValue(viewValue.getModelMetaData(), modelClass);
         if(!StringUtils.isEmpty(viewRep.getModelMetadata())) {
-          originalMetadata = MAPPER.readValue(viewRep.getModelMetadata(), modelClass);
           JsonNode repMetadataNode = MAPPER.readTree(viewRep.getModelMetadata());
           String repModelType = repMetadataNode.get("modelType").asText("genericModel");
           if(m_config.getModelType() != null &&  !m_config.getModelType().equals(repModelType)) {
@@ -337,7 +336,7 @@ final class FSKEditorJSNodeModel
           else {
             metadata = MAPPER.readValue(viewValue.getModelMetaData(), modelClass);
           }
-         
+          originalMetadata = MAPPER.readValue(viewRep.getModelMetadata(), modelClass);
         }
         else {
           if(!StringUtils.isEmpty(portObjectModelType) && !portObjectModelType.equals(modelType)) {
