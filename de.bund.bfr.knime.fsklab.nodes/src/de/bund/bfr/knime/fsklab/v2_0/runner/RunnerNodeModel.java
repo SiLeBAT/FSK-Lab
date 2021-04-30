@@ -182,6 +182,12 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
           fskObj.getGeneratedResourcesDirectory().get().getAbsolutePath());
     }
     
+    // add flow-variable stating which simulation (name) was executed
+    String simulationName = fskObj.simulations != null
+        ? fskObj.simulations.get(fskObj.selectedSimulationIndex).getName()
+            : "defaultSimulation";
+    this.pushFlowVariableString("selectedSimulation", simulationName);
+    
     if(isVisScriptEmpty(fskObj)) {
       LOGGER.warn("There is no visualization script");
       String noImage = "<?xml version=\"1.0\"?>\n"
