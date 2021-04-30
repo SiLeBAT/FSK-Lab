@@ -41,9 +41,3 @@ deploy:
   script: bash gitlab_development.sh
   on:
     branch: development
-- provider: script
-  skip_cleanup: true # to upload artifacts created during the build
-  script: bash gitlab_nightly.sh
-  on: 
-    branch: development
-    condition: $TRAVIS_EVENT_TYPE = cron
