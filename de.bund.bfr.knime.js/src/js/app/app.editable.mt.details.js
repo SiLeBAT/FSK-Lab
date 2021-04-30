@@ -273,6 +273,10 @@ class APPMTEditableDetails {
             .attr('data-toggle', 'tab')
             .appendTo($navItem);
 
+        if(menuMeta.id == "resources"){
+            $navLink.hide();
+            $navLink.attr('id', 'Resources')
+        }
         return $navItem;
     }
 
@@ -304,7 +308,10 @@ class APPMTEditableDetails {
                 // plot
                 else if (panelMeta.type == 'readme') {
                     $panel = O._createScriptPanel(menu, modelHandler);
-                }else{
+                }else if (panelMeta.type == 'resources') {
+                    $panel = O._createResourcesPanel(menu, modelHandler);
+                }
+                else{
                     $panel = O._createPanelPan(menu, modelHandler, handlerPanel);
                 }
             }
@@ -369,7 +376,30 @@ class APPMTEditableDetails {
 
         return $panel;
     }
+    _createResourcesPanel(menu, modelHandler) {
+        let O = this;
+        _log('MODAL DETAILS / _createScriptPanel');
+        
+        // tab-pane
+        let $panel = $('<div class="tab-pane h-100" role="tabpanel"></div>')
+            .attr('id', menu.id);
 
+        if (modelHandler && menu.id ) {
+            // get panel meta
+            let panelMeta = modelHandler._panels[menu.id];
+
+            // title
+            $panel.append('<div class="panel-heading">' + menu.label + '</div>');
+            let $resourcesInput = $("<input id='filesInput' type='file' multiple style='display:none' />")
+                .appendTo($panel);
+            let $resourcesButton = $("<button id='filesButton' type='button' style='border-radius: 5px; background-color: #fff; color: green;'>+ Add Files</button>")
+                .appendTo($panel);
+            let $resourcesArea = $("<div id='filesArea'></div>")
+                .appendTo($panel);
+        }
+
+        return $panel;
+    }
     /**
      * GET MODEL HANDLER
      * returns model handler of class Model
