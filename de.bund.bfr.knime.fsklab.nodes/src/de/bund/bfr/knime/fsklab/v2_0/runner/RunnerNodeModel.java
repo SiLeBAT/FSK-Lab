@@ -183,9 +183,9 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
     }
     
     // add flow-variable stating which simulation (name) was executed
-        String simulationName = fskObj.simulations != null 
-            ? fskObj.simulations.get(fskObj.selectedSimulationIndex).getName()
-                : "defaultSimulation";
+    String simulationName = fskObj.simulations != null
+        ? fskObj.simulations.get(fskObj.selectedSimulationIndex).getName()
+            : "defaultSimulation";
     this.pushFlowVariableString("selectedSimulation", simulationName);
     
     if(isVisScriptEmpty(fskObj)) {
