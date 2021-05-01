@@ -400,6 +400,13 @@ class APPUI {
 			_log( touchspinDefaults );
 			// create touchspin
 			$el.TouchSpin( touchspinDefaults );
+            $el.on('change', function (event) {                    
+                if(isNaN(event.currentTarget.value)){
+                    $el.trigger('touchspin.destroy');  
+                }else{
+                    $el.TouchSpin( touchspinDefaults );
+                }
+            });
 		} );
 	}
 
