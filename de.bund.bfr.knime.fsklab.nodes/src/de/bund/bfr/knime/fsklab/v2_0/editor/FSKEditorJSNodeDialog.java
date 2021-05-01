@@ -80,7 +80,7 @@ public class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
   private final DefaultTableModel m_filesTableModel;
 
   private static final ObjectMapper MAPPER = FskPlugin.getDefault().MAPPER104;
-
+  private String selectedModelType;
   public enum ModelType {
 
     genericModel("Generic model"),
@@ -269,7 +269,7 @@ public class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
 
     // If the model class has changed, then discard the metadata for now
     // TODO: the metadata must be converted between schemas
-    if (!modelType.equals(m_config.getModelType())) {
+    if (!selectedModelType.equals(modelType) && !modelType.equals(m_config.getModelType())) {
       ModelType modelTypeEnum = ModelType.valueOf(modelType);
       Model metadata = NodeUtils.initializeModel(modelTypeEnum);
       try {
@@ -322,7 +322,7 @@ public class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
 
     JComboBox<ModelType> combo = new JComboBox<>(modelTypeComboBoxModel);
     modelTypePanel.add(combo, BorderLayout.NORTH);
-
+    selectedModelType = ((ModelType) modelTypeComboBoxModel.getSelectedItem()).name();
     modelTypePanel.add(Box.createHorizontalGlue());
 
     // Readme panel

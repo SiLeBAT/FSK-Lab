@@ -307,7 +307,6 @@ final class FSKEditorJSNodeModel
     synchronized (getLock()) {
       FSKEditorJSViewValue viewValue = getViewValue();
       FSKEditorJSViewRepresentation viewRep = createEmptyViewRepresentation();
-      LOGGER.info("JS EDITOR  " + viewValue.getResourcesFiles());
       // resources files via fskEditorProxyValue will be available only in the online mode of the JS
       // editor
       if (viewValue.getResourcesFiles() != null
@@ -327,7 +326,6 @@ final class FSKEditorJSNodeModel
       // delete the parent folder of the uploaded files after moving them to the working
       // directory.
       // parentFolderPath is always uses KNIME protocol
-      setWarningMessage("JS EDITOR  ParentResourcesFolder: " + viewValue.getParentResourcesFolder());
 
       if(!StringUtils.isBlank(viewValue.getParentResourcesFolder())){
         BundleContext ctx =
@@ -369,24 +367,36 @@ final class FSKEditorJSNodeModel
           if(m_config.getModelType() != null &&  !m_config.getModelType().equals(repModelType)) {
             metadata =  new ConversionUtils().convertModel(MAPPER.readTree(viewRep.getModelMetadata()),
                   ConversionUtils.ModelClass.valueOf(m_config.getModelType()));
+            //update representation metadata
             viewRep.setModelMetadata(MAPPER.writeValueAsString(metadata));
+            originalMetadata = MAPPER.readValue(viewRep.getModelMetadata(), modelClass);
+            //update view value metadata from representation after converting model metadata
             viewValue.setModelMetaData(MAPPER.writeValueAsString(metadata));
-            
-
-          }else if(!StringUtils.isEmpty(portObjectModelType) && !portObjectModelType.equalsIgnoreCase(modelType)) {
-            String json = MAPPER.writeValueAsString(((FskPortObject)inObjects[0]).modelMetadata);
-            JsonNode portMetadata = MAPPER.readTree(json);
-            metadata = new ConversionUtils().convertModel(portMetadata,
-                ConversionUtils.ModelClass.valueOf(m_config.getModelType()));
-            
-            copyConnectedNodeToView("", viewValue);
-            viewRep.setModelMetadata(MAPPER.writeValueAsString(metadata));
-            viewValue.setModelMetaData(MAPPER.writeValueAsString(metadata));
+            viewValue.setModelScript(viewRep.getModelScript());
+            viewValue.setVisualizationScript(viewRep.getVisScript());
+            viewValue.setReadme(viewRep.getReadme());
           }
           else {
             metadata = MAPPER.readValue(viewValue.getModelMetaData(), modelClass);
+            if(!StringUtils.isEmpty(portObjectModelType) && !portObjectModelType.equals(modelType)) {
+              originalMetadata = ((FskPortObject)inObjects[0]).modelMetadata;
+            }else {
+              originalMetadata = MAPPER.readValue(viewRep.getModelMetadata(), modelClass);
+            }
+            
+            if(!viewValue.isCompleted()) {
+              viewValue.setModelMetaData(viewRep.getModelMetadata());
+              viewValue.setModelScript(viewRep.getModelScript());
+              viewValue.setVisualizationScript(viewRep.getVisScript());
+              viewValue.setReadme(viewRep.getReadme());
+            }else {
+              //update representation for following model type changes
+              viewRep.setModelMetadata(jsonMetadata);
+              viewRep.setModelScript(viewValue.getModelScript());
+              viewRep.setVisScript(viewValue.getVisualizationScript());
+              viewRep.setReadme(viewValue.getReadme());
+            }
           }
-          originalMetadata = MAPPER.readValue(viewRep.getModelMetadata(), modelClass);
         }
         else {
           if(!StringUtils.isEmpty(portObjectModelType) && !portObjectModelType.equals(modelType)) {
@@ -400,6 +410,9 @@ final class FSKEditorJSNodeModel
             viewValue.setModelMetaData(MAPPER.writeValueAsString(metadata));
           }else {
             viewRep.setModelMetadata(jsonMetadata);
+            viewRep.setModelScript(viewValue.getModelScript());
+            viewRep.setVisScript(viewValue.getVisualizationScript());
+            viewRep.setReadme(viewValue.getReadme());
           }
         }
       }
@@ -416,7 +429,10 @@ final class FSKEditorJSNodeModel
       if(originalMetadata != null)
         originalParameters = SwaggerUtil.getParameter(originalMetadata);
       
-      if(originalParameters.size()>0 && !parameters.equals(originalParameters) || m_port == null){
+      if(m_port == null) {
+        regenerateSimulation = true;
+      }
+      else if(originalParameters.size()>0 && !parameters.equals(originalParameters)){
         List<Parameter> nonCommonElements = new ArrayList(parameters);
         nonCommonElements.removeAll(originalParameters);
         for(Parameter p: nonCommonElements) {
