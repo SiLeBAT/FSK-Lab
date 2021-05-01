@@ -280,7 +280,7 @@ public class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
     }
 
     m_config.setModelType(modelType);
-
+    m_config.setRepresentationResetReuired(false);
     m_readmeFile = m_readmePanel.getSelectedFile().trim();
     settings.addString(README_FILE, m_readmeFile);
 

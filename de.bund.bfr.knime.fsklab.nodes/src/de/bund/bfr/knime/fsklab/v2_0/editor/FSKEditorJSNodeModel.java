@@ -130,6 +130,10 @@ final class FSKEditorJSNodeModel
   private final FSKEditorJSConfig m_config = new FSKEditorJSConfig();
   private FskPortObject m_port;
 
+  private boolean isRepresentationResetReuired;
+
+  private boolean resetDone;
+
   // Input and output port types
   private static final PortType[] IN_TYPES = {FskPortObject.TYPE_OPTIONAL};
   private static final PortType[] OUT_TYPES = {FskPortObject.TYPE};
@@ -532,6 +536,17 @@ final class FSKEditorJSNodeModel
   @Override
   protected void performReset() {
     m_port = null;
+    if(isRepresentationResetReuired) {
+      FSKEditorJSViewRepresentation rep =getViewRepresentation();
+      rep.setModelMetadata("");
+      rep.setReadme("");
+      rep.setModelScript("");
+      rep.setVisScript("");
+    }
+    else {
+      isRepresentationResetReuired = true;
+    }
+    resetDone = true;
   }
 
   @Override
@@ -541,7 +556,13 @@ final class FSKEditorJSNodeModel
 
   @Override
   protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
-    new FSKEditorJSConfig().loadSettings(settings);
+    FSKEditorJSConfig config = new FSKEditorJSConfig();
+    config.loadSettings(settings);
+    if(!resetDone) {
+      isRepresentationResetReuired = config.isRepresentationResetReuired();
+    }
+    resetDone=false;
+
   }
 
   @Override
