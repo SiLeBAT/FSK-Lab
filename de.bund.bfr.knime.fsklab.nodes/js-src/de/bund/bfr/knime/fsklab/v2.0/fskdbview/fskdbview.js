@@ -92,13 +92,11 @@ fskdbview = function () {
                 webRepositoryFlag = true;
                 
             }
+            console.log(webRepositoryFlag && _representation.table && _representation.table.rows && _representation.table.rows.length > 0);
             if(webRepositoryFlag && _representation.table && _representation.table.rows && _representation.table.rows.length > 0){
-                _app = new APPLandingpage(_WebRepositoryVars, rootDiv);
-            }
-            else if(webRepositoryFlag && !_representation.table ){
+                console.log(_WebRepositoryVars);
                 _app = new APPLandingpage(_WebRepositoryVars, rootDiv, metadata, uploadDates, executionTimes);
-            }
-            else{
+            }else{
                 _app = new APPLandingpage(_appVars, rootDiv, metadata);
             }
         });
@@ -328,16 +326,10 @@ fskdbview = function () {
                     _log( tableData );
                     if(editorAvailable){
                         $('button[role="mtActionEdit"]').each(function() {
-                            // `this` is the div
-                            $(this).attr('hidden',false );
+                           $(this).attr('hidden',false );
                         });
                         $('button[role="mtActionDetails"]').each(function() {
-                            // `this` is the div
-                            $(this).attr('hidden',true );
-                        });
-                        $('button[role="mtActionSim"]').each(function() {
-                            // `this` is the div
-                            $(this).attr('hidden',true );
+                           $(this).attr('hidden',true );
                         });
                     }
                 },
@@ -496,7 +488,9 @@ fskdbview = function () {
                     {
                         type            : 'link',
                         idPrefix        : 'mtActionEdit_',
-                        icon            : 'icon-edit-2',
+                        role: "mtActionEdit",
+                        icon: 'icon-edit-2',
+                        hidden: true,
                         title           : 'Edit',
                         on              : {
                             click           : ( O, $action, modelIndex, rowData ) => {
@@ -622,6 +616,14 @@ fskdbview = function () {
                         _log( 'on > afterPopulate', 'hook' ); 
                         _log( O );
                         _log( tableData );
+                        if(editorAvailable){
+                            $('button[role="mtActionEdit"]').each(function() {
+                               $(this).attr('hidden',false );
+                            });
+                            $('button[role="mtActionDetails"]').each(function() {
+                               $(this).attr('hidden',true );
+                            });
+                        }
                         let tbl = O._tableData;
                         $.each(_representation.selection,function(index,value){
                             let indexToBeSelected = value.replace("Row","").replace("#","");
