@@ -437,8 +437,16 @@ final class FSKEditorJSNodeModel
         regenerateSimulation = true;
       }
       else if(originalParameters.size()>0 && !parameters.equals(originalParameters)){
-        List<Parameter> nonCommonElements = new ArrayList(parameters);
-        nonCommonElements.removeAll(originalParameters);
+        List<Parameter> nonCommonElements = null;
+        if(originalParameters.size() > parameters.size()) {
+          nonCommonElements = new ArrayList(originalParameters);
+          nonCommonElements.removeAll(parameters);
+        }  
+        else {
+          nonCommonElements = new ArrayList(parameters);
+          nonCommonElements.removeAll(originalParameters);
+        }
+          
         for(Parameter p: nonCommonElements) {
           if(!p.getClassification().equals(ClassificationEnum.OUTPUT)) {
             regenerateSimulation = true;
