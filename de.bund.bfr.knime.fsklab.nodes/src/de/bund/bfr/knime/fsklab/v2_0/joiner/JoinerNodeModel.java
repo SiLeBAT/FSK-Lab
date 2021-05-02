@@ -964,7 +964,15 @@ public final class JoinerNodeModel
       String[] model, String modelType,Map<String, FskPortObject> fskID_to_fskObject) throws IOException {
     FskPortObject portObject = null;
     
-    if (StringUtils.isNotEmpty(model[6])) {
+    if(StringUtils.isNotEmpty(model[5])) {
+      String fileLocation = model[5].substring(1, model[5].length() - 1);
+      fileLocation = fileLocation.replace("file:", "");
+      try {
+        portObject = ReaderNodeUtil.readArchive(new File(fileLocation));
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }else if (StringUtils.isNotEmpty(model[6])) {
       String fileZip = FileUtil.getWorkflowTempDir() +File.separator+ model[7] + ".fskx";
       File f = new File(fileZip);
       if(!f.exists()) { 
@@ -972,14 +980,6 @@ public final class JoinerNodeModel
       }
       try {
         portObject = ReaderNodeUtil.readArchive(new File(fileZip));
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
-    }
-    if(StringUtils.isNotEmpty(model[5])) {
-      String fileLocation = model[5].substring(1, model[5].length() - 1);
-      try {
-        portObject = ReaderNodeUtil.readArchive(new File(fileLocation));
       } catch (Exception e) {
         e.printStackTrace();
       }
