@@ -42,6 +42,7 @@ class FSKEditorJSConfig {
   private static final String ENVIRONMENT = "environment";
   private static final String SERVER_NAME = "serverName";
   private static final String COMPLETED = "completed";
+  private static final String REPRESET = "representationResetReuired";
   private static final String ERRORS = "errors";
   private static final String MODEL_TYPE = "modelType";
 
@@ -52,6 +53,7 @@ class FSKEditorJSConfig {
   private EnvironmentManager m_environment;
   private String m_serverName;
   private boolean m_isCompleted;
+  private boolean representationResetReuired = true;
   private String[] m_validationErrors;
   private String m_modelType;
 
@@ -148,6 +150,13 @@ class FSKEditorJSConfig {
   public void setModelType(String modelType) {
     m_modelType = modelType;
   }
+  public boolean isRepresentationResetReuired() {
+    return representationResetReuired;
+  }
+
+  public void setRepresentationResetReuired(boolean representationResetReuired) {
+    this.representationResetReuired = representationResetReuired;
+  }
 
   /**
    * Saves current parameters to settings object.
@@ -170,6 +179,7 @@ class FSKEditorJSConfig {
 
     settings.addString(SERVER_NAME, m_serverName);
     settings.addBoolean(COMPLETED, m_isCompleted);
+    settings.addBoolean(REPRESET, representationResetReuired);
     settings.addStringArray(ERRORS, m_validationErrors);
     settings.addString(MODEL_TYPE, m_modelType);
   }
@@ -205,6 +215,7 @@ class FSKEditorJSConfig {
 
     m_serverName = settings.getString(SERVER_NAME, "");
     m_isCompleted = settings.getBoolean(COMPLETED, false);
+    representationResetReuired = settings.getBoolean(REPRESET, true);
     m_validationErrors = settings.getStringArray(ERRORS, new String[0]);
     m_modelType = settings.getString(MODEL_TYPE, ModelType.genericModel.name());
   }
@@ -241,6 +252,7 @@ class FSKEditorJSConfig {
 
     m_serverName = settings.getString(SERVER_NAME, "");
     m_isCompleted = settings.getBoolean(COMPLETED, false);
+    representationResetReuired = settings.getBoolean(REPRESET, true);
     m_validationErrors = settings.getStringArray(ERRORS, "");
     m_modelType = settings.getString(MODEL_TYPE, ModelType.genericModel.name());
   }

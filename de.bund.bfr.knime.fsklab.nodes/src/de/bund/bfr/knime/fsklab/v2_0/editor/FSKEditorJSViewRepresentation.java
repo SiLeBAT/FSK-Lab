@@ -37,7 +37,9 @@ final class FSKEditorJSViewRepresentation extends JSONViewContent {
   private String modelMetadata;
   private boolean combinedObject;
   private Map<String, String[]> vocabularies;
-  
+  private String modelScript;
+  private String visScript;
+  private String readme;
 
   public boolean isCombinedObject() {
     return combinedObject;
@@ -73,6 +75,31 @@ final class FSKEditorJSViewRepresentation extends JSONViewContent {
   public int hashCode() {
     return  Objects.hash(vocabularies);
   }
+  public String getModelScript() {
+    return modelScript;
+  }
+
+  public void setModelScript(String modelScript) {
+    this.modelScript = modelScript;
+  }
+
+  public String getVisScript() {
+    return visScript;
+  }
+
+  public void setVisScript(String visScript) {
+    this.visScript = visScript;
+  }
+
+  public String getReadme() {
+    return readme;
+  }
+
+  public void setReadme(String readme) {
+    this.readme = readme;
+  }
+
+  
 
   @Override
   public boolean equals(final Object obj) {
