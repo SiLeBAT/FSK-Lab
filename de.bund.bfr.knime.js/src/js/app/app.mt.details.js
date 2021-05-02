@@ -155,7 +155,7 @@ class APPMTDetails {
         if (modelHandler && modelHandler._menu) {
 
             $.each(modelHandler._menu, (i, menuMeta) => {
-				if (menuMeta.id =='readme')
+				if (menuMeta.id =='readme'|| menuMeta.id == 'resources')
 					return; 
 
                 let $navItem = null;
@@ -190,8 +190,7 @@ class APPMTDetails {
             // get each menus id
             $.each(modelHandler._menu, (i, menuMeta) => {
                 // dropdown nav item 
-
-                if (menuMeta.id =='readme')
+                if (menuMeta.id =='readme' || menuMeta.id == 'resources')
 					return;
                 if (menuMeta.submenus && menuMeta.submenus.length > 0) {
                     // iterate over submenus
