@@ -19,7 +19,7 @@ public class VariableNotGlobalException extends Exception {
   public VariableNotGlobalException(String variableName, String modelId) {
 
     // super(err);
-    FskErrorMessages.variableNotGlobalWarning(variableName, modelId);
+    super(FskErrorMessages.variableNotGlobalWarning(variableName, modelId));
 
   }
 
