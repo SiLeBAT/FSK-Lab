@@ -41,6 +41,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.knime.core.node.ExecutionContext;
@@ -437,8 +438,9 @@ final class FSKEditorJSNodeModel
         regenerateSimulation = true;
       }
       else if(originalParameters.size()>0 && !parameters.equals(originalParameters)){
-        List<Parameter> nonCommonElements = new ArrayList(parameters);
-        nonCommonElements.removeAll(originalParameters);
+        List<Parameter> nonCommonElements = (List<Parameter>) CollectionUtils.removeAll(originalParameters, parameters);
+        nonCommonElements.addAll((List<Parameter>) CollectionUtils.removeAll( parameters, originalParameters));
+          
         for(Parameter p: nonCommonElements) {
           if(!p.getClassification().equals(ClassificationEnum.OUTPUT)) {
             regenerateSimulation = true;
