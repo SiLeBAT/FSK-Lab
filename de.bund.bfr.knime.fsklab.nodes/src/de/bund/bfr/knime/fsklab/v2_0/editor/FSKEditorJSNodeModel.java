@@ -82,6 +82,7 @@ import de.bund.bfr.rakip.vocabularies.data.BasicProcessRepository;
 import de.bund.bfr.rakip.vocabularies.data.CollectionToolRepository;
 import de.bund.bfr.rakip.vocabularies.data.CountryRepository;
 import de.bund.bfr.rakip.vocabularies.data.FishAreaRepository;
+import de.bund.bfr.rakip.vocabularies.data.FormatRepository;
 import de.bund.bfr.rakip.vocabularies.data.HazardRepository;
 import de.bund.bfr.rakip.vocabularies.data.HazardTypeRepository;
 import de.bund.bfr.rakip.vocabularies.data.IndSumRepository;
@@ -166,7 +167,7 @@ final class FSKEditorJSNodeModel
           vocabularies.put("collection_tool", new CollectionToolRepository(connection).getAllNames());
           vocabularies.put("country", new CountryRepository(connection).getAllNames());
           vocabularies.put("fish_area", new FishAreaRepository(connection).getAllNames());
-          vocabularies.put("format", new FishAreaRepository(connection).getAllNames());
+          vocabularies.put("format", new FormatRepository(connection).getAllNames());
           vocabularies.put("hazard", new HazardRepository(connection).getAllNames());
           vocabularies.put("hazard_type", new HazardTypeRepository(connection).getAllNames());
           vocabularies.put("ind_sum", new IndSumRepository(connection).getAllNames());
