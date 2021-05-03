@@ -342,14 +342,21 @@ public class FskService implements Runnable {
 				}
 				
 				try (JarFile jarFile = new JarFile(temporaryFile)) {
-					
-					// Get and import tables.sql
+										
+					// Read tables.sql
+					String tableSqlScript;
 					JarEntry tablesEntry = jarFile.getJarEntry("data/tables.sql");
 					try (InputStream inputStream = jarFile.getInputStream(tablesEntry)) {
-						String tableSqlScript = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
-						Statement statement = connection.createStatement();
-						statement.execute(tableSqlScript);
+						tableSqlScript = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
 					} catch (IOException err) {
+						LOGGER.error("RAKIP vocabularies could not be imported", err);
+						throw err;
+					}
+					
+					// Import tables.sql
+					try (Statement statement = connection.createStatement()) {
+						statement.execute(tableSqlScript);
+					} catch (SQLException err) {
 						LOGGER.error("RAKIP vocabularies could not be imported", err);
 						throw err;
 					}
