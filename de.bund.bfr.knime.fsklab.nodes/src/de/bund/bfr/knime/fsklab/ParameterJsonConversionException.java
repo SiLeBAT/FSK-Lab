@@ -19,8 +19,8 @@ public class ParameterJsonConversionException extends Exception {
    */
   public ParameterJsonConversionException(String parameter) {
 
-    // super(err);
-    FskErrorMessages.parameterJsonConversionError(parameter);
+
+    super(FskErrorMessages.parameterJsonConversionError(parameter));
 
   }
 }

@@ -19,7 +19,7 @@ public class PackageNotFoundException extends Exception {
   public PackageNotFoundException(String pkg) {
 
     // super(err);
-    FskErrorMessages.packageNotFoundError(pkg);
+    super(FskErrorMessages.packageNotFoundError(pkg));
 
   }
 }

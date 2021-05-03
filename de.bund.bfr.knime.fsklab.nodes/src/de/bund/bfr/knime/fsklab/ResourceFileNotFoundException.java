@@ -19,7 +19,7 @@ public class ResourceFileNotFoundException extends Exception {
   public ResourceFileNotFoundException(String fileName) {
 
     // super(err);
-    FskErrorMessages.resourceFileNotFoundWarning(fileName);
+    super(FskErrorMessages.resourceFileNotFoundWarning(fileName));
 
   }
 }

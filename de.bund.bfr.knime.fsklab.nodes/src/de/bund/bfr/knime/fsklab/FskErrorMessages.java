@@ -62,11 +62,16 @@ public class FskErrorMessages {
    * 
    * @param fileName name of resource file that is not found
    */
-  public static void resourceFileNotFoundWarning(String fileName) {
+  public static String resourceFileNotFoundWarning(String fileName) {
+    
     if (isNotNull("Resource File", fileName)) {
-      LOGGER.warn("WARNING: OUTPUT parameter declared as FILE was not found in working directory: '"
-          + fileName + "'");
+      
+      String msg = "WARNING: OUTPUT parameter declared as FILE was not found in working directory: '"
+          + fileName + "'";
+      LOGGER.warn(msg);
+      return msg;
     }
+    return objectNullMessage(fileName);
   }
 
 
@@ -102,13 +107,16 @@ public class FskErrorMessages {
    * {@link de.bund.bfr.knime.fsklab.ParameterDeclarationException}
    * 
    * @param parameterDeclaration the failed command to assign a parameter.
+   * @return error message
    */
-  public static void parameterDeclarationError(String parameterDeclaration) {
+  public static String parameterDeclarationError(String parameterDeclaration) {
     if (isNotNull("Simulation Parameter", parameterDeclaration)) {
-      LOGGER.error(
-          "ERROR: Simulation Parameter could not be loaded. Remove dependencies by checking the parameter order in the simulation.\n");
-      LOGGER.warn(">> " + parameterDeclaration);
+      String msg =     "ERROR: Simulation Parameter could not be loaded. Remove dependencies by checking the parameter order in the simulation.\n";
+      msg += ">> " + parameterDeclaration;
+      LOGGER.error(msg);
+      return msg;
     }
+    return objectNullMessage("Parameter declaration");
   }
 
   /**
@@ -116,13 +124,16 @@ public class FskErrorMessages {
   * {@link de.bund.bfr.knime.fsklab.ParameterJsonConversionException}
   * 
   * @param parameter name of the parameter that could not be serialized
+  * @return error message 
   */
- public static void parameterJsonConversionError(String parameter) {
+ public static String parameterJsonConversionError(String parameter) {
    if (isNotNull("Simulation Parameter", parameter)) {
-     LOGGER.error(
-         "ERROR: Simulation Parameter cant be serialized to JSON. Make sure the data type is supported by FSK-Lab.\n");
-     LOGGER.error(">> " + parameter);
+     String msg = "ERROR: Simulation Parameter cant be serialized to JSON. Make sure the data type is supported by FSK-Lab.\n";
+     msg += ">> " + parameter;
+     LOGGER.error(msg);
+     return msg;
    }
+   return objectNullMessage("Parameter");
  }
   
   /**
@@ -131,12 +142,15 @@ public class FskErrorMessages {
    * 
    * @param pkg name of package that was not found.
    */
-  public static void packageNotFoundError(String pkg) {
+  public static String packageNotFoundError(String pkg) {
     if (isNotNull("Package", pkg)) {
-      LOGGER.error("ERROR: there is no package called '" + pkg
-          + "' nor could it be installed automatically");
-      LOGGER.warn(">> " + pkg);
+      String msg = "ERROR: there is no package called '" + pkg
+          + "' nor could it be installed automatically"
+          + "\n>> " + pkg;
+      LOGGER.error(msg);
+      return msg;
     }
+    return objectNullMessage("Package");
   }
 
   /**
