@@ -37,7 +37,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.TreeSet;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -69,7 +72,8 @@ import metadata.SwaggerUtil;
  * @author SchueleT
  */
 public class ReaderNodeUtil {
-
+  static final Set<String> FSKFilesRegistry = new HashSet();
+  private static ReentrantLock lock = new ReentrantLock();
   private ReaderNodeUtil() {
   }
 
@@ -632,7 +636,20 @@ public class ReaderNodeUtil {
    */
   public static FskPortObject readArchive(File in) throws Exception {
     FskPortObject fskObj = null;
-
+    try {
+      lock.lock();
+      if(!FSKFilesRegistry.contains(in.getPath())) {
+        FSKFilesRegistry.add(in.getPath());
+      }else {
+        while (FSKFilesRegistry.contains(in.getPath())) {
+          TimeUnit.MILLISECONDS.sleep(10);
+        }
+        FSKFilesRegistry.add(in.getPath());
+      }
+    }
+    finally {
+      lock.unlock();
+    }
     try (final CombineArchive archive = new CombineArchive(in)) {
 
       // 1. Get SBML URI
@@ -668,6 +685,10 @@ public class ReaderNodeUtil {
 
       fskObj = readFskPortObject(archive, modelFolders, 0);
     }
+    finally {
+      FSKFilesRegistry.remove(in.getPath());
+    }
+    
 
     // ADD PARAMETER SUFFIXES to 1.7.2 version models (combined)
     ReaderNodeUtil.updateSuffixes(fskObj);
