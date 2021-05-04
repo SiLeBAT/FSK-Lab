@@ -93,7 +93,7 @@ fskdbview = function () {
                 
             }
             if(webRepositoryFlag && _representation.table && _representation.table.rows && _representation.table.rows.length > 0){
-                _app = new APPLandingpage(_WebRepositoryVars, rootDiv, metadata);
+                _app = new APPLandingpage(_WebRepositoryVars, rootDiv, metadata, uploadDates, executionTimes);
             }else{
                 _app = new APPLandingpage(_appVars, rootDiv, metadata);
             }
