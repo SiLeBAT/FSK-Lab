@@ -45,14 +45,15 @@ class APPTableMT extends APPTable {
 		O._loader = _appUI._createLoader( { classes : 'loader-page' }, O._$container );
 		O._loader._setState( true );
 
-		if(O._metadata){
-			await O._prepareDataTable();
-		}else{
-		// get full metadata and create tabledata
+		if(!O._metadata){
 			await O._createData();
-			await O._prepareDataTable();
 		}
-
+        
+        if(!O._uploadDates || O._uploadDates.length == 0){
+            await O._createDataMetadata();
+        }
+        
+        await O._prepareDataTable();
 		// set loader
 		O._loader._setState( false );
 
@@ -164,11 +165,19 @@ class APPTableMT extends APPTable {
 		_log( 'TABLE MAIN / _createData' );
 
 		O._metadata = await _fetchData._json( window._endpoints.metadata ); //O._app._getMetadata();
-		O._uploadDates = await _fetchData._array( window._endpoints.uploadDate, O._metadata.length ); //O._app._getUploadDates( window._endpoints.uploadDate, O._metadata.length );
-		O._executionTimes = await _fetchData._array( window._endpoints.executionTime, O._metadata.length ); //O._app._getExecutionTimes( window._endpoints.executionTime, O._metadata.length );
-
+		
 		_log( O._tableData );
 	}
+    
+    async _createDataMetadata () {
+        let O = this;
+        _log( 'TABLE MAIN / _createDataMetadata' );
+
+        O._uploadDates = await _fetchData._array( window._endpoints.uploadDate, O._metadata.length ); //O._app._getUploadDates( window._endpoints.uploadDate, O._metadata.length );
+        O._executionTimes = await _fetchData._array( window._endpoints.executionTime, O._metadata.length ); //O._app._getExecutionTimes( window._endpoints.executionTime, O._metadata.length );
+
+        _log( O._tableData );
+    }
 	async _prepareDataTable(){
 		_log( 'TABLE MAIN / _prepareDataTable', 'primary' );
 		let O = this;
