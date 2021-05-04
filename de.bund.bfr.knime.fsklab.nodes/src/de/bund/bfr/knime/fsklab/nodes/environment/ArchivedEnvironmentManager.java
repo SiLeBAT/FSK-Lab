@@ -14,7 +14,8 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import de.unirostock.sems.cbarchive.ArchiveEntry;
 import de.unirostock.sems.cbarchive.CombineArchive;
 import de.unirostock.sems.cbarchive.CombineArchiveException;
-
+import static de.bund.bfr.knime.fsklab.v2_0.reader.ReaderNodeUtil.lock;
+import static de.bund.bfr.knime.fsklab.v2_0.reader.ReaderNodeUtil.release;
 /**
  * ArchivedEnvironmentManager handles working directories contained within FSKX archives. If the
  * passed archive path is null, empty string, does not exist or has no resource entries,
@@ -69,7 +70,8 @@ public class ArchivedEnvironmentManager implements EnvironmentManager {
 
     if (entries == null || entries.length == 0)
       return Optional.empty();
-
+    lock(archiveFile.toFile());
+    
     try (CombineArchive archive = new CombineArchive(archiveFile.toFile())) {
 
       Path environment = Files.createTempDirectory("workingDirectory");
@@ -84,6 +86,9 @@ public class ArchivedEnvironmentManager implements EnvironmentManager {
 
     } catch (IOException | JDOMException | ParseException | CombineArchiveException e) {
       return Optional.empty();
+    }
+    finally {
+      release(archiveFile.toFile());
     }
   }
 

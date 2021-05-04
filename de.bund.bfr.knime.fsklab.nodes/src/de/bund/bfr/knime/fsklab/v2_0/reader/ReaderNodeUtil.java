@@ -628,16 +628,10 @@ public class ReaderNodeUtil {
       return fskObj;
     }
   }
-  /**
-   * 
-   * @param in a file to be read and converted into FSK Object
-   * @return FskPortObject
-   * @throws Exception
-   */
-  public static FskPortObject readArchive(File in) throws Exception {
-    FskPortObject fskObj = null;
+  public static void lock(File in) {
     try {
       lock.lock();
+      
       if(!FSKFilesRegistry.contains(in.getPath())) {
         FSKFilesRegistry.add(in.getPath());
       }else {
@@ -646,10 +640,26 @@ public class ReaderNodeUtil {
         }
         FSKFilesRegistry.add(in.getPath());
       }
+    } catch (InterruptedException e) {
+      e.printStackTrace();
     }
     finally {
       lock.unlock();
     }
+  }
+  public static void release(File in) {
+    FSKFilesRegistry.remove(in.getPath());
+  }
+  
+  /**
+   * 
+   * @param in a file to be read and converted into FSK Object
+   * @return FskPortObject
+   * @throws Exception
+   */
+  public static FskPortObject readArchive(File in) throws Exception {
+    FskPortObject fskObj = null;
+    lock(in);
     try (final CombineArchive archive = new CombineArchive(in)) {
 
       // 1. Get SBML URI
@@ -686,7 +696,7 @@ public class ReaderNodeUtil {
       fskObj = readFskPortObject(archive, modelFolders, 0);
     }
     finally {
-      FSKFilesRegistry.remove(in.getPath());
+      release(in);
     }
     
 
