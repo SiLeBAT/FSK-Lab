@@ -370,8 +370,9 @@ public class FskService implements Runnable {
 							try (InputStream is = jarFile.getInputStream(nextEntry);
 									LineIterator lineIterator = IOUtils.lineIterator(is, StandardCharsets.UTF_8)) {
 								while (lineIterator.hasNext()) {
-									Statement statement = connection.createStatement();
-									statement.execute(lineIterator.nextLine());
+									try (Statement statement = connection.createStatement()) {
+										statement.execute(lineIterator.nextLine());
+									}
 								}
 							} catch (IOException | SQLException err) {
 								// Log error and continue with other vocabularies
