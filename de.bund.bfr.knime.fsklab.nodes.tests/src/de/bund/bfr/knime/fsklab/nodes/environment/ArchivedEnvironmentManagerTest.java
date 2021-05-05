@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.junit.Test;
 
@@ -62,8 +63,10 @@ public class ArchivedEnvironmentManagerTest {
 
     assertTrue(Files.exists(environment));
     assertTrue(Files.isDirectory(environment));
-
-    List<Path> files = Files.list(environment).collect(Collectors.toList());
-    assertEquals(2, files.size());
+    
+    try (Stream<Path> stream = Files.list(environment)) {
+    	List<Path> files = stream.collect(Collectors.toList());
+    	assertEquals(2, files.size());
+    }
   }
 }
