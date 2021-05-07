@@ -11,7 +11,7 @@ mv $TARGET_FOLDER/repository $TARGET_FOLDER/fsklab
 mv $TARGET_FOLDER/fsklab $REPO/fsklab
 cd $REPO/fsklab
 git add .
-git commit -m "Development"
+git commit -m "Release"
 
 # Push build
 git push https://$GITLAB_USER:$GITLAB_TOKEN@gitlab.bfr.berlin/silebat/$REPO.git --all
