@@ -825,16 +825,17 @@ joiner = function () {
         editModelsPool(previous, newParams, modelsPool[previous]['modelName'], modelsPool[previous]['metadata'], modelsPool[previous]['modelType'],
                       modelsPool[previous]['modelScript']
                       ,modelsPool[previous]['vis']
-                      ,''
+                      ,modelsPool[previous]['Location']
                       ,modelsPool[previous]['simulation']
-                      ,'');
+                      ,modelsPool[previous]['downloadURL']);
 
         editModelsPool(newValueText, oldParams, modelsPool[newValueText]['modelName'], modelsPool[newValueText]['metadata'], modelsPool[newValueText]['modelType'],
                       modelsPool[newValueText]['modelScript']
                       ,modelsPool[newValueText]['vis']
-                      ,''
+                      ,modelsPool[newValueText]['Location']
                       ,modelsPool[newValueText]['simulation']
-                      ,'');
+                      ,modelsPool[newValueText]['downloadURL']);
+        
       }
       try{
         $("#" + newValueText + ' option').filter(function () {
