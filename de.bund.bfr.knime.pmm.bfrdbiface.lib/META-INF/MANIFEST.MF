@@ -4,14 +4,14 @@ Bundle-Name: DB-Library
 Bundle-SymbolicName: de.bund.bfr.knime.pmm.bfrdbiface.lib;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: de.bund.bfr.knime.pmm.bfrdbiface.lib.Activator
-Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime,
- org.eclipse.core.resources,
- de.bund.bfr.knime.pmm.common,
- org.hsh.bfr.db,
- org.knime.core,
+Require-Bundle: com.jgoodies;bundle-version="1.4.0",
+ de.bund.bfr.knime.pmm.common;bundle-version="1.0.0",
+ org.eclipse.ui;bundle-version="3.109.0",
+ org.eclipse.core.runtime;bundle-version="3.13.0",
+ org.eclipse.core.resources;bundle-version="3.12.0",
+ org.hsh.bfr.db;bundle-version="1.0.0",
  org.jdom.2;bundle-version="2.0.6",
- com.jgoodies;bundle-version="1.4.0"
+ org.knime.core;bundle-version="[4.0.0,5.0.0)"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: de.bund.bfr.knime.pmm.bfrdbiface.lib

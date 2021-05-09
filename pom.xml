@@ -24,11 +24,12 @@
 
 	<modules>
 		<!-- Plugins -->
+		<module>de.bund.bfr.knime.js</module>
+		
 		<module>de.bund.bfr.knime.fsklab.metadata.model</module>
 		<module>de.bund.bfr.knime.fsklab.nodes</module>
 		<module>de.bund.bfr.knime.fsklab.nodes.common</module>
-		<module>de.bund.bfr.knime.fsklab.nodes.deprecated</module>
-		<module>de.bund.bfr.knime.fsklab.nodes.deprecated2</module>
+		<module>de.bund.bfr.knime.fsklab.deprecatednodes</module>
 		<module>de.bund.bfr.knime.fsklab.preferences</module>
 		<module>de.bund.bfr.knime.fsklab.r</module>
 		<module>de.bund.bfr.knime.fsklab.service</module>
@@ -48,8 +49,9 @@
 		<!-- <module>de.bund.bfr.knime.testflows</module> -->
 		<module>de.bund.bfr.knime.foodprocess.tests</module>
 		<module>de.bund.bfr.knime.fsklab.metadata.model.tests</module>
-		<module>de.bund.bfr.knime.fsklab.nodes.deprecated.tests</module>
+		<module>de.bund.bfr.knime.fsklab.deprecatednodes.tests</module>
 		<module>de.bund.bfr.knime.fsklab.nodes.tests</module>
+		<module>de.bund.bfr.knime.fsklab.nodes.common.tests</module>
 		<module>de.bund.bfr.knime.pmm.common.tests</module>
 		<module>de.bund.bfr.knime.pmm.nodes.tests</module>
 

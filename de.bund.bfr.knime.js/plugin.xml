@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension point="org.knime.js.core.webResources">
+   
+     <webResourceBundle  name="Backbone.js" version="1.4.0" webResourceBundleID="backbone_1.4.0" debug="false">
+       <webResource relativePathSource="js-lib/backbone" relativePathTarget="js-lib/backbone" />
+       <importResource relativePath="js-lib/backbone/backbone-min.js" type="JAVASCRIPT" />
+       <webDependency webResourceBundleID="underscore_1.9.1" />
+     </webResourceBundle>
+     
+     <webResourceBundle name="Bootstrap 3 Typeahead" version="4.0.2" webResourceBundleID="bootstrap3_typeahead_4.0.2"
+       debug="false">
+       <webResource relativePathSource="js-lib/bootstrap3_typeahead" relativePathTarget="js-lib/bootstrap3_typeahead" />
+       <importResource relativePath="js-lib/bootstrap3_typeahead/bootstrap3-typeahead.min.js" type="JAVASCRIPT" />
+     </webResourceBundle>
+     
+     <webResourceBundle name="lodash" version="4.17.15" webResourceBundleID="Lodash_4.17.15" debug="false">
+       <webResource relativePathSource="js-lib/lodash" relativePathTarget="js-lib/lodash" />
+       <importResource relativePath="js-lib/lodash/lodash.min.js" type="JAVASCRIPT" />
+     </webResourceBundle>
+     
+      <webResourceBundle name="d3" version="6.6.2" webResourceBundleID="d3_6.6.2" debug="false">
+       <webResource relativePathSource="js-lib/d3" relativePathTarget="js-lib/d3" />
+       <importResource relativePath="js-lib/d3/d3.js" type="JAVASCRIPT" />
+     </webResourceBundle>
+     
+     <webResourceBundle name="ajv" version="5.5.2" webResourceBundleID="ajv_5.5.2" debug="false">
+       <webResource relativePathSource="js-lib/ajv" relativePathTarget="js-lib/ajv" />
+       <importResource relativePath="js-lib/ajv/ajv.min.js" type="JAVASCRIPT" />
+     </webResourceBundle>
+     
+     <webResourceBundle name="underscore" version="1.9.1" webResourceBundleID="underscore_1.9.1" debug="false">
+       <webResource relativePathSource="js-lib/underscore" relativePathTarget="js-lib/underscore" />
+       <importResource relativePath="js-lib/underscore/underscore-min.js" type="JAVASCRIPT" />
+     </webResourceBundle>
+     
+     <webResourceBundle name="datepicker" version="1.9.0" webResourceBundleID="datepicker_1.9.0"
+       debug="false">
+       <webResource relativePathSource="js-lib/datepicker" relativePathTarget="js-lib/datepicker" />
+       <importResource relativePath="js-lib/datepicker/bootstrap-datepicker.min.js" type="JAVASCRIPT" />
+     </webResourceBundle>
+     
+     <webResourceBundle name="codemirror" version="5.49.2" webResourceBundleID="codemirror_5.49.2"
+        debug="false">    
+       <webResource relativePathSource="js-lib/codemirror-5.49.2/" relativePathTarget="codemirror" />
+       <importResource relativePath="codemirror/lib/codemirror.css" type="CSS" />
+       <importResource relativePath="codemirror/lib/codemirror.js" type="JAVASCRIPT" />
+     </webResourceBundle>
+     
+     <webResourceBundle name="JointJS" version="3.1.1" webResourceBundleID="JointJS_3.1.1" debug="false">
+       <webResource relativePathSource="js-lib/jointjs" relativePathTarget="js-lib/jointjs" />
+       <importResource relativePath="js-lib/jointjs/joint.min.css" type="CSS" />
+       <importResource relativePath="js-lib/jointjs/joint.min.js" type="JAVASCRIPT" />
+       <webDependency webResourceBundleID="jQuery_3.3.1" />
+	   <webDependency webResourceBundleID="backbone_1.4.0" />
+	   <webDependency webResourceBundleID="Lodash_4.17.15" />
+     </webResourceBundle>
+     
+     <webResourceBundle name="FSK UI Metadata schema" version="1.0.0" webResourceBundleID="FskMetadata_1.0.0"
+       debug="true" exports="fskui" usesDefine="false">
+
+	   <webResource
+	     relativePathSource="js-lib/bfr/fskmetadata_1.0.0.js"
+		 relativePathTarget="js-lib/bfr/fskmetadata_1.0.0.js">
+	   </webResource>
+
+	   <importResource relativePath="js-lib/bfr/fskmetadata_1.0.0.js" type="JAVASCRIPT"></importResource>
+	 </webResourceBundle>
+
+	 <webResourceBundle name="FSK JS utilities" version="1.0.0" webResourceBundleID="FskUtil_1.0.0"
+	   debug="true" exports="fskutil" usesDefine="false">
+
+	   <webResource
+	     relativePathSource="js-lib/bfr/fskutil_1.0.0.js"
+		 relativePathTarget="js-lib/bfr/fskutil_1.0.0.js">
+	   </webResource>
+
+	   <importResource relativePath="js-lib/bfr/fskutil_1.0.0.js" type="JAVASCRIPT"></importResource>
+     </webResourceBundle>
+     
+     <webResourceBundle name="App utilities" version="1.0.0" webResourceBundleID="app_1.0.0"
+	   debug="true" exports="app" usesDefine="false">
+
+	   <webResource
+	     relativePathSource="js-lib/bfr/fskapp/"
+		 relativePathTarget="js-lib/bfr/fskapp/">
+	   </webResource>
+
+	   <importResource relativePath="js-lib/bfr/fskapp/app_1.0.0.js" type="JAVASCRIPT"></importResource>
+	   <importResource relativePath="js-lib/bfr/fskapp/editor_data_1.0.0.js" type="JAVASCRIPT"></importResource>
+	   <importResource relativePath="js-lib/bfr/fskapp/css/styles.css" type="CSS"></importResource>
+     </webResourceBundle>
+   </extension>
+   
+</plugin>

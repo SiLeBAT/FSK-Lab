@@ -1,0 +1,16 @@
+.alert-dismissible {
+	.close-sm {
+		padding: 0.9rem 1.25rem;
+		font-size: 1rem; 
+	}
+}
+.alert-sm {
+	padding: 0.5rem 1rem;
+	font-size: $font-size-sm;
+	margin-bottom: 0.25rem;
+}
+.alert-xs {
+	padding: 0.25rem 0.5rem;
+	font-size: 0.75rem;
+	margin-bottom: 0;
+}

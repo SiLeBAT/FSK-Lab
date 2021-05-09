@@ -1,26 +1,30 @@
 package de.bund.bfr.knime.fsklab.nodes;
 
+import de.bund.bfr.knime.fsklab.nodes.plot.BasePlotter;
+import de.bund.bfr.knime.fsklab.nodes.plot.Ggplot2Plotter;
+import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
+import de.bund.bfr.knime.fsklab.r.client.LibRegistry;
+import de.bund.bfr.knime.fsklab.r.client.RController;
+import de.bund.bfr.knime.fsklab.r.client.ScriptExecutor;
+import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
+import de.bund.bfr.knime.fsklab.v2_0.FskSimulation;
+import de.bund.bfr.knime.fsklab.v2_0.runner.RunnerNodeInternalSettings;
+import de.bund.bfr.knime.fsklab.v2_0.runner.RunnerNodeSettings;
+import de.bund.bfr.metadata.swagger.Parameter;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import metadata.SwaggerUtil;
 import org.knime.core.node.BufferedDataTable;
+import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.util.FileUtil;
 import org.rosuda.REngine.REXP;
-import de.bund.bfr.knime.fsklab.FskPortObject;
-import de.bund.bfr.knime.fsklab.FskSimulation;
-import de.bund.bfr.knime.fsklab.nodes.plot.BasePlotter;
-import de.bund.bfr.knime.fsklab.nodes.plot.Ggplot2Plotter;
-import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
-import metadata.SwaggerUtil;
-import de.bund.bfr.knime.fsklab.r.client.LibRegistry;
-import de.bund.bfr.knime.fsklab.r.client.RController;
-import de.bund.bfr.knime.fsklab.r.client.ScriptExecutor;
-import de.bund.bfr.metadata.swagger.Parameter;
+import org.rosuda.REngine.REXPMismatchException;
 
 public class RScriptHandler extends ScriptHandler {
 
@@ -34,7 +38,7 @@ public class RScriptHandler extends ScriptHandler {
   public RScriptHandler(List<String> packages) throws RException {
     this.controller = new RController();
     this.executor = new ScriptExecutor(controller);
-    
+
     if (packages.contains("ggplot2")) {
       plotter = new Ggplot2Plotter(controller);
     } else {
@@ -42,13 +46,14 @@ public class RScriptHandler extends ScriptHandler {
     }
   }
 
-  void setWorkingDirectory(Path workingDirectory, ExecutionContext exec) throws Exception {
+  @Override
+  public void setWorkingDirectory(Path workingDirectory, ExecutionContext exec) throws Exception {
     controller.setWorkingDirectory(workingDirectory);
   }
 
   @Override
   public String[] runScript(String script, ExecutionContext exec, Boolean showErrors)
-      throws Exception {
+      throws RException, CanceledExecutionException, InterruptedException, REXPMismatchException {
     if (showErrors) {
       REXP c = executor.execute(script, exec);
       String[] execResult = c.asStrings();
@@ -60,7 +65,9 @@ public class RScriptHandler extends ScriptHandler {
     return null;
   }
 
-  void convertToKnimeDataTable(FskPortObject fskObj, ExecutionContext exec) throws Exception {
+  @Override
+  public void convertToKnimeDataTable(FskPortObject fskObj, ExecutionContext exec)
+      throws Exception {
     LibRegistry.instance().install(Arrays.asList("data.table"));
 
     String DT = "library(data.table)\n";
@@ -107,7 +114,7 @@ public class RScriptHandler extends ScriptHandler {
   }
 
   @Override
-  void installLibs(final FskPortObject fskObj, ExecutionContext exec, NodeLogger LOGGER)
+  public void installLibs(final FskPortObject fskObj, ExecutionContext exec, NodeLogger LOGGER)
       throws Exception {
     // Install needed libraries
     if (!fskObj.packages.isEmpty()) {
@@ -119,27 +126,31 @@ public class RScriptHandler extends ScriptHandler {
   }
 
   @Override
-  String buildParameterScript(final FskSimulation simulation) {
+  public String buildParameterScript(final FskSimulation simulation) {
     return NodeUtils.buildParameterScript(simulation);
   }
 
   @Override
-  void plotToImageFile(final RunnerNodeInternalSettings internalSettings,
+  public void plotToImageFile(final RunnerNodeInternalSettings internalSettings,
       RunnerNodeSettings nodeSettings, final FskPortObject fskObj, ExecutionContext exec)
       throws Exception {
-    plotter.plotPng(internalSettings.imageFile, fskObj.viz);
+    plotter.plotPng(internalSettings.imageFile, fskObj.getViz());
   }
 
   @Override
-  void saveWorkspace(final FskPortObject fskObj, ExecutionContext exec) throws Exception {
-    if (fskObj.workspace == null) {
-      fskObj.workspace = FileUtil.createTempFile("workspace", ".RData").toPath();
+  public void saveWorkspace(final FskPortObject fskObj, ExecutionContext exec) throws Exception {
+    if (fskObj.getWorkspace() == null) {
+      fskObj.setWorkspace(FileUtil.createTempFile("workspace", ".RData").toPath());
     }
-    controller.saveWorkspace(fskObj.workspace, exec);
+
+
+    controller.saveWorkspace(fskObj.getWorkspace(), exec);
   }
 
+
+
   @Override
-  void restoreDefaultLibrary() throws Exception {
+  public void restoreDefaultLibrary() throws Exception {
     controller.restorePackagePath();
   }
 
@@ -153,17 +164,20 @@ public class RScriptHandler extends ScriptHandler {
     return executor.getStdErr();
   }
 
+  @Override
   public void cleanup(ExecutionContext exec) throws Exception {
     executor.cleanup(exec);
   }
 
   @Override
-  void setupOutputCapturing(ExecutionContext exec) throws Exception {
+  public void setupOutputCapturing(ExecutionContext exec)
+      throws RException, CanceledExecutionException, InterruptedException {
     executor.setupOutputCapturing(exec);
   }
 
   @Override
-  void finishOutputCapturing(ExecutionContext exec) throws Exception {
+  public void finishOutputCapturing(ExecutionContext exec)
+      throws RException, CanceledExecutionException, InterruptedException {
     executor.finishOutputCapturing(exec);
   }
 
@@ -190,5 +204,10 @@ public class RScriptHandler extends ScriptHandler {
   public void close() throws Exception {
     controller.close();
 
+  }
+
+  @Override
+  protected String createVectorQuery(List<String> variableNames) {
+    return "c(" + String.join(", ", variableNames) + ")";
   }
 }

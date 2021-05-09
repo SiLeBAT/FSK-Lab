@@ -40,6 +40,8 @@ public class FskPlugin extends AbstractUIPlugin {
    * Object mapper for 1.0.4 classes generated with Swagger at de.bund.bfr.metadata.swagger
    */
   public ObjectMapper MAPPER104;
+  public ObjectMapper MAPPER104DEFAULT;
+  
 
   /**
    * Jackson object mapper with {@link RakipModule}. Initialized with {@link #start(BundleContext)}
@@ -71,13 +73,18 @@ public class FskPlugin extends AbstractUIPlugin {
         .registerModule(new EMFModule()).registerModule(new EmfMetadataModule());
 
     MAPPER104.setSerializationInclusion(Include.NON_NULL);
+    
+    MAPPER104DEFAULT = new ObjectMapper(jsonFactory).registerModule(new ThreeTenModule())
+        .registerModule(new EMFModule()).registerModule(new EmfMetadataModule());
+
+    MAPPER104DEFAULT.setSerializationInclusion(Include.ALWAYS);
 
     OBJECT_MAPPER = EMFModule.setupDefaultMapper();
     OBJECT_MAPPER.registerModule(new ThreeTenModule());
 
     OLD_OBJECT_MAPPER = new ObjectMapper().registerModule(new RakipModule());
     
-    fskService = new FskService();
+    fskService = FskService.instance();
     
     service = new Thread(fskService);
     service.setName("FSK-Service");

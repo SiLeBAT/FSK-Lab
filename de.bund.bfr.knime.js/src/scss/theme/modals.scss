@@ -1,0 +1,65 @@
+/* modals */
+.modal-header {
+	@media (max-height: 740px) {
+		padding-top: 1rem;
+		padding-bottom: 1rem;
+	}
+	@include media-breakpoint-down( xs ) {
+		padding: 1rem $bfr-padding-x-sm;
+	}
+}
+.modal-close,
+.action[data-dismiss="modal"] {
+	.modal.loading & {
+		z-index: 2000;
+	}
+}
+
+.modal-body {
+	@include media-breakpoint-down( xs ) {
+		padding: 1rem $bfr-padding-x-sm;
+	}
+}
+.modal-title {
+	@media (max-height: 740px) {
+		font-size: 1.25rem;
+	}
+	@include media-breakpoint-down( sm ) {
+		font-size: 1.25rem;
+	}
+}
+.modal-table {
+	padding: 0;
+	@include media-breakpoint-up( xs ) {
+		overflow: hidden;
+	}
+}
+.modal-nav {
+	z-index: 10;
+	position: sticky;
+	left: 0;
+	top: 0;
+	flex: 0 0 0;
+	background-color: $white;
+	box-shadow: 0 10px 13px 0 rgba(20, 20, 20, 0.1);
+	@include media-breakpoint-down( xxs ) {
+		padding: 0.5rem 1rem;
+	}
+	.navbar {
+		flex: 1 0 100%;
+		flex-wrap: wrap;
+		@include media-breakpoint-up( md ) {
+			flex-wrap: nowrap;
+		}
+	}
+}
+.modal-nav-toggler {
+	padding-left: $spacer / 2;
+	padding-right: $spacer / 2;
+}
+.modal-nav-search {}
+.modal-nav-menu {
+	@include media-breakpoint-up( md ) {
+		flex-grow: 1;
+	}
+}

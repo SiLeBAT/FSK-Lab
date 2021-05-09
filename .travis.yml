@@ -1,6 +1,6 @@
 
 language: java
-dist: trusty
+dist: Xenial
 jdk:
   - openjdk8
 script:
@@ -33,11 +33,11 @@ after_success:
 deploy:
 - provider: script
   skip_cleanup: true # to upload artifacts created during the build
-  script: bash bintray.sh
-  on: test
+  script: bash gitlab.sh
+  on:
+    branch: release
 - provider: script
   skip_cleanup: true # to upload artifacts created during the build
-  script: bash bintray_nightly.sh
-  on: 
-    branch: master
-    condition: $TRAVIS_EVENT_TYPE = cron
+  script: bash gitlab_development.sh
+  on:
+    branch: development

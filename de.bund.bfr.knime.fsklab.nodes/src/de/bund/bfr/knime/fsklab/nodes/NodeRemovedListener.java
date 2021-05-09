@@ -7,7 +7,7 @@ import org.knime.core.node.workflow.WorkflowListener;
 import org.knime.core.util.FileUtil;
 
 // Listener to remove extra settings folder when the node is removed in the workflow.
-class NodeRemovedListener implements WorkflowListener {
+public class NodeRemovedListener implements WorkflowListener {
 
   /**
    * Name of the node with ID. E.g. FSK Simulation Configurator JS 0:12.
@@ -20,7 +20,7 @@ class NodeRemovedListener implements WorkflowListener {
    */
   private final String containerName;
 
-  NodeRemovedListener(final String nameWithId, final String containerName) {
+  public NodeRemovedListener(final String nameWithId, final String containerName) {
     this.nameWithId = nameWithId;
     this.containerName = containerName;
   }

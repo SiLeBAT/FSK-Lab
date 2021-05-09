@@ -1,0 +1,88 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>de.bund.bfr.knime.js</groupId>
+	<artifactId>de.bund.bfr.knime.js</artifactId>
+    <packaging>eclipse-plugin</packaging>
+	<parent>
+		<groupId>de.bund.bfr.knime</groupId>
+		<artifactId>de.bund.bfr.knime.root</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+	<build>
+		<plugins>
+		    <plugin>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-codegen-maven-plugin</artifactId>
+                <version>2.4.19</version>
+                <executions>
+                    <execution>
+                        <id>convert</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${basedir}/../de.bund.bfr.knime.fsklab.metadata.model/resources/model.yaml</inputSpec>
+            
+                            <!-- Output directory, relative to the project directory. Default is ${project.build.directory}/generated-sources/swagger -->
+                            <output>specs</output>
+            
+                            <!-- Use "swagger" to convert YAML->JSON or "swagger-yaml" to convert JSON->YAML -->
+                            <language>swagger</language>
+                            <configOptions>
+                                <!-- Default output file name is swagger.json or swagger.yaml -->
+                                <outputFile>SPOT.json</outputFile>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+			<plugin>
+				<groupId>com.github.eirslett</groupId>
+				<artifactId>frontend-maven-plugin</artifactId>
+
+				<executions>
+					<execution>
+						<!-- optional: you don't really need execution ids, but it looks nice 
+							in your build log. -->
+						<id>install node and npm</id>
+						<goals>
+							<goal>install-node-and-npm</goal>
+						</goals>
+						
+					</execution>
+					<execution>
+						<id>npm install</id>
+						<goals>
+							<goal>npm</goal>
+						</goals>
+						<configuration>
+							<!-- optional: The default argument is actually "install", so unless 
+								you need to run some other npm command, you can remove this whole <configuration> 
+								section. -->
+							<arguments>install</arguments>
+						</configuration>
+					</execution>
+					<execution>
+						<id>grunt</id>
+						<goals>
+							<goal>grunt</goal>
+						</goals>
+						
+					</execution>
+				</executions>
+				<configuration>
+					<nodeVersion>v14.15.4</nodeVersion>
+
+					<!-- optional: with node version greater than 4.0.0 will use npm provided 
+						by node distribution -->
+					<npmVersion>6.14.10</npmVersion>
+
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

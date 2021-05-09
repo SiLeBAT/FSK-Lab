@@ -8,20 +8,20 @@
       color="000000"
       hidden="false"
       name="FSK object"
-      objectClass="de.bund.bfr.knime.fsklab.FskPortObject"
-      objectSerializer="de.bund.bfr.knime.fsklab.FskPortObject$Serializer"
-      specClass="de.bund.bfr.knime.fsklab.FskPortObjectSpec"
-      specSerializer="de.bund.bfr.knime.fsklab.FskPortObjectSpec$Serializer">
+      objectClass="de.bund.bfr.knime.fsklab.v2_0.FskPortObject"
+      objectSerializer="de.bund.bfr.knime.fsklab.v2_0.FskPortObject$Serializer"
+      specClass="de.bund.bfr.knime.fsklab.v2_0.FskPortObjectSpec"
+      specSerializer="de.bund.bfr.knime.fsklab.v2_0.FskPortObjectSpec$Serializer">
     </portType>
     
     <portType
       color="FF4500"
       hidden="false"
       name="Combined FSK object"
-      objectClass="de.bund.bfr.knime.fsklab.CombinedFskPortObject"
-      objectSerializer="de.bund.bfr.knime.fsklab.CombinedFskPortObject$Serializer"
-      specClass="de.bund.bfr.knime.fsklab.CombinedFskPortObjectSpec"
-      specSerializer="de.bund.bfr.knime.fsklab.CombinedFskPortObjectSpec$Serializer">
+      objectClass="de.bund.bfr.knime.fsklab.v2_0.CombinedFskPortObject"
+      objectSerializer="de.bund.bfr.knime.fsklab.v2_0.CombinedFskPortObject$Serializer"
+      specClass="de.bund.bfr.knime.fsklab.v2_0.CombinedFskPortObjectSpec"
+      specSerializer="de.bund.bfr.knime.fsklab.v2_0.CombinedFskPortObjectSpec$Serializer">
     </portType>
   </extension>
     
@@ -42,15 +42,18 @@
   </extension>
 
   <extension point="org.knime.workbench.repository.nodes">
-     <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.CreatorNodeFactory" />
-     <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.RunnerNodeFactory" />
-     <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.FskToRNodeFactory" />
-     <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.ReaderNodeFactory" />
-     <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.WriterNodeFactory" />
-     <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.FSK2MetadataNodeFactory" />
-     <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.JSSimulatorNodeFactory" />
-     <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.JoinerNodeFactory" />
-     <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.FSKEditorJSNodeFactory" />
+     <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.v2_0.creator.CreatorNodeFactory" />
+     <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.v2_0.runner.RunnerNodeFactory" />
+     <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.v2_0.fsk2r.FskToRNodeFactory" />
+     <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.v2_0.reader.ReaderNodeFactory" />
+     <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.v2_0.writer.WriterNodeFactory" />
+     <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.v2_0.fsk2metadata.FSK2MetadataNodeFactory" />
+     <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.v2_0.simulator.JSSimulatorNodeFactory" />
+     <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.v2_0.joiner.JoinerNodeFactory" />
+     <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.v2_0.editor.FSKEditorJSNodeFactory" />
+     <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.v2_0.fskdbview.FSKDBViewNodeFactory"/>
+     
+     
      
      <!-- Disable workflow writer and reader nodes (unfinished)
      <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.WorkflowWriterNodeFactory" />
@@ -62,9 +65,9 @@
      <!-- JavaScript component for the simulator node -->
      <javascriptComponent
        getComponentValue-method-name="getComponentValue"
-       implementationBundleID="de.bund.bfr.knime.fsklab.nodes.jssimulator.bundle"
+       implementationBundleID="de.bund.bfr.knime.fsklab.v2.0.simulator.bundle"
        init-method-name="init"
-       javascriptComponentID="de.bund.bfr.knime.fsklab.nodes.jssimulator"
+       javascriptComponentID="de.bund.bfr.knime.fsklab.v2.0.simulator.component"
        name="JavaScript Simulation Configurator"
        namespace="simulator">
      </javascriptComponent>
@@ -72,21 +75,33 @@
      <!-- Javascript component for Fsk joiner node -->
      <javascriptComponent
        getComponentValue-method-name="getComponentValue"
-       implementationBundleID="de.bund.bfr.knime.fsklab.js.joiner.bundle"
+       implementationBundleID="de.bund.bfr.knime.fsklab.v2.0.joiner.bundle"
        init-method-name="init"
-       javascriptComponentID="de.bund.bfr.knime.fsklab.js.joiner"
+       javascriptComponentID="de.bund.bfr.knime.fsklab.v2.0.joiner.component"
        name="FSK Joiner"
        namespace="joiner">
      </javascriptComponent>
+     
      <!-- Javascript component for Fsk Editor JS node -->
      <javascriptComponent
        validate-method-name="validate"
        getComponentValue-method-name="getComponentValue"
-       implementationBundleID="de.bund.bfr.knime.fsklab.js.FSKEditorJS.bundle"
+       implementationBundleID="de.bund.bfr.knime.fsklab.v2.0.editor.bundle"
        init-method-name="init"
-       javascriptComponentID="de.bund.bfr.knime.fsklab.js.FSKEditorJS"
+       javascriptComponentID="de.bund.bfr.knime.fsklab.v2.0.editor.component"
        name="FSK Editor JS"
        namespace="fskeditorjs">
+     </javascriptComponent>
+     
+     <!-- Javascript component for Fsk DB View node -->
+     <javascriptComponent
+       validate-method-name="validate"
+       getComponentValue-method-name="getComponentValue"
+       implementationBundleID="de.bund.bfr.knime.fsklab.v2.0.fskdbview.bundle"
+       init-method-name="init"
+       javascriptComponentID="de.bund.bfr.knime.fsklab.v2.0.fskdbview.component"
+       name="FSK DB View"
+       namespace="fskdbview">
      </javascriptComponent>
    </extension>
    
@@ -98,22 +113,16 @@
        name="JavaScript Simulation Configurator"
        usesDefine="false"
        version="0.0.1"
-       webResourceBundleID="de.bund.bfr.knime.fsklab.nodes.jssimulator.bundle">
-       
-       <!-- JS and CSS code -->
-       <webResource
-         relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/jssimulator.js"
-         relativePathTarget="de/bund/bfr/knime/fsklab/nodes/jssimulator.js">
-       </webResource>
-       <importResource relativePath="de/bund/bfr/knime/fsklab/nodes/jssimulator.js" type="JAVASCRIPT" />
+       webResourceBundleID="de.bund.bfr.knime.fsklab.v2.0.simulator.bundle">
        
        <webResource
-         relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/jssimulator.css"
-         relativePathTarget="de/bund/bfr/knime/fsklab/nodes/jssimulator.css">
-       </webResource>
-       <importResource relativePath="de/bund/bfr/knime/fsklab/nodes/jssimulator.css" type="CSS" />
+         relativePathSource="js-src/de/bund/bfr/knime/fsklab/v2.0/simulator"
+         relativePathTarget="js-src/de/bund/bfr/knime/fsklab/v2.0/simulator" />
+       <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/v2.0/simulator/jssimulator.js" type="JAVASCRIPT" />
+       <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/v2.0/simulator/jssimulator.css" type="CSS" />
 
-       <webDependency webResourceBundleID="bootstrap_3.3.6"></webDependency>
+       <webDependency webResourceBundleID="jQuery_3.3.1" />
+	   <webDependency webResourceBundleID="app_1.0.0" />
      </webResourceBundle>
      
 	 <!-- JS and CSS for editor -->
@@ -122,121 +131,62 @@
        name="FSK Editor JS"
        usesDefine="true"
        version="1.0.0"
-       webResourceBundleID="de.bund.bfr.knime.fsklab.js.FSKEditorJS.bundle">
+       webResourceBundleID="de.bund.bfr.knime.fsklab.v2.0.editor.bundle">
        
        <!-- JS and CSS code -->
-       <webResource relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/neweditor" relativePathTarget="neweditor" />
-       <importResource relativePath="neweditor/editor.js" type="JAVASCRIPT" />
-       <importResource relativePath="neweditor/editor.css" type="CSS" />
-
-       <webDependency webResourceBundleID="codemirror"></webDependency>
-       <webDependency webResourceBundleID="bootstrap_3.3.6"></webDependency>
+       <webResource
+         relativePathSource="js-src/de/bund/bfr/knime/fsklab/v2.0/editor"
+         relativePathTarget="js-src/de/bund/bfr/knime/fsklab/v2.0/editor" />
+       <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/v2.0/editor/editor.js" type="JAVASCRIPT" />
+       <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/v2.0/editor/lazyload.js" type="JAVASCRIPT" />
+       <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/v2.0/editor/editor.css" type="CSS" />
+       
+       <webDependency webResourceBundleID="ajv_5.5.2"></webDependency>
+       <webDependency webResourceBundleID="codemirror_5.49.2"></webDependency>
+       <webDependency webResourceBundleID="jQuery_3.3.1" />
+	   <webDependency webResourceBundleID="app_1.0.0" />
+	   <!--webDependency webResourceBundleID="bootstrap_3.3.6"></webDependency-->
        <webDependency webResourceBundleID="bootstrap3_typeahead_4.0.2"></webDependency>
-       <webDependency webResourceBundleID="datepicker"></webDependency>
        <webDependency webResourceBundleID="RequireJS_2.3.3"></webDependency>
        <webDependency webResourceBundleID="knimeserviceConditionalLoad_1.0"></webDependency>
+       <webDependency webResourceBundleID="knimeLazyLoadingService_1.0"></webDependency>
        
-       <!-- FSK dependencies -->
-       <webDependency webResourceBundleID="FskMetadata_1.0.0"></webDependency>
-       <webDependency webResourceBundleID="FskUtil_1.0.0"></webDependency>
-       
+       <!--webDependency webResourceBundleID="FskMetadata_1.0.0"></webDependency>
+       <webDependency webResourceBundleID="FskUtil_1.0.0"></webDependency-->
      </webResourceBundle>
      
      <!-- JS and CSS code for Fsk Joiner node -->	 
-	 <webResourceBundle debug="true" name="FSK Joiner" usesDefine="true" version="1.0.0" webResourceBundleID="de.bund.bfr.knime.fsklab.js.joiner.bundle">
-	   <webResource relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/newjoiner" relativePathTarget="js-src/de/bund/bfr/knime/fsklab/nodes/newjoiner" />
+	 <webResourceBundle debug="true" name="FSK Joiner"
+	   usesDefine="true" version="1.0.0" webResourceBundleID="de.bund.bfr.knime.fsklab.v2.0.joiner.bundle">
+       <webResource
+         relativePathSource="js-src/de/bund/bfr/knime/fsklab/v2.0/joiner"
+         relativePathTarget="js-src/de/bund/bfr/knime/fsklab/v2.0/joiner" />	   
+	   <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/v2.0/joiner/joiner.css" type="CSS" />
+	   <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/v2.0/joiner/joiner.js" type="JAVASCRIPT" />
 	   
-	   <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/nodes/newjoiner/joiner.css" type="CSS" />
-	   <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/nodes/newjoiner/joiner.js" type="JAVASCRIPT" />
-	   
+	   <webDependency webResourceBundleID="d3_6.6.2" />
 	   <webDependency webResourceBundleID="JointJS_3.1.1" />
 	   <webDependency webResourceBundleID="bootstrap_3.3.6" />
        <webDependency webResourceBundleID="bootstrap3_typeahead_4.0.2" />
-       <webDependency webResourceBundleID="codemirror"></webDependency>
+       <webDependency webResourceBundleID="codemirror_5.49.2"></webDependency>
        <webDependency webResourceBundleID="RequireJS_2.3.3"></webDependency>
        <webDependency webResourceBundleID="knimeserviceConditionalLoad_1.0"></webDependency>
 	   
 	   <webDependency webResourceBundleID="FskMetadata_1.0.0" />
 	   <webDependency webResourceBundleID="FskUtil_1.0.0" />
 	 </webResourceBundle>
-    
-     <webResourceBundle debug="false" name="lodash" version="4.17.15" webResourceBundleID="Lodash_4.17.15">
-       <webResource relativePathSource="js-lib/lodash/4.17.15" relativePathTarget="js-lib/lodash/4.17.15" />
-       <importResource relativePath="js-lib/lodash/4.17.15/lodash.min.js" type="JAVASCRIPT" />
-     </webResourceBundle>
-    
-    <webResourceBundle debug="false" name="underscore" version="1.9.1" webResourceBundleID="underscore_1.9.1">
-      <webResource relativePathSource="js-lib/underscore/1.9.1" relativePathTarget="js-lib/underscore/1.9.1" />
-      <importResource relativePath="js-lib/underscore/1.9.1/underscore-min.js" type="JAVASCRIPT" />
-    </webResourceBundle>
-    
-    <webResourceBundle debug="false" name="backbone" version="1.4.0" webResourceBundleID="backbone_1.4.0">
-      <webResource relativePathSource="js-lib/backbone/1.4.0" relativePathTarget="js-lib/backbone/1.4.0" />
-      <importResource relativePath="js-lib/backbone/1.4.0/backbone-min.js" type="JAVASCRIPT" />
-      <webDependency webResourceBundleID="underscore_1.9.1" />
-    </webResourceBundle>
-    
-    <webResourceBundle debug="false" name="JointJS" version="3.1.1" webResourceBundleID="JointJS_3.1.1">
-      <webResource relativePathSource="js-lib/jointjs/3.1.1" relativePathTarget="js-lib/jointjs/3.1.1" />
-      <importResource relativePath="js-lib/jointjs/3.1.1/joint.min.css" type="CSS" />
-      <importResource relativePath="js-lib/jointjs/3.1.1/joint.min.js" type="JAVASCRIPT" />
-      <webDependency webResourceBundleID="jQuery_3.3.1" />
-	  <webDependency webResourceBundleID="backbone_1.4.0" />
-	  <webDependency webResourceBundleID="Lodash_4.17.15" />
-    </webResourceBundle>
-    
-    <webResourceBundle debug="false" name="codemirror" usesDefine="true" version="5.49.2" webResourceBundleID="codemirror">    
-      <webResource relativePathSource="js-lib/codemirror-5.49.2/" relativePathTarget="codemirror"></webResource>
-      <importResource relativePath="codemirror/lib/codemirror.css" type="CSS" />
-    </webResourceBundle>
-    
-    <webResourceBundle debug="false" name="Bootstrap 3 Typeahead" usesDefine="false" version="4.0.2" webResourceBundleID="bootstrap3_typeahead_4.0.2">
-      <webResource relativePathSource="js-lib/bootstrap3_typeahead" relativePathTarget="bootstrap3_typeahead" />
-      <importResource relativePath="bootstrap3_typeahead/bootstrap3-typeahead.min.js" type="JAVASCRIPT" />
-    </webResourceBundle>
-
-    <webResourceBundle debug="false" name="datepicker" usesDefine="false" version="1.9.0" webResourceBundleID="datepicker">
-      <webResource relativePathSource="js-lib/datepicker" relativePathTarget="datepicker" />
-      <importResource relativePath="datepicker/bootstrap-datepicker.min.js" type="JAVASCRIPT" />
-    </webResourceBundle>
-    
-	<webResourceBundle
-		debug="true"
-		exports="fskui"
-		name="FSK UI Metadata schema"
-		usesDefine="false"
-		version="1.0.0"
-		webResourceBundleID="FskMetadata_1.0.0">
-		
-		<webResource
-			relativePathSource="js-lib/bfr/fskmetadata_1.0.0.js"
-			relativePathTarget="js-lib/bfr/fskmetadata_1.0.0.js">
-		</webResource>
-		
-		<importResource
-			relativePath="js-lib/bfr/fskmetadata_1.0.0.js"
-			type="JAVASCRIPT">
-		</importResource>
-	</webResourceBundle>
-	
-	<webResourceBundle
-		debug="true"
-		exports="fskutil"
-		name="FSK JS utilities"
-		usesDefine="false"
-		version="1.0.0"
-		webResourceBundleID="FskUtil_1.0.0">
-		
-		<webResource
-			relativePathSource="js-lib/bfr/fskutil_1.0.0.js"
-			relativePathTarget="js-lib/bfr/fskutil_1.0.0.js">
-		</webResource>
-		
-		<importResource
-			relativePath="js-lib/bfr/fskutil_1.0.0.js"
-			type="JAVASCRIPT">
-		</importResource>
-	</webResourceBundle>
+	 
+	 <!-- JS and CSS for FSK DB VIEW node -->	 
+	 <webResourceBundle debug="true" name="FSK DB View"
+	   usesDefine="true" version="1.0.0" webResourceBundleID="de.bund.bfr.knime.fsklab.v2.0.fskdbview.bundle">
+       <webResource
+         relativePathSource="js-src/de/bund/bfr/knime/fsklab/v2.0/fskdbview"
+         relativePathTarget="js-src/de/bund/bfr/knime/fsklab/v2.0/fskdbview" />	   
+	   <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/v2.0/fskdbview/fskdbview.css" type="CSS" />
+	   <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/v2.0/fskdbview/fskdbview.js" type="JAVASCRIPT" />
+	   <webDependency webResourceBundleID="jQuery_3.3.1" />
+	   <webDependency webResourceBundleID="app_1.0.0" />
+	 </webResourceBundle>
 
   </extension>
 </plugin>

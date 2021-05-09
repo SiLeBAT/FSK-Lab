@@ -1,0 +1,136 @@
+// bootstrap datepicker
+
+$custom-date-input-padding		:$input-padding-x;
+$custom-date-input-bg-size		: 1rem 1rem;
+$custom-date-indicator-color	: $bfr-icon-primary-color;
+$custom-date-input-indicator	: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='#{$custom-date-indicator-color}' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-calendar'><rect x='3' y='4' width='18' height='18' rx='2' ry='2'></rect><line x1='16' y1='2' x2='16' y2='6'></line><line x1='8' y1='2' x2='8' y2='6'></line><line x1='3' y1='10' x2='21' y2='10'></line></svg>");
+$custom-date-input-background 	: escape-svg($custom-date-input-indicator) no-repeat right $custom-date-input-padding center / $custom-date-input-bg-size !default;
+
+.input-group.date {
+	input {
+		background: $custom-date-input-background;
+	}
+}
+.input-daterange {
+	.form-control {
+		text-align: left;
+		&:first-child {
+			border-radius: $input-border-radius 0 0 $input-border-radius;
+		}
+		&:last-child {
+			border-radius: 0 $input-border-radius $input-border-radius 0;
+		}
+	}
+}
+.datepicker {
+	table {
+		thead {
+		}
+		tr {
+			th,
+			td {
+				width: 40px;
+			}
+			th {
+				&.dow {
+					height: 40px;
+					background-color: $table-head-bg;
+					border-radius: 0;
+					font-size: 0.75rem;
+					font-weight: $table-th-font-weight;
+					color: $table-head-color;
+					text-transform: uppercase;
+					white-space: nowrap;
+				}
+			}
+			td {
+				font-size: $font-size-sm;
+				&.day {
+					color: $bfr-text-muted-color;
+					&.old,
+					&.new {
+						color: $bfr-placeholder-color;
+					}
+					&.range {
+						background-color: $bfr-hover;
+						color: $bfr-hover-color;
+					}
+					&.today {
+						background-color: $bfr-black;
+						border-color: $bfr-black;
+						color: $bfr-negative;
+						&:focus,
+						&:hover {
+							background-color: $bfr-hover;
+							color: $bfr-hover-color;
+						}
+					}
+					&.active,
+					&.range-start,
+					&.range-end {
+						background-color: $bfr-active;
+						color: $bfr-active-color;
+						&:hover {
+							background-color: $bfr-active-hover;
+							color: $bfr-active-color;
+						}
+					}
+					&:hover {
+						background-color: $bfr-hover;
+						color: $bfr-hover-color;
+					}
+				}
+			}
+		}
+		tfoot {
+			tr {
+				th {
+					&:hover {
+						background-color: $bfr-hover;
+						color: $bfr-hover-color;
+					}
+				}
+			}
+		}
+	}
+	.datepicker-days {
+		padding: 0.5rem;
+	}
+	.datepicker-switch {
+		font-size: 0.875rem;
+		&:hover {
+			background-color: $bfr-hover;
+		}
+	}
+	.prev,
+	.next {
+		position: relative;
+		color: transparent;
+		&:hover {
+			background-color: $bfr-hover;
+			&:after {
+				color: $bfr-hover-color;
+			}
+		}
+		&:after {
+			@extend .feather;
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%,-50%);
+			display: block;
+			font-size: 1.25rem;
+			color: $bfr-icon-secondary-color;
+		}
+	}
+	.prev {
+		&:after {
+			content: '\e843';
+		}
+	}
+	.next {
+		&:after {
+			content: '\e844';
+		}
+	}
+}

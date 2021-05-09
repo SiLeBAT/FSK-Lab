@@ -3,12 +3,15 @@ package de.bund.bfr.knime.fsklab.nodes;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
+import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
 
-import de.bund.bfr.knime.fsklab.nodes.FSKEditorJSNodeDialog.ModelType;
+import de.bund.bfr.knime.fsklab.v2_0.editor.FSKEditorJSNodeDialog.ModelType;
 import de.bund.bfr.metadata.swagger.ConsumptionModel;
 import de.bund.bfr.metadata.swagger.DataModel;
+import de.bund.bfr.metadata.swagger.DataModelGeneralInformation;
 import de.bund.bfr.metadata.swagger.DoseResponseModel;
 import de.bund.bfr.metadata.swagger.DoseResponseModelGeneralInformation;
 import de.bund.bfr.metadata.swagger.ExposureModel;
@@ -35,6 +38,8 @@ public class NodeUtilsTest {
 		
 		GenericModelGeneralInformation information = ((GenericModel)model).getGeneralInformation();
 		assertEquals("Generic model", information.getModelCategory().getModelClass());
+		
+		assertTrue(StringUtils.isNotEmpty(information.getIdentifier()));
 	}
 
 	@Test
@@ -44,6 +49,9 @@ public class NodeUtilsTest {
 		assertEquals("dataModel", model.getModelType());
 
 		// TODO: Data model has no ModelCategory
+		DataModelGeneralInformation information = ((DataModel)model).getGeneralInformation();
+		
+		assertTrue(StringUtils.isNotEmpty(information.getIdentifier()));
 	}
 
 	@Test
@@ -54,6 +62,8 @@ public class NodeUtilsTest {
 		
 		PredictiveModelGeneralInformation information = ((ConsumptionModel) model).getGeneralInformation();
 		assertEquals("Consumption model", information.getModelCategory().getModelClass());
+		
+		assertTrue(StringUtils.isNotEmpty(information.getIdentifier()));
 	}
 	
 	@Test
@@ -64,6 +74,8 @@ public class NodeUtilsTest {
 		
 		DoseResponseModelGeneralInformation information = ((DoseResponseModel) model).getGeneralInformation();
 		assertEquals("Dose-response model", information.getModelCategory().getModelClass());
+		
+		assertTrue(StringUtils.isNotEmpty(information.getIdentifier()));
 	}
 
 	@Test
@@ -74,6 +86,8 @@ public class NodeUtilsTest {
 		
 		PredictiveModelGeneralInformation information = ((ExposureModel) model).getGeneralInformation();
 		assertEquals("Exposure model", information.getModelCategory().getModelClass());
+		
+		assertTrue(StringUtils.isNotEmpty(information.getIdentifier()));
 	}
 
 	@Test
@@ -84,6 +98,8 @@ public class NodeUtilsTest {
 		
 		PredictiveModelGeneralInformation information = ((HealthModel) model).getGeneralInformation();
 		assertEquals("Health metrics model", information.getModelCategory().getModelClass());
+		
+		assertTrue(StringUtils.isNotEmpty(information.getIdentifier()));
 	}
 
 	@Test
@@ -94,6 +110,8 @@ public class NodeUtilsTest {
 		
 		OtherModelGeneralInformation information = ((OtherModel) model).getGeneralInformation();
 		assertEquals("Other empirical models", information.getModelCategory().getModelClass());
+		
+		assertTrue(StringUtils.isNotEmpty(information.getIdentifier()));
 	}
 
 	@Test
@@ -104,6 +122,8 @@ public class NodeUtilsTest {
 		
 		PredictiveModelGeneralInformation information = ((PredictiveModel) model).getGeneralInformation();
 		assertEquals("Predictive model", information.getModelCategory().getModelClass());
+		
+		assertTrue(StringUtils.isNotEmpty(information.getIdentifier()));
 	}
 
 	@Test
@@ -114,6 +134,8 @@ public class NodeUtilsTest {
 		
 		PredictiveModelGeneralInformation information = ((ProcessModel) model).getGeneralInformation();
 		assertEquals("Process model", information.getModelCategory().getModelClass());
+		
+		assertTrue(StringUtils.isNotEmpty(information.getIdentifier()));
 	}
 	
 	@Test
@@ -124,6 +146,8 @@ public class NodeUtilsTest {
 
 		PredictiveModelGeneralInformation information = ((QraModel) model).getGeneralInformation();
 		assertEquals("Quantitative risk assessment", information.getModelCategory().getModelClass());
+		
+		assertTrue(StringUtils.isNotEmpty(information.getIdentifier()));
 	}
 	
 	@Test
@@ -134,6 +158,8 @@ public class NodeUtilsTest {
 
 		PredictiveModelGeneralInformation information = ((RiskModel) model).getGeneralInformation();
 		assertEquals("Risk characterization model", information.getModelCategory().getModelClass());
+		
+		assertTrue(StringUtils.isNotEmpty(information.getIdentifier()));
 	}
 
 	@Test
@@ -144,6 +170,8 @@ public class NodeUtilsTest {
 
 		PredictiveModelGeneralInformation information = ((ToxicologicalModel) model).getGeneralInformation();
 		assertEquals("Toxicological reference value", information.getModelCategory().getModelClass());
+		
+		assertTrue(StringUtils.isNotEmpty(information.getIdentifier()));
 	}
 
 	@Test
@@ -154,5 +182,7 @@ public class NodeUtilsTest {
 
 		GenericModelGeneralInformation information = ((GenericModel)model).getGeneralInformation();
 		assertEquals("Generic model", information.getModelCategory().getModelClass());
+		
+		assertTrue(StringUtils.isNotEmpty(information.getIdentifier()));
 	}
 }

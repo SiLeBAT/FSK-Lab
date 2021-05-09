@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="libs/jhdf-0.5.11.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/batik-svg-dom.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/batik-util-1.7.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/freemarker-2.3.23.jar"/>
@@ -10,6 +11,7 @@
 	<classpathentry kind="lib" path="sedml_libs/jlibsedml-2.2.3.jar" sourcepath="sedml_libs/jlibsedml-2.2.3-sources.jar"/>
 	<classpathentry kind="lib" path="sedml_libs/jmathml-2.2.1.jar"/>
 	<classpathentry kind="lib" path="sedml_libs/xom-1.2.5.jar"/>
+	<classpathentry kind="lib" path="libs/vocabularies-2.0.0.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>

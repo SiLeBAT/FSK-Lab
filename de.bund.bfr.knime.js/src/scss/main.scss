@@ -1,0 +1,26 @@
+
+@import "theme/vars";
+
+@import "../../node_modules/bootstrap/scss/bootstrap";
+
+@import "theme/basic";
+@import "theme/typography";
+
+@import "theme/alerts";
+@import "theme/buttons";
+@import "theme/cards";
+@import "theme/dropdowns";
+@import "theme/form";
+@import "theme/filter";
+@import "theme/icons";
+@import "theme/modals";
+@import "theme/nav";
+@import "theme/tables";
+
+@import "theme/modal-details";
+@import "theme/modal-simulation";
+
+@import "extension/select2";
+@import "extension/bootstrap-datepicker";
+@import "extension/bootstrap-touchspin";
+@import "extension/ion-rangeslider";

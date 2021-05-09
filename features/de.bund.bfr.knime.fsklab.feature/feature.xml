@@ -2,7 +2,7 @@
 <feature
       id="de.bund.bfr.knime.fsklab.feature"
       label="BfR FSK-Lab"
-      version="1.8.1.qualifier"
+      version="2.0.0.qualifier"
       provider-name="German Federal Institute for Risk Assessment (BfR)">
 
    <description url="http://www.example.com/description">
@@ -184,6 +184,19 @@ along with this program.  If not, see &amp;quot;http://www.gnu.org/licenses/&amp
 
    <plugin
          id="de.bund.bfr.knime.fsklab.service"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="de.bund.bfr.knime.js"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="de.bund.bfr.knime.fsklab.deprecatednodes"
          download-size="0"
          install-size="0"
          version="0.0.0"
