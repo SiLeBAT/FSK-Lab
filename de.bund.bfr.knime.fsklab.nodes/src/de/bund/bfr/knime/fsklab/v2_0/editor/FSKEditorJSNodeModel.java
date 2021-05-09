@@ -35,12 +35,14 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -425,7 +427,6 @@ final class FSKEditorJSNodeModel
       if(StringUtils.isEmpty(viewRep.getModelMetadata())) {
           viewRep.setModelMetadata("");
       }
-      boolean regenerateSimulation = false;
       // Take parameters from view value (metadata)
       List<Parameter> parameters = new ArrayList<>();
       if(metadata != null)
@@ -435,32 +436,21 @@ final class FSKEditorJSNodeModel
       if(originalMetadata != null)
         originalParameters = SwaggerUtil.getParameter(originalMetadata);
       
-      if(m_port == null) {
-        regenerateSimulation = true;
-      }
-      else if(originalParameters.size()>0 && !parameters.equals(originalParameters)){
-        List<Parameter> nonCommonElements = (List<Parameter>) CollectionUtils.removeAll(originalParameters, parameters);
-        nonCommonElements.addAll((List<Parameter>) CollectionUtils.removeAll( parameters, originalParameters));
-          
-        for(Parameter p: nonCommonElements) {
-          if(!p.getClassification().equals(ClassificationEnum.OUTPUT)) {
-            regenerateSimulation = true;
-          }
-        }
-      }
-      
-      // Take simulation from view value otherwise from input port (if connected)
-      if (metadata != null && SwaggerUtil.getModelMath(metadata) != null
-          && SwaggerUtil.getParameter(metadata) != null && regenerateSimulation)  {
+      // Take simulation from input port (if connected) otherwise from view value. 
+      if (m_port != null) {
+        //clone to clean the port object simulations safely later.
+        simulations = new ArrayList<>(m_port.simulations);
+        if(originalParameters.size() > 0)
+          checkAndRegenerateSimulation(simulations, originalParameters, parameters);
+
+      }else if (metadata != null && SwaggerUtil.getModelMath(metadata) != null
+          && SwaggerUtil.getParameter(metadata) != null)  {
 
         // 1. Create new default simulation out of the view value
         FskSimulation newDefaultSimulation = NodeUtils.createDefaultSimulation(parameters);
 
         // 2. Assign newDefaultSimulation
         simulations = Arrays.asList(newDefaultSimulation);
-      } else if (m_port != null) {
-        //clone to clean the port object simulations safely later.
-        simulations = new ArrayList<>(m_port.simulations);
       }
 
       modelScript = StringUtils.defaultString(viewValue.getModelScript(), "");
@@ -536,6 +526,36 @@ final class FSKEditorJSNodeModel
     return new PortObject[] {outputPort};
   }
 
+  public void checkAndRegenerateSimulation(List<FskSimulation> simulations,
+      List<Parameter> originalParameters, List<Parameter> newParams) {
+    List<Parameter> paramsToBeRemoved =
+        (List<Parameter>) CollectionUtils.removeAll(originalParameters, newParams);
+    List<Parameter> viewParams =  (List<Parameter>) CollectionUtils.removeAll(newParams, originalParameters);
+    List<String> editedParamsIDs = new ArrayList<String>();
+    List<String> originalParamsIDs = originalParameters.stream().map(para -> para.getId()).collect(Collectors.toList());
+    
+    simulations.forEach(sim -> {
+       LinkedHashMap<String, String> simParams = sim.getParameters();
+       viewParams.forEach(viewParam -> {
+         // new parameters will be added to all simulations
+         if(!originalParamsIDs.contains(viewParam.getId())) {  
+           simParams.put(viewParam.getId(),viewParam.getValue());
+         }
+         // or the changed parameter will be added only to the default simulation 
+         else if(sim.getName().equals("defaultSimulation")) {
+           simParams.put(viewParam.getId(),viewParam.getValue());
+         }
+         editedParamsIDs.add(viewParam.getId());
+       });
+       //remove the parameter from simulation if it is removed from model math
+       paramsToBeRemoved.forEach(toBeDeletedParam -> {
+         if(!editedParamsIDs.contains(toBeDeletedParam.getId())) {  
+           simParams.remove(toBeDeletedParam.getId());
+         }
+       });
+    });
+  }
+  
   @Override
   protected void performReset() {
     m_port = null;
