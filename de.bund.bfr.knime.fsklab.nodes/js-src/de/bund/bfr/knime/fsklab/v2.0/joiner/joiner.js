@@ -897,7 +897,11 @@ joiner = function () {
         return true;
       },
       validateConnection: function (cellViewS, magnetS, cellViewT, magnetT, end, linkView) {
-
+        //It's not allowed to override parameters of type CONSTANT
+        if($(magnetT).text().indexOf('Classification: CONSTANT') != -1){
+            $(magnetT).attr( "fill","yellow" );
+            return false;
+        }
         var links = _graph.getLinks();
         for (var i = 0; i < links.length; i++) {
           if (linkView == links[i].findView(_paper)) //Skip the wire the user is drawing
@@ -1237,6 +1241,11 @@ joiner = function () {
       });
       _graph.addCells(links);
     }
+    $('.joint-port-body').each(function( index ) {
+        if($( this ).text().indexOf('Classification: CONSTANT') != -1){
+            $( this ).attr( "fill","yellow" );
+        }
+    });
   }
 
   /**
@@ -1250,7 +1259,7 @@ joiner = function () {
       'label': {
         'markup': `<text class="label-text" fill="black"><title>${param.dataType}</title>${param.idmask}</text>`
       },
-      'markup': `<circle fill="#FF7979"  r="92.5" class="port-body"><title>Parameter ID: ` + param.idmask + `\nParameter Name: ` + param.name + `\nDescription: ` + param.description + `\nUnit: ` + param.unit + `\nDataType: ` + param.dataType + `\nSource: ` + param.source + `\nSubject: ` + param.subject + `\nDistribution: ` + param.distribution + `\nReference: ` + param.reference + `\nVariabilitySubject: ` + param.variabilitySubject + `\nMinValue: ` + param.minValue + `\nMaxValue: ` + param.maxValue + `\nError: ` + param.error + `\n</title></circle>`,
+      'markup': `<circle fill="#FF7979"  r="92.5" class="port-body"><title>Parameter ID: ` + param.idmask + `\nParameter Name: ` + param.name  + `\nClassification: ` + param.classification +  `\nDescription: ` + param.description + `\nUnit: ` + param.unit + `\nDataType: ` + param.dataType + `\nSource: ` + param.source + `\nSubject: ` + param.subject + `\nDistribution: ` + param.distribution + `\nReference: ` + param.reference + `\nVariabilitySubject: ` + param.variabilitySubject + `\nMinValue: ` + param.minValue + `\nMaxValue: ` + param.maxValue + `\nError: ` + param.error + `\n</title></circle>`,
     };
   }
 
