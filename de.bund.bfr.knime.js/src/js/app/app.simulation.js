@@ -318,17 +318,16 @@ class APPSimulation {
 			if ( inputType ) {
 
 				// numeric
-				if ( inputType == 'number' ) {
+				if ( inputType == 'number' && param.classification != "CONSTANT") {
 
 					let $inputGroup = $( '<div class="input-group input-group-sm"></div>' )
 						.appendTo( $field );
-
+                    
 					$input = $( '<input type="text" />' )
 						.attr( 'id', 'paramInput_'+ param.id )
 						.data( 'param-input', param ) 
 						.attr( 'aria-invalid', false )
 						.appendTo( $inputGroup );
-
 					// rangeslider single, if min/max
 					if ( param.minValue && param.maxValue  && param.minValue != "-" && param.maxValue != "-") {
 
