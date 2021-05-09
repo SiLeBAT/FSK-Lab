@@ -440,7 +440,8 @@ final class FSKEditorJSNodeModel
       if (m_port != null) {
         //clone to clean the port object simulations safely later.
         simulations = new ArrayList<>(m_port.simulations);
-        checkAndRegenerateSimulation(simulations, originalParameters, parameters);
+        if(originalParameters.size() > 0)
+          checkAndRegenerateSimulation(simulations, originalParameters, parameters);
 
       }else if (metadata != null && SwaggerUtil.getModelMath(metadata) != null
           && SwaggerUtil.getParameter(metadata) != null)  {
