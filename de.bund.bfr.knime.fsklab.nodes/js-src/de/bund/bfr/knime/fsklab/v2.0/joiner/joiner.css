@@ -104,3 +104,8 @@ input::-webkit-inner-spin-button {
 input:disabled{
     background-color:white;
 }
+
+/* port styling */
+.available-magnet {
+    fill: rgb(38, 255, 39);
+}
