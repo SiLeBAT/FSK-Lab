@@ -53,7 +53,6 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 		Composite parent = getFieldEditorParent();
 		addField(new RHomeDirectoryFieldEditor(PreferenceInitializer.R3_PATH_CFG, "Path to R 3", parent));
 		addField(new DirectoryFieldEditor(PreferenceInitializer.PYTHON2_PATH_CFG, "Path to Python 2", parent));
-		addField(new StringFieldEditor(PreferenceInitializer.CV_URL_CFG, "Controlled vocabulary URL", parent));
 	}
 
 	@Override
@@ -134,6 +133,7 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 				}
 
 				setMessage(null, NONE);
+	            PreferenceInitializer.refresh = true;
 				return true;
 			} catch (InvalidRHomeException e) {
 				setMessage(e.getMessage(), ERROR);
