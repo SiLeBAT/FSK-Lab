@@ -170,7 +170,6 @@ public class RScriptHandler extends ScriptHandler {
   @Override
   public void cleanup(ExecutionContext exec) throws Exception {
     executor.cleanup(exec);
-    RprofileManager.unSubscribe();
   }
 
   @Override
@@ -206,8 +205,8 @@ public class RScriptHandler extends ScriptHandler {
 
   @Override
   public void close() throws Exception {
+    RprofileManager.unSubscribe();
     controller.close();
-
   }
 
   @Override

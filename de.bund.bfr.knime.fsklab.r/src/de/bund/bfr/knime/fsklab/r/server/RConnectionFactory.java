@@ -51,7 +51,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.filechooser.FileSystemView;
 
 import org.apache.commons.io.FileUtils;
@@ -381,7 +382,7 @@ public class RConnectionFactory {
 
 		FileUtils.writeLines(rprofile.toFile(), lines);
 	}
-
+	
 	public static void backupProfile() throws IOException {
 		// Only backup on the first call to backupProfile when originalProfile is null
 		if (originalProfile == null) {
@@ -389,13 +390,20 @@ public class RConnectionFactory {
 			Path rprofile = documentsFolder.resolve(".Rprofile");
 			if (Files.exists(rprofile)) {
 				originalProfile = FileUtils.readFileToString(rprofile.toFile(), "UTF-8");
+				originalProfile = removeFSKLibPathCall(originalProfile);
 				Files.delete(rprofile);
 			} else {
 				originalProfile = "";
 			}
 		}
 	}
-
+    
+	private static String removeFSKLibPathCall( String s) {
+	    final Matcher matcher = Pattern
+	        .compile(".libPaths\\s*\\((.*.fsk.*)\\)").matcher(s);
+	    return matcher.replaceAll("");
+	}
+	
 	public static void restoreProfile() throws IOException {
 		Path documentsFolder = FileSystemView.getFileSystemView().getDefaultDirectory().toPath();
 		Path rprofile = documentsFolder.resolve(".Rprofile");
@@ -403,6 +411,7 @@ public class RConnectionFactory {
 		if (!originalProfile.isEmpty()) {
 			FileUtils.writeStringToFile(rprofile.toFile(), originalProfile, "UTF-8");
 		}
+		originalProfile = null;
 	}
 
 	/**

@@ -2,6 +2,7 @@ package de.bund.bfr.knime.fsklab.r.client;
 
 import java.io.IOException;
 import java.util.concurrent.locks.ReentrantLock;
+import com.sun.jna.Platform;
 import de.bund.bfr.knime.fsklab.preferences.PreferenceInitializer;
 import de.bund.bfr.knime.fsklab.r.server.RConnectionFactory;
 
@@ -14,7 +15,7 @@ public class RprofileManager {
   public static void subscribe() throws IOException {
     try {
       lock.lock();
-      if (rHandlerCount++ == 0 && PreferenceInitializer.getRPath().contains(BFR_R_PLUGIN_NAME)) {
+      if (rHandlerCount++ == 0 && (PreferenceInitializer.getRPath().contains(BFR_R_PLUGIN_NAME) || Platform.isLinux())) {
         RConnectionFactory.createFskLibrary();
         RConnectionFactory.backupProfile();
         RConnectionFactory.configureProfile();
@@ -27,7 +28,7 @@ public class RprofileManager {
   public synchronized static void unSubscribe() throws IOException {
     try {
       lock.lock();
-      if (--rHandlerCount == 0 && PreferenceInitializer.getRPath().contains(BFR_R_PLUGIN_NAME)) {
+      if (--rHandlerCount == 0 && PreferenceInitializer.getRPath().contains(BFR_R_PLUGIN_NAME) || Platform.isLinux()) {
         RConnectionFactory.restoreProfile();
       }
     } finally {
