@@ -83,7 +83,7 @@ public class LibRegistry {
     // Prepare rWrapper
     rWrapper = new RWrapper();
     rWrapper.library("miniCRAN");
-    if(!PreferenceInitializer.getRPath().contains(RprofileManager.BFR_R_PLUGIN_NAME)) {
+    if((!PreferenceInitializer.getRPath().contains(RprofileManager.BFR_R_PLUGIN_NAME) &&  Platform.isWindows()) || Platform.isMac()) {
       try {
         String[] rPath= controller.eval(".libPaths()", true).asStrings();
         //get default library path.

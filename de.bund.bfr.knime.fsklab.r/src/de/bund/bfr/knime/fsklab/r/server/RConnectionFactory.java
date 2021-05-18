@@ -370,11 +370,15 @@ public class RConnectionFactory {
 		LOGGER.info("using libraries in " + FilenameUtils.separatorsToUnix(installPath.toString()));
 		// Configure .rprofile
 		List<String> lines = new ArrayList<>();
-		lines.add(".libPaths(c('" + FilenameUtils.separatorsToUnix(installPath.toString()) + "'))");
+		
+		
 
 		// Do not execute unpackPkgZip on Linux. It causes trouble on the VRE.
 		if (!Platform.isLinux()) {
+		    lines.add(".libPaths(c('" + FilenameUtils.separatorsToUnix(installPath.toString()) + "'))");
 			lines.add("trace(utils:::unpackPkgZip, quote(Sys.sleep(2.5)), at = list(c(14,4,4,4,3,3)))");
+		}else {
+		  lines.add(".libPaths(c('" + FilenameUtils.separatorsToUnix(installPath.toString()) + "', .libPaths()))");
 		}
 		
 		Path documentsFolder = FileSystemView.getFileSystemView().getDefaultDirectory().toPath();

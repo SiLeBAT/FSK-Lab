@@ -131,7 +131,6 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 				}
 
 				setMessage(null, NONE);
-	            PreferenceInitializer.refresh = true;
 				return true;
 			} catch (InvalidRHomeException e) {
 				setMessage(e.getMessage(), ERROR);
