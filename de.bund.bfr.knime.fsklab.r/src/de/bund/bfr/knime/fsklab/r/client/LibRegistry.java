@@ -122,7 +122,8 @@ public class LibRegistry {
     } else {
 
       // Create directories
-      Files.createDirectory(repoPath);
+      if(!Files.exists(repoPath))
+        Files.createDirectory(repoPath);
       if(!Files.exists(installPath))
         Files.createDirectory(installPath);
 
