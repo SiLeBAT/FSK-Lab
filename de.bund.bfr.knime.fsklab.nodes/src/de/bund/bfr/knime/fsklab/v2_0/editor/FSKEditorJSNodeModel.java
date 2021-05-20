@@ -407,7 +407,7 @@ final class FSKEditorJSNodeModel
           }
         }
         else {
-          if(!StringUtils.isEmpty(portObjectModelType) && !portObjectModelType.equals(modelType)) {
+          if(!StringUtils.isEmpty(portObjectModelType) && !portObjectModelType.equalsIgnoreCase(modelType)) {
             String json = MAPPER.writeValueAsString(((FskPortObject)inObjects[0]).modelMetadata);
             JsonNode portMetadata = MAPPER.readTree(json);
             metadata = new ConversionUtils().convertModel(portMetadata,
