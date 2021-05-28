@@ -538,6 +538,8 @@ final class FSKEditorJSNodeModel
        LinkedHashMap<String, String> simParams = sim.getParameters();
        if(!simParams.isEmpty()){
          viewParams.forEach(viewParam -> {
+           if(viewParam.getClassification() == ClassificationEnum.OUTPUT)
+              return;
            // new parameters will be added to all simulations
            if(!originalParamsIDs.contains(viewParam.getId())) {  
              simParams.put(viewParam.getId(),viewParam.getValue());
