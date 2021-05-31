@@ -533,13 +533,12 @@ final class FSKEditorJSNodeModel
     List<Parameter> viewParams =  (List<Parameter>) CollectionUtils.removeAll(newParams, originalParameters);
     List<String> editedParamsIDs = new ArrayList<String>();
     List<String> originalParamsIDs = originalParameters.stream().map(para -> para.getId()).collect(Collectors.toList());
-    
+    if(originalParamsIDs.isEmpty())
+      return;
     simulations.forEach(sim -> {
        LinkedHashMap<String, String> simParams = sim.getParameters();
        if(!simParams.isEmpty()){
          viewParams.forEach(viewParam -> {
-           if(viewParam.getClassification() == ClassificationEnum.OUTPUT)
-              return;
            // new parameters will be added to all simulations
            if(!originalParamsIDs.contains(viewParam.getId())) {  
              simParams.put(viewParam.getId(),viewParam.getValue());
