@@ -8,7 +8,14 @@
     width: 100%;
     text-align: center;
     margin-top:auto;
-    flex: 0 0 80px;
+    flex: 0 0 50px;
+    @include media-breakpoint-down( sm ) {
+		flex: 0 0 80px;
+	}
+    @include media-breakpoint-down( xs ) {
+		flex: 0 0 120px;
+	}
+	
 }
 #footer_p{
     margin: 0 !important;
@@ -18,5 +25,13 @@
 }
 
 body{
-    margin-bottom:80px;
+    
+
+	@include media-breakpoint-up( sm ) {
+		margin-bottom:80px;
+	}
+	@include media-breakpoint-down( xs ) {
+		margin-bottom:120px;
+	}
+	
 }
