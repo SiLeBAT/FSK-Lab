@@ -9,10 +9,10 @@
     text-align: center;
     margin-top:auto;
     flex: 0 0 50px;
-    @include media-breakpoint-down( sm ) {
+    @include media-breakpoint-up( md ) {
 		flex: 0 0 80px;
 	}
-    @include media-breakpoint-down( xs ) {
+    @include media-breakpoint-down( sm ) {
 		flex: 0 0 120px;
 	}
 	
@@ -27,10 +27,10 @@
 body{
     
 
-	@include media-breakpoint-up( sm ) {
+	@include media-breakpoint-up( md ) {
 		margin-bottom:80px;
 	}
-	@include media-breakpoint-down( xs ) {
+	@include media-breakpoint-down( sm ) {
 		margin-bottom:120px;
 	}
 	
