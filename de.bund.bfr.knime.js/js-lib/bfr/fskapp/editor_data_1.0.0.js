@@ -823,12 +823,12 @@ const ui = {
         "description": "Information 'per what' the variability is described. It can be variability between broiler in a flock,  variability between all meat packages sold, variability between days, etc."
     }, {
         "id": "minValue",
-        "label": "Value max",
+        "label": "Value min",
         "type": "text",
         "description": "Numerical value of the minimum limit of the parameter that determines the range of applicability for which the model applies"
     }, {
         "id": "maxValue",
-        "label": "Value min",
+        "label": "Value max",
         "type": "text",
         "description": "Numerical value of the maximum limit of the parameter that determines the range of applicability for which the model applies"
     }, {
