@@ -132,7 +132,7 @@ class TestUtils {
 	static void testFirstReference(Reference reference) {
 		assertTrue(reference.isIsReferenceDescription());
 		assertNull(reference.getPublicationType());
-		assertEquals(2002, reference.getDate().getYear());
+		assertEquals("2002", reference.getDate());
 		assertNull(reference.getPmid());
 		assertEquals("10.1136/bmj.324.7334.429/g", reference.getDoi());
 		assertEquals("authors", reference.getAuthorList());

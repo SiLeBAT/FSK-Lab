@@ -87,7 +87,7 @@ var createForm = (prop, value, port) =>   {
 	let isMandatory = prop.required ? prop.required : false;
 
 	if (prop.type === "text" || prop.type === "number" || prop.type === "url" ||
-		prop.type === "date" || prop.type === "email")
+		prop.type === "date" || prop.type === "email"  || prop.type === "year_date")
 		return new InputForm(prop.label, isMandatory, prop.type, prop.description,
 			value ? value : "", port, prop.vocabulary, prop.sid);
 	

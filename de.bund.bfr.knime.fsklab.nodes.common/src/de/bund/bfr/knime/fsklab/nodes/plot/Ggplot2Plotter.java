@@ -42,7 +42,7 @@ public class Ggplot2Plotter implements ModelPlotter {
     // Get image path (with proper slashes)
     final String path = FilenameUtils.separatorsToUnix(file.getAbsolutePath());
 
-    final String wholeScript = script + "\nggsave('" + path + "')";
+    final String wholeScript = "require(\"ggplot2\")"+script + "\nggsave('" + path + "', width = 4, height = 4)";
     controller.eval(wholeScript, false);
   }
 }

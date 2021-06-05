@@ -113,7 +113,7 @@ public class SwaggerUtil {
 		}
 
 		if (record.getPublicationDate() != null) {
-			reference.setDate(toLocalDate(record.getPublicationDate()));
+			reference.setDate(""+toLocalDate(record.getPublicationDate()).getYear());
 		}
 
 		reference.setPmid(record.getPmid());

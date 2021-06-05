@@ -102,6 +102,7 @@ import de.bund.bfr.metadata.swagger.ProcessModel;
 import de.bund.bfr.metadata.swagger.QraModel;
 import de.bund.bfr.metadata.swagger.RiskModel;
 import de.bund.bfr.metadata.swagger.ToxicologicalModel;
+import metadata.EmfMetadataModule;
 import metadata.SwaggerUtil;
 
 /**
@@ -284,7 +285,7 @@ public class FskPortObject implements PortObject {
 				MAPPER103.registerModule(new EMFModule());
 
 				MAPPER104 = new ObjectMapper(jsonFactory);
-				MAPPER104.registerModule(new ThreeTenModule());
+				MAPPER104.registerModule(new ThreeTenModule()).registerModule(new EmfMetadataModule());;
 
 				modelClasses = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 				modelClasses.put("genericModel", GenericModel.class);

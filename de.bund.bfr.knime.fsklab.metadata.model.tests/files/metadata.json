@@ -31,11 +31,7 @@
       {
         "isReferenceDescription": true,
         "publicationType": "JOUR",
-        "date": [
-          3911,
-          4,
-          22
-        ],
+        "date": "2002",
         "doi": "https://doi.org/10.1016/j.ijfoodmicro.2011.04.018",
         "authorList": "Pires, S.M., Vieira, A.R., Perez, E., Wong, D.L.F., & Hald, T.",
         "title": "Attributing human foodborne illness to food sources and water in Latin America and the Caribbean using data from outbreak investigations",

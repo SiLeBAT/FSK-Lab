@@ -403,8 +403,7 @@ public class ImporterUtils {
 
 		final Cell dateCell = row.getCell(columns.get("date"));
 		if (dateCell.getCellTypeEnum() == CellType.NUMERIC) {
-			final LocalDate localDate = retrieveDate(dateCell);
-			reference.setDate(localDate);
+		  reference.setDate(""+((Double)dateCell.getNumericCellValue()).intValue());
 		}
 
 		final Cell pmidCell = row.getCell(columns.get("pmid"));

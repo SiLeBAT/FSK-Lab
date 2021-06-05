@@ -72,7 +72,7 @@ public class RakipUtil {
 		// the date format.
 		final String publicationDate = record.getPrimaryDate();
 		if (StringUtils.isNotEmpty(publicationDate)) {
-			reference.setDate(LocalDate.parse(publicationDate));
+			reference.setDate(""+LocalDate.parse(publicationDate).getYear());
 		}
 
 		reference.setDoi(record.getDoi());

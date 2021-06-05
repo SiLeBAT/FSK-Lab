@@ -197,7 +197,7 @@ const ui = {
         }, {
             "id": "date",
             "label": "Date",
-            "type": "date",
+            "type": "year_date",
             "description": "Temporal information on the publication date"
         }, {
             "id": "pmid",
