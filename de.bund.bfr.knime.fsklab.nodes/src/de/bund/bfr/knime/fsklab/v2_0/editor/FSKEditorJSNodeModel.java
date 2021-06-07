@@ -63,7 +63,6 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.fskml.RScript;
@@ -261,7 +260,7 @@ final class FSKEditorJSNodeModel
     if(!StringUtils.isEmpty(value.getModelMetaData())) {
       try {
         value.setModelMetaData(migrateReferenceDateToYear(value.getModelMetaData()));
-      } catch (JsonProcessingException e) {
+      } catch (IOException e) {
         // TODO Auto-generated catch block
         e.printStackTrace();
       }
@@ -269,9 +268,9 @@ final class FSKEditorJSNodeModel
     return value;
   }
   
-  public String migrateReferenceDateToYear(String metadataString) throws JsonMappingException, JsonProcessingException {
-      JsonNode metadataNode;
-      metadataNode = MAPPER.readTree(metadataString);
+  public String migrateReferenceDateToYear(String metadataString) throws IOException {
+      
+      JsonNode metadataNode = MAPPER.readTree(metadataString);
       
       String modelType = metadataNode.get("modelType").asText("genericModel");
 
