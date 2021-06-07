@@ -4,13 +4,17 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.workflow.FlowVariable;
 import org.knime.core.node.workflow.NodeContext;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.sun.jna.Platform;
 import de.bund.bfr.fskml.FSKML;
 import de.bund.bfr.knime.fsklab.v2_0.FskSimulation;
@@ -42,6 +46,7 @@ import de.bund.bfr.metadata.swagger.OtherModelGeneralInformation;
 import de.bund.bfr.metadata.swagger.OtherModelModelMath;
 import de.bund.bfr.metadata.swagger.Parameter;
 import de.bund.bfr.metadata.swagger.Parameter.ClassificationEnum;
+import metadata.SwaggerUtil;
 import de.bund.bfr.metadata.swagger.PopulationGroup;
 import de.bund.bfr.metadata.swagger.PredictiveModel;
 import de.bund.bfr.metadata.swagger.PredictiveModelGeneralInformation;
@@ -259,5 +264,41 @@ public class NodeUtils {
                 .modelCategory(new ModelCategory().modelClass("Generic model")))
             .modelType("genericModel");
     }
+  }
+  
+  /**
+   * Initialise and return a reference List for the passed type and model. 
+   */
+  public static List<Reference> getReferenceList(String modelType, Model metadata) {
+    List<Reference> references = new ArrayList<>();
+
+    if (modelType == null)
+      references = ((GenericModel) metadata).getGeneralInformation().getReference();
+    else if (modelType.equalsIgnoreCase("genericModel")) {
+      references = ((GenericModel) metadata).getGeneralInformation().getReference();
+    } else if (modelType.equalsIgnoreCase("dataModel")) {
+      references = ((DataModel) metadata).getGeneralInformation().getReference();
+    } else if (modelType.equalsIgnoreCase("consumptionModel")) {
+      references = ((ConsumptionModel) metadata).getGeneralInformation().getReference();
+    } else if (modelType.equalsIgnoreCase("doseResponseModel")) {
+      references = ((DoseResponseModel) metadata).getGeneralInformation().getReference();
+    } else if (modelType.equalsIgnoreCase("exposureModel")) {
+      references = ((ExposureModel) metadata).getGeneralInformation().getReference();
+    } else if (modelType.equalsIgnoreCase("healthModel")) {
+      references = ((HealthModel) metadata).getGeneralInformation().getReference();
+    } else if (modelType.equalsIgnoreCase("otherModel")) {
+      references = ((OtherModel) metadata).getGeneralInformation().getReference();
+    } else if (modelType.equalsIgnoreCase("predictiveModel")) {
+      references = ((PredictiveModel) metadata).getGeneralInformation().getReference();
+    } else if (modelType.equalsIgnoreCase("processModel")) {
+      references = ((ProcessModel) metadata).getGeneralInformation().getReference();
+    } else if (modelType.equalsIgnoreCase("qraModel")) {
+      references = ((QraModel) metadata).getGeneralInformation().getReference();
+    } else if (modelType.equalsIgnoreCase("riskModel")) {
+      references = ((RiskModel) metadata).getGeneralInformation().getReference();
+    } else if (modelType.equalsIgnoreCase("toxicologicalModel")) {
+      references = ((ToxicologicalModel) metadata).getGeneralInformation().getReference();
+    }
+    return references;
   }
 }
