@@ -189,7 +189,7 @@ public class Reference {
   private PublicationTypeEnum publicationType = null;
 
   @SerializedName("date")
-  private LocalDate date = null;
+  private String date = null;
 
   @SerializedName("pmid")
   private String pmid = null;
@@ -260,7 +260,7 @@ public class Reference {
     this.publicationType = publicationType;
   }
 
-  public Reference date(LocalDate date) {
+  public Reference date(String date) {
     this.date = date;
     return this;
   }
@@ -270,11 +270,11 @@ public class Reference {
    * @return date
   **/
   @ApiModelProperty(value = "Temporal information on the publication date")
-  public LocalDate getDate() {
+  public String getDate() {
     return date;
   }
 
-  public void setDate(LocalDate date) {
+  public void setDate(String date) {
     this.date = date;
   }
 

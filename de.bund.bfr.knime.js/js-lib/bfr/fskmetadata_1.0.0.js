@@ -196,7 +196,7 @@ ui = {
             "vocabulary": "publication_type"
         }, {
             "id": "date",
-            "label": "Date",
+            "label": "Publication Year",
             "type": "date",
             "description": "Temporal information on the publication date"
         }, {

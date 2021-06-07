@@ -77,7 +77,7 @@ import de.bund.bfr.knime.fsklab.v2_0.FskSimulation;
 import de.bund.bfr.knime.fsklab.v2_0.editor.FSKEditorJSNodeDialog.ModelType;
 import de.bund.bfr.metadata.swagger.Model;
 import de.bund.bfr.metadata.swagger.Parameter;
-import de.bund.bfr.metadata.swagger.Parameter.ClassificationEnum;
+import de.bund.bfr.metadata.swagger.Reference;
 import de.bund.bfr.rakip.vocabularies.data.AccreditationProcedureRepository;
 import de.bund.bfr.rakip.vocabularies.data.AvailabilityRepository;
 import de.bund.bfr.rakip.vocabularies.data.BasicProcessRepository;
@@ -257,10 +257,34 @@ final class FSKEditorJSNodeModel
         value.setVisualizationScript("");
       }
     }
-
+    if(!StringUtils.isEmpty(value.getModelMetaData())) {
+      try {
+        value.setModelMetaData(migrateReferenceDateToYear(value.getModelMetaData()));
+      } catch (IOException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+    }
     return value;
   }
+  
+  public String migrateReferenceDateToYear(String metadataString) throws IOException {
+      
+      JsonNode metadataNode = MAPPER.readTree(metadataString);
+      
+      String modelType = metadataNode.get("modelType").asText("genericModel");
 
+      // Deserialize metadata to concrete class according to modelType
+      Class<? extends Model> modelClass = SwaggerUtil.modelClasses.get(modelType);
+      
+      Model metadata = MAPPER.readValue(metadataString, modelClass);
+      List<Reference> references = NodeUtils.getReferenceList(modelType, metadata);
+      references.forEach(reference -> {
+        reference.setDate(reference.getDate().split("[-,]")[0]);
+      });
+      return MAPPER.writeValueAsString(metadata);
+  }
+  
   @Override
   public String getJavascriptObjectID() {
     return "de.bund.bfr.knime.fsklab.v2.0.editor.component";

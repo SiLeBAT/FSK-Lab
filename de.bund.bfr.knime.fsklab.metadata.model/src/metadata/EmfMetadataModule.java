@@ -18,6 +18,8 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.datatype.threetenbp.ThreeTenModule;
 
 import de.bund.bfr.metadata.swagger.Assay;
@@ -165,6 +167,15 @@ public class EmfMetadataModule extends SimpleModule {
 			}
 			else {
 				// Swagger information
+			  if (node.has("reference")) {
+                for (JsonNode child : node.get("reference")) {
+                  if (child.has("date") && child.get("date") instanceof ArrayNode) {
+                    ArrayNode dateChild = (ArrayNode) child.get("date");
+                    JsonNode year = dateChild.get(0);
+                    ((ObjectNode)child).replace("date", year);
+                  }
+                }
+            }
 				return originalMapper.treeToValue(node, GenericModelGeneralInformation.class);
 			}
 		}
@@ -421,13 +432,13 @@ public class EmfMetadataModule extends SimpleModule {
 		}
 
 		if (node.has("publicationDate")) {
-			try {
-				Date date = dateFormat.parse(node.get("publicationDate").asText());
-				LocalDate localDate = toLocalDate(date);
-				reference.setDate(localDate);
-			} catch (ParseException e) {
-				// do nothing
-			}
+		    try {
+                Date date = dateFormat.parse(node.get("publicationDate").asText());
+                LocalDate localDate = toLocalDate(date);
+                reference.setDate(""+localDate.getYear());
+            } catch (ParseException e) {
+                // do nothing
+            }
 		}
 
 		if (node.has("pmid")) {

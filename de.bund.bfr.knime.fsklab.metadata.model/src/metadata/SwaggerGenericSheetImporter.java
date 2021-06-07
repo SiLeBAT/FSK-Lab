@@ -559,9 +559,7 @@ public class SwaggerGenericSheetImporter  {
 
 		final Cell dateCell = row.getCell(M);
 		if (dateCell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
-			final Date date = dateCell.getDateCellValue();
-			final LocalDate localDate = LocalDate.of(date.getYear() + 1900, date.getMonth() + 1, date.getDate());
-			reference.setDate(localDate);
+		    reference.setDate(dateCell.getStringCellValue());
 		}
 
 		final Cell pmidCell = row.getCell(N);

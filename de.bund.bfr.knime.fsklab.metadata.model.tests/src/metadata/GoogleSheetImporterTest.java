@@ -125,7 +125,7 @@ public class GoogleSheetImporterTest {
 		assertEquals(PublicationType.RPRT, reference.getPublicationType());
 
 		// 6th December 2017
-		assertEquals(LocalDate.of(2017, 11, 6), TestUtils.toLocalDate(reference.getPublicationDate()));
+		assertEquals("2017", reference.getPublicationDate());
 
 		assertFalse(reference.eIsSet(pkg.getReference_Pmid()));
 		assertEquals("10.2903/j.efsa.2018.5134", reference.getDoi());

@@ -420,7 +420,6 @@ definitions:
          - VIDEO
       date:
         type: string
-        format: date
         description: Temporal information on the publication date
       pmid:
         type: string
