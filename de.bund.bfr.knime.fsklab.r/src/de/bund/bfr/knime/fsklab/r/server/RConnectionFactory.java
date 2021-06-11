@@ -51,7 +51,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.filechooser.FileSystemView;
 
 import org.apache.commons.io.FileUtils;
@@ -207,11 +208,7 @@ public class RConnectionFactory {
 		if (!commandFile.canExecute()) {
 			throw new IOException("Command is not an executable: " + cmd);
 		}
-
-		createFskLibrary();
-		backupProfile();
-		configureProfile();
-
+		
 		RInstance rInstance = null;
 		try {
 			final Process p = launchRserveProcess(command, host, port);
@@ -343,11 +340,6 @@ public class RConnectionFactory {
 					m_resources.stream()
 							.filter(resource -> resource != null && resource.getUnderlyingRInstance() != null)
 							.forEach(resource -> resource.destroy(false));
-					try {
-						restoreProfile();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
 				}
 			}
 		});
@@ -355,7 +347,7 @@ public class RConnectionFactory {
 		// m_initialized already set to true in compareAndSet
 	}
 
-	private static void createFskLibrary() throws IOException {
+	public static void createFskLibrary() throws IOException {
 
 		Path userFolder = Paths.get(System.getProperty("user.home"));
 		Path fskFolder = userFolder.resolve(".fsk");
@@ -371,18 +363,22 @@ public class RConnectionFactory {
 		}
 	}
 
-	private static void configureProfile() throws IOException {
+	public static void configureProfile() throws IOException {
 
 		Path userFolder = Paths.get(System.getProperty("user.home"));
 		Path installPath = userFolder.resolve(".fsk/library");
-
+		LOGGER.info("using libraries in " + FilenameUtils.separatorsToUnix(installPath.toString()));
 		// Configure .rprofile
 		List<String> lines = new ArrayList<>();
-		lines.add(".libPaths(c('" + FilenameUtils.separatorsToUnix(installPath.toString()) + "', .libPaths()))");
+		
+		
 
 		// Do not execute unpackPkgZip on Linux. It causes trouble on the VRE.
 		if (!Platform.isLinux()) {
+		    lines.add(".libPaths(c('" + FilenameUtils.separatorsToUnix(installPath.toString()) + "'))");
 			lines.add("trace(utils:::unpackPkgZip, quote(Sys.sleep(2.5)), at = list(c(14,4,4,4,3,3)))");
+		}else {
+		  lines.add(".libPaths(c('" + FilenameUtils.separatorsToUnix(installPath.toString()) + "', .libPaths()))");
 		}
 		
 		Path documentsFolder = FileSystemView.getFileSystemView().getDefaultDirectory().toPath();
@@ -390,29 +386,36 @@ public class RConnectionFactory {
 
 		FileUtils.writeLines(rprofile.toFile(), lines);
 	}
-
-	private static void backupProfile() throws IOException {
+	
+	public static void backupProfile() throws IOException {
 		// Only backup on the first call to backupProfile when originalProfile is null
 		if (originalProfile == null) {
 			Path documentsFolder = FileSystemView.getFileSystemView().getDefaultDirectory().toPath();
 			Path rprofile = documentsFolder.resolve(".Rprofile");
 			if (Files.exists(rprofile)) {
 				originalProfile = FileUtils.readFileToString(rprofile.toFile(), "UTF-8");
+				originalProfile = removeFSKLibPathCall(originalProfile);
 				Files.delete(rprofile);
 			} else {
 				originalProfile = "";
 			}
 		}
 	}
-
-	private static void restoreProfile() throws IOException {
+    
+	private static String removeFSKLibPathCall( String s) {
+	    final Matcher matcher = Pattern
+	        .compile(".libPaths\\s*\\((.*.fsk.*)\\)").matcher(s);
+	    return matcher.replaceAll("");
+	}
+	
+	public static void restoreProfile() throws IOException {
 		Path documentsFolder = FileSystemView.getFileSystemView().getDefaultDirectory().toPath();
 		Path rprofile = documentsFolder.resolve(".Rprofile");
-
 		Files.delete(rprofile);
 		if (!originalProfile.isEmpty()) {
 			FileUtils.writeStringToFile(rprofile.toFile(), originalProfile, "UTF-8");
 		}
+		originalProfile = null;
 	}
 
 	/**

@@ -5,12 +5,14 @@ import de.bund.bfr.knime.fsklab.nodes.plot.Ggplot2Plotter;
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
 import de.bund.bfr.knime.fsklab.r.client.LibRegistry;
 import de.bund.bfr.knime.fsklab.r.client.RController;
+import de.bund.bfr.knime.fsklab.r.client.RprofileManager;
 import de.bund.bfr.knime.fsklab.r.client.ScriptExecutor;
 import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
 import de.bund.bfr.knime.fsklab.v2_0.FskSimulation;
 import de.bund.bfr.knime.fsklab.v2_0.runner.RunnerNodeInternalSettings;
 import de.bund.bfr.knime.fsklab.v2_0.runner.RunnerNodeSettings;
 import de.bund.bfr.metadata.swagger.Parameter;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,11 +33,12 @@ public class RScriptHandler extends ScriptHandler {
   ScriptExecutor executor;
   RController controller;
 
-  public RScriptHandler() throws RException {
+  public RScriptHandler() throws RException, IOException {
     this(new ArrayList<String>(0));
   }
 
-  public RScriptHandler(List<String> packages) throws RException {
+  public RScriptHandler(List<String> packages) throws RException, IOException {
+    RprofileManager.subscribe();
     this.controller = new RController();
     this.executor = new ScriptExecutor(controller);
 
@@ -202,8 +205,8 @@ public class RScriptHandler extends ScriptHandler {
 
   @Override
   public void close() throws Exception {
+    RprofileManager.unSubscribe();
     controller.close();
-
   }
 
   @Override

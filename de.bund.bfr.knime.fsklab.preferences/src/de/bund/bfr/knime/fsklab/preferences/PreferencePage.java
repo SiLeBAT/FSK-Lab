@@ -20,17 +20,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
-import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-
 import de.bund.bfr.knime.fsklab.preferences.RBinUtil.InvalidRHomeException;
 
 /**
@@ -52,8 +50,7 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 	protected void createFieldEditors() {
 		Composite parent = getFieldEditorParent();
 		addField(new RHomeDirectoryFieldEditor(PreferenceInitializer.R3_PATH_CFG, "Path to R 3", parent));
-		addField(new DirectoryFieldEditor(PreferenceInitializer.PYTHON2_PATH_CFG, "Path to Python 2", parent));
-		addField(new StringFieldEditor(PreferenceInitializer.CV_URL_CFG, "Controlled vocabulary URL", parent));
+		addField(new BooleanFieldEditor(PreferenceInitializer.RESTORE_RPROFILE, "restore .RProfile after every run", parent));
 	}
 
 	@Override
@@ -81,6 +78,9 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 			final String rHome = getStringValue();
 
 			final Path rHomePath = Paths.get(rHome);
+			if(PreferenceInitializer.refresh) {
+			  setMessage("Please restart you Knime to have all setting applied." );
+			}
 			if (!Files.isDirectory(rHomePath)) {
 				setMessage("The selected path is not a directory.", ERROR);
 				return false;

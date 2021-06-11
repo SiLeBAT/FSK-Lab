@@ -28,11 +28,11 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 
 	/** Path to R v.3 */
 	static final String R3_PATH_CFG = "r3.path";
-	static final String PYTHON2_PATH_CFG = "python2Path";
-	static final String CV_URL_CFG = "controlledvocabulary.path";
+	static final String RESTORE_RPROFILE = "restore_profile";
 	private static RPreferenceProvider cachedRProvider = null;
-
-	@Override
+	public static boolean refresh;
+	
+    @Override
 	public void initializeDefaultPreferences() {
 
 		String rHome = "";
@@ -45,8 +45,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 
 		IPreferenceStore store = Plugin.getDefault().getPreferenceStore();
 		store.setDefault(R3_PATH_CFG, rHome);
-		store.setDefault(PYTHON2_PATH_CFG, "");
-		store.setDefault(CV_URL_CFG, "https://knime.bfr.berlin/vocabularies-app/");
+		store.setDefault(RESTORE_RPROFILE, true);
 	}
 
 	/** @return provider to the path to the R3 executable. */
@@ -59,10 +58,13 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		return cachedRProvider;
 	}
 
-	public static final String getControlledVocabularyURL() {
-		return Plugin.getDefault().getPreferenceStore().getString(CV_URL_CFG);
+	public static final String getRPath() {
+		return Plugin.getDefault().getPreferenceStore().getString(R3_PATH_CFG);
 	}
 	
+	public static final boolean isRProfileToBeRestored() {
+        return Plugin.getDefault().getPreferenceStore().getBoolean(RESTORE_RPROFILE);
+    }
 	/**
 	 * Invalidate the cached R3 preference provider returned by
 	 * {@link #getR3Provider()}, to refetch R properties (which launches an external

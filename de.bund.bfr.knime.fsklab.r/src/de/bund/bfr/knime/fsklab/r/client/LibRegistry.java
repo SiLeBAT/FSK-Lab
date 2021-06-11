@@ -40,7 +40,7 @@ import org.rosuda.REngine.REXPMismatchException;
 import org.rosuda.REngine.RList;
 
 import com.sun.jna.Platform;
-
+import de.bund.bfr.knime.fsklab.preferences.PreferenceInitializer;
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
 
 /**
@@ -53,10 +53,10 @@ public class LibRegistry {
   private static LibRegistry instance;
 
   /** Installation path. */
-  private final Path installPath;
+  private Path installPath;
 
   /** miniCRAN repository path. */
-  private final Path repoPath;
+  private Path repoPath;
 
   /** Utility set to keep count of installed libraries. */
   private final Set<String> installedLibs;
@@ -83,13 +83,23 @@ public class LibRegistry {
     // Prepare rWrapper
     rWrapper = new RWrapper();
     rWrapper.library("miniCRAN");
+    if((!PreferenceInitializer.getRPath().contains(RprofileManager.BFR_R_PLUGIN_NAME) &&  Platform.isWindows()) || Platform.isMac()) {
+      try {
+        String[] rPath= controller.eval(".libPaths()", true).asStrings();
+        //get default library path.
+        installPath = Paths.get(rPath[0]);
+        repoPath = installPath.getParent().resolve("cran");
+      } catch (REXPMismatchException | RException e1) {
+        e1.printStackTrace();
+      }
+    }else {
+      Path userFolder = Paths.get(System.getProperty("user.home"));
+      Path fskFolder = userFolder.resolve(".fsk");
 
-    Path userFolder = Paths.get(System.getProperty("user.home"));
-    Path fskFolder = userFolder.resolve(".fsk");
-
-    // CRAN and library folders
-    installPath = fskFolder.resolve("library");
-    repoPath = fskFolder.resolve("cran");
+      // CRAN and library folders
+      installPath = fskFolder.resolve("library");
+      repoPath = fskFolder.resolve("cran");
+    }
 
     // Validate .fsk folder
     if (Files.exists(installPath) && Files.exists(repoPath)) {
@@ -112,8 +122,10 @@ public class LibRegistry {
     } else {
 
       // Create directories
-      Files.createDirectory(repoPath);
-      Files.createDirectory(installPath);
+      if(!Files.exists(repoPath))
+        Files.createDirectory(repoPath);
+      if(!Files.exists(installPath))
+        Files.createDirectory(installPath);
 
       // Create CRAN structure in repoPath
       rWrapper.makeRepo(repoPath);
@@ -123,8 +135,9 @@ public class LibRegistry {
   }
 
   public synchronized static LibRegistry instance() throws IOException, RException {
-    if (instance == null) {
+    if (instance == null || PreferenceInitializer.refresh) {
       instance = new LibRegistry();
+      PreferenceInitializer.refresh = false;
     }
     return instance;
   }
