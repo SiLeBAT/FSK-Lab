@@ -78,6 +78,9 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 			final String rHome = getStringValue();
 
 			final Path rHomePath = Paths.get(rHome);
+			if(PreferenceInitializer.refresh) {
+			  setMessage("Please restart you Knime to have all setting applied." );
+			}
 			if (!Files.isDirectory(rHomePath)) {
 				setMessage("The selected path is not a directory.", ERROR);
 				return false;
