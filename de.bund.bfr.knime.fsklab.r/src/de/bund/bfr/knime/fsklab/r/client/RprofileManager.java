@@ -28,7 +28,7 @@ public class RprofileManager {
   public synchronized static void unSubscribe() throws IOException {
     try {
       lock.lock();
-      if (--rHandlerCount == 0 && PreferenceInitializer.isRProfileToBeRestored() &&  PreferenceInitializer.getRPath().contains(BFR_R_PLUGIN_NAME) || Platform.isLinux()) {
+      if (--rHandlerCount == 0 && PreferenceInitializer.isRProfileToBeRestored() && (PreferenceInitializer.getRPath().contains(BFR_R_PLUGIN_NAME) || Platform.isLinux())) {
         RConnectionFactory.restoreProfile();
       }
     } finally {
