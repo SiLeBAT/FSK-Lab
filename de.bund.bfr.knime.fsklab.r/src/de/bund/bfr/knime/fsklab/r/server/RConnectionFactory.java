@@ -57,6 +57,7 @@ import javax.swing.filechooser.FileSystemView;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.knime.core.node.KNIMEConstants;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.util.FileUtil;
@@ -412,7 +413,7 @@ public class RConnectionFactory {
 		Path documentsFolder = FileSystemView.getFileSystemView().getDefaultDirectory().toPath();
 		Path rprofile = documentsFolder.resolve(".Rprofile");
 		Files.delete(rprofile);
-		if (!originalProfile.isEmpty()) {
+		if (!StringUtils.isBlank(originalProfile)) {
 			FileUtils.writeStringToFile(rprofile.toFile(), originalProfile, "UTF-8");
 		}
 		originalProfile = null;
