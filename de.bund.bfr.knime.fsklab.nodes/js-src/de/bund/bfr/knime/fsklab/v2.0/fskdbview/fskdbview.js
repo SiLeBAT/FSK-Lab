@@ -640,6 +640,7 @@ fskdbview = function () {
                             let $tr = $(tbl[indexToBeSelected].el[0]);     
                             $tr.addClass('tr-selected');
                             $tr.data('selected', true);
+                            $tr.find( "input.checkbox" ).prop('checked', true);
                             window.selectedModels.push(_representation.metadata[indexToBeSelected]);
                         });
                         

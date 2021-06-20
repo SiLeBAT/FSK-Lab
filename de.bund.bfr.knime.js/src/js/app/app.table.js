@@ -12,6 +12,7 @@ class APPTable {
 		O._$container = $container;
 		O._$wrapper = null;
 		O.totalRows = 0;
+        O.selectAllClicked = false;
 		// defaults
 		O._opts = $.extend(true, {}, {
 			attributes: {}, // attribute : value pairs for <table>
@@ -84,9 +85,15 @@ class APPTable {
 		}
       
 		// complete table data by adding row element to certain row data
-		if(isMainTable)
+		if(isMainTable){
 			tableData[rowIndex].el = $tr;
-
+            
+        }
+        if(O._opts.data){
+            $('<td class="active"><input type="checkbox" class="select-item checkbox" name="select-item" /></td>')
+                                    .appendTo($tr);
+        }
+        
 		// create cols
 		$.each(O.opts.cols, (j, col) => {
 			let data ;
@@ -271,10 +278,25 @@ class APPTable {
 	_createTableHead(cols) {
 		let O = this;
 		_log('TABLE / _createTableHead');
-
+        console.log(O._opts);
 		// thead
 		let $thead = $('<thead></thead>');
-
+        if(O._opts.data){
+            let $checkAll =  $('<th class="active"><input type="checkbox" class="select-all checkbox" name="select-all" /></th>')
+                                        .appendTo($thead);
+            $checkAll.click(function () {
+                                this.checked = !this.checked
+                                var checked = this.checked;
+                                O.selectAllClicked = true;
+                                $("input.select-item").each(function (index,item) {
+						            $tr = $(item.closest("tr"));
+                                    O._deselectRow($tr);
+                                    $tr.click();
+                                    item.checked = checked;
+                                });
+                            });
+                        
+         }
 		// create th cols
 		if (cols) {
 			$.each(cols, (i, col) => {
@@ -282,7 +304,8 @@ class APPTable {
 					.appendTo($thead);
 
 				// th attributes
-				col.label ? $th.html('<span>' + col.label + '</span>') : null;
+                
+				col.label ? $th.html($th.html()+'<span>' + col.label + '</span>') : null;
 				col.id ? $th.attr('id', col.id) : null; // id
 				col.classes && col.classes.th ? $th.addClass(col.classes.th) : null; // classes
 				col.field ? $th.attr('data-field', col.field) : null; // bs table / data-field identifier
@@ -544,14 +567,16 @@ class APPTable {
 
 	_handleRowSelect($tr) {
 		let O = this;
+        O.selectAllClicked = false;
 		// rows selectable and tr exists
 		if (O.opts.rowSelectable && $tr) {
 			// get current state
 			let isSelected = $tr.data('selected');
-
+            console.log($($tr.find( "input.checkbox" )));
 			// already selected
 			if (isSelected) {
 				O._deselectRow($tr);
+                $tr.find( "input.checkbox" ).prop('checked', false);
 			}
 			else {
 				// deselect all
@@ -562,6 +587,7 @@ class APPTable {
 				else {
 					O._selectRow($tr)
 				}
+                $tr.find( "input.checkbox" ).prop('checked', true);
 			}
 		}
 	}
@@ -586,7 +612,7 @@ class APPTable {
 			$tr.data('selected', true);
 
 			// callback on select row
-			if ($.isFunction(O.opts.on.selectRow)) {
+			if ($.isFunction(O.opts.on.selectRow) && !O.selectAllClicked) {
 				O.opts.on.selectRow.call(O, O, rowIndex, rowData);
 			}
 		}
