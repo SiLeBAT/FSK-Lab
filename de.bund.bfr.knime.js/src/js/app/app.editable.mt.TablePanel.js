@@ -287,14 +287,25 @@
             var row = $(O.panelTable._$tbody).find('tr').eq(index);
             if (command === 'up') {
                 row.insertBefore(row.prev());
+                O.moveElement(O.data,index,--index);
             } else if (command === 'down'){
                 row.insertAfter(row.next());
+                O.moveElement(O.data,index,++index);
             }
             $.each($(O.panelTable._$tbody).find('tr'),function(rowindex, row){
                 $(row).attr('data-row-id',rowindex);
             });
+            window.editEventBus.broadcast('MetadataChanged');
         }
-
+        moveElement(arr, old_index, new_index) {
+            if (new_index >= arr.length) {
+                var k = new_index - arr.length + 1;
+                while (k--) {
+                    arr.push(undefined);
+                }
+            }
+            arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
+        };
         removeAll() {
             let O = this;
             O.data = []; // Clear data
