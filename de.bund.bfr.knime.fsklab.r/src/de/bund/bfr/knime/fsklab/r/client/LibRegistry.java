@@ -136,7 +136,8 @@ public class LibRegistry {
 
   public synchronized static LibRegistry instance() throws IOException, RException {
     if (instance == null || PreferenceInitializer.refresh) {
-      instance = new LibRegistry();
+      if(instance == null)
+    	instance = new LibRegistry();
       PreferenceInitializer.refresh = false;
     }
     return instance;

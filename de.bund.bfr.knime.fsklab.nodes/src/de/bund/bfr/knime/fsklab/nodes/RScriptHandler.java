@@ -206,7 +206,8 @@ public class RScriptHandler extends ScriptHandler {
   @Override
   public void close() throws Exception {
     RprofileManager.unSubscribe();
-    controller.close();
+    //controller.close();
+    controller.terminateRProcess();
   }
 
   @Override
