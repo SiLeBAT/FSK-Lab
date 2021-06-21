@@ -109,17 +109,7 @@ public class LibRegistry {
       String[] pkgArray = installPath.toFile().list();
       installedLibs = Arrays.stream(pkgArray).collect(Collectors.toSet());
 
-      // Remove libraries, that are technically installed but with an incompatible version to avoid trouble during execution
-      /*installedLibs.removeIf(
-          lib ->{
-            try {
-              controller.eval("library("+ lib + ")", true);
-              return false;
-            }catch(Exception e) {
-              return true;
-            }
-          });
-          */
+
     } else {
 
       // Create directories
