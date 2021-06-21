@@ -110,7 +110,7 @@ public class LibRegistry {
       installedLibs = Arrays.stream(pkgArray).collect(Collectors.toSet());
 
       // Remove libraries, that are technically installed but with an incompatible version to avoid trouble during execution
-      installedLibs.removeIf(
+      /*installedLibs.removeIf(
           lib ->{
             try {
               controller.eval("library("+ lib + ")", true);
@@ -119,6 +119,7 @@ public class LibRegistry {
               return true;
             }
           });
+          */
     } else {
 
       // Create directories
@@ -135,9 +136,8 @@ public class LibRegistry {
   }
 
   public synchronized static LibRegistry instance() throws IOException, RException {
-    if (instance == null || PreferenceInitializer.refresh) {
-      if(instance == null)
-    	instance = new LibRegistry();
+    if (instance == null ) {
+      instance = new LibRegistry();
       PreferenceInitializer.refresh = false;
     }
     return instance;

@@ -536,7 +536,7 @@ public class RConnectionFactory {
 		private RInstance m_instance;
 		private TimerTask m_pendingDestructionTask = null;
 
-		private static final int RPROCESS_TIMEOUT = 60000;
+		private static final int RPROCESS_TIMEOUT = 100;
 
 		/**
 		 * Constructor

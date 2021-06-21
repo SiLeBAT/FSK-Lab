@@ -239,7 +239,7 @@ public class RController implements IRController {
   /**
    * Terminate the R process started for this RController.
    */
-  public synchronized void terminateRProcess() {
+  private synchronized void terminateRProcess() {
     if (m_connection != null) {
       m_connection.destroy(true);
       m_connection = null;
