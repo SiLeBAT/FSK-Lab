@@ -12,7 +12,6 @@ class APPTable {
 		O._$container = $container;
 		O._$wrapper = null;
 		O.totalRows = 0;
-        O.selectAllClicked = false;
 		// defaults
 		O._opts = $.extend(true, {}, {
 			attributes: {}, // attribute : value pairs for <table>
@@ -33,6 +32,7 @@ class APPTable {
 				afterInit: null,
 				afterPopulate: null,
 				selectRow: null,
+                selectAllRow: null,
 				deselectRow: null
 			}
 		}, settings);
@@ -57,7 +57,6 @@ class APPTable {
 	addRow( rowIndex, rowData, tableData, isMainTable, isEdit) {
 		
 		let O = this;
-        console.log(rowIndex,rowData, tableData, isMainTable, isEdit);
 		tableData = O._tableData
 		// row
 		let $tr = $('<tr data-row-id="' + rowIndex + '"></tr>');			
@@ -278,7 +277,6 @@ class APPTable {
 	_createTableHead(cols) {
 		let O = this;
 		_log('TABLE / _createTableHead');
-        console.log(O._opts);
 		// thead
 		let $thead = $('<thead></thead>');
         if(O._opts.data){
@@ -287,12 +285,17 @@ class APPTable {
             $checkAll.click(function () {
                                 this.checked = !this.checked
                                 var checked = this.checked;
-                                O.selectAllClicked = true;
                                 $("input.select-item").each(function (index,item) {
 						            $tr = $(item.closest("tr"));
-                                    O._deselectRow($tr);
-                                    $tr.click();
-                                    item.checked = checked;
+                                    if(!$tr.is('.tr-hidden')){
+                                        $tr.addClass('tr-selected');
+                                        $tr.data('selected', true);
+                                        item.checked = checked;
+                                        if ($.isFunction(O.opts.on.selectAllRow) ) {
+                                            let rowData = O._tableData[index]
+                                            O.opts.on.selectAllRow.call(O, O, index, rowData);
+                                        }
+                                    }
                                 });
                             });
                         
@@ -567,12 +570,10 @@ class APPTable {
 
 	_handleRowSelect($tr) {
 		let O = this;
-        O.selectAllClicked = false;
 		// rows selectable and tr exists
 		if (O.opts.rowSelectable && $tr) {
 			// get current state
 			let isSelected = $tr.data('selected');
-            console.log($($tr.find( "input.checkbox" )));
 			// already selected
 			if (isSelected) {
 				O._deselectRow($tr);
@@ -612,7 +613,7 @@ class APPTable {
 			$tr.data('selected', true);
 
 			// callback on select row
-			if ($.isFunction(O.opts.on.selectRow) && !O.selectAllClicked) {
+			if ($.isFunction(O.opts.on.selectRow) ) {
 				O.opts.on.selectRow.call(O, O, rowIndex, rowData);
 			}
 		}

@@ -23,6 +23,7 @@ class APPTableMT extends APPTable {
 			on 				: {
 				afterInit		: null,
 				selectRow 		: null,
+                selectAllRow    : null,
 				deselectRow 	: null,
 				updateFilter	: null
 			}
