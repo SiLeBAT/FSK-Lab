@@ -87,8 +87,9 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 			}
 
 			try {
+				PreferenceInitializer.refresh = false;
 				RBinUtil.checkRHome(rHome, true);
-
+				
 				DefaultRPreferenceProvider prefProvider = new DefaultRPreferenceProvider(rHome);
 				final Properties props = prefProvider.getProperties();
 				// the version numbers may contain spaces
@@ -132,7 +133,7 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 						return false;
 					}
 				}
-
+				PreferenceInitializer.refresh = true;
 				setMessage(null, NONE);
 				return true;
 			} catch (InvalidRHomeException e) {

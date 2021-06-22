@@ -62,7 +62,7 @@ public class LibRegistry {
   private final Set<String> installedLibs;
 
   /** Utility RController for running R commands. */
-  private final RController controller = new RController();
+  public final RController controller = new RController();
 
   private String type;
 
@@ -71,7 +71,7 @@ public class LibRegistry {
   private final String MIRROR = "https://cran.rstudio.com";
 
   private LibRegistry() throws IOException, RException {
-
+	  
     if (Platform.isWindows()) {
       type = "win.binary";
     } else if (Platform.isMac()) {
@@ -126,10 +126,17 @@ public class LibRegistry {
   }
 
   public synchronized static LibRegistry instance() throws IOException, RException {
-    if (instance == null ) {
-      instance = new LibRegistry();
-      PreferenceInitializer.refresh = false;
+    if (instance == null || PreferenceInitializer.refresh ) {
+    	PreferenceInitializer.refresh = false;
+//    	if(instance != null) {
+//    		instance.controller.close();
+//    		instance = null;
+//    	}
+    	
+    	instance = new LibRegistry();
+    	
     }
+   
     return instance;
   }
 
