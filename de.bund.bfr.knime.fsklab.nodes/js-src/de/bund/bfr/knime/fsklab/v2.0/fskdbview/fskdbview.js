@@ -331,11 +331,27 @@ fskdbview = function () {
                         });
                     }
                 },
+                selectAllRow       : ( O, rowIndex, rowData ) => {
+                    this.checked = true;
+                    $(this).closest("tr").css("background-color", "#e1e3e8");
+                    window.selectedModels.push(_representation.metadata[rowIndex]);
+                    _value.selection.push(_representation.table.rows[rowIndex].rowKey);
+                    return;
+           
+                },
                 selectRow       : ( O, rowIndex, rowData ) => {
-                            if (window.selectedModels.length >= _representation.maxSelectionNumber) {
-                                $(this).prop("checked", false);
-                                return;
+                            if(O.selectAllClicked){
+                                    this.checked = true;
+                                    $(this).closest("tr").css("background-color", "#e1e3e8");
+                                    window.selectedModels.push(_representation.metadata[rowIndex]);
+                                    _value.selection.push(_representation.table.rows[rowIndex].rowKey);
+                                    return;
                             }
+                            if (window.selectedModels.length >= _representation.maxSelectionNumber) {
+                                    $(this).prop("checked", false);
+                                    return;
+                            }
+                            
                             this.checked = true;
                             $(this).closest("tr").css("background-color", "#e1e3e8");
                             //fetch scripts
@@ -640,9 +656,19 @@ fskdbview = function () {
                             let $tr = $(tbl[indexToBeSelected].el[0]);     
                             $tr.addClass('tr-selected');
                             $tr.data('selected', true);
+                            $tr.find( "input.checkbox" ).prop('checked', true);
                             window.selectedModels.push(_representation.metadata[indexToBeSelected]);
                         });
                         
+                    },
+                    selectAllRow       : ( O, rowIndex, rowData ) => {
+                        console.log('slect All', rowIndex);
+                        this.checked = true;
+                        $(this).closest("tr").css("background-color", "#e1e3e8");
+                        window.selectedModels.push(_representation.metadata[rowIndex]);
+                        _value.selection.push(_representation.table.rows[rowIndex].rowKey);
+                        return;
+               
                     },
                     selectRow       : ( O, rowIndex, rowData ) => {
                             if (window.selectedModels.length >= _representation.maxSelectionNumber) {
