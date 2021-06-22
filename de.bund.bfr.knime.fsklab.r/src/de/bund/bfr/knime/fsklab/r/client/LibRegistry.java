@@ -126,20 +126,30 @@ public class LibRegistry {
   }
 
   public synchronized static LibRegistry instance() throws IOException, RException {
-    if (instance == null || PreferenceInitializer.refresh ) {
-    	PreferenceInitializer.refresh = false;
-//    	if(instance != null) {
-//    		instance.controller.close();
-//    		instance = null;
-//    	}
-    	
-    	instance = new LibRegistry();
-    	
-    }
-   
-    return instance;
+    
+	  if(PreferenceInitializer.refresh)
+		  refreshInstance();
+	  if (instance == null ) {
+		  instance = new LibRegistry();
+	  }
+
+	  return instance;
   }
 
+  private static void refreshInstance() {
+	  synchronized(instance) {
+		  try {
+			  instance.controller.close();
+			  //Thread.sleep(15000);
+			  instance.wait(15000);
+			  instance = new LibRegistry();
+		  } catch(Exception e) {
+			  instance = null;
+		  } finally {
+			  PreferenceInitializer.refresh = false;
+		  }
+	  }
+  }
   /**
    * Install a list of packages into the repository. Already installed packages
    * are ignored.

@@ -119,7 +119,7 @@ class WriterNodeModel extends NoInternalsModel {
   public static final String METADATA_NS = "fsk";
   public static final String METADATA_COMMAND = "command";
 
-  
+  static ScriptHandler scriptHandler;
 
   static final String CFG_FILE = "file";
   private final SettingsModelString filePath = new SettingsModelString(CFG_FILE, null);
@@ -161,7 +161,7 @@ class WriterNodeModel extends NoInternalsModel {
    * add resource files to archive
    */
   private static void addResourcesToArchive(List<Path> resources, CombineArchive archive,
-      String filePrefix, Map<String, URI> uris, ScriptHandler scriptHandler) throws Exception {
+      String filePrefix, Map<String, URI> uris) throws Exception {
     for (final Path resourcePath : resources) {
 
       final String filenameString = filePrefix + resourcePath.getFileName().toString();
@@ -192,7 +192,7 @@ class WriterNodeModel extends NoInternalsModel {
   }
   
   public static void writeFSKObject(FskPortObject fskObj, CombineArchive archive, String filePrefix,
-      Map<String, URI> URIS, ScriptHandler scriptHandler) throws Exception {
+      Map<String, URI> URIS) throws Exception {
 
     addVersion(archive);
    
@@ -208,7 +208,7 @@ class WriterNodeModel extends NoInternalsModel {
         // Adds resources
         try (Stream<Path> stream = Files.list(workingDirectory.get())) {
           List<Path> resources = stream.collect(Collectors.toList());
-          addResourcesToArchive(resources, archive, filePrefix, URIS, scriptHandler);  
+          addResourcesToArchive(resources, archive, filePrefix, URIS);  
         } catch (Exception e) {
           LOGGER.warn(e.toString());
         }
@@ -219,7 +219,7 @@ class WriterNodeModel extends NoInternalsModel {
     if (fskObj.getGeneratedResourcesDirectory().isPresent()) {
       try (Stream<Path> stream = Files.list(fskObj.getGeneratedResourcesDirectory().get().toPath())) {
         List<Path> resources = stream.collect(Collectors.toList());
-        addResourcesToArchive(resources, archive, filePrefix, URIS, scriptHandler);
+        addResourcesToArchive(resources, archive, filePrefix, URIS);
       } catch (Exception e) {
         LOGGER.warn(e.toString());
       }
@@ -227,12 +227,12 @@ class WriterNodeModel extends NoInternalsModel {
 
     // Adds model script
     final ArchiveEntry modelEntry =
-        addRScript(archive, fskObj.getModel(), filePrefix + "model." + scriptHandler.getFileExtension(), scriptHandler);
+        addRScript(archive, fskObj.getModel(), filePrefix + "model." + scriptHandler.getFileExtension());
     modelEntry.addDescription(new FskMetaDataObject(ResourceType.modelScript).metaDataObject);
 
     // Adds visualization script
     final ArchiveEntry vizEntry = addRScript(archive, fskObj.getViz(),
-        filePrefix + "visualization." + scriptHandler.getFileExtension(), scriptHandler);
+        filePrefix + "visualization." + scriptHandler.getFileExtension());
     vizEntry.addDescription(new FskMetaDataObject(ResourceType.visualizationScript).metaDataObject);
 
     // Adds R workspace file
@@ -241,7 +241,7 @@ class WriterNodeModel extends NoInternalsModel {
     }
     // Add simulations
     {
-      SEDMLDocument sedmlDoc = createSedml(fskObj, scriptHandler);
+      SEDMLDocument sedmlDoc = createSedml(fskObj);
 
       File tempFile = FileUtil.createTempFile("sim", "");
       sedmlDoc.writeDocument(tempFile);
@@ -250,7 +250,7 @@ class WriterNodeModel extends NoInternalsModel {
 
     // Add simulations as parameter scripts
     for (FskSimulation sim : fskObj.simulations) {
-      addParameterScript(archive, sim, filePrefix, scriptHandler);
+      addParameterScript(archive, sim, filePrefix);
     }
 
     // TODO: THIS DOES NOT WORK IN WINDOWS: png file cant be opened without renaming the file to .svg  
@@ -270,35 +270,24 @@ class WriterNodeModel extends NoInternalsModel {
   }
 
   private static void writeCombinedObject(CombinedFskPortObject fskObj, CombineArchive archive,
-      Map<String, URI> URIS, String filePrefix, ScriptHandler scriptHandler) throws Exception {
+      Map<String, URI> URIS, String filePrefix) throws Exception {
     filePrefix = filePrefix + normalizeName(fskObj) + System.getProperty("file.separator");
     FskPortObject ffskObj = fskObj.getFirstFskPortObject();
-    try (ScriptHandler singleScriptHandler = ScriptHandler
-            .createHandler(SwaggerUtil.getLanguageWrittenIn(ffskObj.modelMetadata), ffskObj.packages)) {
+    if (ffskObj instanceof CombinedFskPortObject) {
+      writeCombinedObject((CombinedFskPortObject) ffskObj, archive, URIS, filePrefix);
+    } else {
+      writeFSKObject(ffskObj, archive,
+          filePrefix + normalizeName(ffskObj) + System.getProperty("file.separator"), URIS);
+    }
 
-	    if (ffskObj instanceof CombinedFskPortObject) {
-	      writeCombinedObject((CombinedFskPortObject) ffskObj, archive, URIS, filePrefix, singleScriptHandler);
-	    } else {
-	      writeFSKObject(ffskObj, archive,
-	          filePrefix + normalizeName(ffskObj) + System.getProperty("file.separator"), URIS, singleScriptHandler);
-	    }
-    } catch (Exception e) {
-    	throw new Exception(e.getLocalizedMessage(), e);
+    FskPortObject sfskObj = fskObj.getSecondFskPortObject();
+    if (sfskObj instanceof CombinedFskPortObject) {
+      writeCombinedObject((CombinedFskPortObject) sfskObj, archive, URIS, filePrefix);
+    } else {
+      writeFSKObject(sfskObj, archive,
+          filePrefix + normalizeName(sfskObj) + System.getProperty("file.separator"), URIS);
     }
     
-    FskPortObject sfskObj = fskObj.getSecondFskPortObject();
-    try (ScriptHandler singleScriptHandler = ScriptHandler
-            .createHandler(SwaggerUtil.getLanguageWrittenIn(sfskObj.modelMetadata), sfskObj.packages)) {
-
-	    if (sfskObj instanceof CombinedFskPortObject) {
-	      writeCombinedObject((CombinedFskPortObject) sfskObj, archive, URIS, filePrefix, singleScriptHandler);
-	    } else {
-	      writeFSKObject(sfskObj, archive,
-	          filePrefix + normalizeName(sfskObj) + System.getProperty("file.separator"), URIS, singleScriptHandler);
-	    }
-    } catch (Exception e) {
-        throw new Exception(e.getLocalizedMessage(), e);
-    }
     // Adds R workspace file
     if (fskObj.getWorkspace() != null) {
       addWorkspace(archive, fskObj.getWorkspace(), filePrefix);
@@ -308,7 +297,7 @@ class WriterNodeModel extends NoInternalsModel {
     addMetaData(archive, fskObj.modelMetadata, filePrefix + "metaData.json");
     // Add combined simulations
     {
-      SEDMLDocument sedmlDoc = createSedml(fskObj, scriptHandler);
+      SEDMLDocument sedmlDoc = createSedml(fskObj);
 
       File tempFile = FileUtil.createTempFile("sim", "");
       sedmlDoc.writeDocument(tempFile);
@@ -320,53 +309,54 @@ class WriterNodeModel extends NoInternalsModel {
   @Override
   protected PortObject[] execute(PortObject[] inObjects, ExecutionContext exec) throws Exception {
 
-    FskPortObject in = (FskPortObject) inObjects[0];
-    
-    try (ScriptHandler scriptHandler = ScriptHandler
-            .createHandler(SwaggerUtil.getLanguageWrittenIn(in.modelMetadata), in.packages)) {
-        
-	    URL url = FileUtil.toURL(filePath.getStringValue());
-	    File localPath = FileUtil.getFileFromURL(url);
-	
-	    if (localPath != null) {
-	      localPath.delete();
-	      writeArchive(localPath, in, exec, scriptHandler);
-	    } else {
-	
-	      // Creates archive in temporary archive file
-	      File archiveFile = FileUtil.createTempFile("model", "fskx");
-	
-	      // The file is deleted since we need the path only for the COMBINE archive
-	      archiveFile.delete();
-	
-	      // Writes COMBINE archive
-	      writeArchive(archiveFile, in, exec, scriptHandler);
-	
-	      // Copies temporary file to output stream
-	      try (OutputStream os = FileUtil.openOutputConnection(url, "PUT").getOutputStream()) {
-	        Files.copy(archiveFile.toPath(), os);
-	      }
-	
-	      // Deletes temporary file
-	      archiveFile.delete();
-	    }
-    } catch(Exception e) {
-        throw new Exception(e.getLocalizedMessage(), e);
-    }
+	  FskPortObject in = (FskPortObject) inObjects[0];
+	  try {
+		  scriptHandler = ScriptHandler.createHandler(SwaggerUtil.getLanguageWrittenIn(in.modelMetadata),
+				  in.packages);
+		  URL url = FileUtil.toURL(filePath.getStringValue());
+		  File localPath = FileUtil.getFileFromURL(url);
+
+		  if (localPath != null) {
+			  localPath.delete();
+			  writeArchive(localPath, in, exec);
+		  } else {
+
+			  // Creates archive in temporary archive file
+			  File archiveFile = FileUtil.createTempFile("model", "fskx");
+
+			  // The file is deleted since we need the path only for the COMBINE archive
+			  archiveFile.delete();
+
+			  // Writes COMBINE archive
+			  writeArchive(archiveFile, in, exec);
+
+			  // Copies temporary file to output stream
+			  try (OutputStream os = FileUtil.openOutputConnection(url, "PUT").getOutputStream()) {
+				  Files.copy(archiveFile.toPath(), os);
+			  }
+
+			  // Deletes temporary file
+			  archiveFile.delete();
+		  }
+
+	  } finally {
+		  scriptHandler.close();
+	  }
+
     return new PortObject[] {};
   }
 
   private static void writeArchive(File archiveFile, FskPortObject portObject,
-      ExecutionContext exec, ScriptHandler scriptHandler) throws Exception {
+      ExecutionContext exec) throws Exception {
 
     Map<String, URI> URIS = FSKML.getURIS(1, 0, 12);
 
     try (final CombineArchive archive = new CombineArchive(archiveFile)) {
 
       if (portObject instanceof CombinedFskPortObject) {
-        writeCombinedObject((CombinedFskPortObject) portObject, archive, URIS, "", scriptHandler);
+        writeCombinedObject((CombinedFskPortObject) portObject, archive, URIS, "");
       } else {
-        writeFSKObject(portObject, archive, "", URIS, scriptHandler);
+        writeFSKObject(portObject, archive, "", URIS);
       }
 
       // Add SBML document
@@ -604,7 +594,7 @@ class WriterNodeModel extends NoInternalsModel {
   }
 
   private static ArchiveEntry addRScript(final CombineArchive archive, final String script,
-      final String filename, ScriptHandler scriptHandler) throws IOException, URISyntaxException {
+      final String filename) throws IOException, URISyntaxException {
 
     final File file = File.createTempFile("temp", ".r");
     FileUtils.writeStringToFile(file, script, "UTF-8");
@@ -652,7 +642,7 @@ class WriterNodeModel extends NoInternalsModel {
 
 
 
-  private static SEDMLDocument createSedml(FskPortObject portObj, ScriptHandler scriptHandler) {
+  private static SEDMLDocument createSedml(FskPortObject portObj) {
 
     SEDMLDocument doc = Libsedml.createDocument();
     SedML sedml = doc.getSedMLModel();
@@ -760,7 +750,7 @@ class WriterNodeModel extends NoInternalsModel {
 
 
   private static void addParameterScript(CombineArchive archive, FskSimulation simulation,
-      String filePrefix, ScriptHandler scriptHandler) throws IOException {
+      String filePrefix) throws IOException {
 
     String script = scriptHandler.buildParameterScript(simulation);
 

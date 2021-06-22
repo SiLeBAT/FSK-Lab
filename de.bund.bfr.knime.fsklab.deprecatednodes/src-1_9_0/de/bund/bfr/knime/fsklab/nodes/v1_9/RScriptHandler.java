@@ -38,6 +38,8 @@ public class RScriptHandler extends ScriptHandler {
 
   public RScriptHandler(List<String> packages) throws RException, IOException {
     RprofileManager.subscribe();
+    // initialize LibRegistry before Controller to avoid errors on switching R in preferences
+    LibRegistry.instance(); 
     this.controller = new RController();
     this.executor = new ScriptExecutor(controller);
     
