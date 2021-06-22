@@ -42,6 +42,7 @@ import org.rosuda.REngine.RList;
 import com.sun.jna.Platform;
 import de.bund.bfr.knime.fsklab.preferences.PreferenceInitializer;
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
+import de.bund.bfr.knime.fsklab.r.server.RConnectionFactory.RConnectionResource;
 
 /**
  * Singleton!! There can only be one.
@@ -140,8 +141,8 @@ public class LibRegistry {
 	  synchronized(instance) {
 		  try {
 			  instance.controller.close();
-			  //Thread.sleep(15000);
-			  instance.wait(15000);
+			  // Wait until controller is actually closed. 
+			  instance.wait(RConnectionResource.RPROCESS_TIMEOUT + 2000);
 			  instance = new LibRegistry();
 		  } catch(Exception e) {
 			  instance = null;
