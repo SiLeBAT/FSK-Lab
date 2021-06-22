@@ -952,6 +952,9 @@ public final class JoinerNodeModel
     }
   }
   
+  public static String makeValidFileName(String original) {
+   return original.replaceAll("[^a-zA-Z0-9\\.\\-]", "_");
+  }
   /**
    * 
    * @param manager
@@ -973,7 +976,7 @@ public final class JoinerNodeModel
         e.printStackTrace();
       }
     }else if (StringUtils.isNotEmpty(model[6])) {
-      String fileZip = FileUtil.getWorkflowTempDir() +File.separator+ model[7] + ".fskx";
+      String fileZip = FileUtil.getWorkflowTempDir() +File.separator+ makeValidFileName(model[7]) + ".fskx";
       File f = new File(fileZip);
       if(!f.exists()) { 
         downloadFile(new URL(model[6]), fileZip);
