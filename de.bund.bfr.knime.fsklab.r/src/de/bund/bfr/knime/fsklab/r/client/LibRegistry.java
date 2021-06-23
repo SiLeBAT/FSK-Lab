@@ -42,6 +42,7 @@ import org.rosuda.REngine.RList;
 import com.sun.jna.Platform;
 import de.bund.bfr.knime.fsklab.preferences.PreferenceInitializer;
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
+import de.bund.bfr.knime.fsklab.r.server.RConnectionFactory.RConnectionResource;
 
 /**
  * Singleton!! There can only be one.
@@ -62,7 +63,7 @@ public class LibRegistry {
   private final Set<String> installedLibs;
 
   /** Utility RController for running R commands. */
-  private final RController controller = new RController();
+  public final RController controller = new RController();
 
   private String type;
 
@@ -71,7 +72,7 @@ public class LibRegistry {
   private final String MIRROR = "https://cran.rstudio.com";
 
   private LibRegistry() throws IOException, RException {
-
+	  
     if (Platform.isWindows()) {
       type = "win.binary";
     } else if (Platform.isMac()) {
@@ -109,16 +110,7 @@ public class LibRegistry {
       String[] pkgArray = installPath.toFile().list();
       installedLibs = Arrays.stream(pkgArray).collect(Collectors.toSet());
 
-      // Remove libraries, that are technically installed but with an incompatible version to avoid trouble during execution
-      installedLibs.removeIf(
-          lib ->{
-            try {
-              controller.eval("library("+ lib + ")", true);
-              return false;
-            }catch(Exception e) {
-              return true;
-            }
-          });
+
     } else {
 
       // Create directories
@@ -135,13 +127,30 @@ public class LibRegistry {
   }
 
   public synchronized static LibRegistry instance() throws IOException, RException {
-    if (instance == null || PreferenceInitializer.refresh) {
-      instance = new LibRegistry();
-      PreferenceInitializer.refresh = false;
-    }
-    return instance;
+    
+	  if(PreferenceInitializer.refresh)
+		  refreshInstance();
+	  if (instance == null ) {
+		  instance = new LibRegistry();
+	  }
+
+	  return instance;
   }
 
+  private static void refreshInstance() {
+	  synchronized(instance) {
+		  try {
+			  instance.controller.close();
+			  // Wait until controller is actually closed. 
+			  instance.wait(RConnectionResource.RPROCESS_TIMEOUT + 2000);
+			  instance = new LibRegistry();
+		  } catch(Exception e) {
+			  instance = null;
+		  } finally {
+			  PreferenceInitializer.refresh = false;
+		  }
+	  }
+  }
   /**
    * Install a list of packages into the repository. Already installed packages
    * are ignored.

@@ -109,7 +109,7 @@ public class RBinUtil {
 	 * @return properties about used R
 	 */
 	public static Properties retrieveRProperties(final RPreferenceProvider rpref) {
-        PreferenceInitializer.refresh = true;
+        
 		final File tmpPath = new File(TEMP_PATH);
 		File propsFile;
 		File rOutFile;
