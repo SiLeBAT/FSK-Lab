@@ -110,27 +110,33 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
     // No internals settings
   }
 
-  @Override
-  protected void reset() {
-    internalSettings.reset();
-    
-    if(fskObj!= null && fskObj.getGeneratedResourcesDirectory().isPresent()) {
+  private void cleanGeneratedResources(FskPortObject portObject) {
+    if (portObject != null && portObject.getGeneratedResourcesDirectory().isPresent()) {
       try {
-        if(fskObj.getGeneratedResourcesDirectory().get().exists()) {
-          Files.walk(fskObj.getGeneratedResourcesDirectory().get().toPath()) 
-          .sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(file -> {
-            try {
-              file.delete();
-            } catch (Exception ex) {
-              ex.printStackTrace();
-            }
-          });
+        if (portObject instanceof CombinedFskPortObject) {
+          cleanGeneratedResources(((CombinedFskPortObject) portObject).getFirstFskPortObject());
+          cleanGeneratedResources(((CombinedFskPortObject) portObject).getSecondFskPortObject());
+          
+        } 
+        if (portObject.getGeneratedResourcesDirectory().get().exists()) {
+          Files.walk(portObject.getGeneratedResourcesDirectory().get().toPath())
+              .sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(file -> {
+                try {
+                  file.delete();
+                } catch (Exception ex) {
+                  ex.printStackTrace();
+                }
+              });
         }
       } catch (IOException e) {
         e.printStackTrace();
       }
-      
     }
+  }
+  @Override
+  protected void reset() {
+    internalSettings.reset();
+    cleanGeneratedResources(fskObj);
     fskObj = null;
   }
 
