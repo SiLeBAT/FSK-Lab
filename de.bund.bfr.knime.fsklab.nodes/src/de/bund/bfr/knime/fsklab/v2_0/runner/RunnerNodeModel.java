@@ -22,9 +22,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -111,6 +113,24 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
   @Override
   protected void reset() {
     internalSettings.reset();
+    
+    if(fskObj!= null && fskObj.getGeneratedResourcesDirectory().isPresent()) {
+      try {
+        if(fskObj.getGeneratedResourcesDirectory().get().exists()) {
+          Files.walk(fskObj.getGeneratedResourcesDirectory().get().toPath()) 
+          .sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(file -> {
+            try {
+              file.delete();
+            } catch (Exception ex) {
+              ex.printStackTrace();
+            }
+          });
+        }
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+      
+    }
     fskObj = null;
   }
 
