@@ -1,6 +1,7 @@
 package de.bund.bfr.knime.fsklab.nodes;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -88,7 +89,7 @@ public abstract class JsonHandler {
       // work through Map
       for (Map.Entry<String, List<JoinerObject>> entry : sourceTargetPathMap.entrySet()) {
         //ParameterData parameterData = MAPPER.readValue(new File(jsonPath), ParameterData.class);
-        ParameterData parameterData = MAPPER.readValue(new File(entry.getKey()), ParameterData.class);
+        ParameterData parameterData = MAPPER.readValue(new FileInputStream(entry.getKey()), ParameterData.class);
         for (JoinerObject obj : entry.getValue()) {
           loadParametersIntoWorkspace(parameterData, obj.sourceParameter, obj.targetParameter.getId());
 

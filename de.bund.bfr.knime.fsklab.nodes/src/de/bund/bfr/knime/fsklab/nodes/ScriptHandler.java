@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -85,8 +87,13 @@ public abstract class ScriptHandler implements AutoCloseable {
     exec.setProgress(0.3, "create JsonHandler");
     jsonHandler = JsonHandler.createHandler(this, exec);
     exec.setProgress(0.4, "apply Join Relations");
+    Instant start = Instant.now();
     jsonHandler.applyJoinRelation(fskObj, joinRelationList, suffix);
+    Instant end = Instant.now();
+    Duration timeElapsed = Duration.between(start, end); 
+    logger.warn("elapsed time: "+timeElapsed.getSeconds() + "s\n" );
 
+   
 
     exec.setProgress(0.72, "Set parameter values");
     logger.info(" Running with '" + simulation.getName() + "' simulation!");
