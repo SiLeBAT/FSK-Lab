@@ -326,10 +326,11 @@ fskeditorjs = function () {
     let referenceSchema = prepareSchema(window.modelSchema, _metadata.modelType);
     const validate = ajv.compile(referenceSchema)
     validate(deleteEmptyValues(JSON.parse(JSON.stringify(_metadata))))
-    
-    viewValue.validationErrors = validate.errors.map(errorItem => {
-        return JSON.stringify(errorItem)
-    });
+    if(validate.errors){
+        viewValue.validationErrors = validate.errors.map(errorItem => {
+            return JSON.stringify(errorItem)
+        });
+    }
     viewValue.resourcesFiles = resourcesFiles;
     viewValue.parentResourcesFolder = parentResourcesFolder;
     return viewValue;
