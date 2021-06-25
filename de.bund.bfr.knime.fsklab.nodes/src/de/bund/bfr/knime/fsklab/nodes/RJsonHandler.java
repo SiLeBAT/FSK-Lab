@@ -120,6 +120,7 @@ public class RJsonHandler extends JsonHandler {
     }
     String path = workingDirectory.toString() + File.separator + JSON_FILE_NAME;
     MAPPER.writer().writeValue(new File(path), parameterJson);
+    //parameterJson = null;
   }
 
 
@@ -131,10 +132,10 @@ public class RJsonHandler extends JsonHandler {
    * @throws Exception
    */
   @Override
-  public void loadParametersIntoWorkspace(String parameterJson, String sourceParam,
+  public void loadParametersIntoWorkspace(ParameterData parameterData, String sourceParam,
       String targetParam) throws Exception {
 
-    ParameterData parameterData = MAPPER.readValue(new File(parameterJson), ParameterData.class);
+    
     
     for (DataArray param : parameterData.getParameters()) {
       if (sourceParam.equals(param.getMetadata().getId())) {

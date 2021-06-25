@@ -244,7 +244,9 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
       // create a parameter.json for the top level combined model
       return new PortObject[] {fskObj, imgObj};
     } catch (IOException e) {
+      
       LOGGER.warn("There is no image created");
+      LOGGER.warn(e.getMessage());
       return new PortObject[] {fskObj};
     }
   }
@@ -405,12 +407,12 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
     if (portObject.getJoinerRelation() != null) {
       joinRelations.addAll(Arrays.asList(portObject.getJoinerRelation()));
     }
-    if (portObject.getFirstFskPortObject() instanceof CombinedFskPortObject) {
-      getJoinRelations((CombinedFskPortObject) portObject.getFirstFskPortObject(), joinRelations);
-    }
-    if (portObject.getSecondFskPortObject() instanceof CombinedFskPortObject) {
-      getJoinRelations((CombinedFskPortObject) portObject.getSecondFskPortObject(), joinRelations);
-    }
+//    if (portObject.getFirstFskPortObject() instanceof CombinedFskPortObject) {
+//      getJoinRelations((CombinedFskPortObject) portObject.getFirstFskPortObject(), joinRelations);
+//    }
+//    if (portObject.getSecondFskPortObject() instanceof CombinedFskPortObject) {
+//      getJoinRelations((CombinedFskPortObject) portObject.getSecondFskPortObject(), joinRelations);
+//    }
 
     return joinRelations;
   }

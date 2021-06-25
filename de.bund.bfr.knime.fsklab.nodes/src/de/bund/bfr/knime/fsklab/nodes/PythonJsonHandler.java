@@ -114,13 +114,12 @@ public class PythonJsonHandler extends JsonHandler {
    * @throws Exception
    */
   @Override
-  public void loadParametersIntoWorkspace(String parameterJson, String sourceParam,
+  public void loadParametersIntoWorkspace(ParameterData parameterData, String sourceParam,
       String targetParam) throws Exception {
 
     // StringBuilder script = new StringBuilder();
 
-    // load source and target into workspace as strings
-    ParameterData parameterData = MAPPER.readValue(new File(parameterJson), ParameterData.class);
+        
     
     for (DataArray param : parameterData.getParameters()) {
       if (sourceParam.equals(param.getMetadata().getId())) {

@@ -126,7 +126,7 @@ public class RScriptHandler extends ScriptHandler {
       LibRegistry.instance().install(fskObj.packages);
     }
 
-    exec.setProgress(0.71, "Add paths to libraries");
+    exec.setProgress(0.2, "Add paths to libraries");
     controller.addPackagePath(LibRegistry.instance().getInstallationPath());
   }
 

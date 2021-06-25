@@ -6,7 +6,11 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
 import org.knime.core.node.ExecutionContext;
@@ -56,7 +60,10 @@ public abstract class JsonHandler {
   public void applyJoinRelation(FskPortObject fskObj, List<JoinRelationAdvanced> joinRelationList,
       String suffix) throws Exception {
 
+
     if (joinRelationList != null) {
+      // get all relevant parameters -> assign to Map with key=jsonPath
+      Map<String, List<JoinerObject>> sourceTargetPathMap = new HashMap();
       for (JoinRelationAdvanced joinRelation : joinRelationList) {
         String targetParameter = joinRelation.getTargetParam();
         FskPortObject sourceModel = joinRelation.getModel();
@@ -67,22 +74,52 @@ public abstract class JsonHandler {
             String resourcePath = sourceModel.getGeneratedResourcesDirectory().get()
                 .getAbsolutePath().replaceAll("\\\\", "/") + "/";
             String jsonPath = resourcePath + JSON_FILE_NAME;
-            loadParametersIntoWorkspace(jsonPath, sourceParameter, param.getId());
-
-            // if target parameter is of type FILE, add path to generatedResources to sourceParam
-            // This should be safe since source and target parameter must have the same type (if
-            // File)
-            if (param.getDataType().equals(Parameter.DataTypeEnum.FILE)) {
-              addPathToFileParameter(param.getId(), resourcePath);
+            if(!sourceTargetPathMap.containsKey(jsonPath)) {
+              sourceTargetPathMap.put(jsonPath, new ArrayList<JoinerObject>());
             }
 
-            applyJoinCommand(param.getId(), joinRelation.replaceCommand(param.getId()));
+            sourceTargetPathMap.get(jsonPath).add(new JoinerObject(sourceParameter,param,joinRelation, resourcePath));
+
           }
         }
+      }// for joinRelation
+
+
+      // work through Map
+      for (Map.Entry<String, List<JoinerObject>> entry : sourceTargetPathMap.entrySet()) {
+        //ParameterData parameterData = MAPPER.readValue(new File(jsonPath), ParameterData.class);
+        ParameterData parameterData = MAPPER.readValue(new File(entry.getKey()), ParameterData.class);
+        for (JoinerObject obj : entry.getValue()) {
+          loadParametersIntoWorkspace(parameterData, obj.sourceParameter, obj.targetParameter.getId());
+
+          // if target parameter is of type FILE, add path to generatedResources to sourceParam
+          // This should be safe since source and target parameter must have the same type (if
+          // File)
+          if (obj.targetParameter.getDataType().equals(Parameter.DataTypeEnum.FILE)) {
+            addPathToFileParameter(obj.targetParameter.getId(), obj.resourcePath);
+          }
+
+          applyJoinCommand(obj.targetParameter.getId(), obj.joinRelation.replaceCommand(obj.targetParameter.getId()));
+        }
+
       }
-    }
+
+    }// if     
   }
 
+  private class JoinerObject{
+    public String sourceParameter;
+    public Parameter targetParameter;
+    public JoinRelationAdvanced joinRelation;
+    public String resourcePath;
+    public JoinerObject(String source, Parameter target, JoinRelationAdvanced relation, String path) {
+      sourceParameter = source;
+      targetParameter = target;
+      joinRelation = relation;
+      resourcePath = path;
+    }
+  }
+  
   protected abstract void applyJoinCommand(String parameter, String command) throws Exception;
 
   /**
@@ -122,7 +159,7 @@ public abstract class JsonHandler {
    * @param FSKPortObject fsk object containing the parameter names
    * @throws Exception if an error occurs running the script.
    */
-  public abstract void loadParametersIntoWorkspace(String parameterJson, String sourceParam,
+  public abstract void loadParametersIntoWorkspace(ParameterData parameterData, String sourceParam,
       String targetParam) throws Exception;
 
 

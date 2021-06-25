@@ -82,8 +82,9 @@ public abstract class ScriptHandler implements AutoCloseable {
     // Install needed libraries & set path to .fsk folder
     installLibs(fskObj, exec, logger);
     
-
+    exec.setProgress(0.3, "create JsonHandler");
     jsonHandler = JsonHandler.createHandler(this, exec);
+    exec.setProgress(0.4, "apply Join Relations");
     jsonHandler.applyJoinRelation(fskObj, joinRelationList, suffix);
 
 
@@ -152,6 +153,17 @@ public abstract class ScriptHandler implements AutoCloseable {
     } catch (final Exception exception) {
       logger.warn("Visualization script failed", exception);
     }
+    
+    // HDFHandler stores all ouput parameters in HDF file
+    if(saveToJsonChecked) {
+      exec.setProgress(0.92, "Save output parameters");
+      jsonHandler.saveOutputParameters(fskObj, workingDirectory);
+    }
+      
+
+    // Save generated resources
+    exec.setProgress(0.92, "Save generated resources");
+    saveGeneratedResources(fskObj, workingDirectory.toFile(), exec.createSubExecutionContext(1));
 
     exec.setProgress(0.96, "Restore library paths");
     restoreDefaultLibrary();
@@ -161,14 +173,6 @@ public abstract class ScriptHandler implements AutoCloseable {
 
     saveWorkspace(fskObj, exec);
 
-    // HDFHandler stores all ouput parameters in HDF file
-    if(saveToJsonChecked) {
-      jsonHandler.saveOutputParameters(fskObj, workingDirectory);
-    }
-      
-
-    // Save generated resources
-    saveGeneratedResources(fskObj, workingDirectory.toFile(), exec.createSubExecutionContext(1));
 
   
 
