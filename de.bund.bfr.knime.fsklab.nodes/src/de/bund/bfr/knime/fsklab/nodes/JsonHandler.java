@@ -57,11 +57,13 @@ public abstract class JsonHandler {
     }
   }
 
-  // TODO: conversion command? maybe create a new Class instead of using a map
+  // Method loads parameter data from previous models into workspace of current model
+  // according to the list of Joiner-Relations
   public void applyJoinRelation(FskPortObject fskObj, List<JoinRelationAdvanced> joinRelationList,
       String suffix) throws Exception {
 
-
+    // figure out which parameters from JoinRelations belong to which model to avoid loading
+    // a json file twice
     if (joinRelationList != null) {
       // get all relevant parameters -> assign to Map with key=jsonPath
       Map<String, List<JoinerObject>> sourceTargetPathMap = new HashMap();
@@ -86,7 +88,7 @@ public abstract class JsonHandler {
       }// for joinRelation
 
 
-      // work through Map
+      // work through Map, each entry is a parameters.json file, load data into workspace
       for (Map.Entry<String, List<JoinerObject>> entry : sourceTargetPathMap.entrySet()) {
         //ParameterData parameterData = MAPPER.readValue(new File(jsonPath), ParameterData.class);
         ParameterData parameterData = MAPPER.readValue(new FileInputStream(entry.getKey()), ParameterData.class);
@@ -108,11 +110,12 @@ public abstract class JsonHandler {
     }// if     
   }
 
+  // helper class to keep track of which list of Joiner-Relations is related to which parameter.json file
   private class JoinerObject{
     public String sourceParameter;
     public Parameter targetParameter;
     public JoinRelationAdvanced joinRelation;
-    public String resourcePath;
+    public String resourcePath; // path to parameter.json file
     public JoinerObject(String source, Parameter target, JoinRelationAdvanced relation, String path) {
       sourceParameter = source;
       targetParameter = target;

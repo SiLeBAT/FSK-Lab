@@ -87,11 +87,16 @@ public abstract class ScriptHandler implements AutoCloseable {
     exec.setProgress(0.3, "create JsonHandler");
     jsonHandler = JsonHandler.createHandler(this, exec);
     exec.setProgress(0.4, "apply Join Relations");
+
+    // Performance Test: how long to load json data into workspace
     Instant start = Instant.now();
     jsonHandler.applyJoinRelation(fskObj, joinRelationList, suffix);
     Instant end = Instant.now();
-    Duration timeElapsed = Duration.between(start, end); 
-    logger.warn("elapsed time: "+timeElapsed.getSeconds() + "s\n" );
+    Duration timeElapsed = Duration.between(start, end);
+    if(saveToJsonChecked) {
+      logger.warn("time to load json file into workspace: "+timeElapsed.getSeconds() + "s\n" );  
+    }
+    
 
    
 
