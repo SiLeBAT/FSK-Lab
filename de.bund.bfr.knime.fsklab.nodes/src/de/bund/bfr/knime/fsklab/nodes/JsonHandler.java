@@ -83,8 +83,8 @@ public abstract class JsonHandler {
 //TODO: check what happens if sourceTargetPathMap is empty
       // work through Map, each entry is a parameters.json file, load data into workspace
       for (Map.Entry<String, List<JoinerObject>> entry : sourceTargetPathMap.entrySet()) {
-        //ParameterData parameterData = MAPPER.readValue(new File(jsonPath), ParameterData.class);
-        ParameterData parameterData = MAPPER.readValue(new FileInputStream(entry.getKey()), ParameterData.class);
+        ParameterData parameterData = MAPPER.readValue(new File(entry.getKey()), ParameterData.class);
+        //ParameterData parameterData = MAPPER.readValue(new FileInputStream(entry.getKey()), ParameterData.class);
         for (JoinerObject obj : entry.getValue()) {
           loadParametersIntoWorkspace(parameterData, obj.sourceParameter, obj.targetParameter.getId());
 
