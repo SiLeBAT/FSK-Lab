@@ -43,7 +43,9 @@ public class PythonJsonHandler extends JsonHandler {
   }
 
   @Override
-  public void saveInputParameters(FskPortObject fskObj) throws Exception {
+  public void saveInputParameters(FskPortObject fskObj, Path workingDirectory) throws Exception {
+    String path = workingDirectory.toString() + File.separator + JSON_FILE_NAME;
+    parameterJson = new ParameterJson(new File(path));
 
    String modelId = SwaggerUtil.getModelId(fskObj.modelMetadata);
 
@@ -114,14 +116,15 @@ public class PythonJsonHandler extends JsonHandler {
    * @throws Exception
    */
   @Override
-  public void loadParametersIntoWorkspace(ParameterData parameterData, String sourceParam,
+  public void loadParametersIntoWorkspace(ParameterJson parameterJson, String sourceParam,
       String targetParam) throws Exception {
 
     // StringBuilder script = new StringBuilder();
 
         
     
-    for (DataArray param : parameterData.getParameters()) {
+    DataArray param = parameterJson.getParameter();
+    while(param != null) {
       if (sourceParam.equals(param.getMetadata().getId())) {
         String language = param.getGeneratorLanguage();
         String type = param.getParameterType();

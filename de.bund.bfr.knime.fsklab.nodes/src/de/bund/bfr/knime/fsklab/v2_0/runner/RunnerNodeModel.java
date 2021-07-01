@@ -61,6 +61,7 @@ import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.nodes.DataArray;
 import de.bund.bfr.knime.fsklab.nodes.JsonHandler;
 import de.bund.bfr.knime.fsklab.nodes.ParameterData;
+import de.bund.bfr.knime.fsklab.nodes.ParameterJson;
 import de.bund.bfr.knime.fsklab.nodes.ScriptHandler;
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
 import de.bund.bfr.knime.fsklab.r.client.ScriptExecutor;
@@ -267,7 +268,65 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
       }
     }
   }
+  
   private void createTopLevelJsonFile(CombinedFskPortObject fskObj,
+      ExecutionContext exec) throws Exception {
+
+    File newResourcesDirectory = FileUtil.createTempDir("generatedResources");
+    ParameterJson combinedJson = new ParameterJson( new File(newResourcesDirectory, JsonHandler.JSON_FILE_NAME));
+    try {
+    
+    subModelParametersToJson(fskObj, fskObj, combinedJson, "");
+
+    } finally {
+      combinedJson.closeOutput();
+      fskObj.setGeneratedResourcesDirectory(newResourcesDirectory);
+    }
+
+    
+
+  }
+
+  private void subModelParametersToJson(FskPortObject topLevel, FskPortObject fskObj,
+      ParameterJson combinedJson, String suffix) throws Exception {
+
+
+    if (fskObj instanceof CombinedFskPortObject) {
+
+      subModelParametersToJson(topLevel, ((CombinedFskPortObject) fskObj).getFirstFskPortObject(),
+          combinedJson, suffix + JoinerNodeModel.SUFFIX_FIRST);
+
+      subModelParametersToJson(topLevel, ((CombinedFskPortObject) fskObj).getSecondFskPortObject(),
+          combinedJson, suffix + JoinerNodeModel.SUFFIX_SECOND);
+    } else {
+
+      // get json file of single model
+      if (!fskObj.getGeneratedResourcesDirectory().isPresent()) {
+        return;
+      }
+
+      String resourcePath =
+          fskObj.getGeneratedResourcesDirectory().get().getAbsolutePath().replaceAll("\\\\", "/")
+              + "/";
+      String jsonPath = resourcePath + "parameters.json";
+      List<Parameter> topLevelParameter = SwaggerUtil.getParameter(topLevel.modelMetadata);
+
+      ParameterJson modelJson = new ParameterJson(new File(jsonPath));
+
+      DataArray botParam = modelJson.getParameter();
+      while (botParam != null) {
+        // Stream to output JSON file
+        for (Parameter topParam : topLevelParameter) {
+          if (topParam.getId().startsWith(botParam.getMetadata().getId() + suffix)) {
+            combinedJson.addParameter(botParam);
+          }
+        }
+        botParam = modelJson.getParameter();
+      }
+      modelJson.closeInput();
+    }
+  }
+  private void createTopLevelJsonFile_old(CombinedFskPortObject fskObj,
       ExecutionContext exec) throws Exception {
 
     File newResourcesDirectory = FileUtil.createTempDir("generatedResources");
@@ -284,7 +343,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
 
       // write Array of DataArray (Parameters)
       jsonGenerator.writeStartArray();
-      subModelParametersToJson(fskObj, fskObj, jsonGenerator, "");
+      subModelParametersToJson_old(fskObj, fskObj, jsonGenerator, "");
 
       jsonGenerator.writeEndArray();
 
@@ -300,16 +359,16 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
 
 
 
-  private void subModelParametersToJson(FskPortObject topLevel, FskPortObject fskObj,
+  private void subModelParametersToJson_old(FskPortObject topLevel, FskPortObject fskObj,
       JsonGenerator jsonGenerator, String suffix) throws Exception {
 
 
     if (fskObj instanceof CombinedFskPortObject) {
 
-      subModelParametersToJson(topLevel, ((CombinedFskPortObject) fskObj).getFirstFskPortObject(),
+      subModelParametersToJson_old(topLevel, ((CombinedFskPortObject) fskObj).getFirstFskPortObject(),
           jsonGenerator, suffix + JoinerNodeModel.SUFFIX_FIRST);
 
-      subModelParametersToJson(topLevel,
+      subModelParametersToJson_old(topLevel,
           ((CombinedFskPortObject) fskObj).getSecondFskPortObject(), jsonGenerator,
           suffix + JoinerNodeModel.SUFFIX_SECOND);
     } else {

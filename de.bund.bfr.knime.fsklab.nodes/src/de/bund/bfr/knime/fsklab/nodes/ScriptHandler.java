@@ -125,7 +125,7 @@ public abstract class ScriptHandler implements AutoCloseable {
     // JsonHandler stores all input parameters before model execution
 
     if(saveToJsonChecked) {
-      jsonHandler.saveInputParameters(fskObj);
+      jsonHandler.saveInputParameters(fskObj, workingDirectory);
     }
       
 

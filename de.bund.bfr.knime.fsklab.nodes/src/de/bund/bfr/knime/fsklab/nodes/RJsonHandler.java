@@ -50,8 +50,9 @@ public class RJsonHandler extends JsonHandler {
   }
 
   @Override
-  public void saveInputParameters(FskPortObject fskObj) throws Exception {
-
+  public void saveInputParameters(FskPortObject fskObj, Path workingDirectory) throws Exception {
+    String path = workingDirectory.toString() + File.separator + JSON_FILE_NAME;
+    parameterJson = new ParameterJson(new File(path));
     String modelId = SwaggerUtil.getModelId(fskObj.modelMetadata);
     List<Parameter> parameters = SwaggerUtil.getParameter(fskObj.modelMetadata);
     for (Parameter p : parameters) {
@@ -113,15 +114,19 @@ public class RJsonHandler extends JsonHandler {
               SwaggerUtil.getLanguageWrittenIn(fskObj.modelMetadata));
         } catch (RException | CanceledExecutionException | InterruptedException
             | REXPMismatchException | IOException e) {
-          
+          parameterJson.closeOutput();
           throw new VariableNotGlobalException(p.getId(), modelId);
+          
         } finally {
           FileUtil.deleteRecursively(temp);
+          
         }
       }
     }
-    String path = workingDirectory.toString() + File.separator + JSON_FILE_NAME;
-    MAPPER.writer().writeValue(new FileOutputStream(new File(path)), parameterJson);
+    parameterJson.closeOutput();
+    //String path = workingDirectory.toString() + File.separator + JSON_FILE_NAME;
+    //MAPPER.writer().writeValue(new FileOutputStream(new File(path)), parameterJson);
+    //parameterJson.closeOutput();
     //parameterJson = null;
   }
 
@@ -134,12 +139,12 @@ public class RJsonHandler extends JsonHandler {
    * @throws Exception
    */
   @Override
-  public void loadParametersIntoWorkspace(ParameterData parameterData, String sourceParam,
+  public void loadParametersIntoWorkspace(ParameterJson parameterJson, String sourceParam,
       String targetParam) throws Exception {
 
     
-    
-    for (DataArray param : parameterData.getParameters()) {
+    DataArray param = parameterJson.getParameter();
+    while(param != null) {
       if (sourceParam.equals(param.getMetadata().getId())) {
         String language = param.getGeneratorLanguage();
         String type = param.getParameterType();
@@ -150,6 +155,7 @@ public class RJsonHandler extends JsonHandler {
         scriptHandler.runScript("rm(sourceParam)", exec, false);
 
       }
+      param = parameterJson.getParameter();
     }
   }
 

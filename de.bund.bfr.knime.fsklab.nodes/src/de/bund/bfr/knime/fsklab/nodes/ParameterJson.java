@@ -26,27 +26,15 @@ public class ParameterJson {
   private File jsonFile;
   private JsonParser jsonParser;
   private InputStream inputStream;
-  public ParameterJson(File jsonFile)  {
 
-    try {
+  public ParameterJson(File jsonFile)  {
       this.jsonFile = jsonFile;
-      outputStream = new FileOutputStream(jsonFile);
-      
-      jsonGenerator = mapper.getFactory().createGenerator(outputStream);
-      jsonGenerator.useDefaultPrettyPrinter();
-      jsonGenerator.writeStartObject();      
-      jsonGenerator.writeFieldName("parameters");
-      isOutputClosed = false;
-    } catch (IOException e) {
-      
-      closeOutput();
-      e.printStackTrace();
-    }
   }
 
   public void closeOutput() {
     try {
       // Write the end object token of parameters
+      jsonGenerator.writeEndArray();
       jsonGenerator.writeEndObject();
       if (!jsonGenerator.isClosed())
         jsonGenerator.close();
@@ -88,6 +76,11 @@ public class ParameterJson {
           inputStream  = new FileInputStream(jsonFile);
           isInputClosed = false;
           jsonParser = mapper.getFactory().createParser(inputStream);
+          // Check the first token
+          if (jsonParser.nextToken() != JsonToken.START_OBJECT) {
+            throw new IllegalStateException("Expected content to be an object");
+          }
+          
           if (jsonParser.nextToken() != JsonToken.END_OBJECT) {
             String fieldName = jsonParser.getCurrentName();
             if (fieldName.equals("parameters")) {
@@ -114,8 +107,10 @@ public class ParameterJson {
 
     } catch (Exception e) {
       e.printStackTrace();
+      closeInput();
     }
 
+    closeInput();
     return null;
   }
 
@@ -133,18 +128,35 @@ public class ParameterJson {
    */
   public void addParameter(Parameter parameter, String modelId, String data, String parameterType,
       String language) {
-    
-    // Write the start object "parameters:"
     try {
-      // write Array of DataArray (Parameters)
-      jsonGenerator.writeStartArray();
-      mapper.writeValue(jsonGenerator, new DataArray(parameter, modelId, data.replaceAll("\\r?\\n", ""), parameterType, language));
-      jsonGenerator.writeEndArray();
-      
-    } catch(Exception e) {
+      if (isOutputClosed) {
+        outputStream = new FileOutputStream(jsonFile);
+
+        jsonGenerator = mapper.getFactory().createGenerator(outputStream);
+        jsonGenerator.useDefaultPrettyPrinter();
+        jsonGenerator.writeStartObject();
+        jsonGenerator.writeFieldName("parameters");
+        // prepare writin Array of DataArray (Parameters)
+        jsonGenerator.writeStartArray();
+        isOutputClosed = false;
+      }
+      // Write the start object "parameters:"
+
+
+      mapper.writeValue(jsonGenerator, new DataArray(parameter, modelId,
+          data.replaceAll("\\r?\\n", ""), parameterType, language));
+
+
+    } catch (Exception e) {
+      closeOutput();
       e.printStackTrace();
     }
 
-    
+
+  }
+
+  public void addParameter(DataArray parameter) {
+    addParameter(parameter.getMetadata(), parameter.getModelId(), parameter.getData(),
+        parameter.getParameterType(), parameter.getGeneratorLanguage());
   }
 }
