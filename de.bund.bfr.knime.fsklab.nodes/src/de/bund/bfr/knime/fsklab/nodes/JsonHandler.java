@@ -8,6 +8,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,6 +58,7 @@ public abstract class JsonHandler {
     }
   }
 
+  
   // Method loads parameter data from previous models into workspace of current model
   // according to the list of Joiner-Relations
   public void applyJoinRelation(FskPortObject fskObj, List<JoinRelationAdvanced> joinRelationList,
@@ -66,28 +68,19 @@ public abstract class JsonHandler {
     // a json file twice
     if (joinRelationList != null) {
       // get all relevant parameters -> assign to Map with key=jsonPath
-      Map<String, List<JoinerObject>> sourceTargetPathMap = new HashMap();
+      Map<String, List<JoinerObject>> sourceTargetPathMap = new HashMap<String, List<JoinerObject>>();
       for (JoinRelationAdvanced joinRelation : joinRelationList) {
-        String targetParameter = joinRelation.getTargetParam();
-        FskPortObject sourceModel = joinRelation.getModel();
-        String sourceParameter = joinRelation.getSourceParam();
-
-        for (Parameter param : SwaggerUtil.getParameter(fskObj.modelMetadata)) {
-          if (targetParameter.equals(param.getId() + suffix)) {
-            String resourcePath = sourceModel.getGeneratedResourcesDirectory().get()
-                .getAbsolutePath().replaceAll("\\\\", "/") + "/";
-            String jsonPath = resourcePath + JSON_FILE_NAME;
-            if(!sourceTargetPathMap.containsKey(jsonPath)) {
-              sourceTargetPathMap.put(jsonPath, new ArrayList<JoinerObject>());
+        if(SwaggerUtil.getParameter(fskObj.modelMetadata) != null) {
+          for (Parameter param : SwaggerUtil.getParameter(fskObj.modelMetadata)) {
+            if (joinRelation.getTargetParam().equals(param.getId() + suffix)) {
+              addEntryToRelationMap(sourceTargetPathMap,joinRelation, param );
+    
             }
-
-            sourceTargetPathMap.get(jsonPath).add(new JoinerObject(sourceParameter,param,joinRelation, resourcePath));
-
           }
         }
       }// for joinRelation
 
-
+//TODO: check what happens if sourceTargetPathMap is empty
       // work through Map, each entry is a parameters.json file, load data into workspace
       for (Map.Entry<String, List<JoinerObject>> entry : sourceTargetPathMap.entrySet()) {
         //ParameterData parameterData = MAPPER.readValue(new File(jsonPath), ParameterData.class);
@@ -110,6 +103,24 @@ public abstract class JsonHandler {
     }// if     
   }
 
+  // adds jsonPath with corresponding joinReleation information to map
+  private void addEntryToRelationMap(Map<String, List<JoinerObject>> sourceTargetPathMap,
+      JoinRelationAdvanced joinRelation, Parameter param) {
+    if (joinRelation.getModel().getGeneratedResourcesDirectory().isPresent()) {
+      String resourcePath = joinRelation.getModel().getGeneratedResourcesDirectory().get()
+          .getAbsolutePath().replaceAll("\\\\", "/") + "/";
+      String jsonPath = resourcePath + JSON_FILE_NAME;
+      JoinerObject joinerObject =
+          new JoinerObject(joinRelation.getSourceParam(), param, joinRelation, resourcePath);
+      if (!sourceTargetPathMap.containsKey(jsonPath)) {
+        sourceTargetPathMap.put(jsonPath, Arrays.asList(joinerObject));
+      } else {
+        sourceTargetPathMap.get(jsonPath).add(joinerObject);
+      }
+    }
+  }
+
+  
   // helper class to keep track of which list of Joiner-Relations is related to which parameter.json file
   private class JoinerObject{
     public String sourceParameter;
