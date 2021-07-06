@@ -497,6 +497,10 @@ class APPTableMT extends APPTable {
 				// match = true : will be shown
 				let rowMatchesFilter = true;
 
+				// if search result is empty, no match was found
+				if( searchResult.length == 0) {
+					rowMatchesFilter = false;
+				} 
 				// filter by search
 				if( searchResult.length > 0 
 					&& ! searchResult.includes( rowIndex ) ) {
