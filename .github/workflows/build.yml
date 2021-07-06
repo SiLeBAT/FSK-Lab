@@ -1,7 +1,12 @@
 name: Java CI
 
-on: push
-
+on: 
+  push:
+    branches:
+      - development
+  pull_request:
+    branches:
+      - development
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -21,3 +26,11 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
       - name: Build with Maven
         run: mvn verify -B -Pjacoco
+      - name: Deploy to GITLAB
+        env:
+           GITLAB_NAME: ${{ secrets.GITLAB_USER }}
+           GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
+        shell: bash
+        run: |
+           chmod +x "${GITHUB_WORKSPACE}/.github/workflows/gitlab_deployment.sh"
+           "${GITHUB_WORKSPACE}/.github/workflows/gitlab_deployment.sh"
