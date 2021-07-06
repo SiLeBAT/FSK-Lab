@@ -18,11 +18,6 @@
  */
 package de.bund.bfr.knime.fsklab.v2_0.runner;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonToken;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.nodes.DataArray;
 import de.bund.bfr.knime.fsklab.nodes.JsonHandler;
 import de.bund.bfr.knime.fsklab.nodes.ParameterJson;
@@ -40,10 +35,7 @@ import de.bund.bfr.knime.fsklab.v2_0.joiner.JoinerNodeUtil;
 import de.bund.bfr.metadata.swagger.Parameter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -325,99 +317,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
       modelJson.closeInput();
     }
   }
-  private void createTopLevelJsonFile_old(CombinedFskPortObject fskObj,
-      ExecutionContext exec) throws Exception {
-
-    File newResourcesDirectory = FileUtil.createTempDir("generatedResources");
-    File targetFile = new File(newResourcesDirectory, JsonHandler.JSON_FILE_NAME);
-    OutputStream pOutputStream = new FileOutputStream(targetFile);
-    ObjectMapper mapper = FskPlugin.getDefault().MAPPER104;
-    try(JsonGenerator jsonGenerator = mapper.getFactory().createGenerator(pOutputStream)){
-      // Configure the JsonGenerator to pretty print the output
-      jsonGenerator.useDefaultPrettyPrinter();
-
-      // Write the start object "parameters:"
-      jsonGenerator.writeStartObject();      
-      jsonGenerator.writeFieldName("parameters");
-
-      // write Array of DataArray (Parameters)
-      jsonGenerator.writeStartArray();
-      subModelParametersToJson_old(fskObj, fskObj, jsonGenerator, "");
-
-      jsonGenerator.writeEndArray();
-
-      // Write the end object token of parameters
-      jsonGenerator.writeEndObject();
-    } finally {
-      pOutputStream.close();
-    }
-
-    fskObj.setGeneratedResourcesDirectory(newResourcesDirectory);
-
-  }
-
-
-
-  private void subModelParametersToJson_old(FskPortObject topLevel, FskPortObject fskObj,
-      JsonGenerator jsonGenerator, String suffix) throws Exception {
-
-
-    if (fskObj instanceof CombinedFskPortObject) {
-
-      subModelParametersToJson_old(topLevel, ((CombinedFskPortObject) fskObj).getFirstFskPortObject(),
-          jsonGenerator, suffix + JoinerNodeModel.SUFFIX_FIRST);
-
-      subModelParametersToJson_old(topLevel,
-          ((CombinedFskPortObject) fskObj).getSecondFskPortObject(), jsonGenerator,
-          suffix + JoinerNodeModel.SUFFIX_SECOND);
-    } else {
-
-      // get json file of single model
-      if(!fskObj.getGeneratedResourcesDirectory().isPresent()) {
-        return;
-      }
-
-      String resourcePath =
-          fskObj.getGeneratedResourcesDirectory().get().getAbsolutePath().replaceAll("\\\\", "/")
-          + "/";
-      String jsonPath = resourcePath + "parameters.json";
-      List<Parameter> topLevelParameter = SwaggerUtil.getParameter(topLevel.modelMetadata);
-      ObjectMapper mapper = FskPlugin.getDefault().MAPPER104;
-
-      InputStream pDataStream = new FileInputStream(jsonPath);
-
-      // Parse through each models parameter.json and stream it to CombinedModel JSON
-      try (JsonParser jsonParser = mapper.getFactory().createParser(pDataStream)) {
-
-        // Check the first token
-        if (jsonParser.nextToken() != JsonToken.START_OBJECT) {
-          throw new IllegalStateException("Expected content to be an object");
-        }
-
-        // Iterate over the tokens until the end of the array
-        while (jsonParser.nextToken() != JsonToken.END_OBJECT) {
-          String fieldName = jsonParser.getCurrentName();
-          if( fieldName.equals("parameters")) {
-            if (jsonParser.nextToken() == JsonToken.START_ARRAY) {
-              // parse through array
-              while (jsonParser.nextToken() != JsonToken.END_ARRAY) {
-
-                DataArray botParam = mapper.readValue(jsonParser, DataArray.class);
-                // Stream to output JSON file
-                for (Parameter topParam : topLevelParameter) {
-                  if (topParam.getId().startsWith(botParam.getMetadata().getId() + suffix)) {
-                    mapper.writeValue(jsonGenerator, botParam);
-                  }
-                }
-              }             
-            }
-          }
-        }
-      } finally {
-        pDataStream.close();
-      }
-    }
-  }
+  
 
   
   public void reSelectSimulation(FskPortObject fskObj, int index) {
