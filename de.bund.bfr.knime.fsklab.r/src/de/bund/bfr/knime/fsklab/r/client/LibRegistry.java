@@ -128,11 +128,13 @@ public class LibRegistry {
 
   public synchronized static LibRegistry instance() throws IOException, RException {
     
-	  if(PreferenceInitializer.refresh)
-		  refreshInstance();
 	  if (instance == null ) {
 		  instance = new LibRegistry();
+		  PreferenceInitializer.refresh = false;
 	  }
+	  if(PreferenceInitializer.refresh)
+		  refreshInstance();
+	  
 
 	  return instance;
   }

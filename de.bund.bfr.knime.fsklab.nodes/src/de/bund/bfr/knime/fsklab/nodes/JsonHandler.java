@@ -1,12 +1,18 @@
 package de.bund.bfr.knime.fsklab.nodes;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
 import org.knime.core.node.ExecutionContext;
@@ -38,13 +44,13 @@ public abstract class JsonHandler {
 
   protected ScriptHandler scriptHandler;
   protected ExecutionContext exec;
-  protected ParameterData parameterJson;
+  protected ParameterJson parameterJson;
   protected static ObjectMapper MAPPER = FskPlugin.getDefault().MAPPER104;//new ObjectMapper();
 
   protected JsonHandler(ScriptHandler scriptHandler, ExecutionContext exec) {
     this.scriptHandler = scriptHandler;
     this.exec = exec;
-    this.parameterJson = new ParameterData();
+    
     try {
       importLibraries();
     } catch (Exception e) {
@@ -52,37 +58,83 @@ public abstract class JsonHandler {
     }
   }
 
-  // TODO: conversion command? maybe create a new Class instead of using a map
+  
+  // Method loads parameter data from previous models into workspace of current model
+  // according to the list of Joiner-Relations
   public void applyJoinRelation(FskPortObject fskObj, List<JoinRelationAdvanced> joinRelationList,
       String suffix) throws Exception {
 
+    // figure out which parameters from JoinRelations belong to which model to avoid loading
+    // a json file twice
     if (joinRelationList != null) {
+      // get all relevant parameters -> assign to Map with key=jsonPath
+      Map<String, List<JoinerObject>> sourceTargetPathMap = new HashMap<String, List<JoinerObject>>();
       for (JoinRelationAdvanced joinRelation : joinRelationList) {
-        String targetParameter = joinRelation.getTargetParam();
-        FskPortObject sourceModel = joinRelation.getModel();
-        String sourceParameter = joinRelation.getSourceParam();
-
-        for (Parameter param : SwaggerUtil.getParameter(fskObj.modelMetadata)) {
-          if (targetParameter.equals(param.getId() + suffix)) {
-            String resourcePath = sourceModel.getGeneratedResourcesDirectory().get()
-                .getAbsolutePath().replaceAll("\\\\", "/") + "/";
-            String jsonPath = resourcePath + JSON_FILE_NAME;
-            loadParametersIntoWorkspace(jsonPath, sourceParameter, param.getId());
-
-            // if target parameter is of type FILE, add path to generatedResources to sourceParam
-            // This should be safe since source and target parameter must have the same type (if
-            // File)
-            if (param.getDataType().equals(Parameter.DataTypeEnum.FILE)) {
-              addPathToFileParameter(param.getId(), resourcePath);
+        if(SwaggerUtil.getParameter(fskObj.modelMetadata) != null) {
+          for (Parameter param : SwaggerUtil.getParameter(fskObj.modelMetadata)) {
+            if (joinRelation.getTargetParam().equals(param.getId() + suffix)) {
+              addEntryToRelationMap(sourceTargetPathMap,joinRelation, param );
+    
             }
-
-            applyJoinCommand(param.getId(), joinRelation.replaceCommand(param.getId()));
           }
         }
+      }// for joinRelation
+
+//TODO: check what happens if sourceTargetPathMap is empty
+      // work through Map, each entry is a parameters.json file, load data into workspace
+      for (Map.Entry<String, List<JoinerObject>> entry : sourceTargetPathMap.entrySet()) {
+        //ParameterData parameterData = MAPPER.readValue(new File(jsonPath), ParameterData.class);
+        //ParameterData parameterData = MAPPER.readValue(new FileInputStream(entry.getKey()), ParameterData.class);
+        ParameterJson parameterJson = new ParameterJson(new File(entry.getKey()));
+        for (JoinerObject obj : entry.getValue()) {
+          loadParametersIntoWorkspace(parameterJson, obj.sourceParameter, obj.targetParameter.getId());
+
+          // if target parameter is of type FILE, add path to generatedResources to sourceParam
+          // This should be safe since source and target parameter must have the same type (if
+          // File)
+          if (obj.targetParameter.getDataType().equals(Parameter.DataTypeEnum.FILE)) {
+            addPathToFileParameter(obj.targetParameter.getId(), obj.resourcePath);
+          }
+
+          applyJoinCommand(obj.targetParameter.getId(), obj.joinRelation.replaceCommand(obj.targetParameter.getId()));
+        }
+
       }
+
+    }// if     
+  }
+
+  // adds jsonPath with corresponding joinReleation information to map
+  private void addEntryToRelationMap(Map<String, List<JoinerObject>> sourceTargetPathMap,
+      JoinRelationAdvanced joinRelation, Parameter param) {
+    if (joinRelation.getModel().getGeneratedResourcesDirectory().isPresent()) {
+      String resourcePath = joinRelation.getModel().getGeneratedResourcesDirectory().get()
+          .getAbsolutePath().replaceAll("\\\\", "/") + "/";
+      String jsonPath = resourcePath + JSON_FILE_NAME;
+      if(!sourceTargetPathMap.containsKey(jsonPath)) {
+        sourceTargetPathMap.put(jsonPath, new ArrayList<JoinerObject>());
+      }
+
+      sourceTargetPathMap.get(jsonPath).add(new JoinerObject(joinRelation.getSourceParam(),param,joinRelation, resourcePath));
+
     }
   }
 
+  
+  // helper class to keep track of which list of Joiner-Relations is related to which parameter.json file
+  private class JoinerObject{
+    public String sourceParameter;
+    public Parameter targetParameter;
+    public JoinRelationAdvanced joinRelation;
+    public String resourcePath; // path to parameter.json file
+    public JoinerObject(String source, Parameter target, JoinRelationAdvanced relation, String path) {
+      sourceParameter = source;
+      targetParameter = target;
+      joinRelation = relation;
+      resourcePath = path;
+    }
+  }
+  
   protected abstract void applyJoinCommand(String parameter, String command) throws Exception;
 
   /**
@@ -100,7 +152,7 @@ public abstract class JsonHandler {
    * @param FSKPortObject fsk object containing the parameter names
    * @throws Exception if an error occurs running the script.
    */
-  public abstract void saveInputParameters(FskPortObject fskObj) throws Exception;
+  public abstract void saveInputParameters(FskPortObject fskObj, Path workingDirectory) throws Exception;
 
   /**
    * Method to save output parameters in the hdf files. This needs to be called after the execution
@@ -122,7 +174,7 @@ public abstract class JsonHandler {
    * @param FSKPortObject fsk object containing the parameter names
    * @throws Exception if an error occurs running the script.
    */
-  public abstract void loadParametersIntoWorkspace(String parameterJson, String sourceParam,
+  public abstract void loadParametersIntoWorkspace(ParameterJson parameterJson, String sourceParam,
       String targetParam) throws Exception;
 
 

@@ -43,7 +43,9 @@ public class PythonJsonHandler extends JsonHandler {
   }
 
   @Override
-  public void saveInputParameters(FskPortObject fskObj) throws Exception {
+  public void saveInputParameters(FskPortObject fskObj, Path workingDirectory) throws Exception {
+    String path = workingDirectory.toString() + File.separator + JSON_FILE_NAME;
+    parameterJson = new ParameterJson(new File(path));
 
    String modelId = SwaggerUtil.getModelId(fskObj.modelMetadata);
 
@@ -97,12 +99,12 @@ public class PythonJsonHandler extends JsonHandler {
         } catch (RException | CanceledExecutionException | InterruptedException
             | REXPMismatchException | IOException e) {
           // TODO Auto-generated catch block
+          parameterJson.closeOutput();
           throw new VariableNotGlobalException(p.getId(), modelId);
         }
       }
     }
-    String path = workingDirectory.toString() + File.separator + JSON_FILE_NAME;
-    MAPPER.writer().writeValue(new File(path), parameterJson);
+    parameterJson.closeOutput();
   }
 
 
@@ -114,15 +116,15 @@ public class PythonJsonHandler extends JsonHandler {
    * @throws Exception
    */
   @Override
-  public void loadParametersIntoWorkspace(String parameterJson, String sourceParam,
+  public void loadParametersIntoWorkspace(ParameterJson parameterJson, String sourceParam,
       String targetParam) throws Exception {
 
     // StringBuilder script = new StringBuilder();
 
-    // load source and target into workspace as strings
-    ParameterData parameterData = MAPPER.readValue(new File(parameterJson), ParameterData.class);
+        
     
-    for (DataArray param : parameterData.getParameters()) {
+    DataArray param = parameterJson.getParameter();
+    while(param != null) {
       if (sourceParam.equals(param.getMetadata().getId())) {
         String language = param.getGeneratorLanguage();
         String type = param.getParameterType();
@@ -134,6 +136,7 @@ public class PythonJsonHandler extends JsonHandler {
         scriptHandler.runScript("del sourceParam", exec, false);
 
       }
+      param = parameterJson.getParameter();
     }
   }
 

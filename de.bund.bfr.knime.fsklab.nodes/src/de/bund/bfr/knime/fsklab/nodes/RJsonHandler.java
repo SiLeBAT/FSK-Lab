@@ -8,6 +8,8 @@ import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
 import de.bund.bfr.metadata.swagger.Parameter;
 import de.bund.bfr.metadata.swagger.Parameter.DataTypeEnum;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -48,8 +50,9 @@ public class RJsonHandler extends JsonHandler {
   }
 
   @Override
-  public void saveInputParameters(FskPortObject fskObj) throws Exception {
-
+  public void saveInputParameters(FskPortObject fskObj, Path workingDirectory) throws Exception {
+    String path = workingDirectory.toString() + File.separator + JSON_FILE_NAME;
+    parameterJson = new ParameterJson(new File(path));
     String modelId = SwaggerUtil.getModelId(fskObj.modelMetadata);
     List<Parameter> parameters = SwaggerUtil.getParameter(fskObj.modelMetadata);
     for (Parameter p : parameters) {
@@ -111,15 +114,20 @@ public class RJsonHandler extends JsonHandler {
               SwaggerUtil.getLanguageWrittenIn(fskObj.modelMetadata));
         } catch (RException | CanceledExecutionException | InterruptedException
             | REXPMismatchException | IOException e) {
-          
+          parameterJson.closeOutput();
           throw new VariableNotGlobalException(p.getId(), modelId);
+          
         } finally {
           FileUtil.deleteRecursively(temp);
+          
         }
       }
     }
-    String path = workingDirectory.toString() + File.separator + JSON_FILE_NAME;
-    MAPPER.writer().writeValue(new File(path), parameterJson);
+    parameterJson.closeOutput();
+    //String path = workingDirectory.toString() + File.separator + JSON_FILE_NAME;
+    //MAPPER.writer().writeValue(new FileOutputStream(new File(path)), parameterJson);
+    //parameterJson.closeOutput();
+    //parameterJson = null;
   }
 
 
@@ -131,12 +139,12 @@ public class RJsonHandler extends JsonHandler {
    * @throws Exception
    */
   @Override
-  public void loadParametersIntoWorkspace(String parameterJson, String sourceParam,
+  public void loadParametersIntoWorkspace(ParameterJson parameterJson, String sourceParam,
       String targetParam) throws Exception {
 
-    ParameterData parameterData = MAPPER.readValue(new File(parameterJson), ParameterData.class);
     
-    for (DataArray param : parameterData.getParameters()) {
+    DataArray param = parameterJson.getParameter();
+    while(param != null) {
       if (sourceParam.equals(param.getMetadata().getId())) {
         String language = param.getGeneratorLanguage();
         String type = param.getParameterType();
@@ -147,6 +155,7 @@ public class RJsonHandler extends JsonHandler {
         scriptHandler.runScript("rm(sourceParam)", exec, false);
 
       }
+      param = parameterJson.getParameter();
     }
   }
 
@@ -161,22 +170,32 @@ public class RJsonHandler extends JsonHandler {
       // store data in temp file because moving big arrays between controller and Java
       // doesn't seem to work properly
 
+      //File tempDir = FileUtil.createTempDir("rawJsonData");
       File tempData = FileUtil.createTempFile("data", "json");
 
-      MAPPER.writer().writeValue(tempData, param.getData());
-      if (type.contains(DataTypeEnum.OBJECT.getValue()) || type.equals("DataFrame")) {
-        rawJsonData = "sourceParam <- fromJSON(read_json('"
-            + tempData.getAbsolutePath().replaceAll("\\\\", "/") + "'), simplifyVector=FALSE)";
+      //MAPPER.writer().writeValue(new FileOutputStream(tempData), param.getData());
+      FileWriter writer = new FileWriter(tempData);
+      
+      writer.write(param.getData());
+      writer.close(); 
+      if (type.contains(DataTypeEnum.OBJECT.getValue()) ) {
+//        rawJsonData = "sourceParam <- fromJSON(read_json('"
+//            + tempData.getAbsolutePath().replaceAll("\\\\", "/") + "'), simplifyVector=FALSE)";
+        rawJsonData = "sourceParam <- fromJSON('"
+            + tempData.getAbsolutePath().replaceAll("\\\\", "/") + "', simplifyVector=FALSE)";
       } else {
-        rawJsonData = "sourceParam <- fromJSON(read_json('"
-            + tempData.getAbsolutePath().replaceAll("\\\\", "/") + "'))";
+//        rawJsonData = "sourceParam <- fromJSON(read_json('"
+//            + tempData.getAbsolutePath().replaceAll("\\\\", "/") + "'))";
+        rawJsonData = "sourceParam <- fromJSON('"
+          + tempData.getAbsolutePath().replaceAll("\\\\", "/") + "')";
       }
       scriptHandler.runScript(rawJsonData, exec, false);
       FileUtil.deleteRecursively(tempData);
     } else {
-      if (type.contains(DataTypeEnum.OBJECT.getValue()) || type.equals("DataFrame")) {
+      if (type.contains(DataTypeEnum.OBJECT.getValue()) ) {
 
         rawJsonData = "sourceParam <- fromJSON('" + param.getData() + "', simplifyVector=FALSE)";
+        //rawJsonData = "sourceParam <- fromJSON('" + param.getData() + "')";
       } else {
         rawJsonData = "sourceParam <- fromJSON('" + param.getData() + "')";;
 
@@ -201,7 +220,7 @@ public class RJsonHandler extends JsonHandler {
         // unlist columns to restore their original structure
         converted = "as.data.frame(lapply(lapply(" + data + ",cbind),unlist))";
       } else {
-        converted = "do.call(rbind.data.frame, " + data + ")";
+        converted = data;//"do.call(rbind.data.frame, " + data + ")";
 
       }
     } else {

@@ -2,8 +2,10 @@ package de.bund.bfr.knime.fsklab.nodes;
 
 import de.bund.bfr.knime.fsklab.nodes.plot.BasePlotter;
 import de.bund.bfr.knime.fsklab.nodes.plot.Ggplot2Plotter;
+import de.bund.bfr.knime.fsklab.preferences.PreferenceInitializer;
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
 import de.bund.bfr.knime.fsklab.r.client.LibRegistry;
+import de.bund.bfr.knime.fsklab.r.client.LibRegistry.NoInternetException;
 import de.bund.bfr.knime.fsklab.r.client.RController;
 import de.bund.bfr.knime.fsklab.r.client.RprofileManager;
 import de.bund.bfr.knime.fsklab.r.client.ScriptExecutor;
@@ -123,10 +125,20 @@ public class RScriptHandler extends ScriptHandler {
       throws Exception {
     // Install needed libraries
     if (!fskObj.packages.isEmpty()) {
-      LibRegistry.instance().install(fskObj.packages);
+      // surround with try catch, 
+      // in case LibRegistry controller is somehow closed, refresh on fail 
+      // (this happens, if a library is not successfully installed by FSK-Lab but then
+      // installed by user themselves (or Rserve instance is closed by other means)
+      try {
+        LibRegistry.instance().install(fskObj.packages);  
+      } catch ( RException| REXPMismatchException | NoInternetException e) {
+        PreferenceInitializer.refresh = true;
+        LibRegistry.instance().install(fskObj.packages);
+      }
+      
     }
 
-    exec.setProgress(0.71, "Add paths to libraries");
+    exec.setProgress(0.2, "Add paths to libraries");
     controller.addPackagePath(LibRegistry.instance().getInstallationPath());
   }
 
