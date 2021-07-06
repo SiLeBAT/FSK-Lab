@@ -18,41 +18,6 @@
  */
 package de.bund.bfr.knime.fsklab.v2_0.runner;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import org.apache.commons.lang.StringUtils;
-import org.knime.base.data.xml.SvgCell;
-import org.knime.base.data.xml.SvgImageContent;
-import org.knime.base.node.util.exttool.ExtToolOutputNodeModel;
-import org.knime.core.node.CanceledExecutionException;
-import org.knime.core.node.ExecutionContext;
-import org.knime.core.node.ExecutionMonitor;
-import org.knime.core.node.InvalidSettingsException;
-import org.knime.core.node.NodeLogger;
-import org.knime.core.node.NodeSettingsRO;
-import org.knime.core.node.NodeSettingsWO;
-import org.knime.core.node.port.PortObject;
-import org.knime.core.node.port.PortObjectHolder;
-import org.knime.core.node.port.PortObjectSpec;
-import org.knime.core.node.port.PortType;
-import org.knime.core.node.port.image.ImagePortObject;
-import org.knime.core.node.port.image.ImagePortObjectSpec;
-import org.knime.core.util.FileUtil;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
@@ -73,7 +38,42 @@ import de.bund.bfr.knime.fsklab.v2_0.JoinRelationAdvanced;
 import de.bund.bfr.knime.fsklab.v2_0.joiner.JoinerNodeModel;
 import de.bund.bfr.knime.fsklab.v2_0.joiner.JoinerNodeUtil;
 import de.bund.bfr.metadata.swagger.Parameter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import metadata.SwaggerUtil;
+import org.apache.commons.lang.StringUtils;
+import org.knime.base.data.xml.SvgCell;
+import org.knime.base.data.xml.SvgImageContent;
+import org.knime.base.node.util.exttool.ExtToolOutputNodeModel;
+import org.knime.core.node.CanceledExecutionException;
+import org.knime.core.node.ExecutionContext;
+import org.knime.core.node.ExecutionMonitor;
+import org.knime.core.node.InvalidSettingsException;
+import org.knime.core.node.NodeLogger;
+import org.knime.core.node.NodeSettingsRO;
+import org.knime.core.node.NodeSettingsWO;
+import org.knime.core.node.port.PortObject;
+import org.knime.core.node.port.PortObjectHolder;
+import org.knime.core.node.port.PortObjectSpec;
+import org.knime.core.node.port.PortType;
+import org.knime.core.node.port.image.ImagePortObject;
+import org.knime.core.node.port.image.ImagePortObjectSpec;
+import org.knime.core.util.FileUtil;
 
 public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjectHolder {
 
@@ -501,12 +501,12 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
     if (portObject.getJoinerRelation() != null) {
       joinRelations.addAll(Arrays.asList(portObject.getJoinerRelation()));
     }
-//    if (portObject.getFirstFskPortObject() instanceof CombinedFskPortObject) {
-//      getJoinRelations((CombinedFskPortObject) portObject.getFirstFskPortObject(), joinRelations);
-//    }
-//    if (portObject.getSecondFskPortObject() instanceof CombinedFskPortObject) {
-//      getJoinRelations((CombinedFskPortObject) portObject.getSecondFskPortObject(), joinRelations);
-//    }
+    if (portObject.getFirstFskPortObject() instanceof CombinedFskPortObject) {
+      getJoinRelations((CombinedFskPortObject) portObject.getFirstFskPortObject(), joinRelations);
+    }
+    if (portObject.getSecondFskPortObject() instanceof CombinedFskPortObject) {
+      getJoinRelations((CombinedFskPortObject) portObject.getSecondFskPortObject(), joinRelations);
+    }
 
     return joinRelations;
   }
