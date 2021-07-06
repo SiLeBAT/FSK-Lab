@@ -142,7 +142,7 @@ public class ParameterJson {
       }
       // Write the start object "parameters:"
 
-
+      // TODO: instead of serializing data string, serialize file (stream)
       mapper.writeValue(jsonGenerator, new DataArray(parameter, modelId,
           data.replaceAll("\\r?\\n", ""), parameterType, language));
 

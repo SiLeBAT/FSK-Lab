@@ -60,7 +60,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.nodes.DataArray;
 import de.bund.bfr.knime.fsklab.nodes.JsonHandler;
-import de.bund.bfr.knime.fsklab.nodes.ParameterData;
 import de.bund.bfr.knime.fsklab.nodes.ParameterJson;
 import de.bund.bfr.knime.fsklab.nodes.ScriptHandler;
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;

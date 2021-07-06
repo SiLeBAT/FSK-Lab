@@ -99,12 +99,12 @@ public class PythonJsonHandler extends JsonHandler {
         } catch (RException | CanceledExecutionException | InterruptedException
             | REXPMismatchException | IOException e) {
           // TODO Auto-generated catch block
+          parameterJson.closeOutput();
           throw new VariableNotGlobalException(p.getId(), modelId);
         }
       }
     }
-    String path = workingDirectory.toString() + File.separator + JSON_FILE_NAME;
-    MAPPER.writer().writeValue(new File(path), parameterJson);
+    parameterJson.closeOutput();
   }
 
 
@@ -136,6 +136,7 @@ public class PythonJsonHandler extends JsonHandler {
         scriptHandler.runScript("del sourceParam", exec, false);
 
       }
+      param = parameterJson.getParameter();
     }
   }
 
