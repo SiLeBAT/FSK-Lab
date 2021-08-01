@@ -35,3 +35,4 @@ Export-Package: de.bund.bfr.knime.pmm.common,
  de.bund.bfr.knime.pmm.extendedtable.items,
  de.bund.bfr.knime.pmm.extendedtable.pmmtablemodel
 Automatic-Module-Name: de.bund.bfr.knime.pmm.common
+Import-Package: org.w3c.dom.events;resolution:=optional

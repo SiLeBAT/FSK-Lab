@@ -18,3 +18,4 @@ Export-Package: de.bund.bfr.knime.pmm.bfrdbiface.lib
 Bundle-ClassPath: .
 Bundle-Vendor: BfR
 Automatic-Module-Name: de.bund.bfr.knime.pmm.bfrdbiface.lib
+Import-Package: org.w3c.dom.events;resolution:=optional

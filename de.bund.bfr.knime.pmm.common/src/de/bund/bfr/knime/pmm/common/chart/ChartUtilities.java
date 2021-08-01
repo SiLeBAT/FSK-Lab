@@ -31,7 +31,7 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 
 import org.apache.batik.dom.GenericDOMImplementation;
-import org.apache.batik.dom.svg.SVGDOMImplementation;
+import org.apache.batik.anim.dom.SVGDOMImplementation;
 import org.apache.batik.svggen.SVGGraphics2D;
 import org.apache.batik.svggen.SVGGraphics2DIOException;
 import org.jfree.chart.ChartRenderingInfo;
