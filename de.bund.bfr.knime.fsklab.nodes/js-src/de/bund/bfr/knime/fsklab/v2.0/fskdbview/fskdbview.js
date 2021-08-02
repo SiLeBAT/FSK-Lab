@@ -77,6 +77,10 @@ fskdbview = function () {
     }
 
     async function createDBViewUI(){
+		// add Page Loader animation
+		let loader = {};
+		loader._$el = $( '<div class="loader loading"></div>' ).appendTo('body');
+		loader._$el.addClass( 'loading' );
         const metadata = await getMetadata();
         _representation.metadata = metadata;
         
@@ -97,6 +101,8 @@ fskdbview = function () {
             }else{
                 _app = new APPLandingpage(_appVars, rootDiv, metadata);
             }
+			// remove page loader animation 
+			loader._$el.removeClass( 'loading' );
         });
     }
    
