@@ -275,7 +275,9 @@
             }else {
                 isValid = O.input.val() ? true : false;
                 if(!isValid){
-                    O.input.$validationContainer.text("required");
+	//remove "required" message
+                    //O.input.$validationContainer.text("required");
+					isValid = true;
                 }
                 
 
