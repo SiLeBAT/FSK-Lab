@@ -468,8 +468,7 @@ final class FSKEditorJSNodeModel
         if(originalParameters != null)
           checkAndRegenerateSimulation(simulations, originalParameters, parameters);
 
-      }
-      else if (metadata != null && SwaggerUtil.getModelMath(metadata) != null
+      } else if (metadata != null && SwaggerUtil.getModelMath(metadata) != null
           && SwaggerUtil.getParameter(metadata) != null)  {
 
         // 1. Create new default simulation out of the view value
@@ -483,7 +482,7 @@ final class FSKEditorJSNodeModel
         // is not opened
         FskSimulation newDefaultSimulation = NodeUtils.createDefaultSimulation(parameters);
         simulations = Arrays.asList(newDefaultSimulation);
-        
+
       }
 
       modelScript = StringUtils.defaultString(viewValue.getModelScript(), "");
