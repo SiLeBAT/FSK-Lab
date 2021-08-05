@@ -149,19 +149,10 @@ fskdbview = function () {
             _representation.tableID = parent.tableID;
             const rep = await fetch(window._endpoints.metadata);
             const j = await rep.json();
-            
+            _lazySriptsfetching = true;
             for (index = 0; index < j.length; index++) {
                 let row = j[index];
-                try {
-                    _lazySriptsfetching = true;
-                    const simulations = await fetch(window._endpoints.simulationsEndpoint + index);
-                    simulations.json().then(function(data) {
-                        row['simulation'] = data; // this will be a JSON
-                    });
-                    
-                } catch (err) {
-                    console.log(err);
-                }
+                
 
                 if (_representation.table && _representation.table.rows) {
                     _representation.table.rows.push({
@@ -685,25 +676,32 @@ fskdbview = function () {
                             $(this).closest("tr").css("background-color", "#e1e3e8");
                             //fetch scripts
                             if(_lazySriptsfetching){
-                                const modelscript =  fetch(window._endpoints.modelscriptEndpoint + rowIndex);
-                                modelscript.then(function(response) {
-                                    return response.text();
+                                
+                                const simulations = fetch(window._endpoints.simulationsEndpoint + rowIndex);
+                                simulations.then(function(response) {
+                                    return response.json();
                                 }).then(function(data) {
-                                    _representation.metadata[rowIndex]['modelscript'] = data; // this will be a string
-                                    const visualizationscript =  fetch(window._endpoints.visualizationscriptEndpoint + rowIndex);
-                                    visualizationscript.then(function(responsevis) {
-                                        return responsevis.text();
-                                    }).then(function(datavis) {
-                                        _representation.metadata[rowIndex]['visualization'] = datavis; // this will be a string
-                                        // save selected model
-                                        selectionMap[rowIndex] = window.selectedModels.length;
-                                        window.selectedModels.push(_representation.metadata[rowIndex]);
-                                        _value.selection.push(_representation.table.rows[rowIndex].rowKey);
-                                        // emit selection event
-                                        window.downloadURs.push(window._endpoints.download+rowIndex);
-                                        knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c21joiner' ,
-                                                [{"selecteModels":window.selectedModels, "downloadURs":window.downloadURs}]
-                                        /* [window.selectedModels,window.downloadURs]*/,{elements:[]})  
+                                    _representation.metadata[rowIndex]['simulation'] = data; // this will be a json
+                                    const modelscript =  fetch(window._endpoints.modelscriptEndpoint + rowIndex);
+                                    modelscript.then(function(response) {
+                                        return response.text();
+                                    }).then(function(data) {
+                                        _representation.metadata[rowIndex]['modelscript'] = data; // this will be a string
+                                        const visualizationscript =  fetch(window._endpoints.visualizationscriptEndpoint + rowIndex);
+                                        visualizationscript.then(function(responsevis) {
+                                            return responsevis.text();
+                                        }).then(function(datavis) {
+                                            _representation.metadata[rowIndex]['visualization'] = datavis; // this will be a string
+                                            // save selected model
+                                            selectionMap[rowIndex] = window.selectedModels.length;
+                                            window.selectedModels.push(_representation.metadata[rowIndex]);
+                                            _value.selection.push(_representation.table.rows[rowIndex].rowKey);
+                                            // emit selection event
+                                            window.downloadURs.push(window._endpoints.download+rowIndex);
+                                            knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c21joiner' ,
+                                                    [{"selecteModels":window.selectedModels, "downloadURs":window.downloadURs}]
+                                            /* [window.selectedModels,window.downloadURs]*/,{elements:[]})  
+                                        });
                                     });
                                 });
                                 
