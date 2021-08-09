@@ -14,6 +14,7 @@ import javax.json.JsonObject;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -529,17 +530,17 @@ public class GoogleSheetImporterTest {
 
 				final Cell cell = row.getCell(0);
 
-				final int type = cell.getCellType();
+				final CellType type = cell.getCellType();
 
-				if (type == Cell.CELL_TYPE_BLANK) {
+				if (type == CellType.BLANK) {
 					values[i][j] = "";
-				} else if (type == Cell.CELL_TYPE_BOOLEAN) {
+				} else if (type == CellType.BOOLEAN) {
 					values[i][j] = Boolean.toString(cell.getBooleanCellValue());
-				} else if (type == Cell.CELL_TYPE_FORMULA) {
+				} else if (type == CellType.FORMULA) {
 					values[i][j] = cell.getCellFormula();
-				} else if (type == Cell.CELL_TYPE_NUMERIC) {
+				} else if (type == CellType.NUMERIC) {
 					values[i][j] = Double.toString(cell.getNumericCellValue());
-				} else if (type == Cell.CELL_TYPE_STRING) {
+				} else if (type == CellType.STRING) {
 					values[i][j] = cell.getStringCellValue();
 				}
 			}

@@ -377,7 +377,7 @@ public class XLS2PCMLNodeModel extends NodeModel {
 	}
 
 	private DataTable createDataTable(ExpColumnList colList, List<DataPoint> dataPoints) {
-		DataTable table = DataTable.Factory.newInstance();
+		DataTable table = (DataTable) DataTable.Factory.newInstance();
 		
 		table.setColumnList(colList.columnList);
 

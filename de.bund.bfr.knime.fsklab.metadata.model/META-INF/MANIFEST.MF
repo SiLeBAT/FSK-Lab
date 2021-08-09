@@ -6,12 +6,12 @@ Bundle-Version: 0.1.0.qualifier
 Bundle-ClassPath: .,
  libs/emfjson-jackson-1.0.0-rc.1.jar,
  libs/swagger-annotations-1.5.15.jar,
- libs/threetenbp-1.3.5.jar,
  libs/jackson-datatype-threetenbp-2.8.4.jar,
- libs/snakeyaml-1.27.jar
+ libs/snakeyaml-1.27.jar,
+ libs/threetenbp-1.5.1.jar
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: com.fasterxml.jackson.datatype.threetenbp,
  com.fasterxml.jackson.datatype.threetenbp.deser,
  com.fasterxml.jackson.datatype.threetenbp.deser.key,
@@ -52,10 +52,13 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations;bundle-version="2
  com.gmail.gcolaianni5.jris;bundle-version="1.0.0",
  com.google.gson;bundle-version="2.8.1",
  de.bund.bfr.pmfml;bundle-version="0.0.12",
- org.apache.servicemix.bundles.poi;bundle-version="3.17.0",
+ org.apache.servicemix.bundles.poi;bundle-version="4.1.2",
  org.apache.commons.lang3;bundle-version="3.3.1",
  org.eclipse.emf.ecore;bundle-version="2.13.0";visibility:=reexport,
  org.glassfish.javax.json;bundle-version="1.0.4",
- org.junit;bundle-version="4.12.0"
+ org.junit;bundle-version="4.12.0",
+ javax.annotation;bundle-version="1.3.5",
+ org.knime.core;bundle-version="4.4.0"
 Bundle-ActivationPolicy: lazy
 Automatic-Module-Name: de.bund.bfr.knime.fsklab.metadata.model
+Import-Package: org.w3c.dom.events;resolution:=optional

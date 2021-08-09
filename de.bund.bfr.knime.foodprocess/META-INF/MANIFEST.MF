@@ -28,5 +28,5 @@ Require-Bundle: com.jgoodies;bundle-version="1.4.0",
 Bundle-ActivationPolicy: lazy
 Export-Package: de.bund.bfr.knime.foodprocess,
  de.bund.bfr.knime.foodprocess.lib
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Automatic-Module-Name: de.bund.bfr.knime.foodprocess
