@@ -155,7 +155,7 @@ class APPMTDetails {
         if (modelHandler && modelHandler._menu) {
 
             $.each(modelHandler._menu, (i, menuMeta) => {
-				if (menuMeta.id =='readme'|| menuMeta.id == 'resources')
+				if ( menuMeta.id == 'resources')
 					return; 
 
                 let $navItem = null;
@@ -190,7 +190,7 @@ class APPMTDetails {
             // get each menus id
             $.each(modelHandler._menu, (i, menuMeta) => {
                 // dropdown nav item 
-                if (menuMeta.id =='readme' || menuMeta.id == 'resources')
+                if ( menuMeta.id == 'resources')
 					return;
                 if (menuMeta.submenus && menuMeta.submenus.length > 0) {
                     // iterate over submenus
@@ -309,6 +309,10 @@ class APPMTDetails {
 				else if( panelMeta.type == 'visualizationScript' ) {
 					$panel = O._createVisualizationScriptPanel( menu, modelHandler );
 				}
+                // readme
+                else if( panelMeta.type == 'readme' ) {
+                    $panel = O._createReadmetPanel( menu, modelHandler );
+                }
 
                 
             }
@@ -563,7 +567,36 @@ class APPMTDetails {
 
 		return $panel;
 	}
+    
+    _createReadmetPanel ( menu, modelHandler ) {
+        let O = this;
+        _log( 'MODAL DETAILS / _createPlotPanel' );
 
+        // tab-pane
+        let $panel = $( '<div class="tab-pane h-100" role="tabpanel"></div>' )
+            .attr( 'id', menu.id );
+
+        if( modelHandler && menu.id && modelHandler.readme ) {
+            // get panel meta
+            _log('ifffff visualizationScript: ' + modelHandler.readme );
+            let panelMeta = modelHandler._panels[menu.id];
+
+            // title
+            $panel.append( '<div class="panel-heading">'+ menu.label +'</div>' );
+            let $script = $( '<pre class="precss"></pre>' )
+                .appendTo( $panel )
+                .wrap( '<div class="panel-plot"></div>' );
+
+            var lines = modelHandler.readme.split("\n");
+            for(var i = 0; i < lines.length; i++) {
+                $( '<span class="line">'+lines[i]+'</span>' )
+                .appendTo( $script )
+            }
+
+        }
+
+        return $panel;
+    }
 	/**
 	 * GET MODEL HANDLER
 	 * returns model handler of class Model
@@ -592,45 +625,50 @@ class APPMTDetails {
             }else{
                visScript = modelMetadata.visualization;
             }
+            if(!modelMetadata.readme){
+               readme = await _fetchData._content( window._endpoints.readmeEndpoint, modelId );// O._app._getImage( modelMetadata.generalInformation.identifier );
+            }else{
+               readme = modelMetadata.readme;
+            }
             // get appropiate modelMetadata modelHandler for the model type.
 			if ( modelMetadata.modelType === 'genericModel' ) {
-				modelHandler = new GenericModel( modelMetadata, imgUrl, false,  modelScript, visScript );
+				modelHandler = new GenericModel( modelMetadata, imgUrl, false,  modelScript, visScript , readme ) ;
 			}
 			else if ( modelMetadata.modelType === 'dataModel' ) {
-				modelHandler = new DataModel( modelMetadata, imgUrl, false,  modelScript, visScript );
+				modelHandler = new DataModel( modelMetadata, imgUrl, false,  modelScript, visScript , readme ) ;
 			}
 			else if ( modelMetadata.modelType === 'predictiveModel' ) {
-				modelHandler = new PredictiveModel( modelMetadata, imgUrl, false,  modelScript, visScript );
+				modelHandler = new PredictiveModel( modelMetadata, imgUrl, false,  modelScript, visScript , readme ) ;
 			}
 			else if ( modelMetadata.modelType === 'otherModel' ) {
-				modelHandler = new OtherModel( modelMetadata, imgUrl, false,  modelScript, visScript );
+				modelHandler = new OtherModel( modelMetadata, imgUrl, false,  modelScript, visScript , readme ) ;
 			}
 			else if ( modelMetadata.modelType === 'toxicologicalModel' ) {
-				modelHandler = new ToxicologicalModel( modelMetadata, imgUrl, false,  modelScript, visScript );
+				modelHandler = new ToxicologicalModel( modelMetadata, imgUrl, false,  modelScript, visScript , readme ) ;
 			}
 			else if ( modelMetadata.modelType === 'doseResponseModel' ) {
-				modelHandler = new DoseResponseModel( modelMetadata, imgUrl, false,  modelScript, visScript );
+				modelHandler = new DoseResponseModel( modelMetadata, imgUrl, false,  modelScript, visScript , readme ) ;
 			}
 			else if ( modelMetadata.modelType === 'exposureModel' ) {
-				modelHandler = new ExposureModel( modelMetadata, imgUrl, false,  modelScript, visScript );
+				modelHandler = new ExposureModel( modelMetadata, imgUrl, false,  modelScript, visScript , readme ) ;
 			}
 			else if ( modelMetadata.modelType === 'processModel' ) {
-				modelHandler = new ProcessModel( modelMetadata, imgUrl, false,  modelScript, visScript );
+				modelHandler = new ProcessModel( modelMetadata, imgUrl, false,  modelScript, visScript , readme ) ;
 			}
 			else if ( modelMetadata.modelType === 'consumptionModel' ) {
-				modelHandler = new ConsumptionModel( modelMetadata, imgUrl, false,  modelScript, visScript );
+				modelHandler = new ConsumptionModel( modelMetadata, imgUrl, false,  modelScript, visScript , readme ) ;
 			}
 			else if ( modelMetadata.modelType === 'healthModel' ) {
-				modelHandler = new HealthModel( modelMetadata, imgUrl, false,  modelScript, visScript );
+				modelHandler = new HealthModel( modelMetadata, imgUrl, false,  modelScript, visScript , readme ) ;
 			}
 			else if ( modelMetadata.modelType === 'riskModel' ) {
-				modelHandler = new RiskModel( modelMetadata, imgUrl, false,  modelScript, visScript );
+				modelHandler = new RiskModel( modelMetadata, imgUrl, false,  modelScript, visScript , readme ) ;
 			}
 			else if ( modelMetadata.modelType === 'qraModel' ) {
-				modelHandler = new QraModel( modelMetadata, imgUrl, false,  modelScript, visScript );
+				modelHandler = new QraModel( modelMetadata, imgUrl, false,  modelScript, visScript , readme ) ;
 			}
 			else {
-				modelHandler = new GenericModel( modelMetadata, imgUrl, false,  modelScript, visScript );
+				modelHandler = new GenericModel( modelMetadata, imgUrl, false,  modelScript, visScript , readme ) ;
 			}
 		}
 
