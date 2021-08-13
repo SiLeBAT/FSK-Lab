@@ -75,6 +75,7 @@ import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
 import de.bund.bfr.knime.fsklab.v2_0.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.v2_0.FskSimulation;
 import de.bund.bfr.knime.fsklab.v2_0.editor.FSKEditorJSNodeDialog.ModelType;
+import de.bund.bfr.metadata.swagger.DoseResponseModel;
 import de.bund.bfr.metadata.swagger.Model;
 import de.bund.bfr.metadata.swagger.Parameter;
 import de.bund.bfr.metadata.swagger.Reference;
@@ -402,7 +403,7 @@ final class FSKEditorJSNodeModel
                   ConversionUtils.ModelClass.valueOf(m_config.getModelType()));
             //update representation metadata
             viewRep.setModelMetadata(MAPPER.writeValueAsString(metadata));
-            originalMetadata = MAPPER.readValue(viewRep.getModelMetadata(), modelClass);
+            originalMetadata = metadata;
             //update view value metadata from representation after converting model metadata
             viewValue.setModelMetaData(MAPPER.writeValueAsString(metadata));
             viewValue.setModelScript(viewRep.getModelScript());
@@ -434,10 +435,16 @@ final class FSKEditorJSNodeModel
         else {
           if(!StringUtils.isEmpty(portObjectModelType) && !portObjectModelType.equalsIgnoreCase(modelType)) {
             String json = MAPPER.writeValueAsString(((FskPortObject)inObjects[0]).modelMetadata);
-            JsonNode portMetadata = MAPPER.readTree(json);
+            JsonNode portMetadata = MAPPER.readTree(json);    
             metadata = new ConversionUtils().convertModel(portMetadata,
                 ConversionUtils.ModelClass.valueOf(m_config.getModelType()));
-            
+            // workaround only for DoseResponseModel because the model name attribute is called
+            // modelName unlike other models.
+            if (metadata instanceof DoseResponseModel) {
+              String modelName =
+                  SwaggerUtil.getModelName(((FskPortObject) inObjects[0]).modelMetadata);
+              ((DoseResponseModel) metadata).getGeneralInformation().setModelName(modelName);
+            }
             copyConnectedNodeToView("", viewValue);
             viewRep.setModelMetadata(MAPPER.writeValueAsString(metadata));
             viewValue.setModelMetaData(MAPPER.writeValueAsString(metadata));
