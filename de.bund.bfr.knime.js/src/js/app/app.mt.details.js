@@ -583,13 +583,13 @@ class APPMTDetails {
 
             // title
             $panel.append( '<div class="panel-heading">'+ menu.label +'</div>' );
-            let $script = $( '<pre class="precss"></pre>' )
+            let $script = $( '<pre class="precssreadme"></pre>' )
                 .appendTo( $panel )
                 .wrap( '<div class="panel-plot"></div>' );
-
+            
             var lines = modelHandler.readme.split("\n");
             for(var i = 0; i < lines.length; i++) {
-                $( '<span class="line">'+lines[i]+'</span>' )
+                $( '<span class="text-wrap">'+lines[i]+'</span>' )
                 .appendTo( $script )
             }
 

@@ -59,6 +59,31 @@ pre.precss span:before {
 	margin-right: .5em;
 	color: #888
 }
+
+pre.precssreadme {
+    tab-size: 4;
+    padding: 0;
+    color: rgb(255, 255, 255);
+    background-color: rgb(255, 255, 255);
+    font-size: 16px;
+    line-height: 16px;
+}
+pre.precssreadme {
+    background: #ffffff; 
+    color: #303030;
+    padding: 10px 16px;
+  }
+pre.precssreadme span {
+    display: block;
+    line-height: 1.5rem;
+  }
+pre.precssreadme span:before {
+    display: inline-block;
+    border-right: 1px solid #ddd;
+    padding: 0 .5em;
+    margin-right: .5em;
+    color: #888
+}
 .errorMessages{
     display: none;
     list-style-type: none;
