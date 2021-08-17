@@ -1,5 +1,0 @@
-{
-  "type": "Control",
-  "label": "Value",
-  "scope": "#/properties/value"
-}
