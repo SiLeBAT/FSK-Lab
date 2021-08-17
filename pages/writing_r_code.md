@@ -2,7 +2,7 @@
 title: Writing R Code
 summary: Writing R code compatible with FSK-Lab
 keywords: r code
-sidebar: writing_r_code
+sidebar: fsk_sidebar
 permalink: writing_r_code.html
 folder: pages
 ---
