@@ -65,7 +65,7 @@ FSK-Lab is based on R 3.4, [https://r-project.org](https://r-project.org), which
       </p>
     </div>
     <div class="tab-pane fade" id="fsk-mac">
-      <p>On Mac it is necessary to install R 3.4.x from <a href="https://cran.r-project.org/bin/macosx/el-capitan/base/">https://cran.r-project.org/bin/macosx/el-capitan/base/</a>. FSK-Lab on Mac requires three packages: Rserve, miniCRAN and Cairo. These may be installed in the R console with: <code>install.packages(c('Rserve', 'miniCRAN', 'Cairo'))</code>. Besides these three packages, MacOS also requires the XQuartz software which can be obtained at <a href="http://xquartz.macos-forge.org">http://xquartz.macos-forge.org</a>.
+      <p>On Mac it is necessary to install R 3.4.x from <a href="https://cran.r-project.org/bin/macosx/el-capitan/base/">https://cran.r-project.org/bin/macosx/el-capitan/base/</a>. FSK-Lab on Mac requires three packages: Rserve, miniCRAN and Cairo. These may be installed in the R console with: <code>install.packages(c('Rserve', 'miniCRAN', 'svglite', 'Cairo'))</code>. Besides these three packages, MacOS also requires the XQuartz software which can be obtained at <a href="http://xquartz.macos-forge.org">http://xquartz.macos-forge.org</a>.
       </p>
       <p>
         The path to the R folder to be entered in KNIME (as described for Windows) should be /Library/Frameworks/R.framework/Resources/.
@@ -79,7 +79,7 @@ FSK-Lab is based on R 3.4, [https://r-project.org](https://r-project.org), which
       </p>
       <p>
         On Mac it is necessary to install the packages Rserve and miniCRAN that can be installed in the R terminal with:
-        <code>install.packages(c('Rserve', 'miniCRAN'))</code>.
+        <code>install.packages(c('Rserve', 'miniCRAN', 'svglite'))</code>.
       </p>
       <p>
         The path to the R folder to be entered in KNIME should be: /usr/lib/R.
