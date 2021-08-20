@@ -80,7 +80,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
   private final RunnerNodeInternalSettings internalSettings = new RunnerNodeInternalSettings();
   /** Config identifier saveToJson */
   private boolean saveToJsonChecked = false;
-
+  private boolean legacySettingsHaveBeenReset = false;
   private RunnerNodeSettings nodeSettings = new RunnerNodeSettings();
   private FskPortObject fskObj = null;
   // Input and output port types
@@ -133,6 +133,9 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
   }
   @Override
   protected void reset() {
+    // update the Runner node from legacy
+    legacySettingsHaveBeenReset = true;
+    // remove simulation from settings to prioritize input
     nodeSettings.simulation = "";
     internalSettings.reset();
     cleanGeneratedResources(fskObj);
@@ -171,7 +174,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
     // this.fskObj = fskObj;
 
     final List<FskSimulation> simulation = fskObj.simulations;
-    if (StringUtils.isNotBlank(nodeSettings.simulation)) {
+    if (StringUtils.isNotBlank(nodeSettings.simulation) && legacySettingsHaveBeenReset) {
       FskPortObject fskObjk = fskObj;
       IntStream.range(0, simulation.size())
           .filter(index -> simulation.get(index).getName().equals(nodeSettings.simulation))
@@ -206,12 +209,6 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
       this.pushFlowVariableString("generatedResources",
           fskObj.getGeneratedResourcesDirectory().get().getAbsolutePath());
     }
-    
-    // add flow-variable stating which simulation (name) was executed
-    String simulationName = fskObj.simulations != null
-        ? fskObj.simulations.get(fskObj.selectedSimulationIndex).getName()
-            : "defaultSimulation";
-    this.pushFlowVariableString("selectedSimulation", simulationName);
     
     if(isVisScriptEmpty(fskObj)) {
       LOGGER.warn("There is no visualization script");
@@ -497,7 +494,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
       saveToJsonChecked = nodeSettings.saveToJson;
       
       FskSimulation fskSimulation;
-      if (!nodeSettings.simulation.isEmpty()) {
+      if (!nodeSettings.simulation.isEmpty() && legacySettingsHaveBeenReset) {
         // If a simulation is configured in the settings then pick it
         Optional<FskSimulation> sim = fskObj.simulations.stream()
             .filter(it -> it.getName().equals(nodeSettings.simulation)).findFirst();
@@ -551,6 +548,10 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
     try (ScriptHandler handler = ScriptHandler
         .createHandler(SwaggerUtil.getLanguageWrittenIn(fskObj.modelMetadata), fskObj.packages)) {
      
+      // push flowvariable of executed simulation
+      this.pushFlowVariableString("selectedSimulation", simulation.getName());
+
+      
       // give handler info from checkBox that he needs to save parameter data to JSON 
       handler.setSaveToJsonChecked(saveToJsonChecked);
       handler.runSnippet(fskObj, simulation, exec, LOGGER, internalSettings.imageFile, joinRelationList, suffix);

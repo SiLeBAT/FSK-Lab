@@ -94,14 +94,19 @@ public abstract class ScriptHandler implements AutoCloseable {
     Instant end = Instant.now();
     Duration timeElapsed = Duration.between(start, end);
     if(saveToJsonChecked) {
-      logger.warn("time to load json file into workspace: "+timeElapsed.getSeconds() + "s\n" );  
+      logger.info("time to load json file into workspace: "+timeElapsed.getSeconds() + "s\n" );  
     }
     
 
    
 
     exec.setProgress(0.72, "Set parameter values");
-    logger.info(" Running with '" + simulation.getName() + "' simulation!");
+    if(logger.isInfoEnabled()) {
+      logger.info("Running with '" + simulation.getName() + "' simulation! " + simulation.getParameters().toString());
+    } else {
+      logger.info("Running with '" + simulation.getName() + "' simulation! " + simulation.getParameters().toString());  
+    }
+    
 
     // load libraries before (python) parameters are evaluated
 
@@ -385,12 +390,7 @@ public abstract class ScriptHandler implements AutoCloseable {
       ExecutionContext exec)
       throws ResourceFileNotFoundException, JsonFileNotFoundException, VariableNotGlobalException {
 
-    // Delete previous resources if they exist
-    fskPortObject.getGeneratedResourcesDirectory().ifPresent(directory -> {
-      if (directory.exists()) {
-        FileUtil.deleteRecursively(directory);
-      }
-    });
+
 
     List<Parameter> parameterMetadata = SwaggerUtil.getParameter(fskPortObject.modelMetadata);
 
