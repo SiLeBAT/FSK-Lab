@@ -26,10 +26,9 @@
 		  Name of the selected simulation to run. 
 		  If no simulation is selected then the default simulation will be selected.
 		</option>
-			
+		
 	</fullDescription>
-
-    
+	
 	<ports>
 		<inPort name="FSK object" index="0">Input FSK model</inPort>
 		<outPort name="FSK object" index="0">
@@ -42,5 +41,5 @@
 	</ports>
 	<views>
 		<view index="0" name="Plot"></view>
-	</views>	
+	</views>		
 </knimeNode>
