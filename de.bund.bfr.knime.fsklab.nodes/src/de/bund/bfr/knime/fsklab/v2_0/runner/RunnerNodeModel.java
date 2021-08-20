@@ -133,6 +133,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
   }
   @Override
   protected void reset() {
+    nodeSettings.simulation = "";
     internalSettings.reset();
     cleanGeneratedResources(fskObj);
     fskObj = null;
