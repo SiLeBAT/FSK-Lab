@@ -61,6 +61,7 @@ import org.knime.core.util.FileUtil;
 import org.knime.js.core.node.AbstractWizardNodeModel;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
@@ -74,6 +75,7 @@ import de.bund.bfr.knime.fsklab.v2_0.editor.FSKEditorJSNodeDialog.ModelType;
 import de.bund.bfr.knime.fsklab.v2_0.reader.ReaderNodeUtil;
 import de.bund.bfr.metadata.swagger.Model;
 import de.bund.bfr.metadata.swagger.Parameter;
+import metadata.ConversionUtils;
 import metadata.SwaggerUtil;
 
 /**
@@ -605,10 +607,21 @@ public final class JoinerNodeModel
     fskPortObject.modelMetadata = NodeUtils.initializeModel(ModelType.genericModel);
     return fskPortObject;
   }
-  
+  public void convertMetadataToGenericVersion(PortObject[] inObjects) throws JsonMappingException, JsonProcessingException {
+    ConversionUtils converter = new ConversionUtils();
+    for(PortObject pO:inObjects) {
+      FskPortObject fskpo = (FskPortObject) pO;
+      if(fskpo!= null && !fskpo.modelMetadata.getModelType().equalsIgnoreCase("GenericModel")) {
+        Model model = converter.convertModel(MAPPER.readTree(MAPPER.writeValueAsString(fskpo.modelMetadata)),
+            ConversionUtils.ModelClass.valueOf("GenericModel"));
+        fskpo.modelMetadata = model;
+      }
+    }
+  }
   @Override
   protected PortObject[] performExecute(PortObject[] inObjects, ExecutionContext exec)
       throws Exception {
+    convertMetadataToGenericVersion(inObjects);
     PortObject svgImageFromView = null;
     JoinRelation[] connections = new JoinRelation[0];
     
