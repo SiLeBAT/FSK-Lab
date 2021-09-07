@@ -269,6 +269,7 @@ fskdbview = function () {
                     },
                     sortable    : true, // sortable
                     sorter      : '_execution', // _sorter subroutine
+                    switchable 	: true, // data-switchable
                     formatter   : '_execution' // _formatter subroutine
                 },
                 {
@@ -280,6 +281,8 @@ fskdbview = function () {
                         td          : null
                     },
                     sortable    : true, // sortable
+                    sorter      : '_date', // _sorter subroutine
+                    switchable 	: true, // data-switchable
                     formatter   : '_uploadDate' // _formatter subroutine
                 }
             ],
