@@ -183,14 +183,48 @@ var _sorter = {
 		// 	return aa > bb ? 1 : 0; // if a is greater than b return 1 OR
 		// }
 	},
-	_execution 		: ( a, b ) => {
-		var aa = parseFloat( a ); // remove s for seconds
-		var bb = parseFloat( b ) ; // remove s for seconds
-		return aa - bb;
+	_execution: function _execution(a, b) {
+		var array_a = a.split(" ");
+		var array_b = b.split(" ");
+		if(a == "") {
+		    return -1;
+		}
+		if(b == "") {
+		    return 1;
+		}
+		if( array_a.length < array_b.length){
+            return -1;
+        }
+        if( array_a.length > array_b.length){
+            return 1;
+        }
+		return _sorter._executionArray(array_a, array_b);
 	},
-	_date 			: ( a, b ) => {
-		var aa = new Date( a );
-		var bb = new Date( b );
+	_executionArray: function _executionArray(a, b) {
+    	var aa = parseFloat(a[0]); // get first numbers (h,min, seconds)
+        var bb = parseFloat(b[0]);
+
+		if( (aa - bb) == 0 && a.length > 1) {
+
+		    a.shift();
+		    b.shift();// remove first element
+            return _sorter._executionArray(a,b);
+        }
+
+
+		return aa - bb;
+
+	},
+	_date: function _date(a, b) {
+	    if(a == "") {
+    	    return -1;
+    	}
+    	if(b == "") {
+    	    return 1;
+    	}
+
+		var aa = new Date(a);
+		var bb = new Date(b);
 		return aa - bb;
 	}
 }
