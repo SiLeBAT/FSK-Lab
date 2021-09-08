@@ -119,6 +119,9 @@ class APPTable {
 
 
 			// check for function that format the data
+			if(rowData.type && rowData.type == 'date-array'){
+			    col.formatter = '_list';
+			}
 			if (col.formatter) {
 				if ($.isFunction(col.formatter)) {
 					data = col.formatter.call(O, data);
