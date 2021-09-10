@@ -365,7 +365,7 @@ class APPMTDetails {
                     }
                 ],
                 tableData: [],
-                responsive: true,
+                responsive: false,
                 showToggle: true
             };
 
@@ -429,7 +429,7 @@ class APPMTDetails {
             let tableSettings = {
                 cols: [],
                 tableData: [],
-                responsive: true,
+                responsive: false,
                 showToggle: true
             };
 
