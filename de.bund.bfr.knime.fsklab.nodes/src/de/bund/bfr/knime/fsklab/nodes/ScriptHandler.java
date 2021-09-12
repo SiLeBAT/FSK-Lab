@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -82,13 +84,29 @@ public abstract class ScriptHandler implements AutoCloseable {
     // Install needed libraries & set path to .fsk folder
     installLibs(fskObj, exec, logger);
     
-
+    exec.setProgress(0.3, "create JsonHandler");
     jsonHandler = JsonHandler.createHandler(this, exec);
-    jsonHandler.applyJoinRelation(fskObj, joinRelationList, suffix);
+    exec.setProgress(0.4, "apply Join Relations");
 
+    // Performance Test: how long to load json data into workspace
+    Instant start = Instant.now();
+    jsonHandler.applyJoinRelation(fskObj, joinRelationList, suffix);
+    Instant end = Instant.now();
+    Duration timeElapsed = Duration.between(start, end);
+    if(saveToJsonChecked) {
+      logger.info("time to load json file into workspace: "+timeElapsed.getSeconds() + "s\n" );  
+    }
+    
+
+   
 
     exec.setProgress(0.72, "Set parameter values");
-    logger.info(" Running with '" + simulation.getName() + "' simulation!");
+    if(logger.isInfoEnabled()) {
+      logger.info("Running with '" + simulation.getName() + "' simulation! " + simulation.getParameters().toString());
+    } else {
+      logger.info("Running with '" + simulation.getName() + "' simulation! " + simulation.getParameters().toString());  
+    }
+    
 
     // load libraries before (python) parameters are evaluated
 
@@ -112,7 +130,7 @@ public abstract class ScriptHandler implements AutoCloseable {
     // JsonHandler stores all input parameters before model execution
 
     if(saveToJsonChecked) {
-      jsonHandler.saveInputParameters(fskObj);
+      jsonHandler.saveInputParameters(fskObj, workingDirectory);
     }
       
 
@@ -152,6 +170,17 @@ public abstract class ScriptHandler implements AutoCloseable {
     } catch (final Exception exception) {
       logger.warn("Visualization script failed", exception);
     }
+    
+    // HDFHandler stores all ouput parameters in HDF file
+    if(saveToJsonChecked) {
+      exec.setProgress(0.92, "Save output parameters");
+      jsonHandler.saveOutputParameters(fskObj, workingDirectory);
+    }
+      
+
+    // Save generated resources
+    exec.setProgress(0.92, "Save generated resources");
+    saveGeneratedResources(fskObj, workingDirectory.toFile(), exec.createSubExecutionContext(1));
 
     exec.setProgress(0.96, "Restore library paths");
     restoreDefaultLibrary();
@@ -161,14 +190,6 @@ public abstract class ScriptHandler implements AutoCloseable {
 
     saveWorkspace(fskObj, exec);
 
-    // HDFHandler stores all ouput parameters in HDF file
-    if(saveToJsonChecked) {
-      jsonHandler.saveOutputParameters(fskObj, workingDirectory);
-    }
-      
-
-    // Save generated resources
-    saveGeneratedResources(fskObj, workingDirectory.toFile(), exec.createSubExecutionContext(1));
 
   
 
@@ -369,12 +390,7 @@ public abstract class ScriptHandler implements AutoCloseable {
       ExecutionContext exec)
       throws ResourceFileNotFoundException, JsonFileNotFoundException, VariableNotGlobalException {
 
-    // Delete previous resources if they exist
-    fskPortObject.getGeneratedResourcesDirectory().ifPresent(directory -> {
-      if (directory.exists()) {
-        FileUtil.deleteRecursively(directory);
-      }
-    });
+
 
     List<Parameter> parameterMetadata = SwaggerUtil.getParameter(fskPortObject.modelMetadata);
 

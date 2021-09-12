@@ -98,7 +98,7 @@ const ui = {
         "id": "modelClassComment",
         "label": "Comment",
         "type": "long-text",
-        "description": ""
+        "description": "Comment with further details on the model class"
     }, {
         "id": "modelSubClass",
         "label": "Subclass",
@@ -184,32 +184,31 @@ const ui = {
     "reference": [
         {
             "id": "isReferenceDescription",
-            "label": "Is reference",
+            "label": "Is_reference_description?",
             "type": "boolean",
             "description": "Indicates whether this specific publication serves as the reference description for the model. There has to be at least one reference where this field is set to 'True'",
             "required": true
         }, {
             "id": "publicationType",
-            "label": "Type",
+            "label": "Publication type",
             "type": "text",
             "description": "The type of publication, e.g. Report, Journal article, Book, Online database, ...",
             "vocabulary": "publication_type"
         }, {
             "id": "date",
             "label": "Date",
-            "type": "date",
+            "type": "year_date",
             "description": "Temporal information on the publication date"
         }, {
             "id": "pmid",
-            "label": "PubMed",
+            "label": "PubMed ID",
             "type": "text",
             "description": "The PubMed ID related to this publication"
         }, {
             "id": "doi",
-            "label": "DOI",
+            "label": "Publication DOI",
             "type": "long-text",
-            "description": "DOI related to this publication",
-            "required": true
+            "description": "DOI related to this publication"
         }, {
             "id": "authorList",
             "label": "Author list",
@@ -292,7 +291,7 @@ const ui = {
             "required": true
         }, {
             "id": "method",
-            "label": "Method",
+            "label": "Method of production",
             "type": "text-array",
             "description": "Type of production for the product/ matrix",
             "vocabulary": "production_method"
@@ -310,13 +309,13 @@ const ui = {
             "vocabulary": "product_treatment"
         }, {
             "id": "originCountry",
-            "label": "Origin country",
+            "label": "Country of origin",
             "type": "text",
             "description": "Country of origin of the food/product (ISO 3166-1-alpha-2 country code)",
             "vocabulary": "country"
         }, {
             "id": "originArea",
-            "label": "Origin area",
+            "label": "Area of origin",
             "type": "text",
             "description": "Area of origin of the food/product (Nomenclature of territorial units for statistics – NUTS – coding system valid only for EEA and Switzerland).",
             "vocabulary": "region"
@@ -341,13 +340,13 @@ const ui = {
     "hazard": [
         {
             "id": "type",
-            "label": "Type",
+            "label": "Hazard type",
             "type": "text",
             "description": "General classification of the hazard for which the model or data applies",
             "vocabulary": "hazard_type"
         }, {
             "id": "name",
-            "label": "Name",
+            "label": "Hazard name",
             "type": "text",
             "description": "Name of the hazard (agent, contaminant, chemical) for which the data or model applies",
             "vocabulary": "hazard",
@@ -375,49 +374,49 @@ const ui = {
             "description": "Origin of the contamination, source"
         }, {
             "id": "benchmarkDose",
-            "label": "Benchmark dose",
+            "label": "Benchmark Dose (BMD)",
             "type": "text",
             "description": "A dose or concentration that produces a predetermined change in response rate of an adverse effect (called the benchmark response or BMR) compared to background"
         }, {
             "id": "maximumResidueLimit",
-            "label": "Maximum residue limit",
+            "label": "Maximum Residue Limit (MRL)",
             "type": "text",
             "description": "International regulations and permissible maximum residue levels in food and drinking water"
         }, {
             "id": "noObservedAdverseAffectLevel",
-            "label": "NOAEL",
+            "label": "No Observed Adverse Affect Level (NOAEL)",
             "type": "text",
             "description": "Level of exposure of an organism, found by experiment or observation, at which there is no biologically or statistically significant increase in the frequency or severity of any adverse effects in the exposed population when compared to its appropriate control"
         }, {
             "id": "lowestObservedAdverseAffectLevel",
-            "label": "LOAEL",
+            "label": "Lowest Observed Adverse Effect Level (LOAEL)",
             "type": "text",
             "description": "Lowest concentration or amount of a substance found by experiment or observation that causes an adverse alteration of morphology, function, capacity, growth, development, or lifespan of a target organism distinguished from normal organisms of the same species under defined conditions of exposure"
         }, {
             "id": "acceptableOperatorsExposureLevel",
-            "label": "AOEL",
+            "label": "Acceptable Operator Exposure Level (AOEL)",
             "type": "text",
             "description": "Maximum amount of active substance to which the operator may be exposed without any adverse health effects. The AOEL is expressed as milligrams of the chemical per kilogram body weight of the operator"
         }, {
             "id": "acuteReferenceDose",
-            "label": "ARD",
+            "label": "Acute Reference Dose (ARfD)",
             "type": "text",
             "description": "An estimate (with uncertainty spanning perhaps an order of magnitude) of a daily oral exposure for an acute duration (24 hours or less) to the human population (including sensitive subgroups) that is likely to be without an appreciable risk of deleterious effects during a lifetime"
         }, {
             "id": "acceptableDailyIntake",
-            "label": "ADI",
+            "label": "Acceptable Daily Intake (ADI)",
             "type": "text",
             "description": "Acceptable daily intake: measure of amount of a specific substance in food or in drinking water tahta can be ingested (orally) on a daily basis over a lifetime without an appreciable health risk"
         }, {
             "id": "indSum",
-            "label": "Ind sum",
+            "label": "Individual or Summed Hazard",
             "type": "text",
             "description": "Define if the parameter reported is an individual residue/analyte, a summed residue definition or part of a sum a summed residue definition",
             "vocabulary": "ind_sum"
         }],
     "populationGroup": [{
         "id": "name",
-        "label": "Name",
+        "label": "Population name",
         "type": "text",
         "description": "Name of the population for which the model or data applies",
         "required": true
@@ -428,7 +427,7 @@ const ui = {
         "description": "Population of individual that we are interested in describing and making statistical inferences about"
     }, {
         "id": "populationSpan",
-        "label": "Span",
+        "label": "Population span (years)",
         "type": "text-array",
         "description": "Temporal information on the exposure duration"
     }, {
@@ -438,14 +437,19 @@ const ui = {
         "description": "Description of the population for which the model applies (demographic and socio-economic characteristics for example). Background information that are needed in the data analysis phase, size of household, education level, employment status, professional category, ethnicity, etc."
     }, {
         "id": "populationAge",
-        "label": "Age",
+        "label": "Population age",
         "type": "text-array",
         "description": "Description of the range of age or group of age"
     }, {
         "id": "populationGender",
-        "label": "Gender",
+        "label": "Population gender",
         "type": "text",
         "description": "Description of the percentage of gender"
+    }, {
+        "label": "BMI",
+        "id": "bmi",
+        "type": "text-array",
+        "description": "Description of the range of BMI or class of BMI or BMI mean"
     }, {
         "id": "specialDietGroups",
         "label": "Special diet groups",
@@ -453,7 +457,7 @@ const ui = {
         "description": "Description of sub-population with special diets (vegetarians, diabetics, group following special ethnic diets)"
     }, {
         "id": "patternConsumption",
-        "label": "Pattern consumption",
+        "label": "Consumption pattern",
         "type": "text-array",
         "description": "Description of the consumption of different food items, frequency, portion size"
     }, {
@@ -470,7 +474,7 @@ const ui = {
         "vocabulary": "country"
     }, {
         "id": "populationRiskFactor",
-        "label": "Risk factor",
+        "label": "Risk and population factors",
         "type": "text-array",
         "description": "Population risk factor that may influence the outcomes of the study, confounder should be included"
     }, {
@@ -481,18 +485,18 @@ const ui = {
     }],
     "study": [{
         "id": "identifier",
-        "label": "Identifier",
+        "label": "Study identifier",
         "type": "text",
         "description": "A user-defined identifier for the study",
         "required": true
     }, {
         "id": "title",
-        "label": "Title",
+        "label": "Study title",
         "type": "long-text",
         "description": "A title for the Study"
     }, {
         "id": "description",
-        "label": "Description",
+        "label": "Study description",
         "type": "long-text",
         "description": "A brief description of the study aims"
     }, {
@@ -502,23 +506,23 @@ const ui = {
         "description": "The type of study design being employed"
     }, {
         "id": "assayMeasurementType",
-        "label": "Measurement type",
+        "label": "Assay measurement type",
         "type": "text",
         "description": "The measurement being observed in this assay"
     }, {
         "id": "assayTechnologyType",
-        "label": "Technology type",
+        "label": "Assay technology type",
         "type": "text",
         "description": "The technology being employed to observe this measurement",
         "vocabulary": "technology_type"
     }, {
         "id": "assayTechnologyPlatform",
-        "label": "Technology platform",
+        "label": "Assay technology platform",
         "type": "text",
         "description": "The technology platform used"
     }, {
         "id": "accreditationProcedureForTheAssayTechnology",
-        "label": "Accreditation procedure",
+        "label": "Accreditation procedure for assay",
         "type": "text",
         "description": "Accreditation procedure for the analytical method used",
         "vocabulary": "accreditation_procedure"
@@ -527,6 +531,11 @@ const ui = {
         "label": "Protocol name",
         "type": "text",
         "description": "The name of the protocol, e.g.Extraction Protocol"
+    }, {
+        "id": "protocolType",
+        "label": "Protocol type",
+        "type": "text",
+        "description": "The type of the protocol, preferably coming from an Ontology, e.g. Extraction Protocol"
     }, {
         "id": "protocolDescription",
         "label": "Protocol description",
@@ -544,19 +553,19 @@ const ui = {
         "description": "The version of the protocol used, where applicable"
     }, {
         "id": "protocolParametersName",
-        "label": "Parameters name",
+        "label": "Parameters names",
         "type": "text",
         "description": "The parameters used when executing this protocol"
     }, {
         "id": "protocolComponentsName",
-        "label": "Components name",
+        "label": "Components names",
         "type": "text",
         "description": "The components used when carrying out this protocol"
     }, {
         "id": "protocolComponentsType",
-        "label": "Components type",
+        "label": "Protocol components type",
         "type": "text",
-        "description": ""
+        "description": "The type of components used when carrying out this protocol"
     }],
     "studySample": [{
         "id": "sampleName",
@@ -566,7 +575,7 @@ const ui = {
         "required": true
     }, {
         "id": "protocolOfSampleCollection",
-        "label": "Protocol",
+        "label": "Protocol of sample collection",
         "type": "text",
         "description": "Additional protocol for sample and sample collection. Corresponds to the Protocol REF in ISA",
         "required": true
@@ -578,7 +587,7 @@ const ui = {
         "vocabulary": "sampling_strategy"
     }, {
         "id": "typeOfSamplingProgram",
-        "label": "Sampling program",
+        "label": "Type of sampling program",
         "type": "text",
         "description": "Indicate the type of programm for which the samples have been collected",
         "vocabulary": "sampling_program"
@@ -620,31 +629,31 @@ const ui = {
     }],
     "dietaryAssessmentMethod": [{
         "id": "collectionTool",
-        "label": "Collection tool",
+        "label": "Methodological tool to collect data",
         "type": "text",
         "description": "Food diaries, interview, 24-hour recall interview, food propensy questionnaire, portion size measurement aids, eating outside questionnaire",
         "vocabulary": "collection_tool",
         "required": true
     }, {
         "id": "numberOfNonConsecutiveOneDay",
-        "label": "Non-consecutive one day",
+        "label": "Number of non-consecutive one-day",
         "type": "text",
         "description": "Number of non-consecutive one-day recorded",
         "required": true
     }, {
         "id": "softwareTool",
-        "label": "Software tool",
+        "label": "Dietary software tool",
         "type": "text",
         "description": "Name of the software used to collect the data"
     }, {
         "id": "numberOfFoodItems",
-        "label": "Food items",
+        "label": "Number of food items",
         "type": "text-array",
         "description": "Number of food items",
         "required": true
     }, {
         "id": "recordTypes",
-        "label": "Record types",
+        "label": "Type of records",
         "type": "text-array",
         "description": "Consumption occasion, mean of consumption, quantified and described as eaten, recipes for self-made",
         "required": true
@@ -657,18 +666,18 @@ const ui = {
     }],
     "laboratory": [{
         "id": "name",
-        "label": "Name",
+        "label": "Laboratory name",
         "type": "text",
         "description": "Laboratory code (National laboratory code if available) or Laboratory name"
     }, {
         "id": "country",
-        "label": "Country",
+        "label": "Laboratory country",
         "type": "text",
         "description": "Country where the laboratory is placed. (ISO 3166-1-alpha-2)",
         "vocabulary": "country"
     }, {
         "id": "accreditation",
-        "label": "Accreditation",
+        "label": "Laboratory accreditation",
         "type": "text-array",
         "description": "The laboratory accreditation to ISO/IEC 17025",
         "vocabulary": "laboratory_accreditation",
@@ -676,7 +685,7 @@ const ui = {
     }],
     "assay": [{
         "id": "name",
-        "label": "Name",
+        "label": "Assay name",
         "type": "text",
         "description": "A name given to the assay",
         "required": true
@@ -687,22 +696,22 @@ const ui = {
         "description": "General description of the assay. Corresponds to the Protocol REF in ISA"
     }, {
         "id": "moisturePercentage",
-        "label": "Moisture %",
+        "label": "Percentage of moisture",
         "type": "text",
         "description": "Percentage of moisture in the original sample"
     }, {
         "id": "fatPercentage",
-        "label": "Fat %",
+        "label": "Percentage of fat",
         "type": "text",
         "description": "Percentage of fat in the original sample"
     }, {
         "id": "detectionLimit",
-        "label": "Detection limit",
+        "label": "Limit of detection",
         "type": "text",
         "description": "Limit of detection reported in the unit specified by the variable 'Hazard unit'"
     }, {
         "id": "quantificationLimit",
-        "label": "Quantification limit",
+        "label": "Limit of quantification",
         "type": "text",
         "description": "Limit of quantification reported in the unit specified by the variable 'Hazard unit'"
     }, {
@@ -712,9 +721,9 @@ const ui = {
         "description": "Percentage of measures equal to LOQ and/or LOD"
     }, {
         "id": "contaminationRange",
-        "label": "Contamination range",
+        "label": "Range of contamination",
         "type": "text",
-        "description": "Contamination range"
+        "description": "Range of result of the analytical measure reported in the unit specified by the variable 'Hazard unit' before censored data treatment"
     }, {
         "id": "uncertaintyValue",
         "label": "Uncertainty value",
@@ -734,21 +743,21 @@ const ui = {
     }],
     "parameter": [{
         "id": "id",
-        "label": "ID",
+        "label": "Parameter ID",
         "type": "text",
         "description": "An unambiguous ID given to each of the parameters - preferably autogenerated by a software tool and compatible with SBML ID requirements, only letters from A to Z, numbers and '_'",
         "required": true,
         "sid":true
     }, {
         "id": "classification",
-        "label": "Classification",
+        "label": "Parameter classification",
         "type": "enum",
         "description": "General classification of the parameter (e.g. Input, Constant, Output...)",
         "vocabulary": "parameter_classification",
         "required": true
     }, {
         "id": "name",
-        "label": "Name",
+        "label": "Parameter name",
         "type": "text",
         "description": "A name given to the parameter",
         "required": true
@@ -768,7 +777,7 @@ const ui = {
         "id": "unitCategory",
         "label": "Unit category",
         "type": "text",
-        "description": "",
+        "description": "General classification of the parameter unit",
         "vocabulary": "unit_category"
     }, {
         "id": "dataType",
@@ -779,19 +788,19 @@ const ui = {
         "required": true
     }, {
         "id": "source",
-        "label": "Source",
+        "label": "Parameter source",
         "type": "text",
         "description": "Information on the type of knowledge used to define the parameter value",
         "vocabulary": "parameter_source"
     }, {
         "id": "subject",
-        "label": "Subject",
+        "label": "Parameter subject",
         "type": "text",
         "description": "Scope of the parameter, e.g. if it refers to an animal, a batch of animals, a batch of products, a carcass, a carcass skin etc",
         "vocabulary": "parameter_subject"
     }, {
         "id": "distribution",
-        "label": "Distribution",
+        "label": "Parameter distribution",
         "type": "text",
         "description": 'Distribution describing the parameter variabilty. If no distribution selected this means the value provided in "Parameter value" is a point estimate. In case a distribution is selected the value provided in "Parameter value" is a string that the model code can parse in order to sample from the named distribution',
         "vocabulary": "parameter_distribution"
@@ -803,23 +812,23 @@ const ui = {
     },
     {
         "id": "reference",
-        "label": "Reference",
+        "label": "Parameter reference",
         "type": "text",
         "description": ""
     },
     {
         "id": "variabilitySubject",
-        "label": "Variability subject",
+        "label": "Parameter variability subject",
         "type": "text",
         "description": "Information 'per what' the variability is described. It can be variability between broiler in a flock,  variability between all meat packages sold, variability between days, etc."
     }, {
         "id": "minValue",
-        "label": "Min value",
+        "label": "Value min",
         "type": "text",
         "description": "Numerical value of the minimum limit of the parameter that determines the range of applicability for which the model applies"
     }, {
         "id": "maxValue",
-        "label": "Max value",
+        "label": "Value max",
         "type": "text",
         "description": "Numerical value of the maximum limit of the parameter that determines the range of applicability for which the model applies"
     }, {
@@ -842,7 +851,7 @@ const ui = {
         "id": "rmse",
         "label": "RMSE",
         "type": "number",
-        "description": "Root-mean-square error"
+        "description": "Root-mean-squared error"
     }, {
         "id": "rsquared",
         "label": "R squared",
@@ -861,47 +870,49 @@ const ui = {
     }, {
         "id": "sensitivityAnalysis",
         "label": "Sensitivity analysis",
-        "type": "text",
+        "type": "long-text",
         "description": "Description of the results of an sensitivity analysis, i.e. how independence assumptions are met or how variables will affect the output of model"
     }],
     "modelEquation": [{
         "id": "name",
-        "label": "Name",
+        "label": "Model equation name",
         "type": "text",
         "description": "A name given to the model equation",
         "required": true,
     }, {
         "id": "modelEquationClass",
-        "label": "Class",
+        "label": "Model equation class",
         "type": "text",
         "description": "Information on that helps to categorize model equations"
-    },
-    // TODO: reference
-    {
+    }, {
+        "id": "reference",
+        "label": "Model equation reference",
+        "type": "text-array",
+        "description": "Information on the source, where the equation has been extracted from"
+    }, {
         "id": "modelEquation",
         "label": "Equation",
         "type": "text",
-        "description": "The pointer to the file that holds the software code (e.g. R-script)",
-        "required": true
+        "description": "The model equation in a software independent representation, e.g. Math-ML"
     }, {
         "id": "modelHypothesis",
-        "label": "Hypothesis",
+        "label": "Hypothesis of the model",
         "type": "text-array",
         "description": "Description of the hypothesis of the model"
     }],
     "exposure": [{
         "id": "treatment",
-        "label": "Treatment",
+        "label": "Left-censored data treatment",
         "type": "text-array",
         "description": "Description of the mathematical method to replace left-censored data (recommandation of WHO (2013), distribution or others)"
     }, {
         "id": "contamination",
-        "label": "Contamination",
+        "label": "Contam level post data treatment",
         "type": "text-array",
         "description": "Description of the range of of the level of contamination after left censored data treatment"
     }, {
         "id": "type",
-        "label": "Type",
+        "label": "Type of exposure",
         "type": "text",
         "description": "Description of the type of exposure",
         "required": true
@@ -909,7 +920,7 @@ const ui = {
         "id": "scenario",
         "label": "Scenario",
         "type": "text-array",
-        "description": "Description of the different scenarii used in exposure assessment"
+        "description": "Description of the different scenarios used in exposure assessment"
     }, {
         "id": "uncertaintyEstimation",
         "label": "Uncertainty estimation",
@@ -934,7 +945,7 @@ const _genericModelScope = {
         },
         {
             id: "spatialInformation",
-            label: "Spatial information",
+            label: "Spatial Information",
             type: "text-array",
             description: "Spatial information (area) on which the model or data applies"
         }
@@ -1095,7 +1106,7 @@ const _predictiveModelGeneralInformation = {
             "id": "software",
             "label": "Software",
             "type": "text",
-            "description": "The program or software language in which the model has been implemented",
+            "description": "The program or software tool that was used to create the FSKX file",
             "vocabulary": "software"
         }, {
             "id": "languageWrittenIn",

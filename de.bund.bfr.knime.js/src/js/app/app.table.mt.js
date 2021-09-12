@@ -23,6 +23,7 @@ class APPTableMT extends APPTable {
 			on 				: {
 				afterInit		: null,
 				selectRow 		: null,
+                selectAllRow    : null,
 				deselectRow 	: null,
 				updateFilter	: null
 			}
@@ -173,8 +174,10 @@ class APPTableMT extends APPTable {
         let O = this;
         _log( 'TABLE MAIN / _createDataMetadata' );
 
-        O._uploadDates = await _fetchData._array( window._endpoints.uploadDate, O._metadata.length ); //O._app._getUploadDates( window._endpoints.uploadDate, O._metadata.length );
-        O._executionTimes = await _fetchData._array( window._endpoints.executionTime, O._metadata.length ); //O._app._getExecutionTimes( window._endpoints.executionTime, O._metadata.length );
+        //O._uploadDates = await _fetchData._array( window._endpoints.uploadDate, O._metadata.length ); //O._app._getUploadDates( window._endpoints.uploadDate, O._metadata.length );
+        //O._executionTimes = await _fetchData._array( window._endpoints.executionTime, O._metadata.length ); //O._app._getExecutionTimes( window._endpoints.executionTime, O._metadata.length );
+        O._uploadDates = await _fetchData._json( window._endpoints.uploadDate); //O._app._getUploadDates( window._endpoints.uploadDate, O._metadata.length );
+        O._executionTimes = await _fetchData._json( window._endpoints.executionTime); //O._app._getExecutionTimes( window._endpoints.executionTime, O._metadata.length );
 
         _log( O._tableData );
     }
@@ -187,6 +190,7 @@ class APPTableMT extends APPTable {
 		for ( let i = 0; i < O._metadata.length; i++ ) {
 
 			let modelMetadata = O._metadata[i]; // full metadata of model
+			var identifier = modelMetadata['generalInformation']['identifier']
 			let rowData = {
 				modelMetadata 	: modelMetadata, // storess full model metadata for callbacks/hooks
 				cells  			: [], // will contain raw cell value
@@ -224,10 +228,10 @@ class APPTableMT extends APPTable {
 					data = modelMetadata['modelType'];
 				}
 				else if ( col.field == 'executionTime' ) {
-					data = O._executionTimes[i];
+					data = O._executionTimes[identifier]? O._executionTimes[identifier] :"";
 				}
 				else if ( col.field == 'uploadDate' ) {
-					data = O._uploadDates[i];
+					data = O._uploadDates[identifier]? O._uploadDates[identifier] :"";
 				}
 
 				rowData.cells.push( data );
@@ -493,6 +497,10 @@ class APPTableMT extends APPTable {
 				// match = true : will be shown
 				let rowMatchesFilter = true;
 
+				// if search result is empty, no match was found
+				if( searchResult.length == 0) {
+					rowMatchesFilter = false;
+				} 
 				// filter by search
 				if( searchResult.length > 0 
 					&& ! searchResult.includes( rowIndex ) ) {

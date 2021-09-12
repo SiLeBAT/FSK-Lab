@@ -280,35 +280,39 @@ public class WriterNodeModel extends NoInternalsModel {
 
   @Override
   protected PortObject[] execute(PortObject[] inObjects, ExecutionContext exec) throws Exception {
+	  FskPortObject in = (FskPortObject) inObjects[0];
+	  try {
+		  scriptHandler = ScriptHandler.createHandler(SwaggerUtil.getLanguageWrittenIn(in.modelMetadata), in.packages);
+		  URL url = FileUtil.toURL(nodeSettings.filePath);
+		  Path localPath = FileUtil.resolveToPath(url);
 
-    FskPortObject in = (FskPortObject) inObjects[0];
-    scriptHandler = ScriptHandler.createHandler(SwaggerUtil.getLanguageWrittenIn(in.modelMetadata), in.packages);
-    URL url = FileUtil.toURL(nodeSettings.filePath);
-    Path localPath = FileUtil.resolveToPath(url);
+		  if (localPath != null) {
+			  Files.deleteIfExists(localPath);
+			  writeArchive(localPath.toFile(), in, exec);
+		  } else {
 
-    if (localPath != null) {
-      Files.deleteIfExists(localPath);
-      writeArchive(localPath.toFile(), in, exec);
-    } else {
+			  // Creates archive in temporary archive file
+			  File archiveFile = FileUtil.createTempFile("model", "fskx");
 
-      // Creates archive in temporary archive file
-      File archiveFile = FileUtil.createTempFile("model", "fskx");
+			  // The file is deleted since we need the path only for the COMBINE archive
+			  archiveFile.delete();
 
-      // The file is deleted since we need the path only for the COMBINE archive
-      archiveFile.delete();
+			  // Writes COMBINE archive
+			  writeArchive(archiveFile, in, exec);
 
-      // Writes COMBINE archive
-      writeArchive(archiveFile, in, exec);
+			  // Copies temporary file to output stream
+			  try (OutputStream os = FileUtil.openOutputConnection(url, "PUT").getOutputStream()) {
+				  Files.copy(archiveFile.toPath(), os);
+			  }
 
-      // Copies temporary file to output stream
-      try (OutputStream os = FileUtil.openOutputConnection(url, "PUT").getOutputStream()) {
-        Files.copy(archiveFile.toPath(), os);
-      }
-
-      // Deletes temporary file
-      archiveFile.delete();
-    }
-
+			  // Deletes temporary file
+			  archiveFile.delete();
+		  }
+	  
+	  } finally {
+		  scriptHandler.close();
+	  }
+    
     return new PortObject[] {};
   }
 

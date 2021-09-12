@@ -149,6 +149,14 @@
                     //O.input.attr('data-datepicker','');
                 }
                 
+                if (type === "year_date"){
+                    O.input.datepicker( {
+                        format: " yyyy", // Notice the Extra space at the beginning
+                        viewMode: "years", 
+                        minViewMode: "years"
+                    });
+                }
+                
                 if (type === "date" && typeof (value) != "string") {
                     let day = ("" + value[2]).length > 1 ? ("" + value[2]) : ("0" + value[2]);
                     let month = ("" + value[1]).length > 1 ? ("" + value[1]) : ("0" + value[1]);
@@ -195,10 +203,10 @@
                     return value[0] + "-" + month + "-" + day;
                 }
             }else if(O.type === "checkbox" ){
-                console.log(O.input.is(":checked"));
                 return O.input.is(":checked")?"true":"false"; 
-            }
-            else{
+            }else if (O.type === "year_date"){
+                return O.input.val().trim();
+            }else{
                 return O.input.val();
             }
         }
@@ -267,7 +275,9 @@
             }else {
                 isValid = O.input.val() ? true : false;
                 if(!isValid){
-                    O.input.$validationContainer.text("required");
+	//remove "required" message
+                    //O.input.$validationContainer.text("required");
+					isValid = true;
                 }
                 
 

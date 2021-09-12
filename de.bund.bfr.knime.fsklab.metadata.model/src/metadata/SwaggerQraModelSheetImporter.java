@@ -565,9 +565,7 @@ public class SwaggerQraModelSheetImporter  {
 
 		Cell dateCell = row.getCell(N);
 		if (dateCell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
-			Date date = dateCell.getDateCellValue();
-			LocalDate localDate = LocalDate.of(date.getYear() + 1900, date.getMonth() + 1, date.getDate());
-			reference.setDate(localDate);
+		    reference.setDate(dateCell.getStringCellValue());
 		}
 
 		Cell pmidCell = row.getCell(O);

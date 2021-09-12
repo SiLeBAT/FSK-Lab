@@ -1,5 +1,6 @@
 package de.bund.bfr.knime.fsklab.nodes.v1_9;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,6 +23,7 @@ import de.bund.bfr.knime.fsklab.v1_9.runner.RunnerNodeSettings;
 import metadata.SwaggerUtil;
 import de.bund.bfr.knime.fsklab.r.client.LibRegistry;
 import de.bund.bfr.knime.fsklab.r.client.RController;
+import de.bund.bfr.knime.fsklab.r.client.RprofileManager;
 import de.bund.bfr.knime.fsklab.r.client.ScriptExecutor;
 import de.bund.bfr.metadata.swagger.Parameter;
 
@@ -30,11 +32,14 @@ public class RScriptHandler extends ScriptHandler {
   ScriptExecutor executor;
   RController controller;
 
-  public RScriptHandler() throws RException {
+  public RScriptHandler() throws RException, IOException {
     this(new ArrayList<String>(0));
   }
 
-  public RScriptHandler(List<String> packages) throws RException {
+  public RScriptHandler(List<String> packages) throws RException, IOException {
+    RprofileManager.subscribe();
+    // initialize LibRegistry before Controller to avoid errors on switching R in preferences
+    LibRegistry.instance(); 
     this.controller = new RController();
     this.executor = new ScriptExecutor(controller);
     
@@ -191,6 +196,7 @@ public class RScriptHandler extends ScriptHandler {
 
   @Override
   public void close() throws Exception {
+    RprofileManager.unSubscribe();
     controller.close();
 
   }

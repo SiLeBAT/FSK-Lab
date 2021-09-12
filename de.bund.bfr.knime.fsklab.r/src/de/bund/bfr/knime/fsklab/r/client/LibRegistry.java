@@ -40,8 +40,9 @@ import org.rosuda.REngine.REXPMismatchException;
 import org.rosuda.REngine.RList;
 
 import com.sun.jna.Platform;
-
+import de.bund.bfr.knime.fsklab.preferences.PreferenceInitializer;
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
+import de.bund.bfr.knime.fsklab.r.server.RConnectionFactory.RConnectionResource;
 
 /**
  * Singleton!! There can only be one.
@@ -53,16 +54,16 @@ public class LibRegistry {
   private static LibRegistry instance;
 
   /** Installation path. */
-  private final Path installPath;
+  private Path installPath;
 
   /** miniCRAN repository path. */
-  private final Path repoPath;
+  private Path repoPath;
 
   /** Utility set to keep count of installed libraries. */
   private final Set<String> installedLibs;
 
   /** Utility RController for running R commands. */
-  private final RController controller = new RController();
+  public final RController controller = new RController();
 
   private String type;
 
@@ -71,7 +72,7 @@ public class LibRegistry {
   private final String MIRROR = "https://cran.rstudio.com";
 
   private LibRegistry() throws IOException, RException {
-
+	  
     if (Platform.isWindows()) {
       type = "win.binary";
     } else if (Platform.isMac()) {
@@ -83,13 +84,23 @@ public class LibRegistry {
     // Prepare rWrapper
     rWrapper = new RWrapper();
     rWrapper.library("miniCRAN");
+    if((!PreferenceInitializer.getRPath().contains(RprofileManager.BFR_R_PLUGIN_NAME) &&  Platform.isWindows()) || Platform.isMac()) {
+      try {
+        String[] rPath= controller.eval(".libPaths()", true).asStrings();
+        //get default library path.
+        installPath = Paths.get(rPath[0]);
+        repoPath = installPath.getParent().resolve("cran");
+      } catch (REXPMismatchException | RException e1) {
+        e1.printStackTrace();
+      }
+    }else {
+      Path userFolder = Paths.get(System.getProperty("user.home"));
+      Path fskFolder = userFolder.resolve(".fsk");
 
-    Path userFolder = Paths.get(System.getProperty("user.home"));
-    Path fskFolder = userFolder.resolve(".fsk");
-
-    // CRAN and library folders
-    installPath = fskFolder.resolve("library");
-    repoPath = fskFolder.resolve("cran");
+      // CRAN and library folders
+      installPath = fskFolder.resolve("library");
+      repoPath = fskFolder.resolve("cran");
+    }
 
     // Validate .fsk folder
     if (Files.exists(installPath) && Files.exists(repoPath)) {
@@ -99,21 +110,14 @@ public class LibRegistry {
       String[] pkgArray = installPath.toFile().list();
       installedLibs = Arrays.stream(pkgArray).collect(Collectors.toSet());
 
-      // Remove libraries, that are technically installed but with an incompatible version to avoid trouble during execution
-      installedLibs.removeIf(
-          lib ->{
-            try {
-              controller.eval("library("+ lib + ")", true);
-              return false;
-            }catch(Exception e) {
-              return true;
-            }
-          });
+
     } else {
 
       // Create directories
-      Files.createDirectory(repoPath);
-      Files.createDirectory(installPath);
+      if(!Files.exists(repoPath))
+        Files.createDirectory(repoPath);
+      if(!Files.exists(installPath))
+        Files.createDirectory(installPath);
 
       // Create CRAN structure in repoPath
       rWrapper.makeRepo(repoPath);
@@ -123,12 +127,32 @@ public class LibRegistry {
   }
 
   public synchronized static LibRegistry instance() throws IOException, RException {
-    if (instance == null) {
-      instance = new LibRegistry();
-    }
-    return instance;
+    
+	  if (instance == null ) {
+		  instance = new LibRegistry();
+		  PreferenceInitializer.refresh = false;
+	  }
+	  if(PreferenceInitializer.refresh)
+		  refreshInstance();
+	  
+
+	  return instance;
   }
 
+  private static void refreshInstance() {
+	  synchronized(instance) {
+		  try {
+			  instance.controller.close();
+			  // Wait until controller is actually closed. 
+			  instance.wait(RConnectionResource.RPROCESS_TIMEOUT + 2000);
+			  instance = new LibRegistry();
+		  } catch(Exception e) {
+			  instance = null;
+		  } finally {
+			  PreferenceInitializer.refresh = false;
+		  }
+	  }
+  }
   /**
    * Install a list of packages into the repository. Already installed packages
    * are ignored.

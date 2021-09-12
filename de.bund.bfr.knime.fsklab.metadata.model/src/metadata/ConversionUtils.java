@@ -213,16 +213,21 @@ public class ConversionUtils {
 
 				if (originalPropType.equals(targetPropType)) {
 					if (originalPropType.equals("string") || originalPropType.equals("number")) {
-						node.set(key, field.getValue());
+						if(!field.getValue().toString().equals("\"\""))
+							node.set(key, field.getValue());
 					} else if (originalPropType.equals("array")) {
 						ArrayNode convertedProperty = MAPPER.createArrayNode();
 						for (JsonNode child : field.getValue()) {
-		                    if (child.isTextual()) {
-		                      convertedProperty.add(child.asText());
+		                    if (child.isValueNode() && !child.isNull()) {
+		                    	convertedProperty.add(child);
 		                    } else if (child.isObject()) {
 		                      JsonNode convertedChild = convert(child, originalProp, targetProp);
 		                      convertedProperty.add(convertedChild);
 		                    }
+		                    // if array, add array (only relevant for modification dates)
+		                    else if (child.isArray()) {
+		                    	convertedProperty.add(child);
+			                }
 						}
 						if (convertedProperty.size() > 0) {
 						  node.set(key, convertedProperty);

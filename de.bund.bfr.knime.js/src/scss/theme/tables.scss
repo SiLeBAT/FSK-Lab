@@ -234,34 +234,7 @@
 			margin-bottom: 0;
 		}
 	}
-	.tr-selected {
-		position: relative;
-		background-color: lighten( $bfr-primary, 38% );
-		&:hover {
-			background-color: lighten( $bfr-primary, 33% );
-		}
-		&:focus {
-			background-color: lighten( $bfr-primary, 33% );
-		}
-		&:after {
-			content: '\e83f';
-			position: absolute;
-			left: 0;
-			z-index: 20;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			padding: 0rem;
-			width: 1.125rem;
-			height: 1.125rem;
-			background-color: rgba(0,0,0,0.2);
-			border-radius: 0 0 0.25rem 0;
-			text-align: center;
-			font-family: 'feather';
-			font-size: 0.875rem;
-			color: $white;
-		}
-	}
+	
 	.tr-hidden {
 		display: none;
 	}

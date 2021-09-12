@@ -18,32 +18,6 @@
  */
 package de.bund.bfr.knime.fsklab.v2_0.writer;
 
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.threetenbp.ThreeTenModule;
-import de.bund.bfr.fskml.FSKML;
-import de.bund.bfr.fskml.FskMetaDataObject;
-import de.bund.bfr.fskml.FskMetaDataObject.ResourceType;
-import de.bund.bfr.fskml.sedml.SourceScript;
-import de.bund.bfr.knime.fsklab.FskPlugin;
-import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
-import de.bund.bfr.knime.fsklab.nodes.ScriptHandler;
-import de.bund.bfr.knime.fsklab.nodes.WriterNodeUtils;
-import de.bund.bfr.knime.fsklab.r.client.LibRegistry;
-import de.bund.bfr.knime.fsklab.v2_0.CombinedFskPortObject;
-import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
-import de.bund.bfr.knime.fsklab.v2_0.FskSimulation;
-import de.bund.bfr.knime.fsklab.v2_0.JoinRelation;
-import de.bund.bfr.metadata.swagger.Model;
-import de.bund.bfr.metadata.swagger.Parameter;
-import de.unirostock.sems.cbarchive.ArchiveEntry;
-import de.unirostock.sems.cbarchive.CombineArchive;
-import de.unirostock.sems.cbarchive.meta.DefaultMetaDataObject;
-import de.unirostock.sems.cbarchive.meta.MetaDataObject;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -53,13 +27,13 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.xml.stream.XMLStreamException;
-import metadata.SwaggerUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
@@ -102,6 +76,48 @@ import org.sbml.jsbml.ext.comp.Submodel;
 import org.sbml.jsbml.xml.XMLAttributes;
 import org.sbml.jsbml.xml.XMLNode;
 import org.sbml.jsbml.xml.XMLTriple;
+import org.threeten.bp.Instant;
+import org.threeten.bp.LocalDate;
+import org.threeten.bp.ZoneId;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.threetenbp.ThreeTenModule;
+import de.bund.bfr.fskml.FSKML;
+import de.bund.bfr.fskml.FskMetaDataObject;
+import de.bund.bfr.fskml.FskMetaDataObject.ResourceType;
+import de.bund.bfr.fskml.sedml.SourceScript;
+import de.bund.bfr.knime.fsklab.FskPlugin;
+import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
+import de.bund.bfr.knime.fsklab.nodes.ScriptHandler;
+import de.bund.bfr.knime.fsklab.nodes.WriterNodeUtils;
+import de.bund.bfr.knime.fsklab.r.client.LibRegistry;
+import de.bund.bfr.knime.fsklab.v2_0.CombinedFskPortObject;
+import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
+import de.bund.bfr.knime.fsklab.v2_0.FskSimulation;
+import de.bund.bfr.knime.fsklab.v2_0.JoinRelation;
+import de.bund.bfr.metadata.swagger.DataModel;
+import de.bund.bfr.metadata.swagger.DoseResponseModel;
+import de.bund.bfr.metadata.swagger.ExposureModel;
+import de.bund.bfr.metadata.swagger.GenericModel;
+import de.bund.bfr.metadata.swagger.ConsumptionModel;
+import de.bund.bfr.metadata.swagger.HealthModel;
+import de.bund.bfr.metadata.swagger.Model;
+import de.bund.bfr.metadata.swagger.OtherModel;
+import de.bund.bfr.metadata.swagger.Parameter;
+import de.bund.bfr.metadata.swagger.PredictiveModel;
+import de.bund.bfr.metadata.swagger.ProcessModel;
+import de.bund.bfr.metadata.swagger.QraModel;
+import de.bund.bfr.metadata.swagger.RiskModel;
+import de.bund.bfr.metadata.swagger.ToxicologicalModel;
+import de.unirostock.sems.cbarchive.ArchiveEntry;
+import de.unirostock.sems.cbarchive.CombineArchive;
+import de.unirostock.sems.cbarchive.meta.DefaultMetaDataObject;
+import de.unirostock.sems.cbarchive.meta.MetaDataObject;
+import metadata.SwaggerUtil;
 
 class WriterNodeModel extends NoInternalsModel {
 
@@ -329,10 +345,42 @@ class WriterNodeModel extends NoInternalsModel {
     }
 
   }
-
+  
+  public static void addModificationDate(Model modelMetadata) {
+    Date dateJavaFormat = new Date();
+    LocalDate dateThreeTenFormat = Instant.ofEpochMilli(dateJavaFormat.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
+    String modelType = modelMetadata.getModelType();
+      if(modelType.equalsIgnoreCase( "genericModel")) {
+        ((GenericModel)modelMetadata).getGeneralInformation().addModificationDateItem(dateThreeTenFormat);
+      }else if(modelType.equalsIgnoreCase( "dataModel")) {
+        ((DataModel)modelMetadata).getGeneralInformation().addModificationDateItem(dateThreeTenFormat);
+      }else if(modelType.equalsIgnoreCase( "consumptionModel")) {
+        ((ConsumptionModel)modelMetadata).getGeneralInformation().addModificationDateItem(dateThreeTenFormat);
+      }else if(modelType.equalsIgnoreCase( "doseResponseModel")) {
+        ((DoseResponseModel)modelMetadata).getGeneralInformation().addModificationDateItem(dateThreeTenFormat);
+      }else if(modelType.equalsIgnoreCase( "exposureModel")) {
+        ((ExposureModel)modelMetadata).getGeneralInformation().addModificationDateItem(dateThreeTenFormat);
+      }else if(modelType.equalsIgnoreCase( "healthModel")) {
+        ((HealthModel)modelMetadata).getGeneralInformation().addModificationDateItem(dateThreeTenFormat);
+      }else if(modelType.equalsIgnoreCase( "otherModel")) {
+        ((OtherModel)modelMetadata).getGeneralInformation().addModificationDateItem(dateThreeTenFormat);
+      }else if(modelType.equalsIgnoreCase( "predictiveModel")) {
+        ((PredictiveModel)modelMetadata).getGeneralInformation().addModificationDateItem(dateThreeTenFormat);
+      }else if(modelType.equalsIgnoreCase( "processModel")) {
+        ((ProcessModel)modelMetadata).getGeneralInformation().addModificationDateItem(dateThreeTenFormat);
+      }else if(modelType.equalsIgnoreCase( "qraModel")) {;
+        ((QraModel)modelMetadata).getGeneralInformation().addModificationDateItem(dateThreeTenFormat);
+      }else if(modelType.equalsIgnoreCase( "riskModel")) {
+        ((RiskModel)modelMetadata).getGeneralInformation().addModificationDateItem(dateThreeTenFormat);
+      }else if(modelType.equalsIgnoreCase( "toxicologicalModel")) {
+        ((ToxicologicalModel)modelMetadata).getGeneralInformation().addModificationDateItem(dateThreeTenFormat);
+      }
+  }
+  
   @Override
   protected PortObject[] execute(PortObject[] inObjects, ExecutionContext exec) throws Exception {
     FskPortObject in = (FskPortObject) inObjects[0];
+    addModificationDate(in.modelMetadata);
     try (ScriptHandler scriptHandler = ScriptHandler
         .createHandler(SwaggerUtil.getLanguageWrittenIn(in.modelMetadata), in.packages)) {
       
@@ -509,7 +557,18 @@ class WriterNodeModel extends NoInternalsModel {
   }
 
   public static String normalizeName(FskPortObject fskObj) {
-    return SwaggerUtil.getModelName(fskObj.modelMetadata).replaceAll("\\W", "").replace(" ", "");
+    String name = "noModelName";
+    if(SwaggerUtil.getModelName(fskObj.modelMetadata) != null) {
+      name = SwaggerUtil.getModelName(fskObj.modelMetadata)
+          .replaceAll("[^a-zA-Z0-9_]", "") // remove everything not char,number or _
+          .replace(" ", "");
+      //if name starts with number, remove it
+      while (name.matches("^[0-9].*$")) {
+        name = name.substring(1);
+      }
+      
+    }
+    return name;
   }
 
   private static SBMLDocument createSBML(FskPortObject fskObj, CombineArchive archive,

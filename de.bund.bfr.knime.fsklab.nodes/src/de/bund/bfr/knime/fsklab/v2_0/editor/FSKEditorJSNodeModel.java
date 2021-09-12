@@ -75,9 +75,11 @@ import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
 import de.bund.bfr.knime.fsklab.v2_0.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.v2_0.FskSimulation;
 import de.bund.bfr.knime.fsklab.v2_0.editor.FSKEditorJSNodeDialog.ModelType;
+import de.bund.bfr.metadata.swagger.DoseResponseModel;
+import de.bund.bfr.metadata.swagger.GenericModel;
 import de.bund.bfr.metadata.swagger.Model;
 import de.bund.bfr.metadata.swagger.Parameter;
-import de.bund.bfr.metadata.swagger.Parameter.ClassificationEnum;
+import de.bund.bfr.metadata.swagger.Reference;
 import de.bund.bfr.rakip.vocabularies.data.AccreditationProcedureRepository;
 import de.bund.bfr.rakip.vocabularies.data.AvailabilityRepository;
 import de.bund.bfr.rakip.vocabularies.data.BasicProcessRepository;
@@ -257,10 +259,35 @@ final class FSKEditorJSNodeModel
         value.setVisualizationScript("");
       }
     }
-
+    if(!StringUtils.isEmpty(value.getModelMetaData())) {
+      try {
+        value.setModelMetaData(migrateReferenceDateToYear(value.getModelMetaData()));
+      } catch (IOException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+    }
     return value;
   }
+  
+  public String migrateReferenceDateToYear(String metadataString) throws IOException {
+      
+      JsonNode metadataNode = MAPPER.readTree(metadataString);
+      
+      String modelType = metadataNode.get("modelType").asText("genericModel");
 
+      // Deserialize metadata to concrete class according to modelType
+      Class<? extends Model> modelClass = SwaggerUtil.modelClasses.get(modelType);
+      
+      Model metadata = MAPPER.readValue(metadataString, modelClass);
+      List<Reference> references = NodeUtils.getReferenceList(modelType, metadata);
+      references.forEach(reference -> {
+        if(reference.getDate() != null)
+          reference.setDate(reference.getDate().split("[-,]")[0]);
+      });
+      return MAPPER.writeValueAsString(metadata);
+  }
+  
   @Override
   public String getJavascriptObjectID() {
     return "de.bund.bfr.knime.fsklab.v2.0.editor.component";
@@ -368,16 +395,29 @@ final class FSKEditorJSNodeModel
 
         // Deserialize metadata to concrete class according to modelType
         Class<? extends Model> modelClass = SwaggerUtil.modelClasses.get(modelType);
-        metadata = MAPPER.readValue(viewValue.getModelMetaData(), modelClass);
+        //metadata = MAPPER.readValue(viewValue.getModelMetaData(), modelClass);
+        metadata =  new ConversionUtils().convertModel(MAPPER.readTree(viewValue.getModelMetaData()),
+            ConversionUtils.ModelClass.valueOf(modelType));
         if(!StringUtils.isEmpty(viewRep.getModelMetadata())) {
           JsonNode repMetadataNode = MAPPER.readTree(viewRep.getModelMetadata());
           String repModelType = repMetadataNode.get("modelType").asText("genericModel");
-          if(m_config.getModelType() != null &&  !m_config.getModelType().equals(repModelType)) {
+          if(m_config.getModelType() != null &&  !m_config.getModelType().equalsIgnoreCase(repModelType)) {
+            
             metadata =  new ConversionUtils().convertModel(MAPPER.readTree(viewRep.getModelMetadata()),
                   ConversionUtils.ModelClass.valueOf(m_config.getModelType()));
+         // workaround only for DoseResponseModel because the model name attribute is called
+            // modelName unlike other models.
+            if (metadata instanceof DoseResponseModel) {
+              String modelName = repMetadataNode.get("generalInformation").get("name").asText("");;
+              SwaggerUtil.setModelName(metadata, modelName);
+            }
+            if (repModelType.equalsIgnoreCase("doseResponseModel")) {
+              String modelName = repMetadataNode.get("generalInformation").get("modelName").asText("");;
+              SwaggerUtil.setModelName(metadata, modelName);
+            }
             //update representation metadata
             viewRep.setModelMetadata(MAPPER.writeValueAsString(metadata));
-            originalMetadata = MAPPER.readValue(viewRep.getModelMetadata(), modelClass);
+            originalMetadata = metadata;
             //update view value metadata from representation after converting model metadata
             viewValue.setModelMetaData(MAPPER.writeValueAsString(metadata));
             viewValue.setModelScript(viewRep.getModelScript());
@@ -385,21 +425,22 @@ final class FSKEditorJSNodeModel
             viewValue.setReadme(viewRep.getReadme());
           }
           else {
-            metadata = MAPPER.readValue(viewValue.getModelMetaData(), modelClass);
-            if(!StringUtils.isEmpty(portObjectModelType) && !portObjectModelType.equals(modelType)) {
+            //metadata = MAPPER.readValue(viewValue.getModelMetaData(), modelClass);
+            
+            if(!StringUtils.isEmpty(portObjectModelType) && !portObjectModelType.equalsIgnoreCase(modelType)) {
               originalMetadata = ((FskPortObject)inObjects[0]).modelMetadata;
             }else {
               originalMetadata = MAPPER.readValue(viewRep.getModelMetadata(), modelClass);
             }
             
             if(!viewValue.isCompleted()) {
-              viewValue.setModelMetaData(viewRep.getModelMetadata());
+              viewValue.setModelMetaData(MAPPER.writeValueAsString(metadata));
               viewValue.setModelScript(viewRep.getModelScript());
               viewValue.setVisualizationScript(viewRep.getVisScript());
               viewValue.setReadme(viewRep.getReadme());
             }else {
               //update representation for following model type changes
-              viewRep.setModelMetadata(jsonMetadata);
+              viewRep.setModelMetadata(MAPPER.writeValueAsString(metadata));
               viewRep.setModelScript(viewValue.getModelScript());
               viewRep.setVisScript(viewValue.getVisualizationScript());
               viewRep.setReadme(viewValue.getReadme());
@@ -407,17 +448,25 @@ final class FSKEditorJSNodeModel
           }
         }
         else {
-          if(!StringUtils.isEmpty(portObjectModelType) && !portObjectModelType.equalsIgnoreCase(modelType)) {
+          if(!StringUtils.isEmpty(portObjectModelType)
+              && !portObjectModelType.equalsIgnoreCase(modelType) 
+              && !viewValue.isCompleted()) {
             String json = MAPPER.writeValueAsString(((FskPortObject)inObjects[0]).modelMetadata);
-            JsonNode portMetadata = MAPPER.readTree(json);
+            JsonNode portMetadata = MAPPER.readTree(json);    
             metadata = new ConversionUtils().convertModel(portMetadata,
                 ConversionUtils.ModelClass.valueOf(m_config.getModelType()));
-            
+            // workaround only for DoseResponseModel because the model name attribute is called
+            // modelName unlike other models.
+//            if (metadata instanceof DoseResponseModel) {
+              String modelName =
+                  SwaggerUtil.getModelName(((FskPortObject) inObjects[0]).modelMetadata);
+              SwaggerUtil.setModelName(metadata, modelName);
+//            }
             copyConnectedNodeToView("", viewValue);
             viewRep.setModelMetadata(MAPPER.writeValueAsString(metadata));
             viewValue.setModelMetaData(MAPPER.writeValueAsString(metadata));
           }else {
-            viewRep.setModelMetadata(jsonMetadata);
+            viewRep.setModelMetadata(MAPPER.writeValueAsString(metadata));
             viewRep.setModelScript(viewValue.getModelScript());
             viewRep.setVisScript(viewValue.getVisualizationScript());
             viewRep.setReadme(viewValue.getReadme());
@@ -440,10 +489,10 @@ final class FSKEditorJSNodeModel
       if (m_port != null) {
         //clone to clean the port object simulations safely later.
         simulations = new ArrayList<>(m_port.simulations);
-        if(originalParameters.size() > 0)
+        if(originalParameters != null)
           checkAndRegenerateSimulation(simulations, originalParameters, parameters);
 
-      }else if (metadata != null && SwaggerUtil.getModelMath(metadata) != null
+      } else if (metadata != null && SwaggerUtil.getModelMath(metadata) != null
           && SwaggerUtil.getParameter(metadata) != null)  {
 
         // 1. Create new default simulation out of the view value
@@ -451,6 +500,13 @@ final class FSKEditorJSNodeModel
 
         // 2. Assign newDefaultSimulation
         simulations = Arrays.asList(newDefaultSimulation);
+      } else if(metadata == null) {
+
+        // Make sure at least a default simulation is present at any time, even if editor view
+        // is not opened
+        FskSimulation newDefaultSimulation = NodeUtils.createDefaultSimulation(parameters);
+        simulations = Arrays.asList(newDefaultSimulation);
+
       }
 
       modelScript = StringUtils.defaultString(viewValue.getModelScript(), "");
@@ -533,26 +589,33 @@ final class FSKEditorJSNodeModel
     List<Parameter> viewParams =  (List<Parameter>) CollectionUtils.removeAll(newParams, originalParameters);
     List<String> editedParamsIDs = new ArrayList<String>();
     List<String> originalParamsIDs = originalParameters.stream().map(para -> para.getId()).collect(Collectors.toList());
-    
+    if(originalParamsIDs.isEmpty())
+      return;
     simulations.forEach(sim -> {
        LinkedHashMap<String, String> simParams = sim.getParameters();
-       viewParams.forEach(viewParam -> {
-         // new parameters will be added to all simulations
-         if(!originalParamsIDs.contains(viewParam.getId())) {  
+       if(!simParams.isEmpty()){
+         viewParams.forEach(viewParam -> {
+           // new parameters will be added to all simulations
+           if(!originalParamsIDs.contains(viewParam.getId())) {  
+             simParams.put(viewParam.getId(),viewParam.getValue());
+           }
+           // or the changed parameter will be added only to the default simulation 
+           else if(sim.getName().equals("defaultSimulation")) {
+             simParams.put(viewParam.getId(),viewParam.getValue());
+           }
+           editedParamsIDs.add(viewParam.getId());
+         });
+         //remove the parameter from simulation if it is removed from model math
+         paramsToBeRemoved.forEach(toBeDeletedParam -> {
+           if(!editedParamsIDs.contains(toBeDeletedParam.getId())) {  
+             simParams.remove(toBeDeletedParam.getId());
+           }
+         });
+       }else {
+         newParams.forEach(viewParam -> {
            simParams.put(viewParam.getId(),viewParam.getValue());
-         }
-         // or the changed parameter will be added only to the default simulation 
-         else if(sim.getName().equals("defaultSimulation")) {
-           simParams.put(viewParam.getId(),viewParam.getValue());
-         }
-         editedParamsIDs.add(viewParam.getId());
-       });
-       //remove the parameter from simulation if it is removed from model math
-       paramsToBeRemoved.forEach(toBeDeletedParam -> {
-         if(!editedParamsIDs.contains(toBeDeletedParam.getId())) {  
-           simParams.remove(toBeDeletedParam.getId());
-         }
-       });
+         });
+       }
     });
   }
   
