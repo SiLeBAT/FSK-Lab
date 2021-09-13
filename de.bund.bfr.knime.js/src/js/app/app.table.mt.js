@@ -515,7 +515,7 @@ class APPTableMT extends APPTable {
 						if ( $.isArray( facetValue ) && facetValue.length > 0 ) {
 
 							// get according col index
-							let colIndex = super._getColIndexByField( field );
+							let colIndex = _getColIndexByField( field );
 							let cellData = rowData.cells[colIndex];
 
 							if( cellData instanceof Set ) {
@@ -657,4 +657,24 @@ class APPTableMT extends APPTable {
 			return new Set().add( 'no information' );
 		}
 	}
+	
+	/**
+     * GET COL INDEX BY FIELD 
+	 * (adjusted for checkbox column which add +1 column)
+     * returns col index by field identifier
+     * @param {string} field name of the column
+     */
+
+    _getColIndexByField(field) {
+        let O = this;
+        console.log("_getColIndexByField child");
+        let colIndex = -1;
+        $.each(O.opts.cols, (i, col) => {
+            if (field == col.field) {
+                colIndex = i+1;
+            }
+        });
+
+        return colIndex;
+    } 
 }
