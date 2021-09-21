@@ -588,6 +588,7 @@ final class FSKEditorJSNodeModel
     List<Parameter> paramsToBeRemoved =
         (List<Parameter>) CollectionUtils.removeAll(originalParameters, newParams);
     List<Parameter> viewParams =  (List<Parameter>) CollectionUtils.removeAll(newParams, originalParameters);
+    viewParams.removeIf(p -> p.getClassification().equals(ClassificationEnum.OUTPUT));
     List<String> editedParamsIDs = new ArrayList<String>();
     List<String> originalParamsIDs = originalParameters.stream().map(para -> para.getId()).collect(Collectors.toList());
     if(originalParamsIDs.isEmpty())
@@ -597,13 +598,11 @@ final class FSKEditorJSNodeModel
        if(!simParams.isEmpty()){
          viewParams.forEach(viewParam -> {
            // new parameters will be added to all simulations
-           if(!originalParamsIDs.contains(viewParam.getId()) 
-               && !viewParam.getClassification().equals(ClassificationEnum.OUTPUT)) {  
+           if(!originalParamsIDs.contains(viewParam.getId())) {  
              simParams.put(viewParam.getId(),viewParam.getValue());
            }
            // or the changed parameter will be added only to the default simulation 
-           else if(sim.getName().equals("defaultSimulation")
-               && !viewParam.getClassification().equals(ClassificationEnum.OUTPUT)) {
+           else if(sim.getName().equals("defaultSimulation")) {
              simParams.put(viewParam.getId(),viewParam.getValue());
            }
            editedParamsIDs.add(viewParam.getId());
@@ -616,9 +615,7 @@ final class FSKEditorJSNodeModel
          });
        }else {
          newParams.forEach(viewParam -> {
-           if(!viewParam.getClassification().equals(ClassificationEnum.OUTPUT)) {
-             simParams.put(viewParam.getId(),viewParam.getValue());  
-           }
+           simParams.put(viewParam.getId(),viewParam.getValue());  
          });
        }
     });
