@@ -79,6 +79,7 @@ import de.bund.bfr.metadata.swagger.DoseResponseModel;
 import de.bund.bfr.metadata.swagger.GenericModel;
 import de.bund.bfr.metadata.swagger.Model;
 import de.bund.bfr.metadata.swagger.Parameter;
+import de.bund.bfr.metadata.swagger.Parameter.ClassificationEnum;
 import de.bund.bfr.metadata.swagger.Reference;
 import de.bund.bfr.rakip.vocabularies.data.AccreditationProcedureRepository;
 import de.bund.bfr.rakip.vocabularies.data.AvailabilityRepository;
@@ -596,11 +597,13 @@ final class FSKEditorJSNodeModel
        if(!simParams.isEmpty()){
          viewParams.forEach(viewParam -> {
            // new parameters will be added to all simulations
-           if(!originalParamsIDs.contains(viewParam.getId())) {  
+           if(!originalParamsIDs.contains(viewParam.getId()) 
+               && !viewParam.getClassification().equals(ClassificationEnum.OUTPUT)) {  
              simParams.put(viewParam.getId(),viewParam.getValue());
            }
            // or the changed parameter will be added only to the default simulation 
-           else if(sim.getName().equals("defaultSimulation")) {
+           else if(sim.getName().equals("defaultSimulation")
+               && !viewParam.getClassification().equals(ClassificationEnum.OUTPUT)) {
              simParams.put(viewParam.getId(),viewParam.getValue());
            }
            editedParamsIDs.add(viewParam.getId());
@@ -613,7 +616,9 @@ final class FSKEditorJSNodeModel
          });
        }else {
          newParams.forEach(viewParam -> {
-           simParams.put(viewParam.getId(),viewParam.getValue());
+           if(!viewParam.getClassification().equals(ClassificationEnum.OUTPUT)) {
+             simParams.put(viewParam.getId(),viewParam.getValue());  
+           }
          });
        }
     });
