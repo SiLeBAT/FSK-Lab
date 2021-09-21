@@ -79,6 +79,7 @@ import de.bund.bfr.metadata.swagger.DoseResponseModel;
 import de.bund.bfr.metadata.swagger.GenericModel;
 import de.bund.bfr.metadata.swagger.Model;
 import de.bund.bfr.metadata.swagger.Parameter;
+import de.bund.bfr.metadata.swagger.Parameter.ClassificationEnum;
 import de.bund.bfr.metadata.swagger.Reference;
 import de.bund.bfr.rakip.vocabularies.data.AccreditationProcedureRepository;
 import de.bund.bfr.rakip.vocabularies.data.AvailabilityRepository;
@@ -587,6 +588,7 @@ final class FSKEditorJSNodeModel
     List<Parameter> paramsToBeRemoved =
         (List<Parameter>) CollectionUtils.removeAll(originalParameters, newParams);
     List<Parameter> viewParams =  (List<Parameter>) CollectionUtils.removeAll(newParams, originalParameters);
+    viewParams.removeIf(p -> p.getClassification().equals(ClassificationEnum.OUTPUT));
     List<String> editedParamsIDs = new ArrayList<String>();
     List<String> originalParamsIDs = originalParameters.stream().map(para -> para.getId()).collect(Collectors.toList());
     if(originalParamsIDs.isEmpty())
@@ -613,7 +615,7 @@ final class FSKEditorJSNodeModel
          });
        }else {
          newParams.forEach(viewParam -> {
-           simParams.put(viewParam.getId(),viewParam.getValue());
+           simParams.put(viewParam.getId(),viewParam.getValue());  
          });
        }
     });
