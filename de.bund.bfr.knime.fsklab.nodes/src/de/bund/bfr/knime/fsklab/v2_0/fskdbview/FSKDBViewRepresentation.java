@@ -18,6 +18,8 @@
  */
 package de.bund.bfr.knime.fsklab.v2_0.fskdbview;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.knime.core.node.InvalidSettingsException;
@@ -25,8 +27,6 @@ import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.js.core.JSONDataTable;
 import org.knime.js.core.JSONViewContent;
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 
 @JsonAutoDetect
@@ -44,7 +44,7 @@ public class FSKDBViewRepresentation extends JSONViewContent {
   private String showExecuteButtonChecked;
   private String showHeaderButtonChecked;
   private String sandwichList;
-
+  private String token;
   public String getShowDownloadButtonChecked() {
     return showDownloadButtonChecked;
   }
@@ -94,7 +94,13 @@ public class FSKDBViewRepresentation extends JSONViewContent {
   public void setTitle(String title) {
     this.title = title;
   }
+  public String getToken() {
+    return token;
+  }
 
+  public void setToken(String token) {
+    this.token = token;
+  }
   private String title;
 
   private String[] m_selection = {};
