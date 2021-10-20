@@ -93,7 +93,8 @@ class APPModalMTSimulations extends APPModal {
 			O._setTitle( O._modelMetadata.generalInformation.name );
 		}
 		// get simulations
-		_simulations = await  _fetchData._json( window._endpoints.simulations, O._modelId );//O._app._getSimulations( O._modelId );
+		let modelIdentifier = O._modelMetadata.generalInformation.identifier 
+		_simulations = await  _fetchData._json( window._endpoints.simulations, modelIdentifier );//O._app._getSimulations( O._modelId );
 		await O._simulationPanel._updateContent(O._modelMetadata, O._modelId, _simulations);
 		O._loader._setState( false ); // set loader
 	}

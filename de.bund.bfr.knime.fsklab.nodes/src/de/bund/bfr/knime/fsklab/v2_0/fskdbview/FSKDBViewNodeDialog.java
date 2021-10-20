@@ -47,6 +47,7 @@ public class FSKDBViewNodeDialog extends DefaultNodeSettingsPane {
   DialogComponentString showHeader;
   DialogComponentString sandwichList;
   DialogComponentString title;
+  DialogComponentString token;
 
 
 
@@ -77,6 +78,8 @@ public class FSKDBViewNodeDialog extends DefaultNodeSettingsPane {
         createFlowVariableModel(FSKDBViewNodeModel.KEY_SANDWICH_LIST, FlowVariable.Type.STRING);
     FlowVariableModel titleVariable =
         createFlowVariableModel(FSKDBViewNodeModel.KEY_TITLE, FlowVariable.Type.STRING);
+    FlowVariableModel tokenVariable =
+        createFlowVariableModel(FSKDBViewNodeModel.KEY_TOKEN, FlowVariable.Type.STRING);
 
 
     // Add a new String component to the dialog for Repository URL.
@@ -126,7 +129,9 @@ public class FSKDBViewNodeDialog extends DefaultNodeSettingsPane {
         30, showHeaderVariable);
     addDialogComponent(showHeader);
 
-
+    SettingsModelString m_TokenSettings = FSKDBViewNodeModel.createTokenSettingsModel();
+    token = new DialogComponentString(m_TokenSettings, "Token", true, 30, tokenVariable);
+    addDialogComponent(token);
   }
 
   @Override
@@ -140,8 +145,10 @@ public class FSKDBViewNodeDialog extends DefaultNodeSettingsPane {
     showHeader.saveSettingsTo(settings);
     title.saveSettingsTo(settings);
     sandwichList.saveSettingsTo(settings);
+    token.saveSettingsTo(settings);
   }
 
+  @Override
   public void loadAdditionalSettingsFrom(final NodeSettingsRO settings, final DataTableSpec[] specs)
       throws NotConfigurableException {
     repository.loadSettingsFrom(settings, specs);
@@ -153,6 +160,7 @@ public class FSKDBViewNodeDialog extends DefaultNodeSettingsPane {
       showHeader.loadSettingsFrom(settings, specs);
       title.loadSettingsFrom(settings, specs);
       sandwichList.loadSettingsFrom(settings, specs);
+      token.loadSettingsFrom(settings, specs);
     }
 
   }
