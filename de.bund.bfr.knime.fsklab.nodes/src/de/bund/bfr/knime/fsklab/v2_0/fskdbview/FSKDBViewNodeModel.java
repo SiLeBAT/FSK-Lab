@@ -91,7 +91,7 @@ public class FSKDBViewNodeModel
   /**
    * The default online repository URL String.
    */
-  private static final String DEFAULT_REPOSITORY_LOCATION = "https://knime.bfr.berlin/landingpage/";
+  private static final String DEFAULT_REPOSITORY_LOCATION = "https://knime.bfr.berlin/landingpage/DB/";
 
   /**
    * The settings model to manage the shared settings. This model will hold the value entered by the
