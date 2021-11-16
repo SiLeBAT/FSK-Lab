@@ -61,6 +61,7 @@ fskdbview = function () {
 			filter 			: window._endpoint + 'filter',
 			modelscriptEndpoint: window._endpoint + "modelscript/",
             visualizationscriptEndpoint: window._endpoint + "visualizationscript/",
+            readmeEndpoint: window._endpoint + "readme/",
             simulationsEndpoint: window._endpoint + "simulations/"
 		};
         createDBViewUI();
