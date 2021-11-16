@@ -558,7 +558,9 @@ class WriterNodeModel extends NoInternalsModel {
 
   public static String normalizeName(FskPortObject fskObj) {
     if(SwaggerUtil.getModelName(fskObj.modelMetadata) != null)
-      return SwaggerUtil.getModelName(fskObj.modelMetadata).replaceAll("\\W", "").replace(" ", "");
+      return "_" + SwaggerUtil.getModelName(fskObj.modelMetadata)
+          .replaceAll("[^a-zA-Z0-9_]", "")
+          .replace(" ", "");
     return "noModelName";
   }
 
