@@ -7,13 +7,14 @@ date: 08.12.2020
 */
 
 class ModelHandler {
-	constructor( metadata, img , modelScript, visScript ) {
-		this._metadata = metadata;
+	constructor( metadata, img , modelScript, visScript, readme ) {
+this._metadata = metadata;
 		this._schema = {};
 		this._menu = [];
 		this._img = img;
 		this._modelScript = modelScript;
 		this._visScript = visScript;
+this.readme = readme;
 		this.panels = {};
 	}
 	_create() {
@@ -135,8 +136,8 @@ class ModelHandler {
 
 class GenericModel extends ModelHandler {
 
-	constructor( metadata, img , state , modelScript, visScript ) {
-		super( metadata, img , modelScript, visScript);
+	constructor( metadata, img , state , modelScript, visScript , readme ) {
+		super( metadata, img , modelScript, visScript, readme ) ;
 		this._schema = schemas.genericModel;
 		if(state){
 			this.panels = this._createPanels();
@@ -351,8 +352,8 @@ class GenericModel extends ModelHandler {
 }
 class DataModel extends ModelHandler {
 
-	constructor( metadata, img , state, modelScript, visScript ) {
-		super( metadata, img , modelScript, visScript);
+	constructor( metadata, img , state, modelScript, visScript , readme ) {
+		super( metadata, img , modelScript, visScript, readme );
 		this._schema = schemas.dataModel;
 		if(state){
 			this.panels = this._createPanels();
@@ -526,8 +527,8 @@ class DataModel extends ModelHandler {
 
 class PredictiveModel extends ModelHandler {
 
-	constructor( metadata, img , state ,  modelScript, visScript ) {
-		super( metadata, img , modelScript, visScript);
+	constructor( metadata, img , state ,  modelScript, visScript , readme ) {
+		super( metadata, img , modelScript, visScript, readme ) ;
 		this._schema = schemas.predictiveModel;
 		if(state){
 			this.panels = this._createPanels();
@@ -699,8 +700,8 @@ class PredictiveModel extends ModelHandler {
 
 class OtherModel extends ModelHandler {
 
-	constructor( metadata, img , state ,  modelScript, visScript ) {
-		super( metadata, img , modelScript, visScript);
+	constructor( metadata, img , state ,  modelScript, visScript , readme ) {
+		super( metadata, img , modelScript, visScript, readme ) ;
 		this._schema = schemas.otherModel;
 		if(state){
 			this.panels = this._createPanels();
@@ -894,8 +895,8 @@ class OtherModel extends ModelHandler {
 
 class DoseResponseModel extends ModelHandler {
 
-	constructor( metadata, img , state ,  modelScript, visScript ) {
-		super( metadata, img , modelScript, visScript);
+	constructor( metadata, img , state ,  modelScript, visScript , readme ) {
+		super( metadata, img , modelScript, visScript, readme ) ;
 		this._schema = schemas.doseResponseModel;
 		if(state){
 			this.panels = this._createPanels();
@@ -1089,8 +1090,8 @@ class DoseResponseModel extends ModelHandler {
 
 class ToxicologicalModel extends ModelHandler {
 
-	constructor( metadata, img , state ,  modelScript, visScript ) {
-		super( metadata, img , modelScript, visScript);
+	constructor( metadata, img , state ,  modelScript, visScript , readme ) {
+		super( metadata, img , modelScript, visScript, readme ) ;
 		this._schema = schemas.toxicologicalModel;
 		if(state){
 			this.panels = this._createPanels();
@@ -1286,8 +1287,8 @@ class ToxicologicalModel extends ModelHandler {
 
 class ExposureModel extends ModelHandler {
 
-	constructor( metadata, img , state ,  modelScript, visScript ) {
-		super( metadata, img , modelScript, visScript);
+	constructor( metadata, img , state ,  modelScript, visScript , readme ) {
+		super( metadata, img , modelScript, visScript, readme ) ;
 		this._schema = schemas.exposureModel;
 		if(state){
 			this.panels = this._createPanels();
@@ -1494,8 +1495,8 @@ class ExposureModel extends ModelHandler {
 
 class ProcessModel extends ModelHandler {
 
-	constructor( metadata, img , state ,  modelScript, visScript ) {
-		super( metadata, img , modelScript, visScript);
+	constructor( metadata, img , state ,  modelScript, visScript , readme ) {
+		super( metadata, img , modelScript, visScript, readme ) ;
 		this._schema = schemas.processModel;
 		if(state){
 			this.panels = this._createPanels();
@@ -1675,8 +1676,8 @@ class ProcessModel extends ModelHandler {
 
 class ConsumptionModel extends ModelHandler {
 
-	constructor( metadata, img , state ,  modelScript, visScript ) {
-		super( metadata, img , modelScript, visScript);
+	constructor( metadata, img , state ,  modelScript, visScript , readme ) {
+		super( metadata, img , modelScript, visScript, readme ) ;
 		this._schema = schemas.consumptionModel;
 		if(state){
 			this.panels = this._createPanels();
@@ -1866,8 +1867,8 @@ class ConsumptionModel extends ModelHandler {
 
 class HealthModel extends ModelHandler {
 
-	constructor( metadata, img , state ,  modelScript, visScript ) {
-		super( metadata, img , modelScript, visScript);
+	constructor( metadata, img , state ,  modelScript, visScript , readme ) {
+		super( metadata, img , modelScript, visScript, readme ) ;
 		this._schema = schemas.healthModel;
 		if(state){
 			this.panels = this._createPanels();
@@ -2066,8 +2067,8 @@ class HealthModel extends ModelHandler {
 
 class RiskModel extends ModelHandler {
 
-	constructor( metadata, img , state ,  modelScript, visScript ) {
-		super( metadata, img , modelScript, visScript);
+	constructor( metadata, img , state ,  modelScript, visScript , readme ) {
+		super( metadata, img , modelScript, visScript, readme ) ;
 		this._schema = schemas.riskModel;
 		if(state){
 			this.panels = this._createPanels();
@@ -2279,8 +2280,8 @@ class RiskModel extends ModelHandler {
 
 class QraModel extends ModelHandler {
 
-	constructor( metadata, img , state ,  modelScript, visScript ) {
-		super( metadata, img , modelScript, visScript);
+	constructor( metadata, img , state ,  modelScript, visScript , readme ) {
+		super( metadata, img , modelScript, visScript, readme ) ;
 		this._schema = schemas.qraModel;
 		if(state){
 			this.panels = this._createPanels();
