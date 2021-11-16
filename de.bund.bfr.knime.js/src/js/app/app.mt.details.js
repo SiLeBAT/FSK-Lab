@@ -379,6 +379,13 @@ class APPMTDetails {
                     rowData.cells.push(prop.label);
                     // cell 2 val
                     let data = panelMeta.metadata[prop.id];
+                    if(prop.type == 'date'){
+                        data = _formatter['_metadataDate'].call(0,data);
+                    }
+					if(prop.type == 'date-array'){
+                        data = _formatter['_metadataDateArray'].call(0,data);
+                        rowData.type = prop.type;
+                    }
                     data = _checkUndefinedContent(data);
                     rowData.cells.push(data);
 
@@ -448,6 +455,13 @@ class APPMTDetails {
                     // cells
                     $.each(panelMeta.schema, (j, prop) => {
                         let data = item[prop.id];
+                        if(prop.type == 'date' || prop.type == 'year_date'){
+                            data = _formatter['_metadataDate'].call(0,data);
+                        }
+    					if(prop.type == 'date-array'){
+                            data = _formatter['_metadataDateArray'].call(0,data);
+                            rowData.type = prop.type;
+                        }
                         data = _checkUndefinedContent(data);
                         // cell each prop
                         rowData.cells.push(data);
