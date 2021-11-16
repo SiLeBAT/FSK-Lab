@@ -289,15 +289,15 @@ var _formatter = {
 
 
 /**
-  * fetch data from src by id and type
+  * fetch data from src by id and type and token (URL parameters)
   */
 
 var _fetchData = {
 	_json 		: async ( src, id, signal ) => {
-		_log( 'UTILS / _fetchData._json: '+ src + ', '+ id );
+		_log( 'UTILS / _fetchData._json: '+ src + ', '+ id + ', ' + window._token);
 		let data = null;
 		// append id if not type "set"
-		src = ! _isNull( id ) ? src + id : src;
+		src = ! _isNull( id ) ? src + id + window._token: src + window._token;
 
 		let fetchOpts = {};
 		! _isNull( signal ) ? fetchOpts.signal = signal : null;
@@ -317,10 +317,10 @@ var _fetchData = {
 		return data;
 	},
 	_blob 		: async ( src, id, signal ) => {
-		_log( 'UTILS / _fetchData._blob: '+ src + ', '+ id );
+		_log( 'UTILS / _fetchData._blob: '+ src + ', '+ id + ', ' + window._token);
 		let data = null;
 		// append id if not type "set"
-		src = ! _isNull( id ) ? src + id : src;
+		src = ! _isNull( id ) ? src + id + window._token: src  + window._token;
 
 		let fetchOpts = {};
 		! _isNull( signal ) ? fetchOpts.signal = signal : null;
@@ -341,10 +341,10 @@ var _fetchData = {
 		return data;
 	},
 	_content 	: async ( src, id, signal ) => {
-		_log( 'UTILS / _fetchData._content: '+ src + ', '+ id );
+		_log( 'UTILS / _fetchData._content: '+ src + ', '+ id + ', ' + window._token);
 		let data = null;
 		// append id if not type "set"
-		src = ! _isNull( id ) ? src + id : src;
+		src = ! _isNull( id ) ? src + id + window._token : src + window._token;
 
 		let fetchOpts = {};
 		! _isNull( signal ) ? fetchOpts.signal = signal : null;
@@ -364,7 +364,7 @@ var _fetchData = {
 		return data;
 	},
 	_array 		: async ( src, arrayLength, signal ) => {
-		_log( 'UTILS / _fetchData._array: '+ src + ', '+ arrayLength );
+		_log( 'UTILS / _fetchData._array: '+ src + ', '+ arrayLength + ', ' + window._token);
 		let data = [];
 		let fetchOpts = {};
 		! _isNull( signal ) ? fetchOpts.signal = signal : null;

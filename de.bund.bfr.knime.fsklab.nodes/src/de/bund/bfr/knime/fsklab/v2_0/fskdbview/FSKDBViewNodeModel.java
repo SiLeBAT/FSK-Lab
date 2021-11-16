@@ -18,6 +18,7 @@
  */
 package de.bund.bfr.knime.fsklab.v2_0.fskdbview;
 
+import de.bund.bfr.knime.fsklab.v2_0.editor.FSKEditorJSNodeFactory;
 import java.util.Arrays;
 import java.util.List;
 import org.json.JSONArray;
@@ -48,7 +49,6 @@ import org.knime.core.node.web.ValidationError;
 import org.knime.js.core.JSONDataTable;
 import org.knime.js.core.JSONDataTable.JSONDataTableRow;
 import org.knime.js.core.node.AbstractWizardNodeModel;
-import de.bund.bfr.knime.fsklab.v2_0.editor.FSKEditorJSNodeFactory;
 
 
 /**
@@ -86,6 +86,7 @@ public class FSKDBViewNodeModel
   static final String KEY_SHOW_HEADER = "header";
   static final String KEY_SANDWICH_LIST = "sandwichList";
   static final String KEY_TITLE = "tilte";
+  static final String KEY_TOKEN = "token";
 
   /**
    * The default online repository URL String.
@@ -147,6 +148,7 @@ public class FSKDBViewNodeModel
   SettingsModelString m_showDetailsSettings = createShowDetailsButtonSettingsModel();
   SettingsModelString m_showExecuteSettings = createShowExecuteButtonSettingsModel();
   SettingsModelString m_showHeaderSettings = createShowHeaderButtonSettingsModel();
+  SettingsModelString m_TokenSettings = createTokenSettingsModel();
 
   final SettingsModelStringArray selectionSettings = createSelectionSettingsModel();
 
@@ -193,7 +195,9 @@ public class FSKDBViewNodeModel
   static SettingsModelString createTitleSettingsModel() {
     return new SettingsModelString(KEY_TITLE, "FSK-Web Landing Page");
   }
-
+  static SettingsModelString createTokenSettingsModel() {
+    return new SettingsModelString(KEY_TOKEN, "?repository=FSK-Web&status=Curated");
+  }
   /**
    * {@inheritDoc}
    */
@@ -207,6 +211,7 @@ public class FSKDBViewNodeModel
     m_showDetailsSettings.saveSettingsTo(settings);
     m_showExecuteSettings.saveSettingsTo(settings);
     m_showHeaderSettings.saveSettingsTo(settings);
+    m_TokenSettings.saveSettingsTo(settings);
     FSKDBViewValue viewValue = getViewValue();
     if (viewValue != null && viewValue.getSelection() != null
         && viewValue.getSelection().length > 0) {
@@ -234,6 +239,8 @@ public class FSKDBViewNodeModel
     }
     if (settings.containsKey(SELECTION))
       selectionSettings.loadSettingsFrom(settings);
+    if (settings.containsKey(KEY_TOKEN))
+      m_TokenSettings.loadSettingsFrom(settings);
   }
 
   /**
@@ -285,7 +292,7 @@ public class FSKDBViewNodeModel
       }
     }
     representation
-        .setSelection(((SettingsModelStringArray) selectionSettings).getStringArrayValue());
+        .setSelection(selectionSettings.getStringArrayValue());
     if (representation.getTable() == null) {
       representation.setTable(emptyJSONTable);
     }
@@ -364,15 +371,16 @@ public class FSKDBViewNodeModel
       representation.setMaxSelectionNumber(
           ((SettingsModelIntegerBounded) m_maxSelectionNumberSettings).getIntValue());
       representation.setShowDownloadButtonChecked(
-          ((SettingsModelString) m_showDownloadSettings).getStringValue());
+          m_showDownloadSettings.getStringValue());
       representation.setShowDetailsButtonChecked(
-          ((SettingsModelString) m_showDetailsSettings).getStringValue());
+          m_showDetailsSettings.getStringValue());
       representation.setShowExecuteButtonChecked(
-          ((SettingsModelString) m_showExecuteSettings).getStringValue());
+          m_showExecuteSettings.getStringValue());
       representation.setShowHeaderButtonChecked(
-          ((SettingsModelString) m_showHeaderSettings).getStringValue());
+          m_showHeaderSettings.getStringValue());
       representation
-          .setSelection(((SettingsModelStringArray) selectionSettings).getStringArrayValue());
+          .setSelection(selectionSettings.getStringArrayValue());
+      representation.setToken(m_TokenSettings.getStringValue());
       FSKDBViewValue fskdbViewValue = getViewValue();
       if (fskdbViewValue != null && fskdbViewValue.getSelection() != null
           && fskdbViewValue.getSelection().length > 0) {

@@ -430,7 +430,7 @@ class APPTableMT extends APPTable {
 		O._loader._setState( true );
 
 		// fetch result from endpoint
-		let result = await _fetchData._json( window._endpoints.search, query );
+		let result = await _fetchData._json( window._endpoints.search, query);
 
 		O._highlight( query );
 
