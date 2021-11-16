@@ -15,7 +15,7 @@ FSK-Lab is an open source extension plugin to the Konstanz Information Miner
 (KNIME). FSK-Lab enables KNIME users to work with FSK models within KNIME.
 
 ### Installation
-FSK-Lab may be installed throught the update site <https://dl.bintray.com/silebat/fsklab>. More information about the installation can be found at the [Food Risk Labs website](https://foodrisklabs.bfr.bund.de/index.php/fsk-lab/)
+FSK-Lab may be installed throught the update site <https://gitlab.bfr.berlin/silebat/repositories/raw/master/fsklab/>. More information about the installation can be found at the [Food Risk Labs website](https://foodrisklabs.bfr.bund.de/fsk-lab-installation/)
 
 ### Nodes
 - ![](bundles/de.bund.bfr.knime.fsklab.nodes/src/de/bund/bfr/knime/fsklab/nodes/Creator.png) FSK Creator
@@ -26,16 +26,6 @@ FSK-Lab may be installed throught the update site <https://dl.bintray.com/sileba
 - ![](bundles/de.bund.bfr.knime.fsklab.nodes/src/de/bund/bfr/knime/fsklab/nodes/Editor.png) FSK Editor
 - ![](bundles/de.bund.bfr.knime.fsklab.nodes/src/de/bund/bfr/knime/fsklab/nodes/fsk2metadata.png) FSK to metadata
 
-### Deprecated nodes
-- ![](bundles/de.bund.bfr.knime.fsklab.nodes.deprecated/src/de/bund/bfr/knime/fsklab/nodes/creator/FskCreator.png) FSK Creator
-- ![](bundles/de.bund.bfr.knime.fsklab.nodes.deprecated/src/de/bund/bfr/knime/fsklab/nodes/writer/FskxWriter.png) FSKX Writer
-- ![](bundles/de.bund.bfr.knime.fsklab.nodes.deprecated/src/de/bund/bfr/knime/fsklab/nodes/reader/FskxReader.png) FSKX Reader
-- ![](bundles/de.bund.bfr.knime.fsklab.nodes.deprecated/src/de/bund/bfr/knime/fsklab/nodes/runner/FskRunner.png) FSK Runner
-- ![](bundles/de.bund.bfr.knime.fsklab.nodes.deprecated/src/de/bund/bfr/knime/fsklab/nodes/metadataeditor/FskEditor.png) FSK Metadata Editor
-- ![](bundles/de.bund.bfr.knime.fsklab.nodes.deprecated/src/de/bund/bfr/knime/fsklab/nodes/fsk2r/fsk2r.png) FSK to R
-- ![](bundles/de.bund.bfr.knime.fsklab.nodes.deprecated/src/de/bund/bfr/knime/fsklab/nodes/fsk2metadata/fsk2metadata.png) FSK to metadata
-- ![](bundles/de.bund.bfr.knime.fsklab.nodes.deprecated/src/de/bund/bfr/knime/fsklab/nodes/editor/FskEditor.png) FSK Editor
-- ![](bundles/de.bund.bfr.knime.fsklab.nodes.deprecated/src/de/bund/bfr/knime/fsklab/nodes/editor/js/FskEditor.png) FSK Editor JS
 
 ### Project hierarchy
 The project hierarchy is described in the [wiki](https://github.com/SiLeBAT/FSK-Lab/wiki/Project-hierarchy).
@@ -54,7 +44,7 @@ It consists of three components:
 - a HSQL databaase to store experimental data and microbial models
 
 ### Installation
-FSK-Lab may be installed throught the update site [https://dl.bintray.com/silebat/pmmlab]. More information about the installation can be found at the [Food Risk Labs website](https://foodrisklabs.bfr.bund.de/index.php/pmm-lab-installation/)
+PMM-Lab may be installed using the FSK-Lab update site <https://gitlab.bfr.berlin/silebat/repositories/raw/master/fsklab/>. More information about the installation can be found at the [Food Risk Labs website](https://foodrisklabs.bfr.bund.de/pmm-lab-installation/)
 
 ### Extension nodes
 - ![](bundles/de.bund.bfr.knime.pmm.bfrdbiface.lib/icons/XMLToTable.png) Converters
