@@ -557,11 +557,18 @@ class WriterNodeModel extends NoInternalsModel {
   }
 
   public static String normalizeName(FskPortObject fskObj) {
-    if(SwaggerUtil.getModelName(fskObj.modelMetadata) != null)
-      return "_" + SwaggerUtil.getModelName(fskObj.modelMetadata)
-          .replaceAll("[^a-zA-Z0-9_]", "")
+    String name = "noModelName";
+    if(SwaggerUtil.getModelName(fskObj.modelMetadata) != null) {
+      name = SwaggerUtil.getModelName(fskObj.modelMetadata)
+          .replaceAll("[^a-zA-Z0-9_]", "") // remove everything not char,number or _
           .replace(" ", "");
-    return "noModelName";
+      //if name starts with number, remove it
+      while (name.matches("^[0-9].*$")) {
+        name = name.substring(1);
+      }
+      
+    }
+    return name;
   }
 
   private static SBMLDocument createSBML(FskPortObject fskObj, CombineArchive archive,
