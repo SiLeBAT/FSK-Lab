@@ -264,7 +264,27 @@ var _formatter = {
 		var rx = new RegExp('(?![^<]+>)' + search, 'gi');
 		// return val.toString().replace( new RegExp('(<.*?>)(' + search + '?.)(</.*?>)', 'g'), '<mark>$2</mark>' );
 		return val.replace( rx, '<mark>$&</mark>' );
-	}
+	},
+	_metadataDate: function _metadataDate(data) {
+        if(data && data.constructor == Array) {
+            var dTemp = new Date(data);
+            if (Object.prototype.toString.call(dTemp) === "[object Date]") {
+            // it is a date
+                if (!isNaN(dTemp.getTime())) {  // d.valueOf() could also work
+                    // date is valid
+                    data = dTemp.toLocaleDateString();
+                }
+            }
+
+            }
+    	return data;
+    },
+	_metadataDateArray: function _metadataDateArray(data) {
+		if(data){
+	        return data.map(_formatter._metadataDate)
+	    }
+	    return data;
+    }
 }
 
 
