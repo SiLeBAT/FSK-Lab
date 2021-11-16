@@ -172,17 +172,17 @@ public class RunnerNodeDialog extends DataAwareNodeDialogPane {
 
     FskSimulation selectedSimulation;
 
-    String selectedSimulationInSettings = settings.getString("simulation", "");
-    if (!selectedSimulationInSettings.isEmpty()) {
-      // If a simulation is configured in the settings then pick it
-      Optional<FskSimulation> sim = inObj.simulations.stream()
-          .filter(it -> it.getName().equals(selectedSimulationInSettings)).findFirst();
-      // If not present assign default simulation
-      selectedSimulation = sim.orElse(inObj.simulations.get(0));
-    } else {
+//    String selectedSimulationInSettings = settings.getString("simulation", "");
+//    if (!selectedSimulationInSettings.isEmpty()) {
+//      // If a simulation is configured in the settings then pick it
+//      Optional<FskSimulation> sim = inObj.simulations.stream()
+//          .filter(it -> it.getName().equals(selectedSimulationInSettings)).findFirst();
+//      // If not present assign default simulation
+//      selectedSimulation = sim.orElse(inObj.simulations.get(0));
+//    } else {
       // If no selected simulation is saved in settings then pick the simulation from the input port
       selectedSimulation = inObj.simulations.get(inObj.selectedSimulationIndex);
-    }
+//    }
 
     simulationModel.removeAllElements();
     inObj.simulations.forEach(simulationModel::addElement);
