@@ -76,6 +76,7 @@ import de.bund.bfr.knime.fsklab.v2_0.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.v2_0.FskSimulation;
 import de.bund.bfr.knime.fsklab.v2_0.editor.FSKEditorJSNodeDialog.ModelType;
 import de.bund.bfr.metadata.swagger.DoseResponseModel;
+import de.bund.bfr.metadata.swagger.GenericModel;
 import de.bund.bfr.metadata.swagger.Model;
 import de.bund.bfr.metadata.swagger.Parameter;
 import de.bund.bfr.metadata.swagger.Reference;
@@ -394,13 +395,26 @@ final class FSKEditorJSNodeModel
 
         // Deserialize metadata to concrete class according to modelType
         Class<? extends Model> modelClass = SwaggerUtil.modelClasses.get(modelType);
-        metadata = MAPPER.readValue(viewValue.getModelMetaData(), modelClass);
+        //metadata = MAPPER.readValue(viewValue.getModelMetaData(), modelClass);
+        metadata =  new ConversionUtils().convertModel(MAPPER.readTree(viewValue.getModelMetaData()),
+            ConversionUtils.ModelClass.valueOf(modelType));
         if(!StringUtils.isEmpty(viewRep.getModelMetadata())) {
           JsonNode repMetadataNode = MAPPER.readTree(viewRep.getModelMetadata());
           String repModelType = repMetadataNode.get("modelType").asText("genericModel");
-          if(m_config.getModelType() != null &&  !m_config.getModelType().equals(repModelType)) {
+          if(m_config.getModelType() != null &&  !m_config.getModelType().equalsIgnoreCase(repModelType)) {
+            
             metadata =  new ConversionUtils().convertModel(MAPPER.readTree(viewRep.getModelMetadata()),
                   ConversionUtils.ModelClass.valueOf(m_config.getModelType()));
+         // workaround only for DoseResponseModel because the model name attribute is called
+            // modelName unlike other models.
+            if (metadata instanceof DoseResponseModel) {
+              String modelName = repMetadataNode.get("generalInformation").get("name").asText("");;
+              SwaggerUtil.setModelName(metadata, modelName);
+            }
+            if (repModelType.equalsIgnoreCase("doseResponseModel")) {
+              String modelName = repMetadataNode.get("generalInformation").get("modelName").asText("");;
+              SwaggerUtil.setModelName(metadata, modelName);
+            }
             //update representation metadata
             viewRep.setModelMetadata(MAPPER.writeValueAsString(metadata));
             originalMetadata = metadata;
@@ -411,21 +425,22 @@ final class FSKEditorJSNodeModel
             viewValue.setReadme(viewRep.getReadme());
           }
           else {
-            metadata = MAPPER.readValue(viewValue.getModelMetaData(), modelClass);
-            if(!StringUtils.isEmpty(portObjectModelType) && !portObjectModelType.equals(modelType)) {
+            //metadata = MAPPER.readValue(viewValue.getModelMetaData(), modelClass);
+            
+            if(!StringUtils.isEmpty(portObjectModelType) && !portObjectModelType.equalsIgnoreCase(modelType)) {
               originalMetadata = ((FskPortObject)inObjects[0]).modelMetadata;
             }else {
               originalMetadata = MAPPER.readValue(viewRep.getModelMetadata(), modelClass);
             }
             
             if(!viewValue.isCompleted()) {
-              viewValue.setModelMetaData(viewRep.getModelMetadata());
+              viewValue.setModelMetaData(MAPPER.writeValueAsString(metadata));
               viewValue.setModelScript(viewRep.getModelScript());
               viewValue.setVisualizationScript(viewRep.getVisScript());
               viewValue.setReadme(viewRep.getReadme());
             }else {
               //update representation for following model type changes
-              viewRep.setModelMetadata(jsonMetadata);
+              viewRep.setModelMetadata(MAPPER.writeValueAsString(metadata));
               viewRep.setModelScript(viewValue.getModelScript());
               viewRep.setVisScript(viewValue.getVisualizationScript());
               viewRep.setReadme(viewValue.getReadme());
@@ -433,23 +448,25 @@ final class FSKEditorJSNodeModel
           }
         }
         else {
-          if(!StringUtils.isEmpty(portObjectModelType) && !portObjectModelType.equalsIgnoreCase(modelType)) {
+          if(!StringUtils.isEmpty(portObjectModelType)
+              && !portObjectModelType.equalsIgnoreCase(modelType) 
+              && !viewValue.isCompleted()) {
             String json = MAPPER.writeValueAsString(((FskPortObject)inObjects[0]).modelMetadata);
             JsonNode portMetadata = MAPPER.readTree(json);    
             metadata = new ConversionUtils().convertModel(portMetadata,
                 ConversionUtils.ModelClass.valueOf(m_config.getModelType()));
             // workaround only for DoseResponseModel because the model name attribute is called
             // modelName unlike other models.
-            if (metadata instanceof DoseResponseModel) {
+//            if (metadata instanceof DoseResponseModel) {
               String modelName =
                   SwaggerUtil.getModelName(((FskPortObject) inObjects[0]).modelMetadata);
-              ((DoseResponseModel) metadata).getGeneralInformation().setModelName(modelName);
-            }
+              SwaggerUtil.setModelName(metadata, modelName);
+//            }
             copyConnectedNodeToView("", viewValue);
             viewRep.setModelMetadata(MAPPER.writeValueAsString(metadata));
             viewValue.setModelMetaData(MAPPER.writeValueAsString(metadata));
           }else {
-            viewRep.setModelMetadata(jsonMetadata);
+            viewRep.setModelMetadata(MAPPER.writeValueAsString(metadata));
             viewRep.setModelScript(viewValue.getModelScript());
             viewRep.setVisScript(viewValue.getVisualizationScript());
             viewRep.setReadme(viewValue.getReadme());
