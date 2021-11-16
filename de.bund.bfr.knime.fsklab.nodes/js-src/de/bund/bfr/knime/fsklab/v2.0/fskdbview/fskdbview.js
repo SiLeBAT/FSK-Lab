@@ -47,7 +47,7 @@ fskdbview = function () {
         parent.tableID = _representation.tableID;
         //subscribe to events emitted by editor
         knimeService.subscribeToSelection('b800db46-4e25-4f77-bcc6-db0c21EditorSaved', selectionEdited);
-
+        window._token = _representation.token
         window._endpoint = _representation.remoteRepositoryURL ? _representation.remoteRepositoryURL : "https://knime.bfr.berlin/backend/";
         window._endpoints 	= {
 			metadata		: window._endpoint + 'metadata/',
@@ -148,7 +148,8 @@ fskdbview = function () {
         } else {
             parent.tableID = await create_UUID();
             _representation.tableID = parent.tableID;
-            const rep = await fetch(window._endpoints.metadata);
+            token = _representation.token
+            const rep = await fetch(window._endpoints.metadata + token);
             const j = await rep.json();
             _lazySriptsfetching = true;
             for (index = 0; index < j.length; index++) {
@@ -341,6 +342,7 @@ fskdbview = function () {
            
                 },
                 selectRow       : ( O, rowIndex, rowData ) => {
+                			
                             if(O.selectAllClicked){
                                     this.checked = true;
                                     $(this).closest("tr").css("background-color", "#e1e3e8");
@@ -356,18 +358,19 @@ fskdbview = function () {
                             this.checked = true;
                             $(this).closest("tr").css("background-color", "#e1e3e8");
                             //fetch scripts
+                            let modelIdentifier = getData(_representation.metadata[rowIndex], "generalInformation", "identifier")
                             if(!_representation.metadata[rowIndex]['modelscript']){
-                                const simulations = fetch(window._endpoints.simulationsEndpoint + rowIndex);
+                                const simulations = fetch(window._endpoints.simulationsEndpoint + modelIdentifier + window._token);
                                 simulations.then(function(response) {
                                     return response.json();
                                 }).then(function(data) {
                                     _representation.metadata[rowIndex]['simulation'] = data; // this will be a json
-                                    const modelscript =  fetch(window._endpoints.modelscriptEndpoint + rowIndex);
+                                    const modelscript =  fetch(window._endpoints.modelscriptEndpoint + modelIdentifier + window._token);
                                     modelscript.then(function(response) {
                                         return response.text();
                                     }).then(function(data) {
                                         _representation.metadata[rowIndex]['modelscript'] = data; // this will be a string
-                                        const visualizationscript =  fetch(window._endpoints.visualizationscriptEndpoint + rowIndex);
+                                        const visualizationscript =  fetch(window._endpoints.visualizationscriptEndpoint + modelIdentifier + window._token);
                                         visualizationscript.then(function(responsevis) {
                                             return responsevis.text();
                                         }).then(function(datavis) {
@@ -377,7 +380,7 @@ fskdbview = function () {
                                             window.selectedModels.push(_representation.metadata[rowIndex]);
                                             _value.selection.push(_representation.table.rows[rowIndex].rowKey);
                                             // emit selection event
-                                            window.downloadURs.push(window._endpoints.download+rowIndex);
+                                            window.downloadURs.push(window._endpoints.download  + modelIdentifier + window._token);
                                             knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c21joiner' ,
                                                     [{"selecteModels":window.selectedModels, "downloadURs":window.downloadURs}]
                                             /* [window.selectedModels,window.downloadURs]*/,{elements:[]}) 
@@ -390,7 +393,7 @@ fskdbview = function () {
                                 window.selectedModels.push(_representation.metadata[rowIndex]);
                                 _value.selection.push(_representation.table.rows[rowIndex].rowKey);
                                 // emit selection event
-                                window.downloadURs.push(window._endpoints.download+rowIndex);
+                                window.downloadURs.push(window._endpoints.download  + modelIdentifier + window._token);
                                 knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c21joiner' ,
                                         [{"selecteModels":window.selectedModels, "downloadURs":window.downloadURs}]
                                 /* [window.selectedModels,window.downloadURs]*/,{elements:[]}) 
@@ -464,7 +467,8 @@ fskdbview = function () {
             title: 'Download',
             on: {
                 click: (O, $action, rowIndex, rowData) => {
-                    window.open(_endpoints.download + rowIndex, '_blank');
+                	let modelIdentifier = rowData["modelMetadata"]["generalInformation"]["identifier"];
+                    window.open(_endpoints.download + modelIdentifier + window._token, '_blank');
                 }
             }
         });
@@ -489,13 +493,14 @@ fskdbview = function () {
                 // emit selection event
                 let selectedModel = rowData.modelMetadata;
                 //fetch scripts
+                let modelIdentifier = getData(selectedModel, "generalInformation", "identifier")
                 if (_lazySriptsfetching) {
-                    const modelscript = fetch(window._endpoints.modelscriptEndpoint + modelIndex);
+                    const modelscript = fetch(window._endpoints.modelscriptEndpoint + modelIdentifier + window._token);
                     modelscript.then(function(response) {
                         return response.text();
                     }).then(function(data) {
                         selectedModel['modelscript'] = data; // this will be a string
-                        const visualizationscript = fetch(window._endpoints.visualizationscriptEndpoint + modelIndex);
+                        const visualizationscript = fetch(window._endpoints.visualizationscriptEndpoint + modelIdentifier + window._token);
                         visualizationscript.then(function(responsevis) {
                             return responsevis.text();
                         }).then(function(datavis) {
@@ -535,14 +540,16 @@ fskdbview = function () {
                                 selectedModelIndex = modelIndex;
                                 // emit selection event
                                 let selectedModel = rowData.modelMetadata;
+                                
                                 //fetch scripts
+                                let modelIdentifier = getData(selectedModel, "generalInformation", "identifier")
                                 if(_lazySriptsfetching){
-                                    const modelscript =  fetch(window._endpoints.modelscriptEndpoint + modelIndex);
+                                    const modelscript =  fetch(window._endpoints.modelscriptEndpoint + modelIdentifier + window._token);
                                     modelscript.then(function(response) {
                                         return response.text();
                                     }).then(function(data) {
                                         selectedModel['modelscript'] = data; // this will be a string
-                                        const visualizationscript =  fetch(window._endpoints.visualizationscriptEndpoint + modelIndex);
+                                        const visualizationscript =  fetch(window._endpoints.visualizationscriptEndpoint + modelIdentifier + window._token);
                                         visualizationscript.then(function(responsevis) {
                                             return responsevis.text();
                                         }).then(function(datavis) {
@@ -685,19 +692,20 @@ fskdbview = function () {
                             this.checked = true;
                             $(this).closest("tr").css("background-color", "#e1e3e8");
                             //fetch scripts
+                            let modelIdentifier = getData(_representation.metadata[rowIndex], "generalInformation", "identifier")
                             if(_lazySriptsfetching){
                                 
-                                const simulations = fetch(window._endpoints.simulationsEndpoint + rowIndex);
+                                const simulations = fetch(window._endpoints.simulationsEndpoint + modelIdentifier + window._token);
                                 simulations.then(function(response) {
                                     return response.json();
                                 }).then(function(data) {
                                     _representation.metadata[rowIndex]['simulation'] = data; // this will be a json
-                                    const modelscript =  fetch(window._endpoints.modelscriptEndpoint + rowIndex);
+                                    const modelscript =  fetch(window._endpoints.modelscriptEndpoint + modelIdentifier + window._token);
                                     modelscript.then(function(response) {
                                         return response.text();
                                     }).then(function(data) {
                                         _representation.metadata[rowIndex]['modelscript'] = data; // this will be a string
-                                        const visualizationscript =  fetch(window._endpoints.visualizationscriptEndpoint + rowIndex);
+                                        const visualizationscript =  fetch(window._endpoints.visualizationscriptEndpoint + modelIdentifier + window._token);
                                         visualizationscript.then(function(responsevis) {
                                             return responsevis.text();
                                         }).then(function(datavis) {
@@ -707,7 +715,7 @@ fskdbview = function () {
                                             window.selectedModels.push(_representation.metadata[rowIndex]);
                                             _value.selection.push(_representation.table.rows[rowIndex].rowKey);
                                             // emit selection event
-                                            window.downloadURs.push(window._endpoints.download+rowIndex);
+                                            window.downloadURs.push(window._endpoints.download + modelIdentifier + window._token);
                                             knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c21joiner' ,
                                                     [{"selecteModels":window.selectedModels, "downloadURs":window.downloadURs}]
                                             /* [window.selectedModels,window.downloadURs]*/,{elements:[]})  
