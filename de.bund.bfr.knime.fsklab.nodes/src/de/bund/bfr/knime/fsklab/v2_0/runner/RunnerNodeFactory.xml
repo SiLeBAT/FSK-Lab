@@ -39,4 +39,7 @@
 		  visualization script then this port will hold no image (optional).
 		</outPort>
 	</ports>
+	<views>
+		<view index="0" name="Plot"></view>
+	</views>		
 </knimeNode>
