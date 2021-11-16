@@ -233,7 +233,7 @@ public class RJsonHandler extends JsonHandler {
 
   @Override
   protected void addPathToFileParameter(String parameter, String path) throws Exception {
-    scriptHandler.runScript(parameter + " <- paste('" + path + "' , " + parameter + ")", exec,
+    scriptHandler.runScript(parameter + " <- paste('" + path + "' , " + parameter + ",sep='' )", exec,
         false);
 
   }
