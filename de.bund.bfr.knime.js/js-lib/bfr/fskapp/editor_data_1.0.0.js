@@ -448,7 +448,7 @@ const ui = {
     }, {
         "label": "BMI",
         "id": "bmi",
-        "type": "text",
+        "type": "text-array",
         "description": "Description of the range of BMI or class of BMI or BMI mean"
     }, {
         "id": "specialDietGroups",
