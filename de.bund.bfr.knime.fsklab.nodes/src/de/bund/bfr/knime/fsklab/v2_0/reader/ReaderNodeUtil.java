@@ -1,10 +1,13 @@
 package de.bund.bfr.knime.fsklab.v2_0.reader;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.fskml.FSKML;
 import de.bund.bfr.fskml.FskMetaDataObject;
-import de.bund.bfr.fskml.RScript;
 import de.bund.bfr.fskml.FskMetaDataObject.ResourceType;
+import de.bund.bfr.fskml.RScript;
 import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
 import de.bund.bfr.knime.fsklab.nodes.environment.ArchivedEnvironmentManager;
@@ -42,6 +45,7 @@ import java.util.TreeSet;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
+import metadata.SwaggerUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jdom.Text;
@@ -57,10 +61,6 @@ import org.sbml.jsbml.ext.comp.CompModelPlugin;
 import org.sbml.jsbml.ext.comp.CompSBasePlugin;
 import org.sbml.jsbml.ext.comp.ReplacedBy;
 import org.sbml.jsbml.xml.XMLNode;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import metadata.SwaggerUtil;
 
 /**
  * Utility class that updates combined models from FSK-Lab v.1.7.2 to be compatible with 1.8+. The
@@ -527,7 +527,13 @@ public class ReaderNodeUtil {
       URI sedmlUri = URIS.get("sedml");
       //URI htmllUri = URI.create("https://www.iana.org/assignments/media-types/text/html");
       URI rmdUri = URI.create("https://www.iana.org/assignments/media-types/text/markdown");
-
+      List<URI> fileUris = new ArrayList();
+      fileUris.add(textUri);
+      fileUris.add(csvUri);
+      fileUris.add(xlsxUri);
+      fileUris.add(rdataUri);
+      fileUris.add(rmdUri);
+      
 
       // Gets metadata from metadata entry (metaData.json)
       Optional<ArchiveEntry> metadataEntry =
@@ -589,9 +595,7 @@ public class ReaderNodeUtil {
       entries.stream().filter(entry -> entry.getFormat().equals(scriptUri) && entry.getDescriptions().isEmpty())
       .forEach(resourceEntries::add);
       // ... add other entries (not R scripts)
-      entries.stream().filter(entry ->  entry.getFormat().equals(textUri) || entry.getFormat().equals(csvUri)
-          || entry.getFormat().equals(xlsxUri) || entry.getFormat().equals(rdataUri) 
-          || entry.getFormat().equals(rmdUri)).forEach(resourceEntries::add);
+      entries.stream().filter(entry ->  fileUris.contains(entry.getFormat())).forEach(resourceEntries::add);
 
       String[] resourcePaths = resourceEntries.stream().map(ArchiveEntry::getEntityPath).toArray(String[]::new);
 
