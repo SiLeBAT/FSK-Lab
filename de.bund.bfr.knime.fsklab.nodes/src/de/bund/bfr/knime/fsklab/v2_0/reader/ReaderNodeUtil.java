@@ -527,7 +527,7 @@ public class ReaderNodeUtil {
       URI sedmlUri = URIS.get("sedml");
       //URI htmllUri = URI.create("https://www.iana.org/assignments/media-types/text/html");
       URI rmdUri = URI.create("https://www.iana.org/assignments/media-types/text/markdown");
-      List<URI> fileUris = new ArrayList();
+      List<URI> fileUris = new ArrayList<URI>();
       fileUris.add(textUri);
       fileUris.add(csvUri);
       fileUris.add(xlsxUri);

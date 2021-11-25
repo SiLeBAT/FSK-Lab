@@ -181,54 +181,46 @@ class WriterNodeModel extends NoInternalsModel {
 
       final String filenameString = filePrefix + resourcePath.getFileName().toString();
       final File resourceFile = resourcePath.toFile();
-      
-        
+
       if (FilenameUtils.isExtension(filenameString.toLowerCase(), "txt")) {
         archive.addEntry(resourceFile, filenameString, uris.get("plain"));
-      } 
-      if (FilenameUtils.isExtension(filenameString, "RData")) {
+      } else if (FilenameUtils.isExtension(filenameString, "RData")) {
         archive.addEntry(resourceFile, filenameString, uris.get("rdata"));
-      }
-      if (FilenameUtils.isExtension(filenameString.toLowerCase(), "csv")) {
+      } else if (FilenameUtils.isExtension(filenameString.toLowerCase(), "csv")) {
         archive.addEntry(resourceFile, filenameString, uris.get("csv"));
-      }
-      if (FilenameUtils.isExtension(filenameString.toLowerCase(), "jpeg")) {
+      } else if (FilenameUtils.isExtension(filenameString.toLowerCase(), "jpeg")) {
         archive.addEntry(resourceFile, filenameString, uris.get("jpeg"));
-      } 
-      if (FilenameUtils.isExtension(filenameString.toLowerCase(), "bmp")) {
+      } else if (FilenameUtils.isExtension(filenameString.toLowerCase(), "bmp")) {
         archive.addEntry(resourceFile, filenameString, uris.get("bmp"));
-      } 
-      if (FilenameUtils.isExtension(filenameString.toLowerCase(), "png")) {
+      } else if (FilenameUtils.isExtension(filenameString.toLowerCase(), "png")) {
         archive.addEntry(resourceFile, filenameString, uris.get("png"));
-      } 
-      if (FilenameUtils.isExtension(filenameString.toLowerCase(), "tiff")) {
+      } else if (FilenameUtils.isExtension(filenameString.toLowerCase(), "tiff")) {
         archive.addEntry(resourceFile, filenameString, uris.get("tiff"));
-      } 
-      if (FilenameUtils.isExtension(filenameString.toLowerCase(), "xlsx")) {
+      } else if (FilenameUtils.isExtension(filenameString.toLowerCase(), "xlsx")) {
         archive.addEntry(resourceFile, filenameString, uris.get("xlsx"));
       }
       // ADD additional resource files that the model script might need
-      if (FilenameUtils.isExtension(filenameString.toLowerCase(), scriptHandler.getFileExtension())) {
+      else if (FilenameUtils.isExtension(filenameString.toLowerCase(), scriptHandler.getFileExtension())) {
         archive.addEntry(resourceFile, filenameString, FSKML.getURIS(1, 0, 12).get(scriptHandler.getFileExtension()));
       }
       // ADD HDF5 file
-      if (FilenameUtils.isExtension(filenameString, "h5")) {
+      else if (FilenameUtils.isExtension(filenameString, "h5")) {
         archive.addEntry(resourceFile, filenameString, URI.create("http://purl.org/NET/mediatypes/text-xplain"));
       }
       // ADD JSON file
-      if (FilenameUtils.isExtension(filenameString.toLowerCase(), "json")) {
+      else if (FilenameUtils.isExtension(filenameString.toLowerCase(), "json")) {
         archive.addEntry(resourceFile, filenameString, URI.create("http://purl.org/NET/mediatypes/text-xplain"));
       }
       // ADD HTML file
-      if (FilenameUtils.isExtension(filenameString.toLowerCase(), "html")) {
+      else if (FilenameUtils.isExtension(filenameString.toLowerCase(), "html")) {
         archive.addEntry(resourceFile, filenameString, URI.create("https://www.iana.org/assignments/media-types/text/html"));
       }
       // ADD HTM file
-      if (FilenameUtils.isExtension(filenameString.toLowerCase(), "htm")) {
+      else if (FilenameUtils.isExtension(filenameString.toLowerCase(), "htm")) {
         archive.addEntry(resourceFile, filenameString, URI.create("https://www.iana.org/assignments/media-types/text/html"));
       }
       // ADD RMarkdown file
-      if (FilenameUtils.isExtension(filenameString.toLowerCase(), "rmd")) {
+      else if (FilenameUtils.isExtension(filenameString.toLowerCase(), "rmd")) {
         archive.addEntry(resourceFile, filenameString, URI.create("https://www.iana.org/assignments/media-types/text/markdown"));
       }
 
