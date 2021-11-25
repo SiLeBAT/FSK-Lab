@@ -181,49 +181,46 @@ class WriterNodeModel extends NoInternalsModel {
 
       final String filenameString = filePrefix + resourcePath.getFileName().toString();
       final File resourceFile = resourcePath.toFile();
-
-      if (FilenameUtils.isExtension(filenameString.toLowerCase(), "txt")) {
-        archive.addEntry(resourceFile, filenameString, uris.get("plain"));
-      } else if (FilenameUtils.isExtension(filenameString, "RData")) {
-        archive.addEntry(resourceFile, filenameString, uris.get("rdata"));
-      } else if (FilenameUtils.isExtension(filenameString.toLowerCase(), "csv")) {
-        archive.addEntry(resourceFile, filenameString, uris.get("csv"));
-      } else if (FilenameUtils.isExtension(filenameString.toLowerCase(), "jpeg")) {
-        archive.addEntry(resourceFile, filenameString, uris.get("jpeg"));
-      } else if (FilenameUtils.isExtension(filenameString.toLowerCase(), "bmp")) {
-        archive.addEntry(resourceFile, filenameString, uris.get("bmp"));
-      } else if (FilenameUtils.isExtension(filenameString.toLowerCase(), "png")) {
-        archive.addEntry(resourceFile, filenameString, uris.get("png"));
-      } else if (FilenameUtils.isExtension(filenameString.toLowerCase(), "tiff")) {
-        archive.addEntry(resourceFile, filenameString, uris.get("tiff"));
-      } else if (FilenameUtils.isExtension(filenameString.toLowerCase(), "xlsx")) {
-        archive.addEntry(resourceFile, filenameString, uris.get("xlsx"));
+      String extension = FilenameUtils.getExtension(filenameString.toLowerCase());
+      switch(extension) {
+        case "txt": archive.addEntry(resourceFile, filenameString, uris.get("plain"));
+        break;
+        case "rdata": archive.addEntry(resourceFile, filenameString, uris.get("rdata"));
+        break;
+        case "csv": archive.addEntry(resourceFile, filenameString, uris.get("csv"));
+        break;
+        case "jpeg": archive.addEntry(resourceFile, filenameString, uris.get("jpeg"));
+        break;
+        case "bmp": archive.addEntry(resourceFile, filenameString, uris.get("bmp"));
+        break;
+        case "png": archive.addEntry(resourceFile, filenameString, uris.get("png"));
+        break;
+        case "tiff":  archive.addEntry(resourceFile, filenameString, uris.get("tiff"));
+        break;
+        case "xlsx": archive.addEntry(resourceFile, filenameString, uris.get("xlsx"));
+        break;
+        // ADD additional resource files that the model script might need
+        case "r" : archive.addEntry(resourceFile, filenameString,
+            FSKML.getURIS(1, 0, 12).get(scriptHandler.getFileExtension()));
+        break;
+        case "py" : archive.addEntry(resourceFile, filenameString,
+            FSKML.getURIS(1, 0, 12).get(scriptHandler.getFileExtension()));
+        break;
+        case "h5": archive.addEntry(resourceFile, filenameString, URI.create("http://purl.org/NET/mediatypes/text-xplain"));
+        break;
+        // ADD JSON file
+        case "json": archive.addEntry(resourceFile, filenameString, URI.create("http://purl.org/NET/mediatypes/text-xplain"));
+        break;
+        // ADD HTML file
+        case "html": archive.addEntry(resourceFile, filenameString, URI.create("https://www.iana.org/assignments/media-types/text/html"));
+        break;
+        // ADD HTM file
+        case "htm":  archive.addEntry(resourceFile, filenameString, URI.create("https://www.iana.org/assignments/media-types/text/html"));
+        break;
+        // ADD RMarkdown file
+        case "rmd": archive.addEntry(resourceFile, filenameString, URI.create("https://www.iana.org/assignments/media-types/text/markdown"));
+        break;
       }
-      // ADD additional resource files that the model script might need
-      else if (FilenameUtils.isExtension(filenameString.toLowerCase(), scriptHandler.getFileExtension())) {
-        archive.addEntry(resourceFile, filenameString, FSKML.getURIS(1, 0, 12).get(scriptHandler.getFileExtension()));
-      }
-      // ADD HDF5 file
-      else if (FilenameUtils.isExtension(filenameString, "h5")) {
-        archive.addEntry(resourceFile, filenameString, URI.create("http://purl.org/NET/mediatypes/text-xplain"));
-      }
-      // ADD JSON file
-      else if (FilenameUtils.isExtension(filenameString.toLowerCase(), "json")) {
-        archive.addEntry(resourceFile, filenameString, URI.create("http://purl.org/NET/mediatypes/text-xplain"));
-      }
-      // ADD HTML file
-      else if (FilenameUtils.isExtension(filenameString.toLowerCase(), "html")) {
-        archive.addEntry(resourceFile, filenameString, URI.create("https://www.iana.org/assignments/media-types/text/html"));
-      }
-      // ADD HTM file
-      else if (FilenameUtils.isExtension(filenameString.toLowerCase(), "htm")) {
-        archive.addEntry(resourceFile, filenameString, URI.create("https://www.iana.org/assignments/media-types/text/html"));
-      }
-      // ADD RMarkdown file
-      else if (FilenameUtils.isExtension(filenameString.toLowerCase(), "rmd")) {
-        archive.addEntry(resourceFile, filenameString, URI.create("https://www.iana.org/assignments/media-types/text/markdown"));
-      }
-
     }
   }
   
