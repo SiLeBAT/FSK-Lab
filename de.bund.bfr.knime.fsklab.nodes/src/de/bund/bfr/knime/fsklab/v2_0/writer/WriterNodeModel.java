@@ -211,6 +211,19 @@ class WriterNodeModel extends NoInternalsModel {
       else if (FilenameUtils.isExtension(filenameString.toLowerCase(), "json")) {
       archive.addEntry(resourceFile, filenameString, URI.create("http://purl.org/NET/mediatypes/text-xplain"));
       }
+      // ADD HTML file
+      else if (FilenameUtils.isExtension(filenameString.toLowerCase(), "html")) {
+      archive.addEntry(resourceFile, filenameString, URI.create("https://www.iana.org/assignments/media-types/text/html"));
+      }
+      // ADD HTM file
+      else if (FilenameUtils.isExtension(filenameString.toLowerCase(), "htm")) {
+      archive.addEntry(resourceFile, filenameString, URI.create("https://www.iana.org/assignments/media-types/text/html"));
+      }
+      // ADD RMarkdown file
+      else if (FilenameUtils.isExtension(filenameString.toLowerCase(), "rmd")) {
+      archive.addEntry(resourceFile, filenameString, URI.create("https://www.iana.org/assignments/media-types/text/markdown"));
+      }
+
     }
   }
   

@@ -525,6 +525,8 @@ public class ReaderNodeUtil {
       URI rdataUri = URIS.get("rdata");
       URI jsonUri = URIS.get("json");
       URI sedmlUri = URIS.get("sedml");
+      //URI htmllUri = URI.create("https://www.iana.org/assignments/media-types/text/html");
+      URI rmdUri = URI.create("https://www.iana.org/assignments/media-types/text/markdown");
 
 
       // Gets metadata from metadata entry (metaData.json)
@@ -588,7 +590,8 @@ public class ReaderNodeUtil {
       .forEach(resourceEntries::add);
       // ... add other entries (not R scripts)
       entries.stream().filter(entry ->  entry.getFormat().equals(textUri) || entry.getFormat().equals(csvUri)
-          || entry.getFormat().equals(xlsxUri) || entry.getFormat().equals(rdataUri)).forEach(resourceEntries::add);
+          || entry.getFormat().equals(xlsxUri) || entry.getFormat().equals(rdataUri) 
+          || entry.getFormat().equals(rmdUri)).forEach(resourceEntries::add);
 
       String[] resourcePaths = resourceEntries.stream().map(ArchiveEntry::getEntityPath).toArray(String[]::new);
 
