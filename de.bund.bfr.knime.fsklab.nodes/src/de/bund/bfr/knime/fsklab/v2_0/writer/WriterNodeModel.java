@@ -139,6 +139,10 @@ class WriterNodeModel extends NoInternalsModel {
   static final String CFG_FILE = "file";
   private final SettingsModelString filePath = new SettingsModelString(CFG_FILE, null);
 
+  
+  // To calm down Code Climate Warning: define constants for string used more than 3 times
+  private static final String RDATA_EXTENSION = "rdata";
+  
   public WriterNodeModel() {
     super(IN_TYPES, OUT_TYPES);
   }
@@ -185,7 +189,7 @@ class WriterNodeModel extends NoInternalsModel {
       switch(extension) {
         case "txt": archive.addEntry(resourceFile, filenameString, uris.get("plain"));
         break;
-        case "rdata": archive.addEntry(resourceFile, filenameString, uris.get("rdata"));
+        case RDATA_EXTENSION: archive.addEntry(resourceFile, filenameString, uris.get(RDATA_EXTENSION));
         break;
         case "csv": archive.addEntry(resourceFile, filenameString, uris.get("csv"));
         break;
@@ -220,6 +224,7 @@ class WriterNodeModel extends NoInternalsModel {
         // ADD RMarkdown file
         case "rmd": archive.addEntry(resourceFile, filenameString, URI.create("https://www.iana.org/assignments/media-types/text/markdown"));
         break;
+        default: LOGGER.warn(filenameString + " not written to file. Extension is not supported");
       }
     }
   }
@@ -836,7 +841,7 @@ class WriterNodeModel extends NoInternalsModel {
     // Only save R workspace smaller than 100 MB
     if (fileSizeInMB < 100) {
       final ArchiveEntry workspaceEntry = archive.addEntry(workspace.toFile(),
-          filePrefix + "workspace.RData", FSKML.getURIS(1, 0, 12).get("rdata"));
+          filePrefix + "workspace.RData", FSKML.getURIS(1, 0, 12).get(RDATA_EXTENSION));
       workspaceEntry.addDescription(new FskMetaDataObject(ResourceType.workspace).metaDataObject);
     } else {
       LOGGER.warn("Results file larger than 100 MB -> Skipping file");
