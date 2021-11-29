@@ -10,7 +10,15 @@ import org.apache.commons.io.FileUtils;
 import org.knime.core.util.FileUtil;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-
+/**
+ * AddedFilesEnvironmentManager handles working directories made out of referenced files in 
+ * addition to the working directories contained within FSKX archives. If the
+ * references files array is null, empty or the files do not exist,
+ * {@link AddedFilesEnvironmentManager#getEnvironment()} returns the return value of the original 
+ * EnvironmentManager. 
+ * 
+ * @author Thomas Schueler, BfR, Berlin.
+ */
 @JsonAutoDetect(fieldVisibility = Visibility.ANY)
 public class AddedFilesEnvironmentManager implements EnvironmentManager {
 

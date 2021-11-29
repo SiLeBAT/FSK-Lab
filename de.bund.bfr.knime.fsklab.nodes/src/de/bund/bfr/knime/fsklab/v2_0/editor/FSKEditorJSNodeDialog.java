@@ -135,7 +135,6 @@ public class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
 
     // added Files
     addedFiles = new ArrayList<String>();
-    //addedFiles.add("C:/Users/thsch/OneDrive/Dokumente/CodeAndScripts/markdown_test/markdownScript.r");
     createUI();
   }
 
@@ -307,17 +306,10 @@ public class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
     if (m_archivedEnvironmentButton.isSelected()) {
       // Take archive path
       String archivePath = m_workingDirectoryField.getText();
-      // Take entries
 
-      List<String> entries = new ArrayList<String>();
-      for (int row = 0; row < m_filesTableModel.getRowCount(); row++) {
-        String value = (String) m_filesTableModel.getValueAt(row, 0);
-        if(!addedFiles.contains(value))
-          entries.add(value);
-      }
       // Create and set environment
       m_config.setEnvironmentManager(
-          new ArchivedEnvironmentManager(archivePath, entries.toArray(new String[0])));
+          new ArchivedEnvironmentManager(archivePath, saveFileEntries()));
     } else if (m_directoryEnvironmentButton.isSelected()) {
       // Take directory path
       String directoryPath = m_workingDirectoryField.getText();
@@ -325,20 +317,29 @@ public class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
       m_config.setEnvironmentManager(new ExistingEnvironmentManager(directoryPath));
     } else if (m_filesEnvironmentButton.isSelected()) {
       // Take entries
-      
-      List<String> entries = new ArrayList<String>();
-      for (int row = 0; row < m_filesTableModel.getRowCount(); row++) {
-        String value = (String) m_filesTableModel.getValueAt(row, 0);
-        if(!addedFiles.contains(value))
-          entries.add(value);
-      }
       // Create and set environment
-      m_config.setEnvironmentManager(new FilesEnvironmentManager(entries.toArray(new String[0])));
+      m_config.setEnvironmentManager(new FilesEnvironmentManager(saveFileEntries()));
     }
     m_config.setAddedFiles(addedFiles.toArray(new String[0]));
     m_config.saveSettings(settings);
   }
 
+  /**
+   * get file entries from Editor Table (Dialog), but filter out 
+   * any added files
+   * @return files for EnvironmentManager
+   */
+  private String[] saveFileEntries() {
+    // Take entries
+    List<String> entries = new ArrayList<String>();
+    for (int row = 0; row < m_filesTableModel.getRowCount(); row++) {
+      String value = (String) m_filesTableModel.getValueAt(row, 0);
+      if(!addedFiles.contains(value))
+        entries.add(value);
+    }
+    return entries.toArray(new String[0]);
+  }
+  
   private void createUI() {
 
     // Model type panel
