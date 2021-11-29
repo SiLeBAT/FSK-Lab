@@ -68,6 +68,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.fskml.RScript;
 import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
+import de.bund.bfr.knime.fsklab.nodes.environment.AddedFilesEnvironmentManager;
 import de.bund.bfr.knime.fsklab.nodes.environment.EnvironmentManager;
 import de.bund.bfr.knime.fsklab.nodes.environment.ExistingEnvironmentManager;
 import de.bund.bfr.knime.fsklab.v2_0.CombinedFskPortObject;
@@ -551,11 +552,17 @@ final class FSKEditorJSNodeModel
 //        }
 //      }
 //    }
+    
+    // Add new files (if there are any) to Model    
+    EnvironmentManager manager = environmentManager.get();
+    if(m_config.getAddedFiles().length > 0) {
+      manager = new AddedFilesEnvironmentManager(environmentManager.get(), m_config.getAddedFiles());  
+    }
     FskPortObject outputPort;
     if(inObjects[0] instanceof CombinedFskPortObject) {
       outputPort = (FskPortObject) inObjects[0];
     } else {
-      outputPort = new FskPortObject(environmentManager, readme, packages);
+      outputPort = new FskPortObject(Optional.of(manager) , readme, packages);
       outputPort.setModel(modelScript);
       outputPort.setViz(visualizationScript);
     }

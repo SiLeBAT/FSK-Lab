@@ -22,6 +22,9 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -79,6 +82,8 @@ public class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
 
   private final DefaultTableModel m_filesTableModel;
 
+  private List<String> addedFiles; 
+  
   private static final ObjectMapper MAPPER = FskPlugin.getDefault().MAPPER104;
   private String selectedModelType;
   public enum ModelType {
@@ -128,6 +133,9 @@ public class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
 
     m_filesTableModel = new DefaultTableModel(0, 1);
 
+    // added Files
+    addedFiles = new ArrayList<String>();
+    //addedFiles.add("C:/Users/thsch/OneDrive/Dokumente/CodeAndScripts/markdown_test/markdownScript.r");
     createUI();
   }
 
@@ -198,6 +206,11 @@ public class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
           }
         }
       }
+      // Update m_filesTableModel with Added Files
+      for (String entry : addedFiles) {
+        String[] row = {entry};
+        m_filesTableModel.addRow(row);
+      }
     }
   }
 
@@ -216,7 +229,9 @@ public class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
     }
 
     String readmeFile = settings.getString(README_FILE, "");
-
+    if(m_config.getAddedFiles() != null) {
+      addedFiles = Arrays.asList(m_config.getAddedFiles());  
+    }
     updateDialog(modelType, readmeFile, m_config.getEnvironmentManager());
   }
 
@@ -257,6 +272,10 @@ public class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
       environment = null;
     }
 
+    if(m_config.getAddedFiles() != null) {
+      addedFiles = Arrays.asList(m_config.getAddedFiles());  
+    }
+    
     updateDialog(modelType, readmeFile, environment);
   }
 
@@ -289,12 +308,16 @@ public class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
       // Take archive path
       String archivePath = m_workingDirectoryField.getText();
       // Take entries
-      String[] entries = new String[m_filesTableModel.getRowCount()];
+
+      List<String> entries = new ArrayList<String>();
       for (int row = 0; row < m_filesTableModel.getRowCount(); row++) {
-        entries[row] = (String) m_filesTableModel.getValueAt(row, 0);
+        String value = (String) m_filesTableModel.getValueAt(row, 0);
+        if(!addedFiles.contains(value))
+          entries.add(value);
       }
       // Create and set environment
-      m_config.setEnvironmentManager(new ArchivedEnvironmentManager(archivePath, entries));
+      m_config.setEnvironmentManager(
+          new ArchivedEnvironmentManager(archivePath, entries.toArray(new String[0])));
     } else if (m_directoryEnvironmentButton.isSelected()) {
       // Take directory path
       String directoryPath = m_workingDirectoryField.getText();
@@ -302,14 +325,17 @@ public class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
       m_config.setEnvironmentManager(new ExistingEnvironmentManager(directoryPath));
     } else if (m_filesEnvironmentButton.isSelected()) {
       // Take entries
-      String[] entries = new String[m_filesTableModel.getRowCount()];
+      
+      List<String> entries = new ArrayList<String>();
       for (int row = 0; row < m_filesTableModel.getRowCount(); row++) {
-        entries[row] = (String) m_filesTableModel.getValueAt(row, 0);
+        String value = (String) m_filesTableModel.getValueAt(row, 0);
+        if(!addedFiles.contains(value))
+          entries.add(value);
       }
       // Create and set environment
-      m_config.setEnvironmentManager(new FilesEnvironmentManager(entries));
+      m_config.setEnvironmentManager(new FilesEnvironmentManager(entries.toArray(new String[0])));
     }
-
+    m_config.setAddedFiles(addedFiles.toArray(new String[0]));
     m_config.saveSettings(settings);
   }
 
@@ -350,6 +376,13 @@ public class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
     workingDirectoryPanel.add(m_workingDirectoryField);
     workingDirectoryPanel.add(workingDirectoryButton);
 
+    // Add-files directory panel
+    JButton addFilesButton = new JButton("Add New File");
+    addFilesButton.addActionListener(new AddFilesButtonListener());
+
+    JPanel addFilesPanel = new JPanel();
+    addFilesPanel.add(addFilesButton);
+    
     // Group the radio buttons.
     ButtonGroup group = new ButtonGroup();
     group.add(m_archivedEnvironmentButton);
@@ -375,6 +408,7 @@ public class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
     JPanel environmentContainer = new JPanel();
     environmentContainer.setLayout(new BoxLayout(environmentContainer, BoxLayout.Y_AXIS));
     environmentContainer.add(workingDirectoryPanel);
+    environmentContainer.add(addFilesPanel);
     environmentContainer.add(radioPanel);
     environmentContainer.add(table);
 
@@ -453,7 +487,25 @@ public class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
       }
     }
   }
+  private class AddFilesButtonListener implements ActionListener {
 
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      JFileChooser fileChooser = new JFileChooser();
+      fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+      fileChooser.setMultiSelectionEnabled(true);
+
+      // Update table model
+      if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+        //m_filesTableModel.setRowCount(0);
+        for (File file : fileChooser.getSelectedFiles()) {
+          String[] row = {file.getAbsolutePath()};
+          addedFiles.add(file.getAbsolutePath());
+          m_filesTableModel.addRow(row);
+        }
+      }
+    }
+  }
   private void clearEnvironmentPanel() {
     m_workingDirectoryField.setText("");
     m_filesTableModel.setRowCount(0); // Clear table
