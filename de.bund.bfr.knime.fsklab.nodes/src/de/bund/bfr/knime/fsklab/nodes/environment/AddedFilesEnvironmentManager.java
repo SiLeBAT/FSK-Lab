@@ -52,14 +52,10 @@ public class AddedFilesEnvironmentManager implements EnvironmentManager {
     
     if (files == null || files.length == 0)
       return environment;
-
  
     return copyFilesToEnvironment(environment);
-    
-    
-
-    
   }
+
   private Optional<Path> copyFilesToEnvironment(Optional<Path> environment){
     
     List<Path> filePaths = new ArrayList<>();
@@ -94,6 +90,7 @@ public class AddedFilesEnvironmentManager implements EnvironmentManager {
       return environment;
     }
   }
+  
   @Override
   public void deleteEnvironment(Path path) {
     FileUtils.deleteQuietly(path.toFile());

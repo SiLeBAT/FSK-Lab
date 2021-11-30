@@ -229,7 +229,7 @@ public class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
 
     String readmeFile = settings.getString(README_FILE, "");
     if(m_config.getAddedFiles() != null) {
-      addedFiles = Arrays.asList(m_config.getAddedFiles());  
+      addedFiles = new ArrayList<String>(Arrays.asList(m_config.getAddedFiles()));
     }
     updateDialog(modelType, readmeFile, m_config.getEnvironmentManager());
   }
@@ -272,7 +272,7 @@ public class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
     }
 
     if(m_config.getAddedFiles() != null) {
-      addedFiles = Arrays.asList(m_config.getAddedFiles());  
+      addedFiles = new ArrayList<String>(Arrays.asList(m_config.getAddedFiles()));  
     }
     
     updateDialog(modelType, readmeFile, environment);
@@ -486,6 +486,11 @@ public class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
           }
         }
       }
+   // Update m_filesTableModel with Added Files
+      for (String entry : addedFiles) {
+        String[] row = {entry};
+        m_filesTableModel.addRow(row);
+      }
     }
   }
   private class AddFilesButtonListener implements ActionListener {
@@ -495,11 +500,12 @@ public class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
       JFileChooser fileChooser = new JFileChooser();
       fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
       fileChooser.setMultiSelectionEnabled(true);
-
       // Update table model
       if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
         //m_filesTableModel.setRowCount(0);
         for (File file : fileChooser.getSelectedFiles()) {
+          if(addedFiles.contains(file.getAbsolutePath()))
+            continue;
           String[] row = {file.getAbsolutePath()};
           addedFiles.add(file.getAbsolutePath());
           m_filesTableModel.addRow(row);

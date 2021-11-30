@@ -555,7 +555,7 @@ final class FSKEditorJSNodeModel
     
     // Add new files (if there are any) to Model    
     EnvironmentManager manager = environmentManager.get();
-    if(m_config.getAddedFiles().length > 0) {
+    if(m_config.getAddedFiles() != null && m_config.getAddedFiles().length > 0) {
       manager = new AddedFilesEnvironmentManager(environmentManager.get(), m_config.getAddedFiles());  
     }
     FskPortObject outputPort;
