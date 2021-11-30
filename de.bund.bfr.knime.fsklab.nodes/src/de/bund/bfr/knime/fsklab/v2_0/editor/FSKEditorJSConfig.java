@@ -58,7 +58,7 @@ class FSKEditorJSConfig {
   private boolean representationResetReuired = true;
   private String[] m_validationErrors;
   private String m_modelType;
-  private String[] m_addedFiles;
+  private String[] m_addedFiles = new String[0];
 
   /** UUID of the connected node. */
   private String m_connectedNode;

@@ -54,6 +54,14 @@ public class AddedFilesEnvironmentManager implements EnvironmentManager {
       return environment;
 
  
+    return copyFilesToEnvironment(environment);
+    
+    
+
+    
+  }
+  private Optional<Path> copyFilesToEnvironment(Optional<Path> environment){
+    
     List<Path> filePaths = new ArrayList<>();
     try {
       for (String filePath : files) {
@@ -68,7 +76,7 @@ public class AddedFilesEnvironmentManager implements EnvironmentManager {
       if (Files.notExists(filePath))
         return environment;
     }
-
+    
     try {
       //Path environment = Files.createTempDirectory("workingDirectory");
       if(!environment.isPresent()) {
@@ -86,7 +94,6 @@ public class AddedFilesEnvironmentManager implements EnvironmentManager {
       return environment;
     }
   }
-
   @Override
   public void deleteEnvironment(Path path) {
     FileUtils.deleteQuietly(path.toFile());
