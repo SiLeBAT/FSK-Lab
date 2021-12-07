@@ -380,9 +380,11 @@ public class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
     // Add-files directory panel
     JButton addFilesButton = new JButton("Add New File");
     addFilesButton.addActionListener(new AddFilesButtonListener());
-
+    JButton clearFilesButton = new JButton("Clear Added Files");
+    clearFilesButton.addActionListener(new ClearFilesButtonListener());
     JPanel addFilesPanel = new JPanel();
     addFilesPanel.add(addFilesButton);
+    addFilesPanel.add(clearFilesButton);
     
     // Group the radio buttons.
     ButtonGroup group = new ButtonGroup();
@@ -511,6 +513,24 @@ public class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
           m_filesTableModel.addRow(row);
         }
       }
+      // set FilesEnvironment as default selected if nothing else is
+      if(!m_directoryEnvironmentButton.isSelected() && !m_archivedEnvironmentButton.isSelected()) {
+        m_filesEnvironmentButton.setSelected(true);
+      }
+    }
+  }
+  private class ClearFilesButtonListener implements ActionListener {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      for (int row = 0; row < m_filesTableModel.getRowCount(); row++) {
+        String value = (String) m_filesTableModel.getValueAt(row, 0);
+        if(addedFiles.contains(value)) {
+          m_filesTableModel.removeRow(row);
+          addedFiles.remove(value);
+        }
+      }
+      addedFiles.clear();
+      
     }
   }
   private void clearEnvironmentPanel() {
