@@ -318,6 +318,7 @@ fskeditorjs = function () {
       readme: _readmeCodeMirror ? _readmeCodeMirror.getValue() : _metadata.readme,
       resourceFiles: _val.resourceFiles, // TODO: get actual resource files from editor
       serverName: _val.serverName, // TODO: get actual serverName from editor?
+      environment: _val.environment,
       completed: true,
       validationErrors: [],
       modelType: _metadata.modelType

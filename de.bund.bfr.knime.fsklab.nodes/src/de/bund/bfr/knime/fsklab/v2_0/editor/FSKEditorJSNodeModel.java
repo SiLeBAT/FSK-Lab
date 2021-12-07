@@ -553,16 +553,20 @@ final class FSKEditorJSNodeModel
 //      }
 //    }
     
-    // Add new files (if there are any) to Model    
-    EnvironmentManager manager = environmentManager.get();
+    // Add new files (if there are any) to Model 
+    
+    Optional<EnvironmentManager> manager = environmentManager;
     if(m_config.getAddedFiles() != null && m_config.getAddedFiles().length > 0) {
-      manager = new AddedFilesEnvironmentManager(environmentManager.get(), m_config.getAddedFiles());  
+      if(environmentManager.isPresent())
+        manager = Optional.of(new AddedFilesEnvironmentManager(environmentManager.get(), m_config.getAddedFiles()));
+      else
+        manager = Optional.of(new AddedFilesEnvironmentManager(m_config.getAddedFiles()));
     }
     FskPortObject outputPort;
     if(inObjects[0] instanceof CombinedFskPortObject) {
       outputPort = (FskPortObject) inObjects[0];
     } else {
-      outputPort = new FskPortObject(Optional.of(manager) , readme, packages);
+      outputPort = new FskPortObject(manager , readme, packages);
       outputPort.setModel(modelScript);
       outputPort.setViz(visualizationScript);
     }
