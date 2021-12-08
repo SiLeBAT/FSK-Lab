@@ -63,7 +63,7 @@ public class ExpColumnList {
 
 	public ExpColumnList(String pcmlNamespace) {
 
-		columnList = ColumnList.Factory.newInstance();
+		columnList = (ColumnList) ColumnList.Factory.newInstance();
 
 		// Time column
 		timeColName = new QName(pcmlNamespace, "c0");

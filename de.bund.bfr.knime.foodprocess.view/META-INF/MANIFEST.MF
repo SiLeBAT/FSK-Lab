@@ -17,5 +17,5 @@ Require-Bundle: de.bund.bfr.knime.pmm.common,
  org.knime.workbench.repository;bundle-version="[4.0.0,5.0.0)"
 Bundle-ActivationPolicy: lazy
 Export-Package: de.bund.bfr.knime.foodprocess.view
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Automatic-Module-Name: de.bund.bfr.knime.foodprocess.view

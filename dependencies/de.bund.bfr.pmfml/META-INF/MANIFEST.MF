@@ -9,7 +9,7 @@ Export-Package: de.bund.bfr.pmfml,
  de.bund.bfr.pmfml.model,
  de.bund.bfr.pmfml.numl,
  de.bund.bfr.pmfml.sbml
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Automatic-Module-Name: de.bund.bfr.pmfml
 Require-Bundle: de.unirostock.sems.CombineArchive;bundle-version="1.4.0",
  org.apache.commons.io;bundle-version="2.6.0",

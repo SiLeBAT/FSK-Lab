@@ -27,7 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -305,7 +305,7 @@ class FskCreatorNodeModel extends NoInternalsModel {
     private static String getStringVal(final XSSFSheet sheet, final byte rownum) {
       XSSFCell cell = sheet.getRow(rownum).getCell(5);
 
-      if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC)
+      if (cell.getCellType() == CellType.NUMERIC)
         return Double.toString(cell.getNumericCellValue());
       return cell.getStringCellValue();
     }

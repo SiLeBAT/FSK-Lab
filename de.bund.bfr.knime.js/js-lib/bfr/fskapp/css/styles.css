@@ -13242,31 +13242,6 @@ form {
   .table td ul {
     margin-bottom: 0; }
 
-.table .tr-selected {
-  position: relative;
-  background-color: #b8eae4; }
-  .table .tr-selected:hover {
-    background-color: #a5e4dd; }
-  .table .tr-selected:focus {
-    background-color: #a5e4dd; }
-  .table .tr-selected:after {
-    content: '\e83f';
-    position: absolute;
-    left: 0;
-    z-index: 20;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0rem;
-    width: 1.125rem;
-    height: 1.125rem;
-    background-color: rgba(0, 0, 0, 0.2);
-    border-radius: 0 0 0.25rem 0;
-    text-align: center;
-    font-family: 'feather';
-    font-size: 0.875rem;
-    color: #fff; }
-
 .table .tr-hidden {
   display: none; }
 
@@ -13421,7 +13396,7 @@ form {
     .modal-details .panel-plot .figure svg {
       max-width: 100%; }
 
-pre {
+pre.precss {
   tab-size: 4;
   counter-reset: line;
   padding: 0;
@@ -13430,16 +13405,16 @@ pre {
   font-size: 16px;
   line-height: 16px; }
 
-pre {
+pre.precss {
   background: #ffffff;
   color: #303030;
   padding: 10px 16px; }
 
-pre span {
+pre.precss span {
   display: block;
   line-height: 1.5rem; }
 
-pre span:before {
+pre.precss span:before {
   counter-increment: line;
   content: counter(line);
   display: inline-block;
@@ -13447,6 +13422,15 @@ pre span:before {
   padding: 0 .5em;
   margin-right: .5em;
   color: #888; }
+
+.errorMessages {
+  display: none;
+  list-style-type: none;
+  color: #B94A48;
+  background-color: #F2DEDE;
+  border: 2px solid #EED3D7;
+  border-radius: 4px;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5); }
 
 @media (min-width: 576px) {
   .modal-sim .modal-content {

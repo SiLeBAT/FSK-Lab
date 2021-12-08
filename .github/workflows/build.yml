@@ -4,8 +4,9 @@ on:
   push:
     branches:
       - development
-  release:
-    types: [created]
+  pull_request:
+    branches:
+      - development
 jobs:
   build:
     runs-on: ubuntu-latest
