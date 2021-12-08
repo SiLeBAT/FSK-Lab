@@ -39,12 +39,20 @@ public class Ggplot2Plotter implements ModelPlotter {
   @Override
   public void plotSvg(File file, String script) throws Exception {
 
+	  String configCmd =
+		        Platform.isMac() ? "library('Cairo'); options(device='png', bitmapType='cairo')"
+		            : "options(device='png')";
     // Get image path (with proper slashes)
     final String path = FilenameUtils.separatorsToUnix(file.getAbsolutePath());
 
     controller.eval("require(ggplot2)", false);
+    controller.eval(configCmd,false);
+    controller.eval("svg('" + path + "')", false);
+    //controller.eval("ggsave('" + path + "')", false);// removed size width=4, height=4
     controller.eval(script, false);
-    controller.eval("ggsave('" + path + "')", false);// removed size width=4, height=4
+    
+    // removed size width=4, height=4
+    controller.eval("print(last_plot()); dev.off()", false);// removed size width=4, height=4
     
   }
 }
