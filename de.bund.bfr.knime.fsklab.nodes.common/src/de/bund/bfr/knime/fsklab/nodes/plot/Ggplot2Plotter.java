@@ -51,8 +51,6 @@ public class Ggplot2Plotter implements ModelPlotter {
     //controller.eval("ggsave('" + path + "')", false);// removed size width=4, height=4
     controller.eval(script, false);
     
-    // removed size width=4, height=4
-    controller.eval("print(last_plot()); dev.off()", false);// removed size width=4, height=4
-    
+    controller.eval("print(last_plot()); dev.off()", false);    
   }
 }
