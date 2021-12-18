@@ -67,4 +67,4 @@ Bundle-ClassPath: .,
  fskml-0.0.1-SNAPSHOT.jar
 Bundle-Activator: de.bund.bfr.knime.pmm.nodes.Plugin
 Automatic-Module-Name: de.bund.bfr.knime.pmm.nodes
-Import-Package: org.w3c.dom.events;resolution:=optional
+Import-Package: de.bund.bfr.knime.fsklab.v2_0

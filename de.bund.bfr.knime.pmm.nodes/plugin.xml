@@ -127,6 +127,8 @@
   	<node category-path="/pmmlab/writer" deprecated="true" factory-class="de.bund.bfr.knime.pmm.pmfwriter.PMFWriterNodeFactory"/>
   	<node category-path="/pmmlab/writer" deprecated="true" factory-class="de.bund.bfr.knime.pmm.pmfxwriter.PMFXWriterNodeFactory"/>
   	<node category-path="/pmmlab/writer" deprecated="false" factory-class="de.bund.bfr.knime.pmm.pmfwriter.fsk.NodeFactory" />
+          
+    <node category-path="/pmmlab/converters" factory-class="de.bund.bfr.knime.pmm.fskxexporter.PMMToFSKExporterNodeFactory" id="de.bund.bfr.knime.pmm.fskxexporter.PMMToFSKExporterNodeFactory"/>
   </extension>
   
   <extension point="org.knime.workbench.repository.metanode">
