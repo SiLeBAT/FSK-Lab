@@ -192,7 +192,7 @@ public class PCMLPortObject implements PortObject {
             throws IOException, XmlException {
     	// use NonClosableInputStream to prevent multiple calling of close.
     	// We do it in the next line.
-        XmlObject xmlDoc = PCMLDocument.Factory.parse(
+        XmlObject xmlDoc = PCMLDocumentFactory.Builder.parse(
         		new NonClosableInputStream(is));
 
         is.close();
@@ -290,7 +290,7 @@ public class PCMLPortObject implements PortObject {
     	// use NonClosableInputStream to prevent multiple calling of close.
     	// We do it in the next line.
     	NonClosableInputStream ncis = new NonClosableInputStream(is);
-        XmlObject xmlDoc = PCMLDocument.Factory.parse(ncis);
+        XmlObject xmlDoc = PCMLDocumentFactory.Builder.parse(ncis);
         is.close();
         pcmlDoc = (PCMLDocument)xmlDoc;
         pcmlSpec = spec;

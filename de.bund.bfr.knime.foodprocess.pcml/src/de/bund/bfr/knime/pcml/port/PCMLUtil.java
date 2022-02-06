@@ -51,7 +51,7 @@ import de.bund.bfr.pcml10.ProcessNodeDocument.ProcessNode;
 public class PCMLUtil {
 	/** Creates an empty PCMLDocument. */
 	public static PCMLDocument create() {
-		PCMLDocument doc = (PCMLDocument) PCMLDocument.Factory.newInstance();
+		PCMLDocument doc = (PCMLDocument) PCMLDocumentFactory.Builder.newInstance();
 		PCML pcml = doc.addNewPCML();
 		pcml.setVersion("1.0");
 

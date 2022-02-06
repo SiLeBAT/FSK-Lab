@@ -21,3 +21,4 @@ Export-Package: de.bund.bfr.knime.fsklab.r,
 Bundle-ClassPath: .,
  libs/rengine-1.8.4.jar,
  libs/rserve-engine-1.8.4.jar
+Import-Package: org.w3c.dom.events

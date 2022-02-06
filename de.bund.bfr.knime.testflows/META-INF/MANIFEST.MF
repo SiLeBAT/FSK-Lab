@@ -8,10 +8,9 @@ Require-Bundle: org.junit,
  org.knime.product,
  org.knime.core,
  org.knime.base,
- org.knime.testing,
- nl.esciencecenter.e3dchem.knime.testing.plugin,
  de.bund.bfr.knime.fsklab.nodes,
  de.bund.bfr.knime.fsklab.metadata.model,
  de.bund.bfr.knime.fsklab.r,
- org.knime.js.quickforms
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+ nl.esciencecenter.e3dchem.knime.testing.plugin;bundle-version="[1.0.0,2.0.0)",
+ org.knime.testing;bundle-version="[4.0.0,5.0.0)"
+Bundle-RequiredExecutionEnvironment: JavaSE-11

@@ -16,10 +16,35 @@
 				<artifactId>tycho-surefire-plugin</artifactId>
 				<version>${tycho.version}</version>
 				<configuration>
-					<includes>
-						<include>**/*Test.class</include>
-						<include>**/*test.class</include>
-					</includes>
+					<argLine>${tycho.testArgLine} ${tycho.test.jvmArgs}</argLine>
+					<useUIHarness>true</useUIHarness>
+					<useUIThread>false</useUIThread>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>target-platform-configuration</artifactId>
+				<version>${tycho.version}</version>
+				<configuration>
+					<dependency-resolution>
+						<extraRequirements>
+							<requirement>
+								<type>eclipse-feature</type>
+								<id>org.knime.features.core</id>
+								<versionRange>0.0.0</versionRange>
+							</requirement>
+							<requirement>
+								<type>eclipse-feature</type>
+								<id>Test_feature</id>
+								<versionRange>0.0.0</versionRange>
+							</requirement>
+							<requirment>
+								 <type>eclipse-plugin</type>
+            					 <id>org.eclipse.ui.ide</id>
+            					 <versionRange>0.0.0</versionRange>
+							</requirment>
+						</extraRequirements>
+					</dependency-resolution>
 				</configuration>
 			</plugin>
 		</plugins>
