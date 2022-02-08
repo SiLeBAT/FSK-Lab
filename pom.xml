@@ -98,7 +98,7 @@
 				</os>
 			</activation>
 			<properties>
-				<tycho.test.jvmArgs>-XstartOnFirstThread</tycho.test.jvmArgs>
+				<tycho.testArgLine>-XstartOnFirstThread</tycho.testArgLine>
 			</properties>
 			<build>
 			</build>
