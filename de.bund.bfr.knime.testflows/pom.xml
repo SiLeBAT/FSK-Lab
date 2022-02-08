@@ -38,11 +38,6 @@
 								<id>Test_feature</id>
 								<versionRange>0.0.0</versionRange>
 							</requirement>
-							<requirment>
-								 <type>eclipse-plugin</type>
-            					 <id>org.eclipse.ui.ide</id>
-            					 <versionRange>0.0.0</versionRange>
-							</requirment>
 						</extraRequirements>
 					</dependency-resolution>
 				</configuration>
