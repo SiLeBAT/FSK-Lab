@@ -14,6 +14,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<eclipse-repo.url>http://download.eclipse.org/releases/latest</eclipse-repo.url>
 		<tycho.testArgLine></tycho.testArgLine>
+		<tycho.testUI>false</tycho.testUI>
 		<jacoco-version>0.7.8</jacoco-version>
 	</properties>
 
@@ -99,6 +100,7 @@
 			</activation>
 			<properties>
 				<tycho.testArgLine>-XstartOnFirstThread</tycho.testArgLine>
+				<tycho.testUI>true</tycho.testUI>
 			</properties>
 			<build>
 			</build>
