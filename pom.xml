@@ -90,21 +90,6 @@
 				</plugins>
 			</build>
 		</profile>
-		<profile>
-			<id>macosx</id>
-			<activation>
-				<os>
-					<name>mac os x</name>
-					<family>mac</family>
-				</os>
-			</activation>
-			<properties>
-				<tycho.testArgLine>-XstartOnFirstThread</tycho.testArgLine>
-				<tycho.testUI>true</tycho.testUI>
-			</properties>
-			<build>
-			</build>
-		</profile>
 	</profiles>
 
 	<build>
