@@ -33,7 +33,14 @@ public class Ggplot2Plotter implements ModelPlotter {
 
     controller.eval("png('" + path + "')", false);
     controller.eval(script, false);
-    controller.eval("print(last_plot()); dev.off()", false);
+    controller.eval("dev.off()", false);
+    // if image is empty, try with print(last_plot()):
+    if(file.length() < 1000) {
+    	controller.eval("png('" + path + "')", false);
+        controller.eval(script, false);
+        controller.eval("print(last_plot());dev.off()", false);
+    }
+
   }
 
   @Override
@@ -47,10 +54,22 @@ public class Ggplot2Plotter implements ModelPlotter {
 
     controller.eval("require(ggplot2)", false);
     controller.eval(configCmd,false);
+
     controller.eval("svg('" + path + "')", false);
-    //controller.eval("ggsave('" + path + "')", false);// removed size width=4, height=4
     controller.eval(script, false);
+    //controller.eval("ggsave('" + path + "')", false);// removed size width=4, height=4    
+    controller.eval("dev.off()", false);
+
+    // if image is empty, try with print(last_plot())
+    // this happens in rserve, if a plot is not explicitly printed
+    // (e.g. when the ggplot function is stored in a variable
+    // however, the last_plot() really only prints the very last plot
+    // thus omitting any previous ones, therefore this zig-zagging
+    if(file.length() < 1000) {
+    	controller.eval("svg('" + path + "')", false);
+        controller.eval(script, false);
+        controller.eval("print(last_plot());dev.off()", false);
+    }
     
-    controller.eval("print(last_plot()); dev.off()", false);    
   }
 }
