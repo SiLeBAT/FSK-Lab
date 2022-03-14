@@ -46,7 +46,7 @@ public class RScriptHandler extends ScriptHandler {
     this.controller = new RController();
     this.executor = new ScriptExecutor(controller);
 
-    if (packages.contains("ggplot2")) {
+    if (packages.contains("ggplot2") || packages.contains("tidyverse")) {
       plotter = new Ggplot2Plotter(controller);
     } else {
       plotter = new BasePlotter(controller);
