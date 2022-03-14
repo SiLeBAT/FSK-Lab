@@ -32,7 +32,9 @@ public class AddedFilesEnvironmentManager implements EnvironmentManager {
   public AddedFilesEnvironmentManager(EnvironmentManager manager) {
     this(manager, new String[0]);
   }
-  
+  public AddedFilesEnvironmentManager(String[] files) {
+    this(new DefaultEnvironmentManager(), files);
+  }
   public AddedFilesEnvironmentManager(EnvironmentManager manager, String[] files) {
     this.manager = manager;
     this.files = files;
