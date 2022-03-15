@@ -515,7 +515,7 @@ class APPTableMT extends APPTable {
 						if ( $.isArray( facetValue ) && facetValue.length > 0 ) {
 
 							// get according col index
-							let colIndex = _getColIndexByField( field );
+							let colIndex = super._getColIndexByField( field );
 							let cellData = rowData.cells[colIndex];
 
 							if( cellData instanceof Set ) {
