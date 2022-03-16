@@ -39,6 +39,7 @@ package de.bund.bfr.knime.fsklab.preferences;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Map;
 import java.util.Properties;
 
 import org.eclipse.core.runtime.Platform;

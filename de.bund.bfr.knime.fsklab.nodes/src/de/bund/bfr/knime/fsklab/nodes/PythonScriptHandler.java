@@ -1,19 +1,22 @@
 package de.bund.bfr.knime.fsklab.nodes;
 
-import de.bund.bfr.knime.fsklab.nodes.plot.PythonPlotter;
-import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
-import de.bund.bfr.knime.fsklab.v2_0.FskSimulation;
-import de.bund.bfr.knime.fsklab.v2_0.runner.RunnerNodeInternalSettings;
-import de.bund.bfr.knime.fsklab.v2_0.runner.RunnerNodeSettings;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.util.FileUtil;
+import org.knime.python2.CondaPythonCommand;
+import org.knime.python2.ManualPythonCommand;
+import org.knime.python2.PythonCommand;
 import org.knime.python2.PythonVersion;
 import org.knime.python2.kernel.PythonKernel;
-import org.knime.python2.kernel.PythonKernelOptions;
+import de.bund.bfr.knime.fsklab.nodes.plot.PythonPlotter;
+import de.bund.bfr.knime.fsklab.preferences.PreferenceInitializer;
+import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
+import de.bund.bfr.knime.fsklab.v2_0.FskSimulation;
+import de.bund.bfr.knime.fsklab.v2_0.runner.RunnerNodeInternalSettings;
+import de.bund.bfr.knime.fsklab.v2_0.runner.RunnerNodeSettings;
 
 public class PythonScriptHandler extends ScriptHandler {
   String std_out = "";
@@ -23,14 +26,24 @@ public class PythonScriptHandler extends ScriptHandler {
 
 
   public PythonScriptHandler(PythonVersion version) throws IOException {
+    PythonCommand command;
 
-    PythonKernelOptions m_kernelOptions = new PythonKernelOptions();
-    if (version != null) {
+    if (version.equals(PythonVersion.PYTHON3)) {
+      if (PreferenceInitializer.isConda())
+        command = new CondaPythonCommand(version, PreferenceInitializer.getCondaPath(),
+            PreferenceInitializer.getPython3Env());
+      else
+        command = new ManualPythonCommand(version, PreferenceInitializer.getPython3Path());
 
-      // m_kernelOptions.setPythonVersionOption(version);
-      controller = new PythonKernel(m_kernelOptions.forPythonVersion(version));
-    } else {
-      controller = new PythonKernel(m_kernelOptions);
+      controller = new PythonKernel(command);
+    } else if (version.equals(PythonVersion.PYTHON2)) {
+      if (PreferenceInitializer.isConda())
+        command = new CondaPythonCommand(version, PreferenceInitializer.getCondaPath(),
+            PreferenceInitializer.getPython2Env());
+      else
+        command = new ManualPythonCommand(version, PreferenceInitializer.getPython2Path());
+
+      controller = new PythonKernel(command);
     }
 
     // set up backend (rendering engine) for matplotlib for image handling:

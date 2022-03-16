@@ -15,3 +15,5 @@ Require-Bundle: org.apache.commons.io;bundle-version="2.6.0",
 Export-Package: de.bund.bfr.knime.fsklab.preferences
 Bundle-Activator: de.bund.bfr.knime.fsklab.preferences.Plugin
 Bundle-ActivationPolicy: lazy
+Import-Package: org.knime.python2,
+ org.knime.python2.conda
