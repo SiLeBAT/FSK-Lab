@@ -431,6 +431,8 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 		@Override
 		protected boolean doCheckState() {
 			final String pythonHome = getStringValue();
+			if(StringUtils.isEmpty(pythonHome))
+				return true;
 			try {
 
 				final Conda conda = new Conda(pythonHome);
@@ -491,9 +493,11 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 				});
 				python2Envs.setInput(envsMaps);
 				String value = PreferenceInitializer.getPython2Env();
-				python2Envs.getCombo().setText(getKey(envsMaps, value));
+				if(!StringUtils.isEmpty(value))
+					python2Envs.getCombo().setText(getKey(envsMaps, value));
 				String value2 = PreferenceInitializer.getPython3Env();
-				python3Envs.getCombo().setText(getKey(envsMaps, value2));
+				if(!StringUtils.isEmpty(value2))
+					python3Envs.getCombo().setText(getKey(envsMaps, value2));
 
 				page.adjustGridLayout();
 				parent.requestLayout();
