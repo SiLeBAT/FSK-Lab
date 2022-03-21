@@ -50,6 +50,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.knime.python2.CondaPythonCommand;
 import org.knime.python2.ManualPythonCommand;
 import org.knime.python2.PythonKernelTester;
 import org.knime.python2.PythonKernelTester.PythonKernelTestResult;
@@ -75,9 +76,9 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 	Map<String, String> envsMaps;
 	Label messagePython2;
 	Label messagePython3;
-	private Label messagepython2path;
-	private Label messagepython3path;
-
+    Label messagepython2path;
+	Label messagepython3path;
+	PythonCondaFieldEditor PythonCondaFieldEditor;
 	public PreferencePage() {
 		super(GRID);
 
@@ -127,9 +128,10 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 		GridData gridDataConda = new GridData();
 		gridDataConda.horizontalSpan = 3;
 		compositeConda.setLayoutData(gridDataConda);
-
-		addField(new PythonCondaFieldEditor(PreferenceInitializer.CONDA_PATH_CFG,
-				"Path to Conda installation directory", compositeConda, this));
+		
+		PythonCondaFieldEditor = new PythonCondaFieldEditor(PreferenceInitializer.CONDA_PATH_CFG,
+				"Path to Conda installation directory", compositeConda, this);
+		addField(PythonCondaFieldEditor);
 
 		messagePython2 = new Label(compositeConda, SWT.WRAP);
 
@@ -147,10 +149,10 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 				var selectedElement = ((StructuredSelection) paramSelectionChangedEvent.getSelection())
 						.getFirstElement().toString();
 
-				String pythonHome = envsMaps.get(selectedElement);
+				String pythonEnvHome = envsMaps.get(selectedElement);
 				PythonKernelTestResult result;
 				result = PythonKernelTester.testPython2Installation(
-						new ManualPythonCommand(PythonVersion.fromId("python2"), pythonHome + "/bin/python"),
+						new CondaPythonCommand(PythonVersion.fromId("python2"), PythonCondaFieldEditor.pythonHome, pythonEnvHome),
 						Collections.emptyList(), true);
 
 				Color red = new Color(python3Envs.getControl().getParent().getDisplay(), 255, 0, 0);
@@ -201,10 +203,10 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 				((StructuredSelection) paramSelectionChangedEvent.getSelection()).getFirstElement();
 				var selectedElement = ((StructuredSelection) paramSelectionChangedEvent.getSelection())
 						.getFirstElement().toString();
-				String pythonHome = envsMaps.get(selectedElement);
+				String pythonEnvHome = envsMaps.get(selectedElement);
 				PythonKernelTestResult result;
 				result = PythonKernelTester.testPython3Installation(
-						new ManualPythonCommand(PythonVersion.fromId("python3"), pythonHome + "/bin/python"),
+						new CondaPythonCommand(PythonVersion.fromId("python3"), PythonCondaFieldEditor.pythonHome, pythonEnvHome),
 						Collections.emptyList(), true);
 
 				Color red = new Color(python3Envs.getControl().getParent().getDisplay(), 255, 0, 0);
@@ -417,7 +419,7 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 	private class PythonCondaFieldEditor extends DirectoryFieldEditor {
 		PreferencePage page;
 		Composite parent;
-
+		String pythonHome;
 		public PythonCondaFieldEditor(final String name, final String labelText, final Composite parent,
 				PreferencePage page) {
 			init(name, labelText);
@@ -430,7 +432,7 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 
 		@Override
 		protected boolean doCheckState() {
-			final String pythonHome = getStringValue();
+			pythonHome = getStringValue();
 			if(StringUtils.isEmpty(pythonHome))
 				return true;
 			try {
