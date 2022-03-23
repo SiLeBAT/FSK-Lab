@@ -28,6 +28,8 @@ import java.util.Properties;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.preferences.DefaultScope;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
@@ -50,6 +52,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.knime.python2.Activator;
 import org.knime.python2.CondaPythonCommand;
 import org.knime.python2.ManualPythonCommand;
 import org.knime.python2.PythonKernelTester;
@@ -57,6 +60,10 @@ import org.knime.python2.PythonKernelTester.PythonKernelTestResult;
 import org.knime.python2.PythonVersion;
 import org.knime.python2.conda.Conda;
 import org.knime.python2.conda.CondaEnvironmentIdentifier;
+import org.knime.python2.config.CondaEnvironmentsConfig;
+import org.knime.python2.config.PythonConfigStorage;
+import org.knime.python2.prefs.PreferenceStorage;
+import org.knime.python2.prefs.PreferenceWrappingConfigStorage;
 
 import de.bund.bfr.knime.fsklab.preferences.RBinUtil.InvalidRHomeException;
 
@@ -67,23 +74,32 @@ import de.bund.bfr.knime.fsklab.preferences.RBinUtil.InvalidRHomeException;
  */
 public class PreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 	/** Creates a new preference page. */
-	Composite compositeConda;
-	Composite compositeNormal;
-	PythonFileFieldEditor python2FieldEditor;
-	PythonFileFieldEditor python3FieldEditor;
-	ComboViewer python3Envs;
-	ComboViewer python2Envs;
-	Map<String, String> envsMaps;
-	Label messagePython2;
-	Label messagePython3;
-    Label messagepython2path;
-	Label messagepython3path;
+	private Composite compositeConda;
+	private Composite compositeNormal;
+	private PythonFileFieldEditor python2FieldEditor;
+	private PythonFileFieldEditor python3FieldEditor;
+	private ComboViewer python3Envs;
+	private ComboViewer python2Envs;
+	private Map<String, String> envsMaps;
+	private Label messagePython2;
+	private Label messagePython3;
+	private Label messagepython2path;
+	private Label messagepython3path;
 	PythonCondaFieldEditor PythonCondaFieldEditor;
+	/**
+	 * properties to access the KNIME Python settings.
+	 * */
+	private static final String PLUGIN_ID = "org.knime.python2";
+	private static final PreferenceStorage CURRENT_SCOPE_PREFERENCES =
+	        new PreferenceStorage(Activator.PLUGIN_ID, InstanceScope.INSTANCE, DefaultScope.INSTANCE);
+	private static final PythonConfigStorage CURRENT = new PreferenceWrappingConfigStorage(CURRENT_SCOPE_PREFERENCES);
+
 	public PreferencePage() {
 		super(GRID);
 
 		setPreferenceStore(Plugin.getDefault().getPreferenceStore());
 		setDescription("FSK-Lab");
+		
 	}
 
 	@Override
@@ -235,11 +251,18 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 				"Path to Python3 execution", compositeNormal, "python3");
 		python2FieldEditor.setStringValue("python3");
 		addField(this.python3FieldEditor);
+		String storedCondaHome = PreferenceInitializer.getCondaPath();
+		String condaHome = getCondaInstallationPath();
+		if(StringUtils.isEmpty(storedCondaHome)) {
+			Plugin.getDefault().getPreferenceStore().putValue(PreferenceInitializer.CONDA_PATH_CFG, condaHome);
+			PythonCondaFieldEditor.setStringValue(condaHome);
+		}
+		
 		compositeNormal.layout(true, true);
 		compositeNormal.getParent().pack();
 
 	}
-
+	
 	class CondaSelectionListener implements SelectionListener {
 
 		@Override
@@ -497,9 +520,18 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 				String value = PreferenceInitializer.getPython2Env();
 				if(!StringUtils.isEmpty(value))
 					python2Envs.getCombo().setText(getKey(envsMaps, value));
+				else {
+					String python2CondaEnvironmentDirectory = getPython2CondaEnvironmentDirectoryPath();
+					python2Envs.getCombo().setText(getKey(envsMaps, python2CondaEnvironmentDirectory));
+				}
+					
 				String value2 = PreferenceInitializer.getPython3Env();
 				if(!StringUtils.isEmpty(value2))
 					python3Envs.getCombo().setText(getKey(envsMaps, value2));
+				else {
+					String python3CondaEnvironmentDirectory = getPython3CondaEnvironmentDirectoryPath();
+					python3Envs.getCombo().setText(getKey(envsMaps, python3CondaEnvironmentDirectory));
+				}
 
 				page.adjustGridLayout();
 				parent.requestLayout();
@@ -520,4 +552,25 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 		}
 		return null;
 	}
+	
+	
+    public static String getCondaInstallationPath() {
+        final CondaEnvironmentsConfig condaEnvironmentsConfig = loadCurrentCondaEnvironmentsConfig();
+        return condaEnvironmentsConfig.getCondaDirectoryPath().getStringValue();
+    }
+
+    public static String getPython2CondaEnvironmentDirectoryPath() {
+        final CondaEnvironmentsConfig condaEnvironmentsConfig = loadCurrentCondaEnvironmentsConfig();
+        return condaEnvironmentsConfig.getPython2Config().getEnvironmentDirectory().getStringValue();
+    }
+
+    public static String getPython3CondaEnvironmentDirectoryPath() {
+        final CondaEnvironmentsConfig condaEnvironmentsConfig = loadCurrentCondaEnvironmentsConfig();
+        return condaEnvironmentsConfig.getPython3Config().getEnvironmentDirectory().getStringValue();
+    }
+    private static CondaEnvironmentsConfig loadCurrentCondaEnvironmentsConfig() {
+        final CondaEnvironmentsConfig condaEnvironmentsConfig = new CondaEnvironmentsConfig();
+        condaEnvironmentsConfig.loadConfigFrom(CURRENT);
+        return condaEnvironmentsConfig;
+    }
 }
