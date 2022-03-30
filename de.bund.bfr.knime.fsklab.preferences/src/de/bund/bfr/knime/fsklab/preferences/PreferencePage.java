@@ -181,7 +181,7 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 		messageRConda.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, true, 3, 1));
 		
 		rCondaFieldEditor = new CondaFieldEditor(PreferenceInitializer.CONDA_PATH_CFG,
-				"Path to Conda installation directory", compositeRConda, this, false);
+				"Path to Conda installation directory", compositeRConda, this, false, messageRConda);
 		addField(rCondaFieldEditor);
 
 		Label envRLabel = new Label(compositeRConda, SWT.LEFT);
@@ -296,9 +296,10 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 			pythonConda.setSelection(true);
 
 		compositePythonConda.setLayoutData(gridDataPythonConda);
-		
+		Label messagePythonConda  = new Label(compositePythonConda, SWT.WRAP);
+		messagePythonConda.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, true, 3, 1));
 		pythonCondaFieldEditor = new CondaFieldEditor(PreferenceInitializer.CONDA_PATH_CFG,
-				"Path to Conda installation directory", compositePythonConda, this, true);
+				"Path to Conda installation directory", compositePythonConda, this, true, messagePythonConda);
 		addField(pythonCondaFieldEditor);
 
 		messagePython2 = new Label(compositePythonConda, SWT.WRAP);
@@ -610,19 +611,21 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 		Composite parent;
 		String condaHome;
 		boolean pythonConda ;
+		Label messageConda;
 		public CondaFieldEditor(final String name, final String labelText, final Composite parent,
-				PreferencePage page, boolean pythonConda) {
+				PreferencePage page, boolean pythonConda, Label messageConda) {
 			init(name, labelText);
 			setChangeButtonText(JFaceResources.getString("openBrowse"));
 			createControl(parent);
 			this.page = page;
 			this.parent = parent;
 			this.pythonConda = pythonConda;
-
+			this.messageConda = messageConda;
 		}
 
 		@Override
 		protected boolean doCheckState() {
+			messageConda.setText("");
 			condaHome = getStringValue();
 			if(StringUtils.isEmpty(condaHome))
 				return true;
@@ -691,7 +694,8 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 						python2Envs.getCombo().setText(getKey(envsMaps, value));
 					else {
 						String python2CondaEnvironmentDirectory = getPython2CondaEnvironmentDirectoryPath();
-						python2Envs.getCombo().setText(getKey(envsMaps, python2CondaEnvironmentDirectory));
+						if(!python2CondaEnvironmentDirectory.equals("no_conda_environment_selected"))
+							python2Envs.getCombo().setText(getKey(envsMaps, python2CondaEnvironmentDirectory));
 					}
 						
 					String value2 = PreferenceInitializer.getPython3Env();
@@ -699,7 +703,8 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 						python3Envs.getCombo().setText(getKey(envsMaps, value2));
 					else {
 						String python3CondaEnvironmentDirectory = getPython3CondaEnvironmentDirectoryPath();
-						python3Envs.getCombo().setText(getKey(envsMaps, python3CondaEnvironmentDirectory));
+						if(!python3CondaEnvironmentDirectory.equals("no_conda_environment_selected"))
+							python3Envs.getCombo().setText(getKey(envsMaps, python3CondaEnvironmentDirectory));
 					}
 				}else {
 					rEnvs.setContentProvider(new IStructuredContentProvider() {
@@ -736,7 +741,8 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 				parent.requestLayout();
 
 			} catch (final Exception ex) {
-				setMessage(ex.getMessage(), ERROR);
+				messageConda.setText(ex.getMessage());
+				messageConda.setForeground(new Color(messageConda.getParent().getDisplay(), 255, 0, 0));
 			}
 			return true;
 		}
