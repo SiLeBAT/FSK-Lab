@@ -548,7 +548,8 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 			label.setText("");
 			return true;
 		} catch (InvalidRHomeException e) {
-			setMessage(e.getMessage(), ERROR);
+			label.setText(e.getMessage());
+			label.setForeground(red);
 			return false;
 		}
 	}
