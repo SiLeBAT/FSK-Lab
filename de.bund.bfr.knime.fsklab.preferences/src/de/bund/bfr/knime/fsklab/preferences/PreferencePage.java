@@ -43,12 +43,15 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
@@ -74,18 +77,24 @@ import de.bund.bfr.knime.fsklab.preferences.RBinUtil.InvalidRHomeException;
  */
 public class PreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 	/** Creates a new preference page. */
-	private Composite compositeConda;
+	private Composite compositePythonConda;
+	private Composite compositeRConda;
 	private Composite compositeNormal;
+	private Composite compositeRNormal;
 	private PythonFileFieldEditor python2FieldEditor;
 	private PythonFileFieldEditor python3FieldEditor;
+	private ComboViewer rEnvs;
 	private ComboViewer python3Envs;
 	private ComboViewer python2Envs;
 	private Map<String, String> envsMaps;
 	private Label messagePython2;
 	private Label messagePython3;
+	private Label messageRConda;
+	private Label messageRManual;
 	private Label messagepython2path;
 	private Label messagepython3path;
-	PythonCondaFieldEditor PythonCondaFieldEditor;
+	CondaFieldEditor pythonCondaFieldEditor;
+	CondaFieldEditor rCondaFieldEditor;
 	/**
 	 * properties to access the KNIME Python settings.
 	 * */
@@ -96,9 +105,7 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 
 	public PreferencePage() {
 		super(GRID);
-
 		setPreferenceStore(Plugin.getDefault().getPreferenceStore());
-		setDescription("FSK-Lab");
 		
 	}
 
@@ -106,10 +113,122 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 	protected void createFieldEditors() {
 
 		Composite parent = getFieldEditorParent();
-		addField(new RHomeDirectoryFieldEditor(PreferenceInitializer.R3_PATH_CFG, "Path to R 3", parent));
-		addField(new BooleanFieldEditor(PreferenceInitializer.RESTORE_RPROFILE, "restore .RProfile after every run",
-				parent));
+		Label rTitle = new Label(parent, SWT.HORIZONTAL);
+		rTitle.setText("R Setting:");
+		Label rseparator = new Label(parent, SWT.HORIZONTAL | SWT.SEPARATOR);
+		GridData rgridDataSeperator = new GridData();
+		rgridDataSeperator.horizontalSpan = 2;
+		rgridDataSeperator.horizontalAlignment = SWT.FILL;
+		rseparator.setLayoutData(rgridDataSeperator);
+		Group rRadioGroup  = new Group(parent, SWT.NONE);
+		rRadioGroup.setLayout(new RowLayout(SWT.HORIZONTAL));
+		
+		Button rConda = new Button(rRadioGroup , SWT.RADIO);
+		rConda.setText("Conda");
+		rConda.setBounds(10, 30, 75, 30);		
+		rConda.addSelectionListener(new SelectionAdapter(){
+		    
+		    public void widgetSelected(final SelectionEvent e){
+		        super.widgetSelected(e);
+		        if(rConda.getSelection()){
+		        	compositeRConda.setVisible(true);
+					((GridData) compositeRConda.getLayoutData()).exclude = false;
+					compositeRNormal.setVisible(false);
+					((GridData) compositeRNormal.getLayoutData()).exclude = true;
+					compositeRConda.layout(true, true);
+					compositeRConda.getParent().pack();
+					Plugin.getDefault().getPreferenceStore().putValue(PreferenceInitializer.IS_R_CONDA, "TRUE");
 
+		        }
+		    }
+		});
+		
+		Button rManual = new Button(rRadioGroup , SWT.RADIO);
+		rManual.setText("Manual");
+		rManual.setBounds(10, 5, 75, 30);
+		rManual.addSelectionListener(new SelectionAdapter(){
+		    
+		    public void widgetSelected(final SelectionEvent e){
+		        super.widgetSelected(e);
+		        if(rManual.getSelection()){
+		        	compositeRConda.setVisible(false);
+					((GridData) compositeRConda.getLayoutData()).exclude = true;
+					compositeRNormal.setVisible(true);
+					((GridData) compositeRNormal.getLayoutData()).exclude = false;
+					compositeRNormal.layout(true, true);
+					compositeRNormal.getParent().pack();
+					Plugin.getDefault().getPreferenceStore().putValue(PreferenceInitializer.IS_R_CONDA, "FALSE");
+
+		        }
+		    }
+		});
+		
+		Label rspacer = new Label(parent, SWT.HORIZONTAL);
+		rspacer.setText("");
+
+		compositeRConda = new Composite(parent, SWT.MULTI);
+		GridData gridDataRConda = new GridData();
+		gridDataRConda.horizontalSpan = 3;
+		if(!PreferenceInitializer.isRConda()) {
+			rManual.setSelection(true);
+			gridDataRConda.exclude = true;
+			compositeRConda.setVisible(false);
+		}else
+			rConda.setSelection(true);
+		compositeRConda.setLayoutData(gridDataRConda);
+		messageRConda = new Label(compositeRConda, SWT.WRAP);
+
+		messageRConda.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, true, 3, 1));
+		
+		rCondaFieldEditor = new CondaFieldEditor(PreferenceInitializer.CONDA_PATH_CFG,
+				"Path to Conda installation directory", compositeRConda, this, false);
+		addField(rCondaFieldEditor);
+
+		Label envRLabel = new Label(compositeRConda, SWT.LEFT);
+		envRLabel.setText("Select an R Environment:");
+		
+		rEnvs = new ComboViewer(compositeRConda, SWT.READ_ONLY);
+
+		rEnvs.addSelectionChangedListener(new ISelectionChangedListener() {
+
+			@Override
+			public void selectionChanged(SelectionChangedEvent paramSelectionChangedEvent) {
+				((StructuredSelection) paramSelectionChangedEvent.getSelection()).getFirstElement();
+				var selectedElement = ((StructuredSelection) paramSelectionChangedEvent.getSelection())
+						.getFirstElement().toString();
+
+				String rEnvHome = envsMaps.get(selectedElement);
+				
+				testRHome(PreferenceInitializer.createExecutableString(rEnvHome), messageRConda);
+				Plugin.getDefault().getPreferenceStore().putValue(PreferenceInitializer.R_ENV_CFG,
+						envsMaps.get(selectedElement));
+				rEnvs.getCombo().setText(selectedElement);
+			}
+		});
+
+		compositeRNormal = new Composite(parent, SWT.MULTI);
+		
+		GridData gridDataRNormal = new GridData();
+		gridDataRNormal.horizontalSpan = 3;
+		gridDataRNormal.horizontalAlignment = SWT.FILL;
+		if(PreferenceInitializer.isRConda()) {
+			gridDataRNormal.exclude = true;
+			compositeRNormal.setVisible(false);
+		}
+		compositeRNormal.setLayoutData(gridDataRNormal);
+		messageRManual = new Label(compositeRNormal, SWT.WRAP);
+
+		messageRManual.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, true, 3, 1));
+		new BooleanFieldEditor(PreferenceInitializer.RESTORE_RPROFILE, "restore .RProfile after every run",
+				compositeRNormal);
+		Label separator1 = new Label(compositeRNormal, SWT.HORIZONTAL);
+		GridData gridDataSeperator1 = new GridData();
+		gridDataSeperator1.horizontalSpan = 2;
+		gridDataSeperator1.horizontalAlignment = SWT.FILL;
+		separator1.setLayoutData(gridDataSeperator1);
+		
+		new RHomeDirectoryFieldEditor(PreferenceInitializer.R3_PATH_CFG, "Path to R 3", compositeRNormal);
+		
 		Label newLineLable = new Label(parent, SWT.HORIZONTAL);
 		GridData newLine = new GridData();
 		newLine.horizontalSpan = 3;
@@ -123,39 +242,72 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 		gridDataSeperator.horizontalSpan = 2;
 		gridDataSeperator.horizontalAlignment = SWT.FILL;
 		separator.setLayoutData(gridDataSeperator);
-
-		Button[] radios = new Button[3];
-
-		radios[0] = new Button(parent, SWT.RADIO);
-		radios[0].setText("Conda");
-		radios[0].setSelection(true);
-		radios[0].setBounds(10, 30, 75, 30);
-		radios[0].addSelectionListener(new CondaSelectionListener());
-
-		radios[1] = new Button(parent, SWT.RADIO);
-		radios[1].setText("Manual");
-		radios[1].setBounds(10, 5, 75, 30);
-		radios[1].addSelectionListener(new CondaSelectionListener());
-
+	
+		Group pythonRadioGroup = new Group(parent, SWT.NONE);
+		pythonRadioGroup.setLayout(new RowLayout(SWT.HORIZONTAL));
+		Button pythonConda = new Button(pythonRadioGroup , SWT.RADIO);
+		pythonConda.setText("Conda");
+		pythonConda.setBounds(10, 30, 75, 30);		
+		pythonConda.addSelectionListener(new SelectionAdapter(){
+		    
+		    public void widgetSelected(final SelectionEvent e){
+		        super.widgetSelected(e);
+		        if(pythonConda.getSelection()){
+		        	compositePythonConda.setVisible(true);
+					((GridData) compositePythonConda.getLayoutData()).exclude = false;
+					compositeNormal.setVisible(false);
+					((GridData) compositeNormal.getLayoutData()).exclude = true;
+					compositePythonConda.layout(true, true);
+					compositePythonConda.getParent().pack();
+					Plugin.getDefault().getPreferenceStore().putValue(PreferenceInitializer.IS_PYTHON_CONDA, "TRUE");
+		        }
+		    }
+		});
+		
+		Button pythonManual = new Button(pythonRadioGroup , SWT.RADIO);
+		pythonManual.setText("Manual");
+		pythonManual.setBounds(10, 5, 75, 30);
+		pythonManual.addSelectionListener(new SelectionAdapter(){
+		    
+		    public void widgetSelected(final SelectionEvent e){
+		        super.widgetSelected(e);
+		        if(pythonManual.getSelection()){
+		        	compositePythonConda.setVisible(false);
+					((GridData) compositePythonConda.getLayoutData()).exclude = true;
+					compositeNormal.setVisible(true);
+					((GridData) compositeNormal.getLayoutData()).exclude = false;
+					compositeNormal.layout(true, true);
+					compositeNormal.getParent().pack();
+					Plugin.getDefault().getPreferenceStore().putValue(PreferenceInitializer.IS_PYTHON_CONDA, "FALSE");
+		        }
+		    }
+		});
 		Label spacer = new Label(parent, SWT.HORIZONTAL);
 		spacer.setText("");
 
-		compositeConda = new Composite(parent, SWT.MULTI);
-		GridData gridDataConda = new GridData();
-		gridDataConda.horizontalSpan = 3;
-		compositeConda.setLayoutData(gridDataConda);
-		
-		PythonCondaFieldEditor = new PythonCondaFieldEditor(PreferenceInitializer.CONDA_PATH_CFG,
-				"Path to Conda installation directory", compositeConda, this);
-		addField(PythonCondaFieldEditor);
+		compositePythonConda = new Composite(parent, SWT.MULTI);
+		GridData gridDataPythonConda = new GridData();
+		gridDataPythonConda.horizontalSpan = 3;
+		if(!PreferenceInitializer.isPythonConda()) {
+			gridDataPythonConda.exclude = true;
+			compositePythonConda.setVisible(false);
+			pythonManual.setSelection(true);
+		}else
+			pythonConda.setSelection(true);
 
-		messagePython2 = new Label(compositeConda, SWT.WRAP);
+		compositePythonConda.setLayoutData(gridDataPythonConda);
+		
+		pythonCondaFieldEditor = new CondaFieldEditor(PreferenceInitializer.CONDA_PATH_CFG,
+				"Path to Conda installation directory", compositePythonConda, this, true);
+		addField(pythonCondaFieldEditor);
+
+		messagePython2 = new Label(compositePythonConda, SWT.WRAP);
 
 		messagePython2.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, true, 3, 1));
 
-		Label env2Label = new Label(compositeConda, SWT.NONE);
+		Label env2Label = new Label(compositePythonConda, SWT.NONE);
 		env2Label.setText("Select an Python 2 Environment:");
-		python2Envs = new ComboViewer(compositeConda, SWT.READ_ONLY);
+		python2Envs = new ComboViewer(compositePythonConda, SWT.READ_ONLY);
 
 		python2Envs.addSelectionChangedListener(new ISelectionChangedListener() {
 
@@ -168,7 +320,7 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 				String pythonEnvHome = envsMaps.get(selectedElement);
 				PythonKernelTestResult result;
 				result = PythonKernelTester.testPython2Installation(
-						new CondaPythonCommand(PythonVersion.fromId("python2"), PythonCondaFieldEditor.pythonHome, pythonEnvHome),
+						new CondaPythonCommand(PythonVersion.fromId("python2"), pythonCondaFieldEditor.condaHome, pythonEnvHome),
 						Collections.emptyList(), true);
 
 				Color red = new Color(python3Envs.getControl().getParent().getDisplay(), 255, 0, 0);
@@ -191,10 +343,14 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 		});
 
 		compositeNormal = new Composite(parent, SWT.MULTI);
-		compositeNormal.setVisible(false);
+		
 		GridData gridDataNormal = new GridData();
 		gridDataNormal.horizontalSpan = 3;
-		gridDataNormal.exclude = true;
+		if(PreferenceInitializer.isPythonConda()) {
+			gridDataNormal.exclude = true;
+			compositeNormal.setVisible(false);
+		}
+		
 		compositeNormal.setLayoutData(gridDataNormal);
 
 		messagepython2path = new Label(compositeNormal, SWT.WRAP);
@@ -205,12 +361,12 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 		python2FieldEditor.setStringValue("python");
 		addField(this.python2FieldEditor);
 
-		messagePython3 = new Label(compositeConda, SWT.WRAP);
+		messagePython3 = new Label(compositePythonConda, SWT.WRAP);
 
 		messagePython3.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, true, 3, 1));
-		Label env3Label = new Label(compositeConda, SWT.NONE);
+		Label env3Label = new Label(compositePythonConda, SWT.NONE);
 		env3Label.setText("Select an Python 3 Environment:");
-		python3Envs = new ComboViewer(compositeConda, SWT.READ_ONLY);
+		python3Envs = new ComboViewer(compositePythonConda, SWT.READ_ONLY);
 
 		python3Envs.addSelectionChangedListener(new ISelectionChangedListener() {
 
@@ -222,7 +378,7 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 				String pythonEnvHome = envsMaps.get(selectedElement);
 				PythonKernelTestResult result;
 				result = PythonKernelTester.testPython3Installation(
-						new CondaPythonCommand(PythonVersion.fromId("python3"), PythonCondaFieldEditor.pythonHome, pythonEnvHome),
+						new CondaPythonCommand(PythonVersion.fromId("python3"), pythonCondaFieldEditor.condaHome, pythonEnvHome),
 						Collections.emptyList(), true);
 
 				Color red = new Color(python3Envs.getControl().getParent().getDisplay(), 255, 0, 0);
@@ -255,7 +411,7 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 		String condaHome = getCondaInstallationPath();
 		if(StringUtils.isEmpty(storedCondaHome)) {
 			Plugin.getDefault().getPreferenceStore().putValue(PreferenceInitializer.CONDA_PATH_CFG, condaHome);
-			PythonCondaFieldEditor.setStringValue(condaHome);
+			pythonCondaFieldEditor.setStringValue(condaHome);
 		}
 		
 		compositeNormal.layout(true, true);
@@ -263,27 +419,27 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 
 	}
 	
-	class CondaSelectionListener implements SelectionListener {
+	class PythonSelectionListener implements SelectionListener {
 
 		@Override
 		public void widgetSelected(SelectionEvent e) {
 			if (((Button) e.widget).getText().equals("Conda")) {
-				compositeConda.setVisible(true);
-				((GridData) compositeConda.getLayoutData()).exclude = false;
+				compositePythonConda.setVisible(true);
+				((GridData) compositePythonConda.getLayoutData()).exclude = false;
 				compositeNormal.setVisible(false);
 				((GridData) compositeNormal.getLayoutData()).exclude = true;
-				compositeConda.layout(true, true);
-				compositeConda.getParent().pack();
-				Plugin.getDefault().getPreferenceStore().putValue(PreferenceInitializer.IS_CONDA, "TRUE");
+				compositePythonConda.layout(true, true);
+				compositePythonConda.getParent().pack();
+				Plugin.getDefault().getPreferenceStore().putValue(PreferenceInitializer.IS_PYTHON_CONDA, "TRUE");
 
 			} else {
-				compositeConda.setVisible(false);
-				((GridData) compositeConda.getLayoutData()).exclude = true;
+				compositePythonConda.setVisible(false);
+				((GridData) compositePythonConda.getLayoutData()).exclude = true;
 				compositeNormal.setVisible(true);
 				((GridData) compositeNormal.getLayoutData()).exclude = false;
 				compositeNormal.layout(true, true);
 				compositeNormal.getParent().pack();
-				Plugin.getDefault().getPreferenceStore().putValue(PreferenceInitializer.IS_CONDA, "TRUE");
+				Plugin.getDefault().getPreferenceStore().putValue(PreferenceInitializer.IS_PYTHON_CONDA, "FALSE");
 
 			}
 
@@ -320,73 +476,82 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 		@Override
 		protected boolean doCheckState() {
 			final String rHome = getStringValue();
-
-			final Path rHomePath = Paths.get(rHome);
-			if (PreferenceInitializer.refresh) {
-				setMessage("Please restart you Knime to have all setting applied.");
-			}
-			if (!Files.isDirectory(rHomePath)) {
-				setMessage("The selected path is not a directory.", ERROR);
-				return false;
-			}
-
-			try {
-				PreferenceInitializer.refresh = false;
-				RBinUtil.checkRHome(rHome, true);
-
-				DefaultRPreferenceProvider prefProvider = new DefaultRPreferenceProvider(rHome);
-				final Properties props = prefProvider.getProperties();
-				// the version numbers may contain spaces
-				final String version = (props.getProperty("major") + "." + props.getProperty("minor")).replace(" ", "");
-
-				if ("3.1.0".equals(version)) {
-					setMessage("You have selected an R 3.1.0 installation. "
-							+ "Please see http://tech.knime.org/faq#q26 for details.", WARNING);
-					return true;
-				}
-
-				// Check if null or empty
-				if (StringUtils.isEmpty(props.getProperty("Rserve.path"))) {
-					setMessage("The package 'Rserve' needs to be installed in your R installation. "
-							+ "Please install it in R using \"install.packages('Rserve')\".", ERROR);
-					return false;
-				}
-
-				// Check if null or empty
-				if (StringUtils.isEmpty(props.getProperty("miniCRAN.path"))) {
-					setMessage("The package 'miniCRAN' needs to be installed in your R installation. "
-							+ "Please install it in R using \"install.packages('miniCRAN')\".", ERROR);
-					return false;
-				}
-
-				// Check if null or empty
-				if (StringUtils.isEmpty(props.getProperty("svglite.path"))) {
-					setMessage("The package 'svglite' needs to be installed in your R installation. "
-							+ "Please install it in R using \"install.packages('svglite')\".", ERROR);
-					return false;
-				}
-
-				// under Mac we need the Cairo package to use png()/bmp() devices
-				if (Platform.getOS().equals(Platform.OS_MACOSX)) {
-					// Check if null or empty
-					final String cairoPath = props.getProperty("Cairo.path");
-					if (StringUtils.isEmpty(cairoPath)) {
-						setMessage("The package 'Cairo' needs to be installed in your R installation for "
-								+ "bitmap graphics devices to work properly. Please install it in R using "
-								+ "\"install.packages('Cairo')\".", WARNING);
-						return false;
-					}
-				}
-				PreferenceInitializer.refresh = true;
-				setMessage(null, NONE);
-				return true;
-			} catch (InvalidRHomeException e) {
-				setMessage(e.getMessage(), ERROR);
-				return false;
-			}
+			return testRHome(rHome, messageRManual);
 		}
 	}
+	private boolean testRHome(String rHome, Label label) {
+		final Path rHomePath = Paths.get(rHome);
+		Color red = new Color(label.getParent().getDisplay(), 255, 0, 0);
+		Color yellow = new Color(label.getParent().getDisplay(), 255, 255, 0);
+		if (PreferenceInitializer.refresh) {
+			label.setText("Please restart you Knime to have all setting applied.");
+		}
+		if (!Files.isDirectory(rHomePath)) {
+			label.setText("The selected path is not a directory.");
+			label.setForeground(red);
+			return false;
+		}
 
+		try {
+			PreferenceInitializer.refresh = false;
+			RBinUtil.checkRHome(rHome, true);
+
+			DefaultRPreferenceProvider prefProvider = new DefaultRPreferenceProvider(rHome);
+			final Properties props = prefProvider.getProperties();
+			// the version numbers may contain spaces
+			final String version = (props.getProperty("major") + "." + props.getProperty("minor")).replace(" ", "");
+
+			if ("3.1.0".equals(version)) {
+				label.setText("You have selected an R 3.1.0 installation. "
+						+ "Please see http://tech.knime.org/faq#q26 for details.");
+				label.setForeground(yellow);
+				return true;
+			}
+
+			// Check if null or empty
+			if (StringUtils.isEmpty(props.getProperty("Rserve.path"))) {
+				label.setText("The package 'Rserve' needs to be installed in your R installation. "
+						+ "Please install it in R using \"install.packages('Rserve')\".");
+				label.setForeground(red);
+				return false;
+			}
+
+			// Check if null or empty
+			if (StringUtils.isEmpty(props.getProperty("miniCRAN.path"))) {
+				label.setText("The package 'miniCRAN' needs to be installed in your R installation. "
+						+ "Please install it in R using \"install.packages('miniCRAN')\".");
+				label.setForeground(red);
+				return false;
+			}
+
+			// Check if null or empty
+			if (StringUtils.isEmpty(props.getProperty("svglite.path"))) {
+				label.setText("The package 'svglite' needs to be installed in your R installation. "
+						+ "Please install it in R using \"install.packages('svglite')\".");
+				label.setForeground(red);
+				return false;
+			}
+
+			// under Mac we need the Cairo package to use png()/bmp() devices
+			if (Platform.getOS().equals(Platform.OS_MACOSX)) {
+				// Check if null or empty
+				final String cairoPath = props.getProperty("Cairo.path");
+				if (StringUtils.isEmpty(cairoPath)) {
+					label.setText("The package 'Cairo' needs to be installed in your R installation for "
+							+ "bitmap graphics devices to work properly. Please install it in R using "
+							+ "\"install.packages('Cairo')\".");
+					label.setForeground(red);
+					return false;
+				}
+			}
+			PreferenceInitializer.refresh = true;
+			label.setText("");
+			return true;
+		} catch (InvalidRHomeException e) {
+			setMessage(e.getMessage(), ERROR);
+			return false;
+		}
+	}
 	private class PythonFileFieldEditor extends FileFieldEditor {
 		String versionId;
 		Composite parent;
@@ -439,100 +604,133 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 		}
 	}
 
-	private class PythonCondaFieldEditor extends DirectoryFieldEditor {
+	private class CondaFieldEditor extends DirectoryFieldEditor {
 		PreferencePage page;
 		Composite parent;
-		String pythonHome;
-		public PythonCondaFieldEditor(final String name, final String labelText, final Composite parent,
-				PreferencePage page) {
+		String condaHome;
+		boolean pythonConda ;
+		public CondaFieldEditor(final String name, final String labelText, final Composite parent,
+				PreferencePage page, boolean pythonConda) {
 			init(name, labelText);
 			setChangeButtonText(JFaceResources.getString("openBrowse"));
 			createControl(parent);
 			this.page = page;
 			this.parent = parent;
+			this.pythonConda = pythonConda;
 
 		}
 
 		@Override
 		protected boolean doCheckState() {
-			pythonHome = getStringValue();
-			if(StringUtils.isEmpty(pythonHome))
+			condaHome = getStringValue();
+			if(StringUtils.isEmpty(condaHome))
 				return true;
 			try {
 
-				final Conda conda = new Conda(pythonHome);
+				final Conda conda = new Conda(condaHome);
 
 				List<CondaEnvironmentIdentifier> list = conda.getEnvironments();
 				envsMaps = (Map<String, String>) list.stream().collect(
 						java.util.stream.Collectors.toMap(item -> item.getName(), item -> item.getDirectoryPath()));
 
-				python3Envs.setContentProvider(new IStructuredContentProvider() {
-
-					@Override
-					public void inputChanged(Viewer paramViewer, Object paramObject1, Object paramObject2) {
+				if(pythonConda) {
+					python3Envs.setContentProvider(new IStructuredContentProvider() {
+	
+						@Override
+						public void inputChanged(Viewer paramViewer, Object paramObject1, Object paramObject2) {
+						}
+	
+						@Override
+						public void dispose() {
+						}
+	
+						@Override
+						public Object[] getElements(Object paramObject) {
+	
+							return ((HashMap) paramObject).keySet().toArray();
+						}
+					});
+					python3Envs.setLabelProvider(new LabelProvider() {
+	
+						@Override
+						public String getText(Object element) {
+							return element.toString();
+						}
+	
+					});
+					python3Envs.setInput(envsMaps);
+	
+					python2Envs.setContentProvider(new IStructuredContentProvider() {
+	
+						@Override
+						public void inputChanged(Viewer paramViewer, Object paramObject1, Object paramObject2) {
+						}
+	
+						@Override
+						public void dispose() {
+						}
+	
+						@Override
+						public Object[] getElements(Object paramObject) {
+	
+							return ((HashMap) paramObject).keySet().toArray();
+						}
+					});
+					python2Envs.setLabelProvider(new LabelProvider() {
+	
+						@Override
+						public String getText(Object element) {
+							return element.toString();
+						}
+	
+					});
+					python2Envs.setInput(envsMaps);
+					String value = PreferenceInitializer.getPython2Env();
+					if(!StringUtils.isEmpty(value))
+						python2Envs.getCombo().setText(getKey(envsMaps, value));
+					else {
+						String python2CondaEnvironmentDirectory = getPython2CondaEnvironmentDirectoryPath();
+						python2Envs.getCombo().setText(getKey(envsMaps, python2CondaEnvironmentDirectory));
 					}
-
-					@Override
-					public void dispose() {
+						
+					String value2 = PreferenceInitializer.getPython3Env();
+					if(!StringUtils.isEmpty(value2))
+						python3Envs.getCombo().setText(getKey(envsMaps, value2));
+					else {
+						String python3CondaEnvironmentDirectory = getPython3CondaEnvironmentDirectoryPath();
+						python3Envs.getCombo().setText(getKey(envsMaps, python3CondaEnvironmentDirectory));
 					}
-
-					@Override
-					public Object[] getElements(Object paramObject) {
-
-						return ((HashMap) paramObject).keySet().toArray();
-					}
-				});
-				python3Envs.setLabelProvider(new LabelProvider() {
-
-					@Override
-					public String getText(Object element) {
-						return element.toString();
-					}
-
-				});
-				python3Envs.setInput(envsMaps);
-
-				python2Envs.setContentProvider(new IStructuredContentProvider() {
-
-					@Override
-					public void inputChanged(Viewer paramViewer, Object paramObject1, Object paramObject2) {
-					}
-
-					@Override
-					public void dispose() {
-					}
-
-					@Override
-					public Object[] getElements(Object paramObject) {
-
-						return ((HashMap) paramObject).keySet().toArray();
-					}
-				});
-				python2Envs.setLabelProvider(new LabelProvider() {
-
-					@Override
-					public String getText(Object element) {
-						return element.toString();
-					}
-
-				});
-				python2Envs.setInput(envsMaps);
-				String value = PreferenceInitializer.getPython2Env();
-				if(!StringUtils.isEmpty(value))
-					python2Envs.getCombo().setText(getKey(envsMaps, value));
-				else {
-					String python2CondaEnvironmentDirectory = getPython2CondaEnvironmentDirectoryPath();
-					python2Envs.getCombo().setText(getKey(envsMaps, python2CondaEnvironmentDirectory));
-				}
+				}else {
+					rEnvs.setContentProvider(new IStructuredContentProvider() {
+						
+						@Override
+						public void inputChanged(Viewer paramViewer, Object paramObject1, Object paramObject2) {
+						}
+	
+						@Override
+						public void dispose() {
+						}
+	
+						@Override
+						public Object[] getElements(Object paramObject) {
+	
+							return ((HashMap) paramObject).keySet().toArray();
+						}
+					});
+					rEnvs.setLabelProvider(new LabelProvider() {
+	
+						@Override
+						public String getText(Object element) {
+							return element.toString();
+						}
+	
+					});
+					rEnvs.setInput(envsMaps);
+					String value = PreferenceInitializer.getREnv();
+					if(!StringUtils.isEmpty(value))
+						rEnvs.getCombo().setText(getKey(envsMaps, value));
 					
-				String value2 = PreferenceInitializer.getPython3Env();
-				if(!StringUtils.isEmpty(value2))
-					python3Envs.getCombo().setText(getKey(envsMaps, value2));
-				else {
-					String python3CondaEnvironmentDirectory = getPython3CondaEnvironmentDirectoryPath();
-					python3Envs.getCombo().setText(getKey(envsMaps, python3CondaEnvironmentDirectory));
 				}
-
 				page.adjustGridLayout();
 				parent.requestLayout();
 
