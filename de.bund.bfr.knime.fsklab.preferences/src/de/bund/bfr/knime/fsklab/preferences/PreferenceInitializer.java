@@ -82,7 +82,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 	}
 
 	public static final String getRPath() {
-		if(isRConda()) {
+		if(!isRConda()) {
 			return Plugin.getDefault().getPreferenceStore().getString(R3_PATH_CFG);
 		}else {
 			return createExecutableString(Plugin.getDefault().getPreferenceStore().getString(R_ENV_CFG));

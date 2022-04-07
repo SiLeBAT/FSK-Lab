@@ -141,6 +141,13 @@ public class RBinUtil {
 			return new Properties();
 		}
 		ProcessBuilder builder = new ProcessBuilder();
+		if (rpref != null ) {
+            if(PreferenceInitializer.isRConda())
+            	rpref.setUpEnvironment(builder.environment(),PreferenceInitializer.getREnv());
+            else {
+            	rpref.setUpEnvironment(builder.environment(),PreferenceInitializer.getRPath());
+            }
+        }
 		builder.command(rpref.getRBinPath("Rscript").toString(), "--vanilla", rCommandFile.getName(),
 				rOutFile.getName());
 		builder.directory(rCommandFile.getParentFile());
