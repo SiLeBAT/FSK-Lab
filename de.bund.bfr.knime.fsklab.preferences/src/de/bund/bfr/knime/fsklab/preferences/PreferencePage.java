@@ -16,7 +16,6 @@
  **************************************************************************************************/
 package de.bund.bfr.knime.fsklab.preferences;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -664,9 +663,11 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 					try {
 						Conda conda = new Conda(condaHome);
 						List<CondaEnvironmentIdentifier> list = conda.getEnvironments();
-
-						envsMaps = (Map<String, String>) list.stream().collect(java.util.stream.Collectors
-								.toMap(item -> item.getName(), item -> item.getDirectoryPath()));
+						if (envsMaps == null || envsMaps.isEmpty()) {
+							envsMaps = (Map<String, String>) list.stream().collect(java.util.stream.Collectors
+									.toMap(item -> item.getName(), item -> item.getDirectoryPath()));
+							System.out.println("envsMaps");
+						}
 
 						if (pythonConda) {
 							python3Envs.setContentProvider(new IStructuredContentProvider() {
