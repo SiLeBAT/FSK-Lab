@@ -29,7 +29,7 @@ public class PythonScriptHandler extends ScriptHandler {
     PythonCommand command;
 
     if (version.equals(PythonVersion.PYTHON3)) {
-      if (PreferenceInitializer.isConda())
+      if (PreferenceInitializer.isPythonConda())
         command = new CondaPythonCommand(version, PreferenceInitializer.getCondaPath(),
             PreferenceInitializer.getPython3Env());
       else
@@ -37,7 +37,7 @@ public class PythonScriptHandler extends ScriptHandler {
 
       controller = new PythonKernel(command);
     } else if (version.equals(PythonVersion.PYTHON2)) {
-      if (PreferenceInitializer.isConda())
+      if (PreferenceInitializer.isPythonConda())
         command = new CondaPythonCommand(version, PreferenceInitializer.getCondaPath(),
             PreferenceInitializer.getPython2Env());
       else

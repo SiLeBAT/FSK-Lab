@@ -41,14 +41,15 @@ public class BasePlotter implements ModelPlotter {
 
     // Initialize necessary R stuff to plot
     String configCmd =
-        Platform.isMac() ? "library('Cairo'); options(device='png', bitmapType='cairo')"
+        Platform.isMac() ? "library(Cairo); options(device='png', bitmapType='cairo')"
             : "options(device='png')";
 
     // Get image path (with proper slashes)
     final String path = FilenameUtils.separatorsToUnix(file.getAbsolutePath());
 
-    final String wholeScript =
-        String.join("\n", configCmd, "svg('" + path + "')", script, "dev.off()");
+    //final String wholeScript =
+    //    String.join("\n", configCmd, "svg('" + path + "')", script, "dev.off()");
+    final String wholeScript =String.join("\n", configCmd, "Cairo(file='" + path + "',type='svg',dpi=72)", script, "dev.off()");
     controller.eval(wholeScript, false);
   }
 }
