@@ -229,8 +229,8 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 		gridDataSeperator1.horizontalAlignment = SWT.FILL;
 		separator1.setLayoutData(gridDataSeperator1);
 
-		new RHomeDirectoryFieldEditor(PreferenceInitializer.R3_PATH_CFG, "Path to R 3", compositeRNormal);
-
+		RHomeDirectoryFieldEditor rhome = new RHomeDirectoryFieldEditor(PreferenceInitializer.R3_PATH_CFG, "Path to R 3", compositeRNormal);
+		rhome.setStringValue(Plugin.getDefault().getPreferenceStore().getString(PreferenceInitializer.R3_PATH_CFG));
 		Label newLineLable = new Label(parent, SWT.HORIZONTAL);
 		GridData newLine = new GridData();
 		newLine.horizontalSpan = 3;
