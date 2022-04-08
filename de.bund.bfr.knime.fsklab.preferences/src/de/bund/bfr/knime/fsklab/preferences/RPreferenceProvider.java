@@ -62,5 +62,5 @@ public interface RPreferenceProvider {
 
   public Properties getProperties();
   
-  public Map<String, String> setUpEnvironment(final Map<String, String> environment, String m_condaPrefix);
+  public Map<String, String> setUpEnvironment( Map<String, String> environment);
 }

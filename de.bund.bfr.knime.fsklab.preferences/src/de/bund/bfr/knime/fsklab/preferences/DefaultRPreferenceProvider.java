@@ -136,21 +136,28 @@ public class DefaultRPreferenceProvider implements RPreferenceProvider {
 
 		return m_properties;
 	}
-	public Map<String, String> setUpEnvironment(final Map<String, String> environment, String r_prefix) {
-		if (Platform.getOS().equals(Platform.OS_WIN32)) {
-            String path = findPathVariableName(environment);
-            final var pathVar = new StringBuilder();
-            pathVar.append(r_prefix).append(File.pathSeparator);
-            pathVar.append(r_prefix).append(File.separator).append("Library").append(File.separator).append("bin")
-                .append(File.pathSeparator);
-            pathVar.append(r_prefix).append(File.separator).append("Library").append(File.separator)
-                .append("mingw-w64").append(File.separator).append("bin").append(File.pathSeparator);
-            pathVar.append(r_prefix).append(File.separator).append("Scripts").append(File.pathSeparator);
-            pathVar.append(environment.getOrDefault(path, ""));
-            environment.put(path, pathVar.toString());
-        }
-        return environment;
-    }
+
+	public Map<String, String> setUpEnvironment(final Map<String, String> environment) {
+		String r_prefix;
+		if (PreferenceInitializer.isRConda())
+			r_prefix = PreferenceInitializer.getREnv();
+		else {
+			r_prefix = PreferenceInitializer.getRPath();
+		}
+		if (Platform.getOS().equals(Platform.OS_WIN32) && r_prefix != null) {
+			String path = findPathVariableName(environment);
+			final var pathVar = new StringBuilder();
+			pathVar.append(r_prefix).append(File.pathSeparator);
+			pathVar.append(r_prefix).append(File.separator).append("Library").append(File.separator).append("bin")
+					.append(File.pathSeparator);
+			pathVar.append(r_prefix).append(File.separator).append("Library").append(File.separator).append("mingw-w64")
+					.append(File.separator).append("bin").append(File.pathSeparator);
+			pathVar.append(r_prefix).append(File.separator).append("Scripts").append(File.pathSeparator);
+			pathVar.append(environment.getOrDefault(path, ""));
+			environment.put(path, pathVar.toString());
+		}
+		return environment;
+	}
 	
 	/**
      * Should only be called on windows.
