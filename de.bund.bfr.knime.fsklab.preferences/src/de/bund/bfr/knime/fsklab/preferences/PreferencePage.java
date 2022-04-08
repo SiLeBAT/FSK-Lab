@@ -200,11 +200,10 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 						.getFirstElement().toString();
 
 				String rEnvHome = envsMaps.get(selectedElement);
-
-				testRHome(PreferenceInitializer.createExecutableString(rEnvHome), messageRConda);
 				Plugin.getDefault().getPreferenceStore().putValue(PreferenceInitializer.R_ENV_CFG,
 						envsMaps.get(selectedElement));
 				rEnvs.getCombo().setText(selectedElement);
+				testRHome(PreferenceInitializer.createExecutableString(rEnvHome), messageRConda);
 			}
 		});
 
@@ -499,9 +498,14 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 	}
 
 	private boolean testRHome(String rHome, Label label) {
-		final Path rHomePath = Paths.get(rHome);
 		Color red = new Color(label.getParent().getDisplay(), 255, 0, 0);
 		Color yellow = new Color(label.getParent().getDisplay(), 255, 255, 0);
+		if(!Files.exists(Paths.get(rHome))) {
+			label.setText("The selected environment is not a valid!");
+			label.setForeground(red);
+			return false;
+		}
+		final Path rHomePath = Paths.get(rHome);
 		if (PreferenceInitializer.refresh) {
 			label.setText("Please restart you Knime to have all setting applied.");
 		}
