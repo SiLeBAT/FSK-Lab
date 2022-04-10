@@ -142,7 +142,16 @@ public class NodeUtils {
       FileUtils.writeStringToFile(configFile, configString, StandardCharsets.UTF_8);
     }
   }
-
+  
+  /** Initialize and return an empty Generic model using the fluent API of the generated Swagger Models */
+  public static Model initializePridictiveModell() {
+    String modelId = UUID.randomUUID().toString();
+    return new PredictiveModel().modelMath(new PredictiveModelModelMath())
+        .generalInformation(new PredictiveModelGeneralInformation()
+            .identifier(modelId)
+            .modelCategory(new ModelCategory().modelClass("Predictive model")))
+        .modelType("predictiveModel");
+  }
   /** Initialize and return an empty Generic model using the fluent API of the generated Swagger Models */
   public static Model initializeGenericModell() {
       return new GenericModel()
