@@ -2,6 +2,7 @@ package de.bund.bfr.knime.fsklab.nodes;
 
 import de.bund.bfr.knime.fsklab.nodes.plot.BasePlotter;
 import de.bund.bfr.knime.fsklab.nodes.plot.Ggplot2Plotter;
+import de.bund.bfr.knime.fsklab.nodes.plot.RCondaPlotter;
 import de.bund.bfr.knime.fsklab.preferences.PreferenceInitializer;
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
 import de.bund.bfr.knime.fsklab.r.client.LibRegistry;
@@ -46,11 +47,16 @@ public class RScriptHandler extends ScriptHandler {
     this.controller = new RController();
     this.executor = new ScriptExecutor(controller);
 
-    if (packages.contains("ggplot2")) {
-      plotter = new Ggplot2Plotter(controller);
+    if(PreferenceInitializer.isRConda()) {
+      plotter = new RCondaPlotter(controller);
     } else {
-      plotter = new BasePlotter(controller);
+      if (packages.contains("ggplot2")) {
+        plotter = new Ggplot2Plotter(controller);
+      } else {
+        plotter = new BasePlotter(controller);
+      }
     }
+    
   }
 
   @Override
