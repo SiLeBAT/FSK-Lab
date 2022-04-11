@@ -34,6 +34,7 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
 import de.bund.bfr.knime.fsklab.v2_0.FskPortObjectSpec;
+import de.bund.bfr.knime.pmm.common.pmmtablemodel.SchemaFactory;
 
 public class PMMToFSKExporterNodeModel extends NodeModel {
 
@@ -105,8 +106,14 @@ public class PMMToFSKExporterNodeModel extends NodeModel {
   protected PortObject[] execute(PortObject[] inData, ExecutionContext exec) throws Exception {
     BufferedDataTable dataTable = (BufferedDataTable) inData[0];
     pmmodelReader.readPrimaryTableIntoParametricModel(dataTable);
-    FskPortObject portObj =
-        pmmodelReader.convertParametricModelToFSKObject(pmmodelReader.m1s.get(selectedModel));
+    FskPortObject portObj = null;
+    if (SchemaFactory.conformsM1Schema(dataTable.getSpec()))
+      portObj =
+      pmmodelReader.convertParametricModelToFSKObject(pmmodelReader.m1s.get(selectedModel));
+    else
+      portObj =
+      pmmodelReader.convertParametricModelToFSKObject(pmmodelReader.m2s.get(selectedModel));
+    
 
     return new PortObject[] {portObj};
   }
