@@ -487,6 +487,8 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 		@Override
 		protected boolean doCheckState() {
 			final String rHome = getStringValue();
+			Plugin.getDefault().getPreferenceStore().putValue(PreferenceInitializer.R3_PATH_CFG,
+					rHome);
 			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {
 					testRHome(rHome, messageRManual);
