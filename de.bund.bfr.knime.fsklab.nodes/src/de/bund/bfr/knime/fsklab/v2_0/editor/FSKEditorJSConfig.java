@@ -19,7 +19,6 @@
 package de.bund.bfr.knime.fsklab.v2_0.editor;
 
 import java.io.IOException;
-import java.util.List;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
@@ -46,8 +45,7 @@ class FSKEditorJSConfig {
   private static final String REPRESET = "representationResetReuired";
   private static final String ERRORS = "errors";
   private static final String MODEL_TYPE = "modelType";
-  private static final String ADDED_FILES ="addedFiles";
-  
+
   private String m_metadata;
   private String m_modelScript;
   private String m_visualizationScript;
@@ -58,7 +56,6 @@ class FSKEditorJSConfig {
   private boolean representationResetReuired = true;
   private String[] m_validationErrors;
   private String m_modelType;
-  private String[] m_addedFiles;
 
   /** UUID of the connected node. */
   private String m_connectedNode;
@@ -153,15 +150,6 @@ class FSKEditorJSConfig {
   public void setModelType(String modelType) {
     m_modelType = modelType;
   }
-  
-  public String[] getAddedFiles() {
-    return m_addedFiles;
-  }
-
-  public void setAddedFiles(String[] addedFiles) {
-    m_addedFiles = addedFiles;
-  }
-
   public boolean isRepresentationResetReuired() {
     return representationResetReuired;
   }
@@ -194,7 +182,6 @@ class FSKEditorJSConfig {
     settings.addBoolean(REPRESET, representationResetReuired);
     settings.addStringArray(ERRORS, m_validationErrors);
     settings.addString(MODEL_TYPE, m_modelType);
-    settings.addStringArray(ADDED_FILES, m_addedFiles);
   }
 
   /**
@@ -231,7 +218,6 @@ class FSKEditorJSConfig {
     representationResetReuired = settings.getBoolean(REPRESET, true);
     m_validationErrors = settings.getStringArray(ERRORS, new String[0]);
     m_modelType = settings.getString(MODEL_TYPE, ModelType.genericModel.name());
-    m_addedFiles = settings.getStringArray(ADDED_FILES, new String[0]);
   }
 
   /**
@@ -269,6 +255,5 @@ class FSKEditorJSConfig {
     representationResetReuired = settings.getBoolean(REPRESET, true);
     m_validationErrors = settings.getStringArray(ERRORS, "");
     m_modelType = settings.getString(MODEL_TYPE, ModelType.genericModel.name());
-    m_addedFiles = settings.getStringArray(ADDED_FILES, new String[0]);
   }
 }

@@ -334,7 +334,7 @@ class APPSimulation {
 						let step = 1;
 						// calc decimals for slider steps depending on min-max values
 						if ( param.dataType.toLowerCase() === 'double' ) {
-							let decimals = param.value.substring(param.value.indexOf('.') + 1).length;
+							let decimals = Math.max( param.minValue.substring( param.minValue.indexOf( '.' ) + 1 ).length, param.maxValue.substring( param.maxValue.indexOf( '.' ) + 1 ).length );
 							for ( let j = 0; j < decimals; j++ ) {
 								step = step / 10;
 							}

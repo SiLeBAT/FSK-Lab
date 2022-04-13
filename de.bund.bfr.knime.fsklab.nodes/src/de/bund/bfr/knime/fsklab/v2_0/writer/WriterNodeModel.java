@@ -18,44 +18,6 @@
  */
 package de.bund.bfr.knime.fsklab.v2_0.writer;
 
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.threetenbp.ThreeTenModule;
-import de.bund.bfr.fskml.FSKML;
-import de.bund.bfr.fskml.FskMetaDataObject;
-import de.bund.bfr.fskml.FskMetaDataObject.ResourceType;
-import de.bund.bfr.fskml.sedml.SourceScript;
-import de.bund.bfr.knime.fsklab.FskPlugin;
-import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
-import de.bund.bfr.knime.fsklab.nodes.ScriptHandler;
-import de.bund.bfr.knime.fsklab.nodes.WriterNodeUtils;
-import de.bund.bfr.knime.fsklab.r.client.LibRegistry;
-import de.bund.bfr.knime.fsklab.v2_0.CombinedFskPortObject;
-import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
-import de.bund.bfr.knime.fsklab.v2_0.FskSimulation;
-import de.bund.bfr.knime.fsklab.v2_0.JoinRelation;
-import de.bund.bfr.metadata.swagger.ConsumptionModel;
-import de.bund.bfr.metadata.swagger.DataModel;
-import de.bund.bfr.metadata.swagger.DoseResponseModel;
-import de.bund.bfr.metadata.swagger.ExposureModel;
-import de.bund.bfr.metadata.swagger.GenericModel;
-import de.bund.bfr.metadata.swagger.HealthModel;
-import de.bund.bfr.metadata.swagger.Model;
-import de.bund.bfr.metadata.swagger.OtherModel;
-import de.bund.bfr.metadata.swagger.Parameter;
-import de.bund.bfr.metadata.swagger.PredictiveModel;
-import de.bund.bfr.metadata.swagger.ProcessModel;
-import de.bund.bfr.metadata.swagger.QraModel;
-import de.bund.bfr.metadata.swagger.RiskModel;
-import de.bund.bfr.metadata.swagger.ToxicologicalModel;
-import de.unirostock.sems.cbarchive.ArchiveEntry;
-import de.unirostock.sems.cbarchive.CombineArchive;
-import de.unirostock.sems.cbarchive.meta.DefaultMetaDataObject;
-import de.unirostock.sems.cbarchive.meta.MetaDataObject;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -72,7 +34,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.xml.stream.XMLStreamException;
-import metadata.SwaggerUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
@@ -118,6 +79,45 @@ import org.sbml.jsbml.xml.XMLTriple;
 import org.threeten.bp.Instant;
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.ZoneId;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.threetenbp.ThreeTenModule;
+import de.bund.bfr.fskml.FSKML;
+import de.bund.bfr.fskml.FskMetaDataObject;
+import de.bund.bfr.fskml.FskMetaDataObject.ResourceType;
+import de.bund.bfr.fskml.sedml.SourceScript;
+import de.bund.bfr.knime.fsklab.FskPlugin;
+import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
+import de.bund.bfr.knime.fsklab.nodes.ScriptHandler;
+import de.bund.bfr.knime.fsklab.nodes.WriterNodeUtils;
+import de.bund.bfr.knime.fsklab.r.client.LibRegistry;
+import de.bund.bfr.knime.fsklab.v2_0.CombinedFskPortObject;
+import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
+import de.bund.bfr.knime.fsklab.v2_0.FskSimulation;
+import de.bund.bfr.knime.fsklab.v2_0.JoinRelation;
+import de.bund.bfr.metadata.swagger.DataModel;
+import de.bund.bfr.metadata.swagger.DoseResponseModel;
+import de.bund.bfr.metadata.swagger.ExposureModel;
+import de.bund.bfr.metadata.swagger.GenericModel;
+import de.bund.bfr.metadata.swagger.ConsumptionModel;
+import de.bund.bfr.metadata.swagger.HealthModel;
+import de.bund.bfr.metadata.swagger.Model;
+import de.bund.bfr.metadata.swagger.OtherModel;
+import de.bund.bfr.metadata.swagger.Parameter;
+import de.bund.bfr.metadata.swagger.PredictiveModel;
+import de.bund.bfr.metadata.swagger.ProcessModel;
+import de.bund.bfr.metadata.swagger.QraModel;
+import de.bund.bfr.metadata.swagger.RiskModel;
+import de.bund.bfr.metadata.swagger.ToxicologicalModel;
+import de.unirostock.sems.cbarchive.ArchiveEntry;
+import de.unirostock.sems.cbarchive.CombineArchive;
+import de.unirostock.sems.cbarchive.meta.DefaultMetaDataObject;
+import de.unirostock.sems.cbarchive.meta.MetaDataObject;
+import metadata.SwaggerUtil;
 
 class WriterNodeModel extends NoInternalsModel {
 
@@ -139,10 +139,6 @@ class WriterNodeModel extends NoInternalsModel {
   static final String CFG_FILE = "file";
   private final SettingsModelString filePath = new SettingsModelString(CFG_FILE, null);
 
-  
-  // To calm down Code Climate Warning: define constants for string used more than 3 times
-  private static final String RDATA_EXTENSION = "rdata";
-  
   public WriterNodeModel() {
     super(IN_TYPES, OUT_TYPES);
   }
@@ -185,46 +181,35 @@ class WriterNodeModel extends NoInternalsModel {
 
       final String filenameString = filePrefix + resourcePath.getFileName().toString();
       final File resourceFile = resourcePath.toFile();
-      String extension = FilenameUtils.getExtension(filenameString.toLowerCase());
-      switch(extension) {
-        case "txt": archive.addEntry(resourceFile, filenameString, uris.get("plain"));
-        break;
-        case RDATA_EXTENSION: archive.addEntry(resourceFile, filenameString, uris.get(RDATA_EXTENSION));
-        break;
-        case "csv": archive.addEntry(resourceFile, filenameString, uris.get("csv"));
-        break;
-        case "jpeg": archive.addEntry(resourceFile, filenameString, uris.get("jpeg"));
-        break;
-        case "bmp": archive.addEntry(resourceFile, filenameString, uris.get("bmp"));
-        break;
-        case "png": archive.addEntry(resourceFile, filenameString, uris.get("png"));
-        break;
-        case "tiff":  archive.addEntry(resourceFile, filenameString, uris.get("tiff"));
-        break;
-        case "xlsx": archive.addEntry(resourceFile, filenameString, uris.get("xlsx"));
-        break;
-        // ADD additional resource files that the model script might need
-        case "r" : archive.addEntry(resourceFile, filenameString,
-            FSKML.getURIS(1, 0, 12).get(scriptHandler.getFileExtension()));
-        break;
-        case "py" : archive.addEntry(resourceFile, filenameString,
-            FSKML.getURIS(1, 0, 12).get(scriptHandler.getFileExtension()));
-        break;
-        case "h5": archive.addEntry(resourceFile, filenameString, URI.create("http://purl.org/NET/mediatypes/text-xplain"));
-        break;
-        // ADD JSON file
-        case "json": archive.addEntry(resourceFile, filenameString, URI.create("http://purl.org/NET/mediatypes/text-xplain"));
-        break;
-        // ADD HTML file
-        case "html": archive.addEntry(resourceFile, filenameString, URI.create("https://www.iana.org/assignments/media-types/text/html"));
-        break;
-        // ADD HTM file
-        case "htm":  archive.addEntry(resourceFile, filenameString, URI.create("https://www.iana.org/assignments/media-types/text/html"));
-        break;
-        // ADD RMarkdown file
-        case "rmd": archive.addEntry(resourceFile, filenameString, URI.create("https://www.iana.org/assignments/media-types/text/markdown"));
-        break;
-        default: LOGGER.warn(filenameString + " not written to file. Extension is not supported");
+
+      if (FilenameUtils.isExtension(filenameString.toLowerCase(), "txt")) {
+        archive.addEntry(resourceFile, filenameString, uris.get("plain"));
+      } else if (FilenameUtils.isExtension(filenameString, "RData")) {
+        archive.addEntry(resourceFile, filenameString, uris.get("rdata"));
+      } else if (FilenameUtils.isExtension(filenameString.toLowerCase(), "csv")) {
+        archive.addEntry(resourceFile, filenameString, uris.get("csv"));
+      } else if (FilenameUtils.isExtension(filenameString.toLowerCase(), "jpeg")) {
+        archive.addEntry(resourceFile, filenameString, uris.get("jpeg"));
+      } else if (FilenameUtils.isExtension(filenameString.toLowerCase(), "bmp")) {
+        archive.addEntry(resourceFile, filenameString, uris.get("bmp"));
+      } else if (FilenameUtils.isExtension(filenameString.toLowerCase(), "png")) {
+        archive.addEntry(resourceFile, filenameString, uris.get("png"));
+      } else if (FilenameUtils.isExtension(filenameString.toLowerCase(), "tiff")) {
+        archive.addEntry(resourceFile, filenameString, uris.get("tiff"));
+      } else if (FilenameUtils.isExtension(filenameString.toLowerCase(), "xlsx")) {
+        archive.addEntry(resourceFile, filenameString, uris.get("xlsx"));
+      }
+      // ADD additional resource files that the model script might need
+      else if (FilenameUtils.isExtension(filenameString.toLowerCase(), scriptHandler.getFileExtension())) {
+      archive.addEntry(resourceFile, filenameString, FSKML.getURIS(1, 0, 12).get(scriptHandler.getFileExtension()));
+      }
+      // ADD HDF5 file
+      else if (FilenameUtils.isExtension(filenameString, "h5")) {
+      archive.addEntry(resourceFile, filenameString, URI.create("http://purl.org/NET/mediatypes/text-xplain"));
+      }
+      // ADD JSON file
+      else if (FilenameUtils.isExtension(filenameString.toLowerCase(), "json")) {
+      archive.addEntry(resourceFile, filenameString, URI.create("http://purl.org/NET/mediatypes/text-xplain"));
       }
     }
   }
@@ -841,7 +826,7 @@ class WriterNodeModel extends NoInternalsModel {
     // Only save R workspace smaller than 100 MB
     if (fileSizeInMB < 100) {
       final ArchiveEntry workspaceEntry = archive.addEntry(workspace.toFile(),
-          filePrefix + "workspace.RData", FSKML.getURIS(1, 0, 12).get(RDATA_EXTENSION));
+          filePrefix + "workspace.RData", FSKML.getURIS(1, 0, 12).get("rdata"));
       workspaceEntry.addDescription(new FskMetaDataObject(ResourceType.workspace).metaDataObject);
     } else {
       LOGGER.warn("Results file larger than 100 MB -> Skipping file");
