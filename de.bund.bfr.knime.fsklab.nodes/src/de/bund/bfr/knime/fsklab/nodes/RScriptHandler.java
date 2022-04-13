@@ -50,7 +50,7 @@ public class RScriptHandler extends ScriptHandler {
     if(PreferenceInitializer.isRConda()) {
       plotter = new RCondaPlotter(controller);
     } else {
-      if (packages.contains("ggplot2")) {
+      if (packages.contains("ggplot2") || packages.contains("tidyverse")) {
         plotter = new Ggplot2Plotter(controller);
       } else {
         plotter = new BasePlotter(controller);

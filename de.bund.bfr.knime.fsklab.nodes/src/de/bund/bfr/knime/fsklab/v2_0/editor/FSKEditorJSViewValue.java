@@ -97,10 +97,12 @@ class FSKEditorJSViewValue extends JSONViewContent {
     modelMetaData = settings.getString(CFG_MODEL_METADATA);
     // fix for old broken strings. Previously some strings were escaped and wrapped with
     // extra quotes at the beginning and end.
-    if (modelMetaData.startsWith("\"") && modelMetaData.endsWith("\"")) {
-      modelMetaData = StringEscapeUtils.unescapeJson(modelMetaData);
-      modelMetaData = modelMetaData.substring(1, modelMetaData.length() - 1);
-    }
+    if(modelMetaData != null) {
+      if (modelMetaData.startsWith("\"") && modelMetaData.endsWith("\"")) {
+        modelMetaData = StringEscapeUtils.unescapeJson(modelMetaData);
+        modelMetaData = modelMetaData.substring(1, modelMetaData.length() - 1);
+      }  
+    }    
 
     modelScript = settings.getString(CFG_ORIGINAL_MODEL_SCRIPT);
     visualizationScript = settings.getString(CFG_ORIGINAL_VISUALIZATION_SCRIPT);

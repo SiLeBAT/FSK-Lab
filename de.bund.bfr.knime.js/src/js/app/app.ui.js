@@ -137,7 +137,15 @@ class APPUI {
 		return $alert;
 	}
 
-
+	_precision(param) {
+		let step = 1;
+		// add case if parameter is integer (no decimal point)
+	  	let decimals = param.includes(".") ? param.substring(param.indexOf('.') + 1).length : 0;
+		for ( let j = 0; j < decimals; j++ ) {
+			step = step / 10;
+		}
+	  	return step;
+	}
 	/**
 	 * POPULATE SELECT
 	 *
@@ -551,7 +559,8 @@ class APPUI {
 						}
 
 						$el.data( 'rangeslider' ).update( {
-							from : val
+							from : val,
+							step: O._precision(val)
 						} );
 
 						$el.$inputSingle.val( val );
