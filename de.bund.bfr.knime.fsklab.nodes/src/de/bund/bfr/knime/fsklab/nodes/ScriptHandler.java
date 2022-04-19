@@ -460,7 +460,10 @@ public abstract class ScriptHandler implements AutoCloseable {
     try {
       if(fskPortObject.getPlot() != null && fskPortObject.getGeneratedResourcesDirectory().isPresent()) {
         File sourcePlot = new File(fskPortObject.getPlot());
-        File targetPlot = new File(fskPortObject.getGeneratedResourcesDirectory().get(), SwaggerUtil.getModelId(fskPortObject.modelMetadata)+".svg");
+        String targetPlotName =  (SwaggerUtil.getModelId(fskPortObject.modelMetadata) != null) 
+            ? SwaggerUtil.getModelId(fskPortObject.modelMetadata) + ".svg" 
+                : "subModelPlot.svg";
+        File targetPlot = new File(fskPortObject.getGeneratedResourcesDirectory().get(), targetPlotName);
         FileUtil.copy(sourcePlot, targetPlot, exec);  
       }
     } catch(IOException | CanceledExecutionException e) {
