@@ -37,7 +37,7 @@ import de.bund.bfr.knime.fsklab.v2_0.FskPortObjectSpec;
 
 public class PMMToFSKExporterNodeModel extends NodeModel {
 
-  private static final NodeLogger LOGGER = NodeLogger.getLogger("Fskx Runner Node Model");
+  private static final NodeLogger LOGGER = NodeLogger.getLogger("PMMLab Model Converter");
 
   /** Output spec for an FSK object. */
   private static final FskPortObjectSpec FSK_SPEC = FskPortObjectSpec.INSTANCE;
