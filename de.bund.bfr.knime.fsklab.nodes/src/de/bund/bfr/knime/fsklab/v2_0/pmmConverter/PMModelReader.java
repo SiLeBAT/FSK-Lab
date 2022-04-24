@@ -2,36 +2,46 @@ package de.bund.bfr.knime.fsklab.v2_0.pmmConverter;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.nio.file.Paths;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import org.apache.commons.lang3.StringUtils;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.BufferedDataTable;
+import org.lsmp.djep.djep.DJep;
+import org.nfunk.jep.Node;
 import org.threeten.bp.LocalDate;
 import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
-import de.bund.bfr.knime.fsklab.nodes.environment.DefaultEnvironmentManager;
 import de.bund.bfr.knime.fsklab.nodes.environment.EnvironmentManager;
+import de.bund.bfr.knime.fsklab.nodes.environment.ExistingEnvironmentManager;
 import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
-import de.bund.bfr.knime.pmm.common.CatalogModelXml;
+import de.bund.bfr.knime.fsklab.v2_0.FskSimulation;
+import de.bund.bfr.knime.pmm.common.IndepXml;
 import de.bund.bfr.knime.pmm.common.ParamXml;
 import de.bund.bfr.knime.pmm.common.ParametricModel;
 import de.bund.bfr.knime.pmm.common.PmmException;
 import de.bund.bfr.knime.pmm.common.PmmTimeSeries;
-import de.bund.bfr.knime.pmm.common.PmmXmlDoc;
 import de.bund.bfr.knime.pmm.common.PmmXmlElementConvertable;
 import de.bund.bfr.knime.pmm.common.generictablemodel.KnimeRelationReader;
 import de.bund.bfr.knime.pmm.common.generictablemodel.KnimeSchema;
 import de.bund.bfr.knime.pmm.common.generictablemodel.KnimeTuple;
+import de.bund.bfr.knime.pmm.common.math.MathUtilities;
 import de.bund.bfr.knime.pmm.common.pmmtablemodel.Model1Schema;
 import de.bund.bfr.knime.pmm.common.pmmtablemodel.Model2Schema;
-import de.bund.bfr.knime.pmm.common.pmmtablemodel.SchemaFactory;
 import de.bund.bfr.knime.pmm.common.pmmtablemodel.TimeSeriesSchema;
 import de.bund.bfr.metadata.swagger.ModelEquation;
 import de.bund.bfr.metadata.swagger.Parameter;
+import de.bund.bfr.metadata.swagger.Parameter.ClassificationEnum;
 import de.bund.bfr.metadata.swagger.PredictiveModel;
 import de.bund.bfr.metadata.swagger.PredictiveModelGeneralInformation;
 import de.bund.bfr.metadata.swagger.PredictiveModelModelMath;
@@ -44,14 +54,18 @@ public class PMModelReader {
   protected Map<String, Map<String, Double>> maxValues;
   protected static final String PRIMARY = "Primary";
   protected static final String SECONDARY = "Secondary";
-
+  Map<String, Double> functionParameters;
   HashMap<String, ParametricModel> m1s;
   HashMap<String, ParametricModel> m2s;
   HashMap<ParametricModel, HashMap<String, ParametricModel>> m_secondaryModels;
+  Optional<Path> workingDirectory;
+  private boolean dataAvailable;
 
-  protected void readPrimaryTableIntoParametricModel(BufferedDataTable dataTable) {
+
+  protected void readDataTableIntoParametricModel(BufferedDataTable dataTable, boolean loadData) {
 
     DataTableSpec inSpec = dataTable.getDataTableSpec();
+    modelNames = new LinkedHashMap<>();
     try {
       KnimeSchema tsSchema = new TimeSeriesSchema();
       KnimeSchema inSchema1 = new Model1Schema();
@@ -69,6 +83,7 @@ public class PMModelReader {
         finalSchema = inSchema2;
       if (hasTs)
         finalSchema = (finalSchema == null) ? tsSchema : KnimeSchema.merge(tsSchema, finalSchema);
+      List<KnimeTuple> tuples = new ArrayList<>();
       if (finalSchema != null) {
         KnimeRelationReader reader = new KnimeRelationReader(finalSchema, dataTable);
         HashMap<Integer, PmmTimeSeries> tss = new HashMap<>();
@@ -77,8 +92,10 @@ public class PMModelReader {
         m_secondaryModels = new HashMap<>();
         Integer condID = null;
         Integer m1EstID = null, m2EstID;
+
         while (reader.hasMoreElements()) {
           KnimeTuple row = reader.nextElement();
+          tuples.add(row);
           if (hasTs) {
             PmmTimeSeries ts = new PmmTimeSeries(row);
             condID = ts.getCondId();
@@ -87,7 +104,9 @@ public class PMModelReader {
           }
           if (hasM1) {
             ParametricModel pm1 = new ParametricModel(row, 1, hasTs ? condID : null);
-            m1EstID = pm1.estModelId;
+            modelNames.put(PRIMARY + pm1.modelId, pm1.modelName);
+
+            m1EstID = pm1.modelId;
             if (!m1s.containsKey(PRIMARY + pm1.modelId)) {
               // m1s.put(m1EstID, pm1);
               m1s.put(PRIMARY + pm1.modelId, pm1);
@@ -96,18 +115,22 @@ public class PMModelReader {
 
             if (hasM2) {
               ParametricModel pm2 = new ParametricModel(row, 2, null);
-              m2EstID = pm2.estModelId;
+              modelNames.put(SECONDARY + pm2.modelId, pm2.modelName);
+              m2EstID = pm2.modelId;
               if (!m2s.containsKey(SECONDARY + pm2.modelId)) {
                 m2s.put(SECONDARY + pm2.modelId, pm2);
               }
-              if (!m_secondaryModels.containsKey(m1s.get(m1EstID)))
-                m_secondaryModels.put(m1s.get(m1EstID), new HashMap<String, ParametricModel>());
-              HashMap<String, ParametricModel> hm = m_secondaryModels.get(m1s.get(m1EstID));
-              hm.put(pm2.getDepVar(), m2s.get(m2EstID));
+              if (!m_secondaryModels.containsKey(m1s.get(PRIMARY + m1EstID)))
+                m_secondaryModels.put(m1s.get(PRIMARY + m1EstID),
+                    new HashMap<String, ParametricModel>());
+              HashMap<String, ParametricModel> hm =
+                  m_secondaryModels.get(m1s.get(PRIMARY + m1EstID));
+              hm.put(pm2.getDepVar(), m2s.get(SECONDARY + m2EstID));
             }
           } else if (hasM2) {
             ParametricModel pm2 = new ParametricModel(row, 2, null);
-            m2EstID = pm2.estModelId;
+            modelNames.put(SECONDARY + pm2.modelId, pm2.modelName);
+            m2EstID = pm2.modelId;
             if (!m2s.containsKey(SECONDARY + pm2.modelId)) {
               m2s.put(SECONDARY + pm2.modelId, pm2);
             }
@@ -116,22 +139,80 @@ public class PMModelReader {
             hm.put(pm2.getDepVar(), m2s.get(m2EstID));
           }
         }
-
+      }
+      if (inSpec.containsName("MD_Data") && loadData) {
+        workingDirectory = Optional.of(Files.createTempDirectory("workingDirectory"));
+        MDUtil.writeJson(tuples, "ModelData", workingDirectory.get());
+        dataAvailable = true;
       }
     } catch (PmmException e) {
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
     }
   }
 
-  public FskPortObject convertParametricModelToFSKObject(ParametricModel parametricModel) {
+  public FskPortObject convertParametricModelToFSKObject(ParametricModel parametricModel)
+      throws IOException {
     PredictiveModel modelMetadata = (PredictiveModel) NodeUtils.initializePridictiveModell();
     modelMetadata.setGeneralInformation(extractGeneralInformation(parametricModel));
     modelMetadata.setModelMath(extractModelMath(parametricModel));
-    java.util.Optional<EnvironmentManager> environmentManager =
-        Optional.of(new DefaultEnvironmentManager());
+    FskSimulation newDefaultSimulation =
+        NodeUtils.createDefaultSimulation(modelMetadata.getModelMath().getParameter());
+    List<FskSimulation> simulations = Arrays.asList(newDefaultSimulation);
+    java.util.Optional<EnvironmentManager> environmentManager;
+    if (!dataAvailable) {
+      environmentManager = Optional.empty();
+    } else {
+      environmentManager =
+          Optional.of(new ExistingEnvironmentManager(workingDirectory.get().toString()));
+    }
     FskPortObject portObj = null;
+    StringBuilder indparm = new StringBuilder();
+    if (parametricModel.getIndependent().getElementSet().size() > 0) {
+      indparm.append(((IndepXml) parametricModel.getIndependent().getElementSet().get(0)).name);
+    }
     try {
-      portObj = new FskPortObject("Model script", "Vis Script", modelMetadata, Paths.get("."),
-          new ArrayList(), environmentManager, "", "");
+      String visScript = "plot(values,type = 'l', col = 'blue', xlab = '" + indparm + "', ylab = '"
+          + parametricModel.getDepVar() + "(" + parametricModel.getDepUnit() + ")'," + "   main = '"
+          + parametricModel.modelName + "')";
+      portObj = new FskPortObject(generateModelScript(parametricModel), visScript, modelMetadata,
+          null, Collections.emptyList(), environmentManager, "", "");
+      portObj.simulations.addAll(simulations);
+
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return portObj;
+  }
+
+  public FskPortObject convertTertiaryParametricModelToFSKObject(ParametricModel parametricModel)
+      throws IOException {
+    PredictiveModel modelMetadata = (PredictiveModel) NodeUtils.initializePridictiveModell();
+    modelMetadata.setGeneralInformation(extractGeneralInformation(parametricModel));
+    modelMetadata.setModelMath(extractTertiaryModelMath(parametricModel));
+    FskSimulation newDefaultSimulation =
+        NodeUtils.createDefaultSimulation(modelMetadata.getModelMath().getParameter());
+    List<FskSimulation> simulations = Arrays.asList(newDefaultSimulation);
+    java.util.Optional<EnvironmentManager> environmentManager;
+    if (!dataAvailable) {
+      environmentManager = Optional.empty();
+    } else {
+      environmentManager =
+          Optional.of(new ExistingEnvironmentManager(workingDirectory.get().toString()));
+    }
+    FskPortObject portObj = null;
+    StringBuilder indparm = new StringBuilder();
+
+    indparm.append(((IndepXml) parametricModel.getIndependent().getElementSet().get(0)).name);
+    try {
+      String visScript = "plot(values,type = 'l', col = 'blue', xlab = '" + indparm.toString()
+          + "', ylab = '" + parametricModel.getDepVar() + "(" + parametricModel.getDepUnit() + ")',"
+          + "   main = '" + parametricModel.modelName + "')";
+      portObj = new FskPortObject(generateTertiaryModelScript(parametricModel), visScript,
+          modelMetadata, null, Collections.emptyList(), environmentManager, "", "");
+      portObj.simulations.addAll(simulations);
+
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -149,113 +230,218 @@ public class PMModelReader {
 
   public PredictiveModelModelMath extractModelMath(ParametricModel parametricModel) {
     PredictiveModelModelMath modelMath = new PredictiveModelModelMath();
+    functionParameters = new HashMap<String, Double>();
 
+    buildModelMathParameters(parametricModel, modelMath);
+    ModelEquation modelEquation = new ModelEquation();
+    modelEquation.setModelEquation(parametricModel.getFormula());
+    modelMath.addModelEquationItem(modelEquation);
+
+    QualityMeasures qualityMeasures = new QualityMeasures();
+    qualityMeasures.setBic(
+        isDouble(parametricModel.getBic()) ? new BigDecimal(parametricModel.getBic()) : null);
+    qualityMeasures.setAic(
+        isDouble(parametricModel.getAic()) ? new BigDecimal(parametricModel.getAic()) : null);
+    parametricModel.setRss(null);
+    qualityMeasures.setRsquared(
+        isDouble(parametricModel.getRsquared()) ? new BigDecimal(parametricModel.getRsquared())
+            : null);
+    qualityMeasures.setRmse(
+        isDouble(parametricModel.getRms()) ? new BigDecimal(parametricModel.getRms()) : null);
+    modelMath.addQualityMeasuresItem(qualityMeasures);
+
+    return modelMath;
+  }
+
+  public PredictiveModelModelMath extractTertiaryModelMath(ParametricModel parametricModel) {
+    PredictiveModelModelMath modelMath = new PredictiveModelModelMath();
+    functionParameters = new HashMap<String, Double>();
+    buildModelMathParameters(parametricModel, modelMath);
+
+    HashMap<String, ParametricModel> secondaryModels = m_secondaryModels.get(parametricModel);
+    secondaryModels.forEach((DepVar, subParametricModel) -> {
+      buildModelMathParameters(subParametricModel, modelMath);
+      removeDepVars(modelMath, DepVar);
+    });
+    ModelEquation modelEquation = new ModelEquation();
+    modelEquation.setModelEquation(simplifyTertiaryFormula(parametricModel));
+    modelMath.addModelEquationItem(modelEquation);
+
+    QualityMeasures qualityMeasures = new QualityMeasures();
+    qualityMeasures.setBic(
+        isDouble(parametricModel.getBic()) ? new BigDecimal(parametricModel.getBic()) : null);
+    qualityMeasures.setAic(
+        isDouble(parametricModel.getAic()) ? new BigDecimal(parametricModel.getAic()) : null);
+    parametricModel.setRss(null);
+    qualityMeasures.setRsquared(
+        isDouble(parametricModel.getRsquared()) ? new BigDecimal(parametricModel.getRsquared())
+            : null);
+    qualityMeasures.setRmse(
+        isDouble(parametricModel.getRms()) ? new BigDecimal(parametricModel.getRms()) : null);
+    modelMath.addQualityMeasuresItem(qualityMeasures);
+
+    return modelMath;
+  }
+
+  public String simplifyTertiaryFormula(ParametricModel parametricModel) {
+    String finalFormula = parametricModel.getFormula();
+    HashMap<String, ParametricModel> secondaryModels = m_secondaryModels.get(parametricModel);
+    for (Map.Entry<String, ParametricModel> entry : secondaryModels.entrySet()) {
+      String DepVar = entry.getKey();
+      ParametricModel subParametricModel = entry.getValue();
+      String subFunction = subParametricModel.getFormula();
+      subFunction = MathUtilities.getAllButBoundaryCondition(
+          subFunction.replace(subParametricModel.getDepVar() + "=", ""));
+      finalFormula = finalFormula.replaceAll(DepVar, "(" + subFunction + ")");
+
+    }
+    return finalFormula;
+  }
+
+  public void buildModelMathParameters(ParametricModel parametricModel,
+      PredictiveModelModelMath modelMath) {
     for (PmmXmlElementConvertable el : parametricModel.getParameter().getElementSet()) {
       if (el instanceof ParamXml) {
         ParamXml px = (ParamXml) el;
         Parameter parameter = new Parameter();
         parameter.setName(px.name);
         parameter.setId(px.name);
+        parameter.setClassification(ClassificationEnum.INPUT);
+
         parameter.setDescription(px.description);
         parameter.setUnit(px.unit);
         parameter.setValue("" + px.value);
         parameter.setError("" + px.error);
         parameter.setMaxValue("" + px.max);
         parameter.setMinValue("" + px.min);
-
         modelMath.getParameter().add(parameter);
-      }
-    }
-    ModelEquation modelEquation = new ModelEquation();
-    modelEquation.setModelEquation(parametricModel.getFormula());
-    modelMath.addModelEquationItem(modelEquation);
-
-    QualityMeasures qualityMeasures = new QualityMeasures();
-    qualityMeasures.setBic(new BigDecimal(parametricModel.getBic()));
-    qualityMeasures.setAic(new BigDecimal(parametricModel.getAic()));
-    parametricModel.setRss(null);
-    qualityMeasures.setRsquared(new BigDecimal(parametricModel.getRsquared()));
-    qualityMeasures.setRmse(new BigDecimal(parametricModel.getRms()));
-    modelMath.addQualityMeasuresItem(qualityMeasures);
-
-    return modelMath;
-  }
-
-  protected void readPrimaryTable(BufferedDataTable table) {
-
-    modelNames = new LinkedHashMap<>();
-    parameters = new LinkedHashMap<>();
-    minValues = new LinkedHashMap<>();
-    maxValues = new LinkedHashMap<>();
-    KnimeRelationReader reader = null;
-    if (SchemaFactory.conformsM1Schema(table.getSpec()))
-      reader = new KnimeRelationReader(SchemaFactory.createM1Schema(), table);
-    else
-      reader = new KnimeRelationReader(SchemaFactory.createM2Schema(), table);
-    while (reader.hasMoreElements()) {
-      KnimeTuple tuple = reader.nextElement();
-      PmmXmlDoc modelXml = null;
-      if (SchemaFactory.conformsM1Schema(table.getSpec()))
-        modelXml = tuple.getPmmXml(Model1Schema.ATT_MODELCATALOG);
-      else
-        modelXml = tuple.getPmmXml(Model2Schema.ATT_MODELCATALOG);
-      String id = PRIMARY + ((CatalogModelXml) modelXml.get(0)).id;
-
-      if (!modelNames.containsKey(id)) {
-        PmmXmlDoc params = null;
-        if (SchemaFactory.conformsM1Schema(table.getSpec()))
-          params = tuple.getPmmXml(Model1Schema.ATT_PARAMETER);
-        else
-          params = tuple.getPmmXml(Model2Schema.ATT_PARAMETER);
-        List<String> paramNames = new ArrayList<>();
-        Map<String, Double> min = new LinkedHashMap<>();
-        Map<String, Double> max = new LinkedHashMap<>();
-
-        for (PmmXmlElementConvertable el : params.getElementSet()) {
-          ParamXml element = (ParamXml) el;
-
-          paramNames.add(element.name);
-          min.put(element.name, element.min);
-          max.put(element.name, element.max);
-        }
-
-        modelNames.put(id, ((CatalogModelXml) modelXml.get(0)).name);
-        parameters.put(id, paramNames);
-        minValues.put(id, min);
-        maxValues.put(id, max);
+        functionParameters.put(px.name, px.value);
       }
     }
   }
 
-  protected void readSecondaryTable(BufferedDataTable table) {
-    readPrimaryTable(table);
+  public boolean isDouble(Double num) {
+    return num != null && !Double.isNaN(num) && !Double.isInfinite(num);
+  }
 
-    KnimeRelationReader reader = new KnimeRelationReader(SchemaFactory.createM2Schema(), table);
-
-    while (reader.hasMoreElements()) {
-      KnimeTuple tuple = reader.nextElement();
-      PmmXmlDoc modelXml = tuple.getPmmXml(Model2Schema.ATT_MODELCATALOG);
-      String id = SECONDARY + ((CatalogModelXml) modelXml.get(0)).id;
-
-      if (!modelNames.containsKey(id)) {
-        PmmXmlDoc params = tuple.getPmmXml(Model2Schema.ATT_PARAMETER);
-        List<String> paramNames = new ArrayList<>();
-        Map<String, Double> min = new LinkedHashMap<>();
-        Map<String, Double> max = new LinkedHashMap<>();
-
-        for (PmmXmlElementConvertable el : params.getElementSet()) {
-          ParamXml element = (ParamXml) el;
-
-          paramNames.add(element.name);
-          min.put(element.name, element.min);
-          max.put(element.name, element.max);
-        }
-
-        modelNames.put(id, ((CatalogModelXml) modelXml.get(0)).name);
-        parameters.put(id, paramNames);
-        minValues.put(id, min);
-        maxValues.put(id, max);
+  public void removeDepVars(PredictiveModelModelMath modelMath, String depVar) {
+    if (functionParameters.containsKey(depVar)) {
+      functionParameters.remove(depVar);
+      Iterator<Parameter> iter = modelMath.getParameter().iterator();
+      while (iter.hasNext()) {
+        if (iter.next().getName().equals(depVar))
+          iter.remove();
       }
     }
+  }
+
+  public String generateTertiaryModelScript(ParametricModel parametricModel) {
+    HashMap<String, ParametricModel> secondaryModels = m_secondaryModels.get(parametricModel);
+    Set<PmmXmlElementConvertable> subIndependentList = new HashSet();
+    secondaryModels.forEach((DepVar, subParametricModel) -> {
+      subIndependentList.addAll(subParametricModel.getIndependent().getElementSet());
+    });
+    StringBuilder code = new StringBuilder();
+    code.append("library('SciViews')\n");
+    String function = simplifyTertiaryFormula(parametricModel);
+    DJep parser = MathUtilities.createParser();
+
+    for (String param : functionParameters.keySet()) {
+      parser.addConstant(param, functionParameters.get(param));
+    }
+    List<PmmXmlElementConvertable> independentList =
+        parametricModel.getIndependent().getElementSet();
+    independentList.addAll(subIndependentList);
+
+
+    String BoundaryCondition = MathUtilities.getBoundaryCondition(function);
+
+    function = MathUtilities
+        .getAllButBoundaryCondition(function.replace(parametricModel.getDepVar() + "=", ""));
+
+    System.out.println(function);
+    System.out.println(BoundaryCondition);
+
+    code.append("values <- c()\n");
+    if (!StringUtils.isAllEmpty(BoundaryCondition))
+      code.append("if(" + BoundaryCondition.replaceAll("\\*", " && ") + "){\n");
+    IndepXml variable = null;
+    for (int indIndex = 0; indIndex < independentList.size(); indIndex++) {
+      if (indIndex == 0)
+        variable = (IndepXml) independentList.get(0);
+      else {
+        IndepXml otherIndependentVariable = (IndepXml) independentList.get(indIndex);
+        code.append(otherIndependentVariable.name + " <- " + otherIndependentVariable.min + "\n");
+      }
+    }
+    // independentList.forEach(item -> {
+    if (variable != null)
+      code.append("for(" + variable.name + " in " + variable.min + ":" + variable.max + "){\n");
+    System.out.println(variable);
+    // });
+    code.append("values <- c( values," + function + ")\n");
+
+    if (variable != null)
+      code.append("}");
+
+
+    if (!StringUtils.isAllEmpty(BoundaryCondition))
+      code.append("}\n");
+    System.out.println(code);
+
+    return code.toString();
+  }
+
+  public String generateModelScript(ParametricModel parametricModel) {
+    StringBuilder code = new StringBuilder();
+    code.append("library('SciViews')\n");
+    String function = parametricModel.getFormula();
+    DJep parser = MathUtilities.createParser();
+    Node node = null;
+
+    for (String param : functionParameters.keySet()) {
+      parser.addConstant(param, functionParameters.get(param));
+    }
+    List<PmmXmlElementConvertable> independentList =
+        parametricModel.getIndependent().getElementSet();
+
+
+
+    String BoundaryCondition = MathUtilities.getBoundaryCondition(function);
+
+    function = MathUtilities
+        .getAllButBoundaryCondition(function.replace(parametricModel.getDepVar() + "=", ""));
+
+    System.out.println(function);
+    System.out.println(BoundaryCondition);
+
+    code.append("values <- c()\n");
+    if (!StringUtils.isAllEmpty(BoundaryCondition))
+      code.append("if(" + BoundaryCondition.replaceAll("\\*", " && ") + "){\n");
+    IndepXml variable = null;
+    for (int indIndex = 0; indIndex < independentList.size(); indIndex++) {
+      if (indIndex == 0)
+        variable = (IndepXml) independentList.get(0);
+      else {
+        IndepXml otherIndependentVariable = (IndepXml) independentList.get(indIndex);
+        code.append(otherIndependentVariable.name + " <- " + otherIndependentVariable.min + "\n");
+      }
+    }
+    // independentList.forEach(item -> {
+    if (variable != null)
+      code.append("for(" + variable.name + " in " + variable.min + ":" + variable.max + "){\n");
+    System.out.println(variable);
+    // });
+    code.append("values <- c( values," + function + ")\n");
+
+    if (variable != null)
+      code.append("}");
+
+
+    if (!StringUtils.isAllEmpty(BoundaryCondition))
+      code.append("}\n");
+    System.out.println(code);
+
+    return code.toString();
   }
 }

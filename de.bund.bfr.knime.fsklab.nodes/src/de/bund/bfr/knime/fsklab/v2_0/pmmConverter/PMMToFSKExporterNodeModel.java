@@ -34,7 +34,6 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
 import de.bund.bfr.knime.fsklab.v2_0.FskPortObjectSpec;
-import de.bund.bfr.knime.pmm.common.pmmtablemodel.SchemaFactory;
 
 public class PMMToFSKExporterNodeModel extends NodeModel {
 
@@ -105,15 +104,22 @@ public class PMMToFSKExporterNodeModel extends NodeModel {
   @Override
   protected PortObject[] execute(PortObject[] inData, ExecutionContext exec) throws Exception {
     BufferedDataTable dataTable = (BufferedDataTable) inData[0];
-    pmmodelReader.readPrimaryTableIntoParametricModel(dataTable);
+    pmmodelReader.readDataTableIntoParametricModel(dataTable, true);
+
     FskPortObject portObj = null;
-    if (SchemaFactory.conformsM1Schema(dataTable.getSpec()))
-      portObj =
-      pmmodelReader.convertParametricModelToFSKObject(pmmodelReader.m1s.get(selectedModel));
-    else
-      portObj =
-      pmmodelReader.convertParametricModelToFSKObject(pmmodelReader.m2s.get(selectedModel));
-    
+    if (selectedModel != null && selectedModel.startsWith(PMModelReader.PRIMARY)) {
+      if (!pmmodelReader.m1s.isEmpty() && !pmmodelReader.m2s.isEmpty()) {
+        portObj = pmmodelReader
+            .convertTertiaryParametricModelToFSKObject(pmmodelReader.m1s.get(selectedModel));
+      } else if (!pmmodelReader.m1s.isEmpty())
+        portObj =
+            pmmodelReader.convertParametricModelToFSKObject(pmmodelReader.m1s.get(selectedModel));
+    } else {
+      if (!pmmodelReader.m2s.isEmpty())
+        portObj =
+            pmmodelReader.convertParametricModelToFSKObject(pmmodelReader.m2s.get(selectedModel));
+    }
+
 
     return new PortObject[] {portObj};
   }

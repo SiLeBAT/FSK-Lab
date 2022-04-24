@@ -23,6 +23,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
 import java.util.Map.Entry;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
@@ -32,7 +33,7 @@ import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
-import de.bund.bfr.knime.pmm.common.pmmtablemodel.SchemaFactory;
+import de.bund.bfr.knime.pmm.common.ParametricModel;
 
 public class PMMToFSKExporterNodeDialog extends DataAwareNodeDialogPane implements ActionListener {
 
@@ -41,6 +42,11 @@ public class PMMToFSKExporterNodeDialog extends DataAwareNodeDialogPane implemen
   private JComboBox<String> models;
   private JPanel panel;
   PMModelReader pmmodelReader = new PMModelReader();
+  HashMap<String, ParametricModel> m1s;
+  HashMap<String, ParametricModel> m2s;
+  HashMap<ParametricModel, HashMap<String, ParametricModel>> m_secondaryModels;
+  protected static final String PRIMARY = "Primary";
+  protected static final String SECONDARY = "Secondary";
 
   /**
    * New pane for configuring the ModelEstimation node.
@@ -63,14 +69,7 @@ public class PMMToFSKExporterNodeDialog extends DataAwareNodeDialogPane implemen
 
   protected void loadSettingsFrom(NodeSettingsRO settings, BufferedDataTable[] input)
       throws NotConfigurableException {
-    if (SchemaFactory.conformsM1Schema(input[0].getSpec())) {
-      pmmodelReader.readPrimaryTable(input[0]);
-    } else if (SchemaFactory.conformsM2Schema(input[0].getSpec())) {
-      pmmodelReader.readSecondaryTable(input[0]);
-    } else {
-      System.out.println("was");
-    }
-
+    pmmodelReader.readDataTableIntoParametricModel(input[0], false);
     if (models.getItemCount() == 0)
       for (Entry<String, String> e : pmmodelReader.modelNames.entrySet()) {
         String key = e.getKey();
