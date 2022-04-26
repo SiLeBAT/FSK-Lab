@@ -26,6 +26,7 @@ import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.DataAwareNodeDialogPane;
@@ -53,9 +54,9 @@ public class PMMToFSKExporterNodeDialog extends DataAwareNodeDialogPane implemen
    */
   protected PMMToFSKExporterNodeDialog() {
     models = new JComboBox<>();
-
+    JLabel label1 = new JLabel("Select Model:");
     JPanel modelsPanel = new JPanel();
-
+    modelsPanel.add(label1);
     modelsPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
     modelsPanel.add(models);
 

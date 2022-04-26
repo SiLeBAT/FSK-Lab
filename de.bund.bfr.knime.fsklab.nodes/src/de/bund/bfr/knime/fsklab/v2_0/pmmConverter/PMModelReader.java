@@ -1,5 +1,6 @@
 package de.bund.bfr.knime.fsklab.v2_0.pmmConverter;
 
+import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
@@ -60,6 +61,7 @@ public class PMModelReader {
   HashMap<ParametricModel, HashMap<String, ParametricModel>> m_secondaryModels;
   Optional<Path> workingDirectory;
   private boolean dataAvailable;
+  private File dataFile;
 
 
   protected void readDataTableIntoParametricModel(BufferedDataTable dataTable, boolean loadData) {
@@ -142,7 +144,7 @@ public class PMModelReader {
       }
       if (inSpec.containsName("MD_Data") && loadData) {
         workingDirectory = Optional.of(Files.createTempDirectory("workingDirectory"));
-        MDUtil.writeJson(tuples, "ModelData", workingDirectory.get());
+        dataFile = MDUtil.writeJson(tuples, "ModelData", workingDirectory.get());
         dataAvailable = true;
       }
     } catch (PmmException e) {
@@ -343,6 +345,7 @@ public class PMModelReader {
     });
     StringBuilder code = new StringBuilder();
     code.append("library('SciViews')\n");
+    code.append(loadDataScript());
     String function = simplifyTertiaryFormula(parametricModel);
     DJep parser = MathUtilities.createParser();
 
@@ -395,6 +398,7 @@ public class PMModelReader {
   public String generateModelScript(ParametricModel parametricModel) {
     StringBuilder code = new StringBuilder();
     code.append("library('SciViews')\n");
+    code.append(loadDataScript());
     String function = parametricModel.getFormula();
     DJep parser = MathUtilities.createParser();
     Node node = null;
@@ -443,5 +447,20 @@ public class PMModelReader {
     System.out.println(code);
 
     return code.toString();
+  }
+
+  public String loadDataScript() {
+    String dataLoaderScript = "";
+    if (dataFile != null) {
+      dataLoaderScript +=
+          "library(rjson)\n" + "my.JSON <- fromJSON(file=\"" + dataFile.getName() + "\")\n"
+              + "df <- lapply(my.JSON, function(timeSeries) # Loop through each \"timeSeries\"\n"
+              + "  {\n" + "  # Convert each group to a data frame.\n"
+              + "  # This assumes you have 10 elements each time\n"
+              + "  data.frame(matrix(unlist(timeSeries), ncol=10, byrow=T))\n" + "  })\n" + "\n"
+              + "# Now you have a list of data frames, connect them together in\n"
+              + "# one single dataframe\n" + "df <- do.call(rbind, df)";
+    }
+    return dataLoaderScript;
   }
 }
