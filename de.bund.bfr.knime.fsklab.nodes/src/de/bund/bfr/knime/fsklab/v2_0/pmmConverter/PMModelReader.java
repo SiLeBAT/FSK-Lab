@@ -459,7 +459,7 @@ public class PMModelReader {
               + "  # This assumes you have 10 elements each time\n"
               + "  data.frame(matrix(unlist(timeSeries), ncol=10, byrow=T))\n" + "  })\n" + "\n"
               + "# Now you have a list of data frames, connect them together in\n"
-              + "# one single dataframe\n" + "df <- do.call(rbind, df)";
+              + "# one single dataframe\n" + "df <- do.call(rbind, df)\n";
     }
     return dataLoaderScript;
   }
