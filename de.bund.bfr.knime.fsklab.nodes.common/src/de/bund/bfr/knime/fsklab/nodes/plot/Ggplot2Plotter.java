@@ -36,7 +36,7 @@ public class Ggplot2Plotter implements ModelPlotter {
   private void createPlot(File file, String script, String format) throws Exception{
 
 	  String configCmd =
-			  Platform.isMac() ? "library('Cairo'); options(device='png', bitmapType='cairo')"
+			  Platform.isMac() ? "library(Cairo); options(device='png', bitmapType='cairo')"
 					  : "options(device='png')";
 	  // Get image path (with proper slashes)
 	  final String path = FilenameUtils.separatorsToUnix(file.getAbsolutePath());
