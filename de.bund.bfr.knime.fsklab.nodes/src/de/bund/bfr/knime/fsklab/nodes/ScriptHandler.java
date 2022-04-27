@@ -458,7 +458,7 @@ public abstract class ScriptHandler implements AutoCloseable {
 
     // Save Plot in generatedResouces Folder (SubPlot for Combined Models)    
     try {
-      if(fskPortObject.getPlot() != null && fskPortObject.getGeneratedResourcesDirectory().isPresent()) {
+      if(!fskPortObject.getPlot().isBlank() && fskPortObject.getGeneratedResourcesDirectory().isPresent()) {
         File sourcePlot = new File(fskPortObject.getPlot());
         String targetPlotName =  (SwaggerUtil.getModelId(fskPortObject.modelMetadata) != null) 
             ? SwaggerUtil.getModelId(fskPortObject.modelMetadata) + ".svg" 
