@@ -37,6 +37,7 @@
 package de.bund.bfr.knime.fsklab.preferences;
 
 import java.nio.file.Path;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -60,4 +61,6 @@ public interface RPreferenceProvider {
   public Path getRServeBinPath();
 
   public Properties getProperties();
+  
+  public Map<String, String> setUpEnvironment( Map<String, String> environment);
 }
