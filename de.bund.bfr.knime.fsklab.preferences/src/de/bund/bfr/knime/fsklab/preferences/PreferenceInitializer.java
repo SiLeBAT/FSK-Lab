@@ -121,7 +121,17 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		return Plugin.getDefault().getPreferenceStore().getString(IS_PYTHON_CONDA).equals("TRUE") ? true : false;
 	}
 	public static final boolean isRConda() {
+		if(isTychoTest()) 
+			return false;
 		return Plugin.getDefault().getPreferenceStore().getString(IS_R_CONDA).equals("TRUE") ? true : false;
+	}
+	
+	private static boolean isTychoTest() {
+		String runningMode = System.getProperty("eclipse.application");
+		if(runningMode!=null && runningMode.equals("org.eclipse.tycho.surefire.osgibooter.uitest")){
+			return true;
+		}
+		return false;
 	}
 
 	/**
