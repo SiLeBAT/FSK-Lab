@@ -55,6 +55,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
+import de.bund.bfr.knime.fsklab.nodes.environment.AddedFilesEnvironmentManager;
 import de.bund.bfr.knime.fsklab.nodes.environment.ArchivedEnvironmentManager;
 import de.bund.bfr.knime.fsklab.nodes.environment.EnvironmentManager;
 import de.bund.bfr.knime.fsklab.nodes.environment.ExistingEnvironmentManager;
@@ -127,9 +128,9 @@ public class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
     m_workingDirectoryField.setEditable(false);
 
     // Radio buttons
-    m_archivedEnvironmentButton = new JRadioButton("Archived environment");
-    m_directoryEnvironmentButton = new JRadioButton("Directory environment");
-    m_filesEnvironmentButton = new JRadioButton("Files environment");
+    m_archivedEnvironmentButton = new JRadioButton("Archive (FSKX)");
+    m_directoryEnvironmentButton = new JRadioButton("Directory");
+    m_filesEnvironmentButton = new JRadioButton("Files (individual)");
 
     m_filesTableModel = new DefaultTableModel(0, 1);
 
@@ -204,12 +205,21 @@ public class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
             m_filesTableModel.addRow(row);
           }
         }
+      } else if (environment instanceof AddedFilesEnvironmentManager) {
+        AddedFilesEnvironmentManager addedFilesManager = (AddedFilesEnvironmentManager) environment;
+        updateDialog(modelType, readmeFile, addedFilesManager.getManager());
+        
+        for(String entry : addedFilesManager.getFiles()) {
+          String[] row = {entry};
+          m_filesTableModel.addRow(row);
+          addedFiles.add(entry);
+        }
       }
-      // Update m_filesTableModel with Added Files
-      for (String entry : addedFiles) {
-        String[] row = {entry};
-        m_filesTableModel.addRow(row);
-      }
+//      // Update m_filesTableModel with Added Files
+//      for (String entry : addedFiles) {
+//        String[] row = {entry};
+//        m_filesTableModel.addRow(row);
+//      }
     }
   }
 
@@ -320,6 +330,8 @@ public class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
       // Create and set environment
       m_config.setEnvironmentManager(new FilesEnvironmentManager(saveFileEntries()));
     }
+    if(!addedFiles.isEmpty())
+      m_config.setEnvironmentManager(new AddedFilesEnvironmentManager(m_config.getEnvironmentManager(),addedFiles.toArray(new String[0])));
     m_config.setAddedFiles(addedFiles.toArray(new String[0]));
     m_config.saveSettings(settings);
   }
@@ -530,7 +542,12 @@ public class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
         }
       }
       addedFiles.clear();
-      
+      if (m_config.getEnvironmentManager() instanceof AddedFilesEnvironmentManager) {
+        AddedFilesEnvironmentManager addedFilesManager = (AddedFilesEnvironmentManager) m_config.getEnvironmentManager();
+        //addedFilesManager.clearAddedFiles();
+        m_config.setEnvironmentManager(addedFilesManager.getManager());
+
+      }
     }
   }
   private void clearEnvironmentPanel() {

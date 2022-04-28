@@ -164,7 +164,9 @@ class WriterNodeModel extends NoInternalsModel {
   }
 
   @Override
-  protected void reset() {}
+  protected void reset() {
+    
+  }
 
   @Override
   protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
@@ -251,6 +253,8 @@ class WriterNodeModel extends NoInternalsModel {
         } catch (Exception e) {
           LOGGER.warn(e.toString());
         }
+        
+        fskObj.getEnvironmentManager().get().deleteEnvironment(workingDirectory.get());
       }
     }
     
