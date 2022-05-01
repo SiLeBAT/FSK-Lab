@@ -75,6 +75,8 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		}
 		
 		if (cachedRProvider == null || !cachedRProvider.getRHome().equals(rHome)) {
+			if(isTychoTest())
+				rHome = RPathUtil.getSystemRHome().getAbsolutePath();
 			cachedRProvider = new DefaultRPreferenceProvider(rHome);
 		}
 
