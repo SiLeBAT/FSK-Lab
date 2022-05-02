@@ -40,7 +40,11 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Enumeration;
+
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
 import org.knime.core.node.NodeLogger;
@@ -127,8 +131,16 @@ public final class RPathUtil {
 		};
 
 		File programFiles = new File(System.getenv("ProgramFiles"));
-		checkInWindowsFolders(programFiles.listFiles(ff));
-		
+		try {
+			Files.walk(Paths.get(programFiles.getPath())).filter(pathName -> {
+				return pathName.toFile().isDirectory() && pathName.getFileName().toString().startsWith("R-");
+			}).map(Path::toFile).forEach(file ->{
+				if (systemRHome == null ) {
+					checkFolder(file);
+				}
+			});
+		} catch (Exception e) {}
+
 		if (systemRHome == null && systemRExecutable == null) {
 			// Try with location where BfR IT installs applications
 			File bfrR = new File("C:/Program Files (x86)/User/R/");
@@ -141,16 +153,22 @@ public final class RPathUtil {
 	
 	private static void checkInWindowsFolders(File[] folders) {
 		for (File folder : folders) {
-			File binDir = new File(folder, "bin");
-			if (binDir.isDirectory()) {
-				File executable = new File(binDir, "R.exe");
-				if (executable.isFile()) {
-					systemRHome = folder;
-					systemRExecutable = executable;
-					break;
-				}
+			if(checkFolder(folder)) 
+				break;
+		}
+	}
+	
+	private static boolean checkFolder(File folder) {
+		File binDir = new File(folder, "bin");
+		if (binDir.isDirectory()) {
+			File executable = new File(binDir, "R.exe");
+			if (executable.isFile()) {
+				systemRHome = folder;
+				systemRExecutable = executable;
+				return true;
 			}
 		}
+		return false;
 	}
 
 	private static void findSystemRUnix() {
