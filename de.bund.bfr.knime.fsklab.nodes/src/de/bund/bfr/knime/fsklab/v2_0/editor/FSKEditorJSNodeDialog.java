@@ -464,6 +464,8 @@ public class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
     @Override
     public void actionPerformed(ActionEvent e) {
 
+      // if environment type is switched, clear added Files
+      addedFiles.clear();
       if (m_directoryEnvironmentButton.isSelected()) {
 
         JFileChooser fileChooser = new JFileChooser();
