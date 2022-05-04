@@ -333,7 +333,7 @@ final class FSKEditorJSNodeModel
     String visualizationScript = "";
 
     Optional<EnvironmentManager> environmentManager;   
-    if (m_config.getEnvironmentManager() != null) {
+    if (m_config.getEnvironmentManager() != null && m_config.getEnvironmentManager().getEnvironment().isPresent()) {
       environmentManager = Optional.of(m_config.getEnvironmentManager());
     } else if (inObjects[0] != null) {
       environmentManager = ((FskPortObject) inObjects[0]).getEnvironmentManager();
@@ -556,12 +556,12 @@ final class FSKEditorJSNodeModel
     // Add new files (if there are any) to Model 
     
     Optional<EnvironmentManager> manager = environmentManager;
-    if(m_config.getAddedFiles() != null && m_config.getAddedFiles().length > 0) {
-      if(environmentManager.isPresent())
-        manager = Optional.of(new AddedFilesEnvironmentManager(environmentManager.get(), m_config.getAddedFiles()));
-      else
-        manager = Optional.of(new AddedFilesEnvironmentManager(m_config.getAddedFiles()));
-    }
+//    if(m_config.getAddedFiles() != null && m_config.getAddedFiles().length > 0) {
+//      if(environmentManager.isPresent())
+//        manager = Optional.of(new AddedFilesEnvironmentManager(environmentManager.get(), m_config.getAddedFiles()));
+//      else
+//        manager = Optional.of(new AddedFilesEnvironmentManager(m_config.getAddedFiles()));
+//    }
     FskPortObject outputPort;
     if(inObjects[0] instanceof CombinedFskPortObject) {
       outputPort = (FskPortObject) inObjects[0];
