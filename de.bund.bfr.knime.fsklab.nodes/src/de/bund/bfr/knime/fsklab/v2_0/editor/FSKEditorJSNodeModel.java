@@ -333,7 +333,7 @@ final class FSKEditorJSNodeModel
     String visualizationScript = "";
 
     Optional<EnvironmentManager> environmentManager;   
-    if (m_config.getEnvironmentManager() != null) {
+    if (m_config.getEnvironmentManager() != null && m_config.getEnvironmentManager().getEnvironment().isPresent()) {
       environmentManager = Optional.of(m_config.getEnvironmentManager());
     } else if (inObjects[0] != null) {
       environmentManager = ((FskPortObject) inObjects[0]).getEnvironmentManager();
