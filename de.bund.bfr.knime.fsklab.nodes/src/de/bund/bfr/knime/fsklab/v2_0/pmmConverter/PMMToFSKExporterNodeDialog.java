@@ -42,7 +42,7 @@ public class PMMToFSKExporterNodeDialog extends DataAwareNodeDialogPane implemen
 
   private JComboBox<String> models;
   private JPanel panel;
-  PMModelReader pmmodelReader = new PMModelReader();
+  PMModelReader pmmodelReader ;
   HashMap<String, ParametricModel> m1s;
   HashMap<String, ParametricModel> m2s;
   HashMap<ParametricModel, HashMap<String, ParametricModel>> m_secondaryModels;
@@ -70,7 +70,9 @@ public class PMMToFSKExporterNodeDialog extends DataAwareNodeDialogPane implemen
 
   protected void loadSettingsFrom(NodeSettingsRO settings, BufferedDataTable[] input)
       throws NotConfigurableException {
-    pmmodelReader.readDataTableIntoParametricModel(input[0], false);
+    models.removeAllItems();
+    pmmodelReader = new PMModelReader();
+    pmmodelReader.readDataTableIntoParametricModel(input[0], false, null);
     if (models.getItemCount() == 0)
       for (Entry<String, String> e : pmmodelReader.modelNames.entrySet()) {
         String key = e.getKey();

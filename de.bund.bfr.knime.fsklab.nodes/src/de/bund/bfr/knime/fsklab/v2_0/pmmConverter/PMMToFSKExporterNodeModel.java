@@ -104,7 +104,7 @@ public class PMMToFSKExporterNodeModel extends NodeModel {
   @Override
   protected PortObject[] execute(PortObject[] inData, ExecutionContext exec) throws Exception {
     BufferedDataTable dataTable = (BufferedDataTable) inData[0];
-    pmmodelReader.readDataTableIntoParametricModel(dataTable, true);
+    pmmodelReader.readDataTableIntoParametricModel(dataTable, true, exec);
 
     FskPortObject portObj = null;
     if (selectedModel != null && selectedModel.startsWith(PMModelReader.PRIMARY)) {

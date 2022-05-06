@@ -35,7 +35,9 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations;bundle-version="2
  org.h2;bundle-version="1.4.196",
  org.json;bundle-version="20140107.0.0",
  org.apache.commons.collections;bundle-version="3.2.2",
- de.bund.bfr.knime.pmm.common;bundle-version="1.0.0"
+ de.bund.bfr.knime.pmm.common;bundle-version="1.0.0",
+ com.google.guava;bundle-version="19.0.0",
+ org.hsh.bfr.db;bundle-version="1.0.0"
 Bundle-Vendor: German Federal Institute for Risk Assessment (BfR)
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: de.bund.bfr.knime.fsklab.FskPlugin
@@ -53,7 +55,8 @@ Bundle-ClassPath: .,
  libs/batik-util-1.7.jar,
  libs/fskml-1.0.13.jar,
  libs/jhdf-0.5.11.jar,
- libs/vocabularies-2.0.0.jar
+ libs/vocabularies-2.0.0.jar,
+ pmfml-0.0.12.jar
 Export-Package: de.bund.bfr.knime.fsklab;
   uses:="org.osgi.framework,
    javax.swing.tree,

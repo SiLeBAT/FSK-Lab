@@ -16,9 +16,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.commons.lang3.StringUtils;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.BufferedDataTable;
+import org.knime.core.node.ExecutionContext;
 import org.lsmp.djep.djep.DJep;
 import org.nfunk.jep.Node;
 import org.threeten.bp.LocalDate;
@@ -62,9 +64,9 @@ public class PMModelReader {
   Optional<Path> workingDirectory;
   private boolean dataAvailable;
   private File dataFile;
+  private HashMap<String, HashMap<String,String>> modelParams = new HashMap<String, HashMap<String,String>>();
 
-
-  protected void readDataTableIntoParametricModel(BufferedDataTable dataTable, boolean loadData) {
+  protected void readDataTableIntoParametricModel(BufferedDataTable dataTable, boolean loadData, ExecutionContext exec) {
 
     DataTableSpec inSpec = dataTable.getDataTableSpec();
     modelNames = new LinkedHashMap<>();
@@ -106,35 +108,38 @@ public class PMModelReader {
           }
           if (hasM1) {
             ParametricModel pm1 = new ParametricModel(row, 1, hasTs ? condID : null);
-            modelNames.put(PRIMARY + pm1.modelId, pm1.modelName);
+            m1EstID = pm1.estModelId;
+            modelNames.put(PRIMARY +"-"+ pm1.modelName+ pm1.modelId + (m1EstID!=null?m1EstID.toString():""), pm1.modelName);
 
-            m1EstID = pm1.modelId;
-            if (!m1s.containsKey(PRIMARY + pm1.modelId)) {
+            
+            if (!m1s.containsKey(PRIMARY +"-"+ pm1.modelName+ pm1.modelId+ (m1EstID!=null?m1EstID.toString():""))) {
               // m1s.put(m1EstID, pm1);
-              m1s.put(PRIMARY + pm1.modelId, pm1);
+              m1s.put(PRIMARY +"-"+ pm1.modelName+ pm1.modelId+ (m1EstID!=null?m1EstID.toString():""), pm1);
             }
 
 
             if (hasM2) {
               ParametricModel pm2 = new ParametricModel(row, 2, null);
-              modelNames.put(SECONDARY + pm2.modelId, pm2.modelName);
-              m2EstID = pm2.modelId;
-              if (!m2s.containsKey(SECONDARY + pm2.modelId)) {
-                m2s.put(SECONDARY + pm2.modelId, pm2);
+              m2EstID = pm2.estModelId;
+              modelNames.put(SECONDARY +"-"+ pm2.modelName+ pm2.modelId+ (m2EstID!=null?m2EstID.toString():""), pm2.modelName);
+              
+              if (!m2s.containsKey(SECONDARY +"-"+ pm2.modelName+ pm2.modelId+ (m2EstID!=null?m2EstID.toString():""))) {
+                m2s.put(SECONDARY +"-"+ pm2.modelName+ pm2.modelId+ (m2EstID!=null?m2EstID.toString():""), pm2);
               }
-              if (!m_secondaryModels.containsKey(m1s.get(PRIMARY + m1EstID)))
-                m_secondaryModels.put(m1s.get(PRIMARY + m1EstID),
+              if (!m_secondaryModels.containsKey(m1s.get(PRIMARY +"-"+ pm1.modelName+ pm1.modelId+ (m1EstID!=null?m1EstID.toString():""))))
+                m_secondaryModels.put(m1s.get(PRIMARY +"-"+ pm1.modelName+ pm1.modelId+ (m1EstID!=null?m1EstID.toString():"")),
                     new HashMap<String, ParametricModel>());
               HashMap<String, ParametricModel> hm =
-                  m_secondaryModels.get(m1s.get(PRIMARY + m1EstID));
-              hm.put(pm2.getDepVar(), m2s.get(SECONDARY + m2EstID));
+                  m_secondaryModels.get(m1s.get(PRIMARY +"-"+ pm1.modelName+ pm1.modelId+ (m1EstID!=null?m1EstID.toString():"")));
+              hm.put(pm2.getDepVar(), m2s.get(SECONDARY +"-"+ pm2.modelName+ pm2.modelId+ (m2EstID!=null?m2EstID.toString():"")));
             }
           } else if (hasM2) {
             ParametricModel pm2 = new ParametricModel(row, 2, null);
-            modelNames.put(SECONDARY + pm2.modelId, pm2.modelName);
-            m2EstID = pm2.modelId;
-            if (!m2s.containsKey(SECONDARY + pm2.modelId)) {
-              m2s.put(SECONDARY + pm2.modelId, pm2);
+            m2EstID = pm2.estModelId;
+            modelNames.put(SECONDARY +"-"+ pm2.modelName+ pm2.modelId, pm2.modelName+ (m2EstID!=null?m2EstID.toString():""));
+            
+            if (!m2s.containsKey(SECONDARY +"-"+ pm2.modelName+ pm2.modelId+ (m2EstID!=null?m2EstID.toString():""))) {
+              m2s.put(SECONDARY +"-"+ pm2.modelName+ pm2.modelId+ (m2EstID!=null?m2EstID.toString():""), pm2);
             }
             m_secondaryModels.put(null, new HashMap<String, ParametricModel>());
             HashMap<String, ParametricModel> hm = m_secondaryModels.get(null);
@@ -142,10 +147,18 @@ public class PMModelReader {
           }
         }
       }
+      workingDirectory = Optional.of(Files.createTempDirectory("workingDirectory"));
+
       if (inSpec.containsName("MD_Data") && loadData) {
-        workingDirectory = Optional.of(Files.createTempDirectory("workingDirectory"));
         dataFile = MDUtil.writeJson(tuples, "ModelData", workingDirectory.get());
         dataAvailable = true;
+      }
+      try {
+        if(exec!=null)
+          PMFWriter.write(dataTable, workingDirectory.get().toFile().getAbsolutePath(), "PMFModel", true, exec);
+      } catch (Exception e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
       }
     } catch (PmmException e) {
     } catch (IOException e) {
@@ -234,7 +247,7 @@ public class PMModelReader {
     PredictiveModelModelMath modelMath = new PredictiveModelModelMath();
     functionParameters = new HashMap<String, Double>();
 
-    buildModelMathParameters(parametricModel, modelMath);
+    buildModelMathParameters(parametricModel, modelMath,null);
     ModelEquation modelEquation = new ModelEquation();
     modelEquation.setModelEquation(parametricModel.getFormula());
     modelMath.addModelEquationItem(modelEquation);
@@ -258,11 +271,12 @@ public class PMModelReader {
   public PredictiveModelModelMath extractTertiaryModelMath(ParametricModel parametricModel) {
     PredictiveModelModelMath modelMath = new PredictiveModelModelMath();
     functionParameters = new HashMap<String, Double>();
-    buildModelMathParameters(parametricModel, modelMath);
+    buildModelMathParameters(parametricModel, modelMath,null);
 
     HashMap<String, ParametricModel> secondaryModels = m_secondaryModels.get(parametricModel);
+    AtomicInteger counter = new AtomicInteger(0);
     secondaryModels.forEach((DepVar, subParametricModel) -> {
-      buildModelMathParameters(subParametricModel, modelMath);
+      buildModelMathParameters(subParametricModel, modelMath, counter.addAndGet(1));
       removeDepVars(modelMath, DepVar);
     });
     ModelEquation modelEquation = new ModelEquation();
@@ -288,28 +302,39 @@ public class PMModelReader {
   public String simplifyTertiaryFormula(ParametricModel parametricModel) {
     String finalFormula = parametricModel.getFormula();
     HashMap<String, ParametricModel> secondaryModels = m_secondaryModels.get(parametricModel);
+    int index = 1;
     for (Map.Entry<String, ParametricModel> entry : secondaryModels.entrySet()) {
       String DepVar = entry.getKey();
       ParametricModel subParametricModel = entry.getValue();
-      String subFunction = subParametricModel.getFormula();
+      String subFunction = fixDuplicatedParamNames(subParametricModel.modelName, subParametricModel.getFormula(), index++);
+      
       subFunction = MathUtilities.getAllButBoundaryCondition(
-          subFunction.replace(subParametricModel.getDepVar() + "=", ""));
+          subFunction.replace( subParametricModel.getDepVar() + "=", ""));
       finalFormula = finalFormula.replaceAll(DepVar, "(" + subFunction + ")");
 
     }
     return finalFormula;
   }
-
+  public String fixDuplicatedParamNames(String modelName,String subFunction, int index) {
+    HashMap<String,String> subModelParams = modelParams.get(modelName+index);
+    for (Map.Entry<String, String> entry : subModelParams.entrySet()) {
+      subFunction = subFunction.replaceAll("\\b"+entry.getKey()+"\\b", entry.getValue());
+    }
+    return subFunction;
+  }
   public void buildModelMathParameters(ParametricModel parametricModel,
-      PredictiveModelModelMath modelMath) {
+      PredictiveModelModelMath modelMath, Integer index) {
+
+    HashMap<String,String> subModelParams = new HashMap<String,String>();
+    modelParams.put(parametricModel.modelName+index, subModelParams);
     for (PmmXmlElementConvertable el : parametricModel.getParameter().getElementSet()) {
       if (el instanceof ParamXml) {
         ParamXml px = (ParamXml) el;
         Parameter parameter = new Parameter();
-        parameter.setName(px.name);
-        parameter.setId(px.name);
+        subModelParams.put(px.name, px.name+(index!=null?index.toString():""));
+        parameter.setName(px.name+(index!=null?index.toString():""));
+        parameter.setId(px.name+(index!=null?index.toString():""));
         parameter.setClassification(ClassificationEnum.INPUT);
-
         parameter.setDescription(px.description);
         parameter.setUnit(px.unit);
         parameter.setValue("" + px.value);
@@ -362,12 +387,6 @@ public class PMModelReader {
     function = MathUtilities
         .getAllButBoundaryCondition(function.replace(parametricModel.getDepVar() + "=", ""));
 
-    System.out.println(function);
-    System.out.println(BoundaryCondition);
-
-    code.append("values <- c()\n");
-    if (!StringUtils.isAllEmpty(BoundaryCondition))
-      code.append("if(" + BoundaryCondition.replaceAll("\\*", " && ") + "){\n");
     IndepXml variable = null;
     for (int indIndex = 0; indIndex < independentList.size(); indIndex++) {
       if (indIndex == 0)
@@ -377,10 +396,13 @@ public class PMModelReader {
         code.append(otherIndependentVariable.name + " <- " + otherIndependentVariable.min + "\n");
       }
     }
+    code.append("values <- c()\n");
+    if (!StringUtils.isAllEmpty(BoundaryCondition))
+      code.append("if(" + BoundaryCondition.replaceAll("\\*", " && ") + "){\n");
+    
     // independentList.forEach(item -> {
     if (variable != null)
       code.append("for(" + variable.name + " in " + variable.min + ":" + variable.max + "){\n");
-    System.out.println(variable);
     // });
     code.append("values <- c( values," + function + ")\n");
 
@@ -390,8 +412,6 @@ public class PMModelReader {
 
     if (!StringUtils.isAllEmpty(BoundaryCondition))
       code.append("}\n");
-    System.out.println(code);
-
     return code.toString();
   }
 
@@ -416,9 +436,6 @@ public class PMModelReader {
     function = MathUtilities
         .getAllButBoundaryCondition(function.replace(parametricModel.getDepVar() + "=", ""));
 
-    System.out.println(function);
-    System.out.println(BoundaryCondition);
-
     code.append("values <- c()\n");
     if (!StringUtils.isAllEmpty(BoundaryCondition))
       code.append("if(" + BoundaryCondition.replaceAll("\\*", " && ") + "){\n");
@@ -434,7 +451,6 @@ public class PMModelReader {
     // independentList.forEach(item -> {
     if (variable != null)
       code.append("for(" + variable.name + " in " + variable.min + ":" + variable.max + "){\n");
-    System.out.println(variable);
     // });
     code.append("values <- c( values," + function + ")\n");
 
@@ -444,7 +460,6 @@ public class PMModelReader {
 
     if (!StringUtils.isAllEmpty(BoundaryCondition))
       code.append("}\n");
-    System.out.println(code);
 
     return code.toString();
   }

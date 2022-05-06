@@ -198,6 +198,8 @@ class WriterNodeModel extends NoInternalsModel {
         archive.addEntry(resourceFile, filenameString, uris.get("tiff"));
       } else if (FilenameUtils.isExtension(filenameString.toLowerCase(), "xlsx")) {
         archive.addEntry(resourceFile, filenameString, uris.get("xlsx"));
+      }else if (FilenameUtils.isExtension(filenameString.toLowerCase(), "pmfx")) {
+        archive.addEntry(resourceFile, filenameString, URI.create("https://www.bfr.bund.de/pmfx"));
       }
       // ADD additional resource files that the model script might need
       else if (FilenameUtils.isExtension(filenameString.toLowerCase(), scriptHandler.getFileExtension())) {
