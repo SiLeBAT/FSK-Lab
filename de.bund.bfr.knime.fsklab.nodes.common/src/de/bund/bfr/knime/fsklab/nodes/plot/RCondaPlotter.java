@@ -31,7 +31,7 @@ public class RCondaPlotter implements ModelPlotter {
 
 	private void createPlot(File file, String script, String image_type) throws Exception{
 
-		String configCmd = "library('Cairo'); options(device='png', bitmapType='cairo')";
+		String configCmd = "library(Cairo); options(device='png', bitmapType='cairo')";
 		// Get image path (with proper slashes)
 		final String path = FilenameUtils.separatorsToUnix(file.getAbsolutePath());
 
@@ -46,7 +46,7 @@ public class RCondaPlotter implements ModelPlotter {
 		// (e.g. when the ggplot function is stored in a variable
 		// however, the last_plot() really only prints the very last plot
 		// thus omitting any previous ones, therefore this zig-zagging
-		if(file.length() < 1000) {
+		if(file.length() < 1000 && !script.isBlank()) {
 			controller.eval("Cairo(file='" + path + "',type='" + image_type + "',dpi=72,bg='white')",
 					false);
 			controller.eval(script, false);

@@ -532,7 +532,7 @@ class APPTableMT extends APPTable {
 								}
 							}
 							else {
-								if ( ! facetValue.includes( cellData ) ) {
+								if ( ! cellData.includes( facetValue ) ) {
 									// row data does not match
 									rowMatchesFilter = false;
 								}							
