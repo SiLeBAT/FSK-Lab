@@ -52,6 +52,7 @@ import org.apache.commons.lang.StringUtils;
 import org.knime.base.data.xml.SvgCell;
 import org.knime.base.data.xml.SvgImageContent;
 import org.knime.base.node.util.exttool.ExtToolOutputNodeModel;
+import org.knime.core.data.collection.CollectionDataValue;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.ExecutionMonitor;
@@ -65,6 +66,9 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.image.ImagePortObject;
 import org.knime.core.node.port.image.ImagePortObjectSpec;
+
+import org.knime.core.node.workflow.FlowVariable;
+
 import org.knime.core.util.FileUtil;
 
 public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjectHolder {
@@ -209,7 +213,18 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
       this.pushFlowVariableString("generatedResources",
           fskObj.getGeneratedResourcesDirectory().get().getAbsolutePath());
     }
-    
+    // Store subplots of Comnbined Model in Flow-Variable
+    if (fskObj instanceof CombinedFskPortObject) {
+      List<String> subPlotPaths = new ArrayList<String>();
+      makeSubPlotsAvailable(fskObj,subPlotPaths);
+      String plotPathsList = subPlotPaths.stream()
+          .map(n ->  String.valueOf(n)) 
+          .collect(Collectors.joining("\",\"", "[\"", "\"]"));
+      CollectionDataValue x;
+      this.pushFlowVariableString("SubPlots", plotPathsList.replace("\\", "/"));
+//      this.pushFlowVariable("SubPlots",
+//          org.knime.core.node.workflow.FlowVariable. FlowVariable.Type..StringArrayType.INSTANCE,subPlotPaths.toArray(new String[0]));
+    }
     if(isVisScriptEmpty(fskObj)) {
       LOGGER.warn("There is no visualization script");
       String noImage = "<?xml version=\"1.0\"?>\n"
@@ -316,7 +331,27 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
     }
   }
   
-
+  public void makeSubPlotsAvailable(FskPortObject fskObj, List<String> list) {
+    
+    if (fskObj instanceof CombinedFskPortObject) {
+      makeSubPlotsAvailable(((CombinedFskPortObject) fskObj).getFirstFskPortObject(), list);
+      makeSubPlotsAvailable(((CombinedFskPortObject) fskObj).getSecondFskPortObject(), list);
+    } else {
+      if(fskObj.getGeneratedResourcesDirectory().isPresent()) {
+        try {
+          list.addAll(Files.walk(fskObj.getGeneratedResourcesDirectory().get().toPath())
+              .map(file -> file.toString()).filter(file -> file.endsWith(".svg"))
+              .collect(Collectors.toList()));
+        } catch(IOException e) {
+          String modelID = SwaggerUtil.getModelId(fskObj.modelMetadata);
+          String plotNotFoundMsg = (modelID != null) ? modelID + " generated no Subplot" 
+              : "no Subplot generated"; 
+          LOGGER.warn( plotNotFoundMsg);
+        }
+      }
+        
+    }
+  }
   
   public void reSelectSimulation(FskPortObject fskObj, int index) {
     fskObj.selectedSimulationIndex = index;
