@@ -3,10 +3,10 @@ name: Java CI
 on: 
   push:
     branches:
-      - development
+      - knime_4_4
   pull_request:
     branches:
-      - development
+      - knime_4_4
 jobs:
   build:
     runs-on: ubuntu-latest
