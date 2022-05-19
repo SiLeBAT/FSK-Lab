@@ -23,7 +23,7 @@ public class BasePlotter implements ModelPlotter {
 
     // Initialize necessary R stuff to plot
     String configCmd =
-        Platform.isMac() ? "library('Cairo'); options(device='png', bitmapType='cairo')"
+        Platform.isMac() ? "library(Cairo); options(device='png', bitmapType='cairo')"
             : "options(device='png')";
     controller.eval(configCmd, false);
 
@@ -51,7 +51,7 @@ public class BasePlotter implements ModelPlotter {
 
     // Initialize necessary R stuff to plot
     String configCmd =
-        Platform.isMac() ? "library('Cairo'); options(device='png', bitmapType='cairo')"
+        Platform.isMac() ? "library(Cairo); options(device='png', bitmapType='cairo')"
             : "options(device='png')";
 
     // Get image path (with proper slashes)
