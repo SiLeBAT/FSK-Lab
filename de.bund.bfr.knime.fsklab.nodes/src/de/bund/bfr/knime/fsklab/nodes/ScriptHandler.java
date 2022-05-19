@@ -455,5 +455,19 @@ public abstract class ScriptHandler implements AutoCloseable {
     } catch (CanceledExecutionException | IOException e) {
       throw new JsonFileNotFoundException(workingDirectory.toString());
     }
+
+    // Save Plot in generatedResouces Folder (SubPlot for Combined Models)    
+    try {
+      if(!fskPortObject.getPlot().trim().isEmpty() && fskPortObject.getGeneratedResourcesDirectory().isPresent()) {
+        File sourcePlot = new File(fskPortObject.getPlot());
+        String targetPlotName =  (SwaggerUtil.getModelId(fskPortObject.modelMetadata) != null) 
+            ? SwaggerUtil.getModelId(fskPortObject.modelMetadata) + ".svg" 
+                : "subModelPlot.svg";
+        File targetPlot = new File(fskPortObject.getGeneratedResourcesDirectory().get(), targetPlotName);
+        FileUtil.copy(sourcePlot, targetPlot, exec);  
+      }
+    } catch(IOException | CanceledExecutionException e) {
+      throw new ResourceFileNotFoundException(fskPortObject.getPlot());
+    }
   }
 }

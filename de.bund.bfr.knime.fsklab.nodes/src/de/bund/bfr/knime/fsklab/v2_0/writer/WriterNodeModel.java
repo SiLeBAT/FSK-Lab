@@ -251,6 +251,9 @@ class WriterNodeModel extends NoInternalsModel {
         } catch (Exception e) {
           LOGGER.warn(e.toString());
         }
+        
+        // after writing the FSKX object, delete the environment to remove temporary files
+        fskObj.getEnvironmentManager().get().deleteEnvironment(workingDirectory.get());
       }
     }
     

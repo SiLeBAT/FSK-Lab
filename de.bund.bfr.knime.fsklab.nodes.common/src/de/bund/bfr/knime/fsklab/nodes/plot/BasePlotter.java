@@ -23,7 +23,7 @@ public class BasePlotter implements ModelPlotter {
 
     // Initialize necessary R stuff to plot
     String configCmd =
-        Platform.isMac() ? "library('Cairo'); options(device='png', bitmapType='cairo')"
+        Platform.isMac() ? "library(Cairo); options(device='png', bitmapType='cairo')"
             : "options(device='png')";
     controller.eval(configCmd, false);
 
@@ -51,7 +51,7 @@ public class BasePlotter implements ModelPlotter {
 
     // Initialize necessary R stuff to plot
     String configCmd =
-        Platform.isMac() ? "library('Cairo'); options(device='png', bitmapType='cairo')"
+        Platform.isMac() ? "library(Cairo); options(device='png', bitmapType='cairo')"
             : "options(device='png')";
 
     // Get image path (with proper slashes)
@@ -65,7 +65,7 @@ public class BasePlotter implements ModelPlotter {
     // (e.g. when the ggplot function is stored in a variable
     // however, the last_plot() really only prints the very last plot
     // thus omitting any previous ones, therefore this zig-zagging
-    if(file.length() < 1000) {
+    if(file.length() < 1000 && !script.trim().isEmpty()) {
     	controller.eval("svg('" + path + "')", false);
     	controller.eval(script, false);
     	controller.eval("print(last_plot());dev.off()", false);
