@@ -668,7 +668,6 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 						if (envsMaps == null || envsMaps.isEmpty()) {
 							envsMaps = (Map<String, String>) list.stream().collect(java.util.stream.Collectors
 									.toMap(item -> item.getName(), item -> item.getDirectoryPath()));
-							System.out.println("envsMaps");
 						}
 
 						if (pythonConda) {
