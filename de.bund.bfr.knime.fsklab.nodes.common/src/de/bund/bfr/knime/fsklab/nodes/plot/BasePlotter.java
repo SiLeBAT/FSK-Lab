@@ -65,7 +65,7 @@ public class BasePlotter implements ModelPlotter {
     // (e.g. when the ggplot function is stored in a variable
     // however, the last_plot() really only prints the very last plot
     // thus omitting any previous ones, therefore this zig-zagging
-    if(file.length() < 1000) {
+    if(file.length() < 1000 && !script.isBlank()) {
     	controller.eval("svg('" + path + "')", false);
     	controller.eval(script, false);
     	controller.eval("print(last_plot());dev.off()", false);

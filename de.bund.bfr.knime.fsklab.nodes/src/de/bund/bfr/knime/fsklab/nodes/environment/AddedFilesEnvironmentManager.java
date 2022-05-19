@@ -24,7 +24,7 @@ public class AddedFilesEnvironmentManager implements EnvironmentManager {
 
   private EnvironmentManager manager;
   private String[] files;
-
+  private List<Path> markedForRemoval = new ArrayList<Path>();
   
   public AddedFilesEnvironmentManager() {
     this(new DefaultEnvironmentManager(), new String[0]);
@@ -38,11 +38,15 @@ public class AddedFilesEnvironmentManager implements EnvironmentManager {
   public AddedFilesEnvironmentManager(EnvironmentManager manager, String[] files) {
     this.manager = manager;
     this.files = files;
+    
   }
   
   
   public String[] getFiles() {
     return files;
+  }
+  public List<Path> getMarkedForRemoval() {
+    return markedForRemoval;
   }
   public EnvironmentManager getManager() {
     return manager;
@@ -84,7 +88,10 @@ public class AddedFilesEnvironmentManager implements EnvironmentManager {
       for (Path filePath : filePaths) {
         Path sourcePath = filePath;
         Path targetPath = environment.get().resolve(sourcePath.getFileName());
-        Files.copy(filePath, targetPath);
+        if(Files.notExists(targetPath)) { // don't overwrite or replace file if it exists already
+          Files.copy(sourcePath, targetPath);
+          markedForRemoval.add(targetPath);
+        }
       }
       
       return environment;
@@ -93,10 +100,20 @@ public class AddedFilesEnvironmentManager implements EnvironmentManager {
     }
   }
   
+  
+  public void clearAddedFiles() {
+    
+    for (Path filePath : markedForRemoval) {
+      FileUtils.deleteQuietly(filePath.toFile());
+    }
+    markedForRemoval.clear();
+  
+  }
+ 
   @Override
   public void deleteEnvironment(Path path) {
-    FileUtils.deleteQuietly(path.toFile());
+    clearAddedFiles();
+    manager.deleteEnvironment(path);
   }
-  
-  
+    
 }
