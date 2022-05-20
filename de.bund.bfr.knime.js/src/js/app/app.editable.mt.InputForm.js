@@ -132,7 +132,7 @@
                     // string or others
                     //<input class="custom-control-input" type="checkbox" id="switchExample1" name="switchExample1" checked />
                     else if ( type == 'checkbox' ) {
-                        O.input = $( '<input type="checkbox" class="form-control form-control-sm text-left" style="width: auto;" />' )
+                        O.input = $( '<input type="checkbox" class="form-check-input" style="width: auto;" />' )
                             .attr( 'id', 'input_'+ name.replace(/[\W_]+/g,"_") )
                             .appendTo( $field );
 
