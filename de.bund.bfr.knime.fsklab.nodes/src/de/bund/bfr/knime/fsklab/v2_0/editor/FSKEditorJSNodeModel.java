@@ -284,7 +284,7 @@ final class FSKEditorJSNodeModel
       Model metadata = MAPPER.readValue(metadataString, modelClass);
       List<Reference> references = NodeUtils.getReferenceList(modelType, metadata);
       references.forEach(reference -> {
-        if(reference.getDate() != null)
+        if(reference.getDate() != null && !reference.getDate().trim().equals("-"))
           reference.setDate(reference.getDate().split("[-,]")[0]);
       });
       return MAPPER.writeValueAsString(metadata);
