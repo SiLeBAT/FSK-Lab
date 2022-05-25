@@ -538,9 +538,7 @@ class APPTableMT extends APPTable {
 									//cellData.has( val ) ? cellMatches = true : null;
 									for (const element of cellData) {
 										element.includes(val.trim()) ? cellMatches = true : null;
-										if(cellMatches){break;}
 									}
-									if(cellMatches){break;}
 								} );
 
 								if( ! cellMatches ) {

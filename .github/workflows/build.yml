@@ -4,9 +4,7 @@ on:
   push:
     branches:
       - knime_4_4
-  pull_request:
-    branches:
-      - knime_4_4
+
 jobs:
   build:
     runs-on: ubuntu-latest
