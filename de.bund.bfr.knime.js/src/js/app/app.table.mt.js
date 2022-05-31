@@ -141,8 +141,12 @@ class APPTableMT extends APPTable {
 		let hazard = O._getScopeData( modelMetadata, 'scope', 'hazard', 'hazardName' );
 		rowData.el.find('td[data-label="Hazard"]' ).html( hazard );
 		//let modelType = modelMetadata['modelType'];
-		let modelType = modelMetadata['generalInformation']['modelCategory']['modelClass'] ?
+		let modelType = "Generic model";
+		if(modelMetadata['generalInformation']['modelCategory']){
+			modelType = modelMetadata['generalInformation']['modelCategory']['modelClass'] ?
 			modelMetadata['generalInformation']['modelCategory']['modelClass'] : "Generic model";
+		} 
+		
 		// special case: (Data) -> Data model
 		if(modelType === "(Data)"){modelType = "Data model";}
 		rowData.el.find('td[data-label="Type"]' ).html( modelType );
@@ -229,8 +233,11 @@ class APPTableMT extends APPTable {
 					}
 				}
 				else if ( col.field == 'modelType' ) {
-					data = modelMetadata['generalInformation']['modelCategory']['modelClass'] ?
-					modelMetadata['generalInformation']['modelCategory']['modelClass'] : "Generic model";
+					data = "Generic model";
+					if(modelMetadata['generalInformation']['modelCategory']){
+						data = modelMetadata['generalInformation']['modelCategory']['modelClass'] ?
+						modelMetadata['generalInformation']['modelCategory']['modelClass'] : "Generic model";						
+					}
 					// special case: (Data) -> Data model
 					if(data === "(Data)"){data = "Data model";}
 				}
@@ -272,8 +279,12 @@ class APPTableMT extends APPTable {
 			let environment = O._getScopeData( modelMetadata, 'scope', 'product', 'productName' );
 			let hazard = O._getScopeData( modelMetadata, 'scope', 'hazard', 'hazardName' );
 			//let modelType = modelMetadata['modelType'];
-			let modelType = modelMetadata['generalInformation']['modelCategory']['modelClass'] ? 
-				modelMetadata['generalInformation']['modelCategory']['modelClass'] : "Generic model";//_modelMetadata2['modelType'];
+			
+			let modelType = "Generic model";
+			if(modelMetadata['generalInformation']['modelCategory']){
+				modelType = modelMetadata['generalInformation']['modelCategory']['modelClass'] ? 
+				modelMetadata['generalInformation']['modelCategory']['modelClass'] : "Generic model";//_modelMetadata2['modelType'];				
+			}
 			// special case: (Data) -> Data model
 			if(modelType === "(Data)"){modelType = "Data model";}
 
