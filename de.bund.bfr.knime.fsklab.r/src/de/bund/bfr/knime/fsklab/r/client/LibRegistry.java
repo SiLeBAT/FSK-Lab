@@ -165,24 +165,22 @@ public class LibRegistry {
   public synchronized void install(final List<String> packages)
       throws RException, REXPMismatchException, NoInternetException {
     
-    if (!isNetAvailable()) {
-      throw new NoInternetException(packages);
-    }
-    
     if (Platform.isLinux() || Platform.isMac()) {
       // Install missing packages
       controller.addPackagePath(installPath);
       
       String[] installedPackagesArray = controller.eval("rownames(installed.packages())", true).asStrings();
       Set<String> installedPackagesSet = Arrays.stream(installedPackagesArray).collect(Collectors.toSet());
-      
       for (String pkg : packages) {
-        if (!installedPackagesSet.contains(pkg)) {
-          String cmd = String.format("install.packages('%s', lib = '%s', repos = '%s')", pkg, rWrapper._path2String(installPath), MIRROR);
-          controller.eval(cmd, false);
-        }
+		if (!installedPackagesSet.contains(pkg)) {
+			if (!isNetAvailable()) {
+				throw new NoInternetException(packages);
+			}
+			String cmd = String.format("install.packages('%s', lib = '%s', repos = '%s')", pkg,
+					rWrapper._path2String(installPath), MIRROR);
+			controller.eval(cmd, false);
+		}
       }
-      
       installedPackagesArray = controller.eval("rownames(installed.packages())", true).asStrings();
       installedPackagesSet = Arrays.stream(installedPackagesArray).collect(Collectors.toSet());
       
