@@ -1,17 +1,16 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<knimeNode icon="./default.png" type="Source" xmlns="http://knime.org/node/v2.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
+<?xml version="1.0" encoding="UTF-8"?>    
+    <knimeNode icon="./default.png" type="Manipulator" xmlns="http://knime.org/node/v3.6" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://knime.org/node/v3.6 http://knime.org/node/v3.6.xsd">
     <name>PMF To FSK Converter</name>
     
     <shortDescription>
-        
+        A node to convert the models written in PMMLab into FSK Lab
     </shortDescription>
     
     <fullDescription>
-        <intro>Insert long description here...</intro>
+        <intro>A node to convert the models written in PMMLab into FSK Lab using R language</intro>
         
         
-        <option name="short name of first option (like in the dialog)">description of first option</option>
-        <option name="short name of second option (like in the dialog)">description of second option</option>
+        <option name="Select A Model">Select the Primary, Secondary or Tertiary Model to be converted to a FSK formated model</option>
         <!-- possibly more options that can also be grouped by tabs -->
         <!--
         <tab name="Standard Options">
