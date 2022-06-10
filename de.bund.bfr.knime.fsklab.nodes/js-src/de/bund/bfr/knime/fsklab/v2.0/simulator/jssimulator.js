@@ -43,7 +43,10 @@ simulator = function() {
 	};
 
 	view.getComponentValue = function() {
-		_modelSim._saveSimulation();
+		console.log(_modelSim._savedState);
+		if ( _modelSim._savedState === 'dirty') {
+			_modelSim._saveSimulation();
+		}
 		let sims = [];
 		$.each(_simulations, function(index, sim){
 		   let params = [];

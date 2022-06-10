@@ -43,6 +43,7 @@ class APPSimulation {
 		// global
 		O._metadata = O.opts.data;
 		O._state = 'params'; // default state: params form
+		O._savedState = 'clean'
 
 		O._$simInputs = []; // inputs from params and customs
 		O._simFields = {};
@@ -768,6 +769,8 @@ class APPSimulation {
 
 		// update sim select to index for add-action : -1
 		O._updateSimIndex( -1 );
+		O._setSavedState( 'dirty' );
+
 	}
 
 
@@ -833,7 +836,7 @@ class APPSimulation {
 				O._updateSimIndex( O._simulations.length - 1 );
 			}
 		}
-
+		O._setSavedState( 'clean' );
 		// TO DO 
 		// save to endpoint ?
 	}
@@ -1134,5 +1137,9 @@ class APPSimulation {
 			// set sim modal state
 			O._state = state;
 		}
+	}
+	_setSavedState ( state ) {
+		// set sim modal state
+		this._savedState = state;
 	}
 }
