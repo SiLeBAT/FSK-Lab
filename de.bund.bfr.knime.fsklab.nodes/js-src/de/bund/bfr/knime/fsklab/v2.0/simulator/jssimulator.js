@@ -43,6 +43,10 @@ simulator = function() {
 	};
 
 	view.getComponentValue = function() {
+		
+		if ( _modelSim._savedState === 'dirty') {
+			_modelSim._saveSimulation();
+		}
 		let sims = [];
 		$.each(_simulations, function(index, sim){
 		   let params = [];
