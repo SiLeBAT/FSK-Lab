@@ -43,7 +43,7 @@ simulator = function() {
 	};
 
 	view.getComponentValue = function() {
-		console.log(_modelSim._savedState);
+		
 		if ( _modelSim._savedState === 'dirty') {
 			_modelSim._saveSimulation();
 		}
