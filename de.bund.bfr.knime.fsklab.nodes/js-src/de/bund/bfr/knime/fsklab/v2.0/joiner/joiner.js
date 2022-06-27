@@ -1192,19 +1192,13 @@ joiner = function () {
         return;
       sourcePort = link.attributes.source.port;
       targetPort = link.attributes.target.port;
-
-      let sourceParameter = _firstModelParameterMap[sourcePort] ?
-        _firstModelParameterMap[sourcePort] : _secondModelParameterMap[sourcePort];
-
-      let targetParameter = _secondModelParameterMap[sourcePort] ?
-        _secondModelParameterMap[sourcePort] : _firstModelParameterMap[sourcePort];
-
-      if (targetParameter != undefined) {
+	  
+      if (sourcePort != undefined && targetPort != undefined) {
         $.each(_value.joinRelations, function (index, value) {
-
-          if (value != undefined && value.sourceParam.parameterID == sourceParameter.parameterID
-            && value.targetParam.parameterID == targetParameter.parameterID) {
+          if (value != undefined && value.sourceParam == sourcePort
+            && value.targetParam == targetPort) {
             _value.joinRelations.splice(index, 1);
+            	delete window.joinRelationsMap[sourcePort + "," + targetPort] ;
           }
         });
         _value.jsonRepresentation = JSON.stringify(_graph.toJSON());
