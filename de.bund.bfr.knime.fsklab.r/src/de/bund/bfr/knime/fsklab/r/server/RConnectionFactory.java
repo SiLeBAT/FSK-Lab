@@ -67,6 +67,7 @@ import org.rosuda.REngine.Rserve.RserveException;
 
 import com.sun.jna.Platform;
 
+import de.bund.bfr.knime.fsklab.preferences.DefaultRPreferenceProvider;
 import de.bund.bfr.knime.fsklab.preferences.PreferenceInitializer;
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
 import de.bund.bfr.knime.fsklab.r.client.RController;
@@ -162,9 +163,11 @@ public class RConnectionFactory {
 
 			// "x64" for 64 bit and "i386" for 32 bit.
 			final String arch = archProperty.equals("x86_64") ? "x64" : "i386";
-
-			env.put("PATH", rHome + File.pathSeparator + rHome + "\\bin\\" + arch + "\\" + File.pathSeparator
-					+ env.get("PATH"));
+			
+			env.put(DefaultRPreferenceProvider.findPathVariableName(env),
+					rHome + File.pathSeparator + rHome + "\\bin\\" + arch + "\\" + File.pathSeparator
+					+ env.get(DefaultRPreferenceProvider.findPathVariableName(env)));
+			PreferenceInitializer.getR3Provider().setUpEnvironment(env);
 
 		} else {
 			// on Unix we need priorize the "R_HOME/lib" folder in the

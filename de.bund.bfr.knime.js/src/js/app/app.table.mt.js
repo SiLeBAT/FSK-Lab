@@ -140,9 +140,17 @@ class APPTableMT extends APPTable {
 		rowData.el.find('td[data-label="Environment"]' ).html( environment );
 		let hazard = O._getScopeData( modelMetadata, 'scope', 'hazard', 'hazardName' );
 		rowData.el.find('td[data-label="Hazard"]' ).html( hazard );
-		let modelType = modelMetadata['modelType'];
-		rowData.el.find('td[data-label="Type"]' ).html( modelType );
-		// update sets
+						//let modelType = modelMetadata['modelType'];
+		let modelType = "Generic model";
+		if(modelMetadata['generalInformation']['modelCategory']){
+			modelType = modelMetadata['generalInformation']['modelCategory']['modelClass'] ?
+			modelMetadata['generalInformation']['modelCategory']['modelClass'] : "Generic model";
+		} 
+		
+		// special case: (Data) -> Data model
+		if(modelType === "(Data)"){modelType = "Data model";}
+rowData.el.find('td[data-label="Type"]' ).html( modelType );
+// update sets
 		if ( software ) O._updateSet( 'software', software );
 		if ( environment ) {
 			environment.forEach( x => { 
@@ -225,8 +233,14 @@ class APPTableMT extends APPTable {
 					}
 				}
 				else if ( col.field == 'modelType' ) {
-					data = modelMetadata['modelType'];
-				}
+															data = "Generic model";
+					if(modelMetadata['generalInformation']['modelCategory']){
+						data = modelMetadata['generalInformation']['modelCategory']['modelClass'] ?
+						modelMetadata['generalInformation']['modelCategory']['modelClass'] : "Generic model";						
+					}
+					// special case: (Data) -> Data model
+					if(data === "(Data)"){data = "Data model";}
+}
 				else if ( col.field == 'executionTime' ) {
 					data = O._executionTimes[identifier]? O._executionTimes[identifier] :"";
 				}
@@ -264,7 +278,15 @@ class APPTableMT extends APPTable {
 			let software = O._getData( modelMetadata, 'generalInformation', 'software' );
 			let environment = O._getScopeData( modelMetadata, 'scope', 'product', 'productName' );
 			let hazard = O._getScopeData( modelMetadata, 'scope', 'hazard', 'hazardName' );
-			let modelType = modelMetadata['modelType'];
+									//let modelType = modelMetadata['modelType'];
+			
+			let modelType = "Generic model";
+			if(modelMetadata['generalInformation']['modelCategory']){
+				modelType = modelMetadata['generalInformation']['modelCategory']['modelClass'] ? 
+				modelMetadata['generalInformation']['modelCategory']['modelClass'] : "Generic model";//_modelMetadata2['modelType'];				
+			}
+			// special case: (Data) -> Data model
+			if(modelType === "(Data)"){modelType = "Data model";}
 
 			// update sets
 			if ( software ) O._updateSet( 'software', software );
@@ -515,7 +537,7 @@ class APPTableMT extends APPTable {
 						if ( $.isArray( facetValue ) && facetValue.length > 0 ) {
 
 							// get according col index
-							let colIndex = _getColIndexByField( field );
+							let colIndex = super._getColIndexByField( field );
 							let cellData = rowData.cells[colIndex];
 
 							if( cellData instanceof Set ) {
@@ -524,7 +546,10 @@ class APPTableMT extends APPTable {
 
 								$.each( facetValue, ( i, val ) => {
 									// check set for matching one of the facet values
-									cellData.has( val ) ? cellMatches = true : null;
+									//cellData.has( val ) ? cellMatches = true : null;
+									for (const element of cellData) {
+										element.includes(val.trim()) ? cellMatches = true : null;
+									}
 								} );
 
 								if( ! cellMatches ) {
@@ -532,7 +557,7 @@ class APPTableMT extends APPTable {
 								}
 							}
 							else {
-								if ( ! facetValue.includes( cellData ) ) {
+								if ( ! cellData.includes( facetValue ) ) {
 									// row data does not match
 									rowMatchesFilter = false;
 								}							

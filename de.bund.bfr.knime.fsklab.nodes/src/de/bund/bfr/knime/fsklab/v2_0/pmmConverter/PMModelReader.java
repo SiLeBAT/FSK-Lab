@@ -45,6 +45,7 @@ import de.bund.bfr.knime.pmm.common.pmmtablemodel.TimeSeriesSchema;
 import de.bund.bfr.metadata.swagger.ModelEquation;
 import de.bund.bfr.metadata.swagger.Parameter;
 import de.bund.bfr.metadata.swagger.Parameter.ClassificationEnum;
+import de.bund.bfr.metadata.swagger.Parameter.DataTypeEnum;
 import de.bund.bfr.metadata.swagger.PredictiveModel;
 import de.bund.bfr.metadata.swagger.PredictiveModelGeneralInformation;
 import de.bund.bfr.metadata.swagger.PredictiveModelModelMath;
@@ -341,6 +342,7 @@ public class PMModelReader {
         parameter.setError("" + px.error);
         parameter.setMaxValue("" + px.max);
         parameter.setMinValue("" + px.min);
+        parameter.setDataType(DataTypeEnum.DOUBLE);
         modelMath.getParameter().add(parameter);
         functionParameters.put(px.name, px.value);
       }

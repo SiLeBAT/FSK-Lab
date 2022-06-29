@@ -487,6 +487,8 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 		@Override
 		protected boolean doCheckState() {
 			final String rHome = getStringValue();
+			Plugin.getDefault().getPreferenceStore().putValue(PreferenceInitializer.R3_PATH_CFG,
+					rHome);
 			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {
 					testRHome(rHome, messageRManual);
@@ -666,7 +668,6 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 						if (envsMaps == null || envsMaps.isEmpty()) {
 							envsMaps = (Map<String, String>) list.stream().collect(java.util.stream.Collectors
 									.toMap(item -> item.getName(), item -> item.getDirectoryPath()));
-							System.out.println("envsMaps");
 						}
 
 						if (pythonConda) {
