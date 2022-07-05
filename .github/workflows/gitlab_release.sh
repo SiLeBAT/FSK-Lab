@@ -17,4 +17,4 @@ git add .
 git commit -m "Release"
 
 # Push build
-git push https://$GITLAB_USER:$GITLAB_TOKEN@gitlab.bfr.berlin/silebat/$REPO.git --4.4
+git push https://$GITLAB_USER:$GITLAB_TOKEN@gitlab.bfr.berlin/silebat/$REPO.git 4.4
