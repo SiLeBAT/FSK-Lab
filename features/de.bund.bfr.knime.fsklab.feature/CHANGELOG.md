@@ -4,6 +4,155 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2022-7-05
+
+### Added
+* new preference page, allowing usage of  Conda Environments (R and Python)
+* improved Joining (Functions)
+* Simulation Configurator doesn't require "saving" a simulation anymore
+* better offline support for FSK-Lab
+* Editor allows to add files to an existing model
+* on executing combined models, the intermediate plots saved and can be accessed by using the KNIME flow-variable "subplots" in the Runner
+* Markdown and HTML files are now stored in model when using FSK-Writer
+
+
+### Changed
+* upgrade to KNIME target platform 4.4 
+* improved loading speed of Model-Repository by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/921
+* disable editing of constant parameters in Simulation Configurator by @ahmadswaid in https://github.com/SiLeBAT/FSK-Lab/pull/903
+* auto-add modification date when writing model by @ahmadswaid in https://github.com/SiLeBAT/FSK-Lab/pull/917
+
+
+### Fixed
+
+* editing models no longer removes simulations by @ahmadswaid in https://github.com/SiLeBAT/FSK-Lab/pull/904
+* fixed issues with minimum model by @ahmadswaid in https://github.com/SiLeBAT/FSK-Lab/pull/915
+* fixed issues with ggplot by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/1006
+
+
+### Misc Fixes
+* fix move up/down bug in tables by @ahmadswaid in https://github.com/SiLeBAT/FSK-Lab/pull/927
+* FSK DB VIEW: select all feature by @ahmadswaid in https://github.com/SiLeBAT/FSK-Lab/pull/926
+* fixed bug RakipInitiative/ModelRepository#367 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/960
+* add modelType and ReadMe to FSK2Metadata by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/963
+* RakipInitiative/ModelRepository#372 endpoint update for db by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/962
+* added workaround to resource files having uppercase extensions by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/964
+* updated DBView default endpoint to /landingpage/DB/ by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/965
+* Dev44 merge943 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/966
+* Dev44 merge944 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/967
+* merge #946 attempt 3 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/972
+* Dev44 merge948 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/973
+* Dev44 merge949 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/974
+* Dev44 merge950 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/975
+* Dev44 merge951 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/976
+* Dev44 merge952 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/977
+* Dev44 merge953 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/978
+* Dev44 merge954 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/980
+* Dev44 merge955 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/981
+* Dev44 merge956 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/982
+* Dev44 merge958 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/983
+* Dev44 merge959 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/984
+* Dev44 merge960 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/985
+* Dev44 merge962 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/986
+* Dev44 merge963 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/987
+* Dev44 merge964 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/988
+* Dev44 merge965 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/989
+* R Markdown (Rmd) and HTML Files are now supported in Reader/Writer by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/991
+* editor allows to add files to an existing environment by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/993
+* fixed some bugs regarding adding files to Editor by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/994
+* Ggplot ggsave bugfix by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/996
+* R markdown support 4_5 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/1002
+* Added files environment 4_5 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/1005
+* Editor add files bugfix 4_5 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/1006
+* Ggplot ggsave bugfix 4_5 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/1008
+* fixes forced rounding in Simulation Configurator node (target 4.5) by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/1009
+* Tidyverse plotter fix 4.5 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/1011
+* Fix for broken Sorting and Editor Nullpointer Issue by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/1012
+* prevent integer sliders to have decimals by default by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/1016
+* store plot images of submodels of combined models in flow-variable by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/1021
+* manual merge of Python_preferences and knime_4_5 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/1023
+* fix https://github.com/RakipInitiative/ModelRepository/issues/400 by @ahmadswaid in https://github.com/SiLeBAT/FSK-Lab/pull/1025
+* Improved added files environment 4 5 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/1026
+* fix for isReferenceDescription target 4.5 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/1033
+* fix for Column Filter and Model Type by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/1034
+* fix nullpointer exception for modelCategory by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/1040
+* Runner Offline Support by @ahmadswaid in https://github.com/SiLeBAT/FSK-Lab/pull/1041
+* fixing https://github.com/RakipInitiative/ModelRepository/issues/409 by @ahmadswaid in https://github.com/SiLeBAT/FSK-Lab/pull/1044
+* fixing bug of Deleting Joiner Connection issue 410 by @ahmadswaid in https://github.com/SiLeBAT/FSK-Lab/pull/1047
+* fix issue in saving downloaded files from remote with a valid file name by @ahmadswaid in https://github.com/SiLeBAT/FSK-Lab/pull/929
+* Force terminate unused controllers by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/928
+* GitHub action by @miguelalba in https://github.com/SiLeBAT/FSK-Lab/pull/924
+* clean generated resources on reset by @ahmadswaid in https://github.com/SiLeBAT/FSK-Lab/pull/930
+* check if validation errors exists before manipulating by @ahmadswaid in https://github.com/SiLeBAT/FSK-Lab/pull/931
+* fixed bug, where on empty search result table would still show models by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/934
+* Stream json parameters by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/933
+* deploy to gitlab on push development by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/935
+* added page loader animation when dbview is fetching data by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/937
+* editor always creates a minimum viable model for basic FSK nodes by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/938
+* cancel bulk simulation loading.only fetch it on model selection by @ahmadswaid in https://github.com/SiLeBAT/FSK-Lab/pull/939
+* changed the github build.yml to only deploy on development by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/941
+* fix scope -> BMI type according to YAML type by @ahmadswaid in https://github.com/SiLeBAT/FSK-Lab/pull/944
+* Editor bug changing model class to generic or DoseResponseModel by @ahmadswaid in https://github.com/SiLeBAT/FSK-Lab/pull/943
+* Readme in detailsview in fskdb view by @ahmadswaid in https://github.com/SiLeBAT/FSK-Lab/pull/946
+* release patch 16.08.2021 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/947
+* delete nodeSettings simulation on reset by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/948
+* fixed error when loading Runner "missing or surplus view" by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/949
+* fixed bug in writer regarding model names starting with number by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/950
+* Convert Metadata To Generic before join by @ahmadswaid in https://github.com/SiLeBAT/FSK-Lab/pull/951
+* fixed editor issues with saving and some conversion issues by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/952
+* improved the sorting of executionTime and uploadDate by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/953
+* fixed format for dates in DBView Details view by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/954
+* made the horizontal scrollbar visible to modal tables by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/955
+* updated the URL's in the readme by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/956
+* workaround for column sorter by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/958
+* fix bug where edited output parameters are applied to simulation by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/959
+* fixed bug RakipInitiative/ModelRepository#367 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/960
+* add modelType and ReadMe to FSK2Metadata by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/963
+* RakipInitiative/ModelRepository#372 endpoint update for db by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/962
+* added workaround to resource files having uppercase extensions by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/964
+* updated DBView default endpoint to /landingpage/DB/ by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/965
+* Dev44 merge943 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/966
+* Dev44 merge944 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/967
+* merge #946 attempt 3 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/972
+* Dev44 merge948 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/973
+* Dev44 merge949 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/974
+* Dev44 merge950 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/975
+* Dev44 merge951 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/976
+* Dev44 merge952 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/977
+* Dev44 merge953 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/978
+* Dev44 merge954 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/980
+* Dev44 merge955 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/981
+* Dev44 merge956 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/982
+* Dev44 merge958 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/983
+* Dev44 merge959 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/984
+* Dev44 merge960 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/985
+* Dev44 merge962 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/986
+* Dev44 merge963 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/987
+* Dev44 merge964 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/988
+* Dev44 merge965 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/989
+* R Markdown (Rmd) and HTML Files are now supported in Reader/Writer by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/991
+* editor allows to add files to an existing environment by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/993
+* fixed some bugs regarding adding files to Editor by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/994
+* Ggplot ggsave bugfix by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/996
+* R markdown support 4_5 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/1002
+* Added files environment 4_5 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/1005
+* Editor add files bugfix 4_5 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/1006
+* Ggplot ggsave bugfix 4_5 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/1008
+* fixes forced rounding in Simulation Configurator node (target 4.5) by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/1009
+* Tidyverse plotter fix 4.5 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/1011
+* Fix for broken Sorting and Editor Nullpointer Issue by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/1012
+* prevent integer sliders to have decimals by default by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/1016
+* store plot images of submodels of combined models in flow-variable by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/1021
+* manual merge of Python_preferences and knime_4_5 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/1023
+* fix https://github.com/RakipInitiative/ModelRepository/issues/400 by @ahmadswaid in https://github.com/SiLeBAT/FSK-Lab/pull/1025
+* Improved added files environment 4 5 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/1026
+* fix for isReferenceDescription target 4.5 by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/1033
+* fix for Column Filter and Model Type by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/1034
+* fix nullpointer exception for modelCategory by @schuelet in https://github.com/SiLeBAT/FSK-Lab/pull/1040
+* Runner Offline Support by @ahmadswaid in https://github.com/SiLeBAT/FSK-Lab/pull/1041
+* fixing https://github.com/RakipInitiative/ModelRepository/issues/409 by @ahmadswaid in https://github.com/SiLeBAT/FSK-Lab/pull/1044
+* fixing bug of Deleting Joiner Connection issue 410 by @ahmadswaid in https://github.com/SiLeBAT/FSK-Lab/pull/1047
+
 ## [2.0.0] - 2021-4-27
 
 ### Changed
