@@ -1,6 +1,7 @@
 package metadata;
 
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Sheet;
 
 import de.bund.bfr.knime.fsklab.nodes.Variable;
@@ -39,68 +40,68 @@ public class LegacyMetadataImporter {
 		final FskMetaData template = new FskMetaData();
 
 		final Cell modelNameCell = sheet.getRow(NAME).getCell(5);
-		if (modelNameCell.getCellType() == Cell.CELL_TYPE_STRING) {
+		if (modelNameCell.getCellType() == CellType.STRING) {
 			template.modelName = modelNameCell.getStringCellValue();
 		}
 
 		final Cell modelIdCell = sheet.getRow(ID).getCell(5);
-		if (modelIdCell.getCellType() == Cell.CELL_TYPE_STRING) {
+		if (modelIdCell.getCellType() == CellType.STRING) {
 			template.modelId = modelIdCell.getStringCellValue();
 		}
 
 		// model link
 
 		final Cell organismCell = sheet.getRow(ORGANISM).getCell(5);
-		if (organismCell.getCellType() == Cell.CELL_TYPE_STRING) {
+		if (organismCell.getCellType() == CellType.STRING) {
 			template.organism = organismCell.getStringCellValue();
 		}
 
 		final Cell organismDetailCell = sheet.getRow(ORGANISM_DETAIL).getCell(5);
-		if (organismDetailCell.getCellType() == Cell.CELL_TYPE_STRING) {
+		if (organismDetailCell.getCellType() == CellType.STRING) {
 			template.organismDetails = organismDetailCell.getStringCellValue();
 		}
 
 		final Cell matrixCell = sheet.getRow(MATRIX).getCell(5);
-		if (matrixCell.getCellType() == Cell.CELL_TYPE_STRING) {
+		if (matrixCell.getCellType() == CellType.STRING) {
 			template.matrix = matrixCell.getStringCellValue();
 		}
 
 		final Cell matrixDetailCell = sheet.getRow(MATRIX_DETAIL).getCell(5);
-		if (matrixDetailCell.getCellType() == Cell.CELL_TYPE_STRING) {
+		if (matrixDetailCell.getCellType() == CellType.STRING) {
 			template.matrixDetails = matrixDetailCell.getStringCellValue();
 		}
 
 		final Cell creatorCell = sheet.getRow(CREATOR).getCell(5);
-		if (creatorCell.getCellType() == Cell.CELL_TYPE_STRING) {
+		if (creatorCell.getCellType() == CellType.STRING) {
 			template.creator = creatorCell.getStringCellValue();
 		}
 
 		// There is no family name, contact or software in the spreadsheet.
 
 		final Cell referenceDescriptionCell = sheet.getRow(REFERENCE_DESCRIPTION).getCell(5);
-		if (referenceDescriptionCell.getCellType() == Cell.CELL_TYPE_STRING) {
+		if (referenceDescriptionCell.getCellType() == CellType.STRING) {
 			template.referenceDescription = referenceDescriptionCell.getStringCellValue();
 		}
 
 		// reference description link
 
 		final Cell creationDateCell = sheet.getRow(CREATED_DATE).getCell(5);
-		if (creationDateCell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+		if (creationDateCell.getCellType() == CellType.NUMERIC) {
 			template.createdDate = creationDateCell.getDateCellValue();
 		}
 
 		final Cell modificationCell = sheet.getRow(MODIFIED_DATE).getCell(5);
-		if (modificationCell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+		if (modificationCell.getCellType() == CellType.NUMERIC) {
 			template.modifiedDate = modificationCell.getDateCellValue();
 		}
 
 		final Cell rightsCell = sheet.getRow(RIGHTS).getCell(5);
-		if (rightsCell.getCellType() == Cell.CELL_TYPE_STRING) {
+		if (rightsCell.getCellType() == CellType.STRING) {
 			template.rights = rightsCell.getStringCellValue();
 		}
 
 		final Cell notesCell = sheet.getRow(NOTES).getCell(5);
-		if (notesCell.getCellType() == Cell.CELL_TYPE_STRING) {
+		if (notesCell.getCellType() == CellType.STRING) {
 			template.notes = notesCell.getStringCellValue();
 		}
 
@@ -108,7 +109,7 @@ public class LegacyMetadataImporter {
 
 		try {
 			final Cell typeCell = sheet.getRow(TYPE).getCell(5);
-			if (typeCell.getCellType() == Cell.CELL_TYPE_STRING) {
+			if (typeCell.getCellType() == CellType.STRING) {
 				template.type = ModelType.valueOf(typeCell.getStringCellValue());
 			}
 		} catch (final IllegalArgumentException e) {
@@ -116,7 +117,7 @@ public class LegacyMetadataImporter {
 
 		try {
 			final Cell subjectCell = sheet.getRow(SUBJECT).getCell(5);
-			if (subjectCell.getCellType() == Cell.CELL_TYPE_STRING) {
+			if (subjectCell.getCellType() == CellType.STRING) {
 				template.subject = ModelClass.valueOf(subjectCell.getStringCellValue());
 			}
 		} catch (final IllegalArgumentException e) {
@@ -127,51 +128,51 @@ public class LegacyMetadataImporter {
 
 		// dependent variable
 		final Cell depVarNameCell = sheet.getRow(DEPVAR).getCell(5);
-		if (depVarNameCell.getCellType() == Cell.CELL_TYPE_STRING) {
+		if (depVarNameCell.getCellType() == CellType.STRING) {
 			template.dependentVariable.name = depVarNameCell.getStringCellValue();
 		}
 
 		final Cell depVarUnitCell = sheet.getRow(DEPVAR_UNIT).getCell(5);
-		if (depVarUnitCell.getCellType() == Cell.CELL_TYPE_STRING) {
+		if (depVarUnitCell.getCellType() == CellType.STRING) {
 			template.dependentVariable.unit = depVarUnitCell.getStringCellValue();
 		}
 
 		final Cell depVarMinCell = sheet.getRow(DEPVAR_MIN).getCell(5);
-		if (depVarMinCell.getCellType() == Cell.CELL_TYPE_STRING) {
+		if (depVarMinCell.getCellType() == CellType.STRING) {
 			template.dependentVariable.min = depVarMinCell.getStringCellValue();
-		} else if (depVarMinCell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+		} else if (depVarMinCell.getCellType() == CellType.NUMERIC) {
 			template.dependentVariable.min = Double.toString(depVarMinCell.getNumericCellValue());
 		}
 
 		final Cell depVarMaxCell = sheet.getRow(DEPVAR_MAX).getCell(5);
-		if (depVarMaxCell.getCellType() == Cell.CELL_TYPE_STRING) {
+		if (depVarMaxCell.getCellType() == CellType.STRING) {
 			template.dependentVariable.max = depVarMaxCell.getStringCellValue();
-		} else if (depVarMaxCell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+		} else if (depVarMaxCell.getCellType() == CellType.NUMERIC) {
 			template.dependentVariable.max = Double.toString(depVarMaxCell.getNumericCellValue());
 		}
 
 		// independent variables *
 		String[] indepVars = null;
 		final Cell indepVarCell = sheet.getRow(INDEPVAR).getCell(5);
-		if (indepVarCell.getCellType() == Cell.CELL_TYPE_STRING) {
+		if (indepVarCell.getCellType() == CellType.STRING) {
 			indepVars = indepVarCell.getStringCellValue().split("\\|\\|");
 		}
 
 		String[] indepVarUnits = null;
 		final Cell indepVarUnitCell = sheet.getRow(INDEPVAR_UNIT).getCell(5);
-		if (indepVarUnitCell.getCellType() == Cell.CELL_TYPE_STRING) {
+		if (indepVarUnitCell.getCellType() == CellType.STRING) {
 			indepVarUnits = indepVarUnitCell.getStringCellValue().split("\\|\\|");
 		}
 
 		String[] mins = null;
 		final Cell indepVarMinCell = sheet.getRow(INDEPVAR_MIN).getCell(5);
-		if (indepVarMinCell.getCellType() == Cell.CELL_TYPE_STRING) {
+		if (indepVarMinCell.getCellType() == CellType.STRING) {
 			mins = indepVarMinCell.getStringCellValue().split("\\|\\|");
 		}
 
 		String[] maxs = null;
 		final Cell indepVarMaxCell = sheet.getRow(INDEPVAR_MAX).getCell(5);
-		if (indepVarMaxCell.getCellType() == Cell.CELL_TYPE_STRING) {
+		if (indepVarMaxCell.getCellType() == CellType.STRING) {
 			maxs = indepVarMaxCell.getStringCellValue().split("\\|\\|");
 		}
 

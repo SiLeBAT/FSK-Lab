@@ -38,7 +38,7 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations;bundle-version="2
 Bundle-Vendor: German Federal Institute for Risk Assessment (BfR)
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: de.bund.bfr.knime.fsklab.FskPlugin
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ClassPath: .,
  libs/freemarker-2.3.23.jar,
  libs/bfr-swing-1.0-SNAPSHOT.jar,
@@ -85,4 +85,5 @@ Export-Package: de.bund.bfr.knime.fsklab;
  de.bund.bfr.knime.fsklab.nodes.environment,
  de.bund.bfr.knime.fsklab.v2_0,
  de.bund.bfr.knime.fsklab.v2_0.runner
-Import-Package: org.w3c.dom.events;resolution:=optional
+Import-Package: org.w3c.dom.events
+

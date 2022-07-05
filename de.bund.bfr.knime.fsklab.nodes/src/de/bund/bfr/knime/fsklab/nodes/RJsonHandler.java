@@ -62,8 +62,8 @@ public class RJsonHandler extends JsonHandler {
           Boolean isDataFrame = scriptHandler.runScript("class(" + p.getId() + ")", exec, true)[0]
               .contains("data.frame");
           String parameterDataType = isDataFrame ? "DataFrame" : p.getDataType().getValue();
-  
-          scriptHandler.runScript("write_json(" + p.getId() + ",'" + temp.getAbsolutePath().replaceAll("\\\\", "/") + "',digits=NA, auto_unbox=TRUE)", exec, false);
+          namedVectorToList();
+          scriptHandler.runScript("write_json( fsk_vec_to_list(" + p.getId() + "),'" + temp.getAbsolutePath().replaceAll("\\\\", "/") + "',digits=NA, auto_unbox=TRUE)", exec, false);
           String[] check = scriptHandler.runScript("print('ok')", exec, true);
           //String data = (results != null) ? results[0] : "";
           String results = new String ( Files.readAllBytes( Paths.get(temp.getAbsolutePath()) ) );
@@ -85,6 +85,18 @@ public class RJsonHandler extends JsonHandler {
     }
   }
 
+  // Edge Case Handling: Named Vectors in R are not supported by jsonlite, so they need to be transformed into a list
+  private void namedVectorToList() throws RException ,CanceledExecutionException , InterruptedException,
+   REXPMismatchException , IOException {
+    scriptHandler.runScript("fsk_vec_to_list <- function(vec) {\n"
+        + "  if(is.vector(vec) & !is.list(vec)){\n"
+        + "    if (is.null(names(vec))) return(vec);\n"
+        + "    return (split(unname(vec), names(vec)))  \n"
+        + "  }\n"
+        + "  return(vec)\n"
+        + "}", exec, false);
+  }
+  
   @Override
   public void saveOutputParameters(FskPortObject fskObj, Path workingDirectory)
       throws VariableNotGlobalException, IOException {
@@ -98,15 +110,15 @@ public class RJsonHandler extends JsonHandler {
         File temp = FileUtil.createTempFile("temp_parameters", ".json");
         try {
 
-          script.append("toJSON(" + p.getId() + ", auto_unbox=TRUE)\n");
+          //script.append("toJSON(" + p.getId() + ", auto_unbox=TRUE)\n");
 
           // we need to differentiate between list and dataframe:
           Boolean isDataFrame;
           isDataFrame = scriptHandler.runScript("class(" + p.getId() + ")", exec, true)[0]
               .contains("data.frame");
-
+          namedVectorToList();
           String parameterDataType = isDataFrame ? "DataFrame" : p.getDataType().getValue();
-          scriptHandler.runScript("write_json(" + p.getId() + ",'" + temp.getAbsolutePath().replaceAll("\\\\", "/") + "',digits=NA, auto_unbox=TRUE)", exec, false);
+          scriptHandler.runScript("write_json( fsk_vec_to_list(" + p.getId() + "),'" + temp.getAbsolutePath().replaceAll("\\\\", "/") + "',digits=NA, auto_unbox=TRUE)", exec, false);
           String[] check = scriptHandler.runScript("print('ok')", exec, true);
           String results = new String ( Files.readAllBytes( Paths.get(temp.getAbsolutePath()) ) );
           String data = (results != null) ? results : "";
@@ -166,7 +178,7 @@ public class RJsonHandler extends JsonHandler {
 
     String rawJsonData = "";
     String type = param.getParameterType();
-    if (param.getData().length() > 1000) {
+    if (param.getData().length() > 1000 || type.equalsIgnoreCase("string") ) {
       // store data in temp file because moving big arrays between controller and Java
       // doesn't seem to work properly
 
@@ -233,7 +245,7 @@ public class RJsonHandler extends JsonHandler {
 
   @Override
   protected void addPathToFileParameter(String parameter, String path) throws Exception {
-    scriptHandler.runScript(parameter + " <- paste('" + path + "' , " + parameter + ")", exec,
+    scriptHandler.runScript(parameter + " <- paste('" + path + "' , " + parameter + ",sep='' )", exec,
         false);
 
   }

@@ -68,6 +68,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.fskml.RScript;
 import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
+import de.bund.bfr.knime.fsklab.nodes.environment.AddedFilesEnvironmentManager;
 import de.bund.bfr.knime.fsklab.nodes.environment.EnvironmentManager;
 import de.bund.bfr.knime.fsklab.nodes.environment.ExistingEnvironmentManager;
 import de.bund.bfr.knime.fsklab.v2_0.CombinedFskPortObject;
@@ -79,6 +80,7 @@ import de.bund.bfr.metadata.swagger.DoseResponseModel;
 import de.bund.bfr.metadata.swagger.GenericModel;
 import de.bund.bfr.metadata.swagger.Model;
 import de.bund.bfr.metadata.swagger.Parameter;
+import de.bund.bfr.metadata.swagger.Parameter.ClassificationEnum;
 import de.bund.bfr.metadata.swagger.Reference;
 import de.bund.bfr.rakip.vocabularies.data.AccreditationProcedureRepository;
 import de.bund.bfr.rakip.vocabularies.data.AvailabilityRepository;
@@ -282,7 +284,7 @@ final class FSKEditorJSNodeModel
       Model metadata = MAPPER.readValue(metadataString, modelClass);
       List<Reference> references = NodeUtils.getReferenceList(modelType, metadata);
       references.forEach(reference -> {
-        if(reference.getDate() != null)
+        if(reference.getDate() != null && !reference.getDate().trim().equals("-"))
           reference.setDate(reference.getDate().split("[-,]")[0]);
       });
       return MAPPER.writeValueAsString(metadata);
@@ -331,7 +333,7 @@ final class FSKEditorJSNodeModel
     String visualizationScript = "";
 
     Optional<EnvironmentManager> environmentManager;   
-    if (m_config.getEnvironmentManager() != null) {
+    if (m_config.getEnvironmentManager() != null && m_config.getEnvironmentManager().getEnvironment().isPresent()) {
       environmentManager = Optional.of(m_config.getEnvironmentManager());
     } else if (inObjects[0] != null) {
       environmentManager = ((FskPortObject) inObjects[0]).getEnvironmentManager();
@@ -550,11 +552,21 @@ final class FSKEditorJSNodeModel
 //        }
 //      }
 //    }
+    
+    // Add new files (if there are any) to Model 
+    
+    Optional<EnvironmentManager> manager = environmentManager;
+//    if(m_config.getAddedFiles() != null && m_config.getAddedFiles().length > 0) {
+//      if(environmentManager.isPresent())
+//        manager = Optional.of(new AddedFilesEnvironmentManager(environmentManager.get(), m_config.getAddedFiles()));
+//      else
+//        manager = Optional.of(new AddedFilesEnvironmentManager(m_config.getAddedFiles()));
+//    }
     FskPortObject outputPort;
     if(inObjects[0] instanceof CombinedFskPortObject) {
       outputPort = (FskPortObject) inObjects[0];
     } else {
-      outputPort = new FskPortObject(environmentManager, readme, packages);
+      outputPort = new FskPortObject(manager , readme, packages);
       outputPort.setModel(modelScript);
       outputPort.setViz(visualizationScript);
     }
@@ -587,6 +599,7 @@ final class FSKEditorJSNodeModel
     List<Parameter> paramsToBeRemoved =
         (List<Parameter>) CollectionUtils.removeAll(originalParameters, newParams);
     List<Parameter> viewParams =  (List<Parameter>) CollectionUtils.removeAll(newParams, originalParameters);
+    viewParams.removeIf(p -> p.getClassification().equals(ClassificationEnum.OUTPUT));
     List<String> editedParamsIDs = new ArrayList<String>();
     List<String> originalParamsIDs = originalParameters.stream().map(para -> para.getId()).collect(Collectors.toList());
     if(originalParamsIDs.isEmpty())
@@ -613,7 +626,7 @@ final class FSKEditorJSNodeModel
          });
        }else {
          newParams.forEach(viewParam -> {
-           simParams.put(viewParam.getId(),viewParam.getValue());
+           simParams.put(viewParam.getId(),viewParam.getValue());  
          });
        }
     });

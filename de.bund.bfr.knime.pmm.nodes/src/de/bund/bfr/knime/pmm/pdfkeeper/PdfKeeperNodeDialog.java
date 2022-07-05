@@ -44,7 +44,7 @@ import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
 
-import com.sun.org.apache.xml.internal.security.utils.Base64;
+import java.util.Base64;
 
 /**
  * <code>NodeDialog</code> for the "PdfKeeper" Node.
@@ -81,7 +81,7 @@ public class PdfKeeperNodeDialog extends NodeDialogPane {
 			    	fileBytes = null;
 			    	Path path = Paths.get(f.getAbsolutePath());
 					try {
-						fileBytes = Base64.encode(Files.readAllBytes(path));
+						fileBytes = Base64.getEncoder().encodeToString(Files.readAllBytes(path));
 					} catch (IOException e1) {
 						e1.printStackTrace();
 					}			
@@ -126,7 +126,7 @@ public class PdfKeeperNodeDialog extends NodeDialogPane {
 									}
 									pathname = tmpFolder + fileName;
 									out = new FileOutputStream(pathname);
-									out.write(Base64.decode(fileBytes));
+									out.write(Base64.getDecoder().decode(fileBytes));
 								} finally {
 									if (out != null) {
 										out.close();

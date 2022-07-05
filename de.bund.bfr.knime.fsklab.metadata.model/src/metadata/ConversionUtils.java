@@ -213,7 +213,9 @@ public class ConversionUtils {
 
 				if (originalPropType.equals(targetPropType)) {
 					if (originalPropType.equals("string") || originalPropType.equals("number")) {
-						if(!field.getValue().toString().equals("\"\""))
+						if(!field.getValue().toString().equals("\"\"") && !field.getValue().toString().equals("\"-\""))
+							node.set(key, field.getValue());
+					} else if (originalPropType.equals("boolean") ) {
 							node.set(key, field.getValue());
 					} else if (originalPropType.equals("array")) {
 						ArrayNode convertedProperty = MAPPER.createArrayNode();

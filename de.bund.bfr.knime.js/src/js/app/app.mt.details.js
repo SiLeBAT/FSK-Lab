@@ -630,17 +630,17 @@ class APPMTDetails {
             let modelScript;
             let visScript;
 			if(!modelMetadata.modelscript && modelMetadata.modelscript!=""){
-               modelScript = await _fetchData._content( window._endpoints.modelscriptEndpoint, modelId );// O._app._getImage( modelMetadata.generalInformation.identifier );
+               modelScript = await _fetchData._content( window._endpoints.modelscriptEndpoint, modelMetadata.generalInformation.identifier );// O._app._getImage( modelMetadata.generalInformation.identifier );
             }else{
                modelScript = modelMetadata.modelscript;
             }
             if(!modelMetadata.visualization && modelMetadata.visualization!=""){
-               visScript = await _fetchData._content( window._endpoints.visualizationscriptEndpoint, modelId );// O._app._getImage( modelMetadata.generalInformation.identifier );
+               visScript = await _fetchData._content( window._endpoints.visualizationscriptEndpoint, modelMetadata.generalInformation.identifier );// O._app._getImage( modelMetadata.generalInformation.identifier );
             }else{
                visScript = modelMetadata.visualization;
             }
             if(!modelMetadata.readme){
-               readme = await _fetchData._content( window._endpoints.readmeEndpoint, modelId );// O._app._getImage( modelMetadata.generalInformation.identifier );
+               readme = await _fetchData._content( window._endpoints.readmeEndpoint, modelMetadata.generalInformation.identifier );// O._app._getImage( modelMetadata.generalInformation.identifier );
             }else{
                readme = modelMetadata.readme;
             }

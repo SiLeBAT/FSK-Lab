@@ -43,6 +43,7 @@ class APPSimulation {
 		// global
 		O._metadata = O.opts.data;
 		O._state = 'params'; // default state: params form
+		O._savedState = 'clean'
 
 		O._$simInputs = []; // inputs from params and customs
 		O._simFields = {};
@@ -334,7 +335,7 @@ class APPSimulation {
 						let step = 1;
 						// calc decimals for slider steps depending on min-max values
 						if ( param.dataType.toLowerCase() === 'double' ) {
-							let decimals = Math.max( param.minValue.substring( param.minValue.indexOf( '.' ) + 1 ).length, param.maxValue.substring( param.maxValue.indexOf( '.' ) + 1 ).length );
+							let decimals = param.value.substring(param.value.indexOf('.') + 1).length;
 							for ( let j = 0; j < decimals; j++ ) {
 								step = step / 10;
 							}
@@ -768,6 +769,8 @@ class APPSimulation {
 
 		// update sim select to index for add-action : -1
 		O._updateSimIndex( -1 );
+		O._setSavedState( 'dirty' );
+
 	}
 
 
@@ -802,6 +805,10 @@ class APPSimulation {
 	async _saveSimulation () {
 		let O = this;
 		_log( 'PANEL SIM / _saveSimulation', 'secondary' );
+
+		if(O._$simNameInput.val() == ""){
+			O._$simNameInput.val("simulationname" + O._getRandomInt(100));
+		}
 		// run validation
 		let validation = await O._validateSimForm();
 
@@ -833,7 +840,7 @@ class APPSimulation {
 				O._updateSimIndex( O._simulations.length - 1 );
 			}
 		}
-
+		O._setSavedState( 'clean' );
 		// TO DO 
 		// save to endpoint ?
 	}
@@ -1134,5 +1141,13 @@ class APPSimulation {
 			// set sim modal state
 			O._state = state;
 		}
+	}
+	_setSavedState ( state ) {
+		// set sim modal state
+		this._savedState = state;
+	}
+	
+	_getRandomInt(max) {
+	  return Math.floor(Math.random() * max);
 	}
 }
