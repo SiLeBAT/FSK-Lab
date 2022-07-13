@@ -175,16 +175,13 @@ public class JoinerNodeUtil {
       if (firstObject instanceof CombinedFskPortObject
           && !unModifiedParamsNames.containsKey(firstModelName)) {
         addIdentifierToParametersForCombinedObject(firstObject,
-            suffix + JoinerNodeModel.SUFFIX_FIRST, suffixInsertionIndex, unModifiedParamsNames,
+            suffix + JoinerNodeModel.SUFFIX_FIRST, ++suffixInsertionIndex, unModifiedParamsNames,
             old_new_pramsMap);
       } else {
-        if(firstObject instanceof CombinedFskPortObject)
-          ++suffixInsertionIndex;
         
         addIdentifierToParametersAndStoreInMap(firstObject, suffix + JoinerNodeModel.SUFFIX_FIRST,
             suffixInsertionIndex, unModifiedParamsNames, old_new_pramsMap);
-        if(firstObject instanceof CombinedFskPortObject)
-          --suffixInsertionIndex;
+        
       }
 
       if (secondObject instanceof CombinedFskPortObject
@@ -211,25 +208,14 @@ public class JoinerNodeUtil {
       String suffix, int suffixInsertionIndex,
       final Map<String, List<String>> unModifiedParamsNames,
       Map<String, Map<String, String>> old_new_pramsMap) {
+	  
+	  Map<String, String> tempMap = new HashMap<>();
     addIdentifierToParameters(SwaggerUtil.getParameter(portObject.modelMetadata), suffix,
-        suffixInsertionIndex);
+        suffixInsertionIndex, tempMap);
     
 
     String modelName = SwaggerUtil.getModelName(portObject.modelMetadata);
-    List<String> originalParameterNames = unModifiedParamsNames.get(modelName);
-    Map<String, String> tempMap = new HashMap<>();
-    SwaggerUtil.getParameter(portObject.modelMetadata).stream().forEach(param -> {
-      String key = param.getId();
-      for (String paramName : originalParameterNames) {
-        int paramStringLength = paramName.length();
-        String paramNewID = paramName.substring(0, paramStringLength - suffixInsertionIndex)
-            + suffix
-            + paramName.substring(paramStringLength - suffixInsertionIndex, paramName.length());
-        if (key.equals(paramNewID)) {
-          tempMap.put(key, paramName);
-        }
-      }
-    });
+    
     old_new_pramsMap.put(modelName, tempMap);
     
     if (portObject instanceof CombinedFskPortObject && old_new_pramsMap != null
@@ -284,15 +270,14 @@ public class JoinerNodeUtil {
    * 
    * @param modelParameters List of parameters from the model to be joined.
    * @param currentSuffix the suffix to be add to the parameter ID.
+   * @param paramsMap holds suffixed parameters name with the original name.
    */
   public static void addIdentifierToParameters(List<Parameter> modelParameters,
-      String currentSuffix, int suffixInsertionIndex) {
+      String currentSuffix, int suffixInsertionIndex, Map<String, String> paramsMap) {
     if (modelParameters != null)
       modelParameters.forEach(it -> {
-        int paramStringLength = it.getId().length();
-        String paramNewID = it.getId().substring(0, paramStringLength - suffixInsertionIndex)
-            + currentSuffix
-            + it.getId().substring(paramStringLength - suffixInsertionIndex, it.getId().length());
+        String paramNewID = it.getId()+ currentSuffix;
+        paramsMap.put(paramNewID, it.getId());
         it.setId(paramNewID);
       });
   }
