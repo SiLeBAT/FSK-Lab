@@ -19,6 +19,7 @@ package de.bund.bfr.knime.fsklab.preferences;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -48,12 +49,15 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.knime.python2.Activator;
@@ -68,6 +72,7 @@ import org.knime.python2.config.CondaEnvironmentsConfig;
 import org.knime.python2.config.PythonConfigStorage;
 import org.knime.python2.prefs.PreferenceStorage;
 import org.knime.python2.prefs.PreferenceWrappingConfigStorage;
+import org.knime.python2.prefs.PythonPreferences;
 
 import de.bund.bfr.knime.fsklab.preferences.RBinUtil.InvalidRHomeException;
 
@@ -94,8 +99,7 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 	private Label messageRManual;
 	private Label messagepython2path;
 	private Label messagepython3path;
-	CondaFieldEditor pythonCondaFieldEditor;
-	CondaFieldEditor rCondaFieldEditor;
+	String condaPath;
 	/**
 	 * properties to access the KNIME Python settings.
 	 */
@@ -107,12 +111,12 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 	public PreferencePage() {
 		super(GRID);
 		setPreferenceStore(Plugin.getDefault().getPreferenceStore());
-
+		condaPath = PythonPreferences.getCondaInstallationPath();
 	}
 
 	@Override
 	protected void createFieldEditors() {
-
+		
 		Composite parent = getFieldEditorParent();
 		Label rTitle = new Label(parent, SWT.HORIZONTAL);
 		rTitle.setText("R Setting:");
@@ -121,7 +125,7 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 		rgridDataSeperator.horizontalSpan = 2;
 		rgridDataSeperator.horizontalAlignment = SWT.FILL;
 		rseparator.setLayoutData(rgridDataSeperator);
-		Group rRadioGroup = new Group(parent, SWT.NONE);
+		Group rRadioGroup = new Group(parent, SWT.HORIZONTAL);
 		rRadioGroup.setLayout(new RowLayout(SWT.HORIZONTAL));
 
 		Button rConda = new Button(rRadioGroup, SWT.RADIO);
@@ -164,48 +168,57 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 			}
 		});
 
-		Label rspacer = new Label(parent, SWT.HORIZONTAL);
+		
+		Label rspacer = new Label(parent, SWT.VERTICAL);
 		rspacer.setText("");
-
-		compositeRConda = new Composite(parent, SWT.MULTI);
-		GridData gridDataRConda = new GridData();
-		gridDataRConda.horizontalSpan = 3;
+		Label rspacer2 = new Label(parent, SWT.VERTICAL);
+		rspacer2.setText("");
+		compositeRConda = new Composite(parent, SWT.VERTICAL);
+		GridLayout gridLayout = new GridLayout();
+		gridLayout.numColumns = 3;
+		compositeRConda.setLayout(gridLayout);
 		if (!PreferenceInitializer.isRConda()) {
 			rManual.setSelection(true);
-			gridDataRConda.exclude = true;
 			compositeRConda.setVisible(false);
 		} else
 			rConda.setSelection(true);
-		compositeRConda.setLayoutData(gridDataRConda);
 		messageRConda = new Label(compositeRConda, SWT.WRAP);
-
-		messageRConda.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, true, 3, 1));
-
-		rCondaFieldEditor = new CondaFieldEditor(PreferenceInitializer.CONDA_PATH_CFG,
-				"Path to Conda installation directory", compositeRConda, this, false, messageRConda);
-		addField(rCondaFieldEditor);
-
+		GridData gridDataR2Normal = new GridData();
+		gridDataR2Normal.horizontalSpan = 3;
+		gridDataR2Normal.horizontalAlignment = SWT.FILL;
+		
+		messageRConda.setLayoutData(gridDataR2Normal);
+		messageRConda.setText("Path to Conda: \n"+ condaPath); 
+		
 		Label envRLabel = new Label(compositeRConda, SWT.LEFT);
-		envRLabel.setText("Select an R Environment:");
+		envRLabel.setText("Select a R Environment:");
 
 		rEnvs = new ComboViewer(compositeRConda, SWT.READ_ONLY);
 
-		rEnvs.addSelectionChangedListener(new ISelectionChangedListener() {
-
-			@Override
-			public void selectionChanged(SelectionChangedEvent paramSelectionChangedEvent) {
-				((StructuredSelection) paramSelectionChangedEvent.getSelection()).getFirstElement();
-				var selectedElement = ((StructuredSelection) paramSelectionChangedEvent.getSelection())
-						.getFirstElement().toString();
-
-				String rEnvHome = envsMaps.get(selectedElement);
-				Plugin.getDefault().getPreferenceStore().putValue(PreferenceInitializer.R_ENV_CFG,
-						envsMaps.get(selectedElement));
-				rEnvs.getCombo().setText(selectedElement);
-				testRHome(PreferenceInitializer.createExecutableString(rEnvHome), messageRConda);
+		
+		Button checkREnv = new Button(compositeRConda, SWT.BUTTON1);
+		checkREnv.setText("Check R Environment");
+		checkREnv.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event e) {
+				switch (e.type) {
+				case SWT.Selection:
+					Display.getDefault().asyncExec(new Runnable() {
+						public void run() {
+							StructuredSelection sel = (StructuredSelection) rEnvs.getSelection();
+							String selectedRElement = (String) sel.getFirstElement();
+							String rEnvHome = envsMaps.get(selectedRElement);
+							Plugin.getDefault().getPreferenceStore().putValue(PreferenceInitializer.R_ENV_CFG,
+									envsMaps.get(selectedRElement));
+							rEnvs.getCombo().setText(selectedRElement);
+							testRHome(PreferenceInitializer.createExecutableString(rEnvHome), messageRConda);
+						}
+					});
+					break;
+				}
 			}
 		});
-
+		fillCondaEnvsforR(condaPath, messageRConda, compositeRConda);
+		
 		compositeRNormal = new Composite(parent, SWT.MULTI);
 
 		GridData gridDataRNormal = new GridData();
@@ -282,69 +295,79 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 				}
 			}
 		});
+		
 		Label spacer = new Label(parent, SWT.HORIZONTAL);
 		spacer.setText("");
+		Label spacer2 = new Label(parent, SWT.HORIZONTAL);
+		spacer2.setText("");
 
 		compositePythonConda = new Composite(parent, SWT.MULTI);
-		GridData gridDataPythonConda = new GridData();
-		gridDataPythonConda.horizontalSpan = 3;
+		GridLayout gridLayout2 = new GridLayout();
+		gridLayout2.numColumns = 3;
+		compositePythonConda.setLayout(gridLayout2);
 		if (!PreferenceInitializer.isPythonConda()) {
-			gridDataPythonConda.exclude = true;
 			compositePythonConda.setVisible(false);
 			pythonManual.setSelection(true);
-		} else
+		} else 
 			pythonConda.setSelection(true);
-
-		compositePythonConda.setLayoutData(gridDataPythonConda);
+		
 		Label messagePythonConda = new Label(compositePythonConda, SWT.WRAP);
 		messagePythonConda.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, true, 3, 1));
-		pythonCondaFieldEditor = new CondaFieldEditor(PreferenceInitializer.CONDA_PATH_CFG,
-				"Path to Conda installation directory", compositePythonConda, this, true, messagePythonConda);
-		addField(pythonCondaFieldEditor);
+		messagePythonConda.setText("Path to Conda: "+condaPath);
+		fillCondaEnvsforPython(condaPath, messageRConda, compositePythonConda);
+		//pythonCondaFieldEditor = new CondaFieldEditor(PreferenceInitializer.CONDA_PATH_CFG,
+		//		"Path to Conda installation directory", compositePythonConda, this, true, messagePythonConda);
+		//addField(pythonCondaFieldEditor);
 
 		messagePython2 = new Label(compositePythonConda, SWT.WRAP);
 
 		messagePython2.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, true, 3, 1));
 
 		Label env2Label = new Label(compositePythonConda, SWT.NONE);
-		env2Label.setText("Select an Python 2 Environment:");
+		env2Label.setText("Select a Python 2 Environment:");
 		python2Envs = new ComboViewer(compositePythonConda, SWT.READ_ONLY);
 
-		python2Envs.addSelectionChangedListener(new ISelectionChangedListener() {
-
-			@Override
-			public void selectionChanged(SelectionChangedEvent paramSelectionChangedEvent) {
-				Display.getDefault().asyncExec(new Runnable() {
-					public void run() {
-						((StructuredSelection) paramSelectionChangedEvent.getSelection()).getFirstElement();
-						var selectedElement = ((StructuredSelection) paramSelectionChangedEvent.getSelection())
-								.getFirstElement().toString();
-
-						String pythonEnvHome = envsMaps.get(selectedElement);
-						PythonKernelTestResult result;
-						result = PythonKernelTester.testPython2Installation(
-								new CondaPythonCommand(PythonVersion.fromId("python2"),
-										pythonCondaFieldEditor.condaHome, pythonEnvHome),
-								Collections.emptyList(), true);
-
-						Color red = new Color(python3Envs.getControl().getParent().getDisplay(), 255, 0, 0);
-						Color black = new Color(python3Envs.getControl().getParent().getDisplay(), 0, 0, 0);
-						if (result.hasError()) {
-
-							messagePython2.setText(result.getErrorLog());
-							messagePython2.setForeground(red);
-
-						} else {
-							messagePython2.setText(result.getVersion() + " is installed");
+		
+		Button checkPython2Env = new Button(compositePythonConda, SWT.BUTTON1);
+		checkPython2Env.setText("Check Python 2 Environment");
+		checkPython2Env.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event e) {
+				switch (e.type) {
+				case SWT.Selection:
+					Display.getDefault().asyncExec(new Runnable() {
+						public void run() {
+							Color black = new Color(python3Envs.getControl().getParent().getDisplay(), 0, 0, 0);
+							messagePython2.setText("Checking...");
 							messagePython2.setForeground(black);
+							StructuredSelection sel = (StructuredSelection) python2Envs.getSelection();
+							String selectedPython2Element = (String) sel.getFirstElement();
+							if (StringUtils.isEmpty(selectedPython2Element))
+								return;
+							String pythonEnvHome = envsMaps.get(selectedPython2Element);
+							PythonKernelTestResult result;
+							result = PythonKernelTester.testPython2Installation(
+									new CondaPythonCommand(PythonVersion.fromId("python2"), condaPath, pythonEnvHome),
+									Collections.emptyList(), true);
 
+							Color red = new Color(python3Envs.getControl().getParent().getDisplay(), 255, 0, 0);
+							if (result.hasError()) {
+
+								messagePython2.setText(result.getErrorLog());
+								messagePython2.setForeground(red);
+
+							} else {
+								messagePython2.setText(result.getVersion() + " is installed");
+								messagePython2.setForeground(black);
+
+							}
+
+							Plugin.getDefault().getPreferenceStore().putValue(PreferenceInitializer.PYTHON2_ENV_CFG,
+									envsMaps.get(selectedPython2Element));
+							python2Envs.getCombo().setText(selectedPython2Element);
 						}
-
-						Plugin.getDefault().getPreferenceStore().putValue(PreferenceInitializer.PYTHON2_ENV_CFG,
-								envsMaps.get(selectedElement));
-						python2Envs.getCombo().setText(selectedElement);
-					}
-				});
+					});
+					break;
+				}
 			}
 		});
 
@@ -371,45 +394,53 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 
 		messagePython3.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, true, 3, 1));
 		Label env3Label = new Label(compositePythonConda, SWT.NONE);
-		env3Label.setText("Select an Python 3 Environment:");
+		env3Label.setText("Select a Python 3 Environment:");
 		python3Envs = new ComboViewer(compositePythonConda, SWT.READ_ONLY);
 
-		python3Envs.addSelectionChangedListener(new ISelectionChangedListener() {
-
-			@Override
-			public void selectionChanged(SelectionChangedEvent paramSelectionChangedEvent) {
-				Display.getDefault().asyncExec(new Runnable() {
-					public void run() {
-						((StructuredSelection) paramSelectionChangedEvent.getSelection()).getFirstElement();
-						var selectedElement = ((StructuredSelection) paramSelectionChangedEvent.getSelection())
-								.getFirstElement().toString();
-						String pythonEnvHome = envsMaps.get(selectedElement);
-						PythonKernelTestResult result;
-						result = PythonKernelTester.testPython3Installation(
-								new CondaPythonCommand(PythonVersion.fromId("python3"),
-										pythonCondaFieldEditor.condaHome, pythonEnvHome),
-								Collections.emptyList(), true);
-
-						Color red = new Color(python3Envs.getControl().getParent().getDisplay(), 255, 0, 0);
-						Color black = new Color(python3Envs.getControl().getParent().getDisplay(), 0, 0, 0);
-						if (result.hasError()) {
-
-							messagePython3.setText(result.getErrorLog());
-							messagePython3.setForeground(red);
-
-						} else {
-							messagePython3.setText(result.getVersion() + " is installed");
+		
+		Button checkPython3Env = new Button(compositePythonConda, SWT.BUTTON1);
+		checkPython3Env.setText("Check Python 3 Environment");
+		checkPython3Env.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event e) {
+				switch (e.type) {
+				case SWT.Selection:
+					Display.getDefault().asyncExec(new Runnable() {
+						public void run() {
+							Color black = new Color(python3Envs.getControl().getParent().getDisplay(), 0, 0, 0);
+							messagePython3.setText("Checking...");
 							messagePython3.setForeground(black);
+							StructuredSelection sel = (StructuredSelection) python3Envs.getSelection();
+							String selectedPython3Element = (String) sel.getFirstElement();
+							if (StringUtils.isEmpty(selectedPython3Element))
+								return;
+							String pythonEnvHome = envsMaps.get(selectedPython3Element);
+							PythonKernelTestResult result;
+							result = PythonKernelTester.testPython3Installation(
+									new CondaPythonCommand(PythonVersion.fromId("python3"),
+											condaPath, pythonEnvHome),
+									Collections.emptyList(), true);
 
+							Color red = new Color(python3Envs.getControl().getParent().getDisplay(), 255, 0, 0);
+							
+							if (result.hasError()) {
+
+								messagePython3.setText(result.getErrorLog());
+								messagePython3.setForeground(red);
+
+							} else {
+								messagePython3.setText(result.getVersion() + " is installed");
+								messagePython3.setForeground(black);
+
+							}
+							Plugin.getDefault().getPreferenceStore().putValue(PreferenceInitializer.PYTHON3_ENV_CFG,
+									envsMaps.get(selectedPython3Element));
+							python3Envs.getCombo().setText(selectedPython3Element);
 						}
-						Plugin.getDefault().getPreferenceStore().putValue(PreferenceInitializer.PYTHON3_ENV_CFG,
-								envsMaps.get(selectedElement));
-						python3Envs.getCombo().setText(selectedElement);
-					}
-				});
+					});
+					break;
+				}
 			}
 		});
-
 		messagepython3path = new Label(compositeNormal, SWT.WRAP);
 
 		messagepython3path.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, true, 3, 1));
@@ -422,12 +453,157 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 		String condaHome = getCondaInstallationPath();
 		if (StringUtils.isEmpty(storedCondaHome)) {
 			Plugin.getDefault().getPreferenceStore().putValue(PreferenceInitializer.CONDA_PATH_CFG, condaHome);
-			pythonCondaFieldEditor.setStringValue(condaHome);
 		}
 
 		compositeNormal.layout(true, true);
 		compositeNormal.getParent().pack();
 
+	}
+
+	private void fillCondaEnvsforR(String condaHome, Label messageConda, Composite parent) {
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {
+				List<CondaEnvironmentIdentifier> list = new ArrayList<>();
+				try {
+					Conda conda = new Conda(condaHome);
+					list = conda.getEnvironments();
+
+				} catch (final Exception ex) {
+					// messageConda.setText(ex.getMessage());
+					messageConda.setForeground(new Color(messageConda.getParent().getDisplay(), 0, 0, 0));
+				}
+				if (envsMaps == null || envsMaps.isEmpty()) {
+					envsMaps = (Map<String, String>) list.stream().collect(
+							java.util.stream.Collectors.toMap(item -> item.getName(), item -> item.getDirectoryPath()));
+				}
+				rEnvs.setContentProvider(new IStructuredContentProvider() {
+
+					@Override
+					public void inputChanged(Viewer paramViewer, Object paramObject1, Object paramObject2) {
+					}
+
+					@Override
+					public void dispose() {
+					}
+
+					@Override
+					public Object[] getElements(Object paramObject) {
+
+						return ((HashMap) paramObject).keySet().toArray();
+					}
+				});
+				rEnvs.setLabelProvider(new LabelProvider() {
+
+					@Override
+					public String getText(Object element) {
+						return element.toString();
+					}
+
+				});
+				rEnvs.setInput(envsMaps);
+				String value = PreferenceInitializer.getREnv();
+				if (!StringUtils.isEmpty(value))
+					rEnvs.getCombo().setText(getKey(envsMaps, value));
+				PreferencePage.this.adjustGridLayout();
+				parent.requestLayout();
+
+			}
+		});
+	}
+
+	private void fillCondaEnvsforPython(String condaHome, Label messageConda, Composite parent) {
+		if (StringUtils.isEmpty(condaHome))
+			return;
+
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {
+				List<CondaEnvironmentIdentifier> list = new ArrayList<>();
+				try {
+					Conda conda = new Conda(condaHome);
+					list = conda.getEnvironments();
+
+				} catch (final Exception ex) {
+					// messageConda.setText(ex.getMessage());
+					messageConda.setForeground(new Color(messageConda.getParent().getDisplay(), 0, 0, 0));
+				}
+
+				if (envsMaps == null || envsMaps.isEmpty()) {
+					envsMaps = (Map<String, String>) list.stream().collect(
+							java.util.stream.Collectors.toMap(item -> item.getName(), item -> item.getDirectoryPath()));
+				}
+				python3Envs.setContentProvider(new IStructuredContentProvider() {
+
+					@Override
+					public void inputChanged(Viewer paramViewer, Object paramObject1, Object paramObject2) {
+					}
+
+					@Override
+					public void dispose() {
+					}
+
+					@Override
+					public Object[] getElements(Object paramObject) {
+
+						return ((HashMap) paramObject).keySet().toArray();
+					}
+				});
+				python3Envs.setLabelProvider(new LabelProvider() {
+
+					@Override
+					public String getText(Object element) {
+						return element.toString();
+					}
+
+				});
+				python3Envs.setInput(envsMaps);
+
+				python2Envs.setContentProvider(new IStructuredContentProvider() {
+
+					@Override
+					public void inputChanged(Viewer paramViewer, Object paramObject1, Object paramObject2) {
+					}
+
+					@Override
+					public void dispose() {
+					}
+
+					@Override
+					public Object[] getElements(Object paramObject) {
+
+						return ((HashMap) paramObject).keySet().toArray();
+					}
+				});
+				python2Envs.setLabelProvider(new LabelProvider() {
+
+					@Override
+					public String getText(Object element) {
+						return element.toString();
+					}
+
+				});
+				python2Envs.setInput(envsMaps);
+				String value = PreferenceInitializer.getPython2Env();
+				if (!StringUtils.isEmpty(value))
+					python2Envs.getCombo().setText(getKey(envsMaps, value));
+				else {
+					String python2CondaEnvironmentDirectory = getPython2CondaEnvironmentDirectoryPath();
+					if (!python2CondaEnvironmentDirectory.equals("no_conda_environment_selected")) {
+						python2Envs.getCombo().setText(getKey(envsMaps, python2CondaEnvironmentDirectory));
+					}
+				}
+
+				String value2 = PreferenceInitializer.getPython3Env();
+				if (!StringUtils.isEmpty(value2))
+					python3Envs.getCombo().setText(getKey(envsMaps, value2));
+				else {
+					String python3CondaEnvironmentDirectory = getPython3CondaEnvironmentDirectoryPath();
+					if (!python3CondaEnvironmentDirectory.equals("no_conda_environment_selected"))
+						python3Envs.getCombo().setText(getKey(envsMaps, python3CondaEnvironmentDirectory));
+				}
+				PreferencePage.this.adjustGridLayout();
+				parent.requestLayout();
+			}
+		});
 	}
 
 	class PythonSelectionListener implements SelectionListener {
@@ -463,18 +639,7 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 		}
 
 	}
-
-	@Override
-	public void init(final IWorkbench workbench) {
-		// nothing to do
-	}
-
-	/**
-	 * Modified DirectoryFieldEditor with an appropriate doCheckState() overridden
-	 * and verification on key stroke.
-	 * 
-	 * @author Jonathan Hale
-	 */
+ 
 	private class RHomeDirectoryFieldEditor extends DirectoryFieldEditor {
 
 		public RHomeDirectoryFieldEditor(final String name, final String labelText, final Composite parent) {
@@ -487,8 +652,7 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 		@Override
 		protected boolean doCheckState() {
 			final String rHome = getStringValue();
-			Plugin.getDefault().getPreferenceStore().putValue(PreferenceInitializer.R3_PATH_CFG,
-					rHome);
+			Plugin.getDefault().getPreferenceStore().putValue(PreferenceInitializer.R3_PATH_CFG, rHome);
 			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {
 					testRHome(rHome, messageRManual);
@@ -496,6 +660,11 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 			});
 			return true;
 		}
+	}
+
+	@Override
+	public void init(final IWorkbench workbench) {
+		// nothing to do
 	}
 
 	private boolean testRHome(String rHome, Label label) {
@@ -633,157 +802,6 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 		}
 	}
 
-	private class CondaFieldEditor extends DirectoryFieldEditor {
-		PreferencePage page;
-		Composite parent;
-		String condaHome;
-		boolean pythonConda;
-		Label messageConda;
-
-		public CondaFieldEditor(final String name, final String labelText, final Composite parent, PreferencePage page,
-				boolean pythonConda, Label messageConda) {
-			init(name, labelText);
-			setChangeButtonText(JFaceResources.getString("openBrowse"));
-			createControl(parent);
-			this.page = page;
-			this.parent = parent;
-			this.pythonConda = pythonConda;
-			this.messageConda = messageConda;
-		}
-
-		@Override
-		protected boolean doCheckState() {
-
-			messageConda.setText("");
-			condaHome = getStringValue();
-			if (StringUtils.isEmpty(condaHome))
-				return true;
-
-			Display.getDefault().asyncExec(new Runnable() {
-				public void run() {
-
-					try {
-						Conda conda = new Conda(condaHome);
-						List<CondaEnvironmentIdentifier> list = conda.getEnvironments();
-						if (envsMaps == null || envsMaps.isEmpty()) {
-							envsMaps = (Map<String, String>) list.stream().collect(java.util.stream.Collectors
-									.toMap(item -> item.getName(), item -> item.getDirectoryPath()));
-						}
-
-						if (pythonConda) {
-							python3Envs.setContentProvider(new IStructuredContentProvider() {
-
-								@Override
-								public void inputChanged(Viewer paramViewer, Object paramObject1, Object paramObject2) {
-								}
-
-								@Override
-								public void dispose() {
-								}
-
-								@Override
-								public Object[] getElements(Object paramObject) {
-
-									return ((HashMap) paramObject).keySet().toArray();
-								}
-							});
-							python3Envs.setLabelProvider(new LabelProvider() {
-
-								@Override
-								public String getText(Object element) {
-									return element.toString();
-								}
-
-							});
-							python3Envs.setInput(envsMaps);
-
-							python2Envs.setContentProvider(new IStructuredContentProvider() {
-
-								@Override
-								public void inputChanged(Viewer paramViewer, Object paramObject1, Object paramObject2) {
-								}
-
-								@Override
-								public void dispose() {
-								}
-
-								@Override
-								public Object[] getElements(Object paramObject) {
-
-									return ((HashMap) paramObject).keySet().toArray();
-								}
-							});
-							python2Envs.setLabelProvider(new LabelProvider() {
-
-								@Override
-								public String getText(Object element) {
-									return element.toString();
-								}
-
-							});
-							python2Envs.setInput(envsMaps);
-							String value = PreferenceInitializer.getPython2Env();
-							if (!StringUtils.isEmpty(value))
-								python2Envs.getCombo().setText(getKey(envsMaps, value));
-							else {
-								String python2CondaEnvironmentDirectory = getPython2CondaEnvironmentDirectoryPath();
-								if (!python2CondaEnvironmentDirectory.equals("no_conda_environment_selected")) {
-									python2Envs.getCombo().setText(getKey(envsMaps, python2CondaEnvironmentDirectory));
-								}
-							}
-
-							String value2 = PreferenceInitializer.getPython3Env();
-							if (!StringUtils.isEmpty(value2))
-								python3Envs.getCombo().setText(getKey(envsMaps, value2));
-							else {
-								String python3CondaEnvironmentDirectory = getPython3CondaEnvironmentDirectoryPath();
-								if (!python3CondaEnvironmentDirectory.equals("no_conda_environment_selected"))
-									python3Envs.getCombo().setText(getKey(envsMaps, python3CondaEnvironmentDirectory));
-							}
-						} else {
-							rEnvs.setContentProvider(new IStructuredContentProvider() {
-
-								@Override
-								public void inputChanged(Viewer paramViewer, Object paramObject1, Object paramObject2) {
-								}
-
-								@Override
-								public void dispose() {
-								}
-
-								@Override
-								public Object[] getElements(Object paramObject) {
-
-									return ((HashMap) paramObject).keySet().toArray();
-								}
-							});
-							rEnvs.setLabelProvider(new LabelProvider() {
-
-								@Override
-								public String getText(Object element) {
-									return element.toString();
-								}
-
-							});
-							rEnvs.setInput(envsMaps);
-							String value = PreferenceInitializer.getREnv();
-							if (!StringUtils.isEmpty(value))
-								rEnvs.getCombo().setText(getKey(envsMaps, value));
-
-						}
-						page.adjustGridLayout();
-						parent.requestLayout();
-					} catch (final Exception ex) {
-						messageConda.setText(ex.getMessage());
-						messageConda.setForeground(new Color(messageConda.getParent().getDisplay(), 255, 0, 0));
-					}
-				}
-			});
-
-			return true;
-		}
-
-	}
 
 	public <K, V> K getKey(Map<K, V> map, V value) {
 		for (Entry<K, V> entry : map.entrySet()) {
