@@ -38,6 +38,7 @@ import de.bund.bfr.knime.fsklab.v2_0.CombinedFskPortObject;
 import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
 import de.bund.bfr.knime.fsklab.v2_0.FskSimulation;
 import de.bund.bfr.knime.fsklab.v2_0.JoinRelation;
+import de.bund.bfr.knime.fsklab.v2_0.joiner.JoinerNodeModel;
 import de.bund.bfr.metadata.swagger.ConsumptionModel;
 import de.bund.bfr.metadata.swagger.DataModel;
 import de.bund.bfr.metadata.swagger.DoseResponseModel;
@@ -66,6 +67,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -230,7 +232,7 @@ class WriterNodeModel extends NoInternalsModel {
   }
   
   public static void writeFSKObject(FskPortObject fskObj, CombineArchive archive, String filePrefix,
-      Map<String, URI> URIS, ScriptHandler scriptHandler) throws Exception {
+      Map<String, URI> URIS, ScriptHandler scriptHandler, String suffix, HashMap<String,String> parents) throws Exception {
 
     
     addVersion(archive);
@@ -283,7 +285,7 @@ class WriterNodeModel extends NoInternalsModel {
     }
     // Add simulations
     {
-      SEDMLDocument sedmlDoc = createSedml(fskObj, scriptHandler);
+      SEDMLDocument sedmlDoc = createSedml(fskObj, scriptHandler, suffix,parents);
 
       File tempFile = FileUtil.createTempFile("sim", "");
       sedmlDoc.writeDocument(tempFile);
@@ -311,7 +313,7 @@ class WriterNodeModel extends NoInternalsModel {
   }
 
   private static void writeCombinedObject(CombinedFskPortObject fskObj, CombineArchive archive,
-      Map<String, URI> URIS, String filePrefix, ScriptHandler scriptHandler) throws Exception {
+      Map<String, URI> URIS, String filePrefix, ScriptHandler scriptHandler, String suffix, HashMap<String,String> parents) throws Exception {
     filePrefix = filePrefix + normalizeName(fskObj) + System.getProperty("file.separator");
     
     FskPortObject ffskObj = fskObj.getFirstFskPortObject();
@@ -320,11 +322,11 @@ class WriterNodeModel extends NoInternalsModel {
 
       if (ffskObj instanceof CombinedFskPortObject) {
         writeCombinedObject((CombinedFskPortObject) ffskObj, archive, URIS, filePrefix,
-            singleScriptHandler);
+            singleScriptHandler, JoinerNodeModel.SUFFIX_FIRST, parents);
       } else {
         writeFSKObject(ffskObj, archive,
             filePrefix + normalizeName(ffskObj) + System.getProperty("file.separator"), URIS,
-            singleScriptHandler);
+            singleScriptHandler, JoinerNodeModel.SUFFIX_FIRST, parents);
       }
     } catch (Exception e) {
       throw new Exception(e.getLocalizedMessage(), e);
@@ -336,11 +338,11 @@ class WriterNodeModel extends NoInternalsModel {
 
       if (sfskObj instanceof CombinedFskPortObject) {
         writeCombinedObject((CombinedFskPortObject) sfskObj, archive, URIS, filePrefix,
-            singleScriptHandler);
+            singleScriptHandler, JoinerNodeModel.SUFFIX_SECOND, parents);
       } else {
         writeFSKObject(sfskObj, archive,
             filePrefix + normalizeName(sfskObj) + System.getProperty("file.separator"), URIS,
-            singleScriptHandler);
+            singleScriptHandler, JoinerNodeModel.SUFFIX_SECOND, parents);
       }
     } catch (Exception e) {
       throw new Exception(e.getLocalizedMessage(), e);
@@ -355,7 +357,7 @@ class WriterNodeModel extends NoInternalsModel {
     addMetaData(archive, fskObj.modelMetadata, filePrefix + "metaData.json");
     // Add combined simulations
     {
-      SEDMLDocument sedmlDoc = createSedml(fskObj, scriptHandler);
+      SEDMLDocument sedmlDoc = createSedml(fskObj, scriptHandler, suffix,parents);
 
       File tempFile = FileUtil.createTempFile("sim", "");
       sedmlDoc.writeDocument(tempFile);
@@ -437,18 +439,20 @@ class WriterNodeModel extends NoInternalsModel {
     
     return new PortObject[] {};
   }
-
   private static void writeArchive(File archiveFile, FskPortObject portObject,
       ExecutionContext exec, ScriptHandler scriptHandler) throws Exception {
 
     Map<String, URI> URIS = FSKML.getURIS(1, 0, 12);
 
     try (final CombineArchive archive = new CombineArchive(archiveFile)) {
+      String suffix = "";
+      HashMap<String, String> parents = new HashMap<String, String>();
 
+      //Entry<String,String> e = new Entry();
       if (portObject instanceof CombinedFskPortObject) {
-        writeCombinedObject((CombinedFskPortObject) portObject, archive, URIS, "", scriptHandler);
+        writeCombinedObject((CombinedFskPortObject) portObject, archive, URIS, "", scriptHandler, suffix, parents);
       } else {
-        writeFSKObject(portObject, archive, "", URIS, scriptHandler);
+        writeFSKObject(portObject, archive, "", URIS, scriptHandler, suffix,parents);
       }
 
       // Add SBML document
@@ -744,8 +748,9 @@ class WriterNodeModel extends NoInternalsModel {
   }
 
 
+  
 
-  private static SEDMLDocument createSedml(FskPortObject portObj, ScriptHandler scriptHandler) {
+  private static SEDMLDocument createSedml(FskPortObject portObj, ScriptHandler scriptHandler, String suffix, HashMap<String,String> parents) {
 
     SEDMLDocument doc = Libsedml.createDocument();
     SedML sedml = doc.getSedMLModel();
@@ -792,12 +797,26 @@ class WriterNodeModel extends NoInternalsModel {
       // Add changes to model
       for (Map.Entry<String, String> entry : fskSimulation.getParameters().entrySet()) {
 
-        String parameterName = entry.getKey();
+        String parameterName = entry.getKey(); // TODO: instead of the id, we need a path to target parameter of submodel
+        
+        System.out.println("Modelname: " + SwaggerUtil.getModelName(portObj.modelMetadata) + " , suffix: " + suffix + " ID: " + parameterName );
+        
+       
         String parameterValue = entry.getValue().toString();
-
-        ChangeAttribute change =
-            new ChangeAttribute(new XPathTarget(parameterName), parameterValue);
-        model.addChange(change);
+        if(portObj instanceof CombinedFskPortObject) {
+          List chain = new ArrayList<String>();
+          String originalParameterName = getOriginalParameterName(portObj,parameterName,"",chain);
+          String successorModelName = getSuccessorModelName( (CombinedFskPortObject)portObj, parameterName, suffix);
+          ChangeAttribute change =
+              new ChangeAttribute(new XPathTarget(successorModelName+"/"+originalParameterName), parameterValue);
+          model.addChange(change);  
+        } else {
+          
+          ChangeAttribute change =
+              new ChangeAttribute(new XPathTarget(parameterName), parameterValue);
+          model.addChange(change);
+        }
+          
       }
     }
 
@@ -814,6 +833,63 @@ class WriterNodeModel extends NoInternalsModel {
     return doc;
   }
 
+  private static String getSuccessorModelName2(CombinedFskPortObject fskObj, String parameterName) {
+    
+    
+    //List<String> params = SwaggerUtil.getParameter(fskObj.getFirstFskPortObject().modelMetadata).stream()
+    //    .map(param -> param.getId()).collect(Collectors.toList());
+    for (FskSimulation fskSimulation : fskObj.getFirstFskPortObject().simulations) {
+      for (Map.Entry<String, String> entry : fskSimulation.getParameters().entrySet()) {
+        String pName = entry.getKey() + JoinerNodeModel.SUFFIX_FIRST;
+        if((pName).equals(parameterName)){
+          return  SwaggerUtil.getModelName(fskObj.getFirstFskPortObject().modelMetadata);
+        } 
+      }
+      break;
+    }
+    
+    return  SwaggerUtil.getModelName(fskObj.getSecondFskPortObject().modelMetadata);
+  }
+  
+private static String getSuccessorModelName(CombinedFskPortObject fskObj, String parameterName, String suffix) {
+    
+    if(suffix.equals(JoinerNodeModel.SUFFIX_FIRST)) {
+      return SwaggerUtil.getModelName(fskObj.getFirstFskPortObject().modelMetadata);
+    }
+    return  SwaggerUtil.getModelName(fskObj.getSecondFskPortObject().modelMetadata);
+    
+
+  }
+  private static String getOriginalParameterName(FskPortObject fskObj, String parameterName, String suffix, List<String> chain) {
+    
+    if(fskObj instanceof CombinedFskPortObject) {
+      String oName = getOriginalParameterName(((CombinedFskPortObject) fskObj).getFirstFskPortObject(),
+          parameterName,
+          suffix + JoinerNodeModel.SUFFIX_FIRST,
+          chain);
+      if(oName.equals("")) {
+        chain.add(SwaggerUtil.getModelName(((CombinedFskPortObject) fskObj).getSecondFskPortObject().modelMetadata));
+        oName = getOriginalParameterName(((CombinedFskPortObject) fskObj).getSecondFskPortObject(),
+            parameterName,
+            suffix + JoinerNodeModel.SUFFIX_SECOND,
+            chain);
+      } else {
+        chain.add(SwaggerUtil.getModelName(((CombinedFskPortObject) fskObj).modelMetadata));
+      }
+     
+      return oName;
+    } else {
+      List<String> params = SwaggerUtil.getParameter(fskObj.modelMetadata).stream()
+          .map(param -> param.getId()).collect(Collectors.toList());
+      for (String p : params) {
+        if((p + suffix).equals(parameterName)){
+          return  p;
+        } 
+      }
+      return  "";  
+    }
+    
+  }
   private static void addVersion(CombineArchive archive) {
 
     DefaultJDOMFactory factory = new DefaultJDOMFactory();
