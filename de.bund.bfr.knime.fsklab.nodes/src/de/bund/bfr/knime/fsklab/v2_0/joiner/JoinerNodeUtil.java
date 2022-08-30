@@ -95,7 +95,7 @@ public class JoinerNodeUtil {
         String topParam = null ;
         if(index.get() < topLevelJoinedModelParams.size() )
          topParam = topLevelJoinedModelParams.get(index.get()).getId();
-        if(!StringUtils.isEmpty(topParam) && topParam.startsWith(param.getId())) {
+        if(!StringUtils.isEmpty(topParam) && removeTrailingNumbers(topParam).equals(removeTrailingNumbers(param.getId()))) {
           originalNamesMap.put(topParam, new Object[]{param,portObject,param.getId()});
           listOfParameterWithSuffixs.add(topParam);
           index.getAndIncrement();
@@ -161,6 +161,16 @@ public class JoinerNodeUtil {
       }
     });
     return trailingNums;
+  }
+  
+  private static String removeTrailingNumbers(String parameter) {
+    final  Pattern lastIntPattern = Pattern.compile("[^0-9]+([0-9]+)$");
+    Matcher matcher = lastIntPattern.matcher(parameter);
+    String trailingNum="";
+    if (matcher.find()) {
+      trailingNum = matcher.group(1); 
+    }
+    return parameter.substring(0, parameter.lastIndexOf(trailingNum));
   }
   /**
    * A helper method for extracting the root model parameter names.
