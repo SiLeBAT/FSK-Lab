@@ -207,9 +207,6 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 							StructuredSelection sel = (StructuredSelection) rEnvs.getSelection();
 							String selectedRElement = (String) sel.getFirstElement();
 							String rEnvHome = envsMaps.get(selectedRElement);
-							Plugin.getDefault().getPreferenceStore().putValue(PreferenceInitializer.R_ENV_CFG,
-									envsMaps.get(selectedRElement));
-							rEnvs.getCombo().setText(selectedRElement);
 							testRHome(PreferenceInitializer.createExecutableString(rEnvHome), messageRConda);
 						}
 					});
@@ -360,10 +357,6 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 								messagePython2.setForeground(black);
 
 							}
-
-							Plugin.getDefault().getPreferenceStore().putValue(PreferenceInitializer.PYTHON2_ENV_CFG,
-									envsMaps.get(selectedPython2Element));
-							python2Envs.getCombo().setText(selectedPython2Element);
 						}
 					});
 					break;
@@ -463,16 +456,16 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 	private void fillCondaEnvsforR(String condaHome, Label messageConda, Composite parent) {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
-				List<CondaEnvironmentIdentifier> list = new ArrayList<>();
-				try {
-					Conda conda = new Conda(condaHome);
-					list = conda.getEnvironments();
-
-				} catch (final Exception ex) {
-					// messageConda.setText(ex.getMessage());
-					messageConda.setForeground(new Color(messageConda.getParent().getDisplay(), 0, 0, 0));
-				}
 				if (envsMaps == null || envsMaps.isEmpty()) {
+					List<CondaEnvironmentIdentifier> list = new ArrayList<>();
+					try {
+						Conda conda = new Conda(condaHome);
+						list = conda.getEnvironments();
+
+					} catch (final Exception ex) {
+						// messageConda.setText(ex.getMessage());
+						messageConda.setForeground(new Color(messageConda.getParent().getDisplay(), 0, 0, 0));
+					}
 					envsMaps = (Map<String, String>) list.stream().collect(
 							java.util.stream.Collectors.toMap(item -> item.getName(), item -> item.getDirectoryPath()));
 				}
@@ -517,17 +510,16 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
-				List<CondaEnvironmentIdentifier> list = new ArrayList<>();
-				try {
-					Conda conda = new Conda(condaHome);
-					list = conda.getEnvironments();
-
-				} catch (final Exception ex) {
-					// messageConda.setText(ex.getMessage());
-					messageConda.setForeground(new Color(messageConda.getParent().getDisplay(), 0, 0, 0));
-				}
-
 				if (envsMaps == null || envsMaps.isEmpty()) {
+					List<CondaEnvironmentIdentifier> list = new ArrayList<>();
+					try {
+						Conda conda = new Conda(condaHome);
+						list = conda.getEnvironments();
+
+					} catch (final Exception ex) {
+						// messageConda.setText(ex.getMessage());
+						messageConda.setForeground(new Color(messageConda.getParent().getDisplay(), 0, 0, 0));
+					}
 					envsMaps = (Map<String, String>) list.stream().collect(
 							java.util.stream.Collectors.toMap(item -> item.getName(), item -> item.getDirectoryPath()));
 				}
@@ -831,5 +823,26 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 		final CondaEnvironmentsConfig condaEnvironmentsConfig = new CondaEnvironmentsConfig();
 		condaEnvironmentsConfig.loadConfigFrom(CURRENT);
 		return condaEnvironmentsConfig;
+	}
+
+	
+	@Override
+	public boolean performOk() {
+		StructuredSelection python2Sel = (StructuredSelection) python2Envs.getSelection();
+		String selectedPython2Element = (String) python2Sel.getFirstElement();
+		Plugin.getDefault().getPreferenceStore().putValue(PreferenceInitializer.PYTHON2_ENV_CFG,
+				envsMaps.get(selectedPython2Element));
+		
+		StructuredSelection python3Sel = (StructuredSelection) python3Envs.getSelection();
+		String selectedPython3Element = (String) python3Sel.getFirstElement();
+		Plugin.getDefault().getPreferenceStore().putValue(PreferenceInitializer.PYTHON3_ENV_CFG,
+				envsMaps.get(selectedPython3Element));
+		
+		StructuredSelection rSel = (StructuredSelection) rEnvs.getSelection();
+		String selectedRElement = (String) rSel.getFirstElement();
+		Plugin.getDefault().getPreferenceStore().putValue(PreferenceInitializer.R_ENV_CFG,
+				envsMaps.get(selectedRElement));
+		
+		return super.performOk();
 	}
 }
