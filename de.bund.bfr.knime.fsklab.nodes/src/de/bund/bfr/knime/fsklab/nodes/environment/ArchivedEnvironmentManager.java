@@ -68,20 +68,19 @@ public class ArchivedEnvironmentManager implements EnvironmentManager {
     if (Files.notExists(archiveFile))
       return Optional.empty();
 
-    if (entries == null || entries.length == 0)
-      return Optional.empty();
     lock(archiveFile.toFile());
     
     try (CombineArchive archive = new CombineArchive(archiveFile.toFile())) {
-
       Path environment = Files.createTempDirectory("workingDirectory");
-      for (String entryLocation : entries) {
-        ArchiveEntry resourceEntry = archive.getEntry(entryLocation);
+      if (entries != null && entries.length != 0) {
+        for (String entryLocation : entries) {
+          ArchiveEntry resourceEntry = archive.getEntry(entryLocation);
 
-        Path extractedResourcePath = environment.resolve(resourceEntry.getFileName());
-        resourceEntry.extractFile(extractedResourcePath.toFile());
+          Path extractedResourcePath = environment.resolve(resourceEntry.getFileName());
+          resourceEntry.extractFile(extractedResourcePath.toFile());
+        }
       }
-
+        
       return Optional.of(environment);
 
     } catch (IOException | JDOMException | ParseException | CombineArchiveException e) {
