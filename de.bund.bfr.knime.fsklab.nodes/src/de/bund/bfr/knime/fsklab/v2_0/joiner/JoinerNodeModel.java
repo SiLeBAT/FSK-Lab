@@ -896,8 +896,7 @@ public final class JoinerNodeModel extends
             && unModifiedParamsNames.containsKey(firstModelName)) {
           resetParameterIdToOriginal(
               SwaggerUtil.getParameter(fskID_to_fskObject.get(firstModelName).modelMetadata),
-              ++suffixIndex, true);
-          --suffixIndex;
+              suffixIndex, true);
         } else {
           resetParameterIdForObjectsFromJSON(firstObject, suffixIndex);
 
@@ -906,8 +905,7 @@ public final class JoinerNodeModel extends
             && unModifiedParamsNames.containsKey(secondModelName)) {
           resetParameterIdToOriginal(
               SwaggerUtil.getParameter(fskID_to_fskObject.get(secondModelName).modelMetadata),
-              ++suffixIndex, true);
-          --suffixIndex;
+              suffixIndex, true);
         } else {
           resetParameterIdForObjectsFromJSON(secondObject, suffixIndex);
         }
@@ -930,11 +928,8 @@ public final class JoinerNodeModel extends
   private void resetParameterIdToOriginal(List<Parameter> parameters, int suffixIndex,
       boolean replace) {
     for (Parameter p : parameters) {
-      if (replace)
         p.setId(
-            new StringBuilder(p.getId()).deleteCharAt(p.getId().length() - suffixIndex).toString());
-      else
-        p.setId(p.getId().substring(0, p.getId().length() - suffixIndex));
+            new StringBuilder(p.getId()).delete(p.getId().length() - suffixIndex, p.getId().length()).toString());
     }
   }
 
