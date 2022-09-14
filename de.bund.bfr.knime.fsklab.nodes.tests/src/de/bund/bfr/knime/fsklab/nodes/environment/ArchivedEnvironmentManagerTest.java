@@ -39,17 +39,17 @@ public class ArchivedEnvironmentManagerTest {
   }
 
   @Test
-  public void testGetEnvironment_nullEntries_shouldReturnEmptyOptional() {
+  public void testGetEnvironment_nullEntries_shouldNotReturnEmptyOptional() {
     ArchivedEnvironmentManager environmentManager =
         new ArchivedEnvironmentManager("files/model_without_resources.fskx", null);
-    assertFalse(environmentManager.getEnvironment().isPresent());
+    assertTrue(environmentManager.getEnvironment().isPresent());
   }
 
   @Test
-  public void testGetEnvironment_emptyEntries_shouldReturnEmptyOptional() {
+  public void testGetEnvironment_emptyEntries_shouldNotReturnEmptyOptional() {
     ArchivedEnvironmentManager environmentManager =
         new ArchivedEnvironmentManager("files/model_without_resources.fskx", new String[0]);
-    assertFalse(environmentManager.getEnvironment().isPresent());
+    assertTrue(environmentManager.getEnvironment().isPresent());
   }
 
   @Test
