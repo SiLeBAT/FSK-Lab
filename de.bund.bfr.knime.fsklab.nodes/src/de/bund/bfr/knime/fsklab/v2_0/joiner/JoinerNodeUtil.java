@@ -8,6 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -120,6 +121,47 @@ public class JoinerNodeUtil {
     
     return joinRelationList;
   }
+  public static LinkedHashMap<String, Object[]> generateColorMap(FskPortObject portObject,
+      LinkedHashMap<String, Object[]> originalNamesMap, List<Parameter> topLevelJoinedModelParams, 
+       AtomicInteger index, AtomicInteger generatedColorInt) {
+    
+    if (originalNamesMap == null) {
+      originalNamesMap = new LinkedHashMap<String, Object[]>();
+    }
+    if (portObject instanceof CombinedFskPortObject) {
+      
+      generateColorMap(((CombinedFskPortObject) portObject).getFirstFskPortObject(),
+               originalNamesMap, topLevelJoinedModelParams, index, generatedColorInt);
+ 
+      
+      generateColorMap(((CombinedFskPortObject) portObject).getSecondFskPortObject(),
+               originalNamesMap, topLevelJoinedModelParams, index, generatedColorInt);
+    } else {
+      
+      List<Parameter> listOfParameter = SwaggerUtil.getParameter(portObject.modelMetadata);
+      List<String> listOfParameterWithSuffixs = new ArrayList<>();
+      Random r = new Random();
+      int colorInt = generatedColorInt.addAndGet(60) ;
+      if(colorInt>360) {
+        generatedColorInt.set(0);
+        colorInt = 0;
+      }
+      String colour = "hsl(" +colorInt + ", "+(1 + r.nextInt(100))+"%,"+(50 + r.nextInt(20))+"%)";
+      for (Parameter param : listOfParameter) {
+        String topParam = null ;
+        if(index.get() < topLevelJoinedModelParams.size() )
+         topParam = topLevelJoinedModelParams.get(index.get()).getId();
+        if(!StringUtils.isEmpty(topParam) && removeTrailingNumbers(topParam).equals(removeTrailingNumbers(param.getId()))) {
+          originalNamesMap.put(topParam, new Object[]{colour,param.getId()});
+          listOfParameterWithSuffixs.add(topParam);
+          index.getAndIncrement();
+        }
+      }
+      
+    }
+    return originalNamesMap;
+  }
+  
   public static String findSuffix(List<String> listOfParameter) {
     List<String> trailingNums = extractNumber(listOfParameter);
     int longestStringIndex = 0;

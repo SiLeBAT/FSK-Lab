@@ -245,8 +245,13 @@ class APPSimulation {
 				.attr( 'for', 'paramInput_'+ param.id )
 				.appendTo( $formGroup );
 			// set custom label or id
-			param._label ? $label.text( param._label ) : $label.text( param.id );
-
+			if(O.paramsColorMap[param.id]){
+				param._label ? $label.text( param._label ) : $label.text(O.paramsColorMap[param.id][1] );
+				$label.css("background-color",O.paramsColorMap[param.id][0]);
+				//console.log($label.attr('style'));
+			}
+			else
+				param._label ? $label.text( param._label ) : $label.text( param.id );
 			// field
 			let $field = $( '<div class="col-12 col-xs-7 col-md-6 order-3 order-xs-2 sim-param-field"></div>' )
 				.appendTo( $formGroup );
@@ -1005,7 +1010,7 @@ class APPSimulation {
 	 * @param {event} event 
 	 */
 	 
-	async _updateContent(_modelMetadata, _modelId, _simulations) {
+	async _updateContent(_modelMetadata, _modelId, _simulations, paramsColorMap) {
 		let O = this;
 		_log( 'PANEL SIM / _updateContent' );
 		O._setState( 'params' ); // reset state to form params when opening PANEL
@@ -1018,6 +1023,7 @@ class APPSimulation {
 		O._simSelectedIndex = 0; // reset simulation
 		// get simulations
 		O._simulations = _simulations;
+		O.paramsColorMap = paramsColorMap;
 
 		// create params		
 		if ( O._simulations && O._simulations.length > 0 ) {
