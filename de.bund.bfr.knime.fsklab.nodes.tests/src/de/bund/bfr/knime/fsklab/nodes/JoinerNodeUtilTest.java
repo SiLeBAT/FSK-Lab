@@ -80,9 +80,6 @@ public class JoinerNodeUtilTest {
 
     List<Parameter> firstModelParams = Collections.singletonList(new Parameter().id("log10_D"));
     List<Parameter> secondModelParams = Collections.singletonList(new Parameter().id("log10_D"));
-
-    JoinerNodeUtil.addIdentifierToParameters(firstModelParams,JoinerNodeModel.SUFFIX_FIRST, 0, new HashMap<>());
-    JoinerNodeUtil.addIdentifierToParameters(secondModelParams,JoinerNodeModel.SUFFIX_SECOND, 0, new HashMap<>());
     Map<String, String> tempMap1 = new HashMap<>();
     Map<String, String> tempMap2 = new HashMap<>();
     JoinerNodeUtil.addIdentifierToParameters(firstModelParams,JoinerNodeModel.SUFFIX_FIRST, 0, tempMap1);
@@ -100,9 +97,6 @@ public class JoinerNodeUtilTest {
         Arrays.asList(new Parameter().id("log10_D"), new Parameter().id("Temp"));
     List<Parameter> secondModelParams =
         Arrays.asList(new Parameter().id("log10_D"), new Parameter().id("Temp"));
-
-    JoinerNodeUtil.addIdentifierToParameters(firstModelParams,JoinerNodeModel.SUFFIX_FIRST, 0, new HashMap<>());
-    JoinerNodeUtil.addIdentifierToParameters(secondModelParams,JoinerNodeModel.SUFFIX_SECOND, 0, new HashMap<>());
     Map<String, String> tempMap1 = new HashMap<>();
     Map<String, String> tempMap2 = new HashMap<>();
     JoinerNodeUtil.addIdentifierToParameters(firstModelParams,JoinerNodeModel.SUFFIX_FIRST, 0, tempMap1);
