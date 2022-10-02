@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Test;
 
@@ -82,6 +83,10 @@ public class JoinerNodeUtilTest {
 
     JoinerNodeUtil.addIdentifierToParameters(firstModelParams,JoinerNodeModel.SUFFIX_FIRST, 0, new HashMap<>());
     JoinerNodeUtil.addIdentifierToParameters(secondModelParams,JoinerNodeModel.SUFFIX_SECOND, 0, new HashMap<>());
+    Map<String, String> tempMap1 = new HashMap<>();
+    Map<String, String> tempMap2 = new HashMap<>();
+    JoinerNodeUtil.addIdentifierToParameters(firstModelParams,JoinerNodeModel.SUFFIX_FIRST, 0, tempMap1);
+    JoinerNodeUtil.addIdentifierToParameters(secondModelParams,JoinerNodeModel.SUFFIX_SECOND, 0, tempMap2);
     
     assertFalse(firstModelParams.isEmpty());
     assertFalse(secondModelParams.isEmpty());
@@ -98,6 +103,10 @@ public class JoinerNodeUtilTest {
 
     JoinerNodeUtil.addIdentifierToParameters(firstModelParams,JoinerNodeModel.SUFFIX_FIRST, 0, new HashMap<>());
     JoinerNodeUtil.addIdentifierToParameters(secondModelParams,JoinerNodeModel.SUFFIX_SECOND, 0, new HashMap<>());
+    Map<String, String> tempMap1 = new HashMap<>();
+    Map<String, String> tempMap2 = new HashMap<>();
+    JoinerNodeUtil.addIdentifierToParameters(firstModelParams,JoinerNodeModel.SUFFIX_FIRST, 0, tempMap1);
+    JoinerNodeUtil.addIdentifierToParameters(secondModelParams,JoinerNodeModel.SUFFIX_SECOND, 0,tempMap2);
     
     assertEquals(firstModelParams.get(0).getId(), "log10_D" + JoinerNodeModel.SUFFIX_FIRST);
     assertEquals(firstModelParams.get(1).getId(), "Temp" + JoinerNodeModel.SUFFIX_FIRST);
