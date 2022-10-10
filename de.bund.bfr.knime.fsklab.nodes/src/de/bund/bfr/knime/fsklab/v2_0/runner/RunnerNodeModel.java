@@ -192,7 +192,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
       if (fskObj instanceof CombinedFskPortObject) {
         List<Parameter> listOfParameter = SwaggerUtil.getParameter(fskObj.modelMetadata);
         joinRelationList = JoinerNodeUtil.generateJoinerRelationAdvanced(fskObj, null, listOfParameter, getJoinRelations((CombinedFskPortObject)fskObj,
-            new ArrayList<JoinRelation>()), new AtomicInteger(0), null, modelsToSuffixMap);
+            new ArrayList<JoinRelation>()), new AtomicInteger(0), null, modelsToSuffixMap, new ArrayList<JoinRelation>());
         /*joinRelationList = getMapOfSourceParameters(
             fskObj,
             getJoinRelations((CombinedFskPortObject)fskObj, new ArrayList<JoinRelation>()),

@@ -29,6 +29,8 @@ import de.bund.bfr.metadata.swagger.Parameter;
 import metadata.SwaggerUtil;
 
 public class JoinerNodeUtil {
+  private static String[] COLOR_LIST= {"#F0F8FF","#F5F5DC", "#F0FFFF" , "#FFFAF0", "#FFF8DC", "#FFE4C4", "#F0FFF0", "#E6E6FA", "#FFF0F5", "#D3D3D3", "#AFEEEE"};
+  
   /**
    * A helper method for extracting the root model parameter names. the method will iterate
    * recursively over the children models to extract the orginal name of the parameters without
@@ -70,7 +72,7 @@ public class JoinerNodeUtil {
   
   public static List<JoinRelationAdvanced> generateJoinerRelationAdvanced(FskPortObject portObject,
       LinkedHashMap<String, Object[]> originalNamesMap, List<Parameter> topLevelJoinedModelParams, List<JoinRelation> joinRelations,
-       AtomicInteger index, List<JoinRelationAdvanced> joinRelationList, LinkedHashMap<String, String> ModelsToSuffixMap) {
+       AtomicInteger index, List<JoinRelationAdvanced> joinRelationList, LinkedHashMap<String, String> ModelsToSuffixMap, List<JoinRelation> foundRelation) {
     if (joinRelationList == null) {
       joinRelationList = new ArrayList<>();
     }
@@ -83,11 +85,11 @@ public class JoinerNodeUtil {
     if (portObject instanceof CombinedFskPortObject) {
       
           generateJoinerRelationAdvanced(((CombinedFskPortObject) portObject).getFirstFskPortObject(),
-               originalNamesMap, topLevelJoinedModelParams, joinRelations, index, joinRelationList, ModelsToSuffixMap);
+               originalNamesMap, topLevelJoinedModelParams, joinRelations, index, joinRelationList, ModelsToSuffixMap, foundRelation);
  
       
           generateJoinerRelationAdvanced(((CombinedFskPortObject) portObject).getSecondFskPortObject(),
-               originalNamesMap, topLevelJoinedModelParams, joinRelations, index, joinRelationList, ModelsToSuffixMap);
+               originalNamesMap, topLevelJoinedModelParams, joinRelations, index, joinRelationList, ModelsToSuffixMap, foundRelation);
     } else {
       List<Parameter> listOfParameter = SwaggerUtil.getParameter(portObject.modelMetadata);
       List<String> listOfParameterWithSuffixs = new ArrayList<>();
@@ -105,18 +107,44 @@ public class JoinerNodeUtil {
          
         }
       }
-      String commonSuffix = findSuffix(listOfParameterWithSuffixs);
-      for(String missingParam : targets) {
-        String completeParamName = missingParam+commonSuffix;
-        for(JoinRelation relation :joinRelations){
-          if(relation.getTargetParam().equals(completeParamName)) {
-            JoinRelationAdvanced entry = new JoinRelationAdvanced(relation, (FskPortObject)originalNamesMap.get(relation.getSourceParam())[1], "");
-            entry.setSourceParam((String)originalNamesMap.get(relation.getSourceParam())[2]);
-            joinRelationList.add(entry);
+      // listOfParameterWithSuffixs should have at least the output parameters with suffix, if not the else section will be triggered.
+      String commonSuffix;
+      if(listOfParameterWithSuffixs.size() > 0 ) {
+        commonSuffix = findSuffix(listOfParameterWithSuffixs);
+        for(String missingParam : targets) {
+          String completeParamName = missingParam+commonSuffix;
+          for(JoinRelation relation :joinRelations){
+            if(relation.getTargetParam().equals(completeParamName)) {
+              foundRelation.add(relation);
+              JoinRelationAdvanced entry = new JoinRelationAdvanced(relation, (FskPortObject)originalNamesMap.get(relation.getSourceParam())[1], "");
+              entry.setSourceParam((String)originalNamesMap.get(relation.getSourceParam())[2]);
+              joinRelationList.add(entry);
+            }
           }
         }
+      }else {
+        List<JoinRelation> differences = joinRelations.stream()
+            .filter(element -> !foundRelation.contains(element))
+            .collect(Collectors.toList());
+        
+        List<String> remainTargets = differences.stream()
+            .map(element -> element.getTargetParam())
+            .collect(Collectors.toList());
+        commonSuffix = findSuffix(remainTargets);
+        
+        for(String completeParamName : remainTargets) {
+          for(JoinRelation relation :differences){
+            if(relation.getTargetParam().equals(completeParamName)) {
+              JoinRelationAdvanced entry = new JoinRelationAdvanced(relation, (FskPortObject)originalNamesMap.get(relation.getSourceParam())[1], "");
+              entry.setSourceParam((String)originalNamesMap.get(relation.getSourceParam())[2]);
+              joinRelationList.add(entry);
+            }
+          }
+        }
+        
       }
       ModelsToSuffixMap.put(SwaggerUtil.getModelId(portObject.modelMetadata), commonSuffix);
+      
     }
     
     return joinRelationList;
@@ -140,13 +168,19 @@ public class JoinerNodeUtil {
       
       List<Parameter> listOfParameter = SwaggerUtil.getParameter(portObject.modelMetadata);
       List<String> listOfParameterWithSuffixs = new ArrayList<>();
-      Random r = new Random();
-      int colorInt = generatedColorInt.addAndGet(60) ;
-      if(colorInt>360) {
-        generatedColorInt.set(0);
-        colorInt = 0;
+      String colour = "";
+      if(index.get() < COLOR_LIST.length) {
+        colour  = COLOR_LIST[index.get()];
+      }else {
+        Random r = new Random();
+        int colorInt = generatedColorInt.addAndGet(60) ;
+        if(colorInt>360) {
+          generatedColorInt.set(0);
+          colorInt = 0;
+        }
+        colour  = "hsl(" +colorInt + ", "+(1 + r.nextInt(100))+"%,"+(50 + r.nextInt(20))+"%)";
       }
-      String colour = "hsl(" +colorInt + ", "+(1 + r.nextInt(100))+"%,"+(50 + r.nextInt(20))+"%)";
+      
       for (Parameter param : listOfParameter) {
         String topParam = null ;
         if(index.get() < topLevelJoinedModelParams.size() )
