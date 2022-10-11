@@ -79,6 +79,8 @@ class APPModal {
 			if ( $.isFunction( O.opts.on.show ) ) {
 				O.opts.on.show.call( O, O, event );
 			}
+			if(knimeService.isSingleView() == undefined)
+				$("#mtModalDetails").offset({ top: $(event.relatedTarget).offset().top-550 });
 		} );
 
 		// bind hide event
