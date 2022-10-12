@@ -176,7 +176,7 @@ class JSSimulatorNodeModel
       
       List<Parameter> listOfParameter = SwaggerUtil.getParameter(port.modelMetadata);
 
-      value.setParametersMap(JoinerNodeUtil.generateColorMap(port, null, listOfParameter, new AtomicInteger(0), new AtomicInteger(new Random().nextInt(300))));
+      value.setParametersMap(JoinerNodeUtil.generateColorMap(port, null, listOfParameter, new AtomicInteger(0), new AtomicInteger(0)));
       LOGGER.info(
           " saving '" + value.getSelectedSimulationIndex() + "' as the selected simulation index!");
     }

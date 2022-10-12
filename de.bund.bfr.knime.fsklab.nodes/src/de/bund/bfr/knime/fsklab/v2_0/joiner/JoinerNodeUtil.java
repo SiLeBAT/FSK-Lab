@@ -169,16 +169,11 @@ public class JoinerNodeUtil {
       List<Parameter> listOfParameter = SwaggerUtil.getParameter(portObject.modelMetadata);
       List<String> listOfParameterWithSuffixs = new ArrayList<>();
       String colour = "";
-      if(index.get() < COLOR_LIST.length) {
-        colour  = COLOR_LIST[index.get()];
+      if(generatedColorInt.get() < COLOR_LIST.length) {
+        colour  = COLOR_LIST[generatedColorInt.getAndIncrement()];
       }else {
         Random r = new Random();
-        int colorInt = generatedColorInt.addAndGet(60) ;
-        if(colorInt>360) {
-          generatedColorInt.set(0);
-          colorInt = 0;
-        }
-        colour  = "hsl(" +colorInt + ", "+(1 + r.nextInt(100))+"%,"+(50 + r.nextInt(20))+"%)";
+        colour  = "hsl(" + r.nextInt(360) + ", 80%,90%)";
       }
       
       for (Parameter param : listOfParameter) {
