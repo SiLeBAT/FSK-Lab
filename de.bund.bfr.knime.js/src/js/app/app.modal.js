@@ -79,7 +79,8 @@ class APPModal {
 			if ( $.isFunction( O.opts.on.show ) ) {
 				O.opts.on.show.call( O, O, event );
 			}
-			if(knimeService.isSingleView() == undefined){
+			
+			if(window.knimeService.isSingleView() == undefined && !(window.multipleview)) {
 				window.parent.scrollTo(0,0);
 			}
 		} );
