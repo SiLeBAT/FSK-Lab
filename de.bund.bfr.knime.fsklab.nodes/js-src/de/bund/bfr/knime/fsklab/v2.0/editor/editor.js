@@ -80,6 +80,29 @@ fskeditorjs = function () {
     // TODO: remove this test for the vocabularies
     // makeRequest("source");
   }
+
+  function convert(jsosMetadata, schema) {
+		
+	    const result = {};
+	    Object.keys(jsosMetadata || {}).forEach(key => {
+	        if(schema.properties && schema.properties.hasOwnProperty(key) ){
+		        if(schema.properties[key].type !== 'object') {
+		            result[key] = jsosMetadata[key];
+		        }
+		        else if(schema.properties[key].type === 'array') {
+		            result[key] = jsosMetadata[key];
+		        }
+		        else if(schema.properties[key].type === 'object') {
+		            const value = convert(jsosMetadata[key], schema.properties[key]);
+		            if (value !== undefined) {
+		                result[key] = value;
+		            }
+		        }
+		    }
+	    });
+	    return result;
+  }
+  
   function initResourcesTab(){
     if (window.location.protocol != '' && window.location.host != '') {
         // send AJAX request to acquire the JWT for the currently logged in
@@ -296,6 +319,34 @@ fskeditorjs = function () {
       _metadata = _modalDetails._modelHandler.metaData;
       doSave(_metadata)
     });
+    Object.keys(_val.modelsTypeslabel).forEach(function(key) {
+	  if(_val.modelType == _val.modelsTypeslabel[key])
+	  	window['selectInput_Model_class'].val(key);
+	});
+    
+    window['selectInput_Model_class'].trigger('change');
+    
+    setTimeout(function() {
+	    window['selectInput_Model_class'].on('change', function(e){
+			
+		    var modelType = $('#selectInput_Model_class').val();
+		    modelType = modelType == '(Data)' ? 'Data model' : modelType;
+		    
+			let receivedObject = _val.modelMetaData instanceof Object? _val.modelMetaData: JSON.parse(_val.modelMetaData);
+      		let metaData = Array.isArray(receivedObject) ? receivedObject[0] : receivedObject;
+		    
+		    var convertedModel = convert(metaData, _val.modelsMap[modelType]);
+		    
+		    convertedModel.modelType = _val.modelsTypeslabel[modelType];
+		    convertedModel.generalInformation.modelCategory.modelClass = modelType;
+		    
+		    _val.modelMetaData = convertedModel;
+		    _val.modeTypeChanged = "true";
+		    extractAndCreateUI(convertedModel);
+			});
+	}, 500);
+
+    
   }
 
 
@@ -321,6 +372,7 @@ fskeditorjs = function () {
       environment: _val.environment,
       completed: true,
       validationErrors: [],
+      modeTypeChanged:_val.modeTypeChanged,
       modelType: _metadata.modelType
     };
     const ajv = new Ajv({allErrors:true});
@@ -332,6 +384,7 @@ fskeditorjs = function () {
             return JSON.stringify(errorItem)
         });
     }
+    console.log(_metadata);
     viewValue.resourcesFiles = resourcesFiles;
     viewValue.parentResourcesFolder = parentResourcesFolder;
     return viewValue;

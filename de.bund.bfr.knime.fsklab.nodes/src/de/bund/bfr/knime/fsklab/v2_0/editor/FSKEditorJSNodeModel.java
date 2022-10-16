@@ -56,6 +56,8 @@ import org.knime.core.node.port.PortObjectHolder;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.web.ValidationError;
+import org.knime.core.node.workflow.NodeContext;
+import org.knime.core.node.workflow.WorkflowManager;
 import org.knime.core.util.FileUtil;
 import org.knime.core.util.IRemoteFileUtilsService;
 import org.knime.js.core.node.AbstractWizardNodeModel;
@@ -400,7 +402,7 @@ final class FSKEditorJSNodeModel
         //metadata = MAPPER.readValue(viewValue.getModelMetaData(), modelClass);
         metadata =  new ConversionUtils().convertModel(MAPPER.readTree(viewValue.getModelMetaData()),
             ConversionUtils.ModelClass.valueOf(modelType));
-        if(!StringUtils.isEmpty(viewRep.getModelMetadata())) {
+        if(!StringUtils.isEmpty(viewRep.getModelMetadata()) && !viewValue.isModeTypeChanged()) {
           JsonNode repMetadataNode = MAPPER.readTree(viewRep.getModelMetadata());
           String repModelType = repMetadataNode.get("modelType").asText("genericModel");
           if(m_config.getModelType() != null &&  !m_config.getModelType().equalsIgnoreCase(repModelType)) {
@@ -484,9 +486,10 @@ final class FSKEditorJSNodeModel
         parameters = SwaggerUtil.getParameter(metadata);
       // Take original parameters from view representation (metadata)
       List<Parameter> originalParameters = new ArrayList<>();
-      if(originalMetadata != null)
-        originalParameters = SwaggerUtil.getParameter(originalMetadata);
-      
+      if(!viewValue.isModeTypeChanged()) {
+         if(originalMetadata != null )
+            originalParameters = SwaggerUtil.getParameter(originalMetadata);
+      }
       // Take simulation from input port (if connected) otherwise from view value. 
       if (m_port != null) {
         //clone to clean the port object simulations safely later.
