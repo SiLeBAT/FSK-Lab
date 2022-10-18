@@ -343,8 +343,15 @@ fskeditorjs = function () {
 		    _val.modelMetaData = convertedModel;
 		    _val.modeTypeChanged = "true";
 		    extractAndCreateUI(convertedModel);
+		    setTimeout(function() {
+				    $('#select2-selectInput_Model_class-container').text(modelType);
+				    
+			}, 500);
+		    
 			});
 	}, 500);
+	
+	
 
     
   }
@@ -384,7 +391,6 @@ fskeditorjs = function () {
             return JSON.stringify(errorItem)
         });
     }
-    console.log(_metadata);
     viewValue.resourcesFiles = resourcesFiles;
     viewValue.parentResourcesFolder = parentResourcesFolder;
     return viewValue;
