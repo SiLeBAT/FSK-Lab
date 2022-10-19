@@ -3,6 +3,7 @@ package de.bund.bfr.knime.fsklab.nodes.environment;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -10,7 +11,7 @@ import org.apache.commons.io.FileUtils;
 import org.knime.core.util.FileUtil;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-
+import de.bund.bfr.knime.fsklab.preferences.PreferenceInitializer;
 /**
  * FilesEnvironmentManager handles working directories made out of referenced files. If the
  * references files array is null, empty or the files do not exist,
@@ -58,7 +59,7 @@ public class FilesEnvironmentManager implements EnvironmentManager {
     }
 
     try {
-      Path environment = Files.createTempDirectory("workingDirectory");
+      Path environment = Files.createTempDirectory(Paths.get(PreferenceInitializer.getFSKWorkingDirectory()),"workingDirectory");
       for (Path filePath : filePaths) {
         Path sourcePath = filePath;
         Path targetPath = environment.resolve(sourcePath.getFileName());

@@ -1,12 +1,13 @@
 package de.bund.bfr.knime.fsklab.nodes.environment;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
 import org.knime.core.util.FileUtil;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-
+import de.bund.bfr.knime.fsklab.preferences.PreferenceInitializer;
 
 /**
  * 
@@ -35,7 +36,7 @@ public class DefaultEnvironmentManager implements EnvironmentManager {
   public Optional<Path> getEnvironment() {
 
     try {
-      environmentPath = FileUtil.createTempDir("defaultWorkingDirectory").getAbsolutePath();
+      environmentPath = FileUtil.createTempDir("defaultWorkingDirectory",new File(PreferenceInitializer.getFSKWorkingDirectory())).getAbsolutePath();
     }catch(Exception e) {
       e.printStackTrace();
     }

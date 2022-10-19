@@ -95,6 +95,7 @@ import de.bund.bfr.metadata.swagger.ProcessModel;
 import de.bund.bfr.metadata.swagger.QraModel;
 import de.bund.bfr.metadata.swagger.RiskModel;
 import de.bund.bfr.metadata.swagger.ToxicologicalModel;
+import de.bund.bfr.knime.fsklab.preferences.PreferenceInitializer;
 
 /**
  * A port object for an FSK model port providing R scripts and model meta data.
@@ -386,7 +387,7 @@ public class FskPortObject implements PortObject {
       String modelScript = "";
       String visualizationScript = "";
 
-      final Path workspacePath = FileUtil.createTempFile("workspace", ".r").toPath();
+      final Path workspacePath = FileUtil.createTempFile("workspace", ".r", new File(PreferenceInitializer.getFSKWorkingDirectory()), false).toPath();
       List<String> packages = new ArrayList<>();
       
       Model modelMetadata = null;

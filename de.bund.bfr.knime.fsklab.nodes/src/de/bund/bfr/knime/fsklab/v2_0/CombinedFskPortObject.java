@@ -80,6 +80,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.bund.bfr.knime.fsklab.preferences.PreferenceInitializer;
 import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.nodes.FskPortObjectUtil;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.FLabel;
@@ -449,7 +450,7 @@ public class CombinedFskPortObject extends FskPortObject {
       String modelScript = "";
       String visualizationScript = "";
 
-      Path workspacePath = FileUtil.createTempFile("workspace", ".r").toPath();
+      Path workspacePath = FileUtil.createTempFile("workspace", ".r", new File(PreferenceInitializer.getFSKWorkingDirectory()), false).toPath();
       List<String> packages = new ArrayList<>();
 
       Model modelMetadata = null;
