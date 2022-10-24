@@ -31,10 +31,6 @@ public class FilesEnvironmentManager implements EnvironmentManager {
     this.files = files;
   }
 
-  public String[] getFiles() {
-    return files;
-  }
-
   @Override
   public Optional<Path> getEnvironment() {
 
@@ -74,5 +70,10 @@ public class FilesEnvironmentManager implements EnvironmentManager {
   @Override
   public void deleteEnvironment(Path path) {
     FileUtils.deleteQuietly(path.toFile());
+  }
+
+  @Override
+  public String[] getEntries() {
+    return files;
   }
 }

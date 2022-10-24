@@ -198,7 +198,7 @@ public class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
         m_workingDirectoryField.setEnabled(false);
 
         // Update m_filesTableModel
-        String[] files = filesManager.getFiles();
+        String[] files = filesManager.getEntries();
         if (files != null) {
           for (String file : files) {
             String[] row = {file};
@@ -209,7 +209,7 @@ public class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
         AddedFilesEnvironmentManager addedFilesManager = (AddedFilesEnvironmentManager) environment;
         updateDialog(modelType, readmeFile, addedFilesManager.getManager());
         
-        for(String entry : addedFilesManager.getFiles()) {
+        for(String entry : addedFilesManager.getEntries()) {
           String[] row = {entry};
           m_filesTableModel.addRow(row);
           addedFiles.add(entry);

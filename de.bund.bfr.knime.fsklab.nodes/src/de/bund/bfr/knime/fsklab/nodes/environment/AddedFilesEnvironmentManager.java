@@ -41,10 +41,6 @@ public class AddedFilesEnvironmentManager implements EnvironmentManager {
     
   }
   
-  
-  public String[] getFiles() {
-    return files;
-  }
   public List<Path> getMarkedForRemoval() {
     return markedForRemoval;
   }
@@ -114,6 +110,11 @@ public class AddedFilesEnvironmentManager implements EnvironmentManager {
   public void deleteEnvironment(Path path) {
     clearAddedFiles();
     manager.deleteEnvironment(path);
+  }
+  
+  @Override
+  public String[] getEntries() {
+    return files;
   }
     
 }

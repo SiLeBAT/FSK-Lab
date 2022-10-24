@@ -726,7 +726,7 @@ public class CombinedFskPortObject extends FskPortObject {
         String padding = String.join("", Collections.nCopies(25, "-"));
         resourcesList.add(padding+modelName+padding);
         
-        List<String> elements = Arrays.asList(((ArchivedEnvironmentManager) fskObject.getEnvironmentManager().get()).getEntries());
+        List<String> elements = Arrays.asList(fskObject.getEnvironmentManager().get().getEntries());
         resourcesList.addAll(elements);
         
       } 

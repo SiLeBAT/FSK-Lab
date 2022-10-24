@@ -487,8 +487,8 @@ public class FskPortObject implements PortObject {
     final JPanel librariesPanel = UIUtils.createLibrariesPanel(packages);
     final JPanel resourcesPanel;
     if (environmentManager.isPresent()) {
-      resourcesPanel = UIUtils.createResourcesPanel(
-          Arrays.asList(((ArchivedEnvironmentManager) environmentManager.get()).getEntries()));
+      resourcesPanel =
+          UIUtils.createResourcesPanel(Arrays.asList(environmentManager.get().getEntries()));
     } else {
       resourcesPanel = UIUtils.createResourcesPanel(new ArrayList<>());
     }
