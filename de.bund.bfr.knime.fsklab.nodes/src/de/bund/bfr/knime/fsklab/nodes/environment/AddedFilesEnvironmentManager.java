@@ -23,7 +23,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 public class AddedFilesEnvironmentManager implements EnvironmentManager {
 
   private EnvironmentManager manager;
-  private String[] files;
+  private String[] entries;
   private List<Path> markedForRemoval = new ArrayList<Path>();
   
   public AddedFilesEnvironmentManager() {
@@ -35,9 +35,9 @@ public class AddedFilesEnvironmentManager implements EnvironmentManager {
   public AddedFilesEnvironmentManager(String[] files) {
     this(new DefaultEnvironmentManager(), files);
   }
-  public AddedFilesEnvironmentManager(EnvironmentManager manager, String[] files) {
+  public AddedFilesEnvironmentManager(EnvironmentManager manager, String[] entries) {
     this.manager = manager;
-    this.files = files;
+    this.entries = entries;
     
   }
   
@@ -52,7 +52,7 @@ public class AddedFilesEnvironmentManager implements EnvironmentManager {
   public Optional<Path> getEnvironment() {
     Optional<Path> environment = manager.getEnvironment();
     
-    if (files == null || files.length == 0)
+    if (entries == null || entries.length == 0)
       return environment;
  
     return copyFilesToEnvironment(environment);
@@ -62,7 +62,7 @@ public class AddedFilesEnvironmentManager implements EnvironmentManager {
     
     List<Path> filePaths = new ArrayList<>();
     try {
-      for (String filePath : files) {
+      for (String filePath : entries) {
         filePaths.add(FileUtil.resolveToPath(FileUtil.toURL(filePath)));
       }
 
@@ -114,7 +114,7 @@ public class AddedFilesEnvironmentManager implements EnvironmentManager {
   
   @Override
   public String[] getEntries() {
-    return files;
+    return entries;
   }
     
 }

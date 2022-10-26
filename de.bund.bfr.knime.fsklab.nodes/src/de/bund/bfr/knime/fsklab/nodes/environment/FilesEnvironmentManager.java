@@ -21,26 +21,26 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 @JsonAutoDetect(fieldVisibility = Visibility.ANY)
 public class FilesEnvironmentManager implements EnvironmentManager {
 
-  private final String[] files;
-
+  /** Paths to the resource entries in the COMBINE archive. */
+  private  String[] entries;
   public FilesEnvironmentManager() {
     this(new String[0]);
   }
 
   public FilesEnvironmentManager(String[] files) {
-    this.files = files;
+    this.entries = files;
   }
 
   @Override
   public Optional<Path> getEnvironment() {
 
-    if (files == null || files.length == 0)
+    if (entries == null || entries.length == 0)
       return Optional.empty();
 
  
     List<Path> filePaths = new ArrayList<>();
     try {
-      for (String filePath : files) {
+      for (String filePath : entries) {
         filePaths.add(FileUtil.resolveToPath(FileUtil.toURL(filePath)));
       }
 
@@ -74,6 +74,6 @@ public class FilesEnvironmentManager implements EnvironmentManager {
 
   @Override
   public String[] getEntries() {
-    return files;
+    return entries;
   }
 }

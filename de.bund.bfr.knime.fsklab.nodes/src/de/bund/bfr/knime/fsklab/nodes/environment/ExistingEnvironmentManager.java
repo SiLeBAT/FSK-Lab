@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 public class ExistingEnvironmentManager implements EnvironmentManager {
 
   private final String environmentPath;
+  private String[] entries;
 
   public ExistingEnvironmentManager() {
     this("");
@@ -68,7 +69,7 @@ public class ExistingEnvironmentManager implements EnvironmentManager {
   public String[] getEntries() {
     File existingWorkingDirectory = new File(environmentPath);
     File[] files = existingWorkingDirectory.listFiles(File::isFile);
-    String entries[] = Arrays.stream(files).map(File::getName)
+    entries = Arrays.stream(files).map(File::getName)
         .toArray(String[]::new);
    
     return entries;
