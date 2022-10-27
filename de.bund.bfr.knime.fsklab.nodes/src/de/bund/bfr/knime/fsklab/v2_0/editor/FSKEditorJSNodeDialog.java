@@ -555,5 +555,6 @@ public class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
   private void clearEnvironmentPanel() {
     m_workingDirectoryField.setText("");
     m_filesTableModel.setRowCount(0); // Clear table
+    addedFiles.clear();
   }
 }
