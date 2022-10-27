@@ -207,7 +207,7 @@ public class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
         }
       } else if (environment instanceof AddedFilesEnvironmentManager) {
         AddedFilesEnvironmentManager addedFilesManager = (AddedFilesEnvironmentManager) environment;
-        updateDialog(modelType, readmeFile, addedFilesManager.getManager());
+        updateDialogForAddedManager(modelType, readmeFile, addedFilesManager.getManager());
         
         for(String entry : addedFilesManager.getEntries()) {
           String[] row = {entry};
@@ -223,6 +223,44 @@ public class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
     }
   }
 
+  private void updateDialogForAddedManager(ModelType modelType, String readmeFile,
+      EnvironmentManager environment) {
+    if (environment != null) {
+
+      if (environment instanceof ArchivedEnvironmentManager) {
+        ArchivedEnvironmentManager archivedEnvironment = (ArchivedEnvironmentManager) environment;
+
+        m_archivedEnvironmentButton.setSelected(true);
+
+        // Update m_workingDirectoryField
+        m_workingDirectoryField.setEnabled(false);
+        m_workingDirectoryField.setText(archivedEnvironment.getArchivePath());
+
+        
+      } else if (environment instanceof ExistingEnvironmentManager) {
+        ExistingEnvironmentManager directoryManager = (ExistingEnvironmentManager) environment;
+
+        m_archivedEnvironmentButton.setEnabled(false);
+        m_directoryEnvironmentButton.setSelected(true);
+
+        // Update m_workingDirectoryField
+        m_workingDirectoryField.setEnabled(true);
+        m_workingDirectoryField.setText(directoryManager.getEnvironmentPath());
+
+      } else if (environment instanceof FilesEnvironmentManager) {
+         m_archivedEnvironmentButton.setEnabled(false);
+        m_filesEnvironmentButton.setSelected(true);
+        // Update m_workingDirectoryField
+        m_workingDirectoryField.setEnabled(false);
+        
+      } else if (environment instanceof AddedFilesEnvironmentManager) {
+        AddedFilesEnvironmentManager addedFilesManager = (AddedFilesEnvironmentManager) environment;
+        updateDialogForAddedManager(modelType, readmeFile, addedFilesManager.getManager());
+              
+      }
+    }
+   
+  }
   /** Loads settings from saved settings. */
   @Override
   protected void loadSettingsFrom(NodeSettingsRO settings, PortObjectSpec[] specs)

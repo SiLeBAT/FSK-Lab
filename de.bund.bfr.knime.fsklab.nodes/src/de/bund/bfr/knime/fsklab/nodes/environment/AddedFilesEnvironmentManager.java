@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 import org.apache.commons.io.FileUtils;
 import org.knime.core.util.FileUtil;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -114,7 +116,9 @@ public class AddedFilesEnvironmentManager implements EnvironmentManager {
   
   @Override
   public String[] getEntries() {
-    return entries;
+    String[] parent_entries = manager.getEntries();
+    String[] all_entries = Stream.concat(Arrays.stream(parent_entries),Arrays.stream(entries)).toArray(String[]::new);
+    return all_entries;
   }
-    
+ 
 }
