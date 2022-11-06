@@ -7,3 +7,6 @@ target
 bin
 
 .polyglot.build.properties
+.polyglot.META-INF
+.polyglot.feature.xml
+*.fskx
