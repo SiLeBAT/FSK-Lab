@@ -69,7 +69,7 @@ public class ExistingEnvironmentManager implements EnvironmentManager {
   public String[] getEntries() {
     File existingWorkingDirectory = new File(environmentPath);
     File[] files = existingWorkingDirectory.listFiles(File::isFile);
-    entries = Arrays.stream(files).map(File::getName)
+    entries = Arrays.stream(files).map(File::getAbsolutePath)
         .toArray(String[]::new);
    
     return entries;
