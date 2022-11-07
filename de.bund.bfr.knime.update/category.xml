@@ -3,10 +3,16 @@
    <feature url="features/de.bund.bfr.knime.internal.feature_0.0.1.qualifier.jar" id="de.bund.bfr.knime.internal.feature" version="0.0.1.qualifier">
       <category name="FSK-Lab"/>
    </feature>
+   <feature url="features/de.bund.bfr.knime.pmm.feature_1.2.1.qualifier.jar" id="de.bund.bfr.knime.pmm.feature" version="1.2.2.qualifier">
+      <category name="FSK-Lab"/>
+   </feature>
    <feature url="features/de.bund.bfr.knime.r.x64.feature_3.4.4.jar" id="de.bund.bfr.knime.r.x64.feature" version="3.4.4">
       <category name="FSK-Lab"/>
    </feature>
    <feature url="features/de.bund.bfr.knime.r.x86.feature_3.4.4.jar" id="de.bund.bfr.knime.r.x86.feature" version="3.4.4">
+      <category name="FSK-Lab"/>
+   </feature>
+   <feature url="features/de.bund.bfr.knime.foodprocess.feature_1.0.0.qualifier.jar" id="de.bund.bfr.knime.foodprocess.feature" version="1.0.0.qualifier">
       <category name="FSK-Lab"/>
    </feature>
    <feature id="de.bund.bfr.knime.fsklab.feature">
@@ -15,8 +21,6 @@
    <feature id="de.bund.bfr.knime.fsklab.legacy.feature">
       <category name="FSK-Lab"/>
    </feature>
-   <feature id="de.bund.bfr.knime.foodprocess.feature"/>
-   <feature id="de.bund.bfr.knime.pmm.feature"/>
    <category-def name="FSK-Lab" label="FSK-Lab">
       <description>
          KNIME extension nodes for FSK-Lab. Includes FSK-Lab and PMM-Lab.
