@@ -345,7 +345,7 @@ fskeditorjs = function () {
 		    extractAndCreateUI(convertedModel);
 		    setTimeout(function() {
 				    $('#select2-selectInput_Model_class-container').text(modelType);
-				    
+				    findAndRemoveCloseApplyButton(window);
 			}, 500);
 		    
 			});
@@ -356,7 +356,22 @@ fskeditorjs = function () {
     
   }
 
-
+  function findAndRemoveCloseApplyButton(element){
+		if(!element)
+			return;
+		if(element.document){
+			button = element.document.getElementById('knimeSeleniumBridge_closeApplyButton')
+			if(button){
+				button.remove();
+			}
+			else {
+				findAndRemoveCloseApplyButton(element.parent);
+			}
+		}else{
+			findAndRemoveCloseApplyButton(element.parent);
+		}
+  }
+  
   view.getComponentValue = () => {
     _metadata = _modalDetails._modelHandler.metaData;
     delete _metadata['simulation'];
