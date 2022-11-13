@@ -344,10 +344,19 @@ fskeditorjs = function () {
 		    _val.modeTypeChanged = "true";
 		    extractAndCreateUI(convertedModel);
 		    setTimeout(function() {
-				    $('#select2-selectInput_Model_class-container').text(modelType);
 				    findAndRemoveCloseApplyButton(window);
+					//override the seleniumKnimeBridge showModal 
+					parantFunction = window.parent.parent.seleniumKnimeBridge.showModal;
+					window.parent.parent.seleniumKnimeBridge.showModal = (function(oldShowModal) {
+						showModal = function (title, description, choicesString) {
+							let choices = JSON.parse(choicesString);
+							//remove the second option
+							choices.splice(1, 1);
+							oldShowModal(title, description, JSON.stringify(choices));
+						};
+						return showModal;
+					})(parantFunction);
 			}, 500);
-		    
 			});
 	}, 500);
 	
