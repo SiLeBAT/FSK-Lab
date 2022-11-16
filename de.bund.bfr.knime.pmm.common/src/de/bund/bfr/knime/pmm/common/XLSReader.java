@@ -33,6 +33,7 @@ import java.util.Set;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.CellValue;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Row;
@@ -1034,15 +1035,15 @@ public class XLSReader {
 
 	private String getData(Cell cell) {
 		if (cell != null) {
-			if (cell.getCellType() == Cell.CELL_TYPE_FORMULA) {
+			if (cell.getCellType() == CellType.FORMULA) {
 				CellValue value = evaluator.evaluate(cell);
 
 				switch (value.getCellType()) {
-				case Cell.CELL_TYPE_BOOLEAN:
+				case BOOLEAN:
 					return value.getBooleanValue() + "";
-				case Cell.CELL_TYPE_NUMERIC:
+				case NUMERIC:
 					return value.getNumberValue() + "";
-				case Cell.CELL_TYPE_STRING:
+				case STRING:
 					return value.getStringValue();
 				default:
 					return "";
