@@ -39,6 +39,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -88,6 +90,7 @@ import de.bund.bfr.knime.fsklab.nodes.common.ui.FPanel;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.JsonPanel;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.ScriptPanel;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.UIUtils;
+import de.bund.bfr.knime.fsklab.nodes.environment.ArchivedEnvironmentManager;
 import de.bund.bfr.knime.fsklab.nodes.environment.EnvironmentManager;
 import de.bund.bfr.knime.fsklab.nodes.environment.GeneratedResourceFiles;
 import de.bund.bfr.knime.fsklab.rakip.RakipModule;
@@ -703,10 +706,33 @@ public class CombinedFskPortObject extends FskPortObject {
     metaDataPane.setName("Meta data");
 
     final JPanel librariesPanel = UIUtils.createLibrariesPanel(packages);
+    List<String> resourcesList = new ArrayList<>();
+    fillResoucesList(firstFskPortObject, resourcesList);
+    fillResoucesList(secondFskPortObject, resourcesList);
+    final JPanel resourcesPanel = UIUtils.createResourcesPanel(resourcesList);
 
+    
     JPanel simulationsPanel = new SimulationsPanel();
 
-    return new JComponent[] {createScriptPanel(), metaDataPane, librariesPanel, simulationsPanel};
+    return new JComponent[] {createScriptPanel(), metaDataPane, librariesPanel,resourcesPanel , simulationsPanel};
+  }
+  
+  public List<String> fillResoucesList(FskPortObject fskObject , List<String> resourcesList){
+    if(fskObject instanceof CombinedFskPortObject) {
+      fillResoucesList(((CombinedFskPortObject)fskObject).getFirstFskPortObject(), resourcesList);
+      fillResoucesList(((CombinedFskPortObject)fskObject).getSecondFskPortObject(), resourcesList);
+    }else {
+      if (fskObject.getEnvironmentManager().isPresent()) {
+        String modelName = SwaggerUtil.getModelName(fskObject.modelMetadata);
+        String padding = String.join("", Collections.nCopies(25, "-"));
+        resourcesList.add(padding+modelName+padding);
+        
+        List<String> elements = Arrays.asList(fskObject.getEnvironmentManager().get().getEntries());
+        resourcesList.addAll(elements);
+        
+      } 
+    }
+    return resourcesList;
   }
 
   /**
