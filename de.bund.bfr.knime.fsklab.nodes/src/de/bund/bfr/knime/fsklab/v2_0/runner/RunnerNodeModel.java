@@ -55,6 +55,7 @@ import org.knime.core.node.workflow.VariableType;
 import org.knime.core.util.FileUtil;
 import de.bund.bfr.knime.fsklab.nodes.DataArray;
 import de.bund.bfr.knime.fsklab.nodes.JsonHandler;
+import de.bund.bfr.knime.fsklab.preferences.PreferenceInitializer;
 import de.bund.bfr.knime.fsklab.nodes.ParameterJson;
 import de.bund.bfr.knime.fsklab.nodes.ScriptHandler;
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
@@ -274,7 +275,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
   private void createTopLevelJsonFile(CombinedFskPortObject fskObj,
       ExecutionContext exec) throws Exception {
 
-    File newResourcesDirectory = FileUtil.createTempDir("generatedResources");
+    File newResourcesDirectory = FileUtil.createTempDir("generatedResources",new File(PreferenceInitializer.getFSKWorkingDirectory()));
     ParameterJson combinedJson = new ParameterJson( new File(newResourcesDirectory, JsonHandler.JSON_FILE_NAME));
     try {
     

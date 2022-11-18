@@ -27,6 +27,7 @@ import org.apache.commons.io.FileUtils;
 import org.knime.core.data.image.png.PNGImageContent;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.util.FileUtil;
+import de.bund.bfr.knime.fsklab.preferences.PreferenceInitializer;
 
 public class RunnerNodeInternalSettings {
 
@@ -41,7 +42,7 @@ public class RunnerNodeInternalSettings {
 
   public RunnerNodeInternalSettings() {
     try {
-      imageFile = FileUtil.createTempFile("FskxRunner-", ".png");
+        imageFile = FileUtil.createTempFile("FskxRunner-", ".svg", new File(PreferenceInitializer.getFSKWorkingDirectory()), false);
     } catch (IOException e) {
       LOGGER.error("Cannot create temporary file.", e);
       throw new RuntimeException(e);

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.util.Optional;
 import org.apache.commons.io.FileUtils;
@@ -11,6 +12,7 @@ import org.jdom2.JDOMException;
 import org.knime.core.util.FileUtil;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import de.bund.bfr.knime.fsklab.preferences.PreferenceInitializer;
 import de.unirostock.sems.cbarchive.ArchiveEntry;
 import de.unirostock.sems.cbarchive.CombineArchive;
 import de.unirostock.sems.cbarchive.CombineArchiveException;
@@ -71,7 +73,7 @@ public class ArchivedEnvironmentManager implements EnvironmentManager {
     lock(archiveFile.toFile());
     
     try (CombineArchive archive = new CombineArchive(archiveFile.toFile())) {
-      Path environment = Files.createTempDirectory("workingDirectory");
+      Path environment = Files.createTempDirectory(Paths.get(PreferenceInitializer.getFSKWorkingDirectory()),"workingDirectory") ;
       if (entries != null && entries.length != 0) {
         for (String entryLocation : entries) {
           ArchiveEntry resourceEntry = archive.getEntry(entryLocation);
