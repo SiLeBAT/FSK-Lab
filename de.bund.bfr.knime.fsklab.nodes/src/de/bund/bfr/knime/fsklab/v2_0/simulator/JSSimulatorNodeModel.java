@@ -18,11 +18,23 @@
  */
 package de.bund.bfr.knime.fsklab.v2_0.simulator;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
@@ -34,10 +46,16 @@ import org.knime.core.node.port.PortObjectHolder;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.web.ValidationError;
+import org.knime.core.util.FileUtil;
+import org.knime.core.util.IRemoteFileUtilsService;
 import org.knime.js.core.node.AbstractWizardNodeModel;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkUtil;
+import org.osgi.framework.ServiceReference;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.FskPlugin;
+import de.bund.bfr.knime.fsklab.preferences.PreferenceInitializer;
 import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
 import de.bund.bfr.knime.fsklab.v2_0.FskSimulation;
 import de.bund.bfr.knime.fsklab.v2_0.joiner.JoinerNodeUtil;
@@ -45,6 +63,7 @@ import de.bund.bfr.knime.fsklab.v2_0.simulator.JSSimulatorViewValue.JSSimulation
 import de.bund.bfr.metadata.swagger.Model;
 import de.bund.bfr.metadata.swagger.Parameter;
 import de.bund.bfr.metadata.swagger.Parameter.ClassificationEnum;
+import de.bund.bfr.metadata.swagger.Parameter.DataTypeEnum;
 import metadata.SwaggerUtil;
 
 class JSSimulatorNodeModel
@@ -172,8 +191,28 @@ class JSSimulatorNodeModel
 
       final JSSimulatorViewValue value = getViewValue();
 
-      createSimulation(value);
-      
+      try {
+        createSimulation(value, (FskPortObject) inObjects[0]);
+      } catch (IOException | URISyntaxException | InvalidSettingsException e) {
+        e.printStackTrace();
+      }
+      // delete the parent folder of the uploaded files after moving them to the working
+      // directory.
+      // parentFolderPath is always uses KNIME protocol
+
+      if(!StringUtils.isBlank(value.getParentResourcesFolder())){
+        BundleContext ctx =
+            FrameworkUtil.getBundle(IRemoteFileUtilsService.class).getBundleContext();
+        ServiceReference<IRemoteFileUtilsService> ref =
+            ctx.getServiceReference(IRemoteFileUtilsService.class);
+        if (ref != null) {
+          try {
+            ctx.getService(ref).delete(new URL(value.getParentResourcesFolder()));
+          } finally {
+            ctx.ungetService(ref);
+          }
+        }
+      }
       List<Parameter> listOfParameter = SwaggerUtil.getParameter(port.modelMetadata);
 
       value.setParametersMap(JoinerNodeUtil.generateColorMap(port, null, listOfParameter, new AtomicInteger(0), new AtomicInteger(0)));
@@ -187,7 +226,8 @@ class JSSimulatorNodeModel
   }
 
 
-  private void createSimulation(JSSimulatorViewValue val) {
+  private void createSimulation(JSSimulatorViewValue val, FskPortObject fskObj)
+      throws IOException, URISyntaxException, InvalidSettingsException {
 
     final List<Parameter> inputParams = getViewRepresentation().parameters;
     port.simulations.clear();
@@ -197,13 +237,29 @@ class JSSimulatorNodeModel
       for (int i = 0; i < inputParams.size(); i++) {
         final String paramName = inputParams.get(i).getId();
         final String paramValue = jsSimulation.values.get(i);
-        fskSimulation.getParameters().put(paramName, paramValue);
+        if (paramValue != null && inputParams.get(i).getDataType().equals(DataTypeEnum.FILE)) {
+          File file = new File(paramValue);
+
+          if (file.exists()) {
+            if (fskObj.getEnvironmentManager().isPresent()) {
+              Optional<Path> workingDirectory =
+                  fskObj.getEnvironmentManager().get().getEnvironment();
+              if (workingDirectory.isPresent()) {
+                String fileParam = copyFileToWorkingDir(paramValue, workingDirectory.get().toString());
+                fskSimulation.getParameters().put(paramName, fileParam);
+              }
+            }
+          }
+        } else {
+          fskSimulation.getParameters().put(paramName, paramValue);
+        }
       }
       port.simulations.add(fskSimulation);
     }
 
     port.selectedSimulationIndex = val.getSelectedSimulationIndex();
   }
+
 
   @Override
   protected void performReset() {
@@ -273,5 +329,26 @@ class JSSimulatorNodeModel
     m_config.setSelectedSimulationIndex(value.getSelectedSimulationIndex());
     m_config.setSimulations(value.getSimulations());
   }
-
+  /**
+   * copy a file from a URL.The code here is considering that the fileURL is using KNIME
+   * Protocol
+   * 
+   * @param fileURL HTTP URL of the file to be copied
+   * @param workingDir path of the directory to save the file
+   * @throws IOException
+   * @throws URISyntaxException
+   * @throws InvalidSettingsException
+   */
+  public String copyFileToWorkingDir(String fileURL, String workingDir)
+      throws IOException, URISyntaxException, InvalidSettingsException {
+    String fileName = fileURL.substring(fileURL.lastIndexOf("/") + 1, fileURL.length());
+    String destinationPath = workingDir + File.separator + fileName;
+    File fileTodownload = new File(destinationPath);
+    LOGGER.info("JS Simulator path to write to: " + destinationPath);
+    try (InputStream inStream = FileUtil.openInputStream(fileURL);
+        OutputStream outStream = new FileOutputStream(fileTodownload)) {
+      IOUtils.copy(inStream, outStream);
+    }
+    return destinationPath;
+  }
 }

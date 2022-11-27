@@ -56,6 +56,7 @@ simulator = function() {
 		   sims.push({'name':sim['name'],'values':params});
 	   });
 		_val.simulations = sims;
+		_val.parentResourcesFolder = window.parentResourcesFolder;
 		_val.selectedSimulationIndex = _modelSim._simSelectedIndex;
 		return _val;
   };

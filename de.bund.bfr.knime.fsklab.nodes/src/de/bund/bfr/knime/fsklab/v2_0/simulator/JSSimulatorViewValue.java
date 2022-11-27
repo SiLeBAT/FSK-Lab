@@ -50,6 +50,8 @@ public class JSSimulatorViewValue extends JSONViewContent {
   private int selectedSimulationIndex;
   private String modelMath;
   private LinkedHashMap<String, Object[]> parametersMap;
+
+  private String parentResourcesFolder;
   
   public JSSimulatorViewValue() {
     simulations = new JSSimulation[0];
@@ -169,5 +171,13 @@ public class JSSimulatorViewValue extends JSONViewContent {
     public int hashCode() {
       return Objects.hash(name, values);
     }
+  }
+
+  public String getParentResourcesFolder() {
+    return parentResourcesFolder;
+  }
+
+  public void setParentResourcesFolder(String parentResourcesFolder) {
+    this.parentResourcesFolder = parentResourcesFolder;
   }
 }
