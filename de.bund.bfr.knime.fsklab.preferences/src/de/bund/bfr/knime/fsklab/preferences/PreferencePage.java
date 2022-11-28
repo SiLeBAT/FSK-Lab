@@ -87,6 +87,7 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 	private Composite compositeRConda;
 	private Composite compositeNormal;
 	private Composite compositeRNormal;
+	private Composite compositeWorkingDirectory;
 	private PythonFileFieldEditor python2FieldEditor;
 	private PythonFileFieldEditor python3FieldEditor;
 	private ComboViewer rEnvs;
@@ -118,6 +119,18 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 	protected void createFieldEditors() {
 		
 		Composite parent = getFieldEditorParent();
+		compositeWorkingDirectory = new Composite(parent, SWT.MULTI);
+
+		GridData gridDataWorkingDirectory = new GridData();
+		gridDataWorkingDirectory.horizontalSpan = 3;
+		gridDataWorkingDirectory.horizontalAlignment = SWT.FILL;
+		
+		compositeWorkingDirectory.setLayoutData(gridDataWorkingDirectory);
+		
+		FSKWorkingDirectoryFieldEditor  fskWorkingDirectory= new FSKWorkingDirectoryFieldEditor(PreferenceInitializer.FSK_PATH_CFG, "FSK Working directory:", compositeWorkingDirectory);
+		fskWorkingDirectory.setStringValue(Plugin.getDefault().getPreferenceStore().getString(PreferenceInitializer.FSK_PATH_CFG));
+
+
 		Label rTitle = new Label(parent, SWT.HORIZONTAL);
 		rTitle.setText("R Setting:");
 		Label rseparator = new Label(parent, SWT.HORIZONTAL | SWT.SEPARATOR);
@@ -653,7 +666,24 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 			return true;
 		}
 	}
+	
+	private class FSKWorkingDirectoryFieldEditor extends DirectoryFieldEditor {
 
+		public FSKWorkingDirectoryFieldEditor(final String name, final String labelText, final Composite parent) {
+			init(name, labelText);
+			setChangeButtonText(JFaceResources.getString("openBrowse"));
+			setValidateStrategy(VALIDATE_ON_KEY_STROKE);
+			createControl(parent);
+		}
+
+		@Override
+		protected boolean doCheckState() {
+			final String newFSKWorkingDirectory = getStringValue();
+			Plugin.getDefault().getPreferenceStore().putValue(PreferenceInitializer.FSK_PATH_CFG, newFSKWorkingDirectory);
+			return true;
+		}
+	}
+	
 	@Override
 	public void init(final IWorkbench workbench) {
 		// nothing to do

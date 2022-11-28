@@ -25,6 +25,7 @@ fskdbview = function () {
     let _value;
     let initiated = function(){
         editorAvailable =  true;
+        window.multipleview = true;
     }
      var selectionEdited = function (modelMetaDatax) {
         if(!modelMetaDatax.changeSet.added)
@@ -40,7 +41,7 @@ fskdbview = function () {
                                
     view.init = function (representation, value) { 
         
-        knimeService.subscribeToSelection('b800db46-4e25-4f77-bcc6-db0c21GlobalEditor', initiated);
+        knimeService.subscribeToSelection('b800db46-4e25-4f77-bcc6-db0c21Global', initiated);
         _representation = representation;
         knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c21GlobalInit' , [{"tableID":_representation.tableID}],{elements:[]})
         _value = value;

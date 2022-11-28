@@ -8,6 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -28,6 +29,8 @@ import de.bund.bfr.metadata.swagger.Parameter;
 import metadata.SwaggerUtil;
 
 public class JoinerNodeUtil {
+  private static String[] COLOR_LIST= {"#F0F8FF","#F5F5DC", "#F0FFFF" , "#FFFAF0", "#FFF8DC", "#FFE4C4", "#F0FFF0", "#E6E6FA", "#FFF0F5", "#D3D3D3", "#AFEEEE"};
+  
   /**
    * A helper method for extracting the root model parameter names. the method will iterate
    * recursively over the children models to extract the orginal name of the parameters without
@@ -69,7 +72,7 @@ public class JoinerNodeUtil {
   
   public static List<JoinRelationAdvanced> generateJoinerRelationAdvanced(FskPortObject portObject,
       LinkedHashMap<String, Object[]> originalNamesMap, List<Parameter> topLevelJoinedModelParams, List<JoinRelation> joinRelations,
-       AtomicInteger index, List<JoinRelationAdvanced> joinRelationList, LinkedHashMap<String, String> ModelsToSuffixMap) {
+       AtomicInteger index, List<JoinRelationAdvanced> joinRelationList, LinkedHashMap<String, String> ModelsToSuffixMap, List<JoinRelation> foundRelation) {
     if (joinRelationList == null) {
       joinRelationList = new ArrayList<>();
     }
@@ -82,11 +85,11 @@ public class JoinerNodeUtil {
     if (portObject instanceof CombinedFskPortObject) {
       
           generateJoinerRelationAdvanced(((CombinedFskPortObject) portObject).getFirstFskPortObject(),
-               originalNamesMap, topLevelJoinedModelParams, joinRelations, index, joinRelationList, ModelsToSuffixMap);
+               originalNamesMap, topLevelJoinedModelParams, joinRelations, index, joinRelationList, ModelsToSuffixMap, foundRelation);
  
       
           generateJoinerRelationAdvanced(((CombinedFskPortObject) portObject).getSecondFskPortObject(),
-               originalNamesMap, topLevelJoinedModelParams, joinRelations, index, joinRelationList, ModelsToSuffixMap);
+               originalNamesMap, topLevelJoinedModelParams, joinRelations, index, joinRelationList, ModelsToSuffixMap, foundRelation);
     } else {
       List<Parameter> listOfParameter = SwaggerUtil.getParameter(portObject.modelMetadata);
       List<String> listOfParameterWithSuffixs = new ArrayList<>();
@@ -104,22 +107,90 @@ public class JoinerNodeUtil {
          
         }
       }
-      String commonSuffix = findSuffix(listOfParameterWithSuffixs);
-      for(String missingParam : targets) {
-        String completeParamName = missingParam+commonSuffix;
-        for(JoinRelation relation :joinRelations){
-          if(relation.getTargetParam().equals(completeParamName)) {
-            JoinRelationAdvanced entry = new JoinRelationAdvanced(relation, (FskPortObject)originalNamesMap.get(relation.getSourceParam())[1], "");
-            entry.setSourceParam((String)originalNamesMap.get(relation.getSourceParam())[2]);
-            joinRelationList.add(entry);
+      // listOfParameterWithSuffixs should have at least the output parameters with suffix, if not the else section will be triggered.
+      String commonSuffix;
+      if(listOfParameterWithSuffixs.size() > 0 ) {
+        commonSuffix = findSuffix(listOfParameterWithSuffixs);
+        for(String missingParam : targets) {
+          String completeParamName = missingParam+commonSuffix;
+          for(JoinRelation relation :joinRelations){
+            if(relation.getTargetParam().equals(completeParamName)) {
+              foundRelation.add(relation);
+              JoinRelationAdvanced entry = new JoinRelationAdvanced(relation, (FskPortObject)originalNamesMap.get(relation.getSourceParam())[1], "");
+              entry.setSourceParam((String)originalNamesMap.get(relation.getSourceParam())[2]);
+              joinRelationList.add(entry);
+            }
           }
         }
+      }else {
+        List<JoinRelation> differences = joinRelations.stream()
+            .filter(element -> !foundRelation.contains(element))
+            .collect(Collectors.toList());
+        
+        List<String> remainTargets = differences.stream()
+            .map(element -> element.getTargetParam())
+            .collect(Collectors.toList());
+        commonSuffix = findSuffix(remainTargets);
+        
+        for(String completeParamName : remainTargets) {
+          for(JoinRelation relation :differences){
+            if(relation.getTargetParam().equals(completeParamName)) {
+              JoinRelationAdvanced entry = new JoinRelationAdvanced(relation, (FskPortObject)originalNamesMap.get(relation.getSourceParam())[1], "");
+              entry.setSourceParam((String)originalNamesMap.get(relation.getSourceParam())[2]);
+              joinRelationList.add(entry);
+            }
+          }
+        }
+        
       }
       ModelsToSuffixMap.put(SwaggerUtil.getModelId(portObject.modelMetadata), commonSuffix);
+      
     }
     
     return joinRelationList;
   }
+  public static LinkedHashMap<String, Object[]> generateColorMap(FskPortObject portObject,
+      LinkedHashMap<String, Object[]> originalNamesMap, List<Parameter> topLevelJoinedModelParams, 
+       AtomicInteger index, AtomicInteger generatedColorInt) {
+    
+    if (originalNamesMap == null) {
+      originalNamesMap = new LinkedHashMap<String, Object[]>();
+    }
+    if (portObject instanceof CombinedFskPortObject) {
+      
+      generateColorMap(((CombinedFskPortObject) portObject).getFirstFskPortObject(),
+               originalNamesMap, topLevelJoinedModelParams, index, generatedColorInt);
+ 
+      
+      generateColorMap(((CombinedFskPortObject) portObject).getSecondFskPortObject(),
+               originalNamesMap, topLevelJoinedModelParams, index, generatedColorInt);
+    } else {
+      
+      List<Parameter> listOfParameter = SwaggerUtil.getParameter(portObject.modelMetadata);
+      List<String> listOfParameterWithSuffixs = new ArrayList<>();
+      String colour = "";
+      if(generatedColorInt.get() < COLOR_LIST.length) {
+        colour  = COLOR_LIST[generatedColorInt.getAndIncrement()];
+      }else {
+        Random r = new Random();
+        colour  = "hsl(" + r.nextInt(360) + ", 80%,90%)";
+      }
+      
+      for (Parameter param : listOfParameter) {
+        String topParam = null ;
+        if(index.get() < topLevelJoinedModelParams.size() )
+         topParam = topLevelJoinedModelParams.get(index.get()).getId();
+        if(!StringUtils.isEmpty(topParam) && removeTrailingNumbers(topParam).equals(removeTrailingNumbers(param.getId()))) {
+          originalNamesMap.put(topParam, new Object[]{colour,param.getId()});
+          listOfParameterWithSuffixs.add(topParam);
+          index.getAndIncrement();
+        }
+      }
+      
+    }
+    return originalNamesMap;
+  }
+  
   public static String findSuffix(List<String> listOfParameter) {
     List<String> trailingNums = extractNumber(listOfParameter);
     int longestStringIndex = 0;

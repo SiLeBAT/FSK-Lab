@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
+import de.bund.bfr.knime.fsklab.preferences.PreferenceInitializer;
 import de.bund.bfr.knime.fsklab.nodes.ScriptHandler;
 import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
 import de.bund.bfr.metadata.swagger.Parameter;
@@ -107,7 +108,7 @@ public class GeneratedResourceFiles {
 
     try {
 
-      File temp_dir = FileUtil.createTempDir(resourceFolder);
+      File temp_dir = FileUtil.createTempDir(resourceFolder,new File(PreferenceInitializer.getFSKWorkingDirectory()));
       final File resourceFile = new File(temp_dir.getAbsolutePath(),file.getName());
 
       FileUtil.copy(file, resourceFile );
