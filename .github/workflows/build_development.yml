@@ -3,7 +3,7 @@ name: Java CI
 on: 
   push:
     branches:
-      - knime_4_5
+      - knime_4_5_pmm_tests
 
 jobs:
   build:
@@ -24,11 +24,3 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
       - name: Build with Maven
         run: mvn verify -B -Pjacoco
-      - name: Deploy to GITLAB
-        env:
-           GITLAB_NAME: ${{ secrets.GITLAB_USER }}
-           GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
-        shell: bash
-        run: |
-           chmod +x "${GITHUB_WORKSPACE}/.github/workflows/gitlab_development.sh"
-           "${GITHUB_WORKSPACE}/.github/workflows/gitlab_development.sh"
