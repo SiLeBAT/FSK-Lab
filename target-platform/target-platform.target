@@ -32,7 +32,6 @@
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="de.bund.bfr.knime.fsklab.features.ext.r.bin.x64.feature.group" version="3.4.4.201904051519"/>
-<unit id="de.bund.bfr.knime.fsklab.features.ext.r.bin.x86.feature.group" version="3.4.4.201904051519"/>
 <repository location="https://gitlab.bfr.berlin/silebat/legacy/raw/master/RBundles/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
