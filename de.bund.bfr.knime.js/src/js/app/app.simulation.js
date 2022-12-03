@@ -424,6 +424,11 @@ class APPSimulation {
 				else if ( inputType == 'file' ) {
 					console.log(window.location);
 					if (window.location.protocol != '' && window.location.host != '') {
+					    var timeStampInMs = window.performance && window.performance.now
+								            && window.performance.timing
+								            && window.performance.timing.navigationStart ? window.performance
+								            .now()
+								            + window.performance.timing.navigationStart : Date.now();
 				        // send AJAX request to acquire the JWT for the currently logged in
 				        // user. Subsequent requests need to carry the token in the
 				        // “Authorization” header
@@ -435,21 +440,22 @@ class APPSimulation {
 				            if (this.readyState == 4 && this.status == 200) {
 				                JWT = this.responseText;
 				            }
+				            // create temp folder for the current running instance of the
+					        // worklflow on the server
+					        // this folder will be removed after coping all the content inside
+					        // to the fsk object working directory.
+					        var anotherxhttp = new XMLHttpRequest();
+					        window.parentResourcesFolder = "knime://knime.mountpoint/tempResources/jsSimulatorTempFolder"
+					                + timeStampInMs;
+					        anotherxhttp.open("put", server
+					                + "/knime/rest/v4/repository/tempResources/jsSimulatorTempFolder"
+					                + timeStampInMs, true);
+					        anotherxhttp.setRequestHeader("Authorization", "Bearer" + JWT);
+					        anotherxhttp.send();
 				        };
 				        xhttp.open("GET", server + "/knime/rest/session", true);
 				        xhttp.send();
-				        // create temp folder for the current running instance of the
-				        // worklflow on the server
-				        // this folder will be removed after coping all the content inside
-				        // to the fsk object working directory.
-				        var anotherxhttp = new XMLHttpRequest();
-				        window.parentResourcesFolder = "knime://knime.mountpoint/tempResources/jsSimulatorTempFolder"
-				                + timeStampInMs;
-				        anotherxhttp.open("put", server
-				                + "/knime/rest/v4/repository/tempResources/jsSimulatorTempFolder"
-				                + timeStampInMs, true);
-				        anotherxhttp.setRequestHeader("Authorization", "Bearer" + JWT);
-				        anotherxhttp.send();
+				        
 			
 			            // title
 			            let $panel = $('<div class="tab-pane h-100" role="tabpanel"></div>')
@@ -459,7 +465,7 @@ class APPSimulation {
 			            $input.attr( 'id', 'paramInput_'+ param.id )
 							.data( 'param-input', param )  
 							.appendTo($panel);
-			            let button = $("<button id='filesButton' type='button' style='border-radius: 5px; background-color: #fff; color: green;'>+ Add Files</button>")
+			            let button = $("<button id='filesButton' type='button' style='border-radius: 5px; background-color: #fff; color: green;'>Add File</button>")
 			                .appendTo($panel);
 			            let filesContainer = $("<div id='filesArea-"+ param.id+"'></div>")
 			                .appendTo($panel);
@@ -556,9 +562,8 @@ class APPSimulation {
 				                            data: file,
 				                            type: 'put',
 				                            success: function (data) {
-				                                resourcesFiles
-				                                    .push("knime://knime.mountpoint"
-				                                        + data.path);
+				                                window.resourcesFiles[param.id] = "knime://knime.mountpoint"
+				                                        + data.path;
 				                            },
 				                            error: function (data) {
 				                                console.log('ERROR !!!', data);

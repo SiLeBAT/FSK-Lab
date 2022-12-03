@@ -11,6 +11,7 @@ simulator = function() {
 	view.init = function(representation, value) {
 		_rep = representation;
 	    _val = value;
+	    window.resourcesFiles = {};
 	    let _container = $(`<div class="simulationsDiv modal-sim"></div>`);
 	    document.createElement('body');
 	    $('body').html(_container);
@@ -57,6 +58,7 @@ simulator = function() {
 	   });
 		_val.simulations = sims;
 		_val.parentResourcesFolder = window.parentResourcesFolder;
+		_val.resourcesFiles = window.resourcesFiles;
 		_val.selectedSimulationIndex = _modelSim._simSelectedIndex;
 		return _val;
   };

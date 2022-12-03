@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
@@ -52,6 +53,8 @@ public class JSSimulatorViewValue extends JSONViewContent {
   private LinkedHashMap<String, Object[]> parametersMap;
 
   private String parentResourcesFolder;
+
+  private Map<String,String> resourcesFiles;
   
   public JSSimulatorViewValue() {
     simulations = new JSSimulation[0];
@@ -179,5 +182,13 @@ public class JSSimulatorViewValue extends JSONViewContent {
 
   public void setParentResourcesFolder(String parentResourcesFolder) {
     this.parentResourcesFolder = parentResourcesFolder;
+  }
+  
+  public Map <String, String> getResourcesFiles() {
+    return resourcesFiles;
+  }
+
+  public void setResourcesFiles(Map <String, String> resourcesFiles) {
+    this.resourcesFiles = resourcesFiles;
   }
 }

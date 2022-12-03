@@ -230,24 +230,34 @@ class JSSimulatorNodeModel
       throws IOException, URISyntaxException, InvalidSettingsException {
 
     final List<Parameter> inputParams = getViewRepresentation().parameters;
-    port.simulations.clear();
+    JSSimulatorViewValue value = getViewValue();
 
+    port.simulations.clear();
     for (final JSSimulation jsSimulation : val.getSimulations()) {
       final FskSimulation fskSimulation = new FskSimulation(jsSimulation.name);
       for (int i = 0; i < inputParams.size(); i++) {
         final String paramName = inputParams.get(i).getId();
         final String paramValue = jsSimulation.values.get(i);
         if (paramValue != null && inputParams.get(i).getDataType().equals(DataTypeEnum.FILE)) {
-          File file = new File(paramValue);
-
-          if (file.exists()) {
-            if (fskObj.getEnvironmentManager().isPresent()) {
-              Optional<Path> workingDirectory =
-                  fskObj.getEnvironmentManager().get().getEnvironment();
-              if (workingDirectory.isPresent()) {
-                String fileParam = copyFileToWorkingDir(paramValue, workingDirectory.get().toString());
-                fskSimulation.getParameters().put(paramName, fileParam);
-              }
+          Optional<Path> workingDirectory = null;
+          if (fskObj.getEnvironmentManager().isPresent()) {
+            workingDirectory =
+                fskObj.getEnvironmentManager().get().getEnvironment();
+          }
+          else {
+            workingDirectory = Optional.of(Files.createTempDirectory(Paths.get(PreferenceInitializer.getFSKWorkingDirectory()),"workingDirectory"));
+          }
+          
+          if(value.getResourcesFiles()!=null && value.getResourcesFiles().get(paramName) != null) {            
+            String fileParam = downloadFileToWorkingDir(value.getResourcesFiles().get(paramName), workingDirectory.get().toString());
+            fskSimulation.getParameters().put(paramName, fileParam);
+            
+          }else {
+            File file = new File(paramValue);
+            
+            if (file.exists()) {
+              String fileParam = copyFileToWorkingDir(paramValue, workingDirectory.get().toString());
+              fskSimulation.getParameters().put(paramName, fileParam);
             }
           }
         } else {
@@ -349,6 +359,29 @@ class JSSimulatorNodeModel
         OutputStream outStream = new FileOutputStream(fileTodownload)) {
       IOUtils.copy(inStream, outStream);
     }
-    return destinationPath;
+    return fileName;
+  }
+  
+  /**
+   * Downloads a file from a URL.The code here is considering that the fileURL is using KNIME
+   * Protocol
+   * 
+   * @param fileURL HTTP URL of the file to be downloaded
+   * @param workingDir path of the directory to save the file
+   * @throws IOException
+   * @throws URISyntaxException
+   * @throws InvalidSettingsException
+   */
+  public String downloadFileToWorkingDir(String fileURL, String workingDir)
+      throws IOException, URISyntaxException, InvalidSettingsException {
+    String fileName = fileURL.substring(fileURL.lastIndexOf("/") + 1, fileURL.length());
+    String destinationPath = workingDir + File.separator + fileName;
+    File fileTodownload = new File(destinationPath);
+    LOGGER.warn("JS Simulator path to write to: " + destinationPath);
+    try (InputStream inStream = FileUtil.openInputStream(fileURL);
+        OutputStream outStream = new FileOutputStream(fileTodownload)) {
+      IOUtils.copy(inStream, outStream);
+    }
+    return fileName;
   }
 }
