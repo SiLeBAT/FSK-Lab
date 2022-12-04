@@ -85,20 +85,32 @@ fskeditorjs = function () {
 		
 	    const result = {};
 	    Object.keys(jsosMetadata || {}).forEach(key => {
-	        if(schema.properties && schema.properties.hasOwnProperty(key) ){
-		        if(schema.properties[key].type !== 'object') {
-		            result[key] = jsosMetadata[key];
+	        if(schema.properties ){
+		        if(schema.properties.hasOwnProperty(key) ){
+			        if(schema.properties[key].type !== 'object') {
+			            result[key] = jsosMetadata[key];
+			        }
+			        else if(schema.properties[key].type === 'array') {
+			            result[key] = jsosMetadata[key];
+			        }
+			        else if(schema.properties[key].type === 'object' && Array.isArray(jsosMetadata[key])){
+			        	result[key] = jsosMetadata[key];
+			        }
+			        else if(schema.properties[key].type === 'object') {
+			            const value = convert(jsosMetadata[key], schema.properties[key]);
+			            if (value !== undefined) {
+			                result[key] = value;
+			            }
+			        }
+			    }else{
+				    if( key == 'modelName'){
+			        	result['name'] = jsosMetadata[key];
+			        }else if( key == 'name'){
+			        	result['modelName'] = jsosMetadata[key];
+			        }
 		        }
-		        else if(schema.properties[key].type === 'array') {
-		            result[key] = jsosMetadata[key];
-		        }
-		        else if(schema.properties[key].type === 'object') {
-		            const value = convert(jsosMetadata[key], schema.properties[key]);
-		            if (value !== undefined) {
-		                result[key] = value;
-		            }
-		        }
-		    }
+	        }
+		    
 	    });
 	    return result;
   }
@@ -319,13 +331,14 @@ fskeditorjs = function () {
       _metadata = _modalDetails._modelHandler.metaData;
       doSave(_metadata)
     });
-    Object.keys(_val.modelsTypeslabel).forEach(function(key) {
-	  if(_val.modelType == _val.modelsTypeslabel[key])
-	  	window['selectInput_Model_class'].val(key);
-	});
-    
-    window['selectInput_Model_class'].trigger('change');
-    
+    if(!_val.modeTypeChanged){
+	    Object.keys(_val.modelsTypeslabel).forEach(function(key) {
+		  if(_val.modelType == _val.modelsTypeslabel[key])
+		  	window['selectInput_Model_class'].val(key);
+		});
+	    
+	    window['selectInput_Model_class'].trigger('change');
+    }
     setTimeout(function() {
 	    window['selectInput_Model_class'].on('change', function(e){
 			
