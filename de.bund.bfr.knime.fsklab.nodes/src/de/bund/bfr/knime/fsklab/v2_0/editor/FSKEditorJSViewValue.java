@@ -19,6 +19,8 @@
 package de.bund.bfr.knime.fsklab.v2_0.editor;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -28,10 +30,14 @@ import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.js.core.JSONViewContent;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
+import com.fasterxml.jackson.module.jsonSchema.factories.SchemaFactoryWrapper;
 import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.nodes.environment.EnvironmentManager;
 import de.bund.bfr.knime.fsklab.v2_0.editor.FSKEditorJSNodeDialog.ModelType;
+import metadata.SwaggerUtil;
 
 class FSKEditorJSViewValue extends JSONViewContent {
 
@@ -58,7 +64,17 @@ class FSKEditorJSViewValue extends JSONViewContent {
   private String modelType;
   private String[] resourcesFiles;
   private String parentResourcesFolder;
+  public Map<String,JsonSchema> modelsMap = new HashMap<>();
+  public Map<String,String> modelsTypeslabel = new HashMap<>();
+  private boolean modeTypeChanged;
 
+  public boolean isModeTypeChanged() {
+    return modeTypeChanged;
+  }
+
+  public void setModeTypeChanged(boolean modeTypeChanged) {
+    this.modeTypeChanged = modeTypeChanged;
+  }
   public FSKEditorJSViewValue() {
     modelScript = "";
     visualizationScript = "";
@@ -68,6 +84,19 @@ class FSKEditorJSViewValue extends JSONViewContent {
     isCompleted = false;
     validationErrors = new String[0];
     modelType = ModelType.genericModel.name();
+    for(ModelType mt : FSKEditorJSNodeDialog.ModelType.values()) {
+      ObjectMapper mapper = new ObjectMapper();
+      SchemaFactoryWrapper visitor = new SchemaFactoryWrapper();
+      try {
+        mapper.acceptJsonFormatVisitor(SwaggerUtil.modelClasses.get(mt.name()), visitor);
+      } catch (JsonMappingException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+      JsonSchema schema = visitor.finalSchema();
+      modelsMap.put(mt.toString(), schema);
+      modelsTypeslabel.put(mt.toString() =="Data model"?"(Data)":mt.toString(), mt.name());
+    }
   }
 
   @Override
