@@ -167,6 +167,7 @@ public class JoinerNodeUtil {
     } else {
       
       List<Parameter> listOfParameter = SwaggerUtil.getParameter(portObject.modelMetadata);
+      String modelName = SwaggerUtil.getModelName(portObject.modelMetadata);
       List<String> listOfParameterWithSuffixs = new ArrayList<>();
       String colour = "";
       if(generatedColorInt.get() < COLOR_LIST.length) {
@@ -175,13 +176,19 @@ public class JoinerNodeUtil {
         Random r = new Random();
         colour  = "hsl(" + r.nextInt(360) + ", 80%,90%)";
       }
-      
+      boolean firstElement = true;
       for (Parameter param : listOfParameter) {
         String topParam = null ;
         if(index.get() < topLevelJoinedModelParams.size() )
          topParam = topLevelJoinedModelParams.get(index.get()).getId();
         if(!StringUtils.isEmpty(topParam) && removeTrailingNumbers(topParam).equals(removeTrailingNumbers(param.getId()))) {
-          originalNamesMap.put(topParam, new Object[]{colour,param.getId()});
+          if(firstElement ) {
+            originalNamesMap.put(topParam, new Object[]{colour,param.getId(),modelName});
+            firstElement = false;
+          }
+          else {
+            originalNamesMap.put(topParam, new Object[]{colour,param.getId()});
+          }
           listOfParameterWithSuffixs.add(topParam);
           index.getAndIncrement();
         }
