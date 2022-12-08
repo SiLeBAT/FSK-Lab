@@ -2,8 +2,11 @@ package de.bund.bfr.knime.fsklab.nodes.environment;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Optional;
@@ -67,11 +70,16 @@ public class ExistingEnvironmentManager implements EnvironmentManager {
 
   @Override
   public String[] getEntries() {
-    File existingWorkingDirectory = new File(environmentPath);
-    File[] files = existingWorkingDirectory.listFiles(File::isFile);
-    entries = Arrays.stream(files).map(File::getAbsolutePath)
-        .toArray(String[]::new);
-   
+    try {
+      URL url = FileUtil.toURL(environmentPath);
+      File existingWorkingDirectory = FileUtil.getFileFromURL(url);
+      File[] files = existingWorkingDirectory.listFiles(File::isFile);
+      entries = Arrays.stream(files).map(File::getAbsolutePath)
+          .toArray(String[]::new);
+      
+    } catch (InvalidPathException | IOException e) {
+      e.printStackTrace();
+    }
     return entries;
   }
   
