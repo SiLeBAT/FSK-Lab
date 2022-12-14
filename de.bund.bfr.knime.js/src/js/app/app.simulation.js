@@ -248,7 +248,6 @@ class APPSimulation {
 			if(O.paramsColorMap[param.id]){
 				param._label ? $label.text( param._label ) : $label.text(O.paramsColorMap[param.id][1] );
 				$label.css("background-color",O.paramsColorMap[param.id][0]);
-				//console.log($label.attr('style'));
 			}
 			else
 				param._label ? $label.text( param._label ) : $label.text( param.id );
@@ -262,7 +261,6 @@ class APPSimulation {
 
 			// input item
 			let $input = null;
-			console.log(param.dataType.toLowerCase());
 			// set input type
 			let inputType = null;
 			if ( param.dataType.toLowerCase() === 'integer' 
@@ -325,7 +323,7 @@ class APPSimulation {
 
 
 			if ( inputType ) {
-
+			
 				// numeric
 				if ( inputType == 'number' && param.classification != "CONSTANT") {
 
@@ -422,7 +420,6 @@ class APPSimulation {
 					O._$simDescInput = $input;
 				}
 				else if ( inputType == 'file' ) {
-					console.log(window.location);
 					if (window.location.protocol != '' && window.location.host != '') {
 					    var timeStampInMs = window.performance && window.performance.now
 								            && window.performance.timing
@@ -467,9 +464,11 @@ class APPSimulation {
 							.appendTo($panel);
 			            let button = $("<button id='filesButton' type='button' style='border-radius: 5px; background-color: #fff; color: green;'>Add File</button>")
 			                .appendTo($panel);
+			              
 			            let filesContainer = $("<div id='filesArea-"+ param.id+"'></div>")
 			                .appendTo($panel);
-			                
+				        
+			           
 				        let files = [];
 				        let fileIDMap = {}
 				        let fileUploadAJAXMap = {}
@@ -720,7 +719,7 @@ class APPSimulation {
 			$.each( params, ( i, param ) => {
 
 				if ( param.classification != 'OUTPUT' ) {
-
+					
 					let $formGroup = O._createFormField( param );
 					$formGroup ? $formGroup.appendTo( O._$simForm ) : null;
 				}
@@ -832,19 +831,14 @@ class APPSimulation {
 					}
 					// change other inputs
 					else {
-						
 					    if(field.param.dataType == 'FILE'){
-					    	let paramId  = field.input.attr('id').split('_').pop();
-					    	console.log('#filesArea_'+paramId);
-					    	let filesContainer = $('#filesArea-'+paramId);
-					    	console.log(filesContainer);
-					    	let fileElement = $("<div ><hr/><p>"
-				                        + paramValue
-				                        + "</div>");
-				    
-				    
-		                    filesContainer.html(fileElement);
 					    	
+					    	let paramId  = field.input.attr('id').split('_').pop();
+					    	let filesContainer = $('#filesArea-'+paramId);
+					    	let fileElement = $("<div ><hr/><p>"+ paramValue +"</div>");
+				    		
+                            
+		                    filesContainer.html(fileElement);
 						}
 						else{
 							! _isNull( paramValue ) ? field.input.val( paramValue ) : null;

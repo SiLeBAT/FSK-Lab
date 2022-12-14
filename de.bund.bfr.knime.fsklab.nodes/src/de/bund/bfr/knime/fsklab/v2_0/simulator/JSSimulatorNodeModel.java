@@ -55,6 +55,8 @@ import org.osgi.framework.ServiceReference;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.FskPlugin;
+import de.bund.bfr.knime.fsklab.nodes.environment.EnvironmentManager;
+import de.bund.bfr.knime.fsklab.nodes.environment.ExistingEnvironmentManager;
 import de.bund.bfr.knime.fsklab.preferences.PreferenceInitializer;
 import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
 import de.bund.bfr.knime.fsklab.v2_0.FskSimulation;
@@ -247,17 +249,19 @@ class JSSimulatorNodeModel
           else {
             workingDirectory = Optional.of(Files.createTempDirectory(Paths.get(PreferenceInitializer.getFSKWorkingDirectory()),"workingDirectory"));
           }
-          
+          Optional<EnvironmentManager> environmentManager = Optional.of(new ExistingEnvironmentManager(workingDirectory.get().toString()));
+
+          fskObj.setEnvironmentManager(environmentManager);
           if(value.getResourcesFiles()!=null && value.getResourcesFiles().get(paramName) != null) {            
             String fileParam = downloadFileToWorkingDir(value.getResourcesFiles().get(paramName), workingDirectory.get().toString());
-            fskSimulation.getParameters().put(paramName, fileParam);
+            fskSimulation.getParameters().put(paramName, "\""+fileParam+"\"");
             
           }else {
             File file = new File(paramValue);
             
             if (file.exists()) {
               String fileParam = copyFileToWorkingDir(paramValue, workingDirectory.get().toString());
-              fskSimulation.getParameters().put(paramName, fileParam);
+              fskSimulation.getParameters().put(paramName, "\""+fileParam+"\"");
             }
           }
         } else {
