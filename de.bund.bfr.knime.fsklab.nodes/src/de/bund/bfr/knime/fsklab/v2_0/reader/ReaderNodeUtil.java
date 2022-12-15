@@ -13,6 +13,7 @@ import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
 import de.bund.bfr.knime.fsklab.nodes.environment.ArchivedEnvironmentManager;
 import de.bund.bfr.knime.fsklab.nodes.environment.EnvironmentManager;
 import de.bund.bfr.knime.fsklab.rakip.RakipUtil;
+import de.bund.bfr.knime.fsklab.preferences.PreferenceInitializer;
 import de.bund.bfr.knime.fsklab.v2_0.CombinedFskPortObject;
 import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
 import de.bund.bfr.knime.fsklab.v2_0.FskSimulation;
@@ -372,8 +373,8 @@ public class ReaderNodeUtil {
         ArchiveEntry entry = workspaceEntry.get();
         FskMetaDataObject fmdo = new FskMetaDataObject(entry.getDescriptions().get(0));
         if (fmdo.getResourceType() == ResourceType.workspace) {
-            workspace = FileUtil.createTempFile("workspace", ".RData");
-            entry.extractFile(workspace);
+          workspace = FileUtil.createTempFile("workspace", ".RData", new File(PreferenceInitializer.getFSKWorkingDirectory()), false);
+          entry.extractFile(workspace);
         }
       }
 
@@ -391,7 +392,7 @@ public class ReaderNodeUtil {
       if (sbmlEntry.isPresent()) {
 
         // Extract entry to temporary file
-        File temporaryFile = File.createTempFile("model", ".sbml");
+        File temporaryFile = File.createTempFile("model", ".sbml",new File(PreferenceInitializer.getFSKWorkingDirectory()));
         sbmlEntry.get().extractFile(temporaryFile);
         SBMLDocument sbmlDocument = SBMLReader.read(temporaryFile);
         temporaryFile.delete();
@@ -564,7 +565,7 @@ public class ReaderNodeUtil {
             visualizationScript = loadTextEntry(entry);
           } else if (resourceType == ResourceType.workspace) {
             // Legacy check. Look for R workspace with R URI (from old files)
-            workspace = FileUtil.createTempFile("workspace", ".RData");
+            workspace = FileUtil.createTempFile("workspace", ".RData", new File(PreferenceInitializer.getFSKWorkingDirectory()), false);
             entry.extractFile(workspace);
           }
         }
@@ -584,7 +585,7 @@ public class ReaderNodeUtil {
         FskMetaDataObject fmdo =
             new FskMetaDataObject(workspaceEntry.get().getDescriptions().get(0));
         if (fmdo.getResourceType() == ResourceType.workspace) {
-          workspace = FileUtil.createTempFile("workspace", ".RData");
+          workspace = FileUtil.createTempFile("workspace", ".RData", new File(PreferenceInitializer.getFSKWorkingDirectory()), false);
           workspaceEntry.get().extractFile(workspace);
         }
       }
@@ -735,7 +736,7 @@ public class ReaderNodeUtil {
   private static String loadTextEntry(final ArchiveEntry entry) throws IOException {
 
     // Create temporary file with script
-    File temp = File.createTempFile("temp", null);
+    File temp = File.createTempFile("temp", null, new File(PreferenceInitializer.getFSKWorkingDirectory()));
     String contents;
 
     try {
@@ -758,7 +759,7 @@ public class ReaderNodeUtil {
       throws JsonProcessingException, IOException {
 
     // Create temporary file with metadata
-    File temp = File.createTempFile("metadata", ".json");
+    File temp = File.createTempFile("metadata", ".json", new File(PreferenceInitializer.getFSKWorkingDirectory()));
     metadataEntry.extractFile(temp);
 
     // Load metadata from temporary file
@@ -842,7 +843,7 @@ public class ReaderNodeUtil {
       throws IOException, XMLException {
 
     // Create temporary file for extracting SEDML and read it.
-    File tempFile = File.createTempFile("simulations", ".sedml");
+    File tempFile = File.createTempFile("simulations", ".sedml", new File(PreferenceInitializer.getFSKWorkingDirectory()));
     simulationsEntry.extractFile(tempFile);
 
     // Read SEDML and delete temporary file

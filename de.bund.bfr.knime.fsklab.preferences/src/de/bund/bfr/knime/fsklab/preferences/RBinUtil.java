@@ -63,8 +63,8 @@ public class RBinUtil {
 	/**
 	 * The temp directory used as a working directory for R.
 	 */
-	private static final String TEMP_PATH = FilenameUtils.separatorsToUnix(KNIMEConstants.getKNIMETempDir());
-
+	private static final String TEMP_PATH = FilenameUtils.separatorsToUnix(PreferenceInitializer.getFSKWorkingDirectory());
+	
 	private final static NodeLogger LOGGER = NodeLogger.getLogger(RBinUtil.class);
 
 	/**
@@ -115,7 +115,7 @@ public class RBinUtil {
 		File rOutFile;
 
 		try {
-			propsFile = FileUtil.createTempFile("R-propsTempFile-", ".r", true);
+			propsFile = FileUtil.createTempFile("R-propsTempFile-", ".r", tmpPath, true);
 			rOutFile = FileUtil.createTempFile("R-propsTempFile-", ".Rout", tmpPath, true);
 		} catch (IOException e2) {
 			LOGGER.error("Could not create temporary files for R execution.");

@@ -18,21 +18,6 @@
  */
 package de.bund.bfr.knime.fsklab.v2_0.runner;
 
-import de.bund.bfr.knime.fsklab.nodes.DataArray;
-import de.bund.bfr.knime.fsklab.nodes.JsonHandler;
-import de.bund.bfr.knime.fsklab.nodes.ParameterJson;
-import de.bund.bfr.knime.fsklab.nodes.ScriptHandler;
-import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
-import de.bund.bfr.knime.fsklab.r.client.ScriptExecutor;
-import de.bund.bfr.knime.fsklab.v2_0.CombinedFskPortObject;
-import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
-import de.bund.bfr.knime.fsklab.v2_0.FskPortObjectSpec;
-import de.bund.bfr.knime.fsklab.v2_0.FskSimulation;
-import de.bund.bfr.knime.fsklab.v2_0.JoinRelation;
-import de.bund.bfr.knime.fsklab.v2_0.JoinRelationAdvanced;
-import de.bund.bfr.knime.fsklab.v2_0.joiner.JoinerNodeModel;
-import de.bund.bfr.knime.fsklab.v2_0.joiner.JoinerNodeUtil;
-import de.bund.bfr.metadata.swagger.Parameter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -42,12 +27,13 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import metadata.SwaggerUtil;
 import org.apache.commons.lang.StringUtils;
 import org.knime.base.data.xml.SvgCell;
 import org.knime.base.data.xml.SvgImageContent;
@@ -66,8 +52,23 @@ import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.image.ImagePortObject;
 import org.knime.core.node.port.image.ImagePortObjectSpec;
 import org.knime.core.node.workflow.VariableType;
-import org.knime.core.node.workflow.VariableType.StringArrayType;
 import org.knime.core.util.FileUtil;
+import de.bund.bfr.knime.fsklab.nodes.DataArray;
+import de.bund.bfr.knime.fsklab.nodes.JsonHandler;
+import de.bund.bfr.knime.fsklab.nodes.ParameterJson;
+import de.bund.bfr.knime.fsklab.nodes.ScriptHandler;
+import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
+import de.bund.bfr.knime.fsklab.r.client.ScriptExecutor;
+import de.bund.bfr.knime.fsklab.v2_0.CombinedFskPortObject;
+import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
+import de.bund.bfr.knime.fsklab.v2_0.FskPortObjectSpec;
+import de.bund.bfr.knime.fsklab.v2_0.FskSimulation;
+import de.bund.bfr.knime.fsklab.v2_0.JoinRelation;
+import de.bund.bfr.knime.fsklab.v2_0.JoinRelationAdvanced;
+import de.bund.bfr.knime.fsklab.v2_0.joiner.JoinerNodeModel;
+import de.bund.bfr.knime.fsklab.v2_0.joiner.JoinerNodeUtil;
+import de.bund.bfr.metadata.swagger.Parameter;
+import metadata.SwaggerUtil;
 
 public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjectHolder {
 
@@ -91,7 +92,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
 
   // isTest field is only used by maven build
   public static boolean isTest = false;
-
+  LinkedHashMap <String, String> modelsToSuffixMap ;
   public RunnerNodeModel() {
     super(IN_TYPES, OUT_TYPES);
   }
@@ -187,14 +188,18 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
 
       FskSimulation combinedSim = fskObj.simulations.get(fskObj.selectedSimulationIndex);
       List<JoinRelationAdvanced> joinRelationList = null;
+      modelsToSuffixMap = new LinkedHashMap<>();
       if (fskObj instanceof CombinedFskPortObject) {
-        joinRelationList = getMapOfSourceParameters(
+        List<Parameter> listOfParameter = SwaggerUtil.getParameter(fskObj.modelMetadata);
+        joinRelationList = JoinerNodeUtil.generateJoinerRelationAdvanced(fskObj, null, listOfParameter, getJoinRelations((CombinedFskPortObject)fskObj,
+            new ArrayList<JoinRelation>()), new AtomicInteger(0), null, modelsToSuffixMap, new ArrayList<JoinRelation>());
+        /*joinRelationList = getMapOfSourceParameters(
             fskObj,
             getJoinRelations((CombinedFskPortObject)fskObj, new ArrayList<JoinRelation>()),
             null,
             ""
             );
-          
+          */
       }
      
       runFskPortObject(fskObj, combinedSim, exec, joinRelationList, "");
@@ -462,7 +467,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
 
       if (!(firstFskObj instanceof CombinedFskPortObject)) {
         fskSimulationFirst = JoinerNodeUtil.makeIndividualSimulation(combinedSim,null,
-             firstFskObj,suffix + JoinerNodeModel.SUFFIX_FIRST);
+             firstFskObj, modelsToSuffixMap.get(SwaggerUtil.getModelId(firstFskObj.modelMetadata)));
       } else {
         firstFskObj = stepIntoSubModel(firstFskObj, fskSimulationFirst, 
             combinedSim, exec, joinRelationList, suffix + JoinerNodeModel.SUFFIX_FIRST);
@@ -481,7 +486,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
 
       if (!(firstFskObj instanceof CombinedFskPortObject)) {
         firstFskObj = runSnippet(firstFskObj, fskSimulationFirst, context, joinRelationList,
-            suffix + JoinerNodeModel.SUFFIX_FIRST);
+            modelsToSuffixMap.get(SwaggerUtil.getModelId(firstFskObj.modelMetadata)));
 
       }
 
@@ -492,7 +497,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
       FskPortObject secondFskObj = comFskObj.getSecondFskPortObject();
 
       FskSimulation fskSimulationSecond = JoinerNodeUtil.makeIndividualSimulation(combinedSim,
-          null, secondFskObj, suffix + JoinerNodeModel.SUFFIX_SECOND);
+          null, secondFskObj, modelsToSuffixMap.get(SwaggerUtil.getModelId(secondFskObj.modelMetadata)));
 
  
       // execute 2 *******
@@ -505,7 +510,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
         secondFskObj = stepIntoSubModel(secondFskObj, fskSimulationSecond,
             combinedSim, exec, joinRelationList, suffix + JoinerNodeModel.SUFFIX_SECOND);
       } else {
-       secondFskObj = runSnippet( secondFskObj, fskSimulationSecond, context, joinRelationList, suffix + JoinerNodeModel.SUFFIX_SECOND);
+       secondFskObj = runSnippet( secondFskObj, fskSimulationSecond, context, joinRelationList, modelsToSuffixMap.get(SwaggerUtil.getModelId(secondFskObj.modelMetadata)));
 
 
         // save output in the proper variable (with suffix)

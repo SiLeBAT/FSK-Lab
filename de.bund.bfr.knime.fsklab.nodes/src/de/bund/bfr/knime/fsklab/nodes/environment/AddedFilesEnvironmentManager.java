@@ -3,6 +3,7 @@ package de.bund.bfr.knime.fsklab.nodes.environment;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -10,6 +11,7 @@ import org.apache.commons.io.FileUtils;
 import org.knime.core.util.FileUtil;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import de.bund.bfr.knime.fsklab.preferences.PreferenceInitializer;
 /**
  * AddedFilesEnvironmentManager handles working directories made out of referenced files in 
  * addition to the working directories contained within FSKX archives. If the
@@ -82,7 +84,7 @@ public class AddedFilesEnvironmentManager implements EnvironmentManager {
     try {
       //Path environment = Files.createTempDirectory("workingDirectory");
       if(!environment.isPresent()) {
-        environment = Optional.of(Files.createTempDirectory("workingDirectory"));
+        environment = Optional.of(Files.createTempDirectory(Paths.get(PreferenceInitializer.getFSKWorkingDirectory()),"workingDirectory"));
       }
         
       for (Path filePath : filePaths) {

@@ -20,6 +20,8 @@ package de.bund.bfr.knime.fsklab.v2_0.simulator;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
@@ -38,6 +40,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
 import de.bund.bfr.knime.fsklab.v2_0.FskSimulation;
+import de.bund.bfr.knime.fsklab.v2_0.joiner.JoinerNodeUtil;
 import de.bund.bfr.knime.fsklab.v2_0.simulator.JSSimulatorViewValue.JSSimulation;
 import de.bund.bfr.metadata.swagger.Model;
 import de.bund.bfr.metadata.swagger.Parameter;
@@ -170,7 +173,10 @@ class JSSimulatorNodeModel
       final JSSimulatorViewValue value = getViewValue();
 
       createSimulation(value);
+      
+      List<Parameter> listOfParameter = SwaggerUtil.getParameter(port.modelMetadata);
 
+      value.setParametersMap(JoinerNodeUtil.generateColorMap(port, null, listOfParameter, new AtomicInteger(0), new AtomicInteger(0)));
       LOGGER.info(
           " saving '" + value.getSelectedSimulationIndex() + "' as the selected simulation index!");
     }
