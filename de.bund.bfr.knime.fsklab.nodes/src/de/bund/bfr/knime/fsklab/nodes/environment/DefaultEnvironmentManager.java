@@ -3,6 +3,7 @@ package de.bund.bfr.knime.fsklab.nodes.environment;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Optional;
 import org.knime.core.util.FileUtil;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -49,6 +50,17 @@ public class DefaultEnvironmentManager implements EnvironmentManager {
   @Override
   public void deleteEnvironment(Path path) {
     FileUtil.deleteRecursively(path.toFile());  
+  }
+
+
+  @Override
+  public String[] getEntries() {
+    File existingWorkingDirectory = new File(environmentPath);
+    File[] files = existingWorkingDirectory.listFiles(File::isFile);
+    String entries[] = Arrays.stream(files).map(File::getName)
+        .toArray(String[]::new);
+   
+    return entries;
   }
 
 }

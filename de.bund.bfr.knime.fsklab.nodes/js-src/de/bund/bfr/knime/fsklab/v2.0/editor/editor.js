@@ -80,6 +80,41 @@ fskeditorjs = function () {
     // TODO: remove this test for the vocabularies
     // makeRequest("source");
   }
+
+  function convert(jsosMetadata, schema) {
+		
+	    const result = {};
+	    Object.keys(jsosMetadata || {}).forEach(key => {
+	        if(schema.properties ){
+		        if(schema.properties.hasOwnProperty(key) ){
+			        if(schema.properties[key].type !== 'object') {
+			            result[key] = jsosMetadata[key];
+			        }
+			        else if(schema.properties[key].type === 'array') {
+			            result[key] = jsosMetadata[key];
+			        }
+			        else if(schema.properties[key].type === 'object' && Array.isArray(jsosMetadata[key])){
+			        	result[key] = jsosMetadata[key];
+			        }
+			        else if(schema.properties[key].type === 'object') {
+			            const value = convert(jsosMetadata[key], schema.properties[key]);
+			            if (value !== undefined) {
+			                result[key] = value;
+			            }
+			        }
+			    }else{
+				    if( key == 'modelName'){
+			        	result['name'] = jsosMetadata[key];
+			        }else if( key == 'name'){
+			        	result['modelName'] = jsosMetadata[key];
+			        }
+		        }
+	        }
+		    
+	    });
+	    return result;
+  }
+  
   function initResourcesTab(){
     if (window.location.protocol != '' && window.location.host != '') {
         // send AJAX request to acquire the JWT for the currently logged in
@@ -296,9 +331,69 @@ fskeditorjs = function () {
       _metadata = _modalDetails._modelHandler.metaData;
       doSave(_metadata)
     });
+    if(!_val.modeTypeChanged){
+	    Object.keys(_val.modelsTypeslabel).forEach(function(key) {
+		  if(_val.modelType == _val.modelsTypeslabel[key])
+		  	window['selectInput_Model_class'].val(key);
+		});
+	    
+	    window['selectInput_Model_class'].trigger('change');
+    }
+    setTimeout(function() {
+	    window['selectInput_Model_class'].on('change', function(e){
+			
+		    var modelType = $('#selectInput_Model_class').val();
+		    modelType = modelType == '(Data)' ? 'Data model' : modelType;
+		    
+			let receivedObject = _val.modelMetaData instanceof Object? _val.modelMetaData: JSON.parse(_val.modelMetaData);
+      		let metaData = Array.isArray(receivedObject) ? receivedObject[0] : receivedObject;
+		    
+		    var convertedModel = convert(metaData, _val.modelsMap[modelType]);
+		    
+		    convertedModel.modelType = _val.modelsTypeslabel[modelType];
+		    convertedModel.generalInformation.modelCategory.modelClass = modelType;
+		    
+		    _val.modelMetaData = convertedModel;
+		    _val.modeTypeChanged = "true";
+		    extractAndCreateUI(convertedModel);
+		    setTimeout(function() {
+				    findAndRemoveCloseApplyButton(window);
+					//override the seleniumKnimeBridge showModal 
+					parantFunction = window.parent.parent.seleniumKnimeBridge.showModal;
+					window.parent.parent.seleniumKnimeBridge.showModal = (function(oldShowModal) {
+						showModal = function (title, description, choicesString) {
+							let choices = JSON.parse(choicesString);
+							//remove the second option
+							choices.splice(1, 1);
+							oldShowModal(title, description, JSON.stringify(choices));
+						};
+						return showModal;
+					})(parantFunction);
+			}, 500);
+			});
+	}, 500);
+	
+	
+
+    
   }
 
-
+  function findAndRemoveCloseApplyButton(element){
+		if(!element)
+			return;
+		if(element.document){
+			button = element.document.getElementById('knimeSeleniumBridge_closeApplyButton')
+			if(button){
+				button.remove();
+			}
+			else {
+				findAndRemoveCloseApplyButton(element.parent);
+			}
+		}else{
+			findAndRemoveCloseApplyButton(element.parent);
+		}
+  }
+  
   view.getComponentValue = () => {
     _metadata = _modalDetails._modelHandler.metaData;
     delete _metadata['simulation'];
@@ -321,6 +416,7 @@ fskeditorjs = function () {
       environment: _val.environment,
       completed: true,
       validationErrors: [],
+      modeTypeChanged:_val.modeTypeChanged,
       modelType: _metadata.modelType
     };
     const ajv = new Ajv({allErrors:true});

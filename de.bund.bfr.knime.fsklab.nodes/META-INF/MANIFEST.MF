@@ -52,7 +52,8 @@ Bundle-ClassPath: .,
  libs/batik-util-1.7.jar,
  libs/fskml-1.0.13.jar,
  libs/jhdf-0.5.11.jar,
- libs/vocabularies-2.0.0.jar
+ libs/vocabularies-2.0.0.jar,
+ libs/jackson-module-jsonschema-2.2.1.jar
 Export-Package: de.bund.bfr.knime.fsklab;
   uses:="org.osgi.framework,
    javax.swing.tree,

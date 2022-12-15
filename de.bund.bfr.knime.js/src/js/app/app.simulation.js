@@ -546,12 +546,26 @@ class APPSimulation {
 		if ( params.length > 0 ) {
 			// create form group for each param
 			$.each( params, ( i, param ) => {
-
+				if(O.paramsColorMap[param.id][2] ){
+					// create model name title 
+							// formgroup
+					let $formGroup = $( '<div class="form-group row"></div>' );
+		
+					// label containing the model name
+					let $label = $( '<label class="col-form-label col-form-label-sm col-9 col-xs-3 order-1 sim-param-label"></label>' )
+						.text(O.paramsColorMap[param.id][2] )
+						.css("background-color",O.paramsColorMap[param.id][0])
+						.appendTo( $formGroup );
+						
+					let $simDescFormGroup = O._createFormField( simDescParam );
+					$formGroup ? $formGroup.appendTo( O._$simForm ) : null;
+				}
 				if ( param.classification != 'OUTPUT' ) {
 
 					let $formGroup = O._createFormField( param );
 					$formGroup ? $formGroup.appendTo( O._$simForm ) : null;
 				}
+				
 			} );
 
 			// init form items' functions: touchspin, range, select2 ...
