@@ -279,7 +279,8 @@ class APPUI {
 				select2Defaults.selectionCssClass += ' select2-selection--max-sel-1';
 			}
 			// create select2
-			$el.select2( select2Defaults );
+			
+			window[$($el).attr('id')] = $el.select2( select2Defaults );
 
 			// $( window ).on( 'resize', function() {
 			// 	$el.select2( select2Defaults );

@@ -15,4 +15,6 @@ public interface EnvironmentManager {
 
   @JsonIgnore
   void deleteEnvironment(Path path);
+  
+  String[] getEntries();
 }
