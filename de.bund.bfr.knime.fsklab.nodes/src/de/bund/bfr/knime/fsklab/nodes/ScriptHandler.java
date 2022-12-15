@@ -22,6 +22,7 @@ import de.bund.bfr.knime.fsklab.ResourceFileNotFoundException;
 import de.bund.bfr.knime.fsklab.VariableNotGlobalException;
 import de.bund.bfr.knime.fsklab.nodes.plot.ModelPlotter;
 import de.bund.bfr.knime.fsklab.r.client.ScriptExecutor;
+import de.bund.bfr.knime.fsklab.preferences.PreferenceInitializer;
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
 import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
 import de.bund.bfr.knime.fsklab.v2_0.FskSimulation;
@@ -72,7 +73,7 @@ public abstract class ScriptHandler implements AutoCloseable {
     if (fskObj.getEnvironmentManager().isPresent()) {
       workingDirectory = fskObj.getEnvironmentManager().get().getEnvironment().get();
     } else {
-      workingDirectory = FileUtil.createTempDir("tempResourceFiles").toPath();
+      workingDirectory = FileUtil.createTempDir("tempResourceFiles",new File(PreferenceInitializer.getFSKWorkingDirectory())).toPath();
 
     }
     setWorkingDirectory(workingDirectory, exec);
@@ -407,8 +408,7 @@ public abstract class ScriptHandler implements AutoCloseable {
     String command = createVectorQuery(outputFileParameterIds);
 
     try {
-      File newResourcesDirectory = FileUtil.createTempDir("generatedResources");
-
+      File newResourcesDirectory = FileUtil.createTempDir("generatedResources",new File(PreferenceInitializer.getFSKWorkingDirectory()));
 
       if (!command.equals("c()") && !command.equals("print([])")) {
         try {

@@ -1,5 +1,5 @@
 package de.bund.bfr.knime.fsklab.nodes;
-
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
@@ -110,7 +110,7 @@ public class PythonScriptHandler extends ScriptHandler {
   @Override
   public void saveWorkspace(FskPortObject fskObj, ExecutionContext exec) throws Exception {
     if (fskObj.getWorkspace() == null) {
-      fskObj.setWorkspace(FileUtil.createTempFile("workspace", ".py").toPath());
+      fskObj.setWorkspace(FileUtil.createTempFile("workspace", ".py",new File(PreferenceInitializer.getFSKWorkingDirectory()), false).toPath());
     }
 
   }

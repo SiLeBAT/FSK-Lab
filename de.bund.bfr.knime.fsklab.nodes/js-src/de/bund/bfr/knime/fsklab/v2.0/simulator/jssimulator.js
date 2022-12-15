@@ -39,7 +39,7 @@ simulator = function() {
 		   });
 		   _simulations.push({'name':sim['name'],'parameters':params});
 	   });
-	   _modelSim._updateContent({'modelMath':JSON.parse(value.modelMath)}, 0, _simulations);
+	   _modelSim._updateContent({'modelMath':JSON.parse(value.modelMath)}, 0, _simulations, _val.parametersMap);
 	};
 
 	view.getComponentValue = function() {

@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
@@ -46,7 +47,7 @@ import org.knime.core.node.workflow.WorkflowCopyContent;
 import org.knime.core.node.workflow.WorkflowCreationHelper;
 import org.knime.core.node.workflow.WorkflowManager;
 import org.knime.core.util.FileUtil;
-
+import de.bund.bfr.knime.fsklab.preferences.PreferenceInitializer;
 class WorkflowWriterNodeModel extends NoInternalsModel {
 
   private static final PortType[] IN_TYPES = {};
@@ -152,13 +153,13 @@ class WorkflowWriterNodeModel extends NoInternalsModel {
     }
 
     // save the sub workflow to some temp folder
-    Path tempDirWithPrefix = Files.createTempDirectory(nodeContext.getNodeContainer()
+    Path tempDirWithPrefix = Files.createTempDirectory(Paths.get(PreferenceInitializer.getFSKWorkingDirectory()), nodeContext.getNodeContainer()
         .getNameWithID().toString().replaceAll("\\W", "").replace(" ", ""));
 
     File srcDir = tempDirWithPrefix.toFile();
     parentSubWorkflow.save(srcDir, exec, true);
     // TODO find a way to release the folder
-    Path tempdisDirWithPrefix = Files.createTempDirectory(nodeContext.getNodeContainer()
+    Path tempdisDirWithPrefix = Files.createTempDirectory(Paths.get(PreferenceInitializer.getFSKWorkingDirectory()), nodeContext.getNodeContainer()
         .getNameWithID().toString().replaceAll("\\W", "").replace(" ", ""));
     File destDir = tempdisDirWithPrefix.toFile();
 

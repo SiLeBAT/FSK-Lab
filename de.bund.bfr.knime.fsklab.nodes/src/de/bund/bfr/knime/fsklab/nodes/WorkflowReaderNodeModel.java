@@ -22,6 +22,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +50,7 @@ import org.knime.core.node.workflow.WorkflowLoadHelper;
 import org.knime.core.node.workflow.WorkflowManager;
 import org.knime.core.node.workflow.WorkflowPersistor.WorkflowLoadResult;
 import org.knime.core.util.FileUtil;
+import de.bund.bfr.knime.fsklab.preferences.PreferenceInitializer;
 
 class WorkflowReaderNodeModel extends NoInternalsModel {
 
@@ -92,7 +94,7 @@ class WorkflowReaderNodeModel extends NoInternalsModel {
     exec.setMessage("Reading subworkflow");
     final WorkflowContext origContext = NodeContext.getContext().getWorkflowManager().getContext();
     NodeContext nodeContext = NodeContext.getContext();
-    Path tempDirWithPrefix = Files.createTempDirectory(nodeContext.getNodeContainer()
+    Path tempDirWithPrefix = Files.createTempDirectory(Paths.get(PreferenceInitializer.getFSKWorkingDirectory()), nodeContext.getNodeContainer()
         .getNameWithID().toString().replaceAll("\\W", "").replace(" ", ""));
 
     FileUtil.unzip(new File(nodeSettings.filePath), tempDirWithPrefix.toFile());

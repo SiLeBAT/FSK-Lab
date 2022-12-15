@@ -15,6 +15,7 @@ import de.bund.bfr.knime.fsklab.v2_0.FskSimulation;
 import de.bund.bfr.knime.fsklab.v2_0.runner.RunnerNodeInternalSettings;
 import de.bund.bfr.knime.fsklab.v2_0.runner.RunnerNodeSettings;
 import de.bund.bfr.metadata.swagger.Parameter;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -163,7 +164,7 @@ public class RScriptHandler extends ScriptHandler {
   @Override
   public void saveWorkspace(final FskPortObject fskObj, ExecutionContext exec) throws Exception {
     if (fskObj.getWorkspace() == null) {
-      fskObj.setWorkspace(FileUtil.createTempFile("workspace", ".RData").toPath());
+      fskObj.setWorkspace(FileUtil.createTempFile("workspace", ".RData",new File(PreferenceInitializer.getFSKWorkingDirectory()), false).toPath());
     }
 
 

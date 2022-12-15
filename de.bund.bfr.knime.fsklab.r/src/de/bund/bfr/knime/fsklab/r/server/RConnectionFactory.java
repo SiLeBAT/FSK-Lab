@@ -102,13 +102,13 @@ public class RConnectionFactory {
 		try {
 			// try creating a subdirectory in the KNIME temp folder to have all
 			// R stuff in one place
-			dir = FileUtil.createTempDir("knime-r-tmp", KNIMEConstants.getKNIMETempPath().toFile());
+			dir = FileUtil.createTempDir("knime-r-tmp", new File(PreferenceInitializer.getFSKWorkingDirectory()));
 		} catch (final IOException e) {
 			// this should never happen, but if it does, using the existing
 			// KNIME temp folder directly
 			// should work well enough.
 			LOGGER.warn("Could not create temporary directory for R integration.", e);
-			dir = KNIMEConstants.getKNIMETempPath().toFile();
+			dir = new File(PreferenceInitializer.getFSKWorkingDirectory());
 		}
 
 		tempDir = dir;
