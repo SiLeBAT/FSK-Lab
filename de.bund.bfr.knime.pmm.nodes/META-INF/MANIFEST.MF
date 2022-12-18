@@ -63,9 +63,10 @@ Export-Package: de.bund.bfr.knime.pmm.combaseio,
 Bundle-ClassPath: .,
  bfr-swing-1.0-SNAPSHOT.jar,
  jcalendar-1.4.jar,
- nashorn.jar,
  fskml-0.0.1-SNAPSHOT.jar
 Bundle-Activator: de.bund.bfr.knime.pmm.nodes.Plugin
 Automatic-Module-Name: de.bund.bfr.knime.pmm.nodes
-Import-Package: org.w3c.dom.events
+Import-Package: org.jfree.chart,
+ org.lsmp.djep.djep,
+ org.w3c.dom.events
 

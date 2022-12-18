@@ -37,6 +37,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -81,6 +82,7 @@ import de.bund.bfr.knime.fsklab.nodes.common.ui.FPanel;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.JsonPanel;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.ScriptPanel;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.UIUtils;
+import de.bund.bfr.knime.fsklab.nodes.environment.ArchivedEnvironmentManager;
 import de.bund.bfr.knime.fsklab.nodes.environment.EnvironmentManager;
 import de.bund.bfr.metadata.swagger.ConsumptionModel;
 import de.bund.bfr.metadata.swagger.DataModel;
@@ -95,6 +97,7 @@ import de.bund.bfr.metadata.swagger.ProcessModel;
 import de.bund.bfr.metadata.swagger.QraModel;
 import de.bund.bfr.metadata.swagger.RiskModel;
 import de.bund.bfr.metadata.swagger.ToxicologicalModel;
+import de.bund.bfr.knime.fsklab.preferences.PreferenceInitializer;
 
 /**
  * A port object for an FSK model port providing R scripts and model meta data.
@@ -386,7 +389,7 @@ public class FskPortObject implements PortObject {
       String modelScript = "";
       String visualizationScript = "";
 
-      final Path workspacePath = FileUtil.createTempFile("workspace", ".r").toPath();
+      final Path workspacePath = FileUtil.createTempFile("workspace", ".r", new File(PreferenceInitializer.getFSKWorkingDirectory()), false).toPath();
       List<String> packages = new ArrayList<>();
       
       Model modelMetadata = null;
@@ -483,6 +486,13 @@ public class FskPortObject implements PortObject {
     metaDataPane.setName("Meta data");
 
     final JPanel librariesPanel = UIUtils.createLibrariesPanel(packages);
+    final JPanel resourcesPanel;
+    if (environmentManager.isPresent()) {
+      resourcesPanel =
+          UIUtils.createResourcesPanel(Arrays.asList(environmentManager.get().getEntries()));
+    } else {
+      resourcesPanel = UIUtils.createResourcesPanel(new ArrayList<>());
+    }
 
     final JPanel simulationsPanel = new SimulationsPanel();
 
@@ -498,7 +508,7 @@ public class FskPortObject implements PortObject {
         ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER));
 
     return new JComponent[] {modelScriptPanel, vizScriptPanel, metaDataPane, librariesPanel,
-        simulationsPanel, readmePanel};
+        simulationsPanel, readmePanel,resourcesPanel};
   }
 
   private class SimulationsPanel extends FPanel {

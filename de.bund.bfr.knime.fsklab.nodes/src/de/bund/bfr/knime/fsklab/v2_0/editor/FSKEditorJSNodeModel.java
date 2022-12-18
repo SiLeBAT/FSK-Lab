@@ -27,6 +27,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -56,6 +57,8 @@ import org.knime.core.node.port.PortObjectHolder;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.web.ValidationError;
+import org.knime.core.node.workflow.NodeContext;
+import org.knime.core.node.workflow.WorkflowManager;
 import org.knime.core.util.FileUtil;
 import org.knime.core.util.IRemoteFileUtilsService;
 import org.knime.js.core.node.AbstractWizardNodeModel;
@@ -69,6 +72,7 @@ import de.bund.bfr.fskml.RScript;
 import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
 import de.bund.bfr.knime.fsklab.nodes.environment.AddedFilesEnvironmentManager;
+import de.bund.bfr.knime.fsklab.preferences.PreferenceInitializer;
 import de.bund.bfr.knime.fsklab.nodes.environment.EnvironmentManager;
 import de.bund.bfr.knime.fsklab.nodes.environment.ExistingEnvironmentManager;
 import de.bund.bfr.knime.fsklab.v2_0.CombinedFskPortObject;
@@ -353,7 +357,7 @@ final class FSKEditorJSNodeModel
         if (fskObj != null &&fskObj.getEnvironmentManager().isPresent()) {
           workingDirectory = fskObj.getEnvironmentManager().get().getEnvironment();
         } else {
-          workingDirectory = Optional.of(Files.createTempDirectory("workingDirectory"));
+          workingDirectory = Optional.of(Files.createTempDirectory(Paths.get(PreferenceInitializer.getFSKWorkingDirectory()),"workingDirectory"));
         }
         environmentManager = Optional.of(new ExistingEnvironmentManager(workingDirectory.get().toString()));
         for (String fileRequestString : viewValue.getResourcesFiles()) {
@@ -400,7 +404,7 @@ final class FSKEditorJSNodeModel
         //metadata = MAPPER.readValue(viewValue.getModelMetaData(), modelClass);
         metadata =  new ConversionUtils().convertModel(MAPPER.readTree(viewValue.getModelMetaData()),
             ConversionUtils.ModelClass.valueOf(modelType));
-        if(!StringUtils.isEmpty(viewRep.getModelMetadata())) {
+        if(!StringUtils.isEmpty(viewRep.getModelMetadata()) && !viewValue.isModeTypeChanged()) {
           JsonNode repMetadataNode = MAPPER.readTree(viewRep.getModelMetadata());
           String repModelType = repMetadataNode.get("modelType").asText("genericModel");
           if(m_config.getModelType() != null &&  !m_config.getModelType().equalsIgnoreCase(repModelType)) {
@@ -469,6 +473,7 @@ final class FSKEditorJSNodeModel
             viewValue.setModelMetaData(MAPPER.writeValueAsString(metadata));
           }else {
             viewRep.setModelMetadata(MAPPER.writeValueAsString(metadata));
+            originalMetadata = metadata;
             viewRep.setModelScript(viewValue.getModelScript());
             viewRep.setVisScript(viewValue.getVisualizationScript());
             viewRep.setReadme(viewValue.getReadme());
@@ -484,9 +489,10 @@ final class FSKEditorJSNodeModel
         parameters = SwaggerUtil.getParameter(metadata);
       // Take original parameters from view representation (metadata)
       List<Parameter> originalParameters = new ArrayList<>();
-      if(originalMetadata != null)
-        originalParameters = SwaggerUtil.getParameter(originalMetadata);
-      
+      if(!viewValue.isModeTypeChanged()) {
+         if(originalMetadata != null )
+            originalParameters = SwaggerUtil.getParameter(originalMetadata);
+      }
       // Take simulation from input port (if connected) otherwise from view value. 
       if (m_port != null) {
         //clone to clean the port object simulations safely later.
@@ -601,30 +607,55 @@ final class FSKEditorJSNodeModel
     List<Parameter> viewParams =  (List<Parameter>) CollectionUtils.removeAll(newParams, originalParameters);
     viewParams.removeIf(p -> p.getClassification().equals(ClassificationEnum.OUTPUT));
     List<String> editedParamsIDs = new ArrayList<String>();
-    List<String> originalParamsIDs = originalParameters.stream().map(para -> para.getId()).collect(Collectors.toList());
+    List<Parameter> copyOforiginalParameters = new ArrayList<>(originalParameters);
+    copyOforiginalParameters.removeIf(p -> p.getClassification().equals(ClassificationEnum.OUTPUT));
+    List<String> originalParamsIDs = copyOforiginalParameters.stream().map(para -> para.getId()).collect(Collectors.toList());
+    
+    //find newly added and edited parameters out of the saved setting
+    Set<String> simParamIDs = simulations.get(0).getParameters().keySet();
+    List<String> differencesToBeAdded = new ArrayList<>(originalParamsIDs  );
+    List<String> differencesToBeRemoved = new ArrayList<>(simParamIDs   );
+    List<String> retained = new ArrayList<>(originalParamsIDs);
+    retained.retainAll(simParamIDs );
+    differencesToBeAdded.removeAll(simParamIDs);
+    differencesToBeRemoved.removeAll(originalParamsIDs);
+    
     if(originalParamsIDs.isEmpty())
       return;
     simulations.forEach(sim -> {
        LinkedHashMap<String, String> simParams = sim.getParameters();
-       if(!simParams.isEmpty()){
-         viewParams.forEach(viewParam -> {
-           // new parameters will be added to all simulations
-           if(!originalParamsIDs.contains(viewParam.getId())) {  
-             simParams.put(viewParam.getId(),viewParam.getValue());
-           }
-           // or the changed parameter will be added only to the default simulation 
-           else if(sim.getName().equals("defaultSimulation")) {
-             simParams.put(viewParam.getId(),viewParam.getValue());
-           }
-           editedParamsIDs.add(viewParam.getId());
-         });
-         //remove the parameter from simulation if it is removed from model math
-         paramsToBeRemoved.forEach(toBeDeletedParam -> {
-           if(!editedParamsIDs.contains(toBeDeletedParam.getId())) {  
-             simParams.remove(toBeDeletedParam.getId());
-           }
-         });
-       }else {
+      if (!simParams.isEmpty()) {
+        if (!viewParams.isEmpty()) {
+          viewParams.forEach(viewParam -> {
+            // new parameters will be added to all simulations
+            if (!originalParamsIDs.contains(viewParam.getId())) {
+              simParams.put(viewParam.getId(), viewParam.getValue());
+            }
+            // or the changed parameter will be added only to the default simulation
+            else if (sim.getName().equals("defaultSimulation")) {
+              simParams.put(viewParam.getId(), viewParam.getValue());
+            }
+            editedParamsIDs.add(viewParam.getId());
+          });
+        } else {
+          copyOforiginalParameters.forEach(originalParam -> {
+             if(retained.contains(originalParam.getId()) && sim.getName().equals("defaultSimulation")) {
+               simParams.put(originalParam.getId(), originalParam.getValue());
+             }else if(differencesToBeAdded.contains(originalParam.getId())){
+               simParams.put(originalParam.getId(), originalParam.getValue());
+             }
+          });
+        }
+        differencesToBeRemoved.forEach(toBeDeletedParam -> {
+            simParams.remove(toBeDeletedParam);
+        });
+        // remove the parameter from simulation if it is removed from model math
+        paramsToBeRemoved.forEach(toBeDeletedParam -> {
+          if (!editedParamsIDs.contains(toBeDeletedParam.getId())) {
+            simParams.remove(toBeDeletedParam.getId());
+          }
+        });
+      }else {
          newParams.forEach(viewParam -> {
            simParams.put(viewParam.getId(),viewParam.getValue());  
          });

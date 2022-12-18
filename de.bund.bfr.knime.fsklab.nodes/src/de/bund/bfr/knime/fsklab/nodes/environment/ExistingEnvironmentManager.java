@@ -1,10 +1,14 @@
 package de.bund.bfr.knime.fsklab.nodes.environment;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Optional;
 import org.knime.core.util.FileUtil;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -21,6 +25,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 public class ExistingEnvironmentManager implements EnvironmentManager {
 
   private final String environmentPath;
+  private String[] entries;
 
   public ExistingEnvironmentManager() {
     this("");
@@ -62,4 +67,21 @@ public class ExistingEnvironmentManager implements EnvironmentManager {
   public void deleteEnvironment(Path path) {
     // The path existed previously and should not be removed.
   }
+
+  @Override
+  public String[] getEntries() {
+    try {
+      URL url = FileUtil.toURL(environmentPath);
+      File existingWorkingDirectory = FileUtil.getFileFromURL(url);
+      File[] files = existingWorkingDirectory.listFiles(File::isFile);
+      entries = Arrays.stream(files).map(File::getAbsolutePath)
+          .toArray(String[]::new);
+      
+    } catch (InvalidPathException | IOException e) {
+      e.printStackTrace();
+    }
+    return entries;
+  }
+  
+  
 }

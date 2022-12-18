@@ -3,6 +3,7 @@ package de.bund.bfr.knime.fsklab.nodes.environment;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -10,7 +11,7 @@ import org.apache.commons.io.FileUtils;
 import org.knime.core.util.FileUtil;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-
+import de.bund.bfr.knime.fsklab.preferences.PreferenceInitializer;
 /**
  * FilesEnvironmentManager handles working directories made out of referenced files. If the
  * references files array is null, empty or the files do not exist,
@@ -21,30 +22,26 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 @JsonAutoDetect(fieldVisibility = Visibility.ANY)
 public class FilesEnvironmentManager implements EnvironmentManager {
 
-  private final String[] files;
-
+  /** Paths to the resource entries in the COMBINE archive. */
+  private  String[] entries;
   public FilesEnvironmentManager() {
     this(new String[0]);
   }
 
   public FilesEnvironmentManager(String[] files) {
-    this.files = files;
-  }
-
-  public String[] getFiles() {
-    return files;
+    this.entries = files;
   }
 
   @Override
   public Optional<Path> getEnvironment() {
 
-    if (files == null || files.length == 0)
+    if (entries == null || entries.length == 0)
       return Optional.empty();
 
  
     List<Path> filePaths = new ArrayList<>();
     try {
-      for (String filePath : files) {
+      for (String filePath : entries) {
         filePaths.add(FileUtil.resolveToPath(FileUtil.toURL(filePath)));
       }
 
@@ -58,7 +55,7 @@ public class FilesEnvironmentManager implements EnvironmentManager {
     }
 
     try {
-      Path environment = Files.createTempDirectory("workingDirectory");
+      Path environment = Files.createTempDirectory(Paths.get(PreferenceInitializer.getFSKWorkingDirectory()),"workingDirectory");
       for (Path filePath : filePaths) {
         Path sourcePath = filePath;
         Path targetPath = environment.resolve(sourcePath.getFileName());
@@ -74,5 +71,10 @@ public class FilesEnvironmentManager implements EnvironmentManager {
   @Override
   public void deleteEnvironment(Path path) {
     FileUtils.deleteQuietly(path.toFile());
+  }
+
+  @Override
+  public String[] getEntries() {
+    return entries;
   }
 }

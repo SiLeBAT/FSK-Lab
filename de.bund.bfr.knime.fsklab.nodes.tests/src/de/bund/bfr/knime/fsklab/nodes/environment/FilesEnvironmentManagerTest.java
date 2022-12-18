@@ -15,7 +15,7 @@ public class FilesEnvironmentManagerTest {
   @Test
   public void testEmptyConstructor() throws Exception {
     FilesEnvironmentManager environmentManager = new FilesEnvironmentManager();
-    assertEquals(0, environmentManager.getFiles().length);
+    assertEquals(0, environmentManager.getEntries().length);
   }
 
   @Test

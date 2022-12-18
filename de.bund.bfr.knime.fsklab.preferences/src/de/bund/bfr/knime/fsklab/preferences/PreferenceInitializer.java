@@ -31,6 +31,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 
 	/** Path to R v.3 */
 	static final String R3_PATH_CFG = "r3.path";
+	static final String FSK_PATH_CFG = "fsk.path";
 	static final String IS_PYTHON_CONDA = "pythonconda";
 	static final String IS_R_CONDA = "rconda";
 	static final String CONDA_PATH_CFG = "conda.path";
@@ -57,6 +58,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 
 		IPreferenceStore store = Plugin.getDefault().getPreferenceStore();
 		store.setDefault(R3_PATH_CFG, rHome);
+		store.setDefault(FSK_PATH_CFG, System.getProperty("java.io.tmpdir"));
 		store.setDefault(CONDA_PATH_CFG, "");
 		store.setDefault(PYTHON2_PATH_CFG, "python");
 		store.setDefault(PYTHON3_PATH_CFG, "python3");
@@ -91,7 +93,10 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		}
 		
 	}
-
+	public static final String getFSKWorkingDirectory() {
+		return Plugin.getDefault().getPreferenceStore().getString(FSK_PATH_CFG);
+	}
+	
 	public static final String getPython2Path() {
 		return Plugin.getDefault().getPreferenceStore().getString(PYTHON2_PATH_CFG);
 	}

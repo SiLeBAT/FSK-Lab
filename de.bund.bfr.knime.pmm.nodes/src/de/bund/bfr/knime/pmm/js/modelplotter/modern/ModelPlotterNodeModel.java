@@ -105,7 +105,8 @@ import de.bund.bfr.knime.pmm.js.common.schema.JsM1DataSchema;
 import de.bund.bfr.knime.pmm.js.common.schema.JsM1DataSchemaList;
 import de.bund.bfr.knime.pmm.js.common.schema.JsM2Schema;
 import de.bund.bfr.knime.pmm.js.common.schema.JsM2SchemaList;
-import jdk.nashorn.api.scripting.JSObject;
+import netscape.javascript.JSObject;
+
 
 /**
  * Model Plotter node model. Reading all plotables functions of input table and
@@ -368,8 +369,7 @@ public final class ModelPlotterNodeModel
 					context);
 
 			JSObject jSObject = (JSObject) context.getAttribute("pmm_plotter", ScriptContext.ENGINE_SCOPE);
-			JSObject init = (JSObject) jSObject.getMember("init");
-			init.call(jSObject, null, viewValue, true);
+			jSObject.call("init",viewValue);
 		}
 
 		for (KnimeTuple knimeTuple : outTuple) {

@@ -245,8 +245,13 @@ class APPSimulation {
 				.attr( 'for', 'paramInput_'+ param.id )
 				.appendTo( $formGroup );
 			// set custom label or id
-			param._label ? $label.text( param._label ) : $label.text( param.id );
-
+			if(O.paramsColorMap[param.id]){
+				param._label ? $label.text( param._label ) : $label.text(O.paramsColorMap[param.id][1] );
+				$label.css("background-color",O.paramsColorMap[param.id][0]);
+				//console.log($label.attr('style'));
+			}
+			else
+				param._label ? $label.text( param._label ) : $label.text( param.id );
 			// field
 			let $field = $( '<div class="col-12 col-xs-7 col-md-6 order-3 order-xs-2 sim-param-field"></div>' )
 				.appendTo( $formGroup );
@@ -541,12 +546,26 @@ class APPSimulation {
 		if ( params.length > 0 ) {
 			// create form group for each param
 			$.each( params, ( i, param ) => {
-
+				if(O.paramsColorMap[param.id][2] ){
+					// create model name title 
+							// formgroup
+					let $formGroup = $( '<div class="form-group row"></div>' );
+		
+					// label containing the model name
+					let $label = $( '<label class="col-form-label col-form-label-sm col-9 col-xs-3 order-1 sim-param-label"></label>' )
+						.text(O.paramsColorMap[param.id][2] )
+						.css("background-color",O.paramsColorMap[param.id][0])
+						.appendTo( $formGroup );
+						
+					let $simDescFormGroup = O._createFormField( simDescParam );
+					$formGroup ? $formGroup.appendTo( O._$simForm ) : null;
+				}
 				if ( param.classification != 'OUTPUT' ) {
 
 					let $formGroup = O._createFormField( param );
 					$formGroup ? $formGroup.appendTo( O._$simForm ) : null;
 				}
+				
 			} );
 
 			// init form items' functions: touchspin, range, select2 ...
@@ -1005,7 +1024,7 @@ class APPSimulation {
 	 * @param {event} event 
 	 */
 	 
-	async _updateContent(_modelMetadata, _modelId, _simulations) {
+	async _updateContent(_modelMetadata, _modelId, _simulations, paramsColorMap) {
 		let O = this;
 		_log( 'PANEL SIM / _updateContent' );
 		O._setState( 'params' ); // reset state to form params when opening PANEL
@@ -1018,6 +1037,7 @@ class APPSimulation {
 		O._simSelectedIndex = 0; // reset simulation
 		// get simulations
 		O._simulations = _simulations;
+		O.paramsColorMap = paramsColorMap;
 
 		// create params		
 		if ( O._simulations && O._simulations.length > 0 ) {
