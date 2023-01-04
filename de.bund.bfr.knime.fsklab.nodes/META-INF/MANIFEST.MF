@@ -91,5 +91,7 @@ Export-Package: de.bund.bfr.knime.fsklab;
  de.bund.bfr.knime.fsklab.nodes.environment,
  de.bund.bfr.knime.fsklab.v2_0,
  de.bund.bfr.knime.fsklab.v2_0.runner
-Import-Package: org.w3c.dom.events
+Import-Package: org.lsmp.djep.djep,
+ org.nfunk.jep,
+ org.w3c.dom.events
 
