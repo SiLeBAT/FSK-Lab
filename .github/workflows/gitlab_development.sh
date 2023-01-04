@@ -2,7 +2,7 @@ TARGET_FOLDER="$GITHUB_WORKSPACE/de.bund.bfr.knime.update/target"
 REPO="development"
 
 # Check Gitlab repo
-git clone -b 4.4 https://$GITLAB_USER:$GITLAB_TOKEN@gitlab.bfr.berlin/silebat/$REPO.git
+git clone -b 4.4 --single-branch --depth=1 https://$GITLAB_USER:$GITLAB_TOKEN@gitlab.bfr.berlin/silebat/$REPO.git
 
 # Update build
 rm -Rf $REPO/fsklab # Deletes old build if it exists
