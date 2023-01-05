@@ -3,7 +3,9 @@ REPO="development"
 
 
 # Check Gitlab repo
-git clone -b 4.5 --single-branch --depth=1 https://$GITLAB_USER:$GITLAB_TOKEN@gitlab.bfr.berlin/silebat/$REPO.git
+git remote add origin https://$GITLAB_USER:$GITLAB_TOKEN@@gitlab.bfr.berlin/silebat/$REPO.git
+
+git clone -b 4.5 --single-branch --depth=1 https://gitlab.bfr.berlin/silebat/$REPO.git
 
 # Update build
 rm -Rf $REPO/fsklab # Deletes old build if it exists
@@ -18,4 +20,4 @@ git add .
 git commit -m "Development 4.5"
 
 # Push build
-git push https://$GITLAB_USER:$GITLAB_TOKEN@gitlab.bfr.berlin/silebat/$REPO.git 4.5
+git push https://gitlab.bfr.berlin/silebat/$REPO.git 4.5
