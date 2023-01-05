@@ -3,7 +3,7 @@ name: Java CI
 on: 
   push:
     branches:
-      - gitlab_deployment_fix_4.5
+      - knime_4_5
 
 jobs:
   build:
