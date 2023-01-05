@@ -14,7 +14,7 @@ mv $TARGET_FOLDER/repository $TARGET_FOLDER/fsklab
 mv $TARGET_FOLDER/fsklab $REPO/fsklab
 cd $REPO/fsklab
 git config --global user.email $GITLAB_EMAIL
-git config --global user.name "schuelet"
+git config --global user.name $GITLAB_USER
 
 git add .
 git commit -m "Development 4.5"
