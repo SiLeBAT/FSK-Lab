@@ -250,7 +250,8 @@ public class PMModelReader {
 
     buildModelMathParameters(parametricModel, modelMath,null);
     ModelEquation modelEquation = new ModelEquation();
-    modelEquation.setModelEquation(parametricModel.getFormula());
+    String formula = parametricModel.getFormula().replace("log(","log10(");
+    modelEquation.setModelEquation(formula);
     modelMath.addModelEquationItem(modelEquation);
 
     QualityMeasures qualityMeasures = new QualityMeasures();
@@ -310,7 +311,7 @@ public class PMModelReader {
       String subFunction = fixDuplicatedParamNames(subParametricModel.modelName, subParametricModel.getFormula(), index++);
       
       subFunction = MathUtilities.getAllButBoundaryCondition(
-          subFunction.replace( subParametricModel.getDepVar() + "=", ""));
+          subFunction.replace( subParametricModel.getDepVar() + "=", "")).replace("log(","log10(");;
       finalFormula = finalFormula.replaceAll(DepVar, "(" + subFunction + ")");
 
     }
@@ -385,10 +386,10 @@ public class PMModelReader {
 
 
     String BoundaryCondition = MathUtilities.getBoundaryCondition(function);
-
+    //in PMMLAB log means base 10 logarithm and ln is a Natural logarithm
     function = MathUtilities
-        .getAllButBoundaryCondition(function.replace(parametricModel.getDepVar() + "=", ""));
-
+        .getAllButBoundaryCondition(function.replace(parametricModel.getDepVar() + "=", "")).replace("log(","log10(");
+    
     IndepXml variable = null;
     for (int indIndex = 0; indIndex < independentList.size(); indIndex++) {
       if (indIndex == 0)
@@ -436,7 +437,7 @@ public class PMModelReader {
     String BoundaryCondition = MathUtilities.getBoundaryCondition(function);
 
     function = MathUtilities
-        .getAllButBoundaryCondition(function.replace(parametricModel.getDepVar() + "=", ""));
+        .getAllButBoundaryCondition(function.replace(parametricModel.getDepVar() + "=", "")).replace("log(","log10(");;
 
     code.append("values <- c()\n");
     if (!StringUtils.isAllEmpty(BoundaryCondition))
