@@ -225,6 +225,8 @@ class WriterNodeModel extends NoInternalsModel {
         // ADD RMarkdown file
         case "rmd": archive.addEntry(resourceFile, filenameString, URI.create("https://www.iana.org/assignments/media-types/text/markdown"));
         break;
+        case "pmfx": archive.addEntry(resourceFile, filenameString, URI.create("https://www.bfr.bund.de/pmfx"));
+        break;
         default: LOGGER.warn(filenameString + " not written to file. Extension is not supported");
       }
     }
