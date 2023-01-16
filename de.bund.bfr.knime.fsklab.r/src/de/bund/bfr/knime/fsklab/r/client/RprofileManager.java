@@ -15,7 +15,7 @@ public class RprofileManager {
   public static void subscribe() throws IOException {
     try {
       lock.lock();
-      if (rHandlerCount++ == 0 && (PreferenceInitializer.getRPath().contains(BFR_R_PLUGIN_NAME) || Platform.isLinux())) {
+      if (rHandlerCount++ == 0 && (PreferenceInitializer.getRPath().contains(BFR_R_PLUGIN_NAME) || (Platform.isLinux() && !PreferenceInitializer.isRConda()))) {
         RConnectionFactory.createFskLibrary();
         RConnectionFactory.backupProfile();
         RConnectionFactory.configureProfile();
@@ -28,7 +28,7 @@ public class RprofileManager {
   public synchronized static void unSubscribe() throws IOException {
     try {
       lock.lock();
-      if (--rHandlerCount == 0 && PreferenceInitializer.isRProfileToBeRestored() && (PreferenceInitializer.getRPath().contains(BFR_R_PLUGIN_NAME) || Platform.isLinux())) {
+      if (--rHandlerCount == 0 && PreferenceInitializer.isRProfileToBeRestored() && (PreferenceInitializer.getRPath().contains(BFR_R_PLUGIN_NAME) || (Platform.isLinux() && !PreferenceInitializer.isRConda()))) {
         RConnectionFactory.restoreProfile();
       }
     } finally {
