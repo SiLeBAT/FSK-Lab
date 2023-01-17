@@ -239,15 +239,16 @@ class JSSimulatorNodeModel
       final FskSimulation fskSimulation = new FskSimulation(jsSimulation.name);
       for (int i = 0; i < inputParams.size(); i++) {
         final String paramName = inputParams.get(i).getId();
-        final String paramValue = jsSimulation.values.get(i);
+        String paramValue = jsSimulation.values.get(i);
         if (paramValue != null && inputParams.get(i).getDataType().equals(DataTypeEnum.FILE)) {
           Optional<Path> workingDirectory = null;
-          if (fskObj.getEnvironmentManager().isPresent()) {
+          if (fskObj.getEnvironmentManager().isPresent() && fskObj.getEnvironmentManager().get().getEnvironment().isPresent() && fskObj.getEnvironmentManager().get().getEnvironment().get() != null) {
             workingDirectory =
                 fskObj.getEnvironmentManager().get().getEnvironment();
           }
           else {
-            workingDirectory = Optional.of(Files.createTempDirectory(Paths.get(PreferenceInitializer.getFSKWorkingDirectory()),"workingDirectory"));
+            String userPath = PreferenceInitializer.getFSKWorkingDirectory();
+            workingDirectory = Optional.of(Files.createTempDirectory(Paths.get(userPath),"workingDirectory"));
           }
           Optional<EnvironmentManager> environmentManager = Optional.of(new ExistingEnvironmentManager(workingDirectory.get().toString()));
 
@@ -257,11 +258,16 @@ class JSSimulatorNodeModel
             fskSimulation.getParameters().put(paramName, "\""+fileParam+"\"");
             
           }else {
+            if(paramValue.startsWith("\"")) {
+
+              paramValue = paramValue.replaceAll("\"", "");
+            }
             File file = new File(paramValue);
-            
             if (file.exists()) {
               String fileParam = copyFileToWorkingDir(paramValue, workingDirectory.get().toString());
               fskSimulation.getParameters().put(paramName, "\""+fileParam+"\"");
+            }else  {
+              fskSimulation.getParameters().put(paramName, "\""+paramValue+"\"");
             }
           }
         } else {

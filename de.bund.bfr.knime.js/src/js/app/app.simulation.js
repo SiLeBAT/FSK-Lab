@@ -832,13 +832,17 @@ class APPSimulation {
 					// change other inputs
 					else {
 					    if(field.param.dataType == 'FILE'){
-					    	
-					    	let paramId  = field.input.attr('id').split('_').pop();
-					    	let filesContainer = $('#filesArea-'+paramId);
-					    	let fileElement = $("<div ><hr/><p>"+ paramValue +"</div>");
-				    		
-                            
-		                    filesContainer.html(fileElement);
+							if (window.location.protocol != '' && window.location.host != '') {
+								
+								let paramId  = field.input.attr('id').split('_').pop();
+								let filesContainer = $('#filesArea-'+paramId);
+								let fileElement = $("<div ><hr/><p>"+ paramValue +"</div>");
+								
+								
+								filesContainer.html(fileElement);
+							}else{
+								! _isNull( paramValue ) ? field.input.val( paramValue ) : null;
+							}
 						}
 						else{
 							! _isNull( paramValue ) ? field.input.val( paramValue ) : null;
