@@ -54,7 +54,7 @@ public class JSSimulatorViewValue extends JSONViewContent {
 
   private String parentResourcesFolder;
 
-  private Map<String,String> resourcesFiles;
+  private Map<String,String[]> resourcesFiles;
   
   public JSSimulatorViewValue() {
     simulations = new JSSimulation[0];
@@ -184,11 +184,11 @@ public class JSSimulatorViewValue extends JSONViewContent {
     this.parentResourcesFolder = parentResourcesFolder;
   }
   
-  public Map <String, String> getResourcesFiles() {
+  public Map <String, String[]> getResourcesFiles() {
     return resourcesFiles;
   }
 
-  public void setResourcesFiles(Map <String, String> resourcesFiles) {
+  public void setResourcesFiles(Map <String, String[]> resourcesFiles) {
     this.resourcesFiles = resourcesFiles;
   }
 }

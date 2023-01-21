@@ -455,7 +455,7 @@ class APPSimulation {
 				        
 			
 			            // title
-			            let $panel = $('<div class="tab-pane h-100" role="tabpanel"></div>')
+			            let $panel = $('<div class="tab-pane" role="tabpanel"></div>')
             						.appendTo( $field );
 			            $input = $("<input id='filesInput' type='file' style='display:none' />");
 			            
@@ -465,8 +465,12 @@ class APPSimulation {
 			            let button = $("<button id='filesButton' type='button' style='border-radius: 5px; background-color: #fff; color: green;'>Add File</button>")
 			                .appendTo($panel);
 			              
-			            let filesContainer = $("<div id='filesArea-"+ param.id+"'></div>")
+			            let filesContainer = $("<div class='filesArea' id='filesArea-"+ param.id+"'></div>")
 			                .appendTo($panel);
+						if(param.value){
+							let fileElement = $("<div ><hr/><p>"+  param.value +"</div>");
+							filesContainer.html(fileElement);	
+						}
 				        
 			           
 				        let files = [];
@@ -561,8 +565,8 @@ class APPSimulation {
 				                            data: file,
 				                            type: 'put',
 				                            success: function (data) {
-				                                window.resourcesFiles[param.id] = "knime://knime.mountpoint"
-				                                        + data.path;
+				                                window.resourcesFiles[param.id] = ["knime://knime.mountpoint"
+				                                        + data.path, O._simulations[O._selectedSimIndex].name];
 				                            },
 				                            error: function (data) {
 				                                console.log('ERROR !!!', data);
@@ -835,7 +839,7 @@ class APPSimulation {
 							if (window.location.protocol != '' && window.location.host != '') {
 								
 								let paramId  = field.input.attr('id').split('_').pop();
-								let filesContainer = $('#filesArea-'+paramId);
+								let filesContainer = $('#filesArea-Input_'+paramId);
 								let fileElement = $("<div ><hr/><p>"+ paramValue +"</div>");
 								
 								
@@ -957,10 +961,11 @@ class APPSimulation {
 
 		// clear sim select
 		O._$simSelect.val( '' );
-
+		
 		// update sim select to index for add-action : -1
 		O._updateSimIndex( -1 );
 		O._setSavedState( 'dirty' );
+		$('.filesArea').html("")
 
 	}
 
@@ -1140,10 +1145,12 @@ class APPSimulation {
 
 				// no value
 				if( ! fieldValue ) {
-					return {
-						input  	: field.input,
-						msg 	: 'Please provide a value for '+ field.param.id
-					};
+					if ( field.param.dataType.toLowerCase() != 'file' ) {
+						return {
+							input  	: field.input,
+							msg 	: 'Please provide a value for '+ field.param.id
+						};
+					}
 				}
 
 				// check range for integers and doubles

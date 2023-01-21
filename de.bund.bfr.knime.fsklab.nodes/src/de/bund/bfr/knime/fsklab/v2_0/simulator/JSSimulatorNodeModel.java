@@ -253,12 +253,17 @@ class JSSimulatorNodeModel
           Optional<EnvironmentManager> environmentManager = Optional.of(new ExistingEnvironmentManager(workingDirectory.get().toString()));
 
           fskObj.setEnvironmentManager(environmentManager);
-          if(value.getResourcesFiles()!=null && value.getResourcesFiles().get(paramName) != null) {            
-            String fileParam = downloadFileToWorkingDir(value.getResourcesFiles().get(paramName), workingDirectory.get().toString());
-            fskSimulation.getParameters().put(paramName, "\""+fileParam+"\"");
+          if (value.getResourcesFiles() != null
+              && value.getResourcesFiles().get(paramName)!=null
+              && value.getResourcesFiles().get(paramName).length > 0
+              && value.getResourcesFiles().get(paramName)[1].equals(fskSimulation.getName()) && !fskSimulation.getName().equals("defaultSimulation")) {
             
-          }else {
-            if(paramValue.startsWith("\"")) {
+            String fileParam = downloadFileToWorkingDir(value.getResourcesFiles().get(paramName)[0],
+                workingDirectory.get().toString());
+            fskSimulation.getParameters().put(paramName, "\"" + fileParam + "\"");
+
+          } else {
+            if (paramValue.startsWith("\"")) {
 
               paramValue = paramValue.replaceAll("\"", "");
             }
