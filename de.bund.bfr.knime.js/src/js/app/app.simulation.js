@@ -9,6 +9,7 @@ date: 17.12.2020
 class APPSimulation {
 	constructor ( settings, $container ) {
         let O = this;
+		
         // defaults maintable simulations modal
         O._$container = $container;
 		O._opts = $.extend( true, {}, {
@@ -566,7 +567,7 @@ class APPSimulation {
 				                            type: 'put',
 				                            success: function (data) {
 				                                window.resourcesFiles[param.id] = ["knime://knime.mountpoint"
-				                                        + data.path, O._simulations[O._selectedSimIndex].name];
+				                                        + data.path, ""];
 				                            },
 				                            error: function (data) {
 				                                console.log('ERROR !!!', data);
@@ -1035,6 +1036,11 @@ class APPSimulation {
 				O._$simSelect.find( 'option' ).last().prop( 'selected', true );
 				O._updateSimIndex( O._simulations.length - 1 );
 			}
+		}
+		
+		for (const property in window.resourcesFiles) {
+			
+			window.resourcesFile[property] = $('#customInput_simName').val();
 		}
 		O._setSavedState( 'clean' );
 		// TO DO 

@@ -253,10 +253,12 @@ class JSSimulatorNodeModel
           Optional<EnvironmentManager> environmentManager = Optional.of(new ExistingEnvironmentManager(workingDirectory.get().toString()));
 
           fskObj.setEnvironmentManager(environmentManager);
+          
           if (value.getResourcesFiles() != null
               && value.getResourcesFiles().get(paramName)!=null
               && value.getResourcesFiles().get(paramName).length > 0
-              && value.getResourcesFiles().get(paramName)[1].equals(fskSimulation.getName()) && !fskSimulation.getName().equals("defaultSimulation")) {
+              && value.getResourcesFiles().get(paramName)[1].equals(fskSimulation.getName())
+              && !fskSimulation.getName().equals("defaultSimulation")) {
             
             String fileParam = downloadFileToWorkingDir(value.getResourcesFiles().get(paramName)[0],
                 workingDirectory.get().toString());
@@ -389,7 +391,7 @@ class JSSimulatorNodeModel
    */
   public String downloadFileToWorkingDir(String fileURL, String workingDir)
       throws IOException, URISyntaxException, InvalidSettingsException {
-    String fileName = fileURL.substring(fileURL.lastIndexOf("/") + 1, fileURL.length());
+    String fileName = fileURL.substring(fileURL.lastIndexOf(File.separator) + 1, fileURL.length());
     String destinationPath = workingDir + File.separator + fileName;
     File fileTodownload = new File(destinationPath);
     LOGGER.warn("JS Simulator path to write to: " + destinationPath);
