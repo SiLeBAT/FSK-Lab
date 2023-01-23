@@ -466,7 +466,7 @@ class APPSimulation {
 			            let button = $("<button id='filesButton' type='button' style='border-radius: 5px; background-color: #fff; color: green;'>Add File</button>")
 			                .appendTo($panel);
 			              
-			            let filesContainer = $("<div class='filesArea' id='filesArea-"+ param.id+"'></div>")
+			            let filesContainer = $("<div id='filesArea-"+ param.id+"'></div>")
 			                .appendTo($panel);
 						if(param.value){
 							let fileElement = $("<div ><hr/><p>"+  param.value +"</div>");
@@ -966,7 +966,6 @@ class APPSimulation {
 		// update sim select to index for add-action : -1
 		O._updateSimIndex( -1 );
 		O._setSavedState( 'dirty' );
-		$('.filesArea').html("")
 
 	}
 
@@ -1025,7 +1024,9 @@ class APPSimulation {
 
 					if( field.input && ! _isNull( field.param ) ) {
 						// create simulation param
-						newSimulation.parameters[field.param.id] = field.input.val();
+						if(field.param.dataType.toLowerCase() != 'file')
+							newSimulation.parameters[field.param.id] = field.input.val();
+
 					}
 				} );
 
