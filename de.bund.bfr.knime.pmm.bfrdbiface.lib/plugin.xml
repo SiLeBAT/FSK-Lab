@@ -69,49 +69,49 @@
             icon="icons/BfRPMM.png"
             level-id="pmmlab"
             name="PMM-Lab"
-            path="/">
+            path="/community/">
       </category>
       <category
             icon="icons/Reader.png"
             level-id="reader"
             name="Readers"
-            path="/pmmlab">
+            path="/community/pmmlab">
       </category>
       <category
             icon="icons/Writer.png"
             level-id="writer"
             name="Writers"
-            path="/pmmlab">
+            path="/community/pmmlab">
       </category>
       <category
             icon="icons/Model.png"
             level-id="fitting"
             name="Model Fitting"
-            path="/pmmlab">
+            path="/community/pmmlab">
       </category>
       <category
             icon="icons/SelectionAndViews.png"
             level-id="views"
             name="Selectors &amp; Viewers"
-            path="/pmmlab">
+            path="/community/pmmlab">
       </category>
       <category
             icon="icons/Editors.png"
             level-id="editors"
             name="Editors"
-            path="/pmmlab">
+            path="/community/pmmlab">
       </category>
       <category
             icon="icons/XMLToTable.png"
             level-id="converters"
             name="Converters"
-            path="/pmmlab">
+            path="/community/pmmlab">
       </category>
       <category
       		icon="icons/Utilities.png"
       		level-id="util"
       		name="Utilities"
-      		path="/pmmlab">
+      		path="/community/pmmlab">
       </category>
    </extension>
 

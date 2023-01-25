@@ -70,49 +70,49 @@
   
   <!-- Category for legacy FSK nodes -->
   <extension point="org.knime.workbench.repository.categories">
-    <category icon="icons/fsk48.png" level-id="legacy" name="Legacy" path="/fsklab" />
+    <category icon="icons/fsk48.png" level-id="legacy" name="Legacy" path="/community/fsklab" />
   </extension>
 
   <extension point="org.knime.workbench.repository.nodes">
     <!-- 1.0.2 -->
-    <node category-path="/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.nodes.reader.FskxReaderNodeFactory" />
-    <node category-path="/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.nodes.writer.FskxWriterNodeFactory" />
-    <node category-path="/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.nodes.creator.FskCreatorNodeFactory" />
-    <node category-path="/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.nodes.fsk2metadata.ExtractFskMetadataNodeFactory" />
-    <node category-path="/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.nodes.fsk2r.FskToRNodeFactory" />
-    <node category-path="/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.nodes.metadataeditor.FskMetadataEditorNodeFactory" />
-    <node category-path="/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.nodes.editor.FskEditorNodeFactory" />
-    <node category-path="/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.nodes.editor.js.FskEditorNodeFactory" />
-    <node category-path="/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.nodes.runner.FskRunnerNodeFactory" />
+    <node category-path="/community/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.nodes.reader.FskxReaderNodeFactory" />
+    <node category-path="/community/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.nodes.writer.FskxWriterNodeFactory" />
+    <node category-path="/community/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.nodes.creator.FskCreatorNodeFactory" />
+    <node category-path="/community/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.nodes.fsk2metadata.ExtractFskMetadataNodeFactory" />
+    <node category-path="/community/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.nodes.fsk2r.FskToRNodeFactory" />
+    <node category-path="/community/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.nodes.metadataeditor.FskMetadataEditorNodeFactory" />
+    <node category-path="/community/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.nodes.editor.FskEditorNodeFactory" />
+    <node category-path="/community/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.nodes.editor.js.FskEditorNodeFactory" />
+    <node category-path="/community/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.nodes.runner.FskRunnerNodeFactory" />
     
     <!-- Pre-RAKIP -->
-    <node category-path="/fsklab/legacy" deprecated="true" factory-class="de.bund.bfr.knime.pmm.fskx.creator.FskxCreatorNodeFactory" />
-    <node category-path="/fsklab/legacy" deprecated="true" factory-class="de.bund.bfr.knime.pmm.fskx.editor.FskEditorNodeFactory" />
-    <node category-path="/fsklab/legacy" deprecated="true" factory-class="de.bund.bfr.knime.pmm.fskx.reader.FskxReaderNodeFactory" />
-    <node category-path="/fsklab/legacy" deprecated="true" factory-class="de.bund.bfr.knime.pmm.fskx.runner.FskxRunnerNodeFactory" />
-    <node category-path="/fsklab/legacy" deprecated="true" factory-class="de.bund.bfr.knime.pmm.fskx.writer.FskxWriterNodeFactory" />
+    <node category-path="/community/fsklab/legacy" deprecated="true" factory-class="de.bund.bfr.knime.pmm.fskx.creator.FskxCreatorNodeFactory" />
+    <node category-path="/community/fsklab/legacy" deprecated="true" factory-class="de.bund.bfr.knime.pmm.fskx.editor.FskEditorNodeFactory" />
+    <node category-path="/community/fsklab/legacy" deprecated="true" factory-class="de.bund.bfr.knime.pmm.fskx.reader.FskxReaderNodeFactory" />
+    <node category-path="/community/fsklab/legacy" deprecated="true" factory-class="de.bund.bfr.knime.pmm.fskx.runner.FskxRunnerNodeFactory" />
+    <node category-path="/community/fsklab/legacy" deprecated="true" factory-class="de.bund.bfr.knime.pmm.fskx.writer.FskxWriterNodeFactory" />
     
     <!-- 1.7.2 -->
-    <node category-path="/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.nodes.CreatorNodeFactory" />
-    <node category-path="/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.nodes.FSK2MetadataNodeFactory" />
-    <node category-path="/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.nodes.FskToRNodeFactory" />
-    <node category-path="/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.nodes.JoinerNodeFactory" />
-    <node category-path="/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.nodes.RunnerNodeFactory" />
-    <node category-path="/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.nodes.WriterNodeFactory" />
-    <node category-path="/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.nodes.ReaderNodeFactory" />
-    <node category-path="/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.nodes.FSKEditorJSNodeFactory" />
-    <node category-path="/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.nodes.JSSimulatorNodeFactory" />
+    <node category-path="/community/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.nodes.CreatorNodeFactory" />
+    <node category-path="/community/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.nodes.FSK2MetadataNodeFactory" />
+    <node category-path="/community/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.nodes.FskToRNodeFactory" />
+    <node category-path="/community/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.nodes.JoinerNodeFactory" />
+    <node category-path="/community/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.nodes.RunnerNodeFactory" />
+    <node category-path="/community/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.nodes.WriterNodeFactory" />
+    <node category-path="/community/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.nodes.ReaderNodeFactory" />
+    <node category-path="/community/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.nodes.FSKEditorJSNodeFactory" />
+    <node category-path="/community/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.nodes.JSSimulatorNodeFactory" />
     
     <!-- 1.9.0 -->
-    <node category-path="/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.v1_9.creator.CreatorNodeFactory" />
-	<node category-path="/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.v1_9.runner.RunnerNodeFactory" />
-	<node category-path="/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.v1_9.fsk2r.FskToRNodeFactory" />
-	<node category-path="/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.v1_9.reader.ReaderNodeFactory" />
-	<node category-path="/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.v1_9.writer.WriterNodeFactory" />
-	<node category-path="/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.v1_9.fsk2metadata.FSK2MetadataNodeFactory" />
-	<node category-path="/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.v1_9.simulator.JSSimulatorNodeFactory" />
-	<node category-path="/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.v1_9.joiner.JoinerNodeFactory" />
-	<node category-path="/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.v1_9.editor.FSKEditorJSNodeFactory" />
+    <node category-path="/community/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.v1_9.creator.CreatorNodeFactory" />
+	<node category-path="/community/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.v1_9.runner.RunnerNodeFactory" />
+	<node category-path="/community/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.v1_9.fsk2r.FskToRNodeFactory" />
+	<node category-path="/community/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.v1_9.reader.ReaderNodeFactory" />
+	<node category-path="/community/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.v1_9.writer.WriterNodeFactory" />
+	<node category-path="/community/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.v1_9.fsk2metadata.FSK2MetadataNodeFactory" />
+	<node category-path="/community/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.v1_9.simulator.JSSimulatorNodeFactory" />
+	<node category-path="/community/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.v1_9.joiner.JoinerNodeFactory" />
+	<node category-path="/community/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.v1_9.editor.FSKEditorJSNodeFactory" />
 	 
   </extension>
    
