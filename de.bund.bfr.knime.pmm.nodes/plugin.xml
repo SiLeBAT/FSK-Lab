@@ -4,134 +4,134 @@
 <plugin>
   <extension point="org.knime.workbench.repository.nodes">
     <!-- PdfKeeper -->
-    <node category-path="/pmmlab"
+    <node category-path="/community/pmmlab"
       factory-class="de.bund.bfr.knime.pmm.pdfkeeper.PdfKeeperNodeFactory"/>
       
     <!-- Converters -->
     <!-- XML To Table -->
-    <node category-path="/pmmlab/converters"
+    <node category-path="/community/pmmlab/converters"
       factory-class="de.bund.bfr.knime.pmm.xml2table.XML2TableNodeFactory"/>
     
     <!-- Editors -->
     <!-- DB Data Deleter -->
-    <node category-path="/pmmlab/editors"
+    <node category-path="/community/pmmlab/editors"
       factory-class="de.bund.bfr.knime.pmm.dbdelete.DatabaseDeleteNodeFactory"/>
     <!-- Model Creator -->
-    <node category-path="/pmmlab/editors"
+    <node category-path="/community/pmmlab/editors"
       factory-class="de.bund.bfr.knime.pmm.manualmodelconf.ManualModelConfNodeFactory"/>
     <!-- Model Editor -->
-    <node category-path="/pmmlab/editors"
+    <node category-path="/community/pmmlab/editors"
       factory-class="de.bund.bfr.knime.pmm.manualmodelconf.ManualModelEditorNodeFactory"/>
     <!-- Formula Creator -->
-    <node category-path="/pmmlab/editors"
+    <node category-path="/community/pmmlab/editors"
       factory-class="de.bund.bfr.knime.pmm.manualmodelconf.ManualFormulaCreatorNodeFactory"/>
     <!-- Data Editor -->
-    <node category-path="/pmmlab/editors"
+    <node category-path="/community/pmmlab/editors"
       factory-class="de.bund.bfr.knime.pmm.microbialdataedit.MicrobialDataEditNodeFactory"/>
     <!-- Data Creator -->
-    <node category-path="/pmmlab/editors"
+    <node category-path="/community/pmmlab/editors"
       factory-class="de.bund.bfr.knime.pmm.timeseriescreator.TimeSeriesCreatorNodeFactory" />
     <!-- JavaScript Editor -->
-    <node category-path="/pmmlab/editors"
+    <node category-path="/community/pmmlab/editors"
       factory-class="de.bund.bfr.knime.pmm.editor.ModelEditorNodeFactory"/>
 
     <!-- Model Fitting -->
     <!-- PMM Joiner -->
-    <node category-path="/pmmlab/fitting"
+    <node category-path="/community/pmmlab/fitting"
       factory-class="de.bund.bfr.knime.pmm.modelanddatajoiner.ModelAndDataJoinerNodeFactory"/>
     <!-- Model Fitting -->
-    <node category-path="/pmmlab/fitting"
+    <node category-path="/community/pmmlab/fitting"
       factory-class="de.bund.bfr.knime.pmm.modelestimation.ModelEstimationNodeFactory"/>
     
     <!-- Readers -->
     <!-- ComBase Reader -->
-    <node category-path="/pmmlab/reader"
+    <node category-path="/community/pmmlab/reader"
       factory-class="de.bund.bfr.knime.pmm.combaseio.CombaseReaderNodeFactory"/>
     <!-- Model Reader -->
-    <node category-path="/pmmlab/reader"
+    <node category-path="/community/pmmlab/reader"
       factory-class="de.bund.bfr.knime.pmm.estimatedmodelreader.EstimatedModelReaderNodeFactory"/>
     <!-- Formula Reader -->
-    <node category-path="/pmmlab/reader"
+    <node category-path="/community/pmmlab/reader"
       factory-class="de.bund.bfr.knime.pmm.modelcatalogreader.ModelCatalogReaderNodeFactory"/>
     <!-- Data Reader -->
-    <node category-path="/pmmlab/reader"
+    <node category-path="/community/pmmlab/reader"
       factory-class="de.bund.bfr.knime.pmm.timeseriesreader.TimeSeriesReaderNodeFactory" />
     <!-- XLS Model Reader -->
-    <node category-path="/pmmlab/reader"
+    <node category-path="/community/pmmlab/reader"
       factory-class="de.bund.bfr.knime.pmm.xlsmodelreader.XLSModelReaderNodeFactory" />
     <!-- XLS Data Reader -->
-    <node category-path="/pmmlab/reader"
+    <node category-path="/community/pmmlab/reader"
       factory-class="de.bund.bfr.knime.pmm.xlstimeseriesreader.XLSTimeSeriesReaderNodeFactory" />
     <!-- NuML Reader -->
-    <node category-path="/pmmlab/reader"
+    <node category-path="/community/pmmlab/reader"
       factory-class="de.bund.bfr.knime.pmm.numl.NuMLReaderNodeFactory"/>
     <!-- OpenFSMR Converter -->
-    <node category-path="/pmmlab/reader"
+    <node category-path="/community/pmmlab/reader"
       factory-class="de.bund.bfr.knime.pmm.openfsmr.OpenFSMRConverterNodeFactory"/>
     <!-- SBML Reader -->
-    <node category-path="/pmmlab/reader"
+    <node category-path="/community/pmmlab/reader"
       factory-class="de.bund.bfr.knime.pmm.sbmlreader.SBMLReaderNodeFactory"/>
-    <node category-path="/pmmlab/reader" deprecated="true"
+    <node category-path="/community/pmmlab/reader" deprecated="true"
       factory-class="de.bund.bfr.knime.pmm.pmfreader.PMFXReaderNodeFactory"/>
-  	<node category-path="/pmmlab/reader" deprecated="true"
+  	<node category-path="/community/pmmlab/reader" deprecated="true"
   	  factory-class="de.bund.bfr.knime.pmm.pmfreader.PMFReaderNodeFactory"/>
-  	<node category-path="/pmmlab/reader" deprecated="true"
+  	<node category-path="/community/pmmlab/reader" deprecated="true"
   	  factory-class="de.bund.bfr.knime.pmm.pmfxreader.PMFXReaderNodeFactory" />
-  	<node category-path="/pmmlab/reader" deprecated="false"
+  	<node category-path="/community/pmmlab/reader" deprecated="false"
   	  factory-class="de.bund.bfr.knime.pmm.pmfreader.fsk.NodeFactory" />
 
     <!-- Selectors & Viewers -->
-    <node category-path="/pmmlab/views"
+    <node category-path="/community/pmmlab/views"
       factory-class="de.bund.bfr.knime.pmm.dataviewandselect.DataViewAndSelectNodeFactory"/>
     <!-- Fitted Parameter View -->
-    <node category-path="/pmmlab/views"
+    <node category-path="/community/pmmlab/views"
       factory-class="de.bund.bfr.knime.pmm.fittedparameterview.FittedParameterViewNodeFactory"/>
     <!-- Tertiary Model Selection -->
-    <node category-path="/pmmlab/views"
+    <node category-path="/community/pmmlab/views"
       factory-class="de.bund.bfr.knime.pmm.modelselectiontertiary.ModelSelectionTertiaryNodeFactory"/>
     <!-- Predictor View -->
-    <node category-path="/pmmlab/views"
+    <node category-path="/community/pmmlab/views"
       factory-class="de.bund.bfr.knime.pmm.predictorview.PredictorViewNodeFactory"/>
     <!-- Predictor View JS -->
-    <node category-path="/pmmlab/views"
+    <node category-path="/community/pmmlab/views"
       factory-class="de.bund.bfr.knime.pmm.js.modelplotter.modern.ModelPlotterNodeFactory"/>
     <!-- Predictor View JS (deprecated) -->
-    <node category-path="/pmmlab/views"
+    <node category-path="/community/pmmlab/views"
       factory-class="de.bund.bfr.knime.pmm.js.modelplotter.ModelPlotterNodeFactory"/>
     <!-- Secondary Predictor View -->
-    <node category-path="/pmmlab/views"
+    <node category-path="/community/pmmlab/views"
       factory-class="de.bund.bfr.knime.pmm.secondarypredictorview.SecondaryPredictorViewNodeFactory" />
     <!-- Primary model selection -->
-    <node category-path="/pmmlab/views"
+    <node category-path="/community/pmmlab/views"
       factory-class="de.bund.bfr.knime.pmm.primarymodelviewandselect.PrimaryModelViewAndSelectNodeFactory" />
     <!-- Secondary Model View -->
-    <node category-path="/pmmlab/views"
+    <node category-path="/community/pmmlab/views"
       factory-class="de.bund.bfr.knime.pmm.secondarymodelanddataview.SecondaryModelAndDataViewNodeFactory" />
 
     <!-- Writers -->
-    <node category-path="/pmmlab/writer"
+    <node category-path="/community/pmmlab/writer"
       factory-class="de.bund.bfr.knime.pmm.combaseio.CombaseWriterNodeFactory"/>
     <!-- Formula Writer -->
-    <node category-path="/pmmlab/writer"
+    <node category-path="/community/pmmlab/writer"
       factory-class="de.bund.bfr.knime.pmm.modelcatalogwriter.ModelCatalogWriterNodeFactory"/>
     <!-- Model Writer -->
-    <node category-path="/pmmlab/writer"
+    <node category-path="/community/pmmlab/writer"
       factory-class="de.bund.bfr.knime.pmm.estimatedmodelwriter.EstimatedModelWriterNodeFactory"/>
     <!-- Data Writer -->
-    <node category-path="/pmmlab/writer"
+    <node category-path="/community/pmmlab/writer"
       factory-class="de.bund.bfr.knime.pmm.timeserieswriter.TimeSeriesWriterNodeFactory" />
     <!-- SBML Writer -->
-    <node category-path="/pmmlab/writer" deprecated="true"
+    <node category-path="/community/pmmlab/writer" deprecated="true"
       factory-class="de.bund.bfr.knime.pmm.sbmlwriter.SBMLWriterNodeFactory" />
-    <node category-path="/pmmlab/writer" deprecated="true" factory-class="de.bund.bfr.knime.pmm.pmfwriter.PMFXWriterNodeFactory"/>
-  	<node category-path="/pmmlab/writer" deprecated="true" factory-class="de.bund.bfr.knime.pmm.pmfwriter.PMFWriterNodeFactory"/>
-  	<node category-path="/pmmlab/writer" deprecated="true" factory-class="de.bund.bfr.knime.pmm.pmfxwriter.PMFXWriterNodeFactory"/>
-  	<node category-path="/pmmlab/writer" deprecated="false" factory-class="de.bund.bfr.knime.pmm.pmfwriter.fsk.NodeFactory" />
+    <node category-path="/community/pmmlab/writer" deprecated="true" factory-class="de.bund.bfr.knime.pmm.pmfwriter.PMFXWriterNodeFactory"/>
+  	<node category-path="/community/pmmlab/writer" deprecated="true" factory-class="de.bund.bfr.knime.pmm.pmfwriter.PMFWriterNodeFactory"/>
+  	<node category-path="/community/pmmlab/writer" deprecated="true" factory-class="de.bund.bfr.knime.pmm.pmfxwriter.PMFXWriterNodeFactory"/>
+  	<node category-path="/community/pmmlab/writer" deprecated="false" factory-class="de.bund.bfr.knime.pmm.pmfwriter.fsk.NodeFactory" />
   </extension>
   
   <extension point="org.knime.workbench.repository.metanode">
     <PersistedMetaNode
-      category-path="/pmmlab/reader"
+      category-path="/community/pmmlab/reader"
       expert-flag="false"
       icon="metanode_templates/Variable Data Reader.png"
       id="de.bund.bfr.knime.pmm.xlstimeseriesreader.variabledatareader"
