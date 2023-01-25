@@ -235,24 +235,25 @@ class JSSimulatorNodeModel
     JSSimulatorViewValue value = getViewValue();
 
     port.simulations.clear();
+    Optional<Path> workingDirectory = null;
+    if (fskObj.getEnvironmentManager().isPresent()) {
+      workingDirectory = fskObj.getEnvironmentManager().get().getEnvironment();
+    } else {
+      String userPath = PreferenceInitializer.getFSKWorkingDirectory();
+      workingDirectory =
+          Optional.of(Files.createTempDirectory(Paths.get(userPath), "workingDirectory"));
+      Optional<EnvironmentManager> environmentManager =
+          Optional.of(new ExistingEnvironmentManager(workingDirectory.get().toString()));
+      fskObj.setEnvironmentManager(environmentManager);
+
+    }
     for (final JSSimulation jsSimulation : val.getSimulations()) {
       final FskSimulation fskSimulation = new FskSimulation(jsSimulation.name);
       for (int i = 0; i < inputParams.size(); i++) {
         final String paramName = inputParams.get(i).getId();
         String paramValue = jsSimulation.values.get(i);
         if (paramValue != null && inputParams.get(i).getDataType().equals(DataTypeEnum.FILE)) {
-          Optional<Path> workingDirectory = null;
-          if (fskObj.getEnvironmentManager().isPresent() && fskObj.getEnvironmentManager().get().getEnvironment().isPresent() && fskObj.getEnvironmentManager().get().getEnvironment().get() != null) {
-            workingDirectory =
-                fskObj.getEnvironmentManager().get().getEnvironment();
-          }
-          else {
-            String userPath = PreferenceInitializer.getFSKWorkingDirectory();
-            workingDirectory = Optional.of(Files.createTempDirectory(Paths.get(userPath),"workingDirectory"));
-          }
-          Optional<EnvironmentManager> environmentManager = Optional.of(new ExistingEnvironmentManager(workingDirectory.get().toString()));
-
-          fskObj.setEnvironmentManager(environmentManager);
+          
           
           if (value.getResourcesFiles() != null
               && value.getResourcesFiles().get(paramName)!=null
