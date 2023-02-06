@@ -34,7 +34,8 @@ along with this program.  If not, see &amp;quot;http://www.gnu.org/licenses/&amp
 
    <includes
          id="org.knime.features.python2"
-         version="0.0.0"/>
+         version="0.0.0"
+         search-location="both"/>
 
    <requires>
       <import plugin="org.eclipse.core.runtime"/>
