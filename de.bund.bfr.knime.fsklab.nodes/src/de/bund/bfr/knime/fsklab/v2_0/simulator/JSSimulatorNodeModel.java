@@ -33,6 +33,7 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.knime.core.node.CanceledExecutionException;
@@ -46,6 +47,8 @@ import org.knime.core.node.port.PortObjectHolder;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.web.ValidationError;
+import org.knime.core.node.workflow.NodeContext;
+import org.knime.core.util.ContextProperties;
 import org.knime.core.util.FileUtil;
 import org.knime.core.util.IRemoteFileUtilsService;
 import org.knime.js.core.node.AbstractWizardNodeModel;
@@ -235,18 +238,25 @@ class JSSimulatorNodeModel
     JSSimulatorViewValue value = getViewValue();
 
     port.simulations.clear();
+    
     Optional<Path> workingDirectory = null;
+    String userPath = PreferenceInitializer.getFSKWorkingDirectory();
+    Path directory = Files.createTempDirectory(Paths.get(userPath), "workingDirectory");
+    
+    workingDirectory = Optional.of(directory);
     if (fskObj.getEnvironmentManager().isPresent()) {
-      workingDirectory = fskObj.getEnvironmentManager().get().getEnvironment();
-    } else {
-      String userPath = PreferenceInitializer.getFSKWorkingDirectory();
-      workingDirectory =
-          Optional.of(Files.createTempDirectory(Paths.get(userPath), "workingDirectory"));
-      Optional<EnvironmentManager> environmentManager =
-          Optional.of(new ExistingEnvironmentManager(workingDirectory.get().toString()));
-      fskObj.setEnvironmentManager(environmentManager);
+      Optional<Path> oldWorkingDirectory = fskObj.getEnvironmentManager().get().getEnvironment();
+      try {
+        FileUtils.copyDirectory(oldWorkingDirectory.get().toFile(), directory.toFile());
+      } catch (IOException e) {
+          e.printStackTrace();
+      }
+    } 
+    
+    Optional<EnvironmentManager> environmentManager =
+        Optional.of(new ExistingEnvironmentManager(workingDirectory.get().toString()));
+    fskObj.setEnvironmentManager(environmentManager);
 
-    }
     for (final JSSimulation jsSimulation : val.getSimulations()) {
       final FskSimulation fskSimulation = new FskSimulation(jsSimulation.name);
       for (int i = 0; i < inputParams.size(); i++) {
@@ -395,7 +405,7 @@ class JSSimulatorNodeModel
     String fileName = fileURL.substring(fileURL.lastIndexOf(File.separator) + 1, fileURL.length());
     String destinationPath = workingDir + File.separator + fileName;
     File fileTodownload = new File(destinationPath);
-    LOGGER.warn("JS Simulator path to write to: " + destinationPath);
+    LOGGER.warn("downloadFileToWorkingDir JS Simulator path to write to: " + destinationPath);
     try (InputStream inStream = FileUtil.openInputStream(fileURL);
         OutputStream outStream = new FileOutputStream(fileTodownload)) {
       IOUtils.copy(inStream, outStream);
