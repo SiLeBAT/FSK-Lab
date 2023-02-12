@@ -49,6 +49,7 @@ import org.knime.core.node.workflow.WorkflowCopyContent;
 import org.knime.core.node.workflow.WorkflowLoadHelper;
 import org.knime.core.node.workflow.WorkflowManager;
 import org.knime.core.node.workflow.WorkflowPersistor.WorkflowLoadResult;
+import org.knime.core.node.workflow.contextv2.WorkflowContextV2;
 import org.knime.core.util.FileUtil;
 import de.bund.bfr.knime.fsklab.preferences.PreferenceInitializer;
 
@@ -92,7 +93,7 @@ class WorkflowReaderNodeModel extends NoInternalsModel {
   @Override
   protected PortObject[] execute(PortObject[] inObjects, ExecutionContext exec) throws Exception {
     exec.setMessage("Reading subworkflow");
-    final WorkflowContext origContext = NodeContext.getContext().getWorkflowManager().getContext();
+    final  WorkflowContextV2 origContext = NodeContext.getContext().getWorkflowManager().getContextV2();
     NodeContext nodeContext = NodeContext.getContext();
     Path tempDirWithPrefix = Files.createTempDirectory(Paths.get(PreferenceInitializer.getFSKWorkingDirectory()), nodeContext.getNodeContainer()
         .getNameWithID().toString().replaceAll("\\W", "").replace(" ", ""));

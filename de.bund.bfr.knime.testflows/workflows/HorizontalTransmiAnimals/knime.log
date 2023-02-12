@@ -1,0 +1,1950 @@
+2023-02-11 17:56:28,794 : DEBUG : ModalContext :  : TestConfigNodeFactory : HorizontalTransmiAnimals : 3 : Factory is already initialized. Nothing to do.
+2023-02-11 17:56:28,802 : DEBUG : ModalContext :  : CreatorNodeFactory : HorizontalTransmiAnimals : 3 : Factory is already initialized. Nothing to do.
+2023-02-11 17:56:28,808 : DEBUG : ModalContext :  : RunnerNodeFactory : HorizontalTransmiAnimals : 3 : Factory is already initialized. Nothing to do.
+2023-02-11 17:56:28,867 : WARN  : ModalContext :  : FileNodePersistor : FSK Creator (deprecated) : 3:2 : Unable to load port content for node "FSK Creator (deprecated)": Cannot create TypeBindings for class metadata.Reference with 1 type parameter: class expects 0 (through reference chain: org.eclipse.emf.ecore.util.EObjectContainmentEList[0])
+com.fasterxml.jackson.databind.JsonMappingException: Cannot create TypeBindings for class metadata.Reference with 1 type parameter: class expects 0 (through reference chain: org.eclipse.emf.ecore.util.EObjectContainmentEList[0])
+	at com.fasterxml.jackson.databind.JsonMappingException.wrapWithPath(JsonMappingException.java:392)
+	at com.fasterxml.jackson.databind.JsonMappingException.wrapWithPath(JsonMappingException.java:363)
+	at com.fasterxml.jackson.databind.deser.std.CollectionDeserializer._deserializeFromArray(CollectionDeserializer.java:371)
+	at com.fasterxml.jackson.databind.deser.std.CollectionDeserializer.deserialize(CollectionDeserializer.java:272)
+	at com.fasterxml.jackson.databind.deser.std.CollectionDeserializer.deserialize(CollectionDeserializer.java:28)
+	at org.emfjson.jackson.databind.property.EObjectFeatureProperty.deserializeAndSet(EObjectFeatureProperty.java:64)
+	at org.emfjson.jackson.databind.deser.EObjectDeserializer.deserialize(EObjectDeserializer.java:92)
+	at org.emfjson.jackson.databind.deser.EObjectDeserializer.deserialize(EObjectDeserializer.java:36)
+	at com.fasterxml.jackson.databind.deser.DefaultDeserializationContext.readRootValue(DefaultDeserializationContext.java:322)
+	at com.fasterxml.jackson.databind.ObjectMapper._readMapAndClose(ObjectMapper.java:4674)
+	at com.fasterxml.jackson.databind.ObjectMapper.readValue(ObjectMapper.java:3666)
+	at de.bund.bfr.knime.fsklab.FskPortObject$Serializer.loadPortObject(FskPortObject.java:463)
+	at de.bund.bfr.knime.fsklab.FskPortObject$Serializer.loadPortObject(FskPortObject.java:1)
+	at org.knime.core.node.FileNodePersistor.loadPortObject(FileNodePersistor.java:449)
+	at org.knime.core.node.FileNodePersistor.loadPort(FileNodePersistor.java:373)
+	at org.knime.core.node.FileNodePersistor.loadPorts(FileNodePersistor.java:330)
+	at org.knime.core.node.FileNodePersistor.load(FileNodePersistor.java:995)
+	at org.knime.core.node.workflow.FileNativeNodeContainerPersistor.loadNCAndWashModelSettings(FileNativeNodeContainerPersistor.java:254)
+	at org.knime.core.node.workflow.FileSingleNodeContainerPersistor.loadNodeContainer(FileSingleNodeContainerPersistor.java:267)
+	at org.knime.core.node.workflow.WorkflowManager.postLoad(WorkflowManager.java:8698)
+	at org.knime.core.node.workflow.WorkflowManager.loadContent(WorkflowManager.java:8600)
+	at org.knime.core.node.workflow.WorkflowManager.postLoad(WorkflowManager.java:8714)
+	at org.knime.core.node.workflow.WorkflowManager.loadContent(WorkflowManager.java:8600)
+	at org.knime.core.node.workflow.WorkflowManager.load(WorkflowManager.java:8464)
+	at org.knime.core.node.workflow.WorkflowManager.load(WorkflowManager.java:8385)
+	at org.knime.core.node.workflow.WorkflowManager.load(WorkflowManager.java:8358)
+	at org.knime.core.node.workflow.WorkflowManager.loadProject(WorkflowManager.java:8202)
+	at org.knime.workbench.editor2.LoadWorkflowRunnable.run(LoadWorkflowRunnable.java:171)
+	at org.eclipse.jface.operation.ModalContext$ModalContextThread.run(ModalContext.java:122)
+Caused by: java.lang.IllegalArgumentException: Cannot create TypeBindings for class metadata.Reference with 1 type parameter: class expects 0
+	at com.fasterxml.jackson.databind.type.TypeBindings.create(TypeBindings.java:126)
+	at com.fasterxml.jackson.databind.type.TypeFactory.constructReferenceType(TypeFactory.java:1043)
+	at org.emfjson.jackson.databind.type.EcoreTypeFactory.constructReferenceType(EcoreTypeFactory.java:102)
+	at org.emfjson.jackson.databind.type.EcoreTypeFactory.typeOf(EcoreTypeFactory.java:80)
+	at org.emfjson.jackson.databind.type.EcoreTypeFactory.typeOf(EcoreTypeFactory.java:62)
+	at org.emfjson.jackson.databind.property.EObjectPropertyMap$Builder.collectProperties(EObjectPropertyMap.java:113)
+	at org.emfjson.jackson.databind.property.EObjectPropertyMap$Builder.construct(EObjectPropertyMap.java:53)
+	at org.emfjson.jackson.databind.deser.EObjectDeserializer.deserialize(EObjectDeserializer.java:67)
+	at org.emfjson.jackson.databind.deser.EObjectDeserializer.deserialize(EObjectDeserializer.java:36)
+	at com.fasterxml.jackson.databind.deser.std.CollectionDeserializer._deserializeFromArray(CollectionDeserializer.java:355)
+	... 26 more
+2023-02-11 17:56:28,869 : DEBUG : ModalContext :  : Node : FSK Creator (deprecated) : 3:2 : reset
+2023-02-11 17:56:28,869 : DEBUG : ModalContext :  : Node : FSK Creator (deprecated) : 3:2 : clean output ports.
+2023-02-11 17:56:28,877 : DEBUG : ModalContext :  : Node : FSK Creator (deprecated) : 3:2 : Configure succeeded. (FSK Creator (deprecated))
+2023-02-11 17:56:28,879 : WARN  : ModalContext :  : FileNodePersistor : FSK Runner (deprecated) : 3:3 : Unable to load port content for node "FSK Runner (deprecated)": Cannot create TypeBindings for class metadata.Reference with 1 type parameter: class expects 0 (through reference chain: org.eclipse.emf.ecore.util.EObjectContainmentEList[0])
+com.fasterxml.jackson.databind.JsonMappingException: Cannot create TypeBindings for class metadata.Reference with 1 type parameter: class expects 0 (through reference chain: org.eclipse.emf.ecore.util.EObjectContainmentEList[0])
+	at com.fasterxml.jackson.databind.JsonMappingException.wrapWithPath(JsonMappingException.java:392)
+	at com.fasterxml.jackson.databind.JsonMappingException.wrapWithPath(JsonMappingException.java:363)
+	at com.fasterxml.jackson.databind.deser.std.CollectionDeserializer._deserializeFromArray(CollectionDeserializer.java:371)
+	at com.fasterxml.jackson.databind.deser.std.CollectionDeserializer.deserialize(CollectionDeserializer.java:272)
+	at com.fasterxml.jackson.databind.deser.std.CollectionDeserializer.deserialize(CollectionDeserializer.java:28)
+	at org.emfjson.jackson.databind.property.EObjectFeatureProperty.deserializeAndSet(EObjectFeatureProperty.java:64)
+	at org.emfjson.jackson.databind.deser.EObjectDeserializer.deserialize(EObjectDeserializer.java:92)
+	at org.emfjson.jackson.databind.deser.EObjectDeserializer.deserialize(EObjectDeserializer.java:36)
+	at com.fasterxml.jackson.databind.deser.DefaultDeserializationContext.readRootValue(DefaultDeserializationContext.java:322)
+	at com.fasterxml.jackson.databind.ObjectMapper._readMapAndClose(ObjectMapper.java:4674)
+	at com.fasterxml.jackson.databind.ObjectMapper.readValue(ObjectMapper.java:3666)
+	at de.bund.bfr.knime.fsklab.FskPortObject$Serializer.loadPortObject(FskPortObject.java:463)
+	at de.bund.bfr.knime.fsklab.FskPortObject$Serializer.loadPortObject(FskPortObject.java:1)
+	at org.knime.core.node.FileNodePersistor.loadPortObject(FileNodePersistor.java:449)
+	at org.knime.core.node.FileNodePersistor.loadPort(FileNodePersistor.java:373)
+	at org.knime.core.node.FileNodePersistor.loadPorts(FileNodePersistor.java:330)
+	at org.knime.core.node.FileNodePersistor.load(FileNodePersistor.java:995)
+	at org.knime.core.node.workflow.FileNativeNodeContainerPersistor.loadNCAndWashModelSettings(FileNativeNodeContainerPersistor.java:254)
+	at org.knime.core.node.workflow.FileSingleNodeContainerPersistor.loadNodeContainer(FileSingleNodeContainerPersistor.java:267)
+	at org.knime.core.node.workflow.WorkflowManager.postLoad(WorkflowManager.java:8698)
+	at org.knime.core.node.workflow.WorkflowManager.loadContent(WorkflowManager.java:8600)
+	at org.knime.core.node.workflow.WorkflowManager.postLoad(WorkflowManager.java:8714)
+	at org.knime.core.node.workflow.WorkflowManager.loadContent(WorkflowManager.java:8600)
+	at org.knime.core.node.workflow.WorkflowManager.load(WorkflowManager.java:8464)
+	at org.knime.core.node.workflow.WorkflowManager.load(WorkflowManager.java:8385)
+	at org.knime.core.node.workflow.WorkflowManager.load(WorkflowManager.java:8358)
+	at org.knime.core.node.workflow.WorkflowManager.loadProject(WorkflowManager.java:8202)
+	at org.knime.workbench.editor2.LoadWorkflowRunnable.run(LoadWorkflowRunnable.java:171)
+	at org.eclipse.jface.operation.ModalContext$ModalContextThread.run(ModalContext.java:122)
+Caused by: java.lang.IllegalArgumentException: Cannot create TypeBindings for class metadata.Reference with 1 type parameter: class expects 0
+	at com.fasterxml.jackson.databind.type.TypeBindings.create(TypeBindings.java:126)
+	at com.fasterxml.jackson.databind.type.TypeFactory.constructReferenceType(TypeFactory.java:1043)
+	at org.emfjson.jackson.databind.type.EcoreTypeFactory.constructReferenceType(EcoreTypeFactory.java:102)
+	at org.emfjson.jackson.databind.type.EcoreTypeFactory.typeOf(EcoreTypeFactory.java:80)
+	at org.emfjson.jackson.databind.type.EcoreTypeFactory.typeOf(EcoreTypeFactory.java:62)
+	at org.emfjson.jackson.databind.property.EObjectPropertyMap$Builder.collectProperties(EObjectPropertyMap.java:113)
+	at org.emfjson.jackson.databind.property.EObjectPropertyMap$Builder.construct(EObjectPropertyMap.java:53)
+	at org.emfjson.jackson.databind.deser.EObjectDeserializer.deserialize(EObjectDeserializer.java:67)
+	at org.emfjson.jackson.databind.deser.EObjectDeserializer.deserialize(EObjectDeserializer.java:36)
+	at com.fasterxml.jackson.databind.deser.std.CollectionDeserializer._deserializeFromArray(CollectionDeserializer.java:355)
+	... 26 more
+2023-02-11 17:56:28,880 : DEBUG : ModalContext :  : Node : FSK Runner (deprecated) : 3:3 : reset
+2023-02-11 17:56:28,880 : DEBUG : ModalContext :  : Node : FSK Runner (deprecated) : 3:3 : clean output ports.
+2023-02-11 17:56:28,881 : DEBUG : ModalContext :  : Node : FSK Runner (deprecated) : 3:3 : Configure succeeded. (FSK Runner (deprecated))
+2023-02-11 17:56:52,326 : DEBUG : ModalContext :  : FileSingleNodeContainerPersistor : Testflow Configuration : 3:1 : Replaced node directory "/Users/ahmadswaid/knime-workspace/HorizontalTransmiAnimals/Testflow Configuration (#1)"
+2023-02-11 17:56:52,331 : DEBUG : ModalContext :  : FileSingleNodeContainerPersistor : FSK Creator (deprecated) : 3:2 : Replaced node directory "/Users/ahmadswaid/knime-workspace/HorizontalTransmiAnimals/FSK Creator (#2)"
+2023-02-11 17:56:52,336 : DEBUG : ModalContext :  : FileSingleNodeContainerPersistor : FSK Runner (deprecated) : 3:3 : Replaced node directory "/Users/ahmadswaid/knime-workspace/HorizontalTransmiAnimals/FSK Runner (#3)"
+2023-02-11 17:56:56,137 : DEBUG : main :  : ProjectWorkflowMap : HorizontalTransmiAnimals : 3 : Removing "file:/Users/ahmadswaid/knime-workspace/HorizontalTransmiAnimals/" from project map (5 remaining)
+2023-02-11 17:56:56,137 : DEBUG : main :  : WorkflowManager : HorizontalTransmiAnimals : 3 : Removing project "HorizontalTransmiAnimals 3"
+2023-02-11 17:56:56,138 : DEBUG : main :  : RunnerNodeModel : FSK Runner (deprecated) : 3:3 : Removing all (0) views from model.
+2023-02-11 17:56:56,138 : DEBUG : main :  : Node : FSK Runner (deprecated) : 3:3 : clean output ports.
+2023-02-11 17:56:56,139 : DEBUG : main :  : CreatorNodeModel : FSK Creator (deprecated) : 3:2 : Removing all (0) views from model.
+2023-02-11 17:56:56,139 : DEBUG : main :  : Node : FSK Creator (deprecated) : 3:2 : clean output ports.
+2023-02-11 17:56:56,139 : DEBUG : main :  : TestConfigNodeModel : Testflow Configuration : 3:1 : Removing all (0) views from model.
+2023-02-11 17:56:56,139 : DEBUG : main :  : Node : Testflow Configuration : 3:1 : clean output ports.
+2023-02-11 17:56:56,140 : DEBUG : main :  : WorkflowManager : HorizontalTransmiAnimals : 3 : Project "HorizontalTransmiAnimals 3" removed (7 remaining)
+2023-02-11 17:57:02,455 : DEBUG : ModalContext :  : TestConfigNodeFactory : HorizontalTransmiAnimals : 3 : Factory is already initialized. Nothing to do.
+2023-02-11 17:57:02,456 : DEBUG : ModalContext :  : CreatorNodeFactory : HorizontalTransmiAnimals : 3 : Factory is already initialized. Nothing to do.
+2023-02-11 17:57:02,458 : DEBUG : ModalContext :  : RunnerNodeFactory : HorizontalTransmiAnimals : 3 : Factory is already initialized. Nothing to do.
+2023-02-11 17:57:02,460 : DEBUG : ModalContext :  : Node : FSK Creator (deprecated) : 3:2 : Configure succeeded. (FSK Creator (deprecated))
+2023-02-11 17:57:02,461 : DEBUG : ModalContext :  : Node : FSK Runner (deprecated) : 3:3 : Configure succeeded. (FSK Runner (deprecated))
+2023-02-11 18:08:08,816 : ERROR : main :  : Node : FSK Creator : 3:4 : Configure failed (IllegalArgumentException): No spreadsheet provided! Please enter a valid location.
+java.lang.IllegalArgumentException: No spreadsheet provided! Please enter a valid location.
+	at org.knime.core.node.util.CheckUtils.checkArgument(CheckUtils.java:258)
+	at org.knime.core.node.util.CheckUtils.checkArgument(CheckUtils.java:119)
+	at de.bund.bfr.knime.fsklab.v2_0.creator.CreatorNodeModel.configure(CreatorNodeModel.java:373)
+	at org.knime.core.node.NodeModel.configureModel(NodeModel.java:1078)
+	at org.knime.core.node.Node.invokeNodeModelConfigure(Node.java:2007)
+	at org.knime.core.node.Node.configure(Node.java:1943)
+	at org.knime.core.node.workflow.NativeNodeContainer.performConfigure(NativeNodeContainer.java:566)
+	at org.knime.core.node.workflow.SingleNodeContainer.callNodeConfigure(SingleNodeContainer.java:315)
+	at org.knime.core.node.workflow.SingleNodeContainer.configure(SingleNodeContainer.java:200)
+	at org.knime.core.node.workflow.WorkflowManager.configureSingleNodeContainer(WorkflowManager.java:6540)
+	at org.knime.core.node.workflow.WorkflowManager.configureNodeAndPortSuccessors(WorkflowManager.java:6699)
+	at org.knime.core.node.workflow.WorkflowManager.configureNodeAndSuccessors(WorkflowManager.java:6642)
+	at org.knime.core.node.workflow.WorkflowManager.addNodeAndApplyContext(WorkflowManager.java:846)
+	at org.knime.core.ui.wrapper.WorkflowManagerWrapper.createAndAddNode(WorkflowManagerWrapper.java:140)
+	at org.knime.workbench.editor2.commands.CreateNodeCommand.lambda$0(CreateNodeCommand.java:183)
+	at org.knime.workbench.ui.async.AsyncUtil.wfmAsyncSwitch(AsyncUtil.java:130)
+	at org.knime.workbench.editor2.commands.CreateNodeCommand.execute(CreateNodeCommand.java:182)
+	at org.eclipse.gef.commands.CommandStack.execute(CommandStack.java:228)
+	at org.knime.workbench.editor2.WorkflowEditorDropTargetListener.handleDropAsync(WorkflowEditorDropTargetListener.java:531)
+	at org.knime.workbench.editor2.WorkflowEditorDropTargetListener.lambda$5(WorkflowEditorDropTargetListener.java:494)
+	at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:40)
+	at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:132)
+	at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:4345)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3968)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$5.run(PartRenderingEngine.java:1155)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:1046)
+	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:155)
+	at org.eclipse.ui.internal.Workbench.lambda$3(Workbench.java:644)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:551)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:156)
+	at org.knime.product.rcp.KNIMEApplication.start(KNIMEApplication.java:191)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:203)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:136)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:104)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:402)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:255)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:659)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:596)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1467)
+	at org.eclipse.equinox.launcher.Main.main(Main.java:1440)
+2023-02-11 18:08:11,233 : ERROR : main :  : Node : FSK Creator : 3:4 : Configure failed (IllegalArgumentException): No spreadsheet provided! Please enter a valid location.
+java.lang.IllegalArgumentException: No spreadsheet provided! Please enter a valid location.
+	at org.knime.core.node.util.CheckUtils.checkArgument(CheckUtils.java:258)
+	at org.knime.core.node.util.CheckUtils.checkArgument(CheckUtils.java:119)
+	at de.bund.bfr.knime.fsklab.v2_0.creator.CreatorNodeModel.configure(CreatorNodeModel.java:373)
+	at org.knime.core.node.NodeModel.configureModel(NodeModel.java:1078)
+	at org.knime.core.node.Node.invokeNodeModelConfigure(Node.java:2007)
+	at org.knime.core.node.Node.configure(Node.java:1943)
+	at org.knime.core.node.workflow.NativeNodeContainer.performConfigure(NativeNodeContainer.java:566)
+	at org.knime.core.node.workflow.SingleNodeContainer.callNodeConfigure(SingleNodeContainer.java:315)
+	at org.knime.core.node.workflow.SingleNodeContainer.configure(SingleNodeContainer.java:200)
+	at org.knime.core.node.workflow.WorkflowManager.configureSingleNodeContainer(WorkflowManager.java:6540)
+	at org.knime.core.node.workflow.WorkflowManager.configureNodeAndPortSuccessors(WorkflowManager.java:6699)
+	at org.knime.core.node.workflow.WorkflowManager.configureNodeAndSuccessors(WorkflowManager.java:6642)
+	at org.knime.core.node.workflow.WorkflowManager.resetAndConfigureNodeAndSuccessors(WorkflowManager.java:5321)
+	at org.knime.core.node.workflow.WorkflowManager.resetAndConfigureNode(WorkflowManager.java:5242)
+	at org.knime.core.node.workflow.WorkflowManager.addConnection(WorkflowManager.java:1309)
+	at org.knime.core.node.workflow.WorkflowManager.addConnection(WorkflowManager.java:1225)
+	at org.knime.core.ui.wrapper.WorkflowManagerWrapper.addConnection(WorkflowManagerWrapper.java:223)
+	at org.knime.workbench.editor2.commands.CreateConnectionCommand.lambda$2(CreateConnectionCommand.java:404)
+	at org.knime.workbench.ui.async.AsyncUtil.wfmAsyncSwitchRethrow(AsyncUtil.java:200)
+	at org.knime.workbench.editor2.commands.CreateConnectionCommand.createConnection(CreateConnectionCommand.java:404)
+	at org.knime.workbench.editor2.commands.CreateConnectionCommand.execute(CreateConnectionCommand.java:331)
+	at org.eclipse.gef.commands.CommandStack.execute(CommandStack.java:228)
+	at org.eclipse.gef.tools.AbstractTool.executeCommand(AbstractTool.java:425)
+	at org.eclipse.gef.tools.AbstractTool.executeCurrentCommand(AbstractTool.java:438)
+	at org.eclipse.gef.tools.AbstractConnectionCreationTool.handleCreateConnection(AbstractConnectionCreationTool.java:256)
+	at org.eclipse.gef.tools.ConnectionDragCreationTool.handleButtonUp(ConnectionDragCreationTool.java:63)
+	at org.eclipse.gef.tools.AbstractTool.mouseMove(AbstractTool.java:1159)
+	at org.eclipse.gef.tools.SelectionTool.mouseMove(SelectionTool.java:562)
+	at org.eclipse.gef.EditDomain.mouseMove(EditDomain.java:287)
+	at org.eclipse.gef.ui.parts.DomainEventDispatcher.dispatchMouseMoved(DomainEventDispatcher.java:365)
+	at org.eclipse.draw2d.LightweightSystem$EventHandler.mouseMove(LightweightSystem.java:543)
+	at org.eclipse.swt.widgets.TypedListener.handleEvent(TypedListener.java:216)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:89)
+	at org.eclipse.swt.widgets.Display.sendEvent(Display.java:4604)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1524)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1547)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1532)
+	at org.eclipse.swt.widgets.Widget.notifyListeners(Widget.java:1325)
+	at org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:4390)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3966)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$5.run(PartRenderingEngine.java:1155)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:1046)
+	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:155)
+	at org.eclipse.ui.internal.Workbench.lambda$3(Workbench.java:644)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:551)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:156)
+	at org.knime.product.rcp.KNIMEApplication.start(KNIMEApplication.java:191)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:203)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:136)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:104)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:402)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:255)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:659)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:596)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1467)
+	at org.eclipse.equinox.launcher.Main.main(Main.java:1440)
+2023-02-11 18:08:13,581 : INFO  : AWT-EventQueue-0 :  : StringHistory : FSK Creator (deprecated) : 3:2 : History file '/Users/ahmadswaid/knime-workspace/.metadata/knime/history_modelScript.txt' does not exist.
+2023-02-11 18:08:13,584 : INFO  : AWT-EventQueue-0 :  : StringHistory : FSK Creator (deprecated) : 3:2 : History file '/Users/ahmadswaid/knime-workspace/.metadata/knime/history_visualizationScript.txt' does not exist.
+2023-02-11 18:08:13,590 : INFO  : AWT-EventQueue-0 :  : StringHistory : FSK Creator (deprecated) : 3:2 : History file '/Users/ahmadswaid/knime-workspace/.metadata/knime/history_directory.txt' does not exist.
+2023-02-11 18:08:13,593 : INFO  : AWT-EventQueue-0 :  : StringHistory : FSK Creator (deprecated) : 3:2 : History file '/Users/ahmadswaid/knime-workspace/.metadata/knime/history_spreadsheet.txt' does not exist.
+2023-02-11 18:08:23,825 : WARN  : main :  : Node : FSK Creator (deprecated) : 3:5 : Errors overwriting node settings with flow variables: Unknown variable "knime.node(drop) model.R"
+2023-02-11 18:08:23,825 : DEBUG : main :  : Node : FSK Creator (deprecated) : 3:5 : Errors overwriting node settings with flow variables: Unknown variable "knime.node(drop) model.R"
+org.knime.core.node.InvalidSettingsException: Errors overwriting node settings with flow variables: Unknown variable "knime.node(drop) model.R"
+	at org.knime.core.node.workflow.SingleNodeContainer.overwriteSettingsWithFlowVariables(SingleNodeContainer.java:397)
+	at org.knime.core.node.workflow.SingleNodeContainer.applySettingsUsingFlowObjectStack(SingleNodeContainer.java:357)
+	at org.knime.core.node.workflow.SingleNodeContainer$1.preConfigure(SingleNodeContainer.java:294)
+	at org.knime.core.node.Node.configure(Node.java:1938)
+	at org.knime.core.node.workflow.NativeNodeContainer.performConfigure(NativeNodeContainer.java:566)
+	at org.knime.core.node.workflow.SingleNodeContainer.callNodeConfigure(SingleNodeContainer.java:315)
+	at org.knime.core.node.workflow.SingleNodeContainer.configure(SingleNodeContainer.java:200)
+	at org.knime.core.node.workflow.WorkflowManager.configureSingleNodeContainer(WorkflowManager.java:6540)
+	at org.knime.core.node.workflow.WorkflowManager.configureNodeAndPortSuccessors(WorkflowManager.java:6699)
+	at org.knime.core.node.workflow.WorkflowManager.configureNodeAndSuccessors(WorkflowManager.java:6642)
+	at org.knime.core.node.workflow.WorkflowManager.configureAfterLoadWorkflowContent(WorkflowManager.java:8549)
+	at org.knime.core.node.workflow.WorkflowManager.loadWorkflowContent(WorkflowManager.java:8524)
+	at org.knime.core.node.workflow.WorkflowManager.paste(WorkflowManager.java:8152)
+	at org.knime.core.ui.wrapper.WorkflowManagerWrapper.paste(WorkflowManagerWrapper.java:471)
+	at org.knime.workbench.editor2.commands.PasteFromWorkflowDefCommand.execute(PasteFromWorkflowDefCommand.java:138)
+	at org.eclipse.gef.commands.CommandStack.execute(CommandStack.java:228)
+	at org.knime.workbench.editor2.actions.PasteAction.runOnNodes(PasteAction.java:196)
+	at org.knime.workbench.editor2.actions.AbstractNodeAction.runInSWT(AbstractNodeAction.java:174)
+	at org.knime.workbench.editor2.actions.AbstractNodeAction$1.run(AbstractNodeAction.java:160)
+	at org.eclipse.swt.widgets.Synchronizer.syncExec(Synchronizer.java:183)
+	at org.eclipse.ui.internal.UISynchronizer.syncExec(UISynchronizer.java:133)
+	at org.eclipse.swt.widgets.Display.syncExec(Display.java:5211)
+	at org.knime.workbench.editor2.actions.AbstractNodeAction.run(AbstractNodeAction.java:157)
+	at org.eclipse.jface.action.Action.runWithEvent(Action.java:474)
+	at org.eclipse.jface.commands.ActionHandler.execute(ActionHandler.java:121)
+	at org.eclipse.ui.internal.handlers.E4HandlerProxy.execute(E4HandlerProxy.java:97)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.eclipse.e4.core.internal.di.MethodRequestor.execute(MethodRequestor.java:58)
+	at org.eclipse.e4.core.internal.di.InjectorImpl.invokeUsingClass(InjectorImpl.java:317)
+	at org.eclipse.e4.core.internal.di.InjectorImpl.invoke(InjectorImpl.java:251)
+	at org.eclipse.e4.core.contexts.ContextInjectionFactory.invoke(ContextInjectionFactory.java:173)
+	at org.eclipse.e4.core.commands.internal.HandlerServiceHandler.execute(HandlerServiceHandler.java:156)
+	at org.eclipse.core.commands.Command.executeWithChecks(Command.java:488)
+	at org.eclipse.core.commands.ParameterizedCommand.executeWithChecks(ParameterizedCommand.java:485)
+	at org.eclipse.e4.core.commands.internal.HandlerServiceImpl.executeHandler(HandlerServiceImpl.java:213)
+	at org.eclipse.e4.ui.bindings.keys.KeyBindingDispatcher.executeCommand(KeyBindingDispatcher.java:308)
+	at org.eclipse.e4.ui.bindings.keys.KeyBindingDispatcher.press(KeyBindingDispatcher.java:580)
+	at org.eclipse.e4.ui.bindings.keys.KeyBindingDispatcher.processKeyEvent(KeyBindingDispatcher.java:647)
+	at org.eclipse.e4.ui.bindings.keys.KeyBindingDispatcher.filterKeySequenceBindings(KeyBindingDispatcher.java:439)
+	at org.eclipse.e4.ui.bindings.keys.KeyBindingDispatcher$KeyDownFilter.handleEvent(KeyBindingDispatcher.java:96)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:89)
+	at org.eclipse.swt.widgets.Display.filterEvent(Display.java:1199)
+	at org.eclipse.swt.widgets.Display.sendEvent(Display.java:4599)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1524)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1547)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1532)
+	at org.eclipse.swt.widgets.Widget.sendKeyEvent(Widget.java:1561)
+	at org.eclipse.swt.widgets.Widget.sendKeyEvent(Widget.java:1557)
+	at org.eclipse.swt.widgets.Canvas.sendKeyEvent(Canvas.java:522)
+	at org.eclipse.swt.widgets.Control.doCommandBySelector(Control.java:1085)
+	at org.eclipse.swt.widgets.Display.windowProc(Display.java:6453)
+	at org.eclipse.swt.internal.cocoa.OS.objc_msgSend(Native Method)
+	at org.eclipse.swt.internal.cocoa.NSResponder.interpretKeyEvents(NSResponder.java:59)
+	at org.eclipse.swt.widgets.Composite.keyDown(Composite.java:607)
+	at org.eclipse.swt.widgets.Display.windowProc(Display.java:6285)
+	at org.eclipse.swt.internal.cocoa.OS.objc_msgSendSuper(Native Method)
+	at org.eclipse.swt.widgets.Widget.callSuper(Widget.java:236)
+	at org.eclipse.swt.widgets.Widget.windowSendEvent(Widget.java:2162)
+	at org.eclipse.swt.widgets.Shell.windowSendEvent(Shell.java:2487)
+	at org.eclipse.swt.widgets.Display.windowProc(Display.java:6405)
+	at org.eclipse.swt.internal.cocoa.OS.objc_msgSendSuper(Native Method)
+	at org.eclipse.swt.widgets.Display.applicationSendEvent(Display.java:5653)
+	at org.eclipse.swt.widgets.Display.applicationProc(Display.java:5792)
+	at org.eclipse.swt.internal.cocoa.OS.objc_msgSend(Native Method)
+	at org.eclipse.swt.internal.cocoa.NSApplication.sendEvent(NSApplication.java:117)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3963)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$5.run(PartRenderingEngine.java:1155)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:1046)
+	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:155)
+	at org.eclipse.ui.internal.Workbench.lambda$3(Workbench.java:644)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:551)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:156)
+	at org.knime.product.rcp.KNIMEApplication.start(KNIMEApplication.java:191)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:203)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:136)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:104)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:402)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:255)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:659)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:596)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1467)
+	at org.eclipse.equinox.launcher.Main.main(Main.java:1440)
+Caused by: org.knime.core.node.InvalidSettingsException: Unknown variable "knime.node(drop) model.R"
+	at org.knime.core.node.util.CheckUtils.checkSetting(CheckUtils.java:272)
+	at org.knime.core.node.util.CheckUtils.checkSetting(CheckUtils.java:222)
+	at org.knime.core.node.config.ConfigEditTreeModel$ConfigEditTreeNode.getVariable(ConfigEditTreeModel.java:763)
+	at org.knime.core.node.config.ConfigEditTreeModel$ConfigEditTreeNode.overwriteWithVariable(ConfigEditTreeModel.java:679)
+	at org.knime.core.node.config.ConfigEditTreeModel$ConfigEditTreeNode.overwriteSettings(ConfigEditTreeModel.java:657)
+	at org.knime.core.node.config.ConfigEditTreeModel$ConfigEditTreeNode.recursivelyOverwriteSettingsInChildren(ConfigEditTreeModel.java:722)
+	at org.knime.core.node.config.ConfigEditTreeModel$ConfigEditTreeNode.overwriteSettings(ConfigEditTreeModel.java:666)
+	at org.knime.core.node.config.ConfigEditTreeModel.overwriteSettings(ConfigEditTreeModel.java:306)
+	at org.knime.core.node.workflow.SingleNodeContainer.overwriteSettingsWithFlowVariables(SingleNodeContainer.java:395)
+	... 90 more
+2023-02-11 18:08:28,797 : DEBUG : main :  : CreatorNodeModel : FSK Creator (deprecated) : 3:5 : Removing all (0) views from model.
+2023-02-11 18:08:28,797 : DEBUG : main :  : Node : FSK Creator (deprecated) : 3:5 : clean output ports.
+2023-02-11 18:08:46,931 : DEBUG : main :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogErrors': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 18:08:46,931 : DEBUG : main :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogWarnings': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 18:08:46,931 : DEBUG : main :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogInfos': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 18:08:46,932 : DEBUG : main :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'optionalLogMessages': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 18:08:46,932 : DEBUG : main :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'failingNodes': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 18:08:46,932 : DEBUG : main :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'usedJanitors': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 18:08:46,935 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogErrors': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 18:08:46,936 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogWarnings': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 18:08:46,937 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogInfos': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 18:08:46,937 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'optionalLogMessages': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 18:08:46,937 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'failingNodes': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 18:08:46,942 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'usedJanitors': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 18:08:46,971 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'usedJanitors': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 18:08:46,976 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'failingNodes': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 18:08:46,977 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'optionalLogMessages': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 18:08:46,977 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogInfos': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 18:08:46,978 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogWarnings': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 18:08:46,978 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogErrors': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:39:20,151 : DEBUG : main :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogErrors': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:39:20,151 : DEBUG : main :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogWarnings': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:39:20,152 : DEBUG : main :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogInfos': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:39:20,152 : DEBUG : main :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'optionalLogMessages': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:39:20,152 : DEBUG : main :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'failingNodes': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:39:20,152 : DEBUG : main :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'usedJanitors': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:39:20,156 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogErrors': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:39:20,156 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogWarnings': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:39:20,157 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogInfos': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:39:20,157 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'optionalLogMessages': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:39:20,158 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'failingNodes': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:39:20,164 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'usedJanitors': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:39:20,200 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'usedJanitors': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:39:20,208 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'failingNodes': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:39:20,208 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'optionalLogMessages': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:39:20,209 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogInfos': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:39:20,209 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogWarnings': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:39:20,210 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogErrors': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:39:22,637 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogErrors': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:39:22,638 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogWarnings': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:39:22,638 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogInfos': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:39:22,638 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'optionalLogMessages': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:39:22,638 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'failingNodes': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:39:22,639 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'usedJanitors': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:39:22,642 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogErrors': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:39:22,643 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogWarnings': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:39:22,643 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogInfos': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:39:22,644 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'optionalLogMessages': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:39:22,644 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'failingNodes': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:39:22,653 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'usedJanitors': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:39:22,672 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogErrors': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:39:22,677 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogWarnings': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:39:22,680 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogInfos': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:39:22,682 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'optionalLogMessages': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:39:22,683 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'failingNodes': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:39:22,696 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'usedJanitors': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:39:22,711 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogErrors': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:39:22,712 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogWarnings': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:39:22,713 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogInfos': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:39:22,715 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'optionalLogMessages': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:39:22,716 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'failingNodes': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:39:22,725 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'usedJanitors': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:42:04,011 : WARN  : main :  : WrappedNodeDialog : FSK Creator : 3:4 : failed to apply settings: Input file '/Users/ahmadswaid/knime-workspace/HorizontalTransmiAnimals/drop/model.r' does not exist
+org.knime.core.node.InvalidSettingsException: Input file '/Users/ahmadswaid/knime-workspace/HorizontalTransmiAnimals/drop/model.r' does not exist
+	at org.knime.core.node.util.CheckUtils.checkSourceFile(CheckUtils.java:484)
+	at de.bund.bfr.knime.fsklab.v2_0.creator.CreatorNodeModel.validateSettings(CreatorNodeModel.java:129)
+	at org.knime.core.node.Node.validateModelSettings(Node.java:692)
+	at org.knime.core.node.workflow.NativeNodeContainer.performValidateSettings(NativeNodeContainer.java:1184)
+	at org.knime.core.node.workflow.SingleNodeContainer.validateSettings(SingleNodeContainer.java:1000)
+	at org.knime.core.node.workflow.WorkflowManager.loadNodeSettings(WorkflowManager.java:2060)
+	at org.knime.core.node.workflow.NodeContainer.applySettingsFromDialog(NodeContainer.java:1140)
+	at org.knime.core.ui.wrapper.NodeContainerWrapper.applySettingsFromDialog(NodeContainerWrapper.java:264)
+	at org.knime.workbench.ui.wrapper.WrappedNodeDialog.callApplySettingsFromDialog(WrappedNodeDialog.java:672)
+	at org.knime.workbench.ui.wrapper.WrappedNodeDialog.doApply(WrappedNodeDialog.java:644)
+	at org.knime.workbench.ui.wrapper.WrappedNodeDialog$6.widgetSelected(WrappedNodeDialog.java:510)
+	at org.eclipse.swt.widgets.TypedListener.handleEvent(TypedListener.java:252)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:89)
+	at org.eclipse.swt.widgets.Display.sendEvent(Display.java:4604)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1524)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1547)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1532)
+	at org.eclipse.swt.widgets.Widget.notifyListeners(Widget.java:1325)
+	at org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:4390)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3966)
+	at org.eclipse.jface.window.Window.runEventLoop(Window.java:823)
+	at org.eclipse.jface.window.Window.open(Window.java:799)
+	at org.knime.workbench.ui.wrapper.WrappedNodeDialog.open(WrappedNodeDialog.java:199)
+	at org.knime.workbench.editor2.editparts.NodeContainerEditPart.openDialog(NodeContainerEditPart.java:957)
+	at org.knime.workbench.editor2.editparts.NodeContainerEditPart.openNodeDialog(NodeContainerEditPart.java:864)
+	at org.knime.workbench.editor2.editparts.NodeContainerEditPart.openNodeDialog(NodeContainerEditPart.java:846)
+	at org.knime.workbench.editor2.editparts.NodeContainerEditPart.openDialog(NodeContainerEditPart.java:835)
+	at org.knime.workbench.editor2.editparts.NodeContainerEditPart.performRequest(NodeContainerEditPart.java:399)
+	at org.eclipse.gef.tools.SelectEditPartTracker.performOpen(SelectEditPartTracker.java:194)
+	at org.eclipse.gef.tools.SelectEditPartTracker.handleDoubleClick(SelectEditPartTracker.java:137)
+	at org.knime.workbench.editor2.WorkflowSelectionDragEditPartsTracker.handleDoubleClick(WorkflowSelectionDragEditPartsTracker.java:126)
+	at org.eclipse.gef.tools.AbstractTool.mouseDoubleClick(AbstractTool.java:1069)
+	at org.eclipse.gef.tools.SelectionTool.mouseDoubleClick(SelectionTool.java:527)
+	at org.eclipse.gef.EditDomain.mouseDoubleClick(EditDomain.java:231)
+	at org.eclipse.gef.ui.parts.DomainEventDispatcher.dispatchMouseDoubleClicked(DomainEventDispatcher.java:291)
+	at org.eclipse.draw2d.LightweightSystem$EventHandler.mouseDoubleClick(LightweightSystem.java:518)
+	at org.eclipse.swt.widgets.TypedListener.handleEvent(TypedListener.java:200)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:89)
+	at org.eclipse.swt.widgets.Display.sendEvent(Display.java:4604)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1524)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1547)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1532)
+	at org.eclipse.swt.widgets.Widget.notifyListeners(Widget.java:1325)
+	at org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:4390)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3966)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$5.run(PartRenderingEngine.java:1155)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:1046)
+	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:155)
+	at org.eclipse.ui.internal.Workbench.lambda$3(Workbench.java:644)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:551)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:156)
+	at org.knime.product.rcp.KNIMEApplication.start(KNIMEApplication.java:191)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:203)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:136)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:104)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:402)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:255)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:659)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:596)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1467)
+	at org.eclipse.equinox.launcher.Main.main(Main.java:1440)
+2023-02-11 20:42:06,720 : WARN  : main :  : WrappedNodeDialog : FSK Creator : 3:4 : failed to apply settings: Input file '/Users/ahmadswaid/knime-workspace/HorizontalTransmiAnimals/drop/model.r' does not exist
+org.knime.core.node.InvalidSettingsException: Input file '/Users/ahmadswaid/knime-workspace/HorizontalTransmiAnimals/drop/model.r' does not exist
+	at org.knime.core.node.util.CheckUtils.checkSourceFile(CheckUtils.java:484)
+	at de.bund.bfr.knime.fsklab.v2_0.creator.CreatorNodeModel.validateSettings(CreatorNodeModel.java:129)
+	at org.knime.core.node.Node.validateModelSettings(Node.java:692)
+	at org.knime.core.node.workflow.NativeNodeContainer.performValidateSettings(NativeNodeContainer.java:1184)
+	at org.knime.core.node.workflow.SingleNodeContainer.validateSettings(SingleNodeContainer.java:1000)
+	at org.knime.core.node.workflow.WorkflowManager.loadNodeSettings(WorkflowManager.java:2060)
+	at org.knime.core.node.workflow.NodeContainer.applySettingsFromDialog(NodeContainer.java:1140)
+	at org.knime.core.ui.wrapper.NodeContainerWrapper.applySettingsFromDialog(NodeContainerWrapper.java:264)
+	at org.knime.workbench.ui.wrapper.WrappedNodeDialog.callApplySettingsFromDialog(WrappedNodeDialog.java:672)
+	at org.knime.workbench.ui.wrapper.WrappedNodeDialog.doApply(WrappedNodeDialog.java:644)
+	at org.knime.workbench.ui.wrapper.WrappedNodeDialog.doOK(WrappedNodeDialog.java:559)
+	at org.knime.workbench.ui.wrapper.WrappedNodeDialog$5.widgetSelected(WrappedNodeDialog.java:495)
+	at org.eclipse.swt.widgets.TypedListener.handleEvent(TypedListener.java:252)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:89)
+	at org.eclipse.swt.widgets.Display.sendEvent(Display.java:4604)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1524)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1547)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1532)
+	at org.eclipse.swt.widgets.Widget.notifyListeners(Widget.java:1325)
+	at org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:4390)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3966)
+	at org.eclipse.jface.window.Window.runEventLoop(Window.java:823)
+	at org.eclipse.jface.window.Window.open(Window.java:799)
+	at org.knime.workbench.ui.wrapper.WrappedNodeDialog.open(WrappedNodeDialog.java:199)
+	at org.knime.workbench.editor2.editparts.NodeContainerEditPart.openDialog(NodeContainerEditPart.java:957)
+	at org.knime.workbench.editor2.editparts.NodeContainerEditPart.openNodeDialog(NodeContainerEditPart.java:864)
+	at org.knime.workbench.editor2.editparts.NodeContainerEditPart.openNodeDialog(NodeContainerEditPart.java:846)
+	at org.knime.workbench.editor2.editparts.NodeContainerEditPart.openDialog(NodeContainerEditPart.java:835)
+	at org.knime.workbench.editor2.editparts.NodeContainerEditPart.performRequest(NodeContainerEditPart.java:399)
+	at org.eclipse.gef.tools.SelectEditPartTracker.performOpen(SelectEditPartTracker.java:194)
+	at org.eclipse.gef.tools.SelectEditPartTracker.handleDoubleClick(SelectEditPartTracker.java:137)
+	at org.knime.workbench.editor2.WorkflowSelectionDragEditPartsTracker.handleDoubleClick(WorkflowSelectionDragEditPartsTracker.java:126)
+	at org.eclipse.gef.tools.AbstractTool.mouseDoubleClick(AbstractTool.java:1069)
+	at org.eclipse.gef.tools.SelectionTool.mouseDoubleClick(SelectionTool.java:527)
+	at org.eclipse.gef.EditDomain.mouseDoubleClick(EditDomain.java:231)
+	at org.eclipse.gef.ui.parts.DomainEventDispatcher.dispatchMouseDoubleClicked(DomainEventDispatcher.java:291)
+	at org.eclipse.draw2d.LightweightSystem$EventHandler.mouseDoubleClick(LightweightSystem.java:518)
+	at org.eclipse.swt.widgets.TypedListener.handleEvent(TypedListener.java:200)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:89)
+	at org.eclipse.swt.widgets.Display.sendEvent(Display.java:4604)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1524)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1547)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1532)
+	at org.eclipse.swt.widgets.Widget.notifyListeners(Widget.java:1325)
+	at org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:4390)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3966)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$5.run(PartRenderingEngine.java:1155)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:1046)
+	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:155)
+	at org.eclipse.ui.internal.Workbench.lambda$3(Workbench.java:644)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:551)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:156)
+	at org.knime.product.rcp.KNIMEApplication.start(KNIMEApplication.java:191)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:203)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:136)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:104)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:402)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:255)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:659)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:596)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1467)
+	at org.eclipse.equinox.launcher.Main.main(Main.java:1440)
+2023-02-11 20:46:02,654 : DEBUG : main :  : ProjectWorkflowMap : HorizontalTransmiAnimals : 3 : Removing "file:/Users/ahmadswaid/knime-workspace/HorizontalTransmiAnimals/" from project map (0 remaining)
+2023-02-11 20:46:02,654 : DEBUG : main :  : WorkflowManager : HorizontalTransmiAnimals : 3 : Removing project "HorizontalTransmiAnimals 3"
+2023-02-11 20:46:02,654 : WARN  : main :  : VMFileLocker : HorizontalTransmiAnimals : 3 : Directory '/Users/ahmadswaid/knime-workspace/HorizontalTransmiAnimals' does not exist (any more), cannot unlock it
+2023-02-11 20:46:02,655 : DEBUG : main :  : RunnerNodeModel : FSK Runner (deprecated) : 3:3 : Removing all (0) views from model.
+2023-02-11 20:46:02,655 : DEBUG : main :  : Node : FSK Runner (deprecated) : 3:3 : clean output ports.
+2023-02-11 20:46:02,655 : DEBUG : main :  : CreatorNodeModel : FSK Creator : 3:4 : Removing all (0) views from model.
+2023-02-11 20:46:02,655 : DEBUG : main :  : Node : FSK Creator : 3:4 : clean output ports.
+2023-02-11 20:46:02,655 : DEBUG : main :  : CreatorNodeModel : FSK Creator (deprecated) : 3:2 : Removing all (0) views from model.
+2023-02-11 20:46:02,655 : DEBUG : main :  : Node : FSK Creator (deprecated) : 3:2 : clean output ports.
+2023-02-11 20:46:02,655 : DEBUG : main :  : TestConfigNodeModel : Testflow Configuration : 3:1 : Removing all (0) views from model.
+2023-02-11 20:46:02,655 : DEBUG : main :  : Node : Testflow Configuration : 3:1 : clean output ports.
+2023-02-11 20:46:02,656 : DEBUG : main :  : WorkflowManager : HorizontalTransmiAnimals : 3 : Project "HorizontalTransmiAnimals 3" removed (2 remaining)
+2023-02-11 20:47:10,261 : DEBUG : ModalContext :  : TestConfigNodeFactory : HorizontalTransmiAnimals : 3 : Factory is already initialized. Nothing to do.
+2023-02-11 20:47:10,283 : DEBUG : ModalContext :  : CreatorNodeFactory : HorizontalTransmiAnimals : 3 : Factory is already initialized. Nothing to do.
+2023-02-11 20:47:10,309 : DEBUG : ModalContext :  : RunnerNodeFactory : HorizontalTransmiAnimals : 3 : Factory is already initialized. Nothing to do.
+2023-02-11 20:47:10,391 : DEBUG : ModalContext :  : VariableTypeRegistry : FSK Creator (deprecated) : 3:2 : Added flow variable type 'org.knime.conda.CondaEnvironmentPropagation$CondaEnvironmentType' from 'org.knime.conda'
+2023-02-11 20:47:10,395 : DEBUG : ModalContext :  : VariableTypeRegistry : FSK Creator (deprecated) : 3:2 : Added flow variable type 'org.knime.filehandling.core.data.location.variable.FSLocationVariableType' from 'org.knime.filehandling.core'
+2023-02-11 20:47:10,397 : DEBUG : ModalContext :  : VariableTypeRegistry : FSK Creator (deprecated) : 3:2 : Added flow variable type 'org.knime.filehandling.core.data.location.variable.FSLocationSpecVariableType' from 'org.knime.filehandling.core'
+2023-02-11 20:47:10,409 : DEBUG : ModalContext :  : Node : FSK Creator (deprecated) : 3:2 : Configure succeeded. (FSK Creator (deprecated))
+2023-02-11 20:47:10,411 : DEBUG : ModalContext :  : Node : FSK Runner (deprecated) : 3:3 : Configure succeeded. (FSK Runner (deprecated))
+2023-02-11 20:47:53,029 : DEBUG : main :  : Node : FSK Runner (deprecated) : 3:3 : reset
+2023-02-11 20:47:53,030 : DEBUG : main :  : Node : FSK Runner (deprecated) : 3:3 : clean output ports.
+2023-02-11 20:47:53,030 : DEBUG : main :  : NodeContainer : FSK Creator (deprecated) : 3:2 : Setting dirty flag on FSK Runner (deprecated) 3:3
+2023-02-11 20:47:53,030 : DEBUG : main :  : NodeContainer : FSK Creator (deprecated) : 3:2 : Setting dirty flag on HorizontalTransmiAnimals 3
+2023-02-11 20:47:53,033 : DEBUG : main :  : NodeContainer : FSK Creator (deprecated) : 3:2 : FSK Runner (deprecated) 3:3 has new state: IDLE
+2023-02-11 20:47:53,033 : DEBUG : main :  : Node : FSK Creator (deprecated) : 3:2 : reset
+2023-02-11 20:47:53,033 : DEBUG : main :  : Node : FSK Creator (deprecated) : 3:2 : clean output ports.
+2023-02-11 20:47:53,034 : DEBUG : main :  : NodeContainer : FSK Creator (deprecated) : 3:2 : Setting dirty flag on FSK Creator (deprecated) 3:2
+2023-02-11 20:47:53,034 : DEBUG : main :  : NodeContainer : FSK Creator (deprecated) : 3:2 : FSK Creator (deprecated) 3:2 has new state: IDLE
+2023-02-11 20:47:53,036 : DEBUG : main :  : Node : FSK Creator (deprecated) : 3:2 : Configure succeeded. (FSK Creator (deprecated))
+2023-02-11 20:47:53,037 : DEBUG : main :  : NodeContainer : FSK Creator (deprecated) : 3:2 : FSK Creator (deprecated) 3:2 has new state: CONFIGURED
+2023-02-11 20:47:53,038 : DEBUG : main :  : Node : FSK Runner (deprecated) : 3:3 : Configure succeeded. (FSK Runner (deprecated))
+2023-02-11 20:47:53,039 : DEBUG : main :  : NodeContainer : FSK Creator (deprecated) : 3:2 : FSK Runner (deprecated) 3:3 has new state: CONFIGURED
+2023-02-11 20:47:55,629 : DEBUG : KNIME-Worker-9-FSK Creator (deprecated) 3:2 :  : WorkflowManager : FSK Creator (deprecated) : 3:2 : FSK Creator (deprecated) 3:2 doBeforePreExecution
+2023-02-11 20:47:55,629 : DEBUG : KNIME-Worker-9-FSK Creator (deprecated) 3:2 :  : NodeContainer : FSK Creator (deprecated) : 3:2 : FSK Creator (deprecated) 3:2 has new state: PREEXECUTE
+2023-02-11 20:47:55,629 : DEBUG : KNIME-Worker-9-FSK Creator (deprecated) 3:2 :  : WorkflowDataRepository : FSK Creator (deprecated) : 3:2 : Adding handler 5e1129c8-bf55-4402-8dd3-0c71cb96f938 (FSK Creator (deprecated) 3:2: <no directory>) - 1 in total
+2023-02-11 20:47:55,629 : DEBUG : KNIME-Worker-9-FSK Creator (deprecated) 3:2 :  : WorkflowManager : FSK Creator (deprecated) : 3:2 : FSK Creator (deprecated) 3:2 doBeforeExecution
+2023-02-11 20:47:55,630 : DEBUG : KNIME-Worker-9-FSK Creator (deprecated) 3:2 :  : NodeContainer : FSK Creator (deprecated) : 3:2 : FSK Creator (deprecated) 3:2 has new state: EXECUTING
+2023-02-11 20:47:55,630 : DEBUG : KNIME-Worker-9-FSK Creator (deprecated) 3:2 :  : LocalNodeExecutionJob : FSK Creator (deprecated) : 3:2 : FSK Creator (deprecated) 3:2 Start execute
+2023-02-11 20:47:57,240 : DEBUG : KNIME-Worker-9-FSK Creator (deprecated) 3:2 :  : RController : FSK Creator (deprecated) : 3:2 : An attempt (1/5) to connect to Rserve failed.
+org.rosuda.REngine.Rserve.RserveException: Cannot connect: Connection refused (Connection refused)
+	at org.rosuda.REngine.Rserve.RConnection.<init>(RConnection.java:88)
+	at org.rosuda.REngine.Rserve.RConnection.<init>(RConnection.java:60)
+	at de.bund.bfr.knime.fsklab.r.server.RConnectionFactory$RInstance.createConnection(RConnectionFactory.java:450)
+	at de.bund.bfr.knime.fsklab.r.server.RConnectionFactory.launchRserve(RConnectionFactory.java:244)
+	at de.bund.bfr.knime.fsklab.r.server.RConnectionFactory.createConnection(RConnectionFactory.java:307)
+	at de.bund.bfr.knime.fsklab.r.client.RController.initRConnection(RController.java:271)
+	at de.bund.bfr.knime.fsklab.r.client.RController.initR(RController.java:316)
+	at de.bund.bfr.knime.fsklab.r.client.RController.initialize(RController.java:190)
+	at de.bund.bfr.knime.fsklab.r.client.RController.<init>(RController.java:164)
+	at de.bund.bfr.knime.fsklab.r.client.LibRegistry.<init>(LibRegistry.java:66)
+	at de.bund.bfr.knime.fsklab.r.client.LibRegistry.instance(LibRegistry.java:132)
+	at de.bund.bfr.knime.fsklab.nodes.RScriptHandler.<init>(RScriptHandler.java:41)
+	at de.bund.bfr.knime.fsklab.nodes.ScriptHandler.createHandler(ScriptHandler.java:121)
+	at de.bund.bfr.knime.fsklab.nodes.v1_7_2.creator.CreatorNodeModel.execute(CreatorNodeModel.java:449)
+	at org.knime.core.node.NodeModel.executeModel(NodeModel.java:549)
+	at org.knime.core.node.Node.invokeFullyNodeModelExecute(Node.java:1267)
+	at org.knime.core.node.Node.execute(Node.java:1041)
+	at org.knime.core.node.workflow.NativeNodeContainer.performExecuteNode(NativeNodeContainer.java:595)
+	at org.knime.core.node.exec.LocalNodeExecutionJob.mainExecute(LocalNodeExecutionJob.java:98)
+	at org.knime.core.node.workflow.NodeExecutionJob.internalRun(NodeExecutionJob.java:201)
+	at org.knime.core.node.workflow.NodeExecutionJob.run(NodeExecutionJob.java:117)
+	at org.knime.core.util.ThreadUtils$RunnableWithContextImpl.runWithContext(ThreadUtils.java:367)
+	at org.knime.core.util.ThreadUtils$RunnableWithContext.run(ThreadUtils.java:221)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at org.knime.core.util.ThreadPool$MyFuture.run(ThreadPool.java:123)
+	at org.knime.core.util.ThreadPool$Worker.run(ThreadPool.java:246)
+2023-02-11 20:47:57,347 : DEBUG : KNIME-Worker-9-FSK Creator (deprecated) 3:2 :  : RController : FSK Creator (deprecated) : 3:2 : An attempt (2/5) to connect to Rserve failed.
+org.rosuda.REngine.Rserve.RserveException: Cannot connect: Connection refused (Connection refused)
+	at org.rosuda.REngine.Rserve.RConnection.<init>(RConnection.java:88)
+	at org.rosuda.REngine.Rserve.RConnection.<init>(RConnection.java:60)
+	at de.bund.bfr.knime.fsklab.r.server.RConnectionFactory$RInstance.createConnection(RConnectionFactory.java:450)
+	at de.bund.bfr.knime.fsklab.r.server.RConnectionFactory.launchRserve(RConnectionFactory.java:244)
+	at de.bund.bfr.knime.fsklab.r.server.RConnectionFactory.createConnection(RConnectionFactory.java:307)
+	at de.bund.bfr.knime.fsklab.r.client.RController.initRConnection(RController.java:271)
+	at de.bund.bfr.knime.fsklab.r.client.RController.initR(RController.java:316)
+	at de.bund.bfr.knime.fsklab.r.client.RController.initialize(RController.java:190)
+	at de.bund.bfr.knime.fsklab.r.client.RController.<init>(RController.java:164)
+	at de.bund.bfr.knime.fsklab.r.client.LibRegistry.<init>(LibRegistry.java:66)
+	at de.bund.bfr.knime.fsklab.r.client.LibRegistry.instance(LibRegistry.java:132)
+	at de.bund.bfr.knime.fsklab.nodes.RScriptHandler.<init>(RScriptHandler.java:41)
+	at de.bund.bfr.knime.fsklab.nodes.ScriptHandler.createHandler(ScriptHandler.java:121)
+	at de.bund.bfr.knime.fsklab.nodes.v1_7_2.creator.CreatorNodeModel.execute(CreatorNodeModel.java:449)
+	at org.knime.core.node.NodeModel.executeModel(NodeModel.java:549)
+	at org.knime.core.node.Node.invokeFullyNodeModelExecute(Node.java:1267)
+	at org.knime.core.node.Node.execute(Node.java:1041)
+	at org.knime.core.node.workflow.NativeNodeContainer.performExecuteNode(NativeNodeContainer.java:595)
+	at org.knime.core.node.exec.LocalNodeExecutionJob.mainExecute(LocalNodeExecutionJob.java:98)
+	at org.knime.core.node.workflow.NodeExecutionJob.internalRun(NodeExecutionJob.java:201)
+	at org.knime.core.node.workflow.NodeExecutionJob.run(NodeExecutionJob.java:117)
+	at org.knime.core.util.ThreadUtils$RunnableWithContextImpl.runWithContext(ThreadUtils.java:367)
+	at org.knime.core.util.ThreadUtils$RunnableWithContext.run(ThreadUtils.java:221)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at org.knime.core.util.ThreadPool$MyFuture.run(ThreadPool.java:123)
+	at org.knime.core.util.ThreadPool$Worker.run(ThreadPool.java:246)
+2023-02-11 20:47:57,554 : DEBUG : KNIME-Worker-9-FSK Creator (deprecated) 3:2 :  : RController : FSK Creator (deprecated) : 3:2 : Connected to Rserve in 3 attempts.
+2023-02-11 20:47:58,147 : DEBUG : KNIME-Worker-9-FSK Creator (deprecated) 3:2 :  : RController : FSK Creator (deprecated) : 3:2 : An attempt (1/5) to connect to Rserve failed.
+org.rosuda.REngine.Rserve.RserveException: Cannot connect: Connection refused (Connection refused)
+	at org.rosuda.REngine.Rserve.RConnection.<init>(RConnection.java:88)
+	at org.rosuda.REngine.Rserve.RConnection.<init>(RConnection.java:60)
+	at de.bund.bfr.knime.fsklab.r.server.RConnectionFactory$RInstance.createConnection(RConnectionFactory.java:450)
+	at de.bund.bfr.knime.fsklab.r.server.RConnectionFactory.launchRserve(RConnectionFactory.java:244)
+	at de.bund.bfr.knime.fsklab.r.server.RConnectionFactory.createConnection(RConnectionFactory.java:307)
+	at de.bund.bfr.knime.fsklab.r.client.RController.initRConnection(RController.java:271)
+	at de.bund.bfr.knime.fsklab.r.client.RController.initR(RController.java:316)
+	at de.bund.bfr.knime.fsklab.r.client.RController.initialize(RController.java:190)
+	at de.bund.bfr.knime.fsklab.r.client.RController.<init>(RController.java:164)
+	at de.bund.bfr.knime.fsklab.nodes.RScriptHandler.<init>(RScriptHandler.java:42)
+	at de.bund.bfr.knime.fsklab.nodes.ScriptHandler.createHandler(ScriptHandler.java:121)
+	at de.bund.bfr.knime.fsklab.nodes.v1_7_2.creator.CreatorNodeModel.execute(CreatorNodeModel.java:449)
+	at org.knime.core.node.NodeModel.executeModel(NodeModel.java:549)
+	at org.knime.core.node.Node.invokeFullyNodeModelExecute(Node.java:1267)
+	at org.knime.core.node.Node.execute(Node.java:1041)
+	at org.knime.core.node.workflow.NativeNodeContainer.performExecuteNode(NativeNodeContainer.java:595)
+	at org.knime.core.node.exec.LocalNodeExecutionJob.mainExecute(LocalNodeExecutionJob.java:98)
+	at org.knime.core.node.workflow.NodeExecutionJob.internalRun(NodeExecutionJob.java:201)
+	at org.knime.core.node.workflow.NodeExecutionJob.run(NodeExecutionJob.java:117)
+	at org.knime.core.util.ThreadUtils$RunnableWithContextImpl.runWithContext(ThreadUtils.java:367)
+	at org.knime.core.util.ThreadUtils$RunnableWithContext.run(ThreadUtils.java:221)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at org.knime.core.util.ThreadPool$MyFuture.run(ThreadPool.java:123)
+	at org.knime.core.util.ThreadPool$Worker.run(ThreadPool.java:246)
+2023-02-11 20:47:58,252 : DEBUG : KNIME-Worker-9-FSK Creator (deprecated) 3:2 :  : RController : FSK Creator (deprecated) : 3:2 : An attempt (2/5) to connect to Rserve failed.
+org.rosuda.REngine.Rserve.RserveException: Cannot connect: Connection refused (Connection refused)
+	at org.rosuda.REngine.Rserve.RConnection.<init>(RConnection.java:88)
+	at org.rosuda.REngine.Rserve.RConnection.<init>(RConnection.java:60)
+	at de.bund.bfr.knime.fsklab.r.server.RConnectionFactory$RInstance.createConnection(RConnectionFactory.java:450)
+	at de.bund.bfr.knime.fsklab.r.server.RConnectionFactory.launchRserve(RConnectionFactory.java:244)
+	at de.bund.bfr.knime.fsklab.r.server.RConnectionFactory.createConnection(RConnectionFactory.java:307)
+	at de.bund.bfr.knime.fsklab.r.client.RController.initRConnection(RController.java:271)
+	at de.bund.bfr.knime.fsklab.r.client.RController.initR(RController.java:316)
+	at de.bund.bfr.knime.fsklab.r.client.RController.initialize(RController.java:190)
+	at de.bund.bfr.knime.fsklab.r.client.RController.<init>(RController.java:164)
+	at de.bund.bfr.knime.fsklab.nodes.RScriptHandler.<init>(RScriptHandler.java:42)
+	at de.bund.bfr.knime.fsklab.nodes.ScriptHandler.createHandler(ScriptHandler.java:121)
+	at de.bund.bfr.knime.fsklab.nodes.v1_7_2.creator.CreatorNodeModel.execute(CreatorNodeModel.java:449)
+	at org.knime.core.node.NodeModel.executeModel(NodeModel.java:549)
+	at org.knime.core.node.Node.invokeFullyNodeModelExecute(Node.java:1267)
+	at org.knime.core.node.Node.execute(Node.java:1041)
+	at org.knime.core.node.workflow.NativeNodeContainer.performExecuteNode(NativeNodeContainer.java:595)
+	at org.knime.core.node.exec.LocalNodeExecutionJob.mainExecute(LocalNodeExecutionJob.java:98)
+	at org.knime.core.node.workflow.NodeExecutionJob.internalRun(NodeExecutionJob.java:201)
+	at org.knime.core.node.workflow.NodeExecutionJob.run(NodeExecutionJob.java:117)
+	at org.knime.core.util.ThreadUtils$RunnableWithContextImpl.runWithContext(ThreadUtils.java:367)
+	at org.knime.core.util.ThreadUtils$RunnableWithContext.run(ThreadUtils.java:221)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at org.knime.core.util.ThreadPool$MyFuture.run(ThreadPool.java:123)
+	at org.knime.core.util.ThreadPool$Worker.run(ThreadPool.java:246)
+2023-02-11 20:47:58,461 : DEBUG : KNIME-Worker-9-FSK Creator (deprecated) 3:2 :  : RController : FSK Creator (deprecated) : 3:2 : Connected to Rserve in 3 attempts.
+2023-02-11 20:47:59,075 : INFO  : KNIME-Worker-9-FSK Creator (deprecated) 3:2 :  : LocalNodeExecutionJob : FSK Creator (deprecated) : 3:2 : FSK Creator (deprecated) 3:2 End execute (3 secs)
+2023-02-11 20:47:59,075 : DEBUG : KNIME-Worker-9-FSK Creator (deprecated) 3:2 :  : WorkflowManager : FSK Creator (deprecated) : 3:2 : FSK Creator (deprecated) 3:2 doBeforePostExecution
+2023-02-11 20:47:59,075 : DEBUG : KNIME-Worker-9-FSK Creator (deprecated) 3:2 :  : NodeContainer : FSK Creator (deprecated) : 3:2 : FSK Creator (deprecated) 3:2 has new state: POSTEXECUTE
+2023-02-11 20:47:59,076 : DEBUG : KNIME-Worker-9-FSK Creator (deprecated) 3:2 :  : WorkflowManager : FSK Creator (deprecated) : 3:2 : FSK Creator (deprecated) 3:2 doAfterExecute - success
+2023-02-11 20:47:59,076 : DEBUG : KNIME-Worker-9-FSK Creator (deprecated) 3:2 :  : NodeContainer : FSK Creator (deprecated) : 3:2 : FSK Creator (deprecated) 3:2 has new state: EXECUTED
+2023-02-11 20:47:59,076 : DEBUG : KNIME-Worker-9-FSK Creator (deprecated) 3:2 :  : Node : FSK Runner (deprecated) : 3:3 : Configure succeeded. (FSK Runner (deprecated))
+2023-02-11 20:47:59,077 : DEBUG : KNIME-Worker-9-FSK Creator (deprecated) 3:2 :  : NodeContainer : FSK Creator (deprecated) : 3:2 : HorizontalTransmiAnimals 3 has new state: CONFIGURED
+2023-02-11 20:48:18,334 : DEBUG : main :  : ProjectWorkflowMap : HorizontalTransmiAnimals : 3 : Removing "file:/Users/ahmadswaid/knime-workspace/HorizontalTransmiAnimals/" from project map (0 remaining)
+2023-02-11 20:48:18,335 : DEBUG : main :  : WorkflowManager : HorizontalTransmiAnimals : 3 : Removing project "HorizontalTransmiAnimals 3"
+2023-02-11 20:48:18,337 : DEBUG : main :  : RunnerNodeModel : FSK Runner (deprecated) : 3:3 : Removing all (0) views from model.
+2023-02-11 20:48:18,337 : DEBUG : main :  : Node : FSK Runner (deprecated) : 3:3 : clean output ports.
+2023-02-11 20:48:18,337 : DEBUG : main :  : CreatorNodeModel : FSK Creator (deprecated) : 3:2 : Removing all (0) views from model.
+2023-02-11 20:48:18,338 : DEBUG : main :  : Node : FSK Creator (deprecated) : 3:2 : clean output ports.
+2023-02-11 20:48:18,338 : DEBUG : main :  : WorkflowDataRepository : FSK Creator (deprecated) : 3:2 : Removing handler 5e1129c8-bf55-4402-8dd3-0c71cb96f938 (FSK Creator (deprecated) 3:2: <no directory>) - 0 remaining
+2023-02-11 20:48:18,338 : DEBUG : main :  : TestConfigNodeModel : Testflow Configuration : 3:1 : Removing all (0) views from model.
+2023-02-11 20:48:18,338 : DEBUG : main :  : Node : Testflow Configuration : 3:1 : clean output ports.
+2023-02-11 20:48:18,339 : DEBUG : main :  : WorkflowManager : HorizontalTransmiAnimals : 3 : Project "HorizontalTransmiAnimals 3" removed (2 remaining)
+2023-02-11 20:50:10,162 : DEBUG : ModalContext :  : TestConfigNodeFactory : HorizontalTransmiAnimals : 3 : Factory is already initialized. Nothing to do.
+2023-02-11 20:50:10,164 : DEBUG : ModalContext :  : CreatorNodeFactory : HorizontalTransmiAnimals : 3 : Factory is already initialized. Nothing to do.
+2023-02-11 20:50:10,166 : DEBUG : ModalContext :  : RunnerNodeFactory : HorizontalTransmiAnimals : 3 : Factory is already initialized. Nothing to do.
+2023-02-11 20:50:10,169 : DEBUG : ModalContext :  : Node : FSK Creator (deprecated) : 3:2 : Configure succeeded. (FSK Creator (deprecated))
+2023-02-11 20:50:10,170 : DEBUG : ModalContext :  : Node : FSK Runner (deprecated) : 3:3 : Configure succeeded. (FSK Runner (deprecated))
+2023-02-11 20:50:26,045 : ERROR : main :  : Node : FSK Creator : 3:4 : Configure failed (IllegalArgumentException): No spreadsheet provided! Please enter a valid location.
+java.lang.IllegalArgumentException: No spreadsheet provided! Please enter a valid location.
+	at org.knime.core.node.util.CheckUtils.checkArgument(CheckUtils.java:258)
+	at org.knime.core.node.util.CheckUtils.checkArgument(CheckUtils.java:119)
+	at de.bund.bfr.knime.fsklab.v2_0.creator.CreatorNodeModel.configure(CreatorNodeModel.java:373)
+	at org.knime.core.node.NodeModel.configureModel(NodeModel.java:1078)
+	at org.knime.core.node.Node.invokeNodeModelConfigure(Node.java:2007)
+	at org.knime.core.node.Node.configure(Node.java:1943)
+	at org.knime.core.node.workflow.NativeNodeContainer.performConfigure(NativeNodeContainer.java:566)
+	at org.knime.core.node.workflow.SingleNodeContainer.callNodeConfigure(SingleNodeContainer.java:315)
+	at org.knime.core.node.workflow.SingleNodeContainer.configure(SingleNodeContainer.java:200)
+	at org.knime.core.node.workflow.WorkflowManager.configureSingleNodeContainer(WorkflowManager.java:6540)
+	at org.knime.core.node.workflow.WorkflowManager.configureNodeAndPortSuccessors(WorkflowManager.java:6699)
+	at org.knime.core.node.workflow.WorkflowManager.configureNodeAndSuccessors(WorkflowManager.java:6642)
+	at org.knime.core.node.workflow.WorkflowManager.addNodeAndApplyContext(WorkflowManager.java:846)
+	at org.knime.core.ui.wrapper.WorkflowManagerWrapper.createAndAddNode(WorkflowManagerWrapper.java:140)
+	at org.knime.workbench.editor2.commands.CreateNodeCommand.lambda$0(CreateNodeCommand.java:183)
+	at org.knime.workbench.ui.async.AsyncUtil.wfmAsyncSwitch(AsyncUtil.java:130)
+	at org.knime.workbench.editor2.commands.CreateNodeCommand.execute(CreateNodeCommand.java:182)
+	at org.eclipse.gef.commands.CommandStack.execute(CommandStack.java:228)
+	at org.knime.workbench.editor2.WorkflowEditorDropTargetListener.handleDropAsync(WorkflowEditorDropTargetListener.java:531)
+	at org.knime.workbench.editor2.WorkflowEditorDropTargetListener.lambda$5(WorkflowEditorDropTargetListener.java:494)
+	at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:40)
+	at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:132)
+	at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:4345)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3968)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$5.run(PartRenderingEngine.java:1155)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:1046)
+	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:155)
+	at org.eclipse.ui.internal.Workbench.lambda$3(Workbench.java:644)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:551)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:156)
+	at org.knime.product.rcp.KNIMEApplication.start(KNIMEApplication.java:191)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:203)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:136)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:104)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:402)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:255)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:659)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:596)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1467)
+	at org.eclipse.equinox.launcher.Main.main(Main.java:1440)
+2023-02-11 20:51:39,291 : DEBUG : main :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogErrors': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:39,292 : DEBUG : main :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogWarnings': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:39,292 : DEBUG : main :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogInfos': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:39,292 : DEBUG : main :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'optionalLogMessages': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:39,292 : DEBUG : main :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'failingNodes': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:39,293 : DEBUG : main :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'usedJanitors': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:39,297 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogErrors': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:39,298 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogWarnings': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:39,299 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogInfos': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:39,299 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'optionalLogMessages': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:39,300 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'failingNodes': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:39,307 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'usedJanitors': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:39,348 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'usedJanitors': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:39,355 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'failingNodes': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:39,356 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'optionalLogMessages': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:39,356 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogInfos': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:39,357 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogWarnings': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:39,358 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogErrors': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:47,052 : DEBUG : main :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogErrors': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:47,052 : DEBUG : main :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogWarnings': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:47,052 : DEBUG : main :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogInfos': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:47,053 : DEBUG : main :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'optionalLogMessages': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:47,053 : DEBUG : main :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'failingNodes': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:47,053 : DEBUG : main :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'usedJanitors': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:47,057 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogErrors': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:47,057 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogWarnings': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:47,058 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogInfos': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:47,058 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'optionalLogMessages': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:47,059 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'failingNodes': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:47,065 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'usedJanitors': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:47,099 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'usedJanitors': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:47,107 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'failingNodes': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:47,107 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'optionalLogMessages': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:47,108 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogInfos': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:47,108 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogWarnings': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:47,109 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogErrors': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:49,593 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogErrors': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:49,593 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogWarnings': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:49,593 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogInfos': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:49,594 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'optionalLogMessages': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:49,594 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'failingNodes': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:49,594 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'usedJanitors': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:49,597 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogErrors': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:49,598 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogWarnings': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:49,599 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogInfos': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:49,599 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'optionalLogMessages': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:49,600 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'failingNodes': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:49,607 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'usedJanitors': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:49,623 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogErrors': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:49,636 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogWarnings': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:49,638 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogInfos': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:49,639 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'optionalLogMessages': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:49,640 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'failingNodes': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:49,653 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'usedJanitors': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:49,679 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogErrors': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:49,684 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogWarnings': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:49,685 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogInfos': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:49,687 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'optionalLogMessages': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:49,688 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'failingNodes': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:49,704 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'usedJanitors': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:53,508 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogErrors': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:53,508 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogWarnings': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:53,508 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogInfos': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:53,509 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'optionalLogMessages': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:53,509 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'failingNodes': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:53,509 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'usedJanitors': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:53,512 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogErrors': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:53,513 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogWarnings': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:53,514 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogInfos': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:53,514 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'optionalLogMessages': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:53,515 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'failingNodes': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:53,522 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'usedJanitors': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:53,537 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogErrors': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:53,538 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogWarnings': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:53,539 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogInfos': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:53,540 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'optionalLogMessages': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:53,541 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'failingNodes': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:53,550 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'usedJanitors': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:53,565 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogErrors': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:53,566 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogWarnings': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:53,568 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'requiredLogInfos': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:53,569 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'optionalLogMessages': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:53,570 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'failingNodes': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:51:53,579 : DEBUG : AWT-EventQueue-0 :  : VariableTypeRegistry : Testflow Configuration : 3:1 : The following variable types could all correspond to the config 'usedJanitors': [STRINGARRAY, BOOLEANARRAY, INTARRAY, LONGARRAY, DOUBLEARRAY]. Taking the first.
+2023-02-11 20:52:10,187 : DEBUG : main :  : CreatorNodeModel : FSK Creator : 3:4 : Removing all (0) views from model.
+2023-02-11 20:52:10,188 : DEBUG : main :  : Node : FSK Creator : 3:4 : clean output ports.
+2023-02-11 20:52:54,447 : ERROR : main :  : Node : FSK Creator : 3:4 : Configure failed (IllegalArgumentException): No spreadsheet provided! Please enter a valid location.
+java.lang.IllegalArgumentException: No spreadsheet provided! Please enter a valid location.
+	at org.knime.core.node.util.CheckUtils.checkArgument(CheckUtils.java:258)
+	at org.knime.core.node.util.CheckUtils.checkArgument(CheckUtils.java:119)
+	at de.bund.bfr.knime.fsklab.v2_0.creator.CreatorNodeModel.configure(CreatorNodeModel.java:373)
+	at org.knime.core.node.NodeModel.configureModel(NodeModel.java:1078)
+	at org.knime.core.node.Node.invokeNodeModelConfigure(Node.java:2007)
+	at org.knime.core.node.Node.configure(Node.java:1943)
+	at org.knime.core.node.workflow.NativeNodeContainer.performConfigure(NativeNodeContainer.java:566)
+	at org.knime.core.node.workflow.SingleNodeContainer.callNodeConfigure(SingleNodeContainer.java:315)
+	at org.knime.core.node.workflow.SingleNodeContainer.configure(SingleNodeContainer.java:200)
+	at org.knime.core.node.workflow.WorkflowManager.configureSingleNodeContainer(WorkflowManager.java:6540)
+	at org.knime.core.node.workflow.WorkflowManager.configureNodeAndPortSuccessors(WorkflowManager.java:6699)
+	at org.knime.core.node.workflow.WorkflowManager.configureNodeAndSuccessors(WorkflowManager.java:6642)
+	at org.knime.core.node.workflow.WorkflowManager.addNodeAndApplyContext(WorkflowManager.java:846)
+	at org.knime.core.ui.wrapper.WorkflowManagerWrapper.createAndAddNode(WorkflowManagerWrapper.java:140)
+	at org.knime.workbench.editor2.commands.CreateNodeCommand.lambda$0(CreateNodeCommand.java:183)
+	at org.knime.workbench.ui.async.AsyncUtil.wfmAsyncSwitch(AsyncUtil.java:130)
+	at org.knime.workbench.editor2.commands.CreateNodeCommand.execute(CreateNodeCommand.java:182)
+	at org.eclipse.gef.commands.CommandStack.execute(CommandStack.java:228)
+	at org.knime.workbench.editor2.WorkflowEditorDropTargetListener.handleDropAsync(WorkflowEditorDropTargetListener.java:531)
+	at org.knime.workbench.editor2.WorkflowEditorDropTargetListener.lambda$5(WorkflowEditorDropTargetListener.java:494)
+	at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:40)
+	at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:132)
+	at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:4345)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3968)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$5.run(PartRenderingEngine.java:1155)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:1046)
+	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:155)
+	at org.eclipse.ui.internal.Workbench.lambda$3(Workbench.java:644)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:551)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:156)
+	at org.knime.product.rcp.KNIMEApplication.start(KNIMEApplication.java:191)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:203)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:136)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:104)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:402)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:255)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:659)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:596)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1467)
+	at org.eclipse.equinox.launcher.Main.main(Main.java:1440)
+2023-02-12 12:59:01,111 : DEBUG : main :  : Node : FSK Creator : 3:4 : Configure succeeded. (FSK Creator)
+2023-02-12 12:59:01,113 : DEBUG : main :  : NodeContainer : FSK Creator : 3:4 : FSK Creator 3:4 has new state: CONFIGURED
+2023-02-12 12:59:01,114 : DEBUG : main :  : NodeContainer : FSK Creator : 3:4 : HorizontalTransmiAnimals 3 has new state: CONFIGURED
+2023-02-12 12:59:12,963 : DEBUG : main :  : Node : FSK Runner : 3:5 : Configure succeeded. (FSK Runner)
+2023-02-12 12:59:14,743 : DEBUG : KNIME-Worker-11-FSK Creator 3:4 :  : WorkflowManager : FSK Creator : 3:4 : FSK Creator 3:4 doBeforePreExecution
+2023-02-12 12:59:14,743 : DEBUG : KNIME-Worker-11-FSK Creator 3:4 :  : NodeContainer : FSK Creator : 3:4 : FSK Creator 3:4 has new state: PREEXECUTE
+2023-02-12 12:59:14,744 : DEBUG : KNIME-Worker-11-FSK Creator 3:4 :  : WorkflowDataRepository : FSK Creator : 3:4 : Adding handler f909a9ac-d63b-4605-8ec5-971f2bc0d5e0 (FSK Creator 3:4: <no directory>) - 1 in total
+2023-02-12 12:59:14,744 : DEBUG : KNIME-Worker-11-FSK Creator 3:4 :  : WorkflowManager : FSK Creator : 3:4 : FSK Creator 3:4 doBeforeExecution
+2023-02-12 12:59:14,744 : DEBUG : KNIME-Worker-11-FSK Creator 3:4 :  : NodeContainer : FSK Creator : 3:4 : FSK Creator 3:4 has new state: EXECUTING
+2023-02-12 12:59:14,744 : DEBUG : KNIME-Worker-11-FSK Creator 3:4 :  : LocalNodeExecutionJob : FSK Creator : 3:4 : FSK Creator 3:4 Start execute
+2023-02-12 12:59:16,380 : DEBUG : KNIME-Worker-11-FSK Creator 3:4 :  : RController : FSK Creator : 3:4 : An attempt (1/5) to connect to Rserve failed.
+org.rosuda.REngine.Rserve.RserveException: Cannot connect: Connection refused (Connection refused)
+	at org.rosuda.REngine.Rserve.RConnection.<init>(RConnection.java:88)
+	at org.rosuda.REngine.Rserve.RConnection.<init>(RConnection.java:60)
+	at de.bund.bfr.knime.fsklab.r.server.RConnectionFactory$RInstance.createConnection(RConnectionFactory.java:450)
+	at de.bund.bfr.knime.fsklab.r.server.RConnectionFactory.launchRserve(RConnectionFactory.java:244)
+	at de.bund.bfr.knime.fsklab.r.server.RConnectionFactory.createConnection(RConnectionFactory.java:307)
+	at de.bund.bfr.knime.fsklab.r.client.RController.initRConnection(RController.java:271)
+	at de.bund.bfr.knime.fsklab.r.client.RController.initR(RController.java:316)
+	at de.bund.bfr.knime.fsklab.r.client.RController.initialize(RController.java:190)
+	at de.bund.bfr.knime.fsklab.r.client.RController.<init>(RController.java:164)
+	at de.bund.bfr.knime.fsklab.nodes.RScriptHandler.<init>(RScriptHandler.java:48)
+	at de.bund.bfr.knime.fsklab.nodes.ScriptHandler.createHandler(ScriptHandler.java:216)
+	at de.bund.bfr.knime.fsklab.v2_0.creator.CreatorNodeModel.execute(CreatorNodeModel.java:330)
+	at org.knime.core.node.NodeModel.executeModel(NodeModel.java:549)
+	at org.knime.core.node.Node.invokeFullyNodeModelExecute(Node.java:1267)
+	at org.knime.core.node.Node.execute(Node.java:1041)
+	at org.knime.core.node.workflow.NativeNodeContainer.performExecuteNode(NativeNodeContainer.java:595)
+	at org.knime.core.node.exec.LocalNodeExecutionJob.mainExecute(LocalNodeExecutionJob.java:98)
+	at org.knime.core.node.workflow.NodeExecutionJob.internalRun(NodeExecutionJob.java:201)
+	at org.knime.core.node.workflow.NodeExecutionJob.run(NodeExecutionJob.java:117)
+	at org.knime.core.util.ThreadUtils$RunnableWithContextImpl.runWithContext(ThreadUtils.java:367)
+	at org.knime.core.util.ThreadUtils$RunnableWithContext.run(ThreadUtils.java:221)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at org.knime.core.util.ThreadPool$MyFuture.run(ThreadPool.java:123)
+	at org.knime.core.util.ThreadPool$Worker.run(ThreadPool.java:246)
+2023-02-12 12:59:16,484 : DEBUG : KNIME-Worker-11-FSK Creator 3:4 :  : RController : FSK Creator : 3:4 : An attempt (2/5) to connect to Rserve failed.
+org.rosuda.REngine.Rserve.RserveException: Cannot connect: Connection refused (Connection refused)
+	at org.rosuda.REngine.Rserve.RConnection.<init>(RConnection.java:88)
+	at org.rosuda.REngine.Rserve.RConnection.<init>(RConnection.java:60)
+	at de.bund.bfr.knime.fsklab.r.server.RConnectionFactory$RInstance.createConnection(RConnectionFactory.java:450)
+	at de.bund.bfr.knime.fsklab.r.server.RConnectionFactory.launchRserve(RConnectionFactory.java:244)
+	at de.bund.bfr.knime.fsklab.r.server.RConnectionFactory.createConnection(RConnectionFactory.java:307)
+	at de.bund.bfr.knime.fsklab.r.client.RController.initRConnection(RController.java:271)
+	at de.bund.bfr.knime.fsklab.r.client.RController.initR(RController.java:316)
+	at de.bund.bfr.knime.fsklab.r.client.RController.initialize(RController.java:190)
+	at de.bund.bfr.knime.fsklab.r.client.RController.<init>(RController.java:164)
+	at de.bund.bfr.knime.fsklab.nodes.RScriptHandler.<init>(RScriptHandler.java:48)
+	at de.bund.bfr.knime.fsklab.nodes.ScriptHandler.createHandler(ScriptHandler.java:216)
+	at de.bund.bfr.knime.fsklab.v2_0.creator.CreatorNodeModel.execute(CreatorNodeModel.java:330)
+	at org.knime.core.node.NodeModel.executeModel(NodeModel.java:549)
+	at org.knime.core.node.Node.invokeFullyNodeModelExecute(Node.java:1267)
+	at org.knime.core.node.Node.execute(Node.java:1041)
+	at org.knime.core.node.workflow.NativeNodeContainer.performExecuteNode(NativeNodeContainer.java:595)
+	at org.knime.core.node.exec.LocalNodeExecutionJob.mainExecute(LocalNodeExecutionJob.java:98)
+	at org.knime.core.node.workflow.NodeExecutionJob.internalRun(NodeExecutionJob.java:201)
+	at org.knime.core.node.workflow.NodeExecutionJob.run(NodeExecutionJob.java:117)
+	at org.knime.core.util.ThreadUtils$RunnableWithContextImpl.runWithContext(ThreadUtils.java:367)
+	at org.knime.core.util.ThreadUtils$RunnableWithContext.run(ThreadUtils.java:221)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at org.knime.core.util.ThreadPool$MyFuture.run(ThreadPool.java:123)
+	at org.knime.core.util.ThreadPool$Worker.run(ThreadPool.java:246)
+2023-02-12 12:59:16,693 : DEBUG : KNIME-Worker-11-FSK Creator 3:4 :  : RController : FSK Creator : 3:4 : Connected to Rserve in 3 attempts.
+2023-02-12 12:59:17,301 : INFO  : KNIME-Worker-11-FSK Creator 3:4 :  : LocalNodeExecutionJob : FSK Creator : 3:4 : FSK Creator 3:4 End execute (2 secs)
+2023-02-12 12:59:17,301 : DEBUG : KNIME-Worker-11-FSK Creator 3:4 :  : WorkflowManager : FSK Creator : 3:4 : FSK Creator 3:4 doBeforePostExecution
+2023-02-12 12:59:17,302 : DEBUG : KNIME-Worker-11-FSK Creator 3:4 :  : NodeContainer : FSK Creator : 3:4 : FSK Creator 3:4 has new state: POSTEXECUTE
+2023-02-12 12:59:17,302 : DEBUG : KNIME-Worker-11-FSK Creator 3:4 :  : WorkflowManager : FSK Creator : 3:4 : FSK Creator 3:4 doAfterExecute - success
+2023-02-12 12:59:17,302 : DEBUG : KNIME-Worker-11-FSK Creator 3:4 :  : NodeContainer : FSK Creator : 3:4 : FSK Creator 3:4 has new state: EXECUTED
+2023-02-12 12:59:17,302 : DEBUG : KNIME-Worker-11-FSK Creator 3:4 :  : Node : FSK Runner : 3:5 : Configure succeeded. (FSK Runner)
+2023-02-12 12:59:17,303 : DEBUG : KNIME-Worker-11-FSK Creator 3:4 :  : NodeContainer : FSK Creator : 3:4 : FSK Runner 3:5 has new state: CONFIGURED_QUEUED
+2023-02-12 12:59:17,303 : DEBUG : KNIME-Worker-12-FSK Runner 3:5 :  : WorkflowManager : FSK Runner : 3:5 : FSK Runner 3:5 doBeforePreExecution
+2023-02-12 12:59:17,303 : DEBUG : KNIME-Worker-12-FSK Runner 3:5 :  : NodeContainer : FSK Runner : 3:5 : FSK Runner 3:5 has new state: PREEXECUTE
+2023-02-12 12:59:17,303 : DEBUG : KNIME-Worker-12-FSK Runner 3:5 :  : WorkflowDataRepository : FSK Runner : 3:5 : Adding handler 8db75780-0f05-4e57-8fcb-6850651cf3e7 (FSK Runner 3:5: <no directory>) - 2 in total
+2023-02-12 12:59:17,303 : DEBUG : KNIME-Worker-12-FSK Runner 3:5 :  : WorkflowManager : FSK Runner : 3:5 : FSK Runner 3:5 doBeforeExecution
+2023-02-12 12:59:17,304 : DEBUG : KNIME-Worker-12-FSK Runner 3:5 :  : NodeContainer : FSK Runner : 3:5 : FSK Runner 3:5 has new state: EXECUTING
+2023-02-12 12:59:17,304 : DEBUG : KNIME-Worker-12-FSK Runner 3:5 :  : LocalNodeExecutionJob : FSK Runner : 3:5 : FSK Runner 3:5 Start execute
+2023-02-12 12:59:17,522 : INFO  : KNIME-Worker-12-FSK Runner 3:5 :  : Fskx Runner Node Model : FSK Runner : 3:5 : Running Model: class GenericModel {
+    class Model {
+        modelType: genericModel
+    }
+    generalInformation: class GenericModelGeneralInformation {
+        name: Horizontal transmission animals
+        source: null
+        identifier: Horizontal transmission animals
+        author: null
+        creator: null
+        creationDate: 2018-03-30
+        modificationDate: null
+        rights: null
+        availability: null
+        url: null
+        format: null
+        reference: []
+        language: null
+        software: R
+        languageWrittenIn: null
+        modelCategory: null
+        status: null
+        objective: null
+        description: null
+    }
+    scope: class GenericModelScope {
+        product: null
+        hazard: null
+        populationGroup: null
+        generalComment: null
+        temporalInformation: null
+        spatialInformation: null
+    }
+    dataBackground: class GenericModelDataBackground {
+        study: class Study {
+            identifier: null
+            title: title
+            description: null
+            designType: null
+            assayMeasurementType: null
+            assayTechnologyType: null
+            assayTechnologyPlatform: null
+            accreditationProcedureForTheAssayTechnology: null
+            protocolName: null
+            protocolType: null
+            protocolDescription: null
+            protocolURI: null
+            protocolVersion: null
+            protocolParametersName: null
+            protocolComponentsName: null
+            protocolComponentsType: null
+        }
+        studySample: null
+        dietaryAssessmentMethod: null
+        laboratory: null
+        assay: null
+    }
+    modelMath: class GenericModelModelMath {
+        parameter: [class Parameter {
+            id: result
+            classification: OUTPUT
+            name: result
+            description: null
+            unit: dimensionless
+            unitCategory: null
+            dataType: VECTOROFNUMBERS
+            source: null
+            subject: null
+            distribution: null
+            value: null
+            reference: null
+            variabilitySubject: null
+            minValue: null
+            maxValue: null
+            error: null
+        }, class Parameter {
+            id: n_iter
+            classification: INPUT
+            name: n.iter
+            description: null
+            unit: dimensionless
+            unitCategory: null
+            dataType: INTEGER
+            source: null
+            subject: null
+            distribution: null
+            value: 200
+            reference: null
+            variabilitySubject: null
+            minValue: null
+            maxValue: null
+            error: null
+        }, class Parameter {
+            id: K
+            classification: INPUT
+            name: K
+            description: null
+            unit: dimensionless
+            unitCategory: null
+            dataType: INTEGER
+            source: null
+            subject: null
+            distribution: null
+            value: 1
+            reference: null
+            variabilitySubject: null
+            minValue: null
+            maxValue: null
+            error: null
+        }, class Parameter {
+            id: nanim
+            classification: INPUT
+            name: nanim
+            description: null
+            unit: dimensionless
+            unitCategory: null
+            dataType: INTEGER
+            source: null
+            subject: null
+            distribution: null
+            value: 100
+            reference: null
+            variabilitySubject: null
+            minValue: null
+            maxValue: null
+            error: null
+        }, class Parameter {
+            id: r
+            classification: INPUT
+            name: result
+            description: null
+            unit: dimensionless
+            unitCategory: null
+            dataType: DOUBLE
+            source: null
+            subject: null
+            distribution: null
+            value: 0.15
+            reference: null
+            variabilitySubject: null
+            minValue: null
+            maxValue: null
+            error: null
+        }, class Parameter {
+            id: t
+            classification: INPUT
+            name: t
+            description: null
+            unit: dimensionless
+            unitCategory: null
+            dataType: DOUBLE
+            source: null
+            subject: null
+            distribution: null
+            value: 0.29
+            reference: null
+            variabilitySubject: null
+            minValue: null
+            maxValue: null
+            error: null
+        }, class Parameter {
+            id: n_i0
+            classification: INPUT
+            name: n_i0
+            description: null
+            unit: dimensionless
+            unitCategory: null
+            dataType: VECTOROFNUMBERS
+            source: null
+            subject: null
+            distribution: null
+            value: c(1.935721,12.71271,15.66345,1.353314,10.52182,4.736094,7.912544,12.07932,23.1919,18.89457,10.68439,13.02975,25.5023,28.58746,5.889829,26.90452,8.160216,15.8312,8.593648,34.16895,14.51137,32.84028,29.81554,20.34258,21.97171,12.73988,16.64313,13.35931,28.92521,10.55415,10.55013,16.73892,3.190878,19.87838,23.52362,23.20137,15.9757,14.40701,5.014327,4.756479,33.79569,9.373871,4.414774,12.71426,10.6548,14.75995,24.47719,4.087681,2.664281,3.23267,14.24919,20.5345,12.81333,6.883457,33.2732,3.448148,1.014574,33.39331,16.86773,10.64093,21.02841,11.52639,7.24205,38.73768,21.66689,17.25998,8.995757,23.70676,19.82166,34.74927,0.4641947,23.42121,37.14702,21.1278,0.301414,1.223592,6.068193,2.138808,4.205278,15.78051,12.40829,32.38933,28.7909,9.204453,7.138595,20.03624,4.676341,23.22836,8.515107,4.684093,11.3288,27.98973,23.75414,10.02352,21.41725,12.43532,33.53659,3.230087,13.40252,1.834815,19.62866,9.226781,8.196855,31.95928,7.419424,19.23446,8.030689,3.938026,35.07843,30.94347,14.49612,2.672764,3.661242,14.39913,23.53549,3.294764,2.435465,19.73338,19.11645,13.29316,23.98349,28.61863,17.74421,28.63623,10.24255,21.20005,24.95026,20.25662,1.33805,20.01302,23.79495,3.391174,20.43567,16.1562,5.661879,4.986108,1.937331,4.927734,2.645487,27.0641,7.504319,11.04624,16.05923,7.200019,19.93042,14.99434,28.06279,27.52094,0.9374664,1.865803,18.54756,5.507266,4.31251,1.145738,18.37622,17.39421,0.6971349,8.777291,12.53457,12.65693,9.015909,7.212545,3.530513,17.64106,19.96338,20.58375,0.6711766,13.63135,28.54139,38.56506,9.317908,25.75435,35.44397,11.43356,20.11247,8.069184,23.59772,33.51359,9.640212,17.00974,6.803223,37.73145,17.82324,3.143243,3.375974,9.321126,0.6598426,11.71911,0.501711,33.17894,15.3795,7.254196,3.670056,1.058177,37.2422,14.28571,10.2786,50.55711,9.337731,2.425376)
+            reference: null
+            variabilitySubject: null
+            minValue: null
+            maxValue: null
+            error: null
+        }]
+        qualityMeasures: [class QualityMeasures {
+            sse: null
+            mse: null
+            rmse: null
+            rsquared: null
+            aic: null
+            bic: null
+            sensitivityAnalysis: null
+        }]
+        modelEquation: null
+        fittingProcedure: null
+        exposure: null
+        event: null
+    }
+}
+2023-02-12 12:59:17,522 : INFO  : KNIME-Worker-12-FSK Runner 3:5 :  : Fskx Runner Node Model : FSK Runner : 3:5 : Running simulation: 
+2023-02-12 12:59:18,579 : INFO  : KNIME-Worker-12-FSK Runner 3:5 :  : Fskx Runner Node Model : FSK Runner : 3:5 : Running with 'defaultSimulation' simulation! {n_iter=200, K=1, nanim=100, r=0.15, t=0.29, n_i0=c(1.935721,12.71271,15.66345,1.353314,10.52182,4.736094,7.912544,12.07932,23.1919,18.89457,10.68439,13.02975,25.5023,28.58746,5.889829,26.90452,8.160216,15.8312,8.593648,34.16895,14.51137,32.84028,29.81554,20.34258,21.97171,12.73988,16.64313,13.35931,28.92521,10.55415,10.55013,16.73892,3.190878,19.87838,23.52362,23.20137,15.9757,14.40701,5.014327,4.756479,33.79569,9.373871,4.414774,12.71426,10.6548,14.75995,24.47719,4.087681,2.664281,3.23267,14.24919,20.5345,12.81333,6.883457,33.2732,3.448148,1.014574,33.39331,16.86773,10.64093,21.02841,11.52639,7.24205,38.73768,21.66689,17.25998,8.995757,23.70676,19.82166,34.74927,0.4641947,23.42121,37.14702,21.1278,0.301414,1.223592,6.068193,2.138808,4.205278,15.78051,12.40829,32.38933,28.7909,9.204453,7.138595,20.03624,4.676341,23.22836,8.515107,4.684093,11.3288,27.98973,23.75414,10.02352,21.41725,12.43532,33.53659,3.230087,13.40252,1.834815,19.62866,9.226781,8.196855,31.95928,7.419424,19.23446,8.030689,3.938026,35.07843,30.94347,14.49612,2.672764,3.661242,14.39913,23.53549,3.294764,2.435465,19.73338,19.11645,13.29316,23.98349,28.61863,17.74421,28.63623,10.24255,21.20005,24.95026,20.25662,1.33805,20.01302,23.79495,3.391174,20.43567,16.1562,5.661879,4.986108,1.937331,4.927734,2.645487,27.0641,7.504319,11.04624,16.05923,7.200019,19.93042,14.99434,28.06279,27.52094,0.9374664,1.865803,18.54756,5.507266,4.31251,1.145738,18.37622,17.39421,0.6971349,8.777291,12.53457,12.65693,9.015909,7.212545,3.530513,17.64106,19.96338,20.58375,0.6711766,13.63135,28.54139,38.56506,9.317908,25.75435,35.44397,11.43356,20.11247,8.069184,23.59772,33.51359,9.640212,17.00974,6.803223,37.73145,17.82324,3.143243,3.375974,9.321126,0.6598426,11.71911,0.501711,33.17894,15.3795,7.254196,3.670056,1.058177,37.2422,14.28571,10.2786,50.55711,9.337731,2.425376)}
+2023-02-12 12:59:20,556 : INFO  : KNIME-Worker-12-FSK Runner 3:5 :  : LocalNodeExecutionJob : FSK Runner : 3:5 : FSK Runner 3:5 End execute (3 secs)
+2023-02-12 12:59:20,556 : DEBUG : KNIME-Worker-12-FSK Runner 3:5 :  : WorkflowManager : FSK Runner : 3:5 : FSK Runner 3:5 doBeforePostExecution
+2023-02-12 12:59:20,556 : DEBUG : KNIME-Worker-12-FSK Runner 3:5 :  : NodeContainer : FSK Runner : 3:5 : FSK Runner 3:5 has new state: POSTEXECUTE
+2023-02-12 12:59:20,556 : DEBUG : KNIME-Worker-12-FSK Runner 3:5 :  : WorkflowManager : FSK Runner : 3:5 : FSK Runner 3:5 doAfterExecute - success
+2023-02-12 12:59:20,558 : DEBUG : KNIME-Worker-12-FSK Runner 3:5 :  : NodeContainer : FSK Runner : 3:5 : FSK Runner 3:5 has new state: EXECUTED
+2023-02-12 12:59:20,558 : DEBUG : KNIME-Worker-12-FSK Runner 3:5 :  : NodeContainer : FSK Runner : 3:5 : HorizontalTransmiAnimals 3 has new state: CONFIGURED
+2023-02-12 12:59:20,702 : ERROR : AWT-EventQueue-0 :  : RunnerNodeView : FSK Runner : 3:5 : NodeView.modelChanged() causes an error during notification of a changed model, reason: org/apache/batik/util/SVGFeatureStrings
+java.lang.NoClassDefFoundError: org/apache/batik/util/SVGFeatureStrings
+	at org.apache.batik.swing.svg.JSVGComponent.<clinit>(JSVGComponent.java:3712)
+	at de.bund.bfr.knime.fsklab.nodes.common.ui.RPlotterViewPanel.update(RPlotterViewPanel.java:63)
+	at de.bund.bfr.knime.fsklab.v2_0.runner.RunnerNodeView.modelChanged(RunnerNodeView.java:45)
+	at org.knime.core.node.AbstractNodeView.callModelChanged(AbstractNodeView.java:151)
+	at org.knime.core.node.NodeView.access$1(NodeView.java:1)
+	at org.knime.core.node.NodeView$4.run(NodeView.java:287)
+	at org.knime.core.node.util.ViewUtils.runOrInvokeLaterInEDT(ViewUtils.java:207)
+	at org.knime.core.node.NodeView.callModelChanged(NodeView.java:282)
+	at org.knime.core.node.NodeView$5.run(NodeView.java:347)
+	at org.knime.core.node.util.ViewUtils.runOrInvokeLaterInEDT(ViewUtils.java:207)
+	at org.knime.core.node.NodeView.callOpenView(NodeView.java:361)
+	at org.knime.core.node.AbstractNodeView.openView(AbstractNodeView.java:197)
+	at org.knime.core.node.Node.invokeOpenView(Node.java:2665)
+	at org.knime.workbench.editor2.actions.OpenViewAction.lambda$0(OpenViewAction.java:127)
+	at java.desktop/java.awt.event.InvocationEvent.dispatch(InvocationEvent.java:313)
+	at java.desktop/java.awt.EventQueue.dispatchEventImpl(EventQueue.java:770)
+	at java.desktop/java.awt.EventQueue$4.run(EventQueue.java:721)
+	at java.desktop/java.awt.EventQueue$4.run(EventQueue.java:715)
+	at java.base/java.security.AccessController.doPrivileged(Native Method)
+	at java.base/java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:85)
+	at java.desktop/java.awt.EventQueue.dispatchEvent(EventQueue.java:740)
+	at java.desktop/java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:203)
+	at java.desktop/java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:124)
+	at java.desktop/java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:113)
+	at java.desktop/java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:109)
+	at java.desktop/java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:101)
+	at java.desktop/java.awt.EventDispatchThread.run(EventDispatchThread.java:90)
+Caused by: java.lang.ClassNotFoundException: org.apache.batik.util.SVGFeatureStrings cannot be found by org.apache.batik.swing_1.14.0.v20220503-knime
+	at org.eclipse.osgi.internal.loader.BundleLoader.generateException(BundleLoader.java:541)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass0(BundleLoader.java:536)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:416)
+	at org.eclipse.osgi.internal.loader.ModuleClassLoader.loadClass(ModuleClassLoader.java:168)
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:521)
+	... 27 more
+2023-02-12 13:00:50,562 : WARN  : main :  : WrappedNodeDialog : FSK Creator : 3:4 : failed to apply settings: Input file '/Users/ahmadswaid/knime-workspace/HorizontalTransmiAnimals/FSK Creator (' does not exist
+org.knime.core.node.InvalidSettingsException: Input file '/Users/ahmadswaid/knime-workspace/HorizontalTransmiAnimals/FSK Creator (' does not exist
+	at org.knime.core.node.util.CheckUtils.checkSourceFile(CheckUtils.java:484)
+	at de.bund.bfr.knime.fsklab.v2_0.creator.CreatorNodeModel.validateSettings(CreatorNodeModel.java:129)
+	at org.knime.core.node.Node.validateModelSettings(Node.java:692)
+	at org.knime.core.node.workflow.NativeNodeContainer.performValidateSettings(NativeNodeContainer.java:1184)
+	at org.knime.core.node.workflow.SingleNodeContainer.validateSettings(SingleNodeContainer.java:1000)
+	at org.knime.core.node.workflow.WorkflowManager.loadNodeSettings(WorkflowManager.java:2060)
+	at org.knime.core.node.workflow.NodeContainer.applySettingsFromDialog(NodeContainer.java:1140)
+	at org.knime.core.ui.wrapper.NodeContainerWrapper.applySettingsFromDialog(NodeContainerWrapper.java:264)
+	at org.knime.workbench.ui.wrapper.WrappedNodeDialog.callApplySettingsFromDialog(WrappedNodeDialog.java:672)
+	at org.knime.workbench.ui.wrapper.WrappedNodeDialog.doApply(WrappedNodeDialog.java:635)
+	at org.knime.workbench.ui.wrapper.WrappedNodeDialog$6.widgetSelected(WrappedNodeDialog.java:510)
+	at org.eclipse.swt.widgets.TypedListener.handleEvent(TypedListener.java:252)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:89)
+	at org.eclipse.swt.widgets.Display.sendEvent(Display.java:4604)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1524)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1547)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1532)
+	at org.eclipse.swt.widgets.Widget.notifyListeners(Widget.java:1325)
+	at org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:4390)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3966)
+	at org.eclipse.jface.window.Window.runEventLoop(Window.java:823)
+	at org.eclipse.jface.window.Window.open(Window.java:799)
+	at org.knime.workbench.ui.wrapper.WrappedNodeDialog.open(WrappedNodeDialog.java:199)
+	at org.knime.workbench.editor2.editparts.NodeContainerEditPart.openDialog(NodeContainerEditPart.java:957)
+	at org.knime.workbench.editor2.editparts.NodeContainerEditPart.openNodeDialog(NodeContainerEditPart.java:864)
+	at org.knime.workbench.editor2.editparts.NodeContainerEditPart.openNodeDialog(NodeContainerEditPart.java:846)
+	at org.knime.workbench.editor2.editparts.NodeContainerEditPart.openDialog(NodeContainerEditPart.java:835)
+	at org.knime.workbench.editor2.editparts.NodeContainerEditPart.performRequest(NodeContainerEditPart.java:399)
+	at org.eclipse.gef.tools.SelectEditPartTracker.performOpen(SelectEditPartTracker.java:194)
+	at org.eclipse.gef.tools.SelectEditPartTracker.handleDoubleClick(SelectEditPartTracker.java:137)
+	at org.knime.workbench.editor2.WorkflowSelectionDragEditPartsTracker.handleDoubleClick(WorkflowSelectionDragEditPartsTracker.java:126)
+	at org.eclipse.gef.tools.AbstractTool.mouseDoubleClick(AbstractTool.java:1069)
+	at org.eclipse.gef.tools.SelectionTool.mouseDoubleClick(SelectionTool.java:527)
+	at org.eclipse.gef.EditDomain.mouseDoubleClick(EditDomain.java:231)
+	at org.eclipse.gef.ui.parts.DomainEventDispatcher.dispatchMouseDoubleClicked(DomainEventDispatcher.java:291)
+	at org.eclipse.draw2d.LightweightSystem$EventHandler.mouseDoubleClick(LightweightSystem.java:518)
+	at org.eclipse.swt.widgets.TypedListener.handleEvent(TypedListener.java:200)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:89)
+	at org.eclipse.swt.widgets.Display.sendEvent(Display.java:4604)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1524)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1547)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1532)
+	at org.eclipse.swt.widgets.Widget.notifyListeners(Widget.java:1325)
+	at org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:4390)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3966)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$5.run(PartRenderingEngine.java:1155)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:1046)
+	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:155)
+	at org.eclipse.ui.internal.Workbench.lambda$3(Workbench.java:644)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:551)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:156)
+	at org.knime.product.rcp.KNIMEApplication.start(KNIMEApplication.java:191)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:203)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:136)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:104)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:402)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:255)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:659)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:596)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1467)
+	at org.eclipse.equinox.launcher.Main.main(Main.java:1440)
+2023-02-12 13:00:53,317 : WARN  : main :  : WrappedNodeDialog : FSK Creator : 3:4 : failed to apply settings: Input file '/Users/ahmadswaid/knime-workspace/HorizontalTransmiAnimals/FSK Creator (' does not exist
+org.knime.core.node.InvalidSettingsException: Input file '/Users/ahmadswaid/knime-workspace/HorizontalTransmiAnimals/FSK Creator (' does not exist
+	at org.knime.core.node.util.CheckUtils.checkSourceFile(CheckUtils.java:484)
+	at de.bund.bfr.knime.fsklab.v2_0.creator.CreatorNodeModel.validateSettings(CreatorNodeModel.java:129)
+	at org.knime.core.node.Node.validateModelSettings(Node.java:692)
+	at org.knime.core.node.workflow.NativeNodeContainer.performValidateSettings(NativeNodeContainer.java:1184)
+	at org.knime.core.node.workflow.SingleNodeContainer.validateSettings(SingleNodeContainer.java:1000)
+	at org.knime.core.node.workflow.WorkflowManager.loadNodeSettings(WorkflowManager.java:2060)
+	at org.knime.core.node.workflow.NodeContainer.applySettingsFromDialog(NodeContainer.java:1140)
+	at org.knime.core.ui.wrapper.NodeContainerWrapper.applySettingsFromDialog(NodeContainerWrapper.java:264)
+	at org.knime.workbench.ui.wrapper.WrappedNodeDialog.callApplySettingsFromDialog(WrappedNodeDialog.java:672)
+	at org.knime.workbench.ui.wrapper.WrappedNodeDialog.doApply(WrappedNodeDialog.java:635)
+	at org.knime.workbench.ui.wrapper.WrappedNodeDialog.doOK(WrappedNodeDialog.java:559)
+	at org.knime.workbench.ui.wrapper.WrappedNodeDialog$5.widgetSelected(WrappedNodeDialog.java:495)
+	at org.eclipse.swt.widgets.TypedListener.handleEvent(TypedListener.java:252)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:89)
+	at org.eclipse.swt.widgets.Display.sendEvent(Display.java:4604)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1524)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1547)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1532)
+	at org.eclipse.swt.widgets.Widget.notifyListeners(Widget.java:1325)
+	at org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:4390)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3966)
+	at org.eclipse.jface.window.Window.runEventLoop(Window.java:823)
+	at org.eclipse.jface.window.Window.open(Window.java:799)
+	at org.knime.workbench.ui.wrapper.WrappedNodeDialog.open(WrappedNodeDialog.java:199)
+	at org.knime.workbench.editor2.editparts.NodeContainerEditPart.openDialog(NodeContainerEditPart.java:957)
+	at org.knime.workbench.editor2.editparts.NodeContainerEditPart.openNodeDialog(NodeContainerEditPart.java:864)
+	at org.knime.workbench.editor2.editparts.NodeContainerEditPart.openNodeDialog(NodeContainerEditPart.java:846)
+	at org.knime.workbench.editor2.editparts.NodeContainerEditPart.openDialog(NodeContainerEditPart.java:835)
+	at org.knime.workbench.editor2.editparts.NodeContainerEditPart.performRequest(NodeContainerEditPart.java:399)
+	at org.eclipse.gef.tools.SelectEditPartTracker.performOpen(SelectEditPartTracker.java:194)
+	at org.eclipse.gef.tools.SelectEditPartTracker.handleDoubleClick(SelectEditPartTracker.java:137)
+	at org.knime.workbench.editor2.WorkflowSelectionDragEditPartsTracker.handleDoubleClick(WorkflowSelectionDragEditPartsTracker.java:126)
+	at org.eclipse.gef.tools.AbstractTool.mouseDoubleClick(AbstractTool.java:1069)
+	at org.eclipse.gef.tools.SelectionTool.mouseDoubleClick(SelectionTool.java:527)
+	at org.eclipse.gef.EditDomain.mouseDoubleClick(EditDomain.java:231)
+	at org.eclipse.gef.ui.parts.DomainEventDispatcher.dispatchMouseDoubleClicked(DomainEventDispatcher.java:291)
+	at org.eclipse.draw2d.LightweightSystem$EventHandler.mouseDoubleClick(LightweightSystem.java:518)
+	at org.eclipse.swt.widgets.TypedListener.handleEvent(TypedListener.java:200)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:89)
+	at org.eclipse.swt.widgets.Display.sendEvent(Display.java:4604)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1524)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1547)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1532)
+	at org.eclipse.swt.widgets.Widget.notifyListeners(Widget.java:1325)
+	at org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:4390)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3966)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$5.run(PartRenderingEngine.java:1155)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:1046)
+	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:155)
+	at org.eclipse.ui.internal.Workbench.lambda$3(Workbench.java:644)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:551)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:156)
+	at org.knime.product.rcp.KNIMEApplication.start(KNIMEApplication.java:191)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:203)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:136)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:104)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:402)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:255)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:659)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:596)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1467)
+	at org.eclipse.equinox.launcher.Main.main(Main.java:1440)
+2023-02-12 13:01:43,050 : ERROR : main :  : Node : FSK Creator : 3:4 : CODING PROBLEM	Validating settings failed - "de.bund.bfr.knime.fsklab.v2_0.creator.CreatorNodeModel" threw IllegalArgumentException: Missing sheet
+java.lang.IllegalArgumentException: Missing sheet
+	at org.knime.core.node.util.CheckUtils.checkArgument(CheckUtils.java:258)
+	at org.knime.core.node.util.CheckUtils.checkArgument(CheckUtils.java:119)
+	at de.bund.bfr.knime.fsklab.v2_0.creator.CreatorNodeModel.validateSettings(CreatorNodeModel.java:133)
+	at org.knime.core.node.Node.validateModelSettings(Node.java:692)
+	at org.knime.core.node.workflow.NativeNodeContainer.performValidateSettings(NativeNodeContainer.java:1184)
+	at org.knime.core.node.workflow.SingleNodeContainer.validateSettings(SingleNodeContainer.java:1000)
+	at org.knime.core.node.workflow.NodeContainer.areDialogSettingsValid(NodeContainer.java:1153)
+	at org.knime.core.ui.wrapper.NodeContainerWrapper.areDialogSettingsValid(NodeContainerWrapper.java:275)
+	at org.knime.workbench.ui.wrapper.WrappedNodeDialog.doApply(WrappedNodeDialog.java:621)
+	at org.knime.workbench.ui.wrapper.WrappedNodeDialog.doOK(WrappedNodeDialog.java:559)
+	at org.knime.workbench.ui.wrapper.WrappedNodeDialog$5.widgetSelected(WrappedNodeDialog.java:495)
+	at org.eclipse.swt.widgets.TypedListener.handleEvent(TypedListener.java:252)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:89)
+	at org.eclipse.swt.widgets.Display.sendEvent(Display.java:4604)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1524)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1547)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1532)
+	at org.eclipse.swt.widgets.Widget.notifyListeners(Widget.java:1325)
+	at org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:4390)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3966)
+	at org.eclipse.jface.window.Window.runEventLoop(Window.java:823)
+	at org.eclipse.jface.window.Window.open(Window.java:799)
+	at org.knime.workbench.ui.wrapper.WrappedNodeDialog.open(WrappedNodeDialog.java:199)
+	at org.knime.workbench.editor2.editparts.NodeContainerEditPart.openDialog(NodeContainerEditPart.java:957)
+	at org.knime.workbench.editor2.editparts.NodeContainerEditPart.openNodeDialog(NodeContainerEditPart.java:864)
+	at org.knime.workbench.editor2.editparts.NodeContainerEditPart.openNodeDialog(NodeContainerEditPart.java:846)
+	at org.knime.workbench.editor2.editparts.NodeContainerEditPart.openDialog(NodeContainerEditPart.java:835)
+	at org.knime.workbench.editor2.editparts.NodeContainerEditPart.performRequest(NodeContainerEditPart.java:399)
+	at org.eclipse.gef.tools.SelectEditPartTracker.performOpen(SelectEditPartTracker.java:194)
+	at org.eclipse.gef.tools.SelectEditPartTracker.handleDoubleClick(SelectEditPartTracker.java:137)
+	at org.knime.workbench.editor2.WorkflowSelectionDragEditPartsTracker.handleDoubleClick(WorkflowSelectionDragEditPartsTracker.java:126)
+	at org.eclipse.gef.tools.AbstractTool.mouseDoubleClick(AbstractTool.java:1069)
+	at org.eclipse.gef.tools.SelectionTool.mouseDoubleClick(SelectionTool.java:527)
+	at org.eclipse.gef.EditDomain.mouseDoubleClick(EditDomain.java:231)
+	at org.eclipse.gef.ui.parts.DomainEventDispatcher.dispatchMouseDoubleClicked(DomainEventDispatcher.java:291)
+	at org.eclipse.draw2d.LightweightSystem$EventHandler.mouseDoubleClick(LightweightSystem.java:518)
+	at org.eclipse.swt.widgets.TypedListener.handleEvent(TypedListener.java:200)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:89)
+	at org.eclipse.swt.widgets.Display.sendEvent(Display.java:4604)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1524)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1547)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1532)
+	at org.eclipse.swt.widgets.Widget.notifyListeners(Widget.java:1325)
+	at org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:4390)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3966)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$5.run(PartRenderingEngine.java:1155)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:1046)
+	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:155)
+	at org.eclipse.ui.internal.Workbench.lambda$3(Workbench.java:644)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:551)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:156)
+	at org.knime.product.rcp.KNIMEApplication.start(KNIMEApplication.java:191)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:203)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:136)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:104)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:402)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:255)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:659)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:596)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1467)
+	at org.eclipse.equinox.launcher.Main.main(Main.java:1440)
+2023-02-12 13:01:43,056 : ERROR : main :  : Node : FSK Creator : 3:4 : CODING PROBLEM	Validating settings failed - "de.bund.bfr.knime.fsklab.v2_0.creator.CreatorNodeModel" threw IllegalArgumentException: Missing sheet
+java.lang.IllegalArgumentException: Missing sheet
+	at org.knime.core.node.util.CheckUtils.checkArgument(CheckUtils.java:258)
+	at org.knime.core.node.util.CheckUtils.checkArgument(CheckUtils.java:119)
+	at de.bund.bfr.knime.fsklab.v2_0.creator.CreatorNodeModel.validateSettings(CreatorNodeModel.java:133)
+	at org.knime.core.node.Node.validateModelSettings(Node.java:692)
+	at org.knime.core.node.workflow.NativeNodeContainer.performValidateSettings(NativeNodeContainer.java:1184)
+	at org.knime.core.node.workflow.SingleNodeContainer.validateSettings(SingleNodeContainer.java:1000)
+	at org.knime.core.node.workflow.WorkflowManager.loadNodeSettings(WorkflowManager.java:2060)
+	at org.knime.core.node.workflow.NodeContainer.applySettingsFromDialog(NodeContainer.java:1140)
+	at org.knime.core.ui.wrapper.NodeContainerWrapper.applySettingsFromDialog(NodeContainerWrapper.java:264)
+	at org.knime.workbench.ui.wrapper.WrappedNodeDialog.callApplySettingsFromDialog(WrappedNodeDialog.java:672)
+	at org.knime.workbench.ui.wrapper.WrappedNodeDialog.doApply(WrappedNodeDialog.java:635)
+	at org.knime.workbench.ui.wrapper.WrappedNodeDialog.doOK(WrappedNodeDialog.java:559)
+	at org.knime.workbench.ui.wrapper.WrappedNodeDialog$5.widgetSelected(WrappedNodeDialog.java:495)
+	at org.eclipse.swt.widgets.TypedListener.handleEvent(TypedListener.java:252)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:89)
+	at org.eclipse.swt.widgets.Display.sendEvent(Display.java:4604)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1524)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1547)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1532)
+	at org.eclipse.swt.widgets.Widget.notifyListeners(Widget.java:1325)
+	at org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:4390)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3966)
+	at org.eclipse.jface.window.Window.runEventLoop(Window.java:823)
+	at org.eclipse.jface.window.Window.open(Window.java:799)
+	at org.knime.workbench.ui.wrapper.WrappedNodeDialog.open(WrappedNodeDialog.java:199)
+	at org.knime.workbench.editor2.editparts.NodeContainerEditPart.openDialog(NodeContainerEditPart.java:957)
+	at org.knime.workbench.editor2.editparts.NodeContainerEditPart.openNodeDialog(NodeContainerEditPart.java:864)
+	at org.knime.workbench.editor2.editparts.NodeContainerEditPart.openNodeDialog(NodeContainerEditPart.java:846)
+	at org.knime.workbench.editor2.editparts.NodeContainerEditPart.openDialog(NodeContainerEditPart.java:835)
+	at org.knime.workbench.editor2.editparts.NodeContainerEditPart.performRequest(NodeContainerEditPart.java:399)
+	at org.eclipse.gef.tools.SelectEditPartTracker.performOpen(SelectEditPartTracker.java:194)
+	at org.eclipse.gef.tools.SelectEditPartTracker.handleDoubleClick(SelectEditPartTracker.java:137)
+	at org.knime.workbench.editor2.WorkflowSelectionDragEditPartsTracker.handleDoubleClick(WorkflowSelectionDragEditPartsTracker.java:126)
+	at org.eclipse.gef.tools.AbstractTool.mouseDoubleClick(AbstractTool.java:1069)
+	at org.eclipse.gef.tools.SelectionTool.mouseDoubleClick(SelectionTool.java:527)
+	at org.eclipse.gef.EditDomain.mouseDoubleClick(EditDomain.java:231)
+	at org.eclipse.gef.ui.parts.DomainEventDispatcher.dispatchMouseDoubleClicked(DomainEventDispatcher.java:291)
+	at org.eclipse.draw2d.LightweightSystem$EventHandler.mouseDoubleClick(LightweightSystem.java:518)
+	at org.eclipse.swt.widgets.TypedListener.handleEvent(TypedListener.java:200)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:89)
+	at org.eclipse.swt.widgets.Display.sendEvent(Display.java:4604)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1524)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1547)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1532)
+	at org.eclipse.swt.widgets.Widget.notifyListeners(Widget.java:1325)
+	at org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:4390)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3966)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$5.run(PartRenderingEngine.java:1155)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:1046)
+	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:155)
+	at org.eclipse.ui.internal.Workbench.lambda$3(Workbench.java:644)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:551)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:156)
+	at org.knime.product.rcp.KNIMEApplication.start(KNIMEApplication.java:191)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:203)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:136)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:104)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:402)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:255)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:659)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:596)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1467)
+	at org.eclipse.equinox.launcher.Main.main(Main.java:1440)
+2023-02-12 13:01:43,056 : WARN  : main :  : WrappedNodeDialog : FSK Creator : 3:4 : failed to apply settings: Coding issue: Missing sheet
+org.knime.core.node.InvalidSettingsException: Coding issue: Missing sheet
+	at org.knime.core.node.Node.validateModelSettings(Node.java:698)
+	at org.knime.core.node.workflow.NativeNodeContainer.performValidateSettings(NativeNodeContainer.java:1184)
+	at org.knime.core.node.workflow.SingleNodeContainer.validateSettings(SingleNodeContainer.java:1000)
+	at org.knime.core.node.workflow.WorkflowManager.loadNodeSettings(WorkflowManager.java:2060)
+	at org.knime.core.node.workflow.NodeContainer.applySettingsFromDialog(NodeContainer.java:1140)
+	at org.knime.core.ui.wrapper.NodeContainerWrapper.applySettingsFromDialog(NodeContainerWrapper.java:264)
+	at org.knime.workbench.ui.wrapper.WrappedNodeDialog.callApplySettingsFromDialog(WrappedNodeDialog.java:672)
+	at org.knime.workbench.ui.wrapper.WrappedNodeDialog.doApply(WrappedNodeDialog.java:635)
+	at org.knime.workbench.ui.wrapper.WrappedNodeDialog.doOK(WrappedNodeDialog.java:559)
+	at org.knime.workbench.ui.wrapper.WrappedNodeDialog$5.widgetSelected(WrappedNodeDialog.java:495)
+	at org.eclipse.swt.widgets.TypedListener.handleEvent(TypedListener.java:252)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:89)
+	at org.eclipse.swt.widgets.Display.sendEvent(Display.java:4604)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1524)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1547)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1532)
+	at org.eclipse.swt.widgets.Widget.notifyListeners(Widget.java:1325)
+	at org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:4390)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3966)
+	at org.eclipse.jface.window.Window.runEventLoop(Window.java:823)
+	at org.eclipse.jface.window.Window.open(Window.java:799)
+	at org.knime.workbench.ui.wrapper.WrappedNodeDialog.open(WrappedNodeDialog.java:199)
+	at org.knime.workbench.editor2.editparts.NodeContainerEditPart.openDialog(NodeContainerEditPart.java:957)
+	at org.knime.workbench.editor2.editparts.NodeContainerEditPart.openNodeDialog(NodeContainerEditPart.java:864)
+	at org.knime.workbench.editor2.editparts.NodeContainerEditPart.openNodeDialog(NodeContainerEditPart.java:846)
+	at org.knime.workbench.editor2.editparts.NodeContainerEditPart.openDialog(NodeContainerEditPart.java:835)
+	at org.knime.workbench.editor2.editparts.NodeContainerEditPart.performRequest(NodeContainerEditPart.java:399)
+	at org.eclipse.gef.tools.SelectEditPartTracker.performOpen(SelectEditPartTracker.java:194)
+	at org.eclipse.gef.tools.SelectEditPartTracker.handleDoubleClick(SelectEditPartTracker.java:137)
+	at org.knime.workbench.editor2.WorkflowSelectionDragEditPartsTracker.handleDoubleClick(WorkflowSelectionDragEditPartsTracker.java:126)
+	at org.eclipse.gef.tools.AbstractTool.mouseDoubleClick(AbstractTool.java:1069)
+	at org.eclipse.gef.tools.SelectionTool.mouseDoubleClick(SelectionTool.java:527)
+	at org.eclipse.gef.EditDomain.mouseDoubleClick(EditDomain.java:231)
+	at org.eclipse.gef.ui.parts.DomainEventDispatcher.dispatchMouseDoubleClicked(DomainEventDispatcher.java:291)
+	at org.eclipse.draw2d.LightweightSystem$EventHandler.mouseDoubleClick(LightweightSystem.java:518)
+	at org.eclipse.swt.widgets.TypedListener.handleEvent(TypedListener.java:200)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:89)
+	at org.eclipse.swt.widgets.Display.sendEvent(Display.java:4604)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1524)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1547)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1532)
+	at org.eclipse.swt.widgets.Widget.notifyListeners(Widget.java:1325)
+	at org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:4390)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3966)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$5.run(PartRenderingEngine.java:1155)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:1046)
+	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:155)
+	at org.eclipse.ui.internal.Workbench.lambda$3(Workbench.java:644)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:551)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:156)
+	at org.knime.product.rcp.KNIMEApplication.start(KNIMEApplication.java:191)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:203)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:136)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:104)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:402)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:255)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:659)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:596)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1467)
+	at org.eclipse.equinox.launcher.Main.main(Main.java:1440)
+Caused by: java.lang.IllegalArgumentException: Missing sheet
+	at org.knime.core.node.util.CheckUtils.checkArgument(CheckUtils.java:258)
+	at org.knime.core.node.util.CheckUtils.checkArgument(CheckUtils.java:119)
+	at de.bund.bfr.knime.fsklab.v2_0.creator.CreatorNodeModel.validateSettings(CreatorNodeModel.java:133)
+	at org.knime.core.node.Node.validateModelSettings(Node.java:692)
+	... 65 more
+2023-02-12 13:01:51,396 : DEBUG : main :  : Node : FSK Runner : 3:5 : reset
+2023-02-12 13:01:51,398 : DEBUG : main :  : Node : FSK Runner : 3:5 : clean output ports.
+2023-02-12 13:01:51,398 : DEBUG : main :  : WorkflowDataRepository : FSK Creator : 3:4 : Removing handler 8db75780-0f05-4e57-8fcb-6850651cf3e7 (FSK Runner 3:5: <no directory>) - 1 remaining
+2023-02-12 13:01:51,399 : DEBUG : main :  : NodeContainer : FSK Creator : 3:4 : FSK Runner 3:5 has new state: IDLE
+2023-02-12 13:01:51,399 : DEBUG : main :  : Node : FSK Creator : 3:4 : reset
+2023-02-12 13:01:51,400 : DEBUG : main :  : Node : FSK Creator : 3:4 : clean output ports.
+2023-02-12 13:01:51,400 : DEBUG : main :  : WorkflowDataRepository : FSK Creator : 3:4 : Removing handler f909a9ac-d63b-4605-8ec5-971f2bc0d5e0 (FSK Creator 3:4: <no directory>) - 0 remaining
+2023-02-12 13:01:51,400 : DEBUG : main :  : NodeContainer : FSK Creator : 3:4 : FSK Creator 3:4 has new state: IDLE
+2023-02-12 13:01:51,401 : DEBUG : main :  : Node : FSK Creator : 3:4 : Configure succeeded. (FSK Creator)
+2023-02-12 13:01:51,402 : DEBUG : main :  : NodeContainer : FSK Creator : 3:4 : FSK Creator 3:4 has new state: CONFIGURED
+2023-02-12 13:01:51,402 : DEBUG : main :  : Node : FSK Runner : 3:5 : Configure succeeded. (FSK Runner)
+2023-02-12 13:01:51,403 : DEBUG : main :  : NodeContainer : FSK Creator : 3:4 : FSK Runner 3:5 has new state: CONFIGURED
+2023-02-12 13:01:54,067 : DEBUG : KNIME-Worker-13-FSK Creator 3:4 :  : WorkflowManager : FSK Creator : 3:4 : FSK Creator 3:4 doBeforePreExecution
+2023-02-12 13:01:54,068 : DEBUG : KNIME-Worker-13-FSK Creator 3:4 :  : NodeContainer : FSK Creator : 3:4 : FSK Creator 3:4 has new state: PREEXECUTE
+2023-02-12 13:01:54,068 : DEBUG : KNIME-Worker-13-FSK Creator 3:4 :  : WorkflowDataRepository : FSK Creator : 3:4 : Adding handler d22ed657-f7e0-452a-9f00-5d9d63bcdfa4 (FSK Creator 3:4: <no directory>) - 1 in total
+2023-02-12 13:01:54,068 : DEBUG : KNIME-Worker-13-FSK Creator 3:4 :  : WorkflowManager : FSK Creator : 3:4 : FSK Creator 3:4 doBeforeExecution
+2023-02-12 13:01:54,068 : DEBUG : KNIME-Worker-13-FSK Creator 3:4 :  : NodeContainer : FSK Creator : 3:4 : FSK Creator 3:4 has new state: EXECUTING
+2023-02-12 13:01:54,068 : DEBUG : KNIME-Worker-13-FSK Creator 3:4 :  : LocalNodeExecutionJob : FSK Creator : 3:4 : FSK Creator 3:4 Start execute
+2023-02-12 13:01:55,279 : DEBUG : KNIME-Worker-13-FSK Creator 3:4 :  : RController : FSK Creator : 3:4 : An attempt (1/5) to connect to Rserve failed.
+org.rosuda.REngine.Rserve.RserveException: Cannot connect: Connection refused (Connection refused)
+	at org.rosuda.REngine.Rserve.RConnection.<init>(RConnection.java:88)
+	at org.rosuda.REngine.Rserve.RConnection.<init>(RConnection.java:60)
+	at de.bund.bfr.knime.fsklab.r.server.RConnectionFactory$RInstance.createConnection(RConnectionFactory.java:450)
+	at de.bund.bfr.knime.fsklab.r.server.RConnectionFactory.launchRserve(RConnectionFactory.java:244)
+	at de.bund.bfr.knime.fsklab.r.server.RConnectionFactory.createConnection(RConnectionFactory.java:307)
+	at de.bund.bfr.knime.fsklab.r.client.RController.initRConnection(RController.java:271)
+	at de.bund.bfr.knime.fsklab.r.client.RController.initR(RController.java:316)
+	at de.bund.bfr.knime.fsklab.r.client.RController.initialize(RController.java:190)
+	at de.bund.bfr.knime.fsklab.r.client.RController.<init>(RController.java:164)
+	at de.bund.bfr.knime.fsklab.nodes.RScriptHandler.<init>(RScriptHandler.java:48)
+	at de.bund.bfr.knime.fsklab.nodes.ScriptHandler.createHandler(ScriptHandler.java:216)
+	at de.bund.bfr.knime.fsklab.v2_0.creator.CreatorNodeModel.execute(CreatorNodeModel.java:330)
+	at org.knime.core.node.NodeModel.executeModel(NodeModel.java:549)
+	at org.knime.core.node.Node.invokeFullyNodeModelExecute(Node.java:1267)
+	at org.knime.core.node.Node.execute(Node.java:1041)
+	at org.knime.core.node.workflow.NativeNodeContainer.performExecuteNode(NativeNodeContainer.java:595)
+	at org.knime.core.node.exec.LocalNodeExecutionJob.mainExecute(LocalNodeExecutionJob.java:98)
+	at org.knime.core.node.workflow.NodeExecutionJob.internalRun(NodeExecutionJob.java:201)
+	at org.knime.core.node.workflow.NodeExecutionJob.run(NodeExecutionJob.java:117)
+	at org.knime.core.util.ThreadUtils$RunnableWithContextImpl.runWithContext(ThreadUtils.java:367)
+	at org.knime.core.util.ThreadUtils$RunnableWithContext.run(ThreadUtils.java:221)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at org.knime.core.util.ThreadPool$MyFuture.run(ThreadPool.java:123)
+	at org.knime.core.util.ThreadPool$Worker.run(ThreadPool.java:246)
+2023-02-12 13:01:55,382 : DEBUG : KNIME-Worker-13-FSK Creator 3:4 :  : RController : FSK Creator : 3:4 : An attempt (2/5) to connect to Rserve failed.
+org.rosuda.REngine.Rserve.RserveException: Cannot connect: Connection refused (Connection refused)
+	at org.rosuda.REngine.Rserve.RConnection.<init>(RConnection.java:88)
+	at org.rosuda.REngine.Rserve.RConnection.<init>(RConnection.java:60)
+	at de.bund.bfr.knime.fsklab.r.server.RConnectionFactory$RInstance.createConnection(RConnectionFactory.java:450)
+	at de.bund.bfr.knime.fsklab.r.server.RConnectionFactory.launchRserve(RConnectionFactory.java:244)
+	at de.bund.bfr.knime.fsklab.r.server.RConnectionFactory.createConnection(RConnectionFactory.java:307)
+	at de.bund.bfr.knime.fsklab.r.client.RController.initRConnection(RController.java:271)
+	at de.bund.bfr.knime.fsklab.r.client.RController.initR(RController.java:316)
+	at de.bund.bfr.knime.fsklab.r.client.RController.initialize(RController.java:190)
+	at de.bund.bfr.knime.fsklab.r.client.RController.<init>(RController.java:164)
+	at de.bund.bfr.knime.fsklab.nodes.RScriptHandler.<init>(RScriptHandler.java:48)
+	at de.bund.bfr.knime.fsklab.nodes.ScriptHandler.createHandler(ScriptHandler.java:216)
+	at de.bund.bfr.knime.fsklab.v2_0.creator.CreatorNodeModel.execute(CreatorNodeModel.java:330)
+	at org.knime.core.node.NodeModel.executeModel(NodeModel.java:549)
+	at org.knime.core.node.Node.invokeFullyNodeModelExecute(Node.java:1267)
+	at org.knime.core.node.Node.execute(Node.java:1041)
+	at org.knime.core.node.workflow.NativeNodeContainer.performExecuteNode(NativeNodeContainer.java:595)
+	at org.knime.core.node.exec.LocalNodeExecutionJob.mainExecute(LocalNodeExecutionJob.java:98)
+	at org.knime.core.node.workflow.NodeExecutionJob.internalRun(NodeExecutionJob.java:201)
+	at org.knime.core.node.workflow.NodeExecutionJob.run(NodeExecutionJob.java:117)
+	at org.knime.core.util.ThreadUtils$RunnableWithContextImpl.runWithContext(ThreadUtils.java:367)
+	at org.knime.core.util.ThreadUtils$RunnableWithContext.run(ThreadUtils.java:221)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at org.knime.core.util.ThreadPool$MyFuture.run(ThreadPool.java:123)
+	at org.knime.core.util.ThreadPool$Worker.run(ThreadPool.java:246)
+2023-02-12 13:01:55,592 : DEBUG : KNIME-Worker-13-FSK Creator 3:4 :  : RController : FSK Creator : 3:4 : Connected to Rserve in 3 attempts.
+2023-02-12 13:01:56,206 : INFO  : KNIME-Worker-13-FSK Creator 3:4 :  : LocalNodeExecutionJob : FSK Creator : 3:4 : FSK Creator 3:4 End execute (2 secs)
+FSK Creator 3:4 doBeforePostExecution
+2023-02-12 13:01:56,207 : DEBUG : KNIME-Worker-13-FSK Creator 3:4 :  : NodeContainer : FSK Creator : 3:4 : FSK Creator 3:4 has new state: POSTEXECUTE
+2023-02-12 13:01:56,207 : DEBUG : KNIME-Worker-13-FSK Creator 3:4 :  : WorkflowManager : FSK Creator : 3:4 : FSK Creator 3:4 doAfterExecute - success
+2023-02-12 13:01:56,207 : DEBUG : KNIME-Worker-13-FSK Creator 3:4 :  : NodeContainer : FSK Creator : 3:4 : FSK Creator 3:4 has new state: EXECUTED
+2023-02-12 13:01:56,208 : DEBUG : KNIME-Worker-13-FSK Creator 3:4 :  : Node : FSK Runner : 3:5 : Configure succeeded. (FSK Runner)
+2023-02-12 13:01:56,208 : DEBUG : KNIME-Worker-13-FSK Creator 3:4 :  : NodeContainer : FSK Creator : 3:4 : HorizontalTransmiAnimals 3 has new state: CONFIGURED
+2023-02-12 13:02:41,853 : DEBUG : KNIME-Worker-14-FSK Runner 3:5 :  : WorkflowManager : FSK Runner : 3:5 : FSK Runner 3:5 doBeforePreExecution
+2023-02-12 13:02:41,854 : DEBUG : KNIME-Worker-14-FSK Runner 3:5 :  : NodeContainer : FSK Runner : 3:5 : FSK Runner 3:5 has new state: PREEXECUTE
+2023-02-12 13:02:41,855 : DEBUG : KNIME-Worker-14-FSK Runner 3:5 :  : WorkflowDataRepository : FSK Runner : 3:5 : Adding handler dee0d961-852f-489d-bf96-d1d4477d244e (FSK Runner 3:5: <no directory>) - 2 in total
+2023-02-12 13:02:41,855 : DEBUG : KNIME-Worker-14-FSK Runner 3:5 :  : WorkflowManager : FSK Runner : 3:5 : FSK Runner 3:5 doBeforeExecution
+2023-02-12 13:02:41,855 : DEBUG : KNIME-Worker-14-FSK Runner 3:5 :  : NodeContainer : FSK Runner : 3:5 : FSK Runner 3:5 has new state: EXECUTING
+2023-02-12 13:02:41,855 : DEBUG : KNIME-Worker-14-FSK Runner 3:5 :  : LocalNodeExecutionJob : FSK Runner : 3:5 : FSK Runner 3:5 Start execute
+2023-02-12 13:02:41,861 : INFO  : KNIME-Worker-14-FSK Runner 3:5 :  : Fskx Runner Node Model : FSK Runner : 3:5 : Running Model: class GenericModel {
+    class Model {
+        modelType: genericModel
+    }
+    generalInformation: class GenericModelGeneralInformation {
+        name: Horizontal transmission animals
+        source: null
+        identifier: Horizontal transmission animals
+        author: null
+        creator: null
+        creationDate: 2018-03-30
+        modificationDate: null
+        rights: null
+        availability: null
+        url: null
+        format: null
+        reference: []
+        language: null
+        software: R
+        languageWrittenIn: null
+        modelCategory: null
+        status: null
+        objective: null
+        description: null
+    }
+    scope: class GenericModelScope {
+        product: null
+        hazard: null
+        populationGroup: null
+        generalComment: null
+        temporalInformation: null
+        spatialInformation: null
+    }
+    dataBackground: class GenericModelDataBackground {
+        study: class Study {
+            identifier: null
+            title: title
+            description: null
+            designType: null
+            assayMeasurementType: null
+            assayTechnologyType: null
+            assayTechnologyPlatform: null
+            accreditationProcedureForTheAssayTechnology: null
+            protocolName: null
+            protocolType: null
+            protocolDescription: null
+            protocolURI: null
+            protocolVersion: null
+            protocolParametersName: null
+            protocolComponentsName: null
+            protocolComponentsType: null
+        }
+        studySample: null
+        dietaryAssessmentMethod: null
+        laboratory: null
+        assay: null
+    }
+    modelMath: class GenericModelModelMath {
+        parameter: [class Parameter {
+            id: result
+            classification: OUTPUT
+            name: result
+            description: null
+            unit: dimensionless
+            unitCategory: null
+            dataType: VECTOROFNUMBERS
+            source: null
+            subject: null
+            distribution: null
+            value: null
+            reference: null
+            variabilitySubject: null
+            minValue: null
+            maxValue: null
+            error: null
+        }, class Parameter {
+            id: n_iter
+            classification: INPUT
+            name: n.iter
+            description: null
+            unit: dimensionless
+            unitCategory: null
+            dataType: INTEGER
+            source: null
+            subject: null
+            distribution: null
+            value: 200
+            reference: null
+            variabilitySubject: null
+            minValue: null
+            maxValue: null
+            error: null
+        }, class Parameter {
+            id: K
+            classification: INPUT
+            name: K
+            description: null
+            unit: dimensionless
+            unitCategory: null
+            dataType: INTEGER
+            source: null
+            subject: null
+            distribution: null
+            value: 1
+            reference: null
+            variabilitySubject: null
+            minValue: null
+            maxValue: null
+            error: null
+        }, class Parameter {
+            id: nanim
+            classification: INPUT
+            name: nanim
+            description: null
+            unit: dimensionless
+            unitCategory: null
+            dataType: INTEGER
+            source: null
+            subject: null
+            distribution: null
+            value: 100
+            reference: null
+            variabilitySubject: null
+            minValue: null
+            maxValue: null
+            error: null
+        }, class Parameter {
+            id: r
+            classification: INPUT
+            name: result
+            description: null
+            unit: dimensionless
+            unitCategory: null
+            dataType: DOUBLE
+            source: null
+            subject: null
+            distribution: null
+            value: 0.15
+            reference: null
+            variabilitySubject: null
+            minValue: null
+            maxValue: null
+            error: null
+        }, class Parameter {
+            id: t
+            classification: INPUT
+            name: t
+            description: null
+            unit: dimensionless
+            unitCategory: null
+            dataType: DOUBLE
+            source: null
+            subject: null
+            distribution: null
+            value: 0.29
+            reference: null
+            variabilitySubject: null
+            minValue: null
+            maxValue: null
+            error: null
+        }, class Parameter {
+            id: n_i0
+            classification: INPUT
+            name: n_i0
+            description: null
+            unit: dimensionless
+            unitCategory: null
+            dataType: VECTOROFNUMBERS
+            source: null
+            subject: null
+            distribution: null
+            value: c(1.935721,12.71271,15.66345,1.353314,10.52182,4.736094,7.912544,12.07932,23.1919,18.89457,10.68439,13.02975,25.5023,28.58746,5.889829,26.90452,8.160216,15.8312,8.593648,34.16895,14.51137,32.84028,29.81554,20.34258,21.97171,12.73988,16.64313,13.35931,28.92521,10.55415,10.55013,16.73892,3.190878,19.87838,23.52362,23.20137,15.9757,14.40701,5.014327,4.756479,33.79569,9.373871,4.414774,12.71426,10.6548,14.75995,24.47719,4.087681,2.664281,3.23267,14.24919,20.5345,12.81333,6.883457,33.2732,3.448148,1.014574,33.39331,16.86773,10.64093,21.02841,11.52639,7.24205,38.73768,21.66689,17.25998,8.995757,23.70676,19.82166,34.74927,0.4641947,23.42121,37.14702,21.1278,0.301414,1.223592,6.068193,2.138808,4.205278,15.78051,12.40829,32.38933,28.7909,9.204453,7.138595,20.03624,4.676341,23.22836,8.515107,4.684093,11.3288,27.98973,23.75414,10.02352,21.41725,12.43532,33.53659,3.230087,13.40252,1.834815,19.62866,9.226781,8.196855,31.95928,7.419424,19.23446,8.030689,3.938026,35.07843,30.94347,14.49612,2.672764,3.661242,14.39913,23.53549,3.294764,2.435465,19.73338,19.11645,13.29316,23.98349,28.61863,17.74421,28.63623,10.24255,21.20005,24.95026,20.25662,1.33805,20.01302,23.79495,3.391174,20.43567,16.1562,5.661879,4.986108,1.937331,4.927734,2.645487,27.0641,7.504319,11.04624,16.05923,7.200019,19.93042,14.99434,28.06279,27.52094,0.9374664,1.865803,18.54756,5.507266,4.31251,1.145738,18.37622,17.39421,0.6971349,8.777291,12.53457,12.65693,9.015909,7.212545,3.530513,17.64106,19.96338,20.58375,0.6711766,13.63135,28.54139,38.56506,9.317908,25.75435,35.44397,11.43356,20.11247,8.069184,23.59772,33.51359,9.640212,17.00974,6.803223,37.73145,17.82324,3.143243,3.375974,9.321126,0.6598426,11.71911,0.501711,33.17894,15.3795,7.254196,3.670056,1.058177,37.2422,14.28571,10.2786,50.55711,9.337731,2.425376)
+            reference: null
+            variabilitySubject: null
+            minValue: null
+            maxValue: null
+            error: null
+        }]
+        qualityMeasures: [class QualityMeasures {
+            sse: null
+            mse: null
+            rmse: null
+            rsquared: null
+            aic: null
+            bic: null
+            sensitivityAnalysis: null
+        }]
+        modelEquation: null
+        fittingProcedure: null
+        exposure: null
+        event: null
+    }
+}
+2023-02-12 13:02:41,862 : INFO  : KNIME-Worker-14-FSK Runner 3:5 :  : Fskx Runner Node Model : FSK Runner : 3:5 : Running simulation: 
+2023-02-12 13:02:42,105 : DEBUG : KNIME-Worker-14-FSK Runner 3:5 :  : RController : FSK Runner : 3:5 : An attempt (1/5) to connect to Rserve failed.
+org.rosuda.REngine.Rserve.RserveException: Cannot connect: Connection refused (Connection refused)
+	at org.rosuda.REngine.Rserve.RConnection.<init>(RConnection.java:88)
+	at org.rosuda.REngine.Rserve.RConnection.<init>(RConnection.java:60)
+	at de.bund.bfr.knime.fsklab.r.server.RConnectionFactory$RInstance.createConnection(RConnectionFactory.java:450)
+	at de.bund.bfr.knime.fsklab.r.server.RConnectionFactory.launchRserve(RConnectionFactory.java:244)
+	at de.bund.bfr.knime.fsklab.r.server.RConnectionFactory.createConnection(RConnectionFactory.java:307)
+	at de.bund.bfr.knime.fsklab.r.client.RController.initRConnection(RController.java:271)
+	at de.bund.bfr.knime.fsklab.r.client.RController.initR(RController.java:316)
+	at de.bund.bfr.knime.fsklab.r.client.RController.initialize(RController.java:190)
+	at de.bund.bfr.knime.fsklab.r.client.RController.<init>(RController.java:164)
+	at de.bund.bfr.knime.fsklab.nodes.RScriptHandler.<init>(RScriptHandler.java:48)
+	at de.bund.bfr.knime.fsklab.nodes.ScriptHandler.createHandler(ScriptHandler.java:216)
+	at de.bund.bfr.knime.fsklab.v2_0.runner.RunnerNodeModel.runSnippet(RunnerNodeModel.java:583)
+	at de.bund.bfr.knime.fsklab.v2_0.runner.RunnerNodeModel.runFskPortObject(RunnerNodeModel.java:545)
+	at de.bund.bfr.knime.fsklab.v2_0.runner.RunnerNodeModel.execute(RunnerNodeModel.java:206)
+	at org.knime.core.node.NodeModel.executeModel(NodeModel.java:549)
+	at org.knime.core.node.Node.invokeFullyNodeModelExecute(Node.java:1267)
+	at org.knime.core.node.Node.execute(Node.java:1041)
+	at org.knime.core.node.workflow.NativeNodeContainer.performExecuteNode(NativeNodeContainer.java:595)
+	at org.knime.core.node.exec.LocalNodeExecutionJob.mainExecute(LocalNodeExecutionJob.java:98)
+	at org.knime.core.node.workflow.NodeExecutionJob.internalRun(NodeExecutionJob.java:201)
+	at org.knime.core.node.workflow.NodeExecutionJob.run(NodeExecutionJob.java:117)
+	at org.knime.core.util.ThreadUtils$RunnableWithContextImpl.runWithContext(ThreadUtils.java:367)
+	at org.knime.core.util.ThreadUtils$RunnableWithContext.run(ThreadUtils.java:221)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at org.knime.core.util.ThreadPool$MyFuture.run(ThreadPool.java:123)
+	at org.knime.core.util.ThreadPool$Worker.run(ThreadPool.java:246)
+2023-02-12 13:02:42,208 : DEBUG : KNIME-Worker-14-FSK Runner 3:5 :  : RController : FSK Runner : 3:5 : An attempt (2/5) to connect to Rserve failed.
+org.rosuda.REngine.Rserve.RserveException: Cannot connect: Connection refused (Connection refused)
+	at org.rosuda.REngine.Rserve.RConnection.<init>(RConnection.java:88)
+	at org.rosuda.REngine.Rserve.RConnection.<init>(RConnection.java:60)
+	at de.bund.bfr.knime.fsklab.r.server.RConnectionFactory$RInstance.createConnection(RConnectionFactory.java:450)
+	at de.bund.bfr.knime.fsklab.r.server.RConnectionFactory.launchRserve(RConnectionFactory.java:244)
+	at de.bund.bfr.knime.fsklab.r.server.RConnectionFactory.createConnection(RConnectionFactory.java:307)
+	at de.bund.bfr.knime.fsklab.r.client.RController.initRConnection(RController.java:271)
+	at de.bund.bfr.knime.fsklab.r.client.RController.initR(RController.java:316)
+	at de.bund.bfr.knime.fsklab.r.client.RController.initialize(RController.java:190)
+	at de.bund.bfr.knime.fsklab.r.client.RController.<init>(RController.java:164)
+	at de.bund.bfr.knime.fsklab.nodes.RScriptHandler.<init>(RScriptHandler.java:48)
+	at de.bund.bfr.knime.fsklab.nodes.ScriptHandler.createHandler(ScriptHandler.java:216)
+	at de.bund.bfr.knime.fsklab.v2_0.runner.RunnerNodeModel.runSnippet(RunnerNodeModel.java:583)
+	at de.bund.bfr.knime.fsklab.v2_0.runner.RunnerNodeModel.runFskPortObject(RunnerNodeModel.java:545)
+	at de.bund.bfr.knime.fsklab.v2_0.runner.RunnerNodeModel.execute(RunnerNodeModel.java:206)
+	at org.knime.core.node.NodeModel.executeModel(NodeModel.java:549)
+	at org.knime.core.node.Node.invokeFullyNodeModelExecute(Node.java:1267)
+	at org.knime.core.node.Node.execute(Node.java:1041)
+	at org.knime.core.node.workflow.NativeNodeContainer.performExecuteNode(NativeNodeContainer.java:595)
+	at org.knime.core.node.exec.LocalNodeExecutionJob.mainExecute(LocalNodeExecutionJob.java:98)
+	at org.knime.core.node.workflow.NodeExecutionJob.internalRun(NodeExecutionJob.java:201)
+	at org.knime.core.node.workflow.NodeExecutionJob.run(NodeExecutionJob.java:117)
+	at org.knime.core.util.ThreadUtils$RunnableWithContextImpl.runWithContext(ThreadUtils.java:367)
+	at org.knime.core.util.ThreadUtils$RunnableWithContext.run(ThreadUtils.java:221)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at org.knime.core.util.ThreadPool$MyFuture.run(ThreadPool.java:123)
+	at org.knime.core.util.ThreadPool$Worker.run(ThreadPool.java:246)
+2023-02-12 13:02:42,419 : DEBUG : KNIME-Worker-14-FSK Runner 3:5 :  : RController : FSK Runner : 3:5 : Connected to Rserve in 3 attempts.
+2023-02-12 13:02:43,235 : INFO  : KNIME-Worker-14-FSK Runner 3:5 :  : Fskx Runner Node Model : FSK Runner : 3:5 : Running with 'defaultSimulation' simulation! {n_iter=200, K=1, nanim=100, r=0.15, t=0.29, n_i0=c(1.935721,12.71271,15.66345,1.353314,10.52182,4.736094,7.912544,12.07932,23.1919,18.89457,10.68439,13.02975,25.5023,28.58746,5.889829,26.90452,8.160216,15.8312,8.593648,34.16895,14.51137,32.84028,29.81554,20.34258,21.97171,12.73988,16.64313,13.35931,28.92521,10.55415,10.55013,16.73892,3.190878,19.87838,23.52362,23.20137,15.9757,14.40701,5.014327,4.756479,33.79569,9.373871,4.414774,12.71426,10.6548,14.75995,24.47719,4.087681,2.664281,3.23267,14.24919,20.5345,12.81333,6.883457,33.2732,3.448148,1.014574,33.39331,16.86773,10.64093,21.02841,11.52639,7.24205,38.73768,21.66689,17.25998,8.995757,23.70676,19.82166,34.74927,0.4641947,23.42121,37.14702,21.1278,0.301414,1.223592,6.068193,2.138808,4.205278,15.78051,12.40829,32.38933,28.7909,9.204453,7.138595,20.03624,4.676341,23.22836,8.515107,4.684093,11.3288,27.98973,23.75414,10.02352,21.41725,12.43532,33.53659,3.230087,13.40252,1.834815,19.62866,9.226781,8.196855,31.95928,7.419424,19.23446,8.030689,3.938026,35.07843,30.94347,14.49612,2.672764,3.661242,14.39913,23.53549,3.294764,2.435465,19.73338,19.11645,13.29316,23.98349,28.61863,17.74421,28.63623,10.24255,21.20005,24.95026,20.25662,1.33805,20.01302,23.79495,3.391174,20.43567,16.1562,5.661879,4.986108,1.937331,4.927734,2.645487,27.0641,7.504319,11.04624,16.05923,7.200019,19.93042,14.99434,28.06279,27.52094,0.9374664,1.865803,18.54756,5.507266,4.31251,1.145738,18.37622,17.39421,0.6971349,8.777291,12.53457,12.65693,9.015909,7.212545,3.530513,17.64106,19.96338,20.58375,0.6711766,13.63135,28.54139,38.56506,9.317908,25.75435,35.44397,11.43356,20.11247,8.069184,23.59772,33.51359,9.640212,17.00974,6.803223,37.73145,17.82324,3.143243,3.375974,9.321126,0.6598426,11.71911,0.501711,33.17894,15.3795,7.254196,3.670056,1.058177,37.2422,14.28571,10.2786,50.55711,9.337731,2.425376)}
+2023-02-12 13:02:44,758 : INFO  : KNIME-Worker-14-FSK Runner 3:5 :  : LocalNodeExecutionJob : FSK Runner : 3:5 : FSK Runner 3:5 End execute (2 secs)
+2023-02-12 13:02:44,758 : DEBUG : KNIME-Worker-14-FSK Runner 3:5 :  : WorkflowManager : FSK Runner : 3:5 : FSK Runner 3:5 doBeforePostExecution
+2023-02-12 13:02:44,758 : DEBUG : KNIME-Worker-14-FSK Runner 3:5 :  : NodeContainer : FSK Runner : 3:5 : FSK Runner 3:5 has new state: POSTEXECUTE
+2023-02-12 13:02:44,758 : DEBUG : KNIME-Worker-14-FSK Runner 3:5 :  : WorkflowManager : FSK Runner : 3:5 : FSK Runner 3:5 doAfterExecute - success
+2023-02-12 13:02:44,759 : DEBUG : KNIME-Worker-14-FSK Runner 3:5 :  : NodeContainer : FSK Runner : 3:5 : FSK Runner 3:5 has new state: EXECUTED
+2023-02-12 13:02:44,759 : DEBUG : KNIME-Worker-14-FSK Runner 3:5 :  : NodeContainer : FSK Runner : 3:5 : HorizontalTransmiAnimals 3 has new state: CONFIGURED
+2023-02-12 13:02:44,818 : ERROR : AWT-EventQueue-0 :  : RunnerNodeView : FSK Runner : 3:5 : NodeView.modelChanged() causes an error during notification of a changed model, reason: Could not initialize class org.apache.batik.swing.JSVGCanvas
+java.lang.NoClassDefFoundError: Could not initialize class org.apache.batik.swing.JSVGCanvas
+	at de.bund.bfr.knime.fsklab.nodes.common.ui.RPlotterViewPanel.update(RPlotterViewPanel.java:63)
+	at de.bund.bfr.knime.fsklab.v2_0.runner.RunnerNodeView.modelChanged(RunnerNodeView.java:45)
+	at org.knime.core.node.AbstractNodeView.callModelChanged(AbstractNodeView.java:151)
+	at org.knime.core.node.NodeView.access$1(NodeView.java:1)
+	at org.knime.core.node.NodeView$4.run(NodeView.java:287)
+	at org.knime.core.node.util.ViewUtils.runOrInvokeLaterInEDT(ViewUtils.java:207)
+	at org.knime.core.node.NodeView.callModelChanged(NodeView.java:282)
+	at org.knime.core.node.NodeView$5.run(NodeView.java:347)
+	at org.knime.core.node.util.ViewUtils.runOrInvokeLaterInEDT(ViewUtils.java:207)
+	at org.knime.core.node.NodeView.callOpenView(NodeView.java:361)
+	at org.knime.core.node.AbstractNodeView.openView(AbstractNodeView.java:197)
+	at org.knime.core.node.Node.invokeOpenView(Node.java:2665)
+	at org.knime.workbench.editor2.actions.OpenViewAction.lambda$0(OpenViewAction.java:127)
+	at java.desktop/java.awt.event.InvocationEvent.dispatch(InvocationEvent.java:313)
+	at java.desktop/java.awt.EventQueue.dispatchEventImpl(EventQueue.java:770)
+	at java.desktop/java.awt.EventQueue$4.run(EventQueue.java:721)
+	at java.desktop/java.awt.EventQueue$4.run(EventQueue.java:715)
+	at java.base/java.security.AccessController.doPrivileged(Native Method)
+	at java.base/java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:85)
+	at java.desktop/java.awt.EventQueue.dispatchEvent(EventQueue.java:740)
+	at java.desktop/java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:203)
+	at java.desktop/java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:124)
+	at java.desktop/java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:113)
+	at java.desktop/java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:109)
+	at java.desktop/java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:101)
+	at java.desktop/java.awt.EventDispatchThread.run(EventDispatchThread.java:90)
+2023-02-12 13:03:05,422 : DEBUG : main :  : Node : FSK Runner : 3:5 : reset
+2023-02-12 13:03:05,423 : DEBUG : main :  : Node : FSK Runner : 3:5 : clean output ports.
+2023-02-12 13:03:05,424 : DEBUG : main :  : Node : FSK Creator : 3:4 : reset
+2023-02-12 13:03:05,424 : DEBUG : main :  : Node : FSK Creator : 3:4 : clean output ports.
+2023-02-12 13:03:05,426 : DEBUG : main :  : Node : FSK Creator : 3:4 : Configure succeeded. (FSK Creator)
+2023-02-12 13:03:05,426 : DEBUG : main :  : Node : FSK Runner : 3:5 : Configure succeeded. (FSK Runner)
+2023-02-12 13:03:10,896 : DEBUG : main :  : Node : FSK Runner (deprecated) : 3:3 : reset
+2023-02-12 13:03:10,897 : DEBUG : main :  : Node : FSK Runner (deprecated) : 3:3 : clean output ports.
+2023-02-12 13:03:10,898 : DEBUG : main :  : RunnerNodeModel : FSK Runner (deprecated) : 3:3 : Removing all (0) views from model.
+2023-02-12 13:03:10,898 : DEBUG : main :  : Node : FSK Runner (deprecated) : 3:3 : clean output ports.
+2023-02-12 13:03:10,898 : DEBUG : main :  : Node : FSK Creator (deprecated) : 3:2 : reset
+2023-02-12 13:03:10,898 : DEBUG : main :  : Node : FSK Creator (deprecated) : 3:2 : clean output ports.
+2023-02-12 13:03:10,900 : DEBUG : main :  : Node : FSK Creator (deprecated) : 3:2 : Configure succeeded. (FSK Creator (deprecated))
+2023-02-12 13:03:10,901 : DEBUG : main :  : CreatorNodeModel : FSK Creator (deprecated) : 3:2 : Removing all (0) views from model.
+2023-02-12 13:03:10,901 : DEBUG : main :  : Node : FSK Creator (deprecated) : 3:2 : clean output ports.
+2023-02-12 13:03:20,633 : DEBUG : ModalContext :  : FileSingleNodeContainerPersistor : FSK Creator : 3:4 : Created node directory "/Users/ahmadswaid/knime-workspace/HorizontalTransmiAnimals/FSK Creator (#4)"
+2023-02-12 13:03:20,637 : DEBUG : ModalContext :  : FileSingleNodeContainerPersistor : FSK Runner : 3:5 : Created node directory "/Users/ahmadswaid/knime-workspace/HorizontalTransmiAnimals/FSK Runner (#5)"

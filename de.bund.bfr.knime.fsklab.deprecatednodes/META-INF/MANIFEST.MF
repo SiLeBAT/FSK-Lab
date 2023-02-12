@@ -10,7 +10,6 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations;bundle-version="2
  com.google.gson;bundle-version="2.8.1",
  com.google.guava,
  org.apache.commons.lang3;bundle-version="3.3.1",
- org.apache.servicemix.bundles.poi;bundle-version="3.17.0",
  org.knime.base,
  org.knime.ext.r.type,
  org.knime.js.core,
@@ -47,4 +46,9 @@ Bundle-ClassPath: libs/bfr-swing-1.0-SNAPSHOT.jar,
  sedml_libs/jmathml-2.2.1.jar,
  sedml_libs/xom-1.2.5.jar
 Import-Package: com.fasterxml.jackson.datatype.jsr310;version="2.7.1",
+ org.apache.poi.openxml4j.exceptions;version="4.1.1",
+ org.apache.poi.ss;version="4.1.1",
+ org.apache.poi.ss.usermodel;version="4.1.1",
+ org.apache.poi.util;version="4.1.1",
+ org.apache.poi.xssf.usermodel;version="4.1.1",
  org.w3c.dom.events;resolution:=optional

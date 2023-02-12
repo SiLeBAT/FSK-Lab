@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.CellValue;
@@ -980,7 +979,7 @@ public class XLSReader {
 		return missing;
 	}
 
-	private Workbook getWorkbook(File file) throws IOException, InvalidFormatException {
+	private Workbook getWorkbook(File file) throws IOException {
 		if (file.exists()) {
 			try (InputStream in = new FileInputStream(file)) {
 				return WorkbookFactory.create(in);

@@ -56,7 +56,6 @@ along with this program.  If not, see &quot;http://www.gnu.org/licenses/&quot;.
       <import plugin="org.junit"/>
       <import plugin="org.apache.commons.lang3" version="3.3.1" match="greaterOrEqual"/>
       <import plugin="de.bund.bfr.pmfml" version="0.0.12" match="greaterOrEqual"/>
-      <import plugin="org.apache.servicemix.bundles.poi" version="3.17.0" match="greaterOrEqual"/>
       <import plugin="org.sbml.jsbml" version="1.0.0" match="greaterOrEqual"/>
       <import plugin="de.unirostock.sems.CombineArchive" version="1.4.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.osgi"/>

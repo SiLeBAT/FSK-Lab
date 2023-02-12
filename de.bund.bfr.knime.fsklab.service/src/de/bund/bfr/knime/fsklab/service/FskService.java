@@ -1,11 +1,5 @@
 package de.bund.bfr.knime.fsklab.service;
 
-import static spark.Spark.awaitInitialization;
-import static spark.Spark.before;
-import static spark.Spark.get;
-import static spark.Spark.options;
-import static spark.Spark.port;
-import static spark.Spark.post;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,13 +23,6 @@ import org.h2.tools.DeleteDbFiles;
 import org.knime.core.node.NodeLogger;
 import org.osgi.framework.Bundle;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.threetenbp.ThreeTenModule;
-
-import de.bund.bfr.metadata.swagger.Model;
 import de.bund.bfr.rakip.vocabularies.data.AccreditationProcedureRepository;
 import de.bund.bfr.rakip.vocabularies.data.AvailabilityRepository;
 import de.bund.bfr.rakip.vocabularies.data.BasicProcessRepository;
@@ -77,19 +64,13 @@ import de.bund.bfr.rakip.vocabularies.data.StatusRepository;
 import de.bund.bfr.rakip.vocabularies.data.TechnologyTypeRepository;
 import de.bund.bfr.rakip.vocabularies.data.UnitCategoryRepository;
 import de.bund.bfr.rakip.vocabularies.data.UnitRepository;
-import metadata.ConversionUtils;
-import metadata.ConversionUtils.ModelClass;
-import spark.ResponseTransformer;
 
 public class FskService implements Runnable {
 
-	private static final String MIME_JSON = "application/json";
 
 	private static final NodeLogger LOGGER = NodeLogger.getLogger(FskService.class);
 
-	private static final JsonTransformer jsonTransformer = new JsonTransformer();
 
-	private final ConversionUtils utils = new ConversionUtils();
 
 	private int port;
 	
@@ -119,103 +100,10 @@ public class FskService implements Runnable {
 			return;
 		}
 
-		port(0);
-
-		// Enable CORS
-		options("/*", (request, response) -> {
-
-			String accessControlRequestHeaders = request.headers("Access-Control-Request-Headers");
-			if (accessControlRequestHeaders != null) {
-				response.header("Access-Control-Allow-Headers", accessControlRequestHeaders);
-			}
-
-			String accessControlRequestMethod = request.headers("Access-Control-Request-Method");
-			if (accessControlRequestMethod != null) {
-				response.header("Access-Control-Allow-Methods", accessControlRequestMethod);
-			}
-
-			return "OK";
-		});
-
-		before((request, response) -> response.header("Access-Control-Allow-Origin", "*"));
-
-		get("getById/:vocabulary/:id", (req, res) -> {
-			try (Connection connection = DriverManager.getConnection("jdbc:h2:~/.fsk/vocabularies")) {
-				res.type(MIME_JSON);
-				BasicRepository<?> repository = getRepository(req.params(":vocabulary"), connection);
-				int id = Integer.parseInt(req.params(":id"));
-				return repository.getById(id);
-			}
-		}, jsonTransformer);
-
-		get("/getAll/:vocabulary", (req, res) -> {
-			try (Connection connection = DriverManager.getConnection("jdbc:h2:~/.fsk/vocabularies")) {
-				res.type(MIME_JSON);
-				BasicRepository<?> repository = getRepository(req.params(":vocabulary"), connection);
-				return repository.getAll();
-			}
-		}, jsonTransformer);
-
-		get("/getAllNames/:vocabulary", (req, res) -> {
-			try (Connection connection = DriverManager.getConnection("jdbc:h2:~/.fsk/vocabularies")) {
-				res.type(MIME_JSON);
-				BasicRepository<?> repository = getRepository(req.params(":vocabulary"), connection);
-				return repository.getAllNames();
-			}
-		}, jsonTransformer);
-
-		// input metadata as body parameter
-		post("convertMetadata/:targetModelClass", (req, res) -> {
-			res.type("application/json");
-
-			try {
-				JsonNode inputMetadata = jsonTransformer.MAPPER.readTree(req.body());
-				ModelClass targetClass = ModelClass.valueOf(req.params("targetModelClass"));
-				Model convertedMetadata = utils.convertModel(inputMetadata, targetClass);
-				res.status(200);
-				return convertedMetadata;
-			} catch (Exception err) {
-				res.status(400);
-				return err;
-			}
-		}, jsonTransformer);
-
-		post("joinMetadata", (req, res) -> {
-			// The body keeps two JSON models in an array.
-			res.type("application/json");
-
-			try {
-				JsonNode models = jsonTransformer.MAPPER.readTree(req.body());
-				JsonNode firstModel = models.get(0);
-				JsonNode secondModel = models.get(1);
-				Model joinedModel = utils.joinModels(firstModel, secondModel, ModelClass.genericModel);
-				res.status(200);
-				return joinedModel;
-			} catch (Exception err) {
-				res.status(500);
-				return err;
-			}
-		}, jsonTransformer);
-
-		// After initializing the service, get the randomly picked port by Spark.
-		awaitInitialization();
-		port = port();
+		
 	}
 
-	private static class JsonTransformer implements ResponseTransformer {
-
-		ObjectMapper MAPPER = new ObjectMapper().registerModule(new ThreeTenModule())
-				.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-
-		@Override
-		public String render(Object model) {
-			try {
-			    return MAPPER.writeValueAsString(model);
-			} catch (JsonProcessingException err) {
-				return "";
-			}
-		}
-	}
+	
 
 	private BasicRepository<?> getRepository(String vocabulary, Connection connection) {
 		switch (vocabulary) {
