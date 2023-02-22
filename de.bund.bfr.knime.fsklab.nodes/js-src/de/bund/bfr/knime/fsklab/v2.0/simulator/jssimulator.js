@@ -11,6 +11,7 @@ simulator = function() {
 	view.init = function(representation, value) {
 		_rep = representation;
 	    _val = value;
+	    window.resourcesFiles = {};
 	    let _container = $(`<div class="simulationsDiv modal-sim"></div>`);
 	    document.createElement('body');
 	    $('body').html(_container);
@@ -40,6 +41,7 @@ simulator = function() {
 		   _simulations.push({'name':sim['name'],'parameters':params});
 	   });
 	   _modelSim._updateContent({'modelMath':JSON.parse(value.modelMath)}, 0, _simulations, _val.parametersMap);
+	   window.resourcesFile = {};
 	};
 
 	view.getComponentValue = function() {
@@ -56,6 +58,11 @@ simulator = function() {
 		   sims.push({'name':sim['name'],'values':params});
 	   });
 		_val.simulations = sims;
+		for (const property in window.resourcesFiles) {
+			window.resourcesFiles[property][1] = window.resourcesFile[property];
+		}
+		_val.parentResourcesFolder = window.parentResourcesFolder;
+		_val.resourcesFiles = window.resourcesFiles;
 		_val.selectedSimulationIndex = _modelSim._simSelectedIndex;
 		return _val;
   };
