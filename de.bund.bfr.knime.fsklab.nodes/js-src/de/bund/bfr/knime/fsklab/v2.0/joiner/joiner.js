@@ -213,6 +213,7 @@ joiner = function () {
   }
   
   view.init = function (representation, value) {
+	knimeService.setSelectedRows('b800db46-4e25-4f77-bcc6-db0c21Global' , [{"editorAvailable":true}],{elements:[]})
     _genericModelReference = JSON.parse(representation.genericModelReference);
     _value = value;
     _graphObject = JSON.parse(_value.jsonRepresentation)

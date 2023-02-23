@@ -32,6 +32,12 @@ along with this program.  If not, see &amp;quot;http://www.gnu.org/licenses/&amp
       <discovery label="New discovery site" url="http://newsite"/>
    </url>
 
+   <includes
+         id="org.knime.features.python2"
+         version="0.0.0"
+         optional="true"
+         search-location="both"/>
+
    <requires>
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.knime.core"/>
