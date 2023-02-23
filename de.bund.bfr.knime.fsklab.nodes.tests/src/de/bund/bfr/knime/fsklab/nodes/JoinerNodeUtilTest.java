@@ -8,7 +8,9 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Test;
 
@@ -78,9 +80,10 @@ public class JoinerNodeUtilTest {
 
     List<Parameter> firstModelParams = Collections.singletonList(new Parameter().id("log10_D"));
     List<Parameter> secondModelParams = Collections.singletonList(new Parameter().id("log10_D"));
-
-    JoinerNodeUtil.addIdentifierToParameters(firstModelParams,JoinerNodeModel.SUFFIX_FIRST, 0);
-    JoinerNodeUtil.addIdentifierToParameters(secondModelParams,JoinerNodeModel.SUFFIX_SECOND, 0);
+    Map<String, String> tempMap1 = new HashMap<>();
+    Map<String, String> tempMap2 = new HashMap<>();
+    JoinerNodeUtil.addIdentifierToParameters(firstModelParams,JoinerNodeModel.SUFFIX_FIRST, 0, tempMap1);
+    JoinerNodeUtil.addIdentifierToParameters(secondModelParams,JoinerNodeModel.SUFFIX_SECOND, 0, tempMap2);
     
     assertFalse(firstModelParams.isEmpty());
     assertFalse(secondModelParams.isEmpty());
@@ -94,9 +97,10 @@ public class JoinerNodeUtilTest {
         Arrays.asList(new Parameter().id("log10_D"), new Parameter().id("Temp"));
     List<Parameter> secondModelParams =
         Arrays.asList(new Parameter().id("log10_D"), new Parameter().id("Temp"));
-
-    JoinerNodeUtil.addIdentifierToParameters(firstModelParams,JoinerNodeModel.SUFFIX_FIRST, 0);
-    JoinerNodeUtil.addIdentifierToParameters(secondModelParams,JoinerNodeModel.SUFFIX_SECOND, 0);
+    Map<String, String> tempMap1 = new HashMap<>();
+    Map<String, String> tempMap2 = new HashMap<>();
+    JoinerNodeUtil.addIdentifierToParameters(firstModelParams,JoinerNodeModel.SUFFIX_FIRST, 0, tempMap1);
+    JoinerNodeUtil.addIdentifierToParameters(secondModelParams,JoinerNodeModel.SUFFIX_SECOND, 0,tempMap2);
     
     assertEquals(firstModelParams.get(0).getId(), "log10_D" + JoinerNodeModel.SUFFIX_FIRST);
     assertEquals(firstModelParams.get(1).getId(), "Temp" + JoinerNodeModel.SUFFIX_FIRST);

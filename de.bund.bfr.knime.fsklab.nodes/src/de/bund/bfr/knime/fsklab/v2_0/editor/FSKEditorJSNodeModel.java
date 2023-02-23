@@ -469,6 +469,7 @@ final class FSKEditorJSNodeModel
             viewValue.setModelMetaData(MAPPER.writeValueAsString(metadata));
           }else {
             viewRep.setModelMetadata(MAPPER.writeValueAsString(metadata));
+            originalMetadata = metadata;
             viewRep.setModelScript(viewValue.getModelScript());
             viewRep.setVisScript(viewValue.getVisualizationScript());
             viewRep.setReadme(viewValue.getReadme());
@@ -601,30 +602,55 @@ final class FSKEditorJSNodeModel
     List<Parameter> viewParams =  (List<Parameter>) CollectionUtils.removeAll(newParams, originalParameters);
     viewParams.removeIf(p -> p.getClassification().equals(ClassificationEnum.OUTPUT));
     List<String> editedParamsIDs = new ArrayList<String>();
-    List<String> originalParamsIDs = originalParameters.stream().map(para -> para.getId()).collect(Collectors.toList());
+    List<Parameter> copyOforiginalParameters = new ArrayList<>(originalParameters);
+    copyOforiginalParameters.removeIf(p -> p.getClassification().equals(ClassificationEnum.OUTPUT));
+    List<String> originalParamsIDs = copyOforiginalParameters.stream().map(para -> para.getId()).collect(Collectors.toList());
+    
+    //find newly added and edited parameters out of the saved setting
+    Set<String> simParamIDs = simulations.get(0).getParameters().keySet();
+    List<String> differencesToBeAdded = new ArrayList<>(originalParamsIDs  );
+    List<String> differencesToBeRemoved = new ArrayList<>(simParamIDs   );
+    List<String> retained = new ArrayList<>(originalParamsIDs);
+    retained.retainAll(simParamIDs );
+    differencesToBeAdded.removeAll(simParamIDs);
+    differencesToBeRemoved.removeAll(originalParamsIDs);
+    
     if(originalParamsIDs.isEmpty())
       return;
     simulations.forEach(sim -> {
        LinkedHashMap<String, String> simParams = sim.getParameters();
-       if(!simParams.isEmpty()){
-         viewParams.forEach(viewParam -> {
-           // new parameters will be added to all simulations
-           if(!originalParamsIDs.contains(viewParam.getId())) {  
-             simParams.put(viewParam.getId(),viewParam.getValue());
-           }
-           // or the changed parameter will be added only to the default simulation 
-           else if(sim.getName().equals("defaultSimulation")) {
-             simParams.put(viewParam.getId(),viewParam.getValue());
-           }
-           editedParamsIDs.add(viewParam.getId());
-         });
-         //remove the parameter from simulation if it is removed from model math
-         paramsToBeRemoved.forEach(toBeDeletedParam -> {
-           if(!editedParamsIDs.contains(toBeDeletedParam.getId())) {  
-             simParams.remove(toBeDeletedParam.getId());
-           }
-         });
-       }else {
+      if (!simParams.isEmpty()) {
+        if (!viewParams.isEmpty()) {
+          viewParams.forEach(viewParam -> {
+            // new parameters will be added to all simulations
+            if (!originalParamsIDs.contains(viewParam.getId())) {
+              simParams.put(viewParam.getId(), viewParam.getValue());
+            }
+            // or the changed parameter will be added only to the default simulation
+            else if (sim.getName().equals("defaultSimulation")) {
+              simParams.put(viewParam.getId(), viewParam.getValue());
+            }
+            editedParamsIDs.add(viewParam.getId());
+          });
+        } else {
+          copyOforiginalParameters.forEach(originalParam -> {
+             if(retained.contains(originalParam.getId()) && sim.getName().equals("defaultSimulation")) {
+               simParams.put(originalParam.getId(), originalParam.getValue());
+             }else if(differencesToBeAdded.contains(originalParam.getId())){
+               simParams.put(originalParam.getId(), originalParam.getValue());
+             }
+          });
+        }
+        differencesToBeRemoved.forEach(toBeDeletedParam -> {
+            simParams.remove(toBeDeletedParam);
+        });
+        // remove the parameter from simulation if it is removed from model math
+        paramsToBeRemoved.forEach(toBeDeletedParam -> {
+          if (!editedParamsIDs.contains(toBeDeletedParam.getId())) {
+            simParams.remove(toBeDeletedParam.getId());
+          }
+        });
+      }else {
          newParams.forEach(viewParam -> {
            simParams.put(viewParam.getId(),viewParam.getValue());  
          });

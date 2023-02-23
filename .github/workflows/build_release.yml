@@ -29,6 +29,7 @@ jobs:
         env:
            GITLAB_NAME: ${{ secrets.GITLAB_USER }}
            GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
+           GITLAB_EMAIL: ${{ secrets.GITLAB_EMAIL }}
         shell: bash
         run: |
            chmod +x "${GITHUB_WORKSPACE}/.github/workflows/gitlab_release.sh"

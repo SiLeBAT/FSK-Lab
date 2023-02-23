@@ -20,6 +20,7 @@ package de.bund.bfr.knime.fsklab.v2_0.simulator;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
 import org.knime.core.node.InvalidSettingsException;
@@ -48,7 +49,8 @@ public class JSSimulatorViewValue extends JSONViewContent {
   private JSSimulation[] simulations;
   private int selectedSimulationIndex;
   private String modelMath;
-
+  private LinkedHashMap<String, Object[]> parametersMap;
+  
   public JSSimulatorViewValue() {
     simulations = new JSSimulation[0];
     modelMath = "";
@@ -130,6 +132,15 @@ public class JSSimulatorViewValue extends JSONViewContent {
   public void setSimulations(JSSimulation[] simulations) {
     this.simulations = simulations;
   }
+  
+  public LinkedHashMap<String, Object[]> getParametersMap() {
+    return parametersMap;
+  }
+
+  public void setParametersMap(LinkedHashMap<String, Object[]> parametersMap) {
+    this.parametersMap = parametersMap;
+  }
+
 
   @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
   public static class JSSimulation {
