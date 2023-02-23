@@ -125,7 +125,11 @@ public class PythonScriptHandler extends ScriptHandler {
     String cmd = "import os\n";
     String directory = workingDirectory.toString().replaceAll("\\\\", "/");
 
-    cmd += "os.chdir('" + directory + "')";
+    cmd += "os.chdir('" + directory + "')\n";
+    
+    // allow to import modules (e.g. "my-module.py") from the FSKX file
+    cmd += "import sys\n";
+    cmd += "sys.path.append('"+ directory + "')";  
 
     runScript(cmd, exec, false);
   }
