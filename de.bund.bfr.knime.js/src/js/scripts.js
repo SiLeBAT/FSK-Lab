@@ -13,6 +13,6 @@ window._endpoints 	= {
     visScript       : _endpoint + "visualizationscript/",
 	controlledVocabularyEndpoint:'https://knime.bfr.berlin/'
 };
-window._debug = true;
+window._debug = false;
 window.noExecution = true;
 window.editEventBus = new EventObserver();
