@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="de.bund.bfr.knime.pmm.feature"
-      label="PMM Nodes"
+      label="PMM-Lab"
       version="1.2.2.qualifier"
       provider-name="German Federal Institute for Risk Assessment (BfR)">
 

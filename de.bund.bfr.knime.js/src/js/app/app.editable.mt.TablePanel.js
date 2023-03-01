@@ -269,6 +269,8 @@
             let O = this;
             console.log(originalData);
             O.add(originalData, index, true);
+            _appUI._initTdCollapse(O.table);
+            
         }
         remove(index) {
             let O = this;

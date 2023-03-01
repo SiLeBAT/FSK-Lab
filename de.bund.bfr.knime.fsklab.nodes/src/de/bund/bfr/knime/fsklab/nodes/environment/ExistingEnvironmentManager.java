@@ -25,7 +25,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 public class ExistingEnvironmentManager implements EnvironmentManager {
 
   private final String environmentPath;
-  private String[] entries;
+  private String[] entries = new String[] {};;
 
   public ExistingEnvironmentManager() {
     this("");
@@ -74,8 +74,9 @@ public class ExistingEnvironmentManager implements EnvironmentManager {
       URL url = FileUtil.toURL(environmentPath);
       File existingWorkingDirectory = FileUtil.getFileFromURL(url);
       File[] files = existingWorkingDirectory.listFiles(File::isFile);
-      entries = Arrays.stream(files).map(File::getAbsolutePath)
-          .toArray(String[]::new);
+      if(files != null)
+        entries = Arrays.stream(files).map(File::getAbsolutePath)
+            .toArray(String[]::new);
       
     } catch (InvalidPathException | IOException e) {
       e.printStackTrace();
