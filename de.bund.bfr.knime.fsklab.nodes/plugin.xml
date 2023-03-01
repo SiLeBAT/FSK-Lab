@@ -27,7 +27,7 @@
     
   <!-- Category for FSK nodes -->
   <extension point="org.knime.workbench.repository.categories">
-    <category icon="icons/fsk48.png" level-id="fsklab" name="FSK-Lab" path="/" />
+    <category icon="icons/fsk48.png" level-id="fsklab" name="FSK-Lab" path="/community/" />
   </extension>
   
   <!-- Splash extension to be shown when launching KNIME -->
@@ -42,16 +42,16 @@
   </extension>
 
   <extension point="org.knime.workbench.repository.nodes">
-     <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.v2_0.creator.CreatorNodeFactory" />
-     <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.v2_0.runner.RunnerNodeFactory" />
-     <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.v2_0.fsk2r.FskToRNodeFactory" />
-     <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.v2_0.reader.ReaderNodeFactory" />
-     <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.v2_0.writer.WriterNodeFactory" />
-     <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.v2_0.fsk2metadata.FSK2MetadataNodeFactory" />
-     <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.v2_0.simulator.JSSimulatorNodeFactory" />
-     <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.v2_0.joiner.JoinerNodeFactory" />
-     <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.v2_0.editor.FSKEditorJSNodeFactory" />
-     <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.v2_0.fskdbview.FSKDBViewNodeFactory"/>
+     <node category-path="/community/fsklab" factory-class="de.bund.bfr.knime.fsklab.v2_0.creator.CreatorNodeFactory" />
+     <node category-path="/community/fsklab" factory-class="de.bund.bfr.knime.fsklab.v2_0.runner.RunnerNodeFactory" />
+     <node category-path="/community/fsklab" factory-class="de.bund.bfr.knime.fsklab.v2_0.fsk2r.FskToRNodeFactory" />
+     <node category-path="/community/fsklab" factory-class="de.bund.bfr.knime.fsklab.v2_0.reader.ReaderNodeFactory" />
+     <node category-path="/community/fsklab" factory-class="de.bund.bfr.knime.fsklab.v2_0.writer.WriterNodeFactory" />
+     <node category-path="/community/fsklab" factory-class="de.bund.bfr.knime.fsklab.v2_0.fsk2metadata.FSK2MetadataNodeFactory" />
+     <node category-path="/community/fsklab" factory-class="de.bund.bfr.knime.fsklab.v2_0.simulator.JSSimulatorNodeFactory" />
+     <node category-path="/community/fsklab" factory-class="de.bund.bfr.knime.fsklab.v2_0.joiner.JoinerNodeFactory" />
+     <node category-path="/community/fsklab" factory-class="de.bund.bfr.knime.fsklab.v2_0.editor.FSKEditorJSNodeFactory" />
+     <node category-path="/community/fsklab" factory-class="de.bund.bfr.knime.fsklab.v2_0.fskdbview.FSKDBViewNodeFactory"/>
      
      
      <!-- Disable workflow writer and reader nodes (unfinished)

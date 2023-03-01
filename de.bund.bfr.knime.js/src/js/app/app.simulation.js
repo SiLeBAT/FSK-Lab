@@ -9,6 +9,7 @@ date: 17.12.2020
 class APPSimulation {
 	constructor ( settings, $container ) {
         let O = this;
+		
         // defaults maintable simulations modal
         O._$container = $container;
 		O._opts = $.extend( true, {}, {
@@ -248,7 +249,6 @@ class APPSimulation {
 			if(O.paramsColorMap[param.id]){
 				param._label ? $label.text( param._label ) : $label.text(O.paramsColorMap[param.id][1] );
 				$label.css("background-color",O.paramsColorMap[param.id][0]);
-				//console.log($label.attr('style'));
 			}
 			else
 				param._label ? $label.text( param._label ) : $label.text( param.id );
@@ -262,7 +262,6 @@ class APPSimulation {
 
 			// input item
 			let $input = null;
-
 			// set input type
 			let inputType = null;
 			if ( param.dataType.toLowerCase() === 'integer' 
@@ -281,6 +280,9 @@ class APPSimulation {
 			}
 			else if( param.dataType.toLowerCase() === 'matrixofnumbers' ) {
 				inputType = 'matrixofnumbers';
+			}
+			else if( param.dataType.toLowerCase() === 'file' ) {
+				inputType = 'file';
 			}
 			else {
 				inputType = 'text';
@@ -322,7 +324,7 @@ class APPSimulation {
 
 
 			if ( inputType ) {
-
+			
 				// numeric
 				if ( inputType == 'number' && param.classification != "CONSTANT") {
 
@@ -407,6 +409,7 @@ class APPSimulation {
 						.appendTo( $field );
 
 					O._$simNameInput = $input;
+					
 				}
 				// sim description
 				else if ( inputType == 'simDescription' ) {
@@ -416,6 +419,179 @@ class APPSimulation {
 						.appendTo( $field );
 
 					O._$simDescInput = $input;
+				}
+				else if ( inputType == 'file' ) {
+					if (window.location.protocol != '' && window.location.host != '') {
+					    var timeStampInMs = window.performance && window.performance.now
+								            && window.performance.timing
+								            && window.performance.timing.navigationStart ? window.performance
+								            .now()
+								            + window.performance.timing.navigationStart : Date.now();
+				        // send AJAX request to acquire the JWT for the currently logged in
+				        // user. Subsequent requests need to carry the token in the
+				        // “Authorization” header
+				        
+				        server = window.location.protocol + "//" + window.location.host
+				        var xhttp = new XMLHttpRequest();
+				
+				        xhttp.onreadystatechange = function() {
+				            if (this.readyState == 4 && this.status == 200) {
+				                JWT = this.responseText;
+				            }
+				            // create temp folder for the current running instance of the
+					        // worklflow on the server
+					        // this folder will be removed after coping all the content inside
+					        // to the fsk object working directory.
+					        var anotherxhttp = new XMLHttpRequest();
+					        window.parentResourcesFolder = "knime://knime.mountpoint/tempResources/jsSimulatorTempFolder"
+					                + timeStampInMs;
+					        anotherxhttp.open("put", server
+					                + "/knime/rest/v4/repository/tempResources/jsSimulatorTempFolder"
+					                + timeStampInMs, true);
+					        anotherxhttp.setRequestHeader("Authorization", "Bearer" + JWT);
+					        anotherxhttp.send();
+				        };
+				        xhttp.open("GET", server + "/knime/rest/session", true);
+				        xhttp.send();
+				        
+			
+			            // title
+			            let $panel = $('<div class="tab-pane" role="tabpanel"></div>')
+            						.appendTo( $field );
+			            $input = $("<input id='filesInput' type='file' style='display:none' />");
+			            
+			            $input.attr( 'id', 'paramInput_'+ param.id )
+							.data( 'param-input', param )  
+							.appendTo($panel);
+			            let button = $("<button id='filesButton' type='button' style='border-radius: 5px; background-color: #fff; color: green;'>Add File</button>")
+			                .appendTo($panel);
+			              
+			            let filesContainer = $("<div id='filesArea-"+ param.id+"'></div>")
+			                .appendTo($panel);
+						if(param.value){
+							let fileElement = $("<div ><hr/><p>"+  param.value +"</div>");
+							filesContainer.html(fileElement);	
+						}
+				        
+			           
+				        let files = [];
+				        let fileIDMap = {}
+				        let fileUploadAJAXMap = {}
+				    
+				        $input
+				            .change(function () {
+				                let newFiles = [];
+				                for (let index = 0; index < $input[0].files.length; index++) {
+				                    let file = $input[0].files[index];
+				                    newFiles.push(file);
+				                    files.push(file);
+				                }
+				                for (let index = 0; index < newFiles.length; index++) {
+				                    let file = newFiles[index];
+				                    var ID = function () {
+				                        return '_'
+				                            + Math.random().toString(36).substr(2,
+				                                9);
+				                    }();
+				                    let fileElement = $("<div ><hr/><p>"
+				                        + file.name
+				                        + "</p><progress id='"
+				                        + ID
+				                        + "' value='0' max='100' style='width:300px;'/><button idFile='"+ file.name+"' type='button' >delete</button></div>");
+				    
+				                    fileElement.data('fileData', file);
+				                    filesContainer.html(fileElement);
+				                    fileIDMap[file.name] = ID
+				                    $("[idFile='"+file.name+"']").click(function (event) {
+				                        let fileElement = $(event.target);
+				                        let indexToRemove = files.indexOf(fileElement
+				                            .data('fileData'));
+				                        $.ajax({
+				                            type: "DELETE",
+				                            url: server
+				                                + "/knime/rest/v4/repository/tempResources/jsSimulatorTempFolder"
+				                                + timeStampInMs + "/"
+				                                + $( this ).attr('idFile') + "?deletePermanently",
+				                            
+				                            success: function(msg){
+				                            
+				                            }
+				                        });
+				                        $( this ).parent().remove();
+				                        //$("#" + fileIDMap[fileElement.html()]).remove()
+				                        files.splice(indexToRemove, 1);
+				                        fileUploadAJAXMap[$( this ).attr('idFile') ].abort();
+				                        
+				                    });
+				                    fileUploadAJAXMap[file.name] = $
+				                        .ajax({
+				                            url: server
+				                                + "/knime/rest/v4/repository/tempResources/jsSimulatorTempFolder"
+				                                + timeStampInMs + "/"
+				                                + file.name + ":data",
+				                            xhr: function () {
+				                                var myXhr = $.ajaxSettings.xhr();
+				                                if (myXhr.upload) {
+				                                    myXhr.upload
+				                                        .addEventListener(
+				                                            'progress',
+				                                            function (e) {
+				    
+				                                                if (e.lengthComputable) {
+				                                                    var max = e.total;
+				                                                    var current = e.loaded;
+				    
+				                                                    var Percentage = (current * 100)
+				                                                        / max;
+				    
+				                                                    $(
+				                                                        "#"
+				                                                        + fileIDMap[file.name])
+				                                                        .attr(
+				                                                            'value',
+				                                                            Percentage);
+				    
+				                                                    if (Percentage >= 100) {
+				                                                        // process
+				                                                        // completed
+				                                                    }
+				                                                }
+				                                            }, false);
+				                                }
+				                                return myXhr;
+				                            },
+				                            headers: {
+				                                Authorization: "Bearer" + JWT
+				                            },
+				                            data: file,
+				                            type: 'put',
+				                            success: function (data) {
+				                                window.resourcesFiles[param.id] = ["knime://knime.mountpoint"
+				                                        + data.path, ""];
+				                            },
+				                            error: function (data) {
+				                                console.log('ERROR !!!', data);
+				                            },
+				                            cache: false,
+				                            processData: false,
+				                            contentType: false
+				                        });
+				                }
+				    
+				            });
+				    
+				        button.click(function() {
+				            $input.trigger( "click" );
+				        });
+				    
+    
+						
+					}else{
+						$input = $( '<input type="text" class="form-control form-control-sm" />' )
+						.attr( 'id', 'paramInput_'+ param.id )
+						.data( 'param-input', param )  
+						.appendTo( $field );
+					}
 				}
 				// string or others
 				else {
@@ -561,7 +737,7 @@ class APPSimulation {
 					$formGroup ? $formGroup.appendTo( O._$simForm ) : null;
 				}
 				if ( param.classification != 'OUTPUT' ) {
-
+					
 					let $formGroup = O._createFormField( param );
 					$formGroup ? $formGroup.appendTo( O._$simForm ) : null;
 				}
@@ -674,7 +850,22 @@ class APPSimulation {
 					}
 					// change other inputs
 					else {
-						! _isNull( paramValue ) ? field.input.val( paramValue ) : null;
+					    if(field.param.dataType == 'FILE'){
+							if (window.location.protocol != '' && window.location.host != '') {
+								
+								let paramId  = field.input.attr('id').split('_').pop();
+								let filesContainer = $('#filesArea-Input_'+paramId);
+								let fileElement = $("<div ><hr/><p>"+ paramValue +"</div>");
+								
+								
+								filesContainer.html(fileElement);
+							}else{
+								! _isNull( paramValue ) ? field.input.val( paramValue ) : null;
+							}
+						}
+						else{
+							! _isNull( paramValue ) ? field.input.val( paramValue ) : null;
+						}
 					}
 				}
 				// custom fields like name and desc
@@ -785,7 +976,7 @@ class APPSimulation {
 
 		// clear sim select
 		O._$simSelect.val( '' );
-
+		
 		// update sim select to index for add-action : -1
 		O._updateSimIndex( -1 );
 		O._setSavedState( 'dirty' );
@@ -847,7 +1038,9 @@ class APPSimulation {
 
 					if( field.input && ! _isNull( field.param ) ) {
 						// create simulation param
-						newSimulation.parameters[field.param.id] = field.input.val();
+						if(field.param.dataType.toLowerCase() != 'file')
+							newSimulation.parameters[field.param.id] = field.input.val();
+
 					}
 				} );
 
@@ -858,6 +1051,11 @@ class APPSimulation {
 				O._$simSelect.find( 'option' ).last().prop( 'selected', true );
 				O._updateSimIndex( O._simulations.length - 1 );
 			}
+		}
+		
+		for (const property in window.resourcesFiles) {
+			
+			window.resourcesFile[property] = $('#customInput_simName').val();
 		}
 		O._setSavedState( 'clean' );
 		// TO DO 
@@ -968,10 +1166,12 @@ class APPSimulation {
 
 				// no value
 				if( ! fieldValue ) {
-					return {
-						input  	: field.input,
-						msg 	: 'Please provide a value for '+ field.param.id
-					};
+					if ( field.param.dataType.toLowerCase() != 'file' ) {
+						return {
+							input  	: field.input,
+							msg 	: 'Please provide a value for '+ field.param.id
+						};
+					}
 				}
 
 				// check range for integers and doubles

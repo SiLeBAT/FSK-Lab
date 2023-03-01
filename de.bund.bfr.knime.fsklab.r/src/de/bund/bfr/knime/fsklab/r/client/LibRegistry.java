@@ -84,7 +84,7 @@ public class LibRegistry {
     // Prepare rWrapper
     rWrapper = new RWrapper();
     rWrapper.library("miniCRAN");
-    if((!PreferenceInitializer.getRPath().contains(RprofileManager.BFR_R_PLUGIN_NAME) &&  Platform.isWindows()) || Platform.isMac()) {
+    if((!PreferenceInitializer.getRPath().contains(RprofileManager.BFR_R_PLUGIN_NAME) &&  Platform.isWindows()) || PreferenceInitializer.isRConda()) {
       try {
         String[] rPath= controller.eval(".libPaths()", true).asStrings();
         //get default library path.
@@ -165,7 +165,7 @@ public class LibRegistry {
   public synchronized void install(final List<String> packages)
       throws RException, REXPMismatchException, NoInternetException {
 	  
-    if (Platform.isLinux() || Platform.isMac()) {
+    if ((Platform.isLinux() && !PreferenceInitializer.isRConda()) || Platform.isMac()) {
       // Install missing packages
       controller.addPackagePath(installPath);
       

@@ -123,7 +123,7 @@ public class FskPortObject implements PortObject {
   private String viz;
 
   /** Paths to resources: plain text files and R workspace files (.rdata). */
-  private final Optional<EnvironmentManager> environmentManager;
+  private  Optional<EnvironmentManager> environmentManager;
 
   /**
    * Temporary folder for generated resources. It may be empty if the model has not been run.
@@ -184,6 +184,9 @@ public class FskPortObject implements PortObject {
 
   public Optional<EnvironmentManager> getEnvironmentManager() {
     return environmentManager;
+  }
+  public void setEnvironmentManager(Optional<EnvironmentManager> environmentManager) {
+    this.environmentManager = environmentManager;
   }
   
   public String getModel() {

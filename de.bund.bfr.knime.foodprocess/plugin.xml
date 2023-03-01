@@ -2,15 +2,15 @@
 <?eclipse version="3.0"?><plugin>
 
    <extension point="org.knime.workbench.repository.categories">
-      <category after="pmmlab" icon="icons/FoodProcess.png" level-id="foodprocess" name="Foodprocess" path="/">
+      <category after="pmmlab" icon="icons/FoodProcess.png" level-id="foodprocess" name="Foodprocess-Lab" path="/community/">
       </category>
    </extension>
    
    <extension point="org.knime.workbench.repository.nodes">
-      <node category-path="/foodprocess" factory-class="de.bund.bfr.knime.foodprocess.FoodProcessNodeFactory" />
-      <node category-path="/foodprocess" factory-class="de.bund.bfr.knime.foodprocess.addons.IngredientsNodeFactory" />
-      <node category-path="/foodprocess" factory-class="de.bund.bfr.knime.foodprocess.addons.AgentsNodeFactory" />
-      <node category-path="/foodprocess" factory-class="de.bund.bfr.knime.foodprocess.db.WriterNodeFactory" />
+      <node category-path="/community/foodprocess" factory-class="de.bund.bfr.knime.foodprocess.FoodProcessNodeFactory" />
+      <node category-path="/community/foodprocess" factory-class="de.bund.bfr.knime.foodprocess.addons.IngredientsNodeFactory" />
+      <node category-path="/community/foodprocess" factory-class="de.bund.bfr.knime.foodprocess.addons.AgentsNodeFactory" />
+      <node category-path="/community/foodprocess" factory-class="de.bund.bfr.knime.foodprocess.db.WriterNodeFactory" />
    </extension>
    <extension point="org.eclipse.ui.newWizards">
       <wizard class="de.bund.bfr.knime.foodprocess.ui.MyPCImportWizard" id="de.bund.bfr.knime.foodprocess.ui.MyPCImportWizard" name="Process chain importer">

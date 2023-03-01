@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="de.bund.bfr.knime.fsklab.feature"
-      label="BfR FSK-Lab"
+      label="FSK-Lab"
       version="2.1.0.qualifier"
       provider-name="German Federal Institute for Risk Assessment (BfR)">
 
@@ -34,7 +34,9 @@ along with this program.  If not, see &amp;quot;http://www.gnu.org/licenses/&amp
 
    <includes
          id="org.knime.features.python2"
-         version="0.0.0"/>
+         version="0.0.0"
+         optional="true"
+         search-location="both"/>
 
    <requires>
       <import plugin="org.eclipse.core.runtime"/>
