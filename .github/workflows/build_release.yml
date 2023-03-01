@@ -3,7 +3,7 @@ name: Java CI
 on: 
   push:
     branches:
-      - release_deployment_4.0
+      - gitlab-bfr/knime4.0
   release:
     types: [created]
 jobs:
