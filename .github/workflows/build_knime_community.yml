@@ -3,7 +3,7 @@ name: Java CI
 on: 
   push:
     branches:
-      - knime-community/4.5
+      - knime-community/4.7
 
 jobs:
   build:
