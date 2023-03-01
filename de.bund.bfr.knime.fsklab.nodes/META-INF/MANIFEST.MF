@@ -90,6 +90,4 @@ Export-Package: de.bund.bfr.knime.fsklab;
  de.bund.bfr.knime.fsklab.v2_0.runner
 Import-Package: org.apache.poi.openxml4j.exceptions;version="4.1.1",
  org.apache.poi.ss.usermodel;version="4.1.1",
- org.apache.poi.xssf.usermodel;version="4.1.1",
- org.w3c.dom.events
-
+ org.apache.poi.xssf.usermodel;version="4.1.1"

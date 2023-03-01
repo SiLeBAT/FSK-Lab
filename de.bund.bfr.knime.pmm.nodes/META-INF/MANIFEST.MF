@@ -66,6 +66,5 @@ Bundle-ClassPath: .,
 Bundle-Activator: de.bund.bfr.knime.pmm.nodes.Plugin
 Automatic-Module-Name: de.bund.bfr.knime.pmm.nodes
 Import-Package: org.jfree.chart,
- org.lsmp.djep.djep,
- org.w3c.dom.events
+ org.lsmp.djep.djep
 

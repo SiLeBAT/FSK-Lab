@@ -29,4 +29,3 @@ Bundle-ClassPath: .,
  libs/bfr-swing-1.0-SNAPSHOT.jar,
  libs/xerces-2.9.0.jar
 Bundle-Vendor: German Federal Institute for Risk Assessment (BfR)
-Import-Package: org.w3c.dom.events
