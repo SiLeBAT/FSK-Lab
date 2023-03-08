@@ -22,6 +22,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.io.File;
+import java.io.FileInputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -245,7 +246,7 @@ public class CreatorNodeDialog extends NodeDialogPane {
       List<String> names = new ArrayList<>();
 
       synchronized (LOCK) {
-        try (XSSFWorkbook workbook = new XSSFWorkbook(file)) {
+        try (XSSFWorkbook workbook = new XSSFWorkbook(new FileInputStream(file))) {
           for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
             names.add(workbook.getSheetName(i));
           }
