@@ -381,7 +381,6 @@ final class FSKEditorJSNodeModel
           }
         }
       }
-    
 
       final String[] validationErrors = viewValue.getValidationErrors();
       if (validationErrors != null && validationErrors.length > 0) {
