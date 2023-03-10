@@ -528,12 +528,14 @@ public class ReaderNodeUtil {
       URI sedmlUri = URIS.get("sedml");
       //URI htmllUri = URI.create("https://www.iana.org/assignments/media-types/text/html");
       URI rmdUri = URI.create("https://www.iana.org/assignments/media-types/text/markdown");
+      URI genericUri = URI.create("https://knime.bfr.berlin/mediatypes/resourceFile");
       List<URI> fileUris = new ArrayList<URI>();
       fileUris.add(textUri);
       fileUris.add(csvUri);
       fileUris.add(xlsxUri);
       fileUris.add(rdataUri);
       fileUris.add(rmdUri);
+      fileUris.add(genericUri);
       
 
       // Gets metadata from metadata entry (metaData.json)
