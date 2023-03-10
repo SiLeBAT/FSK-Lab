@@ -65,17 +65,16 @@ public class AddedFilesEnvironmentManager implements EnvironmentManager {
     List<Path> filePaths = new ArrayList<>();
     try {
       for (String filePath : entries) {
-        filePaths.add(FileUtil.resolveToPath(FileUtil.toURL(filePath)));
+        Path p = FileUtil.resolveToPath(FileUtil.toURL(filePath));
+        if(Files.exists(p))
+          filePaths.add(p);
       }
 
     }catch(Exception e) {
       return environment;
     }
     
-    for (Path filePath : filePaths) {
-      if (Files.notExists(filePath))
-        return environment;
-    }
+
     
     try {
       //Path environment = Files.createTempDirectory("workingDirectory");
