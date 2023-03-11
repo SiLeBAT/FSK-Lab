@@ -269,14 +269,14 @@ class JSSimulatorNodeModel
     return injectedSimulation;
   }
 
-  public JsonNode getJSONIfValid(Map<String, FlowVariable> mineMap) {
+  public JsonNode getJSONIfValid(Map<String, FlowVariable> variableMap) {
     JsonNode simulationJson = null;
     ObjectMapper mapper = new ObjectMapper()
         .enable(DeserializationFeature.FAIL_ON_TRAILING_TOKENS);
     
-    for(String paramName : mineMap.keySet()) {
+    for(String paramName : variableMap.keySet()) {
       try {
-        simulationJson  = mapper.readTree(mineMap.get(paramName).getStringValue());
+        simulationJson  = mapper.readTree(variableMap.get(paramName).getStringValue());
       } catch (JsonProcessingException e) {
     	    LOGGER.warn("Invalid JSON Object provided via Flow Variable");
       }
@@ -337,7 +337,7 @@ class JSSimulatorNodeModel
             
             URI u = new URI(paramValue);
             if(u.getScheme() != null){
-              String fileParam = downloadWebRecourceToWorkingDir(paramValue,
+              String fileParam = downloadOnlineRecourceToWorkingDir(paramValue,
                   workingDirectory.get().toString());
               fskSimulation.getParameters().put(paramName, "\"" + fileParam + "\"");
             }
@@ -474,26 +474,22 @@ class JSSimulatorNodeModel
   }
   
   /**
-   * Downloads a file from a URL.The code here is considering that the fileURL is using KNIME
-   * Protocol
-   * 
-   * @param fileURL HTTP URL of the file to be downloaded
+   * Downloads a file from a URL.The code here is considering that the fileURL defines a file URI scheme
+   * https://en.wikipedia.org/wiki/File_URI_scheme
+   * @param fileURL URL of the file to be downloaded
    * @param workingDir path of the directory to save the file
    * @throws IOException
    * @throws URISyntaxException
    * @throws InvalidSettingsException
    */
-  public String downloadWebRecourceToWorkingDir(String fileURL, String workingDir) throws IOException {
+  public String downloadOnlineRecourceToWorkingDir(String fileURL, String workingDir) throws IOException {
     String fileName = fileURL.substring(fileURL.lastIndexOf(File.separator) + 1, fileURL.length());
-    String destinationPath = workingDir + File.separator + fileName;
-    File fileTodownload = new File(destinationPath);
-    LOGGER.info("downloadWebRecourceToWorkingDir JS Simulator path to write to: " + destinationPath);
-    
-    
+    String destinationPath = workingDir + File.separator + fileName;    
     URL website = new URL(fileURL);
     ReadableByteChannel rbc = Channels.newChannel(website.openStream());
-    FileOutputStream fos = new FileOutputStream(destinationPath);
-    fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+    try (FileOutputStream fos = new FileOutputStream(destinationPath)) {
+      fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+    }
     return fileName;
   }
 }
