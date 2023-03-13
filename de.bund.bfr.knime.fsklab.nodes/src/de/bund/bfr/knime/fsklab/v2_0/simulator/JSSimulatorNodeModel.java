@@ -277,7 +277,8 @@ class JSSimulatorNodeModel
     
     for(String paramName : variableMap.keySet()) {
       try {
-        simulationJson  = mapper.readTree(variableMap.get(paramName).getStringValue());
+        String value = variableMap.get(paramName).getStringValue();
+        simulationJson  = mapper.readTree(value);
       } catch (JsonProcessingException e) {
     	    LOGGER.warn("Invalid JSON Object provided via Flow Variable");
       }
