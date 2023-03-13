@@ -38,6 +38,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.knime.core.node.CanceledExecutionException;
@@ -337,7 +338,8 @@ class JSSimulatorNodeModel
             
             URI u = new URI(paramValue);
             if(u.getScheme() != null){
-              String fileParam = downloadOnlineRecourceToWorkingDir(paramValue,
+              
+              String fileParam = downloadOnlineRecourceToWorkingDir(u,
                   workingDirectory.get().toString());
               fskSimulation.getParameters().put(paramName, "\"" + fileParam + "\"");
             }
@@ -476,17 +478,16 @@ class JSSimulatorNodeModel
   /**
    * Downloads a file from a URL.The code here is considering that the fileURL defines a file URI scheme
    * https://en.wikipedia.org/wiki/File_URI_scheme
-   * @param fileURL URL of the file to be downloaded
+   * @param u URL of the file to be downloaded
    * @param workingDir path of the directory to save the file
    * @throws IOException
    * @throws URISyntaxException
    * @throws InvalidSettingsException
    */
-  public String downloadOnlineRecourceToWorkingDir(String fileURL, String workingDir) throws IOException {
-    String fileName = fileURL.substring(fileURL.lastIndexOf(File.separator) + 1, fileURL.length());
+  public String downloadOnlineRecourceToWorkingDir(URI u, String workingDir) throws IOException {
+    String fileName = FilenameUtils.getName(u.getPath());
     String destinationPath = workingDir + File.separator + fileName;    
-    URL website = new URL(fileURL);
-    ReadableByteChannel rbc = Channels.newChannel(website.openStream());
+    ReadableByteChannel rbc = Channels.newChannel(u.toURL().openStream());
     try (FileOutputStream fos = new FileOutputStream(destinationPath)) {
       fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
     }
