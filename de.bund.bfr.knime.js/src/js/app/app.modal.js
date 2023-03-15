@@ -80,7 +80,7 @@ class APPModal {
 				O.opts.on.show.call( O, O, event );
 			}
 			
-			if(window.knimeService.isSingleView() == undefined && !(window.multipleview)) {
+			if(!window.knimeService.isSingleView() && !(window.multipleview)) {
 				window.parent.scrollTo(0,0);
 			}
 		} );
