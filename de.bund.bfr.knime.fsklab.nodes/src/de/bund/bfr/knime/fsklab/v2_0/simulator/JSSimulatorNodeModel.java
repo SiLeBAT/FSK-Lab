@@ -272,16 +272,17 @@ class JSSimulatorNodeModel
 
   public JsonNode getJSONIfValid(Map<String, FlowVariable> variableMap) {
     JsonNode simulationJson = null;
+    
     ObjectMapper mapper = new ObjectMapper()
         .enable(DeserializationFeature.FAIL_ON_TRAILING_TOKENS);
-    
-    for(String paramName : variableMap.keySet()) {
+    //TODO: Have a Flow-Variable in Simulator Node Dialog so a simulation can
+    // have a custom name
+    if(variableMap.keySet().contains("injectedSimulation")) {
       try {
-        simulationJson  = mapper.readTree(variableMap.get(paramName).getStringValue());
+        simulationJson  = mapper.readTree(variableMap.get("injectedSimulation").getStringValue());
       } catch (JsonProcessingException e) {
     	    LOGGER.warn("Invalid JSON Object provided via Flow Variable");
       }
-      
     }
     return simulationJson;
   }
