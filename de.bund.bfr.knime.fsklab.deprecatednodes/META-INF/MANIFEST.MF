@@ -51,3 +51,4 @@ Import-Package: com.fasterxml.jackson.datatype.jsr310;version="2.7.1",
  org.apache.poi.ss.usermodel;version="4.1.1",
  org.apache.poi.util;version="4.1.1",
  org.apache.poi.xssf.usermodel;version="4.1.1"
+Bundle-ActivationPolicy: lazy
