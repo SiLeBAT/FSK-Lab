@@ -8,9 +8,8 @@ git clone -b 4.5 --single-branch --depth=1 https://$GITLAB_NAME:$GITLAB_TOKEN@gi
 rm -Rf $REPO/fsklab # Deletes old build if it exists
 rm -Rf $REPO/knime_4.4 # Deletes old build if it exists
 
-mv $TARGET_FOLDER/repository $TARGET_FOLDER/fsklab
-mv $TARGET_FOLDER/fsklab $REPO/fsklab
-cd $REPO/fsklab
+cd $REPO
+date +"%Y-%m-%dT%H:%M:%S%z" >> version.info
 git config --global user.email $GITLAB_EMAIL
 git config --global user.name $GITLAB_TOKEN
 

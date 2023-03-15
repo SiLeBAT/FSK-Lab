@@ -11,7 +11,7 @@ git clone -b 4.5 --single-branch --depth=1 https://$GITLAB_NAME:$GITLAB_TOKEN@gi
 rm -Rf $REPO/fsklab # Deletes old build if it exists
 
 cd $REPO
-echo date +"%Y-%m-%dT%H:%M:%S%z" >> version.info
+date +"%Y-%m-%dT%H:%M:%S%z" >> version.info
 
 git config user.email $GITLAB_EMAIL
 git config user.name $GITLAB_NAME
