@@ -3,7 +3,7 @@ name: Java CI
 on: 
   push:
     branches:
-      - generic_file_support
+      - development
 
 jobs:
   build:
