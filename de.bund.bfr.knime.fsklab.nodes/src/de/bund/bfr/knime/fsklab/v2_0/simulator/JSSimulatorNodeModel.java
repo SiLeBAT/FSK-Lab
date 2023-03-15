@@ -23,17 +23,22 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.knime.core.node.CanceledExecutionException;
@@ -47,8 +52,8 @@ import org.knime.core.node.port.PortObjectHolder;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.web.ValidationError;
-import org.knime.core.node.workflow.NodeContext;
-import org.knime.core.util.ContextProperties;
+import org.knime.core.node.workflow.FlowVariable;
+import org.knime.core.node.workflow.VariableType;
 import org.knime.core.util.FileUtil;
 import org.knime.core.util.IRemoteFileUtilsService;
 import org.knime.js.core.node.AbstractWizardNodeModel;
@@ -56,6 +61,8 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.nodes.environment.EnvironmentManager;
@@ -187,11 +194,14 @@ class JSSimulatorNodeModel
   @Override
   protected PortObject[] performExecute(PortObject[] inObjects, ExecutionContext exec)
       throws IOException, CanceledExecutionException, InvalidSettingsException {
-
+    VariableType[] variableType = new VariableType[]{VariableType.StringType.INSTANCE};
+    Map<String, FlowVariable> variableMap = getAvailableFlowVariables(variableType);
     if (inObjects[0] != null) {
       setInternalPortObjects(inObjects);
     }
-
+    FskSimulation flowVarSimulation = createFlowVarSimulation(variableMap);
+    if(flowVarSimulation != null)
+      ((FskPortObject) inObjects[0]).simulations.add(flowVarSimulation);
     synchronized (getLock()) {
 
       final JSSimulatorViewValue value = getViewValue();
@@ -229,8 +239,53 @@ class JSSimulatorNodeModel
 
     return new PortObject[] {port};
   }
+  private FskSimulation getDefaultSimulation() {
+    FskSimulation defaultSimulation = null;
+    for (final FskSimulation jsSimulation : port.simulations) {
+      if(jsSimulation.getName().equals("defaultSimulation")) {
+        defaultSimulation = jsSimulation;
+      }
+    }
+    return defaultSimulation;
+  }
+  private FskSimulation createFlowVarSimulation( Map<String, FlowVariable> variableMap) {
+    JsonNode simulationJson  = getJSONIfValid(variableMap);
+    FskSimulation injectedSimulation = null;
+    if(simulationJson == null)
+      return injectedSimulation;
+    else 
+      injectedSimulation = new FskSimulation("InjectedSimulation");
+    
+    FskSimulation defaultSimulation = getDefaultSimulation();
+    LinkedHashMap<String, String>  defaultSimulationParams = defaultSimulation.getParameters();
+    LinkedHashMap<String, String>  defaultSimulationParamsCopy = (LinkedHashMap<String, String>) defaultSimulationParams.clone();
+    injectedSimulation.setParams(defaultSimulationParamsCopy);
+    for(String paramName : defaultSimulationParams.keySet()) {
+      if(simulationJson.get(paramName)!=null) {
+        JsonNode value = simulationJson.get(paramName);
+        injectedSimulation.getParameters().put(paramName, value.asText());
+      }
+    }
+    
+    return injectedSimulation;
+  }
 
-
+  public JsonNode getJSONIfValid(Map<String, FlowVariable> variableMap) {
+    JsonNode simulationJson = null;
+    
+    ObjectMapper mapper = new ObjectMapper()
+        .enable(DeserializationFeature.FAIL_ON_TRAILING_TOKENS);
+    //TODO: Have a Flow-Variable in Simulator Node Dialog so a simulation can
+    // have a custom name
+    if(variableMap.keySet().contains("injectedSimulation")) {
+      try {
+        simulationJson  = mapper.readTree(variableMap.get("injectedSimulation").getStringValue());
+      } catch (JsonProcessingException e) {
+    	    LOGGER.warn("Invalid JSON Object provided via Flow Variable");
+      }
+    }
+    return simulationJson;
+  }
   private void createSimulation(JSSimulatorViewValue val, FskPortObject fskObj)
       throws IOException, URISyntaxException, InvalidSettingsException {
 
@@ -281,7 +336,15 @@ class JSSimulatorNodeModel
               paramValue = paramValue.replaceAll("\"", "");
             }
             File file = new File(paramValue);
-            if (file.exists()) {
+            
+            URI u = new URI(paramValue);
+            if(u.getScheme() != null){
+              
+              String fileParam = downloadOnlineRecourceToWorkingDir(u,
+                  workingDirectory.get().toString());
+              fskSimulation.getParameters().put(paramName, "\"" + fileParam + "\"");
+            }
+            else if (file.exists()) {
               String fileParam = copyFileToWorkingDir(paramValue, workingDirectory.get().toString());
               fskSimulation.getParameters().put(paramName, "\""+fileParam+"\"");
             }else  {
@@ -409,6 +472,25 @@ class JSSimulatorNodeModel
     try (InputStream inStream = FileUtil.openInputStream(fileURL);
         OutputStream outStream = new FileOutputStream(fileTodownload)) {
       IOUtils.copy(inStream, outStream);
+    }
+    return fileName;
+  }
+  
+  /**
+   * Downloads a file from a URL.The code here is considering that the fileURL defines a file URI scheme
+   * https://en.wikipedia.org/wiki/File_URI_scheme
+   * @param u URL of the file to be downloaded
+   * @param workingDir path of the directory to save the file
+   * @throws IOException
+   * @throws URISyntaxException
+   * @throws InvalidSettingsException
+   */
+  public String downloadOnlineRecourceToWorkingDir(URI u, String workingDir) throws IOException {
+    String fileName = FilenameUtils.getName(u.getPath());
+    String destinationPath = workingDir + File.separator + fileName;    
+    ReadableByteChannel rbc = Channels.newChannel(u.toURL().openStream());
+    try (FileOutputStream fos = new FileOutputStream(destinationPath)) {
+      fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
     }
     return fileName;
   }
