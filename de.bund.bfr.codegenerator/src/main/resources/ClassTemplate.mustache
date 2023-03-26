@@ -1,0 +1,160 @@
+/*
+ * 
+ * 
+ *
+ *
+ * NOTE: This class is auto generated 
+ *
+ * Do not edit the class manually.
+ *
+ */
+ 
+/**
+ * The {{className}}  module.
+ * @module {{className}}
+ * @version 1.0.0
+ */
+export class {{className}} {
+  
+  {{#hasRequiredFields}}
+  /**
+   * Constructs a new <code>{{className}}</code> from required fields
+   * @class
+   */
+  constructor({{#fields}}{{#required}}{{id}}{{#notLastRequiredElement}},{{/notLastRequiredElement}}{{/required}}{{/fields}}) {
+    {{#fields}}{{#required}}
+    this.{{id}} = {{id}};
+    {{/required}}{{/fields}}
+  }
+  {{/hasRequiredFields}}
+  
+  {{^hasFields}}
+  {{^hasRequiredFields}}
+  /**
+   * Default Constructor a new <code>{{className}}</code> 
+   * @class
+   */
+  constructor() {
+  
+  }
+  {{/hasRequiredFields}}
+  {{/hasFields}}
+  
+  /**
+   * Constructs a <code>{{className}}</code> from a plain JavaScript object, optionally creating a new instance.
+   * Copies all relevant properties from <code>data</code> to <code>obj</code> if supplied or a new instance if not.
+   * @param {Object} data The plain JavaScript object bearing properties of interest.
+   * @param {{{className}}} obj Optional instance to populate.
+   * @return {{{className}}} The populated <code>{{className}}</code> instance.
+   */
+  static constructFromObject(data, obj) {
+    if (data) {
+      obj = obj || new Contact();
+      if (data.hasOwnProperty('country'))
+        obj.country = ApiClient.convertToType(data['country'], 'String');
+      
+    }
+    return obj;
+  }
+  /**
+   * Check if an field is required.
+   * @param {field} to be checked.
+   * @return boolean
+   */
+  isRequired(field) {
+    if (this.requiredfileds.includes(field)) {
+      return true;
+      
+    }
+    return false;
+  }
+  
+  /**
+   * get fieldType.
+   * @param {field} to be checked.
+   * @return Type of the field
+   */
+  getType(field) {
+    return this.filedsTypesMap.get('\''+field+'\'');
+  }
+  
+  /**
+   * get field's Label.
+   * @param {field} to be checked.
+   * @return Label of the field
+   */
+  getLabel(field) {
+    return this.filedslabelsMap.get('\''+field+'\'');
+  }
+  
+  /**
+   * get field's Vocabulary.
+   * @param {field} to be checked.
+   * @return Vocabulary of the field
+   */
+  getVocabulary(field) {
+    return this.filedsVocabulariesMap.get('\''+field+'\'');
+  }
+  
+  /**
+   * get field's description.
+   * @param {field} to be checked.
+   * @return Description of the field
+   */
+  getDescription(field) {
+    return this.filedsDescriptionsMap.get('\''+field+'\'');
+  }
+  
+  /**
+   * get JSON Schema part of {{className}} module.
+   * @return JSON Schema of of {{className}} module.
+   */
+  getJSONSchemaPart() {
+    return {{{JSONRepresentation}}};
+  }
+  
+  /**
+   * get JSON representation of instance of {{className}} module.
+   * @return JSON representation.
+   */
+  getJSONRepresentation() {
+    return {
+    			{{#fields}} 
+    			'{{id}}':this.{{id}}{{#notLastElement}},{{/notLastElement}}
+    			{{/fields}}
+    };
+  }
+}
+{{#fields}}
+ /**
+ * Parameter {{id}}
+ * @member {{type}} {{id}}
+ */
+{{ownerClass}}.prototype.{{id}} = undefined;
+{{/fields}}
+
+/**
+ * @member {requiredfileds} 
+ */
+{{className}}.prototype.requiredfileds = [{{#fields}}{{#required}}'{{id}}'{{#notLastRequiredElement}},{{/notLastRequiredElement}}{{/required}}{{/fields}}];
+
+/**
+ * @member {filedsTypesMap} 
+ */
+{{className}}.prototype.filedsTypesMap ={ {{#fields}} '{{id}}':'{{type}}'{{#notLastElement}},{{/notLastElement}}{{/fields}} };
+
+/**
+ * @member {filedslabelsMap} 
+ */
+{{className}}.prototype.filedsLabelsMap ={ {{#fields}} '{{id}}':'{{label}}'{{#notLastElement}},{{/notLastElement}}{{/fields}} };
+
+/**
+ * @member {filedsVocabulariesMap} 
+ */
+{{className}}.prototype.filedsVocabulariesMap ={ {{#fields}} '{{id}}':'{{vocabulary}}'{{#notLastElement}},{{/notLastElement}}{{/fields}} };
+
+/**
+ * @member {filedsDescriptionsMap} 
+ */
+{{className}}.prototype.filedsDescriptionsMap ={ {{#fields}} '{{id}}':'{{description}}'{{#notLastElement}},{{/notLastElement}}{{/fields}} };
+
