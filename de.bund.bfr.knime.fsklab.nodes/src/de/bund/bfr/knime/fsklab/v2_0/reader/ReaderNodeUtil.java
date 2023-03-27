@@ -536,6 +536,7 @@ public class ReaderNodeUtil {
       fileUris.add(rdataUri);
       fileUris.add(rmdUri);
       fileUris.add(genericUri);
+      fileUris.add(URI.create("https://www.bfr.bund.de/pmfx"));
       
 
       // Gets metadata from metadata entry (metaData.json)

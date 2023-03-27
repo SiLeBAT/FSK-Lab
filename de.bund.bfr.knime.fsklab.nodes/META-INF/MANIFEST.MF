@@ -34,7 +34,11 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations;bundle-version="2
  de.bund.bfr.knime.fsklab.preferences;bundle-version="1.0.0",
  org.h2;bundle-version="1.4.196",
  org.json;bundle-version="20140107.0.0",
- org.apache.commons.collections;bundle-version="3.2.2"
+ org.apache.commons.collections;bundle-version="3.2.2",
+ de.bund.bfr.knime.pmm.common;bundle-version="1.0.0",
+ com.google.guava;bundle-version="19.0.0",
+ org.hsh.bfr.db;bundle-version="1.0.0",
+ de.bund.bfr.pmfml
 Bundle-Vendor: German Federal Institute for Risk Assessment (BfR)
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: de.bund.bfr.knime.fsklab.FskPlugin
@@ -53,6 +57,7 @@ Bundle-ClassPath: .,
  libs/fskml-1.0.13.jar,
  libs/jhdf-0.5.11.jar,
  libs/vocabularies-2.0.0.jar,
+ pmfml-0.0.12.jar,
  libs/jackson-module-jsonschema-2.2.1.jar
 Export-Package: de.bund.bfr.knime.fsklab;
   uses:="org.osgi.framework,
@@ -86,5 +91,7 @@ Export-Package: de.bund.bfr.knime.fsklab;
  de.bund.bfr.knime.fsklab.nodes.environment,
  de.bund.bfr.knime.fsklab.v2_0,
  de.bund.bfr.knime.fsklab.v2_0.runner
-Import-Package: org.w3c.dom.events
+Import-Package: org.lsmp.djep.djep,
+ org.nfunk.jep,
+ org.w3c.dom.events
 
