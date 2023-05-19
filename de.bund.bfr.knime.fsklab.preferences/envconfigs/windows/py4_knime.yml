@@ -1,0 +1,5 @@
+name: py40_knime         # Name of the created environment
+channels:                # Repositories to search for packages
+- conda-forge
+dependencies:            # List of packages that should be installed
+- python=3.9             # Python
