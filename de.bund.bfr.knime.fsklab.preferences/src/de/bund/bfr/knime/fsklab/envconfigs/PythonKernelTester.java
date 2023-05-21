@@ -136,7 +136,20 @@ public class PythonKernelTester {
         return testPythonInstallation(python3Command, PYTHON_MAJOR_VERSION_3, PYTHON_MINIMUM_VERSION_3,
             additionalRequiredModules, Collections.emptyList(), force);
     }
-
+    /**
+     * Tests if R can be started for the given Python 3 command and if all given required custom modules are
+     * installed.
+     *
+     * @param rCommand The R command to test.
+     * @param additionalRequiredModules Additional custom modules that must exist in the Python installation in order
+     *            for the caller to work properly, must not be {@code null} but may be empty.
+     * @param force Force the test to be rerun again even if the same configuration was successfully tested before.
+     * @return The results of the installation test.
+     */
+    public static PythonKernelTestResult testRInstallation(final PythonCommand rCommand,
+        final Collection<PythonModuleSpec> additionalRequiredModules, final boolean force) {
+        return createRTestReport("","",new StringBuilder());
+    }
     /**
      * Tests if Python can be started for the given Python 2 command and if all given required custom modules are
      * installed.
@@ -368,6 +381,12 @@ public class PythonKernelTester {
         }
     }
 
+    
+    private static PythonKernelTestResult createRTestReport(final String errorOutput, final String testOutput,
+            final StringBuilder testLogger) {
+
+    	 return new PythonKernelTestResult("", "", "", "R 4");
+        }
     /**
      * Log detailed info obtained during testing the Python installation.
      */

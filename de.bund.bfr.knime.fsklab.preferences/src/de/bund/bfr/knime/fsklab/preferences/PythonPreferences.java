@@ -61,6 +61,7 @@ import org.knime.python2.Activator;
 import org.knime.python2.PythonCommand;
 import org.knime.python2.PythonModuleSpec;
 import de.bund.bfr.knime.fsklab.python2.config.CondaEnvironmentsConfig;
+import de.bund.bfr.knime.fsklab.python2.config.FSKEnvironmentsConfig;
 import de.bund.bfr.knime.fsklab.python2.config.ManualEnvironmentsConfig;
 import de.bund.bfr.knime.fsklab.python2.config.PythonConfigStorage;
 import de.bund.bfr.knime.fsklab.python2.config.PythonEnvironmentConfig;
@@ -80,10 +81,10 @@ import org.knime.python2.extensions.serializationlibrary.SerializationLibraryExt
 public final class PythonPreferences {
 
     private static final PreferenceStorage DEFAULT_SCOPE_PREFERENCES =
-        new PreferenceStorage("FSK", DefaultScope.INSTANCE);
+        new PreferenceStorage("de.bund.bfr.knime.fsklab.preferences", DefaultScope.INSTANCE);
 
     private static final PreferenceStorage CURRENT_SCOPE_PREFERENCES =
-        new PreferenceStorage("FSK", InstanceScope.INSTANCE, DefaultScope.INSTANCE);
+        new PreferenceStorage("de.bund.bfr.knime.fsklab.preferences", InstanceScope.INSTANCE, DefaultScope.INSTANCE);
 
     /**
      * Accessed by preference page.
@@ -112,7 +113,8 @@ public final class PythonPreferences {
             if (!currentPreferencesKeys.contains(PythonEnvironmentTypeConfig.CFG_KEY_ENVIRONMENT_TYPE)
                 && (currentPreferencesKeys.contains(ManualEnvironmentsConfig.CFG_KEY_PYTHON2_PATH)
                     || currentPreferencesKeys.contains(ManualEnvironmentsConfig.CFG_KEY_PYTHON3_PATH)
-                    || currentPreferencesKeys.contains(ManualEnvironmentsConfig.CFG_KEY_R_PATH))) {
+                    || currentPreferencesKeys.contains(ManualEnvironmentsConfig.CFG_KEY_R_PATH)
+                    || currentPreferencesKeys.contains(FSKEnvironmentsConfig.DEFAULT_FSK_PATH))) {
                 final PythonEnvironmentTypeConfig environmentTypeConfig = new PythonEnvironmentTypeConfig();
                 environmentTypeConfig.getEnvironmentType().setStringValue(PythonEnvironmentType.MANUAL.getId());
                 environmentTypeConfig.saveConfigTo(CURRENT);
@@ -162,6 +164,14 @@ public final class PythonPreferences {
     }
 
 
+    /**
+     * @return The current FSK working directory.
+     */
+    public static FSKEnvironmentsConfig getFSKEnvironmentsConfig() {
+    	FSKEnvironmentsConfig environmentsConfig = new FSKEnvironmentsConfig();
+    	environmentsConfig.loadConfigFrom(CURRENT);
+        return environmentsConfig;
+    }
 
     /**
      * Retrieve the Python environments configuration for the given environment type

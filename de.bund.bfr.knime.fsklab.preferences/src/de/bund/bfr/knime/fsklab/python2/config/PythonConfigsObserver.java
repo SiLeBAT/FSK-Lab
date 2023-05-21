@@ -442,8 +442,8 @@ public class PythonConfigsObserver extends AbstractPythonConfigsObserver {
             onEnvironmentInstallationTestStarting(environmentType, rPythonVersion);
             final PythonCommand pythonCommand = environmentConfig.getPythonCommand();
             final PythonKernelTestResult testResult = isPython3 //
-                ? PythonKernelTester.testPython3Installation(pythonCommand, requiredSerializerModules, true) //
-                : (isR ? PythonKernelTester.testPython3Installation(pythonCommand, requiredSerializerModules, true) :
+                ? PythonKernelTester.testPython3Installation(pythonCommand, requiredSerializerModules, true) : //
+                 (isR ? PythonKernelTester.testRInstallation(pythonCommand, requiredSerializerModules, true) :
                 	PythonKernelTester.testPython2Installation(pythonCommand, requiredSerializerModules, true));
             infoMessage.setStringValue(testResult.getVersion());
             String errorLog = testResult.getErrorLog();

@@ -67,6 +67,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
+import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.swt.SWT;
@@ -88,6 +89,7 @@ import org.knime.core.node.NodeLogger;
 import de.bund.bfr.knime.fsklab.envconfigs.PythonKernelTester.PythonKernelTestResult;
 import de.bund.bfr.knime.fsklab.python2.config.CondaEnvironmentCreationObserver;
 import de.bund.bfr.knime.fsklab.python2.config.CondaEnvironmentsConfig;
+import de.bund.bfr.knime.fsklab.python2.config.FSKEnvironmentsConfig;
 import de.bund.bfr.knime.fsklab.python2.config.ManualEnvironmentsConfig;
 import de.bund.bfr.knime.fsklab.python2.config.PythonConfig;
 import de.bund.bfr.knime.fsklab.python2.config.PythonConfigsObserver;
@@ -104,14 +106,14 @@ import de.bund.bfr.knime.fsklab.python2.config.AbstractPythonConfigsObserver.Pyt
  * @author Christian Dietz, KNIME GmbH, Konstanz, Germany
  * @author Patrick Winter, KNIME AG, Zurich, Switzerland
  */
-public final class PythonPreferencePage extends AbstractPythonPreferencePage {
+public final class PythonPreferencePage  extends AbstractPythonPreferencePage {
 
     private PythonVersionConfig m_pythonVersionConfig;
 
     private PythonEnvironmentTypeConfig m_environmentTypeConfig;
 
     private StackLayout m_environmentConfigurationLayout;
-
+    private StackLayout m_FSKenvironmentConfigurationLayout;
     private CondaEnvironmentsConfig m_condaEnvironmentsConfig;
 
     private CondaEnvironmentCreationObserver m_python2EnvironmentCreator;
@@ -122,8 +124,10 @@ public final class PythonPreferencePage extends AbstractPythonPreferencePage {
     private CondaEnvironmentsPreferencePanel m_condaEnvironmentPanel;
 
     private ManualEnvironmentsConfig m_manualEnvironmentsConfig;
+    private FSKEnvironmentsConfig m_FSKEnvironmentsConfig;
 
     private ManualEnvironmentsPreferencePanel m_manualEnvironmentPanel;
+    private ManualEnvironmentsPreferencePanel m_FSKmanualEnvironmentPanel;
 
     private SerializerConfig m_serializerConfig;
 
@@ -146,7 +150,52 @@ public final class PythonPreferencePage extends AbstractPythonPreferencePage {
     @SuppressWarnings("unused") // References to some panels are not needed; everything is done in their constructor.
     protected void populatePageBody(final Composite container, final List<PythonConfig> configs) {
         createInfoHeader(container);
+        m_FSKEnvironmentsConfig = new FSKEnvironmentsConfig();
+        configs.add(m_FSKEnvironmentsConfig);
+        final Group environmentFSKConfigurationGroup = new Group(container, SWT.NONE);
+        environmentFSKConfigurationGroup.setText("FSK-Lab working directory");
+        environmentFSKConfigurationGroup.setLayout(new GridLayout());
+        environmentFSKConfigurationGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        Composite compositeWorkingDirectory = new Composite(environmentFSKConfigurationGroup, SWT.MULTI);
 
+		GridData gridDataWorkingDirectory = new GridData();
+		gridDataWorkingDirectory.horizontalSpan = 3;
+		gridDataWorkingDirectory.horizontalAlignment = SWT.FILL;
+		
+		compositeWorkingDirectory.setLayoutData(gridDataWorkingDirectory);
+		
+		FSKWorkingDirectoryFieldEditor  fskWorkingDirectory= 
+				new FSKWorkingDirectoryFieldEditor(m_FSKEnvironmentsConfig.getFSKConfig().getFSKPath().getStringValue(),
+						"FSK Working directory:",
+						compositeWorkingDirectory);
+		fskWorkingDirectory.setStringValue(m_FSKEnvironmentsConfig.getFSKConfig().getFSKPath().getStringValue());
+
+        /*
+        final Composite environmentFSKConfigurationPanel = new Composite(environmentFSKConfigurationGroup, SWT.NONE);
+        m_FSKenvironmentConfigurationLayout = new StackLayout();
+        environmentFSKConfigurationPanel.setLayout(m_FSKenvironmentConfigurationLayout);
+        environmentFSKConfigurationPanel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        m_FSKEnvironmentsConfig = new FSKEnvironmentsConfig();
+        configs.add(m_FSKEnvironmentsConfig);
+        m_FSKmanualEnvironmentPanel =
+            new FSKEnvironmentsPreferencePanel(m_FSKEnvironmentsConfig, environmentFSKConfigurationGroup);
+        m_FSKmanualEnvironmentPanel.getPanel();
+        */
+        /* FSK Working directory
+        Composite parent = getFieldEditorParent();
+		compositeWorkingDirectory = new Composite(parent, SWT.MULTI);
+
+		GridData gridDataWorkingDirectory = new GridData();
+		gridDataWorkingDirectory.horizontalSpan = 3;
+		gridDataWorkingDirectory.horizontalAlignment = SWT.FILL;
+		
+		compositeWorkingDirectory.setLayoutData(gridDataWorkingDirectory);
+		
+		FSKWorkingDirectoryFieldEditor  fskWorkingDirectory= new FSKWorkingDirectoryFieldEditor(PreferenceInitializer.FSK_PATH_CFG, "FSK Working directory:", compositeWorkingDirectory);
+		fskWorkingDirectory.setStringValue(Plugin.getDefault().getPreferenceStore().getString(PreferenceInitializer.FSK_PATH_CFG));
+
+        */
+        
         // Python version selection:
         m_pythonVersionConfig = new PythonVersionConfig();
         configs.add(m_pythonVersionConfig);
@@ -285,5 +334,21 @@ public final class PythonPreferencePage extends AbstractPythonPreferencePage {
     public void dispose() {
         super.dispose();
         CondaPreferences.removePropertyChangeListener(m_condaDirPropertyChangeListener);
+    }
+    private class FSKWorkingDirectoryFieldEditor extends DirectoryFieldEditor {
+
+    	public FSKWorkingDirectoryFieldEditor(final String name, final String labelText, final Composite parent) {
+    		init(name, labelText);
+    		setChangeButtonText(JFaceResources.getString("openBrowse"));
+    		setValidateStrategy(VALIDATE_ON_KEY_STROKE);
+    		createControl(parent);
+    	}
+
+    	@Override
+    	protected boolean doCheckState() {
+    		//final String newFSKWorkingDirectory = getStringValue();
+    		//Plugin.getDefault().getPreferenceStore().putValue(FSKPreferenceInitializer.FSK_PATH_CFG, newFSKWorkingDirectory);
+    		return true;
+    	}
     }
 }

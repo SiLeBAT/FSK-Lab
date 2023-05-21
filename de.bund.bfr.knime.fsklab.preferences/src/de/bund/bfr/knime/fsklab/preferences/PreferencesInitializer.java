@@ -64,6 +64,7 @@ package de.bund.bfr.knime.fsklab.preferences;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 
 import de.bund.bfr.knime.fsklab.python2.config.CondaEnvironmentsConfig;
+import de.bund.bfr.knime.fsklab.python2.config.FSKEnvironmentsConfig;
 import de.bund.bfr.knime.fsklab.python2.config.ManualEnvironmentsConfig;
 import de.bund.bfr.knime.fsklab.python2.config.PythonConfigStorage;
 import de.bund.bfr.knime.fsklab.python2.config.PythonEnvironmentTypeConfig;
@@ -92,5 +93,7 @@ public final class PreferencesInitializer extends AbstractPreferenceInitializer 
         new ManualEnvironmentsConfig().saveDefaultsTo(defaultPreferences);
 
         new SerializerConfig().saveDefaultsTo(defaultPreferences);
+        
+        new FSKEnvironmentsConfig().saveDefaultsTo(defaultPreferences);
     }
 }
