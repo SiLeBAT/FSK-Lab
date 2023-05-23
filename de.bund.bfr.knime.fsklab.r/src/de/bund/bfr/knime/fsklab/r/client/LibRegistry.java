@@ -40,7 +40,7 @@ import org.rosuda.REngine.REXPMismatchException;
 import org.rosuda.REngine.RList;
 
 import com.sun.jna.Platform;
-import de.bund.bfr.knime.fsklab.preferences.PreferenceInitializer;
+
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
 import de.bund.bfr.knime.fsklab.r.server.RConnectionFactory.RConnectionResource;
 

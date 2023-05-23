@@ -25,7 +25,8 @@ Require-Bundle: org.apache.commons.io;bundle-version="2.6.0",
  org.apache.batik.util;bundle-version="1.14.0",
  org.apache.batik.anim;bundle-version="1.14.0",
  org.knime.rsyntaxtextarea;bundle-version="4.7.0"
-Export-Package: de.bund.bfr.knime.fsklab.preferences
+Export-Package: de.bund.bfr.knime.fsklab.preferences,
+ de.bund.bfr.knime.fsklab.python2.config
 Bundle-Activator: de.bund.bfr.knime.fsklab.preferences.Plugin
 Bundle-ActivationPolicy: lazy
 

@@ -89,6 +89,7 @@ import org.knime.core.node.NodeLogger;
 import de.bund.bfr.knime.fsklab.envconfigs.PythonKernelTester.PythonKernelTestResult;
 import de.bund.bfr.knime.fsklab.python2.config.CondaEnvironmentCreationObserver;
 import de.bund.bfr.knime.fsklab.python2.config.CondaEnvironmentsConfig;
+import de.bund.bfr.knime.fsklab.python2.config.FSKEnvironmentConfig;
 import de.bund.bfr.knime.fsklab.python2.config.FSKEnvironmentsConfig;
 import de.bund.bfr.knime.fsklab.python2.config.ManualEnvironmentsConfig;
 import de.bund.bfr.knime.fsklab.python2.config.PythonConfig;
@@ -165,7 +166,7 @@ public final class PythonPreferencePage  extends AbstractPythonPreferencePage {
 		compositeWorkingDirectory.setLayoutData(gridDataWorkingDirectory);
 		
 		FSKWorkingDirectoryFieldEditor  fskWorkingDirectory= 
-				new FSKWorkingDirectoryFieldEditor(m_FSKEnvironmentsConfig.getFSKConfig().getFSKPath().getStringValue(),
+				new FSKWorkingDirectoryFieldEditor(m_FSKEnvironmentsConfig.getFSKConfig(),
 						"FSK Working directory:",
 						compositeWorkingDirectory);
 		fskWorkingDirectory.setStringValue(m_FSKEnvironmentsConfig.getFSKConfig().getFSKPath().getStringValue());
@@ -337,7 +338,8 @@ public final class PythonPreferencePage  extends AbstractPythonPreferencePage {
     }
     private class FSKWorkingDirectoryFieldEditor extends DirectoryFieldEditor {
 
-    	public FSKWorkingDirectoryFieldEditor(final String name, final String labelText, final Composite parent) {
+    	public FSKWorkingDirectoryFieldEditor(final FSKEnvironmentConfig fskConfig, final String labelText, final Composite parent) {
+    		String name = fskConfig.getFSKPath().getStringValue();
     		init(name, labelText);
     		setChangeButtonText(JFaceResources.getString("openBrowse"));
     		setValidateStrategy(VALIDATE_ON_KEY_STROKE);

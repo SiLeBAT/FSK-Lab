@@ -13,7 +13,7 @@ import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
 import de.bund.bfr.knime.fsklab.nodes.environment.ArchivedEnvironmentManager;
 import de.bund.bfr.knime.fsklab.nodes.environment.EnvironmentManager;
 import de.bund.bfr.knime.fsklab.rakip.RakipUtil;
-import de.bund.bfr.knime.fsklab.preferences.PreferenceInitializer;
+import de.bund.bfr.knime.fsklab.preferences.PythonPreferences;
 import de.bund.bfr.knime.fsklab.v2_0.CombinedFskPortObject;
 import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
 import de.bund.bfr.knime.fsklab.v2_0.FskSimulation;
@@ -373,7 +373,7 @@ public class ReaderNodeUtil {
         ArchiveEntry entry = workspaceEntry.get();
         FskMetaDataObject fmdo = new FskMetaDataObject(entry.getDescriptions().get(0));
         if (fmdo.getResourceType() == ResourceType.workspace) {
-          workspace = FileUtil.createTempFile("workspace", ".RData", new File(PreferenceInitializer.getFSKWorkingDirectory()), false);
+          workspace = FileUtil.createTempFile("workspace", ".RData", new File(PythonPreferences.getFSKWorkingDirectoryPath()), false);
           entry.extractFile(workspace);
         }
       }
@@ -392,7 +392,7 @@ public class ReaderNodeUtil {
       if (sbmlEntry.isPresent()) {
 
         // Extract entry to temporary file
-        File temporaryFile = File.createTempFile("model", ".sbml",new File(PreferenceInitializer.getFSKWorkingDirectory()));
+        File temporaryFile = File.createTempFile("model", ".sbml",new File(PythonPreferences.getFSKWorkingDirectoryPath()));
         sbmlEntry.get().extractFile(temporaryFile);
         SBMLDocument sbmlDocument = SBMLReader.read(temporaryFile);
         temporaryFile.delete();
@@ -567,7 +567,7 @@ public class ReaderNodeUtil {
             visualizationScript = loadTextEntry(entry);
           } else if (resourceType == ResourceType.workspace) {
             // Legacy check. Look for R workspace with R URI (from old files)
-            workspace = FileUtil.createTempFile("workspace", ".RData", new File(PreferenceInitializer.getFSKWorkingDirectory()), false);
+            workspace = FileUtil.createTempFile("workspace", ".RData", new File(PythonPreferences.getFSKWorkingDirectoryPath()), false);
             entry.extractFile(workspace);
           }
         }
@@ -587,7 +587,7 @@ public class ReaderNodeUtil {
         FskMetaDataObject fmdo =
             new FskMetaDataObject(workspaceEntry.get().getDescriptions().get(0));
         if (fmdo.getResourceType() == ResourceType.workspace) {
-          workspace = FileUtil.createTempFile("workspace", ".RData", new File(PreferenceInitializer.getFSKWorkingDirectory()), false);
+          workspace = FileUtil.createTempFile("workspace", ".RData", new File(PythonPreferences.getFSKWorkingDirectoryPath()), false);
           workspaceEntry.get().extractFile(workspace);
         }
       }
@@ -738,7 +738,7 @@ public class ReaderNodeUtil {
   private static String loadTextEntry(final ArchiveEntry entry) throws IOException {
 
     // Create temporary file with script
-    File temp = File.createTempFile("temp", null, new File(PreferenceInitializer.getFSKWorkingDirectory()));
+    File temp = File.createTempFile("temp", null, new File(PythonPreferences.getFSKWorkingDirectoryPath()));
     String contents;
 
     try {
@@ -761,7 +761,7 @@ public class ReaderNodeUtil {
       throws JsonProcessingException, IOException {
 
     // Create temporary file with metadata
-    File temp = File.createTempFile("metadata", ".json", new File(PreferenceInitializer.getFSKWorkingDirectory()));
+    File temp = File.createTempFile("metadata", ".json", new File(PythonPreferences.getFSKWorkingDirectoryPath()));
     metadataEntry.extractFile(temp);
 
     // Load metadata from temporary file
@@ -845,7 +845,7 @@ public class ReaderNodeUtil {
       throws IOException, XMLException {
 
     // Create temporary file for extracting SEDML and read it.
-    File tempFile = File.createTempFile("simulations", ".sedml", new File(PreferenceInitializer.getFSKWorkingDirectory()));
+    File tempFile = File.createTempFile("simulations", ".sedml", new File(PythonPreferences.getFSKWorkingDirectoryPath()));
     simulationsEntry.extractFile(tempFile);
 
     // Read SEDML and delete temporary file

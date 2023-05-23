@@ -9,8 +9,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import de.bund.bfr.knime.fsklab.python2.kernel.PythonKernel;
-import de.bund.bfr.knime.fsklab.python2.kernel.PythonKernelOptions;
+import org.knime.python2.kernel.PythonKernel;
+import org.knime.python2.kernel.PythonKernelOptions;
 
 
 @Ignore

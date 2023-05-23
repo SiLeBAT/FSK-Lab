@@ -72,7 +72,7 @@ import de.bund.bfr.fskml.RScript;
 import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
 import de.bund.bfr.knime.fsklab.nodes.environment.AddedFilesEnvironmentManager;
-import de.bund.bfr.knime.fsklab.preferences.PreferenceInitializer;
+import de.bund.bfr.knime.fsklab.preferences.PythonPreferences;
 import de.bund.bfr.knime.fsklab.nodes.environment.EnvironmentManager;
 import de.bund.bfr.knime.fsklab.nodes.environment.ExistingEnvironmentManager;
 import de.bund.bfr.knime.fsklab.v2_0.CombinedFskPortObject;
@@ -357,7 +357,7 @@ final class FSKEditorJSNodeModel
         if (fskObj != null &&fskObj.getEnvironmentManager().isPresent()) {
           workingDirectory = fskObj.getEnvironmentManager().get().getEnvironment();
         } else {
-          workingDirectory = Optional.of(Files.createTempDirectory(Paths.get(PreferenceInitializer.getFSKWorkingDirectory()),"workingDirectory"));
+          workingDirectory = Optional.of(Files.createTempDirectory(Paths.get(PythonPreferences.getFSKWorkingDirectoryPath()),"workingDirectory"));
         }
         environmentManager = Optional.of(new ExistingEnvironmentManager(workingDirectory.get().toString()));
         for (String fileRequestString : viewValue.getResourcesFiles()) {

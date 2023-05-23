@@ -7,13 +7,14 @@ import java.util.List;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.util.FileUtil;
+import org.knime.python2.PythonCommand;
+import org.knime.python2.PythonVersion;
+import org.knime.python2.kernel.PythonKernel;
+import org.knime.python2.kernel.PythonKernelQueue;
 import de.bund.bfr.knime.fsklab.nodes.plot.PythonPlotter;
-import de.bund.bfr.knime.fsklab.preferences.PreferenceInitializer;
-import de.bund.bfr.knime.fsklab.python2.CondaPythonCommand;
-import de.bund.bfr.knime.fsklab.python2.ManualPythonCommand;
-import de.bund.bfr.knime.fsklab.python2.PythonCommand;
-import de.bund.bfr.knime.fsklab.python2.PythonVersion;
-import de.bund.bfr.knime.fsklab.python2.kernel.PythonKernel;
+import de.bund.bfr.knime.fsklab.preferences.PreferencesInitializer;
+import de.bund.bfr.knime.fsklab.preferences.PythonPreferences;
+import de.bund.bfr.knime.fsklab.preferences.RPythonVersion;
 import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
 import de.bund.bfr.knime.fsklab.v2_0.FskSimulation;
 import de.bund.bfr.knime.fsklab.v2_0.runner.RunnerNodeInternalSettings;
@@ -24,29 +25,22 @@ public class PythonScriptHandler extends ScriptHandler {
   String std_err = "";
   // controller that communicates with Python Installation
   PythonKernel controller;
-
-
+ 
   public PythonScriptHandler(PythonVersion version) throws IOException {
     PythonCommand command;
-
+    
     if (version.equals(PythonVersion.PYTHON3)) {
-      if (PreferenceInitializer.isPythonConda())
-        command = new CondaPythonCommand(version, PreferenceInitializer.getCondaPath(),
-            PreferenceInitializer.getPython3Env());
-      else
-        command = new ManualPythonCommand(version, PreferenceInitializer.getPython3Path());
-
-      controller = new PythonKernel(command);
-    } else if (version.equals(PythonVersion.PYTHON2)) {
-      if (PreferenceInitializer.isPythonConda())
-        command = new CondaPythonCommand(version, PreferenceInitializer.getCondaPath(),
-            PreferenceInitializer.getPython2Env());
-      else
-        command = new ManualPythonCommand(version, PreferenceInitializer.getPython2Path());
-
-      controller = new PythonKernel(command);
+      
+      command = PythonPreferences.getPython3CommandPreference();
+      
+     
+    } else {
+      
+      command = PythonPreferences.getPython2CommandPreference();
+      
+      
     }
-
+    controller = new PythonKernel(command);
     // set up backend (rendering engine) for matplotlib for image handling:
     controller.execute("import matplotlib");
     controller.execute("matplotlib.use('Agg')");
@@ -111,7 +105,7 @@ public class PythonScriptHandler extends ScriptHandler {
   @Override
   public void saveWorkspace(FskPortObject fskObj, ExecutionContext exec) throws Exception {
     if (fskObj.getWorkspace() == null) {
-      fskObj.setWorkspace(FileUtil.createTempFile("workspace", ".py",new File(PreferenceInitializer.getFSKWorkingDirectory()), false).toPath());
+      fskObj.setWorkspace(FileUtil.createTempFile("workspace", ".py",new File(PythonPreferences.getFSKWorkingDirectoryPath()), false).toPath());
     }
 
   }

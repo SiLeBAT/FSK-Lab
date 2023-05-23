@@ -47,7 +47,7 @@ import org.knime.core.node.workflow.WorkflowCopyContent;
 import org.knime.core.node.workflow.WorkflowCreationHelper;
 import org.knime.core.node.workflow.WorkflowManager;
 import org.knime.core.util.FileUtil;
-import de.bund.bfr.knime.fsklab.preferences.PreferenceInitializer;
+import de.bund.bfr.knime.fsklab.preferences.PythonPreferences;
 class WorkflowWriterNodeModel extends NoInternalsModel {
 
   private static final PortType[] IN_TYPES = {};
@@ -153,13 +153,13 @@ class WorkflowWriterNodeModel extends NoInternalsModel {
     }
 
     // save the sub workflow to some temp folder
-    Path tempDirWithPrefix = Files.createTempDirectory(Paths.get(PreferenceInitializer.getFSKWorkingDirectory()), nodeContext.getNodeContainer()
+    Path tempDirWithPrefix = Files.createTempDirectory(Paths.get(PythonPreferences.getFSKWorkingDirectoryPath()), nodeContext.getNodeContainer()
         .getNameWithID().toString().replaceAll("\\W", "").replace(" ", ""));
 
     File srcDir = tempDirWithPrefix.toFile();
     parentSubWorkflow.save(srcDir, exec, true);
     // TODO find a way to release the folder
-    Path tempdisDirWithPrefix = Files.createTempDirectory(Paths.get(PreferenceInitializer.getFSKWorkingDirectory()), nodeContext.getNodeContainer()
+    Path tempdisDirWithPrefix = Files.createTempDirectory(Paths.get(PythonPreferences.getFSKWorkingDirectoryPath()), nodeContext.getNodeContainer()
         .getNameWithID().toString().replaceAll("\\W", "").replace(" ", ""));
     File destDir = tempdisDirWithPrefix.toFile();
 

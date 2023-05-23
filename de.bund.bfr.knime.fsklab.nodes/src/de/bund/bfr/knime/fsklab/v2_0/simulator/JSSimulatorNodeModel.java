@@ -67,7 +67,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.nodes.environment.EnvironmentManager;
 import de.bund.bfr.knime.fsklab.nodes.environment.ExistingEnvironmentManager;
-import de.bund.bfr.knime.fsklab.preferences.PreferenceInitializer;
+import de.bund.bfr.knime.fsklab.preferences.PythonPreferences;
 import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
 import de.bund.bfr.knime.fsklab.v2_0.FskSimulation;
 import de.bund.bfr.knime.fsklab.v2_0.joiner.JoinerNodeUtil;
@@ -295,7 +295,7 @@ class JSSimulatorNodeModel
     port.simulations.clear();
     
     Optional<Path> workingDirectory = null;
-    String userPath = PreferenceInitializer.getFSKWorkingDirectory();
+    String userPath = PythonPreferences.getFSKWorkingDirectoryPath();
     Path directory = Files.createTempDirectory(Paths.get(userPath), "workingDirectory");
     
     workingDirectory = Optional.of(directory);

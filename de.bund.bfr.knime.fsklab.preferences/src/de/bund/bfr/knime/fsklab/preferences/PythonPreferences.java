@@ -162,12 +162,16 @@ public final class PythonPreferences {
     public static PythonCommand getRCommandPreference() {
         return getPythonCommandPreference(RPythonVersion.R);
     }
-
+    
+    
+    public static String getFSKWorkingDirectoryPath() {
+        return getFSKEnvironmentsConfig().getFSKConfig().getFSKPath().getStringValue();
+    }
 
     /**
      * @return The current FSK working directory.
      */
-    public static FSKEnvironmentsConfig getFSKEnvironmentsConfig() {
+    private static FSKEnvironmentsConfig getFSKEnvironmentsConfig() {
     	FSKEnvironmentsConfig environmentsConfig = new FSKEnvironmentsConfig();
     	environmentsConfig.loadConfigFrom(CURRENT);
         return environmentsConfig;
@@ -239,7 +243,7 @@ public final class PythonPreferences {
     public static String getCondaInstallationPath() {
         return CondaPreferences.getCondaInstallationDirectory();
     }
-
+    
     public static String getPython2CondaEnvironmentDirectoryPath() {
         final CondaEnvironmentsConfig condaEnvironmentsConfig = loadCurrentCondaEnvironmentsConfig();
         return condaEnvironmentsConfig.getPython2Config().getEnvironmentDirectory().getStringValue();

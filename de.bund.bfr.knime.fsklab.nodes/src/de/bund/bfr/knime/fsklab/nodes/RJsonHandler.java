@@ -2,8 +2,8 @@ package de.bund.bfr.knime.fsklab.nodes;
 
 import de.bund.bfr.knime.fsklab.PackageNotFoundException;
 import de.bund.bfr.knime.fsklab.VariableNotGlobalException;
+import de.bund.bfr.knime.fsklab.preferences.PythonPreferences;
 import de.bund.bfr.knime.fsklab.r.client.ScriptExecutor;
-import de.bund.bfr.knime.fsklab.preferences.PreferenceInitializer;
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
 import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
 import de.bund.bfr.metadata.swagger.Parameter;
@@ -58,7 +58,7 @@ public class RJsonHandler extends JsonHandler {
     List<Parameter> parameters = SwaggerUtil.getParameter(fskObj.modelMetadata);
     for (Parameter p : parameters) {
       if (p.getClassification() != Parameter.ClassificationEnum.OUTPUT) {
-        File temp = FileUtil.createTempFile("temp_parameters", ".json", new File(PreferenceInitializer.getFSKWorkingDirectory()), false);
+        File temp = FileUtil.createTempFile("temp_parameters", ".json", new File(PythonPreferences.getFSKWorkingDirectoryPath()), false);
         try {
           Boolean isDataFrame = scriptHandler.runScript("class(" + p.getId() + ")", exec, true)[0]
               .contains("data.frame");
@@ -108,7 +108,7 @@ public class RJsonHandler extends JsonHandler {
     for (Parameter p : parameters) {
       
       if (p.getClassification() == Parameter.ClassificationEnum.OUTPUT) {
-        File temp = FileUtil.createTempFile("temp_parameters", ".json",new File(PreferenceInitializer.getFSKWorkingDirectory()), false);
+        File temp = FileUtil.createTempFile("temp_parameters", ".json",new File(PythonPreferences.getFSKWorkingDirectoryPath()), false);
         try {
 
           //script.append("toJSON(" + p.getId() + ", auto_unbox=TRUE)\n");
@@ -184,7 +184,7 @@ public class RJsonHandler extends JsonHandler {
       // doesn't seem to work properly
 
       //File tempDir = FileUtil.createTempDir("rawJsonData");
-      File tempData = FileUtil.createTempFile("data", "json",new File(PreferenceInitializer.getFSKWorkingDirectory()), false);
+      File tempData = FileUtil.createTempFile("data", "json",new File(PythonPreferences.getFSKWorkingDirectoryPath()), false);
       //MAPPER.writer().writeValue(new FileOutputStream(tempData), param.getData());
       FileWriter writer = new FileWriter(tempData);
       

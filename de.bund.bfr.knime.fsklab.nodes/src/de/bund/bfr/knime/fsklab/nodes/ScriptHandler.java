@@ -13,6 +13,7 @@ import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.util.FileUtil;
+import org.knime.python2.PythonVersion;
 import org.rosuda.REngine.REXPMismatchException;
 import de.bund.bfr.knime.fsklab.FskErrorMessages;
 import de.bund.bfr.knime.fsklab.JsonFileNotFoundException;
@@ -20,9 +21,9 @@ import de.bund.bfr.knime.fsklab.ModelScriptException;
 import de.bund.bfr.knime.fsklab.ResourceFileNotFoundException;
 import de.bund.bfr.knime.fsklab.VariableNotGlobalException;
 import de.bund.bfr.knime.fsklab.nodes.plot.ModelPlotter;
+import de.bund.bfr.knime.fsklab.preferences.PythonPreferences;
 import de.bund.bfr.knime.fsklab.r.client.ScriptExecutor;
-import de.bund.bfr.knime.fsklab.preferences.PreferenceInitializer;
-import de.bund.bfr.knime.fsklab.python2.PythonVersion;
+
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
 import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
 import de.bund.bfr.knime.fsklab.v2_0.FskSimulation;
@@ -73,7 +74,7 @@ public abstract class ScriptHandler implements AutoCloseable {
     if (fskObj.getEnvironmentManager().isPresent()) {
       workingDirectory = fskObj.getEnvironmentManager().get().getEnvironment().get();
     } else {
-      workingDirectory = FileUtil.createTempDir("tempResourceFiles",new File(PreferenceInitializer.getFSKWorkingDirectory())).toPath();
+      workingDirectory = FileUtil.createTempDir("tempResourceFiles",new File(PythonPreferences.getFSKWorkingDirectoryPath())).toPath();
 
     }
     setWorkingDirectory(workingDirectory, exec);
@@ -408,7 +409,7 @@ public abstract class ScriptHandler implements AutoCloseable {
     String command = createVectorQuery(outputFileParameterIds);
 
     try {
-      File newResourcesDirectory = FileUtil.createTempDir("generatedResources",new File(PreferenceInitializer.getFSKWorkingDirectory()));
+      File newResourcesDirectory = FileUtil.createTempDir("generatedResources",new File(PythonPreferences.getFSKWorkingDirectoryPath()));
 
       if (!command.equals("c()") && !command.equals("print([])")) {
         try {

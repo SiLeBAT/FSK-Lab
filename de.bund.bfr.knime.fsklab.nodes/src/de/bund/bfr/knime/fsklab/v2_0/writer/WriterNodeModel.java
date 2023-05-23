@@ -35,7 +35,7 @@ import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
 import de.bund.bfr.knime.fsklab.nodes.ScriptHandler;
 import de.bund.bfr.knime.fsklab.nodes.WriterNodeUtils;
 import de.bund.bfr.knime.fsklab.r.client.LibRegistry;
-import de.bund.bfr.knime.fsklab.preferences.PreferenceInitializer;
+import de.bund.bfr.knime.fsklab.preferences.PythonPreferences;
 import de.bund.bfr.knime.fsklab.v2_0.CombinedFskPortObject;
 import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
 import de.bund.bfr.knime.fsklab.v2_0.FskSimulation;
@@ -311,7 +311,7 @@ class WriterNodeModel extends NoInternalsModel {
     {
       SEDMLDocument sedmlDoc = createSedml(fskObj, scriptHandler);
 
-      File tempFile = FileUtil.createTempFile("sim", "", new File(PreferenceInitializer.getFSKWorkingDirectory()), false);
+      File tempFile = FileUtil.createTempFile("sim", "", new File(PythonPreferences.getFSKWorkingDirectoryPath()), false);
       sedmlDoc.writeDocument(tempFile);
       archive.addEntry(tempFile, filePrefix + "sim.sedml", URIS.get("sedml"));
     }
@@ -383,7 +383,7 @@ class WriterNodeModel extends NoInternalsModel {
     {
       SEDMLDocument sedmlDoc = createSedml(fskObj, scriptHandler);
 
-      File tempFile = FileUtil.createTempFile("sim", "", new File(PreferenceInitializer.getFSKWorkingDirectory()), false);
+      File tempFile = FileUtil.createTempFile("sim", "", new File(PythonPreferences.getFSKWorkingDirectoryPath()), false);
       sedmlDoc.writeDocument(tempFile);
       archive.addEntry(tempFile, filePrefix + "sim.sedml", URIS.get("sedml"));
     }
@@ -433,7 +433,7 @@ class WriterNodeModel extends NoInternalsModel {
       File localPath = FileUtil.getFileFromURL(url);
 
       // Creates archive in temporary archive file
-      File archiveFile = FileUtil.createTempFile("model", "fskx", new File(PreferenceInitializer.getFSKWorkingDirectory()), false);
+      File archiveFile = FileUtil.createTempFile("model", "fskx", new File(PythonPreferences.getFSKWorkingDirectoryPath()), false);
       
       // The file is deleted since we need the path only for the COMBINE archive
       archiveFile.delete();
@@ -483,7 +483,7 @@ class WriterNodeModel extends NoInternalsModel {
         SBMLDocument sbmlDocument = createSBML(portObject, archive, "model", URIS, "");
 
         // Create temporary file and write sbmlDocument into it
-        File temporaryFile = File.createTempFile("connections", ".sbml", new File(PreferenceInitializer.getFSKWorkingDirectory()));
+        File temporaryFile = File.createTempFile("connections", ".sbml", new File(PythonPreferences.getFSKWorkingDirectoryPath()));
         SBMLWriter.write(sbmlDocument, temporaryFile, null, null);
 
         String targetName;
@@ -593,7 +593,7 @@ class WriterNodeModel extends NoInternalsModel {
   private static void addPackagesFile(final CombineArchive archive, final String packageInfoList,
       final String filename) throws IOException, URISyntaxException {
 
-    File rPackagesFile = File.createTempFile("tempPackage", ".json", new File(PreferenceInitializer.getFSKWorkingDirectory()));
+    File rPackagesFile = File.createTempFile("tempPackage", ".json", new File(PythonPreferences.getFSKWorkingDirectoryPath()));
     FileUtils.writeStringToFile(rPackagesFile, packageInfoList, "UTF-8");
 
     archive.addEntry(rPackagesFile, filename, FSKML.getURIS(1, 0, 12).get("json"));
@@ -703,7 +703,7 @@ class WriterNodeModel extends NoInternalsModel {
 
   public static String writeSBMLFile(SBMLDocument doc, CombineArchive archive, String filePrefix,
       Map<String, URI> URIS) throws IOException, SBMLException, XMLStreamException {
-    File tempFile = FileUtil.createTempFile("sbml", "", new File(PreferenceInitializer.getFSKWorkingDirectory()), false);
+    File tempFile = FileUtil.createTempFile("sbml", "", new File(PythonPreferences.getFSKWorkingDirectoryPath()), false);
     String fileName = filePrefix + doc.getModel().getId() + ".sbml";
     new SBMLWriter().write(doc, tempFile);
     archive.addEntry(tempFile, fileName, FSKML.getURIS(1, 0, 12).get("sbml"));
@@ -726,7 +726,7 @@ class WriterNodeModel extends NoInternalsModel {
   private static ArchiveEntry addRScript(final CombineArchive archive, final String script,
       final String filename, ScriptHandler scriptHandler) throws IOException, URISyntaxException {
 
-    final File file = File.createTempFile("temp", ".r", new File(PreferenceInitializer.getFSKWorkingDirectory()));
+    final File file = File.createTempFile("temp", ".r", new File(PythonPreferences.getFSKWorkingDirectoryPath()));
     FileUtils.writeStringToFile(file, script, "UTF-8");
 
     final ArchiveEntry entry = archive.addEntry(file, filename, FSKML.getURIS(1, 0, 12).get(scriptHandler.getFileExtension()));
@@ -745,7 +745,7 @@ class WriterNodeModel extends NoInternalsModel {
     mapper.registerModule(new ThreeTenModule());
     mapper.setSerializationInclusion(Include.NON_NULL);
 
-    File file = File.createTempFile("temp", ".json", new File(PreferenceInitializer.getFSKWorkingDirectory()));
+    File file = File.createTempFile("temp", ".json", new File(PythonPreferences.getFSKWorkingDirectoryPath()));
 
     mapper.writeValue(file, model);
 
@@ -884,7 +884,7 @@ class WriterNodeModel extends NoInternalsModel {
 
     String script = scriptHandler.buildParameterScript(simulation);
 
-    File tempFile = File.createTempFile("temp", "." + scriptHandler.getFileExtension(), new File(PreferenceInitializer.getFSKWorkingDirectory()));
+    File tempFile = File.createTempFile("temp", "." + scriptHandler.getFileExtension(), new File(PythonPreferences.getFSKWorkingDirectoryPath()));
     
     FileUtils.writeStringToFile(tempFile, script, "UTF-8");
 
@@ -899,7 +899,7 @@ class WriterNodeModel extends NoInternalsModel {
   private static void addReadme(CombineArchive archive, String readme, String filePrefix)
       throws IOException {
 
-    File readmeFile = File.createTempFile("README", ".txt", new File(PreferenceInitializer.getFSKWorkingDirectory()));
+    File readmeFile = File.createTempFile("README", ".txt", new File(PythonPreferences.getFSKWorkingDirectoryPath()));
     FileUtils.writeStringToFile(readmeFile, readme, "UTF-8");
 
     ArchiveEntry readmeEntry = archive.addEntry(readmeFile, filePrefix + "README.txt",

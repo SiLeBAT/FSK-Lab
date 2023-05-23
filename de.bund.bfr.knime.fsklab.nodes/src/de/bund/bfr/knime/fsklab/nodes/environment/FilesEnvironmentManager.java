@@ -11,7 +11,7 @@ import org.apache.commons.io.FileUtils;
 import org.knime.core.util.FileUtil;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import de.bund.bfr.knime.fsklab.preferences.PreferenceInitializer;
+import de.bund.bfr.knime.fsklab.preferences.PythonPreferences;
 /**
  * FilesEnvironmentManager handles working directories made out of referenced files. If the
  * references files array is null, empty or the files do not exist,
@@ -55,7 +55,7 @@ public class FilesEnvironmentManager implements EnvironmentManager {
     }
 
     try {
-      Path environment = Files.createTempDirectory(Paths.get(PreferenceInitializer.getFSKWorkingDirectory()),"workingDirectory");
+      Path environment = Files.createTempDirectory(Paths.get(PythonPreferences.getFSKWorkingDirectoryPath()),"workingDirectory");
       for (Path filePath : filePaths) {
         Path sourcePath = filePath;
         Path targetPath = environment.resolve(sourcePath.getFileName());

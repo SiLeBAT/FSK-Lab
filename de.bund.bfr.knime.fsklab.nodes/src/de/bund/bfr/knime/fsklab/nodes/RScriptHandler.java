@@ -3,7 +3,7 @@ package de.bund.bfr.knime.fsklab.nodes;
 import de.bund.bfr.knime.fsklab.nodes.plot.BasePlotter;
 import de.bund.bfr.knime.fsklab.nodes.plot.Ggplot2Plotter;
 import de.bund.bfr.knime.fsklab.nodes.plot.RCondaPlotter;
-import de.bund.bfr.knime.fsklab.preferences.PreferenceInitializer;
+import de.bund.bfr.knime.fsklab.preferences.PythonPreferences;
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
 import de.bund.bfr.knime.fsklab.r.client.LibRegistry;
 import de.bund.bfr.knime.fsklab.r.client.LibRegistry.NoInternetException;
@@ -31,7 +31,7 @@ import org.knime.core.node.NodeLogger;
 import org.knime.core.util.FileUtil;
 import org.rosuda.REngine.REXP;
 import org.rosuda.REngine.REXPMismatchException;
-
+import de.bund.bfr.knime.fsklab.python2.config.PythonEnvironmentType;
 public class RScriptHandler extends ScriptHandler {
 
   ScriptExecutor executor;
@@ -48,7 +48,7 @@ public class RScriptHandler extends ScriptHandler {
     this.controller = new RController();
     this.executor = new ScriptExecutor(controller);
 
-    if(PreferenceInitializer.isRConda()) {
+    if(PythonPreferences.getEnvironmentTypePreference() == PythonEnvironmentType.CONDA) {
       plotter = new RCondaPlotter(controller);
     } else {
       if (packages.contains("ggplot2") || packages.contains("tidyverse")) {
@@ -139,7 +139,7 @@ public class RScriptHandler extends ScriptHandler {
       try {
         LibRegistry.instance().install(fskObj.packages);  
       } catch ( RException| REXPMismatchException | NoInternetException e) {
-        PreferenceInitializer.refresh = true;
+        //PreferenceInitializer.refresh = true;
         LibRegistry.instance().install(fskObj.packages);
       }
       
@@ -164,7 +164,7 @@ public class RScriptHandler extends ScriptHandler {
   @Override
   public void saveWorkspace(final FskPortObject fskObj, ExecutionContext exec) throws Exception {
     if (fskObj.getWorkspace() == null) {
-      fskObj.setWorkspace(FileUtil.createTempFile("workspace", ".RData",new File(PreferenceInitializer.getFSKWorkingDirectory()), false).toPath());
+      fskObj.setWorkspace(FileUtil.createTempFile("workspace", ".RData",new File(PythonPreferences.getFSKWorkingDirectoryPath()), false).toPath());
     }
 
 

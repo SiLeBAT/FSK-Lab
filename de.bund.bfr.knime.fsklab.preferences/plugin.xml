@@ -4,9 +4,6 @@
 
   
    
-   <extension-point id="de.bund.bfr.knime.fsklab.python2.sourcecodetemplates" name="Source code templates extension" schema="schema/sourcecodetemplates.exsd"/>
-   <extension-point id="de.bund.bfr.knime.fsklab.python2.serializationlibrary" name="Python serialization library" schema="schema/serializationlibrary.exsd"/>
-   <extension-point id="de.bund.bfr.knime.fsklab.python2.PythonKernelBackend" name="Python kernel back end" schema="schema/PythonKernelBackend.exsd"/>
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
@@ -18,39 +15,12 @@
       
    </extension>
    <extension
-         point="org.knime.core.PortType">
-      <portType
-            color="#1eb9dc"
-            hidden="false"
-            name="Python"
-            objectClass="de.bund.bfr.knime.fsklab.python2.port.PickledObjectFileStorePortObject"
-            objectSerializer="de.bund.bfr.knime.fsklab.python2.port.PickledObjectFileStorePortObject$Serializer"
-            specClass="de.bund.bfr.knime.fsklab.python2.port.PickledObjectPortObjectSpec"
-            specSerializer="de.bund.bfr.knime.fsklab.python2.port.PickledObjectPortObjectSpec$Serializer">
-      </portType>
-      <portType
-            color="#1eb9dc"
-            hidden="true"
-            name="Python (deprecated)"
-            objectClass="de.bund.bfr.knime.fsklab.python2.port.PickledObjectPortObject"
-            objectSerializer="de.bund.bfr.knime.fsklab.python2.port.PickledObjectPortObject$Serializer"
-            specClass="de.bund.bfr.knime.fsklab.python2.port.PickledObjectPortObjectSpec"
-            specSerializer="de.bund.bfr.knime.fsklab.python2.port.PickledObjectPortObjectSpec$Serializer">
-      </portType>
-   </extension>
-   <extension
          point="org.eclipse.core.runtime.preferences">
       <initializer
             class="de.bund.bfr.knime.fsklab.preferences.PythonPreferencesInitializer">
       </initializer>
-      <initializer
-            class="de.bund.bfr.knime.fsklab.preferences.advanced.PythonAdvancedPreferencesInitializer">
-      </initializer>
    </extension>
    <extension
          point="org.knime.python2.PythonKernelBackend">
-      <PythonKernelBackend
-            PythonKernelBackendFactory="de.bund.bfr.knime.fsklab.python2.kernel.Python2KernelBackendFactory">
-      </PythonKernelBackend>
    </extension>
 </plugin>

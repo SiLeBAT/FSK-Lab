@@ -12,7 +12,7 @@ import org.jdom2.JDOMException;
 import org.knime.core.util.FileUtil;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import de.bund.bfr.knime.fsklab.preferences.PreferenceInitializer;
+import de.bund.bfr.knime.fsklab.preferences.PythonPreferences;
 import de.unirostock.sems.cbarchive.ArchiveEntry;
 import de.unirostock.sems.cbarchive.CombineArchive;
 import de.unirostock.sems.cbarchive.CombineArchiveException;
@@ -73,7 +73,7 @@ public class ArchivedEnvironmentManager implements EnvironmentManager {
     lock(archiveFile.toFile());
     
     try (CombineArchive archive = new CombineArchive(archiveFile.toFile())) {
-      Path environment = Files.createTempDirectory(Paths.get(PreferenceInitializer.getFSKWorkingDirectory()),"workingDirectory") ;
+      Path environment = Files.createTempDirectory(Paths.get(PythonPreferences.getFSKWorkingDirectoryPath()),"workingDirectory") ;
       if (entries != null && entries.length != 0) {
         for (String entryLocation : entries) {
           ArchiveEntry resourceEntry = archive.getEntry(entryLocation);

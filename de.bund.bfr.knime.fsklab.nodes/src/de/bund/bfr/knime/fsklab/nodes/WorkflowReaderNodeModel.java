@@ -51,7 +51,7 @@ import org.knime.core.node.workflow.WorkflowManager;
 import org.knime.core.node.workflow.WorkflowPersistor.WorkflowLoadResult;
 import org.knime.core.node.workflow.contextv2.WorkflowContextV2;
 import org.knime.core.util.FileUtil;
-import de.bund.bfr.knime.fsklab.preferences.PreferenceInitializer;
+import de.bund.bfr.knime.fsklab.preferences.PythonPreferences;
 
 class WorkflowReaderNodeModel extends NoInternalsModel {
 
@@ -95,7 +95,7 @@ class WorkflowReaderNodeModel extends NoInternalsModel {
     exec.setMessage("Reading subworkflow");
     final  WorkflowContextV2 origContext = NodeContext.getContext().getWorkflowManager().getContextV2();
     NodeContext nodeContext = NodeContext.getContext();
-    Path tempDirWithPrefix = Files.createTempDirectory(Paths.get(PreferenceInitializer.getFSKWorkingDirectory()), nodeContext.getNodeContainer()
+    Path tempDirWithPrefix = Files.createTempDirectory(Paths.get(PythonPreferences.getFSKWorkingDirectoryPath()), nodeContext.getNodeContainer()
         .getNameWithID().toString().replaceAll("\\W", "").replace(" ", ""));
 
     FileUtil.unzip(new File(nodeSettings.filePath), tempDirWithPrefix.toFile());

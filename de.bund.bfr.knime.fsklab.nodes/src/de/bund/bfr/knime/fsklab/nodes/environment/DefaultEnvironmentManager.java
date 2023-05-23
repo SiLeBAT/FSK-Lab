@@ -8,7 +8,7 @@ import java.util.Optional;
 import org.knime.core.util.FileUtil;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import de.bund.bfr.knime.fsklab.preferences.PreferenceInitializer;
+import de.bund.bfr.knime.fsklab.preferences.PythonPreferences;
 
 /**
  * 
@@ -37,7 +37,7 @@ public class DefaultEnvironmentManager implements EnvironmentManager {
   public Optional<Path> getEnvironment() {
 
     try {
-      environmentPath = FileUtil.createTempDir("defaultWorkingDirectory",new File(PreferenceInitializer.getFSKWorkingDirectory())).getAbsolutePath();
+      environmentPath = FileUtil.createTempDir("defaultWorkingDirectory",new File(PythonPreferences.getFSKWorkingDirectoryPath())).getAbsolutePath();
     }catch(Exception e) {
       e.printStackTrace();
     }

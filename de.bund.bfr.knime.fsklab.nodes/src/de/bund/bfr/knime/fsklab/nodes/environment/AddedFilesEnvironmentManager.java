@@ -11,7 +11,7 @@ import org.apache.commons.io.FileUtils;
 import org.knime.core.util.FileUtil;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import de.bund.bfr.knime.fsklab.preferences.PreferenceInitializer;
+import de.bund.bfr.knime.fsklab.preferences.PythonPreferences;
 /**
  * AddedFilesEnvironmentManager handles working directories made out of referenced files in 
  * addition to the working directories contained within FSKX archives. If the
@@ -79,7 +79,7 @@ public class AddedFilesEnvironmentManager implements EnvironmentManager {
     try {
       //Path environment = Files.createTempDirectory("workingDirectory");
       if(!environment.isPresent()) {
-        environment = Optional.of(Files.createTempDirectory(Paths.get(PreferenceInitializer.getFSKWorkingDirectory()),"workingDirectory"));
+        environment = Optional.of(Files.createTempDirectory(Paths.get(PythonPreferences.getFSKWorkingDirectoryPath()),"workingDirectory"));
       }
         
       for (Path filePath : filePaths) {
