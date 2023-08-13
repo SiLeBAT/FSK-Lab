@@ -4,12 +4,11 @@ Bundle-Name: Service
 Bundle-SymbolicName: de.bund.bfr.knime.fsklab.service
 Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: de.bund.bfr.knime.fsklab.service
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: com.fasterxml.jackson.core.jackson-annotations;bundle-version="2.8.9",
  com.fasterxml.jackson.core.jackson-core;bundle-version="2.8.9",
  com.fasterxml.jackson.core.jackson-databind;bundle-version="2.8.9",
  de.bund.bfr.knime.fsklab.metadata.model;bundle-version="0.1.0",
- javax.servlet;bundle-version="3.1.0",
  org.eclipse.jetty.http;bundle-version="9.4.8",
  org.eclipse.jetty.io;bundle-version="9.4.8",
  org.eclipse.jetty.server;bundle-version="9.4.8",
@@ -17,9 +16,10 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations;bundle-version="2
  org.eclipse.core.runtime;bundle-version="3.13.0",
  org.apache.commons.io;bundle-version="2.6.0",
  org.h2;bundle-version="1.4.196",
- org.knime.core;bundle-version="[4.0.0,5.0.0)",
+ org.knime.core;bundle-version="[4.0.0,6.0.0)",
  org.slf4j.api;bundle-version="1.7.2"
 Export-Package: de.bund.bfr.knime.fsklab.service
 Bundle-ClassPath: .,
  spark-core-2.9.1.jar,
- vocabularies-2.0.3.jar
+ vocabularies-2.0.3.jar,
+ javax.servlet-3.0.0.v201112011016.jar

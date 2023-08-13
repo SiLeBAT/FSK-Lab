@@ -4,11 +4,11 @@ Bundle-Name: Tests
 Bundle-SymbolicName: de.bund.bfr.knime.foodprocess.tests
 Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: de.bund.bfr.knime.foodprocess.tests
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: org.junit,
  de.bund.bfr.knime.foodprocess.pcml,
  de.bund.bfr.knime.foodprocess.util,
  de.bund.bfr.knime.pmm.common,
  de.bund.bfr.knime.foodprocess,
  de.bund.bfr.knime.pmm.nodes,
- org.knime.core;bundle-version="[4.0.0,5.0.0)"
+ org.knime.core;bundle-version="[4.0.0,6.0.0)"

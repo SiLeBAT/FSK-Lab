@@ -60,14 +60,14 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.knime.conda.*;
+import org.knime.conda.prefs.CondaPreferences;
 import org.knime.python2.Activator;
 import org.knime.python2.CondaPythonCommand;
 import org.knime.python2.ManualPythonCommand;
 import org.knime.python2.PythonKernelTester;
 import org.knime.python2.PythonKernelTester.PythonKernelTestResult;
 import org.knime.python2.PythonVersion;
-import org.knime.python2.conda.Conda;
-import org.knime.python2.conda.CondaEnvironmentIdentifier;
 import org.knime.python2.config.CondaEnvironmentsConfig;
 import org.knime.python2.config.PythonConfigStorage;
 import org.knime.python2.prefs.PreferenceStorage;
@@ -836,7 +836,7 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 
 	public static String getCondaInstallationPath() {
 		final CondaEnvironmentsConfig condaEnvironmentsConfig = loadCurrentCondaEnvironmentsConfig();
-		return condaEnvironmentsConfig.getCondaDirectoryPath().getStringValue();
+		return CondaPreferences.getCondaInstallationDirectory();
 	}
 
 	public static String getPython2CondaEnvironmentDirectoryPath() {

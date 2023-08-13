@@ -5,6 +5,6 @@ Bundle-SymbolicName: de.bund.bfr.knime.pmm.common.tests
 Bundle-Version: 1.0.0.qualifier
 Fragment-Host: de.bund.bfr.knime.pmm.common;bundle-version="1.0.0"
 Automatic-Module-Name: de.bund.bfr.knime.pmm.common.tests
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-Vendor: German Federal Institute for Risk Assessment (BfR)
 Require-Bundle: org.junit;bundle-version="4.12.0"

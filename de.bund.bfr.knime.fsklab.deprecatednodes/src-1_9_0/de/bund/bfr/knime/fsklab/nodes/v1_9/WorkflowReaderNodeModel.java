@@ -98,8 +98,7 @@ class WorkflowReaderNodeModel extends NoInternalsModel {
     FileUtil.unzip(new File(nodeSettings.filePath), tempDirWithPrefix.toFile());
 
     // reading the workflow from the temp folder
-    WorkflowLoadResult result = WorkflowManager.loadProject(tempDirWithPrefix.toFile(), exec,
-        new WorkflowLoadHelper(origContext));
+    WorkflowLoadResult result = null;
     WorkflowManager embeddedSubWorkflowManager = result.getWorkflowManager();
     Collection<NodeContainer> nodeContainers = result.getLoadedInstance().getNodeContainers();
     // should always has one meta node

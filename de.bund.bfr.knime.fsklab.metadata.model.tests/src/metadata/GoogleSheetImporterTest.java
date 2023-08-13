@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.time.LocalDate;
 
-import javax.json.JsonObject;
 
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -21,6 +20,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 import de.bund.bfr.knime.fsklab.metadata.model.tests.TestUtils;
+import jakarta.json.JsonObject;
 
 // TODO: tests methods are commented since GoogleSheetImporter is not implemented yet
 @SuppressWarnings("static-method")

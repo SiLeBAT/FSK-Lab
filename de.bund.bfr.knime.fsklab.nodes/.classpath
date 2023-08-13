@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry exported="true" kind="lib" path="libs/jdom2-2.0.6.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/jackson-module-jsonschema-2.2.1.jar"/>
 	<classpathentry kind="lib" path="libs/jhdf-0.5.11.jar"/>
 	<classpathentry kind="lib" path="libs/batik-svg-dom.jar"/>
@@ -16,6 +17,10 @@
 	<classpathentry kind="lib" path="libs/vocabularies-2.0.0.jar"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="lib" path="libs/fskml-1.0.13.jar" sourcepath="libs/fskml-1.0.13-sources.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-17">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

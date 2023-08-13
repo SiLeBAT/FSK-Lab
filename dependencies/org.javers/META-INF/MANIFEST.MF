@@ -40,5 +40,5 @@ Export-Package: org.javers.common.collections,
  org.javers.core.snapshot,
  org.javers.repository.api,
  org.javers.repository.jql
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Automatic-Module-Name: org.javers

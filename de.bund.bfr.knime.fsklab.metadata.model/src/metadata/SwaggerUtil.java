@@ -16,6 +16,8 @@ import de.bund.bfr.metadata.swagger.QraModel;
 import de.bund.bfr.metadata.swagger.Reference.PublicationTypeEnum;
 import de.bund.bfr.metadata.swagger.RiskModel;
 import de.bund.bfr.metadata.swagger.ToxicologicalModel;
+import jakarta.json.*;
+
 import java.io.StringReader;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -26,8 +28,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
-import javax.json.Json;
-import javax.json.JsonObject;
 import org.threeten.bp.LocalDate;
 
 public class SwaggerUtil {

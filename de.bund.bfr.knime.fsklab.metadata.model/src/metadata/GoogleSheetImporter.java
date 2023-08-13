@@ -1,6 +1,6 @@
 package metadata;
-import javax.json.JsonObject;
 
+import jakarta.json.*;
 import metadata.Assay;
 import metadata.Contact;
 import metadata.DataBackground;

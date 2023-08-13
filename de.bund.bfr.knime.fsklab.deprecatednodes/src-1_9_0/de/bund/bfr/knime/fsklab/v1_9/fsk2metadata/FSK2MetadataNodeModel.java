@@ -19,7 +19,6 @@
 package de.bund.bfr.knime.fsklab.v1_9.fsk2metadata;
 
 import java.io.IOException;
-import javax.json.JsonValue;
 import org.knime.core.data.DataCell;
 import org.knime.core.data.DataColumnSpec;
 import org.knime.core.data.DataColumnSpecCreator;
@@ -42,6 +41,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.bund.bfr.knime.fsklab.FskPluginObjectMapper;
 import de.bund.bfr.knime.fsklab.v1_9.FskPortObject;
+import jakarta.json.JsonValue;
 import metadata.SwaggerUtil;
 
 public class FSK2MetadataNodeModel extends StatelessModel {
