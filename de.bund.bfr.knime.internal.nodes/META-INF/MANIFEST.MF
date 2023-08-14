@@ -11,10 +11,9 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations;bundle-version="2
  de.bund.bfr.knime.fsklab.preferences;bundle-version="1.0.0",
  de.bund.bfr.knime.nodes.util;bundle-version="1.0.0",
  org.apache.commons.codec,
- org.knime.base;bundle-version="[4.0.0,6.0.0)",
- org.knime.core;bundle-version="[4.0.0,6.0.0)",
- org.knime.ext.svg;bundle-version="[4.0.0,6.0.0)",
- org.knime.js.core;bundle-version="[4.0.0,6.0.0)"
+ org.knime.base;bundle-version="[5.1.0,6.0.0)",
+ org.knime.core;bundle-version="[5.1.0,6.0.0)",
+ org.knime.ext.svg;bundle-version="[5.1.0,6.0.0)",
+ org.knime.js.core;bundle-version="[5.1.0,6.0.0)"
 Bundle-Vendor: German Federal Institute for Risk Assessment (BfR)
 Bundle-Activator: de.bund.bfr.knime.internal.nodes.Activator
-Import-Package: org.w3c.dom.events

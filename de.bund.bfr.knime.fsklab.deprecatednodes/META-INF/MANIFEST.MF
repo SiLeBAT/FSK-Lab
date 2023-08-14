@@ -12,9 +12,13 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations;bundle-version="2
  org.apache.commons.lang3;bundle-version="3.3.1",
  org.apache.poi;bundle-version="4.1.1",
  org.apache.poi.ooxml;bundle-version="4.1.1",
- org.knime.base,
- org.knime.ext.r.type,
- org.knime.js.core,
+ org.knime.base;bundle-version="[5.1.0,6.0.0)",
+ org.knime.ext.r.type;bundle-version="[5.1.0,6.0.0)",
+ org.knime.js.core;bundle-version="[5.1.0,6.0.0)",
+ org.knime.json;bundle-version="[5.1.0,6.0.0)",
+ org.knime.python2;bundle-version="[5.1.0,6.0.0)",
+ org.knime.ext.svg;bundle-version="[5.1.0,6.0.0)",
+ org.knime.core;bundle-version="[5.1.0,6.0.0)",
  org.jsoup,
  de.bund.bfr.knime.nodes.util,
  de.bund.bfr.knime.fsklab.r,
@@ -25,16 +29,12 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations;bundle-version="2
  org.sbml.jsbml;bundle-version="1.0.0",
  de.unirostock.sems.CombineArchive;bundle-version="1.4.0",
  com.gmail.gcolaianni5.jris;bundle-version="1.0.0",
- org.knime.json;bundle-version="5.1.0",
  com.sun.jna;bundle-version="4.4.0",
- org.knime.python2;bundle-version="3.7.2",
- org.knime.ext.svg;bundle-version="3.7.0",
  org.slf4j.api;bundle-version="1.7.2",
  de.bund.bfr.knime.fsklab.service;bundle-version="1.0.0",
  de.bund.bfr.knime.js;bundle-version="1.0.0",
  com.fifesoft.rsyntaxtextarea,
  org.eclipse.ui,
- org.knime.core,
  org.apache.commons.lang;bundle-version="2.6.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ClassPath: libs/bfr-swing-1.0-SNAPSHOT.jar,
@@ -47,6 +47,5 @@ Bundle-ClassPath: libs/bfr-swing-1.0-SNAPSHOT.jar,
  sedml_libs/jmathml-2.2.1.jar,
  sedml_libs/xom-1.2.5.jar,
  libs/jdom2-2.0.6.jar
-Import-Package: com.fasterxml.jackson.datatype.jsr310;version="2.7.1",
- org.w3c.dom.events;resolution:=optional
+Import-Package: com.fasterxml.jackson.datatype.jsr310;version="2.7.1"
 Bundle-ActivationPolicy: lazy
