@@ -71,16 +71,17 @@
 
     <!-- List the update sites providing dependencies for your projects here -->
     <repositories>
-        <repository>
+        <!-- <repository>
             <id>p2-knime-update-site</id>
             <layout>p2</layout>
             <url>https://update.knime.com/analytics-platform/${knime.version}</url>
-        </repository>
-        <repository>
+        </repository> -->
+        <!-- <repository>
             <id>p2-knime-trusted-community</id>
             <layout>p2</layout>
             <url>https://update.knime.com/community-contributions/trusted/${knime.version}</url>
         </repository>
+		-->
         <repository>
             <id>3d-e-chem</id>
             <layout>p2</layout>

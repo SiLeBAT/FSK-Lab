@@ -13,7 +13,7 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations;bundle-version="2
  org.apache.poi;bundle-version="4.1.1",
  org.apache.poi.ooxml;bundle-version="4.1.1",
  org.knime.base;bundle-version="[5.1.0,6.0.0)",
- org.knime.ext.r.type;bundle-version="[5.1.0,6.0.0)",
+ org.knime.ext.r.type;bundle-version="[5.0.0,6.0.0)",
  org.knime.js.core;bundle-version="[5.1.0,6.0.0)",
  org.knime.json;bundle-version="[5.1.0,6.0.0)",
  org.knime.python2;bundle-version="[5.1.0,6.0.0)",
@@ -35,7 +35,8 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations;bundle-version="2
  de.bund.bfr.knime.js;bundle-version="1.0.0",
  com.fifesoft.rsyntaxtextarea,
  org.eclipse.ui,
- org.apache.commons.lang;bundle-version="2.6.0"
+ org.apache.commons.lang;bundle-version="2.6.0",
+ com.fasterxml.jackson.datatype.jackson-datatype-jsr310
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ClassPath: libs/bfr-swing-1.0-SNAPSHOT.jar,
  libs/fskml-1.0.12.jar,
@@ -47,5 +48,4 @@ Bundle-ClassPath: libs/bfr-swing-1.0-SNAPSHOT.jar,
  sedml_libs/jmathml-2.2.1.jar,
  sedml_libs/xom-1.2.5.jar,
  libs/jdom2-2.0.6.jar
-Import-Package: com.fasterxml.jackson.datatype.jsr310;version="2.7.1"
 Bundle-ActivationPolicy: lazy

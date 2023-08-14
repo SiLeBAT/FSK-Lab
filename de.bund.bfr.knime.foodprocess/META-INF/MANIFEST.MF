@@ -21,7 +21,8 @@ Require-Bundle: com.jgoodies;bundle-version="1.4.0",
  org.knime.workbench.core;bundle-version="[5.1.0,6.0.0)",
  org.knime.workbench.editor;bundle-version="[5.1.0,6.0.0)",
  org.knime.workbench.ui;bundle-version="[5.1.0,6.0.0)",
- org.knime.workbench.ui.layout;bundle-version="[5.1.0,6.0.0)"
+ org.knime.workbench.ui.layout;bundle-version="[5.1.0,6.0.0)",
+ de.bund.bfr.knime.pmm.nodes;bundle-version="[1.0.0,2.0.0)"
 Bundle-ActivationPolicy: lazy
 Export-Package: de.bund.bfr.knime.foodprocess;
   uses:="de.bund.bfr.knime.foodprocess.lib,
@@ -36,5 +37,3 @@ Export-Package: de.bund.bfr.knime.foodprocess;
  de.bund.bfr.knime.foodprocess.lib;uses:="de.bund.bfr.knime.util,org.knime.core.node.config,javax.swing"
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Automatic-Module-Name: de.bund.bfr.knime.foodprocess
-Import-Package: de.bund.bfr.knime.pmm.estimatedmodelreader,
- de.bund.bfr.knime.pmm.predictorview

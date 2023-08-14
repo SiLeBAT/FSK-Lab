@@ -38,43 +38,6 @@ along with this program.  If not, see &amp;quot;http://www.gnu.org/licenses/&amp
          optional="true"
          search-location="both"/>
 
-   <requires>
-      <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="org.knime.core"/>
-      <import plugin="org.apache.commons.io"/>
-      <import plugin="org.apache.commons.lang3" version="3.3.1" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.ui"/>
-      <import plugin="org.eclipse.ui.workbench" version="3.108.1" match="compatible"/>
-      <import plugin="com.sun.jna" version="4.4.0" match="greaterOrEqual"/>
-      <import plugin="de.bund.bfr.knime.fsklab.preferences" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="org.knime.ext.r.type"/>
-      <import plugin="org.eclipse.emf.ecore"/>
-      <import plugin="com.fasterxml.jackson.core.jackson-annotations" version="2.4.3" match="compatible"/>
-      <import plugin="com.fasterxml.jackson.core.jackson-databind" version="2.8.9" match="compatible"/>
-      <import plugin="org.apache.servicemix.bundles.poi" version="3.17.0" match="greaterOrEqual"/>
-      <import plugin="org.junit"/>
-      <import plugin="org.glassfish.javax.json" version="1.0.4" match="compatible"/>
-      <import plugin="com.google.gson"/>
-      <import plugin="com.gmail.gcolaianni5.jris" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="de.bund.bfr.pmfml" version="0.0.12" match="greaterOrEqual"/>
-      <import plugin="com.fifesoft.rsyntaxtextarea"/>
-      <import plugin="com.google.guava"/>
-      <import plugin="com.toedter.jcalendar" version="1.4.0" match="equivalent"/>
-      <import plugin="org.knime.js.core"/>
-      <import plugin="org.knime.json"/>
-      <import plugin="org.slf4j.api"/>
-      <import plugin="org.knime.python2"/>
-      <import plugin="org.knime.base"/>
-      <import plugin="de.unirostock.sems.CombineArchive" version="1.2.1" match="greaterOrEqual"/>
-      <import plugin="org.jdom.2" version="2.0.6" match="greaterOrEqual"/>
-      <import plugin="org.knime.ext.svg"/>
-      <import plugin="org.apache.commons.lang" version="2.6.0" match="greaterOrEqual"/>
-      <import plugin="org.sbml.jsbml" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="com.google.ez-vcard" version="0.10.6" match="greaterOrEqual"/>
-      <import plugin="com.fasterxml.jackson.core.jackson-core" version="2.8.9" match="greaterOrEqual"/>
-      <import plugin="org.jsoup" version="1.11.2" match="greaterOrEqual"/>
-   </requires>
-
    <plugin
          id="de.bund.bfr.knime.nodes.util"
          download-size="0"

@@ -28,40 +28,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see &quot;http://www.gnu.org/licenses/&quot;.
    </license>
 
-   <requires>
-      <import plugin="org.eclipse.ui"/>
-      <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="org.eclipse.core.resources"/>
-      <import plugin="org.knime.core"/>
-      <import plugin="org.jdom.2" version="2.0.6" match="greaterOrEqual"/>
-      <import plugin="com.jgoodies" version="1.4.0" match="greaterOrEqual"/>
-      <import plugin="org.knime.ext.svg"/>
-      <import plugin="org.apache.poi"/>
-      <import plugin="org.apache.poi.ooxml"/>
-      <import plugin="org.knime.ext.jfreechart"/>
-      <import plugin="org.knime.ext.jep"/>
-      <import plugin="org.apache.commons.math3"/>
-      <import plugin="com.google.guava"/>
-      <import plugin="com.fasterxml.jackson.core.jackson-annotations"/>
-      <import plugin="com.fasterxml.jackson.core.jackson-core"/>
-      <import plugin="com.fasterxml.jackson.core.jackson-databind"/>
-      <import plugin="com.toedter.jcalendar"/>
-      <import plugin="org.knime.base"/>
-      <import plugin="org.knime.js.core"/>
-      <import plugin="org.knime.xml"/>
-      <import plugin="org.knime.workbench.core"/>
-      <import plugin="org.knime.workbench.repository"/>
-      <import plugin="org.knime.ext.poi"/>
-      <import plugin="org.apache.log4j"/>
-      <import plugin="org.junit"/>
-      <import plugin="org.apache.commons.lang3" version="3.3.1" match="greaterOrEqual"/>
-      <import plugin="de.bund.bfr.pmfml" version="0.0.12" match="greaterOrEqual"/>
-      <import plugin="org.apache.servicemix.bundles.poi" version="3.17.0" match="greaterOrEqual"/>
-      <import plugin="org.sbml.jsbml" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="de.unirostock.sems.CombineArchive" version="1.4.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.osgi"/>
-   </requires>
-
    <plugin
          id="de.bund.bfr.knime.pmm.bfrdbiface.lib"
          download-size="0"
