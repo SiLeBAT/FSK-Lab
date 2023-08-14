@@ -28,4 +28,4 @@ Bundle-ClassPath: .,
  libs/xerces-2.9.0.jar
 Bundle-Vendor: German Federal Institute for Risk Assessment (BfR)
 Import-Package: org.apache.batik.swing,
- org.apache.batik.util.gui,
+ org.apache.batik.util.gui
