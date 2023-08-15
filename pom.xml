@@ -10,9 +10,10 @@
 	<packaging>pom</packaging>
 
 	<properties>
-		<tycho.version>2.7.3</tycho.version>
+		<tycho.version>2.7.5</tycho.version>
 		<tycho.extras.version>${tycho.version}</tycho.extras.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <knime.version>5.1</knime.version>
 		<eclipse-repo.url>http://download.eclipse.org/releases/latest</eclipse-repo.url>
 		<tycho.testArgLine></tycho.testArgLine>
 		<tycho.testUI>false</tycho.testUI>
@@ -66,6 +67,27 @@
 		<!-- Update site -->
 		<module>de.bund.bfr.knime.update</module>
 	</modules>
+
+
+    <!-- List the update sites providing dependencies for your projects here -->
+    <repositories>
+        <!-- <repository>
+            <id>p2-knime-update-site</id>
+            <layout>p2</layout>
+            <url>https://update.knime.com/analytics-platform/${knime.version}</url>
+        </repository> -->
+        <!-- <repository>
+            <id>p2-knime-trusted-community</id>
+            <layout>p2</layout>
+            <url>https://update.knime.com/community-contributions/trusted/${knime.version}</url>
+        </repository>
+		-->
+        <repository>
+            <id>3d-e-chem</id>
+            <layout>p2</layout>
+            <url>https://3d-e-chem.github.io/updates/5.1</url>
+        </repository>
+    </repositories>
 
 	<profiles>
 		<profile>

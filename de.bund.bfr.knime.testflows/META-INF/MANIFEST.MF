@@ -12,5 +12,5 @@ Require-Bundle: org.junit,
  de.bund.bfr.knime.fsklab.metadata.model,
  de.bund.bfr.knime.fsklab.r,
  nl.esciencecenter.e3dchem.knime.testing.plugin;bundle-version="[1.0.0,2.0.0)",
- org.knime.testing;bundle-version="[4.0.0,6.0.0)"
+ org.knime.testing;bundle-version="[5.1.0,6.0.0)"
 Bundle-RequiredExecutionEnvironment: JavaSE-17

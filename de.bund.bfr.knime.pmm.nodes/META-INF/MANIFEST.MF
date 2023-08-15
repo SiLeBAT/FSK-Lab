@@ -23,14 +23,16 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations;bundle-version="2
  org.hsh.bfr.db;bundle-version="1.0.0",
  org.junit;bundle-version="4.12.0",
  org.jsoup;bundle-version="1.11.2",
- org.knime.base;bundle-version="[4.0.0,6.0.0)",
- org.knime.ext.poi;bundle-version="[4.0.0,6.0.0)",
- org.knime.js.core;bundle-version="[4.0.0,6.0.0)",
- org.knime.ext.svg;bundle-version="[4.0.0,6.0.0)",
- org.knime.xml;bundle-version="[4.0.0,6.0.0)",
- org.knime.workbench.core;bundle-version="[4.0.0,6.0.0)",
- org.knime.workbench.repository;bundle-version="[4.0.0,6.0.0)",
- org.sbml.jsbml;bundle-version="1.0.0"
+ org.knime.base;bundle-version="[5.1.0,6.0.0)",
+ org.knime.ext.poi;bundle-version="[5.1.0,6.0.0)",
+ org.knime.js.core;bundle-version="[5.1.0,6.0.0)",
+ org.knime.ext.svg;bundle-version="[5.1.0,6.0.0)",
+ org.knime.xml;bundle-version="[5.1.0,6.0.0)",
+ org.knime.workbench.core;bundle-version="[5.1.0,6.0.0)",
+ org.knime.workbench.repository;bundle-version="[5.1.0,6.0.0)",
+ org.sbml.jsbml;bundle-version="1.0.0",
+ org.knime.ext.jfreechart;bundle-version="[5.1.0,6.0.0)",
+ org.knime.ext.jep
 Export-Package: de.bund.bfr.knime.pmm.combaseio,
  de.bund.bfr.knime.pmm.dataviewandselect,
  de.bund.bfr.knime.pmm.dbdelete,
@@ -65,7 +67,4 @@ Bundle-ClassPath: .,
  libs/jdom2-2.0.6.jar
 Bundle-Activator: de.bund.bfr.knime.pmm.nodes.Plugin
 Automatic-Module-Name: de.bund.bfr.knime.pmm.nodes
-Import-Package: org.jfree.chart,
- org.lsmp.djep.djep,
- org.w3c.dom.events
 

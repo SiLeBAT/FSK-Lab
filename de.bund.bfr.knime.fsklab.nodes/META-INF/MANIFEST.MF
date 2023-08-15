@@ -20,23 +20,24 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations;bundle-version="2
  org.apache.commons.lang;bundle-version="2.6.0",
  org.apache.commons.lang3;bundle-version="3.3.1",
  org.eclipse.ui;bundle-version="3.109.0",
- org.knime.base;bundle-version="[4.0.0,6.0.0)",
- org.knime.core;bundle-version="[4.0.0,6.0.0)",
- org.knime.ext.r.type;bundle-version="[4.0.0,6.0.0)",
- org.knime.ext.svg;bundle-version="[4.0.0,6.0.0)",
- org.knime.js.core;bundle-version="[4.0.0,6.0.0)",
- org.knime.json;bundle-version="[4.0.0,6.0.0)",
- org.knime.python2;bundle-version="[4.0.0,6.0.0)",
+ org.knime.base;bundle-version="[5.1.0,6.0.0)",
+ org.knime.core;bundle-version="[5.1.0,6.0.0)",
+ org.knime.ext.r.type;bundle-version="[5.0.0,6.0.0)",
+ org.knime.ext.svg;bundle-version="[5.1.0,6.0.0)",
+ org.knime.js.core;bundle-version="[5.1.0,6.0.0)",
+ org.knime.json;bundle-version="[5.1.0,6.0.0)",
+ org.knime.python2;bundle-version="[5.1.0,6.0.0)",
+ org.knime.r;bundle-version="[5.0.0,6.0.0)",
+ org.knime.core.util;bundle-version="[6.0.0,7.0.0)",
  org.sbml.jsbml;bundle-version="1.0.0",
  org.slf4j.api;bundle-version="1.7.2",
  de.bund.bfr.knime.fsklab.preferences;bundle-version="1.0.0",
  org.h2;bundle-version="1.4.196",
  org.json;bundle-version="20140107.0.0",
  org.apache.commons.collections;bundle-version="3.2.2",
- org.knime.r,
  org.apache.poi;bundle-version="4.1.1",
  org.apache.poi.ooxml;bundle-version="4.1.1",
- org.knime.core.util
+ org.jdom.2;bundle-version="2.0.6"
 Bundle-Vendor: German Federal Institute for Risk Assessment (BfR)
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: de.bund.bfr.knime.fsklab.FskPlugin
@@ -88,5 +89,3 @@ Export-Package: de.bund.bfr.knime.fsklab;
  de.bund.bfr.knime.fsklab.nodes.environment,
  de.bund.bfr.knime.fsklab.v2_0,
  de.bund.bfr.knime.fsklab.v2_0.runner
-Import-Package: org.w3c.dom.events
-
