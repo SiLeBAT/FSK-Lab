@@ -32,7 +32,8 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations;bundle-version="2
  org.knime.workbench.repository;bundle-version="[5.1.0,6.0.0)",
  org.sbml.jsbml;bundle-version="1.0.0",
  org.knime.ext.jfreechart;bundle-version="[5.1.0,6.0.0)",
- org.knime.ext.jep
+ org.knime.ext.jep,
+ org.jdom.2;bundle-version="2.0.6"
 Export-Package: de.bund.bfr.knime.pmm.combaseio,
  de.bund.bfr.knime.pmm.dataviewandselect,
  de.bund.bfr.knime.pmm.dbdelete,
@@ -63,8 +64,7 @@ Export-Package: de.bund.bfr.knime.pmm.combaseio,
 Bundle-ClassPath: .,
  bfr-swing-1.0-SNAPSHOT.jar,
  jcalendar-1.4.jar,
- fskml-0.0.1-SNAPSHOT.jar,
- libs/jdom2-2.0.6.jar
+ fskml-0.0.1-SNAPSHOT.jar
 Bundle-Activator: de.bund.bfr.knime.pmm.nodes.Plugin
 Automatic-Module-Name: de.bund.bfr.knime.pmm.nodes
 

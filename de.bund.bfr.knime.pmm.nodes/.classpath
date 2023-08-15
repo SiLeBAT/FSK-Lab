@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry exported="true" kind="lib" path="libs/jdom2-2.0.6.jar"/>
 	<classpathentry kind="lib" path="bfr-swing-1.0-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="fskml-0.0.1-SNAPSHOT.jar"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
