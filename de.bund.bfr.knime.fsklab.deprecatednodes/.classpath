@@ -4,7 +4,6 @@
 	<classpathentry kind="src" path="src-prerakip"/>
 	<classpathentry kind="src" path="src-1_7_2"/>
 	<classpathentry kind="src" path="src-1_9_0"/>
-	<classpathentry exported="true" kind="lib" path="libs/jdom2-2.0.6.jar"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="lib" path="libs/bfr-swing-1.0-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="libs/fskml-1.0.12.jar"/>

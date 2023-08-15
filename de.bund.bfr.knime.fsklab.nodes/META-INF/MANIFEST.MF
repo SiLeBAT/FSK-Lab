@@ -36,7 +36,8 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations;bundle-version="2
  org.knime.r,
  org.apache.poi;bundle-version="4.1.1",
  org.apache.poi.ooxml;bundle-version="4.1.1",
- org.knime.core.util
+ org.knime.core.util,
+ org.jdom.2;bundle-version="2.0.6"
 Bundle-Vendor: German Federal Institute for Risk Assessment (BfR)
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: de.bund.bfr.knime.fsklab.FskPlugin
