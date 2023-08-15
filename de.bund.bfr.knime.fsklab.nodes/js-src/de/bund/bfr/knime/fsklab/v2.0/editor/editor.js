@@ -116,8 +116,7 @@ fskeditorjs = function () {
   }
   
   function initResourcesTab(){
-    console.log(window.location.protocol,window.location.host)
-    if (window.location.protocol != '' && window.location.host != '' && window.location.host != 'org.knime.js.pagebuilder') {
+    if (knimeService.isRunningInWebportal()) {
         // send AJAX request to acquire the JWT for the currently logged in
         // user. Subsequent requests need to carry the token in the
         // “Authorization” header
