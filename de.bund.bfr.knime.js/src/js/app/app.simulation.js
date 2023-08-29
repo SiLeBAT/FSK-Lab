@@ -1040,6 +1040,10 @@ class APPSimulation {
 						// create simulation param
 						if(field.param.dataType.toLowerCase() != 'file')
 							newSimulation.parameters[field.param.id] = field.input.val();
+						else {
+							if(field.input.val().trim().length > 0)
+								newSimulation.parameters[field.param.id] = field.input.val();
+						}
 
 					}
 				} );
