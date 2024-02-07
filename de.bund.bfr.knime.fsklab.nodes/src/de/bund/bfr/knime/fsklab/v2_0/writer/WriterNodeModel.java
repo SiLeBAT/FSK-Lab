@@ -66,8 +66,10 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -204,6 +206,28 @@ class WriterNodeModel extends NoInternalsModel {
     for (final Path resourcePath : resources) {
 
       final String filenameString = filePrefix + resourcePath.getFileName().toString();
+      // ignore __pycache__
+      if(filenameString.contains("pycache"))
+        continue;
+      
+      // Directories need to be parsed file by file
+      if(Files.isDirectory(resourcePath, LinkOption.NOFOLLOW_LINKS))
+        {
+        try (Stream<Path> paths = Files.walk(resourcePath)) {
+          paths.filter(Files::isRegularFile).forEach(path -> {
+              try {
+                  String subPath = resourcePath.relativize(path).toString();
+                  String newFilePrefix = filenameString + System.getProperty("file.separator") + subPath;
+                  // In case the operating system is not using '/' you might need to replace file separator back to '/'
+                  newFilePrefix = newFilePrefix.replace(System.getProperty("file.separator"), "/");
+                  addResourcesToArchive(Collections.singletonList(path), archive, newFilePrefix, uris, scriptHandler);
+              } catch (Exception e) {
+                  e.printStackTrace();
+              }
+            });
+          }
+          continue;
+        }
       final File resourceFile = resourcePath.toFile();
       String extension = FilenameUtils.getExtension(filenameString.toLowerCase());
       switch(extension) {
@@ -266,7 +290,10 @@ class WriterNodeModel extends NoInternalsModel {
     addMetaData(archive, fskObj.modelMetadata, filePrefix + "metaData.json");
 
     // If the model has an associated working directory with resources these resources
-    // need to be saved into the archive.
+    // need to be saved into the archive. 
+    // NOTE: when using ArchivedEnvironmentManager, 
+    // this will mean that folders that were created during model execution will not appear here.
+    // TODO: investigate why not (possibly in ScriptHandler class)
     if (fskObj.getEnvironmentManager().isPresent()) {
       Optional<Path> workingDirectory = fskObj.getEnvironmentManager().get().getEnvironment();
       if (workingDirectory.isPresent()) {
