@@ -64,6 +64,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.FskPlugin;
+import de.bund.bfr.knime.fsklab.PackagesInfo;
 import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
 import de.bund.bfr.knime.fsklab.nodes.environment.EnvironmentManager;
 import de.bund.bfr.knime.fsklab.v2_0.CombinedFskPortObject;
@@ -558,7 +559,7 @@ public final class JoinerNodeModel extends
   private static CombinedFskPortObject createSimpleCombinedFskPortObject(FskPortObject first,
       FskPortObject second) throws IOException {
     CombinedFskPortObject out =
-        new CombinedFskPortObject(Optional.empty(), new ArrayList<>(), first, second);
+        new CombinedFskPortObject(Optional.empty(), new PackagesInfo(), first, second);
     out.modelMetadata = MAPPER.readValue(MAPPER.writeValueAsString(second.modelMetadata),
         SwaggerUtil.modelClasses.get(second.modelMetadata.getModelType()));
     SwaggerUtil.setModelName(out.modelMetadata, SwaggerUtil.getModelName(first.modelMetadata)
@@ -569,10 +570,7 @@ public final class JoinerNodeModel extends
             new TypeReference<List<Parameter>>() {}),
         MAPPER.readValue(MAPPER.writeValueAsString(SwaggerUtil.getParameter(second.modelMetadata)),
             new TypeReference<List<Parameter>>() {})));
-    Set<String> packageSet = new HashSet<>();
-    packageSet.addAll(first.packages);
-    packageSet.addAll(second.packages);
-    out.packages.addAll(packageSet);
+    
     return out;
   }
 
@@ -603,7 +601,7 @@ public final class JoinerNodeModel extends
 
   private static FskPortObject createEmptyFSKObject() throws IOException {
 
-    FskPortObject fskPortObject = new FskPortObject(Optional.empty(), "", Collections.emptyList());
+    FskPortObject fskPortObject = new FskPortObject(Optional.empty(), "", new PackagesInfo());
     fskPortObject.setModel("");
     fskPortObject.setViz("");
     fskPortObject.modelMetadata = NodeUtils.initializeModel(ModelType.genericModel);
@@ -960,7 +958,7 @@ public final class JoinerNodeModel extends
   private static String[] getFSKObjectAsStringArray(FskPortObject portObject) {
     return new String[] {getObjectAsJSONString(portObject.modelMetadata),
         getObjectAsJSONString(portObject.getModel()), getObjectAsJSONString(portObject.getViz()),
-        getObjectAsJSONString(portObject.simulations), getObjectAsJSONString(portObject.packages),
+        getObjectAsJSONString(portObject.simulations), getObjectAsJSONString(portObject.packagesInfo.getPackageNames()),
         "", ""};
   }
 
@@ -1022,8 +1020,7 @@ public final class JoinerNodeModel extends
       if (fskID_to_fskObject.containsKey(modelName)) {
         portObject = fskID_to_fskObject.get(modelName);
       } else {
-        portObject = new FskPortObject(manager, "",
-            MAPPER.readValue(model[4], new TypeReference<List<String>>() {}));
+        portObject = new FskPortObject(manager, "", new PackagesInfo());
         portObject.simulations.clear();
         portObject.simulations
             .addAll(MAPPER.readValue(model[3], new TypeReference<List<FskSimulation>>() {}));

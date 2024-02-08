@@ -57,6 +57,7 @@ import org.knime.core.node.util.CheckUtils;
 import org.knime.core.util.FileUtil;
 import de.bund.bfr.fskml.Script;
 import de.bund.bfr.fskml.ScriptFactory;
+import de.bund.bfr.knime.fsklab.PackagesInfo;
 import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
 import de.bund.bfr.knime.fsklab.nodes.ScriptHandler;
 import de.bund.bfr.knime.fsklab.nodes.environment.EnvironmentManager;
@@ -303,7 +304,7 @@ class CreatorNodeModel extends NoInternalsModel {
     if (vizRScript != null) {
       librariesSet.addAll(vizRScript.getLibraries());
     }
-    List<String> librariesList = new ArrayList<>(librariesSet);
+    PackagesInfo packageInfo = new PackagesInfo();
 
     // Import readme
     exec.checkCanceled();
@@ -317,7 +318,7 @@ class CreatorNodeModel extends NoInternalsModel {
     }
 
     final FskPortObject portObj = new FskPortObject(modelScript, vizScript, modelMetadata, null,
-        librariesList, environmentManager, plotPath, readme);
+        packageInfo, environmentManager, plotPath, readme);
 
     List<Parameter> parameters = SwaggerUtil.getParameter(modelMetadata);
     if (SwaggerUtil.getModelMath(modelMetadata) != null) {
@@ -327,7 +328,7 @@ class CreatorNodeModel extends NoInternalsModel {
     // Validate parameters from spreadsheet
     exec.checkCanceled();
     try (ScriptHandler handler = ScriptHandler
-        .createHandler(SwaggerUtil.getLanguageWrittenIn(modelMetadata), portObj.packages)) {
+        .createHandler(SwaggerUtil.getLanguageWrittenIn(modelMetadata), portObj.packagesInfo.getPackageNames())) {
       if (!workingDirectory.isEmpty()) {
         Path workingDirectoryPath =
             FileUtil.getFileFromURL(FileUtil.toURL(workingDirectory)).toPath();

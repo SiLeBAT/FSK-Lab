@@ -75,6 +75,7 @@ import org.knime.core.util.FileUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.FskPlugin;
+import de.bund.bfr.knime.fsklab.PackagesInfo;
 import de.bund.bfr.knime.fsklab.nodes.FskPortObjectUtil;
 import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.FLabel;
@@ -142,8 +143,10 @@ public class FskPortObject implements PortObject {
    */
   private Path workspace;
 
-  /** List of R packages. */
-  public final List<String> packages;
+  /** List of packages. */
+  public final PackagesInfo packagesInfo;
+  public boolean overridePackages;
+  
 
   public int selectedSimulationIndex = 0;
   public final List<FskSimulation> simulations = new ArrayList<>();
@@ -151,7 +154,7 @@ public class FskPortObject implements PortObject {
   public Model modelMetadata;
 
   public FskPortObject(final String model, final String viz, final Model modelMetadata,
-      final Path workspace, final List<String> packages,
+      final Path workspace, final PackagesInfo packagesInfo,
       final Optional<EnvironmentManager> environmentManager,
       final String plot, final String readme) throws IOException {
 
@@ -159,17 +162,18 @@ public class FskPortObject implements PortObject {
     this.viz = viz;
     this.modelMetadata = modelMetadata;
     this.workspace = workspace;
-    this.packages = packages;
     this.environmentManager = environmentManager;
     this.plot = plot;
     this.readme = StringUtils.defaultString(readme);
+    this.packagesInfo = packagesInfo;
   }
 
-  public FskPortObject(final Optional<EnvironmentManager> environmentManager, String readme, final List<String> packages)
+  public FskPortObject(final Optional<EnvironmentManager> environmentManager, String readme, final PackagesInfo packagesInfo)
       throws IOException {
     this.environmentManager = environmentManager;
-    this.packages = packages;
     this.readme = readme;
+    this.packagesInfo = packagesInfo;
+    
   }
 
   @Override
@@ -263,7 +267,7 @@ public class FskPortObject implements PortObject {
     private static final String GENERATED_RESOURCE_FILES = "generatedResourcesDirectory";
 
     private static final String PLOT = "plot";
-
+    private static final String PACKAGES_INFO = "packagesInfo";
     private static final String README = "readme";
 
     /** Object mapper for 1.0.4 metadata. */
@@ -323,12 +327,16 @@ public class FskPortObject implements PortObject {
       }
 
       // libraries
-      if (!portObject.packages.isEmpty()) {
-        out.putNextEntry(new ZipEntry("library.list"));
-        IOUtils.writeLines(portObject.packages, "\n", out, StandardCharsets.UTF_8);
+      if (portObject.packagesInfo != null && portObject.packagesInfo.getPackageNames() != null) {
+        out.putNextEntry(new ZipEntry(PACKAGES_INFO));
+        String packagesInfoListjsonString = MAPPER104.writeValueAsString(portObject.packagesInfo);
+        IOUtils.write(packagesInfoListjsonString+"\n", out, StandardCharsets.UTF_8);
         out.closeEntry();
       }
-      
+      // viz entry (file with visualization script)
+      out.putNextEntry(new ZipEntry("OVERRIDEPACKAGES"));
+      IOUtils.write(""+portObject.overridePackages, out, "UTF-8");
+      out.closeEntry();
       
       // Save working directory
       if (portObject.environmentManager.isPresent()) {
@@ -393,8 +401,8 @@ public class FskPortObject implements PortObject {
       String visualizationScript = "";
 
       final Path workspacePath = FileUtil.createTempFile("workspace", ".r", new File(PreferenceInitializer.getFSKWorkingDirectory()), false).toPath();
-      List<String> packages = new ArrayList<>();
-      
+      //List<String> packages = new ArrayList<>();
+      PackagesInfo packagesInfo = null;
       Model modelMetadata = null;
 
       Optional<EnvironmentManager> environmentManager = Optional.empty();
@@ -406,7 +414,7 @@ public class FskPortObject implements PortObject {
 
       List<FskSimulation> simulations = new ArrayList<>();
       int selectedSimulationIndex = 0;
-
+      Boolean overridePackages = false;
       ZipEntry entry;
       while ((entry = in.getNextEntry()) != null) {
         final String entryName = entry.getName();
@@ -415,6 +423,8 @@ public class FskPortObject implements PortObject {
           modelScript = IOUtils.toString(in, "UTF-8");
         } else if (entryName.equals(VIZ)) {
           visualizationScript = IOUtils.toString(in, "UTF-8");
+        }else if (entryName.equals("OVERRIDEPACKAGES")) {
+          overridePackages = Boolean.parseBoolean(IOUtils.toString(in, "UTF-8"));
         } else if (entryName.equals("modelType")) {
           // deserialize new models
           final String modelClass = IOUtils.toString(in, "UTF-8");
@@ -423,8 +433,9 @@ public class FskPortObject implements PortObject {
           modelMetadata = MAPPER104.readValue(in, modelClasses.get(modelClass));
         } else if (entryName.equals(WORKSPACE)) {
           Files.copy(in, workspacePath, StandardCopyOption.REPLACE_EXISTING);
-        } else if (entryName.equals("library.list")) {
-          packages = IOUtils.readLines(in, "UTF-8");
+        } else if (entryName.equals(PACKAGES_INFO)) {
+          String packagesInfoListjsonString = IOUtils.toString(in, "UTF-8");
+          packagesInfo = MAPPER104.readValue(packagesInfoListjsonString, PackagesInfo.class);
         }else if (entryName.equals(WORKING_DIRECTORY)) {
           
           environmentManager = Optional.of(FskPortObjectUtil.deserializeAfterClassloaderReset(getClass().getClassLoader(), MAPPER104, in, EnvironmentManager.class));
@@ -461,8 +472,8 @@ public class FskPortObject implements PortObject {
       in.close();
 
       final FskPortObject portObj = new FskPortObject(modelScript, visualizationScript,
-          modelMetadata, workspacePath, packages, environmentManager, plot, readme);
-
+          modelMetadata, workspacePath, packagesInfo, environmentManager, plot, readme);
+      portObj.overridePackages=overridePackages;
       if (!simulations.isEmpty()) {
         portObj.simulations.addAll(simulations);
       }
@@ -488,7 +499,7 @@ public class FskPortObject implements PortObject {
     final JsonPanel metaDataPane = new JsonPanel("Meta data", metadataJson);
     metaDataPane.setName("Meta data");
 
-    final JPanel librariesPanel = UIUtils.createLibrariesPanel(packages);
+    final JPanel librariesPanel = UIUtils.createLibrariesPanel(packagesInfo.getPackageNames());
     final JPanel resourcesPanel;
     if (environmentManager.isPresent()) {
       resourcesPanel =

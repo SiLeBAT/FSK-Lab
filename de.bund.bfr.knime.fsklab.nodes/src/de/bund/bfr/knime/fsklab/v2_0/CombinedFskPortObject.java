@@ -84,6 +84,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.preferences.PreferenceInitializer;
 import de.bund.bfr.knime.fsklab.FskPlugin;
+import de.bund.bfr.knime.fsklab.PackagesInfo;
 import de.bund.bfr.knime.fsklab.nodes.FskPortObjectUtil;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.FLabel;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.FPanel;
@@ -155,29 +156,29 @@ public class CombinedFskPortObject extends FskPortObject {
   private static Random ran = new Random();
 
   public CombinedFskPortObject(final String model, final String param, final String viz,
-      final Model modelMetadata, final Path workspace, final List<String> packages,
+      final Model modelMetadata, final Path workspace,  final PackagesInfo packagesInfo,
       final GeneratedResourceFiles generatedResourceFiles,
       final Optional<EnvironmentManager> environmentManager, final String plot,
       final FskPortObject firstFskPortObject, final FskPortObject secondFskPortObject)
       throws IOException {
-    super(model, viz, modelMetadata, workspace, packages, environmentManager, plot, "");
+    super(model, viz, modelMetadata, workspace, packagesInfo, environmentManager, plot, "");
     this.firstFskPortObject = firstFskPortObject;
     this.secondFskPortObject = secondFskPortObject;
   }
 
   public CombinedFskPortObject(final Optional<EnvironmentManager> environmentManager,
-      final List<String> packages, final FskPortObject firstFskPortObject,
+      final PackagesInfo packagesInfo, final FskPortObject firstFskPortObject,
       final FskPortObject secondFskPortObject) throws IOException {
-    super(environmentManager, "", packages);
+    super(environmentManager, "", packagesInfo);
     this.firstFskPortObject = firstFskPortObject;
     this.secondFskPortObject = secondFskPortObject;
   }
 
   public CombinedFskPortObject(final String model, final String viz, final Model modelMetadata,
-      final Optional<EnvironmentManager> environmentManager, final List<String> packages,
+      final Optional<EnvironmentManager> environmentManager, final PackagesInfo packagesInfo,
       final FskPortObject firstFskPortObject, final FskPortObject secondFskPortObject)
       throws IOException {
-    super(environmentManager, "", packages);
+    super(environmentManager, "", packagesInfo);
     setModel(model);
     setViz(viz);
     this.firstFskPortObject = firstFskPortObject;
@@ -224,7 +225,7 @@ public class CombinedFskPortObject extends FskPortObject {
 
     private static final String JOINER_RELATION = "joinrelation";
 
-    private static final String LIBRARY_LIST = "library.list";
+    private static final String PACKAGES_INFO = "packagesInfo";
     private static final String BREAK = "break";
 
     /** Object mapper for 1.0.2 metadata. */
@@ -382,9 +383,11 @@ public class CombinedFskPortObject extends FskPortObject {
         }
 
         // libraries
-        if (!portObject.packages.isEmpty()) {
-          out.putNextEntry(new ZipEntry(LIBRARY_LIST + level));
-          IOUtils.writeLines(portObject.packages, "\n", out, StandardCharsets.UTF_8);
+        
+        if (portObject.packagesInfo != null && portObject.packagesInfo.getPackageNames() != null) {
+          out.putNextEntry(new ZipEntry(PACKAGES_INFO));
+          String packagesInfoListjsonString = MAPPER104.writeValueAsString(portObject.packagesInfo);
+          IOUtils.write(packagesInfoListjsonString+"\n", out, StandardCharsets.UTF_8);
           out.closeEntry();
         }
      
@@ -454,7 +457,7 @@ public class CombinedFskPortObject extends FskPortObject {
       String visualizationScript = "";
 
       Path workspacePath = FileUtil.createTempFile("workspace", ".r", new File(PreferenceInitializer.getFSKWorkingDirectory()), false).toPath();
-      List<String> packages = new ArrayList<>();
+      PackagesInfo packagesInfo = null;
 
       Model modelMetadata = null;
 
@@ -569,7 +572,7 @@ public class CombinedFskPortObject extends FskPortObject {
           // build combined object out of the previous objects
           final CombinedFskPortObject portObj =
               new CombinedFskPortObject(modelScript, visualizationScript, modelMetadata,
-                  Optional.empty(), new ArrayList<>(), firstFSKObject, secondFSKObject);
+                  Optional.empty(), new PackagesInfo(), firstFSKObject, secondFSKObject);
           portObj.setWorkspace(workspacePath);
 
           if (relations != null && relations.length > 0) {
@@ -632,8 +635,9 @@ public class CombinedFskPortObject extends FskPortObject {
             modelMetadata = gm;
           } else if (entryName.startsWith(WORKSPACE)) {
             Files.copy(in, workspacePath, StandardCopyOption.REPLACE_EXISTING);
-          } else if (entryName.startsWith(LIBRARY_LIST)) {
-            packages = IOUtils.readLines(in, "UTF-8");
+          } else if (entryName.equals(PACKAGES_INFO)) {
+            String packagesInfoListjsonString = IOUtils.toString(in, "UTF-8");
+            packagesInfo = MAPPER104.readValue(packagesInfoListjsonString, PackagesInfo.class);
           } else if (entryName.startsWith(WORKING_DIRECTORY)) {
          
             environmentManager = Optional.of(FskPortObjectUtil.deserializeAfterClassloaderReset(getClass().
@@ -671,7 +675,7 @@ public class CombinedFskPortObject extends FskPortObject {
         }
       }
       final FskPortObject portObj = new FskPortObject(modelScript, visualizationScript,
-          modelMetadata, workspacePath, packages, environmentManager, plot, readme);
+          modelMetadata, workspacePath, packagesInfo, environmentManager, plot, readme);
 
       if (!simulations.isEmpty()) {
         portObj.simulations.addAll(simulations);
@@ -705,7 +709,7 @@ public class CombinedFskPortObject extends FskPortObject {
     final JsonPanel metaDataPane = new JsonPanel("Meta data", metadataJson);
     metaDataPane.setName("Meta data");
 
-    final JPanel librariesPanel = UIUtils.createLibrariesPanel(packages);
+    final JPanel librariesPanel = UIUtils.createLibrariesPanel(packagesInfo.getPackageNames());
     List<String> resourcesList = new ArrayList<>();
     fillResoucesList(firstFskPortObject, resourcesList);
     fillResoucesList(secondFskPortObject, resourcesList);

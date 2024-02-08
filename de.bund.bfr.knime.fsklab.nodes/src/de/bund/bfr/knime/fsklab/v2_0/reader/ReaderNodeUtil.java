@@ -9,6 +9,7 @@ import de.bund.bfr.fskml.FskMetaDataObject;
 import de.bund.bfr.fskml.FskMetaDataObject.ResourceType;
 import de.bund.bfr.fskml.RScript;
 import de.bund.bfr.knime.fsklab.FskPlugin;
+import de.bund.bfr.knime.fsklab.PackagesInfo;
 import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
 import de.bund.bfr.knime.fsklab.nodes.environment.ArchivedEnvironmentManager;
 import de.bund.bfr.knime.fsklab.nodes.environment.EnvironmentManager;
@@ -48,6 +49,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 import metadata.SwaggerUtil;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jdom.Text;
 import org.jlibsedml.ChangeAttribute;
@@ -73,6 +75,7 @@ import org.sbml.jsbml.xml.XMLNode;
  * @author SchueleT
  */
 public class ReaderNodeUtil {
+  final static ObjectMapper mapper = FskPlugin.getDefault().MAPPER104;
   static final Set<String> FSKFilesRegistry = new HashSet();
   private static ReentrantLock lock = new ReentrantLock();
   private ReaderNodeUtil() {
@@ -479,10 +482,10 @@ public class ReaderNodeUtil {
       String currentModelID =
           SwaggerUtil.getModelName(firstFskPortObject.modelMetadata).replaceAll("\\W", "");
       if (currentModelID.equals(firstModelId)) {
-        topfskObj = new CombinedFskPortObject("", "", model, Optional.empty(), new ArrayList<>(),
+        topfskObj = new CombinedFskPortObject("", "", model, Optional.empty(), new PackagesInfo(),
             firstFskPortObject, secondFskPortObject);
       } else {
-        topfskObj = new CombinedFskPortObject("", "", model, Optional.empty(), new ArrayList<>(),
+        topfskObj = new CombinedFskPortObject("", "", model, Optional.empty(), new PackagesInfo(),
             secondFskPortObject, firstFskPortObject);
       }
 
@@ -607,6 +610,14 @@ public class ReaderNodeUtil {
 
 
       // Retrieve missing libraries from CRAN
+      PackagesInfo packagesInfo = null;
+      Optional<ArchiveEntry> packagesEntry =
+          entries.stream().filter(entry -> entry.getFormat().equals(jsonUri))
+          .filter(entry -> entry.getEntityPath().endsWith("packages.json")).findAny();
+      if (packagesEntry.isPresent()) {
+        String packagesInfoListjsonString = loadTextEntry(packagesEntry.get());
+        packagesInfo = mapper.readValue(packagesInfoListjsonString, PackagesInfo.class);
+      }
       HashSet<String> packagesSet = new HashSet<>();
       if (!modelScript.isEmpty()) {
         packagesSet.addAll(new RScript(modelScript).getLibraries());
@@ -624,7 +635,7 @@ public class ReaderNodeUtil {
       String plotPath = "";
 
       FskPortObject fskObj = new FskPortObject(modelScript, visualizationScript, model,
-          workspacePath, packagesList, Optional.of(environmentManager), plotPath, readme);
+          workspacePath, packagesInfo, Optional.of(environmentManager), plotPath, readme);
 
       // Read selected simulation index and simulations
       Optional<ArchiveEntry> simulationEntry =
@@ -765,7 +776,6 @@ public class ReaderNodeUtil {
     metadataEntry.extractFile(temp);
 
     // Load metadata from temporary file
-    final ObjectMapper mapper = FskPlugin.getDefault().MAPPER104;
     JsonNode jsonNode = mapper.readTree(temp);
 
     temp.delete(); // Delete temporary file

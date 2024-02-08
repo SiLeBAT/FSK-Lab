@@ -580,7 +580,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
       String suffix) throws Exception {
     
     try (ScriptHandler handler = ScriptHandler
-        .createHandler(SwaggerUtil.getLanguageWrittenIn(fskObj.modelMetadata), fskObj.packages)) {
+        .createHandler(SwaggerUtil.getLanguageWrittenIn(fskObj.modelMetadata), fskObj.packagesInfo.getPackageNames())) {
      
       // push flowvariable of executed simulation
       this.pushFlowVariableString("selectedSimulation", simulation.getName());

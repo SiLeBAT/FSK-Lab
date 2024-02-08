@@ -131,16 +131,16 @@ public class RScriptHandler extends ScriptHandler {
   public void installLibs(final FskPortObject fskObj, ExecutionContext exec, NodeLogger LOGGER)
       throws Exception {
     // Install needed libraries
-    if (!fskObj.packages.isEmpty()) {
+    if (!fskObj.packagesInfo.getPackageNames().isEmpty()) {
       // surround with try catch, 
       // in case LibRegistry controller is somehow closed, refresh on fail 
       // (this happens, if a library is not successfully installed by FSK-Lab but then
       // installed by user themselves (or Rserve instance is closed by other means)
       try {
-        LibRegistry.instance().install(fskObj.packages);  
+        LibRegistry.instance().install(fskObj.packagesInfo.getPackageNames());  
       } catch ( RException| REXPMismatchException | NoInternetException e) {
         PreferenceInitializer.refresh = true;
-        LibRegistry.instance().install(fskObj.packages);
+        LibRegistry.instance().install(fskObj.packagesInfo.getPackageNames());
       }
       
     }

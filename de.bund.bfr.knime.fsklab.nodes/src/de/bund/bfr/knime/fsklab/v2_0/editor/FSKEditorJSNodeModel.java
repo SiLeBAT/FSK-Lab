@@ -62,17 +62,24 @@ import org.knime.core.node.workflow.WorkflowManager;
 import org.knime.core.util.FileUtil;
 import org.knime.core.util.IRemoteFileUtilsService;
 import org.knime.js.core.node.AbstractWizardNodeModel;
+import org.knime.python2.prefs.PythonPreferences;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import analyzescript.PythonScriptAnalyser;
 import de.bund.bfr.fskml.RScript;
+import de.bund.bfr.fskml.Script;
+import de.bund.bfr.fskml.ScriptFactory;
 import de.bund.bfr.knime.fsklab.FskPlugin;
+import de.bund.bfr.knime.fsklab.PackagesInfo;
+import de.bund.bfr.knime.fsklab.VersionedPackage;
 import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
 import de.bund.bfr.knime.fsklab.nodes.environment.AddedFilesEnvironmentManager;
 import de.bund.bfr.knime.fsklab.preferences.PreferenceInitializer;
+import de.bund.bfr.knime.fsklab.preferences.PreferencePage;
 import de.bund.bfr.knime.fsklab.nodes.environment.EnvironmentManager;
 import de.bund.bfr.knime.fsklab.nodes.environment.ExistingEnvironmentManager;
 import de.bund.bfr.knime.fsklab.v2_0.CombinedFskPortObject;
@@ -322,6 +329,7 @@ final class FSKEditorJSNodeModel
   protected PortObject[] performExecute(PortObject[] inObjects, ExecutionContext exec)
       throws Exception {
     String portObjectModelType = "";
+    PackagesInfo packagesInfo = new PackagesInfo();
     if (inObjects[0] != null) {
       setInternalPortObjects(inObjects);
       portObjectModelType = ((FskPortObject)inObjects[0]).modelMetadata.getModelType();
@@ -331,7 +339,6 @@ final class FSKEditorJSNodeModel
     Model metadata = null;
     Model originalMetadata = null;
     String readme = "";
-    List<String> packages = Collections.emptyList();
     List<FskSimulation> simulations = Collections.emptyList();
     String modelScript = "";
     String visualizationScript = "";
@@ -524,10 +531,55 @@ final class FSKEditorJSNodeModel
 //      }
 
       // Collect R packages
-      final Set<String> librariesSet = new HashSet<>();
-      librariesSet.addAll(new RScript(modelScript).getLibraries());
-      librariesSet.addAll(new RScript(visualizationScript).getLibraries());
-      packages = new ArrayList<>(librariesSet);
+      if(metadata != null && SwaggerUtil.getLanguageWrittenIn(metadata) != null) {
+        String languageWrittenIn = SwaggerUtil.getLanguageWrittenIn(metadata);
+        String pythonPath = null; // Path to the Python executable in the conda environment
+        String envPath = null; // Path to the conda environment
+        if(PreferencePage.getPython3CondaEnvironmentDirectoryPath() != null)
+          envPath = PreferenceInitializer.getPython3Env();
+        else
+          envPath = PreferenceInitializer.getPython2Env();
+        
+        if(((FskPortObject)inObjects[0]).overridePackages) {
+          pythonPath =envPath+"/bin/python";
+            
+          packagesInfo.setLanguage(languageWrittenIn);
+          try {
+            // Create a temporary file
+            Path tempModelScriptFile = Files.createTempFile(null, ".py");
+            
+            // Write text to the temporary file
+            Files.write(tempModelScriptFile, modelScript.getBytes());
+  
+            System.out.println("Temporary Model Script file written to: " + tempModelScriptFile);
+            Script fskmlModelScript = ScriptFactory.createScript(modelScript, languageWrittenIn == null ? "R" :languageWrittenIn, pythonPath, tempModelScriptFile.toAbsolutePath().toString(), envPath);
+            
+            Path tempVisScriptFile = Files.createTempFile(null, ".py");
+  
+            // Write text to the temporary file
+            Files.write(tempVisScriptFile, visualizationScript.getBytes());
+  
+            System.out.println("Temporary Vis Script file written to: " + tempVisScriptFile);
+            Script fskmlvisualizationScript = ScriptFactory.createScript(visualizationScript, languageWrittenIn == null ? "R" :languageWrittenIn, pythonPath, tempVisScriptFile.toAbsolutePath().toString(), envPath);
+            
+            final PackagesInfo packagesInfoRef = packagesInfo;
+            fskmlModelScript.getPackageMap().forEach((packageName, version) -> 
+              packagesInfoRef.getPackages().add(new VersionedPackage(packageName, version))
+            );
+            
+            fskmlvisualizationScript.getPackageMap().forEach((packageName, version) -> 
+              packagesInfoRef.getPackages().add(new VersionedPackage(packageName, version))
+            );
+            
+  
+          } catch (IOException e) {
+              System.err.println("An error occurred: " + e.getMessage());
+          }
+        }else {
+          packagesInfo = ((FskPortObject)inObjects[0]).packagesInfo;
+        }
+        
+      }
       
       if(m_port instanceof CombinedFskPortObject) {
         viewRep.setCombinedObject(true);
@@ -568,7 +620,7 @@ final class FSKEditorJSNodeModel
     if(inObjects[0] instanceof CombinedFskPortObject) {
       outputPort = (FskPortObject) inObjects[0];
     } else {
-      outputPort = new FskPortObject(manager , readme, packages);
+      outputPort = new FskPortObject(manager , readme, packagesInfo);
       outputPort.setModel(modelScript);
       outputPort.setViz(visualizationScript);
     }
@@ -592,6 +644,9 @@ final class FSKEditorJSNodeModel
     }catch (IllegalArgumentException exception){
       UUID uuid = UUID.randomUUID();
       SwaggerUtil.setModelId(outputPort.modelMetadata, uuid.toString());
+    }
+    if (inObjects[0] != null) {
+      outputPort.overridePackages = ((FskPortObject)inObjects[0]).overridePackages;
     }
     return new PortObject[] {outputPort};
   }
