@@ -37,6 +37,7 @@ import de.bund.bfr.fskml.sedml.SourceScript;
 import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.PackagesInfo;
 import de.bund.bfr.knime.fsklab.VersionedPackage;
+import de.bund.bfr.knime.fsklab.UnsupportedFileExtensionException;
 import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
 import de.bund.bfr.knime.fsklab.nodes.ScriptHandler;
 import de.bund.bfr.knime.fsklab.nodes.WriterNodeUtils;
@@ -71,9 +72,12 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -87,6 +91,8 @@ import metadata.SwaggerUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Platform;
 import org.jdom2.DefaultJDOMFactory;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
@@ -113,6 +119,7 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.util.CheckUtils;
 import org.knime.core.util.FileUtil;
+import org.osgi.framework.Bundle;
 import org.sbml.jsbml.SBMLDocument;
 import org.sbml.jsbml.SBMLException;
 import org.sbml.jsbml.SBMLWriter;
@@ -186,15 +193,51 @@ class WriterNodeModel extends NoInternalsModel {
     
     return new PortObjectSpec[] {};
   }
-
+  public static List<String> blackListedExtensions()  {
+    try {
+      Bundle bundle = Platform.getBundle("de.bund.bfr.knime.fsklab.nodes");
+      URL fileUrl = bundle.getEntry("data/filetype_blacklist.csv");
+      URL resolvedFileUrl = FileLocator.toFileURL(fileUrl);
+      URI resolvedUri = new URI(resolvedFileUrl.getProtocol(), resolvedFileUrl.getPath(), null);
+      File blackList = new File(resolvedUri);
+      return FileUtils.readLines(blackList, StandardCharsets.UTF_8);
+      
+    } catch (Exception e) {
+        return null;
+    }
+    
+  }
   /*
    * add resource files to archive
    */
   private static void addResourcesToArchive(List<Path> resources, CombineArchive archive,
       String filePrefix, Map<String, URI> uris, ScriptHandler scriptHandler) throws Exception {
+    List<String> blackListedExtensions = blackListedExtensions();
     for (final Path resourcePath : resources) {
 
       final String filenameString = filePrefix + resourcePath.getFileName().toString();
+      // ignore __pycache__
+      if(filenameString.contains("pycache"))
+        continue;
+      
+      // Directories need to be parsed file by file
+      if(Files.isDirectory(resourcePath, LinkOption.NOFOLLOW_LINKS))
+        {
+        try (Stream<Path> paths = Files.walk(resourcePath)) {
+          paths.filter(Files::isRegularFile).forEach(path -> {
+              try {
+                  String subPath = resourcePath.relativize(path).toString();
+                  String newFilePrefix = filenameString + System.getProperty("file.separator") + subPath;
+                  // In case the operating system is not using '/' you might need to replace file separator back to '/'
+                  newFilePrefix = newFilePrefix.replace(System.getProperty("file.separator"), "/");
+                  addResourcesToArchive(Collections.singletonList(path), archive, newFilePrefix, uris, scriptHandler);
+              } catch (Exception e) {
+                  e.printStackTrace();
+              }
+            });
+          }
+          continue;
+        }
       final File resourceFile = resourcePath.toFile();
       String extension = FilenameUtils.getExtension(filenameString.toLowerCase());
       switch(extension) {
@@ -235,7 +278,13 @@ class WriterNodeModel extends NoInternalsModel {
         // ADD RMarkdown file
         case "rmd": archive.addEntry(resourceFile, filenameString, URI.create("https://www.iana.org/assignments/media-types/text/markdown"));
         break;
-        default: LOGGER.warn(filenameString + " not written to file. Extension is not supported");
+        default: {
+          if(blackListedExtensions != null && !blackListedExtensions.contains("." + extension.toUpperCase())) {
+               archive.addEntry(resourceFile, filenameString,URI.create("https://knime.bfr.berlin/mediatypes/resourceFile") );
+          } else {
+            LOGGER.warn(filenameString + " not written to file. Extension is not supported");  
+          }
+        }
       }
     }
   }
@@ -251,7 +300,10 @@ class WriterNodeModel extends NoInternalsModel {
     addMetaData(archive, fskObj.modelMetadata, filePrefix + "metaData.json");
 
     // If the model has an associated working directory with resources these resources
-    // need to be saved into the archive.
+    // need to be saved into the archive. 
+    // NOTE: when using ArchivedEnvironmentManager, 
+    // this will mean that folders that were created during model execution will not appear here.
+    // TODO: investigate why not (possibly in ScriptHandler class)
     if (fskObj.getEnvironmentManager().isPresent()) {
       Optional<Path> workingDirectory = fskObj.getEnvironmentManager().get().getEnvironment();
       if (workingDirectory.isPresent()) {
@@ -413,38 +465,39 @@ class WriterNodeModel extends NoInternalsModel {
     try (ScriptHandler scriptHandler = ScriptHandler
         .createHandler(SwaggerUtil.getLanguageWrittenIn(in.modelMetadata), in.packagesInfo.getPackageNames())) {
       
-      
-      
+         
       URL url = FileUtil.toURL(filePath.getStringValue());
       File localPath = FileUtil.getFileFromURL(url);
 
+      // Creates archive in temporary archive file
+      File archiveFile = FileUtil.createTempFile("model", "fskx", new File(PreferenceInitializer.getFSKWorkingDirectory()), false);
+      
+      // The file is deleted since we need the path only for the COMBINE archive
+      archiveFile.delete();
+
+      // Writes COMBINE archive
+      writeArchive(archiveFile, in, exec, scriptHandler);
       if (localPath != null) {
-        localPath.delete();
-        writeArchive(localPath, in, exec, scriptHandler);
+        try {
+          localPath.delete();
+          Files.copy(archiveFile.toPath(), localPath.toPath());
+        } finally {
+       // Deletes temporary file
+          archiveFile.delete();
+        }
+      
       } else {
-
-        // Creates archive in temporary archive file
-        File archiveFile = FileUtil.createTempFile("model", "fskx", new File(PreferenceInitializer.getFSKWorkingDirectory()), false);
-        
-        // The file is deleted since we need the path only for the COMBINE archive
-        archiveFile.delete();
-
-        // Writes COMBINE archive
-        writeArchive(archiveFile, in, exec, scriptHandler);
-
         // Copies temporary file to output stream
         try (OutputStream os = FileUtil.openOutputConnection(url, "PUT").getOutputStream()) {
           Files.copy(archiveFile.toPath(), os);
+        } finally {
+          // Deletes temporary file
+          archiveFile.delete();
         }
-
-        // Deletes temporary file
-        archiveFile.delete();
       }
-
-      
     } catch(Exception e) {
       throw new Exception(e.getLocalizedMessage(), e);
-    }
+    } 
     
     return new PortObject[] {};
   }

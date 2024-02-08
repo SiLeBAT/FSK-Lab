@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.apache.commons.io.FileUtils;
@@ -61,21 +62,20 @@ public class AddedFilesEnvironmentManager implements EnvironmentManager {
   }
 
   private Optional<Path> copyFilesToEnvironment(Optional<Path> environment){
-    
+    clearRedundantEntries();
     List<Path> filePaths = new ArrayList<>();
     try {
       for (String filePath : entries) {
-        filePaths.add(FileUtil.resolveToPath(FileUtil.toURL(filePath)));
+        Path p = FileUtil.resolveToPath(FileUtil.toURL(filePath));
+        if(Files.exists(p))
+          filePaths.add(p);
       }
 
     }catch(Exception e) {
       return environment;
     }
     
-    for (Path filePath : filePaths) {
-      if (Files.notExists(filePath))
-        return environment;
-    }
+
     
     try {
       //Path environment = Files.createTempDirectory("workingDirectory");
@@ -116,7 +116,34 @@ public class AddedFilesEnvironmentManager implements EnvironmentManager {
   
   @Override
   public String[] getEntries() {
-    return entries;
+    clearRedundantEntries();
+    String[] allEntries = manager.getEntries(); 
+    if( allEntries != null) {
+      List<String> resultList = new ArrayList<>(allEntries.length + entries.length);
+      Collections.addAll(resultList, allEntries);
+      Collections.addAll(resultList, entries);
+      String [] resultArray = new String[resultList.size()];
+      return resultList.toArray(resultArray);
+  
+    } else 
+        return entries;
   }
-    
+ 
+  private void clearRedundantEntries() {
+    String[] allEntries = manager.getEntries(); 
+    List<String> newList = new ArrayList<>(entries.length);
+
+    if( allEntries != null) {
+      List<String> resultList = new ArrayList<>(allEntries.length);
+      List<String> oldList = new ArrayList<>(entries.length);
+      Collections.addAll(resultList, allEntries);
+      Collections.addAll(oldList, entries);
+      for(String entry : oldList) {
+        if(!resultList.contains(entry))
+          newList.add(entry);
+      }
+      entries = newList.toArray(new String[newList.size()]);
+      
+    }
+  }
 }

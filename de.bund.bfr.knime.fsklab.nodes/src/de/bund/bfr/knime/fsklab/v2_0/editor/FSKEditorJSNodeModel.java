@@ -388,11 +388,7 @@ final class FSKEditorJSNodeModel
           }
         }
       }
-      // If executed
-      if (viewValue.isCompleted()) {
-        setWarningMessage("Output Parameters are not configured correctly");
-      }
-
+      
       final String[] validationErrors = viewValue.getValidationErrors();
       if (validationErrors != null && validationErrors.length > 0) {
         for (String error : validationErrors) {

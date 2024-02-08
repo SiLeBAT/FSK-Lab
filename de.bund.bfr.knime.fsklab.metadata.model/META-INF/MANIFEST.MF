@@ -61,4 +61,3 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations;bundle-version="2
  org.apache.poi;bundle-version="4.1.1"
 Bundle-ActivationPolicy: lazy
 Automatic-Module-Name: de.bund.bfr.knime.fsklab.metadata.model
-Import-Package: org.w3c.dom.events;resolution:=optional

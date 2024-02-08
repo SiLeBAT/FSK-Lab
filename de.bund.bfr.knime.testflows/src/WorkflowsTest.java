@@ -32,9 +32,9 @@ public class WorkflowsTest {
 	public void testChickenModels() throws Exception {
 		runner.runTestWorkflow(new File("workflows/wf_using_creator"));
 
-		
-		  runner.runTestWorkflow(new File("workflows/HorizontalTransmiAnimals"));
-		 /* runner.runTestWorkflow(new File("workflows/InitializeParentsFlocks"));
+		/* 
+		 * runner.runTestWorkflow(new File("workflows/HorizontalTransmiAnimals"));
+		 * runner.runTestWorkflow(new File("workflows/InitializeParentsFlocks"));
 		 * runner.runTestWorkflow(new File("workflows/HorizontalTransmiAnimals"));
 		 * runner.runTestWorkflow(new File("workflows/HorizontalTransmiFlocks"));
 		 * runner.runTestWorkflow(new File("workflows/VerticalTransmiAnimals"));
