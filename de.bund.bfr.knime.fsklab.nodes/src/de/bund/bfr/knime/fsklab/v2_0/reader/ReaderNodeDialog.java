@@ -19,9 +19,12 @@
 package de.bund.bfr.knime.fsklab.v2_0.reader;
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import org.knime.base.node.io.table.read.ReadTableNodeModel;
 import org.knime.core.node.InvalidSettingsException;
@@ -38,15 +41,19 @@ import org.knime.core.node.workflow.FlowVariable;
 class ReaderNodeDialog extends NodeDialogPane {
 
   private final SettingsModelString filePath;
-
+  private final SettingsModelString overridePackages ;
   private final FilesHistoryPanel m_filePanel;
+  
+  private final JCheckBox overrideCheckBock; 
 
   ReaderNodeDialog() {
    filePath = new SettingsModelString(ReaderNodeModel.CFG_FILE, "");
+   overridePackages = new SettingsModelString(ReaderNodeModel.CFG_OVERRIDE, null);
     m_filePanel =
         new FilesHistoryPanel(createFlowVariableModel("filename", FlowVariable.Type.STRING),
             "fskx_reader", LocationValidation.FileInput, ".fskx");
-
+    overrideCheckBock = new JCheckBox();
+    
     addTab("Options", initLayout());
   }
 
@@ -55,9 +62,17 @@ class ReaderNodeDialog extends NodeDialogPane {
       throws NotConfigurableException {
     try {
       filePath.loadSettingsFrom(settings);
-
+      
+      
       m_filePanel.updateHistory();
       m_filePanel.setSelectedFile(filePath.getStringValue());
+      
+
+      if(settings.containsKey("overridePackages")) {
+        overridePackages.loadSettingsFrom(settings);
+        overrideCheckBock.setSelected(overridePackages.getStringValue()!=null?Boolean.parseBoolean(overridePackages.getStringValue()):false);
+      }
+      
     } catch (InvalidSettingsException exception) {
       throw new NotConfigurableException(exception.getMessage(), exception);
     }
@@ -66,9 +81,12 @@ class ReaderNodeDialog extends NodeDialogPane {
   @Override
   protected void saveSettingsTo(NodeSettingsWO settings) throws InvalidSettingsException {
     filePath.setStringValue(m_filePanel.getSelectedFile().trim());
+    overridePackages.setStringValue(""+overrideCheckBock.isSelected());
+
     m_filePanel.addToHistory();
 
     filePath.saveSettingsTo(settings);
+    overridePackages.saveSettingsTo(settings);
   }
 
   private JPanel initLayout() {
@@ -78,10 +96,15 @@ class ReaderNodeDialog extends NodeDialogPane {
         BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Input location:"));
     filePanel.add(m_filePanel, BorderLayout.NORTH);
     filePanel.add(Box.createHorizontalGlue());
+    
+    JPanel overridePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    overridePanel.add(new JLabel("Override Packages Info:"));
+    overridePanel.add(overrideCheckBock);
 
     JPanel panel = new JPanel();
     panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
     panel.add(filePanel);
+    panel.add(overridePanel);
 
     return panel;
   }

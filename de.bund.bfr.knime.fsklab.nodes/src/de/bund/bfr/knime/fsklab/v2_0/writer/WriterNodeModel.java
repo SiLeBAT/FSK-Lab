@@ -25,16 +25,24 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.threetenbp.ThreeTenModule;
+import analyzescript.PythonScriptAnalyser;
 import de.bund.bfr.fskml.FSKML;
 import de.bund.bfr.fskml.FskMetaDataObject;
+import de.bund.bfr.fskml.PythonScript;
+import de.bund.bfr.fskml.RScript;
+import de.bund.bfr.fskml.Script;
+import de.bund.bfr.fskml.ScriptFactory;
 import de.bund.bfr.fskml.FskMetaDataObject.ResourceType;
 import de.bund.bfr.fskml.sedml.SourceScript;
 import de.bund.bfr.knime.fsklab.FskPlugin;
+import de.bund.bfr.knime.fsklab.PackagesInfo;
+import de.bund.bfr.knime.fsklab.VersionedPackage;
 import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
 import de.bund.bfr.knime.fsklab.nodes.ScriptHandler;
 import de.bund.bfr.knime.fsklab.nodes.WriterNodeUtils;
 import de.bund.bfr.knime.fsklab.r.client.LibRegistry;
 import de.bund.bfr.knime.fsklab.preferences.PreferenceInitializer;
+import de.bund.bfr.knime.fsklab.preferences.PreferencePage;
 import de.bund.bfr.knime.fsklab.v2_0.CombinedFskPortObject;
 import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
 import de.bund.bfr.knime.fsklab.v2_0.FskSimulation;
@@ -67,9 +75,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.xml.stream.XMLStreamException;
@@ -317,7 +327,7 @@ class WriterNodeModel extends NoInternalsModel {
     
     FskPortObject ffskObj = fskObj.getFirstFskPortObject();
     try (ScriptHandler singleScriptHandler = ScriptHandler
-        .createHandler(SwaggerUtil.getLanguageWrittenIn(ffskObj.modelMetadata), ffskObj.packages)) {
+        .createHandler(SwaggerUtil.getLanguageWrittenIn(ffskObj.modelMetadata), ffskObj.packagesInfo.getPackageNames())) {
 
       if (ffskObj instanceof CombinedFskPortObject) {
         writeCombinedObject((CombinedFskPortObject) ffskObj, archive, URIS, filePrefix,
@@ -333,7 +343,7 @@ class WriterNodeModel extends NoInternalsModel {
 
     FskPortObject sfskObj = fskObj.getSecondFskPortObject();
     try (ScriptHandler singleScriptHandler = ScriptHandler
-        .createHandler(SwaggerUtil.getLanguageWrittenIn(sfskObj.modelMetadata), sfskObj.packages)) {
+        .createHandler(SwaggerUtil.getLanguageWrittenIn(sfskObj.modelMetadata), sfskObj.packagesInfo.getPackageNames())) {
 
       if (sfskObj instanceof CombinedFskPortObject) {
         writeCombinedObject((CombinedFskPortObject) sfskObj, archive, URIS, filePrefix,
@@ -401,7 +411,7 @@ class WriterNodeModel extends NoInternalsModel {
     FskPortObject in = (FskPortObject) inObjects[0];
     addModificationDate(in.modelMetadata);
     try (ScriptHandler scriptHandler = ScriptHandler
-        .createHandler(SwaggerUtil.getLanguageWrittenIn(in.modelMetadata), in.packages)) {
+        .createHandler(SwaggerUtil.getLanguageWrittenIn(in.modelMetadata), in.packagesInfo.getPackageNames())) {
       
       
       
@@ -472,25 +482,84 @@ class WriterNodeModel extends NoInternalsModel {
 
       final URI libUri = NodeUtils.getLibURI();
       List<String> missingPackages = new ArrayList<>();
-      List<VersionedPackage> versionedPackages = new ArrayList<>(portObject.packages.size());
+      List<VersionedPackage> versionedPackages = new ArrayList<>();
+      String PythonDistributionVersion = null ;
+      if(portObject.modelMetadata != null && SwaggerUtil.getLanguageWrittenIn(portObject.modelMetadata) != null) {
+        String languageWrittenIn = SwaggerUtil.getLanguageWrittenIn(portObject.modelMetadata);
+        String pythonPath = null; // Path to the Python executable in the conda environment
+        String envPath = null; // Path to the conda environment
+        if(PreferencePage.getPython3CondaEnvironmentDirectoryPath() != null)
+          envPath = PreferenceInitializer.getPython3Env();
+        else
+          envPath = PreferenceInitializer.getPython2Env();
+        
+        pythonPath =envPath+"/bin/python";
+        PythonDistributionVersion = PythonScriptAnalyser.extractPythonVersion(pythonPath);
+        
+        if(languageWrittenIn.toLowerCase().startsWith("r"))
+        {
+       // Get versions of R or Python packages
+          for (String packageName : portObject.packagesInfo.getPackageNames()) {
+            String command = scriptHandler.getPackageVersionCommand(packageName);
 
-      // Get versions of R packages
-      for (String packageName : portObject.packages) {
-        String command = scriptHandler.getPackageVersionCommand(packageName);
+            try {
+              String packageVersion = scriptHandler.runScript(command, exec, true)[0];
+              versionedPackages.add(new VersionedPackage(packageName, packageVersion));
 
-        try {
-          String packageVersion = scriptHandler.runScript(command, exec, true)[0];
-          versionedPackages.add(new VersionedPackage(packageName, packageVersion));
-
-          Path path = LibRegistry.instance().getPath(packageName);
-          if (path != null) {
-            File file = path.toFile();
-            archive.addEntry(file, file.getName(), libUri);
+              Path path = LibRegistry.instance().getPath(packageName);
+              if (path != null) {
+                File file = path.toFile();
+                archive.addEntry(file, file.getName(), libUri);
+              }
+            } catch (Exception err) {
+              missingPackages.add(packageName);
+            }
           }
-        } catch (Exception err) {
-          missingPackages.add(packageName);
         }
+        else if(languageWrittenIn.toLowerCase().startsWith("py"))
+        {
+          if(portObject.overridePackages) {
+            try {
+              // Create a temporary file
+              Path tempModelScriptFile = Files.createTempFile(null, ".py");
+              
+              // Write text to the temporary file
+              Files.write(tempModelScriptFile, portObject.getModel().getBytes());
+  
+              System.out.println("Temporary Model Script file written to: " + tempModelScriptFile);
+              Script fskmlModelScript = ScriptFactory.createScript(portObject.getModel(), languageWrittenIn == null ? "R" :languageWrittenIn, pythonPath, tempModelScriptFile.toAbsolutePath().toString(), envPath);
+              
+              Path tempVisScriptFile = Files.createTempFile(null, ".py");
+  
+              // Write text to the temporary file
+              Files.write(tempVisScriptFile, portObject.getViz().getBytes());
+  
+              System.out.println("Temporary Vis Script file written to: " + tempVisScriptFile);
+              Script fskmlvisualizationScript = ScriptFactory.createScript(portObject.getViz(), languageWrittenIn == null ? "R" :languageWrittenIn, pythonPath, tempVisScriptFile.toAbsolutePath().toString(), envPath);
+              
+              final List<VersionedPackage> finalVersionedPackage = versionedPackages;
+              fskmlModelScript.getPackageMap().forEach((packageName, version) -> {
+                VersionedPackage versionedPackage = new VersionedPackage(packageName, version);
+                finalVersionedPackage.add(versionedPackage);
+              });
+              
+              fskmlvisualizationScript.getPackageMap().forEach((packageName, version) -> {
+                VersionedPackage versionedPackage = new VersionedPackage(packageName, version);
+                finalVersionedPackage.add(versionedPackage);
+              });
+            } catch (IOException e) {
+                System.err.println("An error occurred: " + e.getMessage());
+            }
+            
+          }
+        }else {
+          versionedPackages = portObject.packagesInfo.getPackages();
+
+        }
+        
       }
+      
+      
 
       // Try to retrieve versions of missing packages from the repository
       if (!missingPackages.isEmpty()) {
@@ -515,7 +584,11 @@ class WriterNodeModel extends NoInternalsModel {
       
       final String language = StringUtils.defaultIfBlank(
           SwaggerUtil.getLanguageWrittenIn(portObject.modelMetadata), "R");
-      PackagesInfo packagesInfo = new PackagesInfo(language, versionedPackages);
+      PackagesInfo packagesInfo;
+      if(PythonDistributionVersion != null)
+        packagesInfo = new PackagesInfo(PythonDistributionVersion, versionedPackages);
+      else
+        packagesInfo = new PackagesInfo(language, versionedPackages);
 
       try {
         String jsonString = FskPlugin.getDefault().MAPPER104.writeValueAsString(packagesInfo);
@@ -528,41 +601,7 @@ class WriterNodeModel extends NoInternalsModel {
     }
   }
 
-  /**
-   * Utility class for serializing package information to JSON. The properties "Package" and
-   * "Version" are kept for backward-compatibility.
-   */
-  private static class VersionedPackage {
-
-    @JsonProperty("Package")
-    private final String packageName;
-
-    @JsonProperty("Version")
-    private final String version;
-
-    VersionedPackage(final String packageName, final String version) {
-      this.packageName = packageName;
-      this.version = version;
-    }
-  }
-
-  /**
-   * Utility class for the packages information files. It is used for serializing/deserializing
-   * packages information.
-   */
-  private static class PackagesInfo {
-
-    @JsonProperty("Language")
-    private final String language;
-
-    @JsonProperty("PackageList")
-    private final List<VersionedPackage> packages;
-
-    PackagesInfo(final String language, final List<VersionedPackage> packages) {
-      this.language = language;
-      this.packages = packages;
-    }
-  }
+  
 
   private static void addPackagesFile(final CombineArchive archive, final String packageInfoList,
       final String filename) throws IOException, URISyntaxException {

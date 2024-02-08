@@ -52,8 +52,10 @@ public class ReaderNodeModel extends NoInternalsModel {
   private static final PortType[] OUT_TYPES = {FskPortObject.TYPE};
 
   static final String CFG_FILE = "filename";
+  static final String CFG_OVERRIDE = "overridePackages";
   
   private final SettingsModelString filePath = new SettingsModelString(CFG_FILE, null);
+  private final SettingsModelString overridePackages = new SettingsModelString(CFG_OVERRIDE, null);
 
   
   public ReaderNodeModel() {
@@ -63,12 +65,14 @@ public class ReaderNodeModel extends NoInternalsModel {
   @Override
   protected void saveSettingsTo(NodeSettingsWO settings) {
     filePath.saveSettingsTo(settings);
+    overridePackages.saveSettingsTo(settings);
   }
 
   @Override
   protected void loadValidatedSettingsFrom(NodeSettingsRO settings)
       throws InvalidSettingsException {
     filePath.loadSettingsFrom(settings);
+    overridePackages.loadSettingsFrom(settings);
   }
 
   @Override
@@ -140,7 +144,12 @@ public class ReaderNodeModel extends NoInternalsModel {
 
       
       inObject = ReaderNodeUtil.readArchive(fskxFile);
+      
     }
+      if(inObject.packagesInfo.getPackages().isEmpty())
+        inObject.overridePackages = true;
+      else
+        inObject.overridePackages = Boolean.parseBoolean(overridePackages.getStringValue());
 
     return new PortObject[] {inObject};
   }

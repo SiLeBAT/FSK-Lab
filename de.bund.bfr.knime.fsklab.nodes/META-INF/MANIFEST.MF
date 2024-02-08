@@ -52,10 +52,11 @@ Bundle-ClassPath: .,
  sedml_libs/xom-1.2.5.jar,
  libs/batik-svg-dom.jar,
  libs/batik-util-1.7.jar,
- libs/fskml-1.0.13.jar,
  libs/jhdf-0.5.11.jar,
  libs/vocabularies-2.0.0.jar,
- libs/jackson-module-jsonschema-2.2.1.jar
+ libs/jackson-module-jsonschema-2.2.1.jar,
+ libs/fskml-1.0.14.jar,
+ libs/fskml-1.0.14-sources.jar
 Export-Package: de.bund.bfr.knime.fsklab;
   uses:="org.osgi.framework,
    javax.swing.tree,

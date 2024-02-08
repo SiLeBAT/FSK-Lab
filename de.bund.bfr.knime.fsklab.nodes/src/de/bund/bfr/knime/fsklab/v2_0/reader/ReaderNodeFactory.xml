@@ -23,6 +23,9 @@
 			  <li>Local path: C:/workspace/my_resource.txt</li>
 			</ul>
 		</option>
+		<option name="Override Packages">
+		  If selected, The creator packages will be re-written with packages information of your distribution.
+		</option>
 	</fullDescription>
 	<ports>
 		<outPort name="FSK object" index="0">FSK object</outPort>
