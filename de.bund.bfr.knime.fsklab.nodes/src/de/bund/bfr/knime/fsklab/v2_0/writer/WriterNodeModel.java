@@ -268,6 +268,8 @@ class WriterNodeModel extends NoInternalsModel {
         // ADD RMarkdown file
         case "rmd": archive.addEntry(resourceFile, filenameString, URI.create("https://www.iana.org/assignments/media-types/text/markdown"));
         break;
+        case "pmfx": archive.addEntry(resourceFile, filenameString, URI.create("https://www.bfr.bund.de/pmfx"));
+        break;
         default: {
           if(blackListedExtensions != null && !blackListedExtensions.contains("." + extension.toUpperCase())) {
                archive.addEntry(resourceFile, filenameString,URI.create("https://knime.bfr.berlin/mediatypes/resourceFile") );

@@ -52,6 +52,7 @@
      <node category-path="/community/fsklab" factory-class="de.bund.bfr.knime.fsklab.v2_0.joiner.JoinerNodeFactory" />
      <node category-path="/community/fsklab" factory-class="de.bund.bfr.knime.fsklab.v2_0.editor.FSKEditorJSNodeFactory" />
      <node category-path="/community/fsklab" factory-class="de.bund.bfr.knime.fsklab.v2_0.fskdbview.FSKDBViewNodeFactory"/>
+     <node category-path="/community/fsklab" factory-class="de.bund.bfr.knime.fsklab.v2_0.pmmConverter.PMMToFSKExporterNodeFactory"/>
      
      
      <!-- Disable workflow writer and reader nodes (unfinished)
