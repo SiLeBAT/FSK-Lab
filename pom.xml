@@ -65,6 +65,7 @@
 
 		<!-- Update site -->
 		<module>de.bund.bfr.knime.update</module>
+		<module>de.bund.bfr.knime.kidacodegen</module>
 	</modules>
 
 	<profiles>

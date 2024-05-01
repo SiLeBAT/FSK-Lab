@@ -1,0 +1,55 @@
+	
+	constructor(metadata, img, state, modelScript, visScript, readme) {
+		super(metadata, img, modelScript, visScript, readme);
+		this._schema = schemas.genericModel;
+		if (state) {
+			this.panels = this._createPanels();
+		}
+		this._menu = {{{ menus }}};
+		this._panels = {
+			{{#panels}}
+			{{fieldName}}:{
+				type: '{{#array}}complex{{/array}}{{^array}}simple{{/array}}',
+				schema: this.jsonSchema.{{parent}}{{metadataSource}},
+				metadata: this._metadata.{{metadataSource}}
+			}{{^@last}},{{/@last}}
+			{{/panels}}	
+		}
+	}
+
+	get metaData() {
+		try {
+			{{#panels}}
+			this._metadata.{{fieldNameWithParent}} = this.panels.{{fieldName}}.data;
+			{{/panels}}	
+			this._metadata.modelType = "{{classname}}";
+
+			this._metadata = metadataFix(this._metadata);
+		} catch (error) {
+			console.log(error);
+		}
+		return this._metadata;
+	}
+
+	get jsonSchema() {
+		return {{{jsonSchema}}}
+	}
+	// Validate this.panels and return boolean
+	validate() {
+		let isValid = true;
+		if (!this.panels.generalInformation.validate()) isValid = false;
+		if (!this.panels.modelCategory.validate()) isValid = false;
+		if (!this.panels.scopeGeneral.validate()) isValid = false;
+		if (!this.panels.study.validate()) isValid = false;
+		return isValid;
+	}
+
+	_createPanels() {
+		let port = window.port || -1;
+		let schema = schemas.genericModel;
+		return {
+			{{#panels}}
+			{{fieldName}}: new {{#array}}TablePanel{{/array}}{{^array}}FormPanel{{/array}}("{{label}}", this.jsonSchema.{{parent}}.{{metadataSource}},{{#metadatParentbBlank}} this._metadata.{{metadataSource}}{{/metadatParentbBlank}}{{^metadatParentbBlank}} this._metadata.{{metadatParent}}?this._metadata.{{metadatParent}}.{{metadataSource}}:{}{{/metadatParentbBlank}}, port){{^@last}}, {{/@last}}
+			{{/panels}}	
+			}
+		}

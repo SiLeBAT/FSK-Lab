@@ -1,0 +1,199 @@
+{{>licenseInfo}}
+import {ApiClient} from './ApiClient';
+import {EventObserver} from './app/EventObserver.js';
+import {ArrayForm} from './app/ArrayForm.js';
+import {InputForm} from './app/InputForm.js';
+import {SelectForm} from './app/SelectForm.js';
+import {SimpleTable} from './app/SimpleTable.js';
+import {TablePanel} from './app/TablePanel.js';
+import {TextareaForm} from './app/TextareaForm.js';
+import {FormPanel} from './app/FormPanel.js';
+import {Dialog} from './app/Dialog.js';
+import {APPTable} from './app/APPTable.js';
+import {APPTableMT} from './app/APPTableMT.js';
+import {APPModal} from './app/APPModal.js';
+import {APPModalMTDetails} from './app/APPModalMTDetails.js';
+import {APPMTEditableDetails} from './app/APPMTEditableDetails.js';
+import {APPModalMTSimulations} from './app/APPModalMTSimulations.js';
+import {APPSimulation} from './app/APPSimulation.js';
+import {APPUI} from './app/APPUI.js';
+import {APPMTDetails} from './app/APPMTDetails.js';
+import {APPLandingpage} from './app/APPLandingpage.js';
+
+{{#models}}import {{braces "left"}}{{#model}}{{classFilename}}{{/model}}{{braces "right"}} from './{{#modelPackage}}{{modelPackage}}/{{/modelPackage}}{{importPath}}';
+{{/models}}
+
+{{#models}}import {{braces "left"}}{{#model}}{{classFilename}}View{{/model}}{{braces "right"}} from './{{#modelPackage}}{{modelPackage}}/{{/modelPackage}}{{importPath}}View';
+{{/models}}{{#apiInfo}}{{#apis}}import {{braces "left"}}{{importPath}}{{braces "right"}} from './{{#apiPackage}}{{apiPackage}}/{{/apiPackage}}{{importPath}}';
+{{/apis}}{{/apiInfo}}
+
+{{#emitJSDoc}}/**{{#projectDescription}}
+* {{projectDescription}}.<br>{{/projectDescription}}
+* The <code>index</code> module provides access to constructors for all the classes which comprise the public API.
+* <p>
+* An AMD (recommended!) or CommonJS application will generally do something equivalent to the following:
+* <pre>
+* var {{moduleName}} = require('{{#invokerPackage}}{{invokerPackage}}/{{/invokerPackage}}index'); // See note below*.
+* var xxxSvc = new {{moduleName}}.XxxApi(); // Allocate the API class we're going to use.
+* var yyyModel = new {{moduleName}}.Yyy(); // Construct a model instance.
+* yyyModel.someProperty = 'someValue';
+* ...
+* var zzz = xxxSvc.doSomething(yyyModel); // Invoke the service.
+* ...
+* </pre>
+* <em>*NOTE: For a top-level AMD script, use require(['{{#invokerPackage}}{{invokerPackage}}/{{/invokerPackage}}index'], function(){...})
+* and put the application logic within the callback function.</em>
+* </p>
+* <p>
+* A non-AMD browser application (discouraged) might do something like this:
+* <pre>
+* var xxxSvc = new {{moduleName}}.XxxApi(); // Allocate the API class we're going to use.
+* var yyy = new {{moduleName}}.Yyy(); // Construct a model instance.
+* yyyModel.someProperty = 'someValue';
+* ...
+* var zzz = xxxSvc.doSomething(yyyModel); // Invoke the service.
+* ...
+* </pre>
+* </p>
+* @module {{#invokerPackage}}{{invokerPackage}}/{{/invokerPackage}}index
+* @version {{projectVersion}}
+*/{{/emitJSDoc}}
+export {
+    {{#emitJSDoc}}/**
+     * The ApiClient constructor.
+     * @property {{braces "left"}}module:{{#invokerPackage}}{{invokerPackage}}/{{/invokerPackage}}ApiClient{{braces "right"}}
+     */{{/emitJSDoc}}
+    ApiClient{{#models}},
+
+    {{#emitJSDoc}}/**
+     * The {{importPath}} model constructor.
+     * @property {{braces "left"}}module:{{#invokerPackage}}{{invokerPackage}}/{{/invokerPackage}}{{#modelPackage}}{{modelPackage}}/{{/modelPackage}}{{importPath}}{{braces "right"}}
+     */{{/emitJSDoc}}
+    {{importPath}}{{/models}}{{#models}},
+
+    {{#emitJSDoc}}/**
+     * The {{importPath}}View  constructor.
+     * @property {{braces "left"}}module:{{#invokerPackage}}{{invokerPackage}}/{{/invokerPackage}}{{#modelPackage}}{{modelPackage}}/{{/modelPackage}}{{importPath}}View{{braces "right"}}
+     */{{/emitJSDoc}}
+    {{importPath}}View{{/models}}{{#apiInfo}}{{#apis}}
+
+    {{#emitJSDoc}}/**
+    * The {{importPath}} service constructor.
+    * @property {{braces "left"}}module:{{#invokerPackage}}{{invokerPackage}}/{{/invokerPackage}}{{#apiPackage}}{{apiPackage}}/{{/apiPackage}}{{importPath}}{{braces "right"}}
+    */{{/emitJSDoc}}
+    {{importPath}}{{/apis}}{{/apiInfo}},
+    
+     /**
+     * The EventObserver constructor.
+     * @property {EventObserver}
+     */
+    EventObserver,
+    
+     /**
+     * The ArrayForm constructor.
+     * @property {ArrayForm}
+     */
+    ArrayForm,
+    
+     /**
+     * The InputForm constructor.
+     * @property {InputForm}
+     */
+    InputForm,
+    
+     /**
+     * The SelectForm constructor.
+     * @property {SelectForm}
+     */
+    SelectForm,
+    
+     /**
+     * The SimpleTable constructor.
+     * @property {SimpleTable}
+     */
+    SimpleTable,
+    
+     /**
+     * The TablePanel constructor.
+     * @property {TablePanel}
+     */
+    TablePanel,
+    
+     /**
+     * The TextareaForm constructor.
+     * @property {TextareaForm}
+     */
+    TextareaForm,
+    
+     /**
+     * The FormPanel constructor.
+     * @property {FormPanel}
+     */
+    FormPanel,
+    
+     /**
+     * The Dialog constructor.
+     * @property {Dialog}
+     */
+    Dialog,
+    
+     /**
+     * The APPModalMTDetails constructor.
+     * @property {APPModalMTDetails}
+     */
+    APPModalMTDetails,
+    
+     /**
+     * The APPMTEditableDetails constructor.
+     * @property {APPMTEditableDetails}
+     */
+    APPMTEditableDetails,
+    
+     /**
+     * The APPModalMTSimulations constructor.
+     * @property {APPModalMTSimulations}
+     */
+    APPModalMTSimulations,
+    
+     /**
+     * The APPSimulation constructor.
+     * @property {APPSimulation}
+     */
+    APPSimulation,
+    
+     /**
+     * The APPTable constructor.
+     * @property {APPTable}
+     */
+    APPTable,
+    
+     /**
+     * The APPTableMT constructor.
+     * @property {APPTableMT}
+     */
+    APPTableMT,
+    
+     /**
+     * The APPUI constructor.
+     * @property {APPUI}
+     */
+    APPUI,
+    
+     /**
+     * The APPMTDetails constructor.
+     * @property {APPMTDetails}
+     */
+    APPMTDetails,
+    
+     /**
+     * The APPModal constructor.
+     * @property {APPModal}
+     */
+    APPModal,
+    
+     /**
+     * The APPLandingpage constructor.
+     * @property {APPLandingpage}
+     */
+    APPLandingpage
+};

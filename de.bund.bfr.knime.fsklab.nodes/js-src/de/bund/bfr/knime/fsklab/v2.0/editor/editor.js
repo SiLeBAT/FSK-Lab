@@ -5,7 +5,7 @@ fskeditorjs = function () {
 
   var _rep;
   var _val;
-
+  window._debug = true;
   var _metadata = {
     generalInformation: {},
     scope: {},
@@ -38,6 +38,8 @@ fskeditorjs = function () {
     _visualizationCodeMirror.setValue(selectedModel.visualization);
 
   }
+
+  
   let camelize = function (str) {
       return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(word, index) {
             return index === 0 ? word.toUpperCase() : word.toLowerCase();
@@ -72,6 +74,7 @@ fskeditorjs = function () {
     
     _rep = representation;
     _val = value;
+    console.log("value",JSON.parse(value.modelMetaData));
     window._endpoints.controlledVocabularyEndpoint = _rep.controlledVocabularyURL;
     window.vocabularies = representation.vocabularies;
     //fskutil = new fskutil();
@@ -317,12 +320,15 @@ fskeditorjs = function () {
     window.port = _rep.servicePort;
     let mainContainer = $(`<div class="card"></div>`);
     $('body').html(mainContainer);
-    _modalDetails = new APPMTEditableDetails( {
+    
+    _modalDetails = new kidaLibrary.APPMTEditableDetails( {
                         data          : {},
                         id            : 'mtModalDetails',
                         classes     : 'modal-details',
                         type          : 'mtDetails'
                       }, mainContainer );
+                      
+    console.log(_modalDetails)
     _modalDetails._createModelMetadataContent();
     await _modalDetails._updateContent(_metadata, 0);
     createUI(modelscript, visualization);
@@ -333,13 +339,14 @@ fskeditorjs = function () {
     });
     if(!_val.modeTypeChanged){
 	    Object.keys(_val.modelsTypeslabel).forEach(function(key) {
-		  if(_val.modelType == _val.modelsTypeslabel[key])
+		  if(_val.modelType == _val.modelsTypeslabel[key] && window['selectInput_Model_class'])
 		  	window['selectInput_Model_class'].val(key);
 		});
-	    
-	    window['selectInput_Model_class'].trigger('change');
+	    if(window['selectInput_Model_class'])
+	    	window['selectInput_Model_class'].trigger('change');
     }
     setTimeout(function() {
+	  if(window['selectInput_Model_class'])
 	    window['selectInput_Model_class'].on('change', function(e){
 			
 		    var modelType = $('#selectInput_Model_class').val();
@@ -500,15 +507,15 @@ fskeditorjs = function () {
     $('#visualizationScriptArea').val(visualization || _val.visualizationScript);
     $('#readmeArea').val(_val.readme);
     
-     _modelCodeMirror = createCodeMirror("modelScriptArea", "text/x-rsrc");
-     _visualizationCodeMirror = createCodeMirror("visualizationScriptArea", "text/x-rsrc");
-     _readmeCodeMirror = createCodeMirror("readmeArea", "text/x-markdown");
+     //_modelCodeMirror = createCodeMirror("modelScriptArea", "text/x-rsrc");
+     //_visualizationCodeMirror = createCodeMirror("visualizationScriptArea", "text/x-rsrc");
+     //_readmeCodeMirror = createCodeMirror("readmeArea", "text/x-markdown");
      let doScriptSave = () => { 
         _metadata = _modalDetails._modelHandler.metaData;
         doSave(_metadata)
       };
       
-     _modelCodeMirror.on("blur", () => { 
+     /*_modelCodeMirror.on("blur", () => { 
         _modelCodeMirror.focus();
         doScriptSave();
       });
@@ -519,18 +526,18 @@ fskeditorjs = function () {
      _readmeCodeMirror.on("blur", () => { 
         _readmeCodeMirror.focus();
         doScriptSave();
-      });
+      });*/
     
      $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
          if (e.currentTarget.text == 'Model') {
-             _modelCodeMirror.refresh();
-             _modelCodeMirror.focus();
+             //_modelCodeMirror.refresh();
+             //_modelCodeMirror.focus();
          } else if (e.currentTarget.text == 'Visualization') {
-             _visualizationCodeMirror.refresh();
-             _visualizationCodeMirror.focus();
+             //_visualizationCodeMirror.refresh();
+             //_visualizationCodeMirror.focus();
          } else if (e.currentTarget.text == 'Readme') {
-             _readmeCodeMirror.refresh();
-             _readmeCodeMirror.focus();
+             //_readmeCodeMirror.refresh();
+             //_readmeCodeMirror.focus();
          }
      });
 

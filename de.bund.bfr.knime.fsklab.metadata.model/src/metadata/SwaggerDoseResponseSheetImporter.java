@@ -147,7 +147,7 @@ public class SwaggerDoseResponseSheetImporter{
 
 		Cell nameCell = sheet.getRow(GENERAL_INFORMATION__NAME).getCell(I);
 		if (nameCell.getCellType() == CellType.STRING) {
-			information.setModelName(nameCell.getStringCellValue());
+			information.setName(nameCell.getStringCellValue());
 		}
 
 		Cell sourceCell = sheet.getRow(GENERAL_INFORMATION__SOURCE).getCell(I);
