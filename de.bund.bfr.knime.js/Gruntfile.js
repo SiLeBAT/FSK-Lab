@@ -46,7 +46,7 @@ module.exports = function (grunt) {
 		babel: {
 			options: {
 				sourceMap: false,
-				presets: ['babel-preset-es2015']
+				presets: ['@babel/preset-env']
 			},
 			dist: {
 				files: {
@@ -59,16 +59,7 @@ module.exports = function (grunt) {
 				src: [
 					'src/js/app/app.editable.eventObserver.js',
 					'src/js/scripts.js',
-					'src/js/app/app.schemas.js',
 					'src/js/app/app.utils.js',
-					'src/js/app/app.modal.js',
-					'src/js/app/app.modal.mt-details.js',
-					'src/js/app/app.editable.mt.*.js',
-					'src/js/app/app.modal.mt-simulations.js',
-					'src/js/app/app.simulation.js',
-					'src/js/app/app.mt.details.js',
-					'src/js/app/app.table.js',
-					'src/js/app/app.table.mt.js',
 					'src/js/app/app.ui.js',
 					'src/js/app/app.landingpage.js',
                     'specs/template.js',
@@ -155,6 +146,7 @@ module.exports = function (grunt) {
 
 	// register task
 	grunt.registerTask('runScripts', ['jshint', 'concat:jsapp', 'concat:jsvendors', 'babel', 'concat:jsall', 'uglify']);
+	
 	// grunt.registerTask('runStylesLess', ['less', 'concat:css' ,'postcss' ,'cssmin', 'compress:css']);
 	grunt.registerTask('runStylesSaas', ['sass', 'concat:css' ,'postcss' ,'cssmin']);
 

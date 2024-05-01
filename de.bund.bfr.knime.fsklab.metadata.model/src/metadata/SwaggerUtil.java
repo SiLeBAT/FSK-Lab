@@ -684,7 +684,7 @@ public class SwaggerUtil {
 		} else if (modelType.equalsIgnoreCase("toxicologicalModel")) {
 			name = ((ToxicologicalModel) model).getGeneralInformation().getName();
 		} else if (modelType.equalsIgnoreCase("doseResponseModel")) {
-			name = ((DoseResponseModel) model).getGeneralInformation().getModelName();
+			name = ((DoseResponseModel) model).getGeneralInformation().getName();
 		} else if (modelType.equalsIgnoreCase("processModel")) {
 			name = ((ProcessModel) model).getGeneralInformation().getName();
 		} else if (modelType.equalsIgnoreCase("consumptionModel")) {
@@ -754,7 +754,7 @@ public class SwaggerUtil {
 		} else if (modelType.equalsIgnoreCase("toxicologicalModel")) {
 			((ToxicologicalModel) model).getGeneralInformation().setName(name);
 		} else if (modelType.equalsIgnoreCase("doseResponseModel")) {
-			((DoseResponseModel) model).getGeneralInformation().setModelName(name);
+			((DoseResponseModel) model).getGeneralInformation().setName(name);
 		} else if (modelType.equalsIgnoreCase("processModel")) {
 			((ProcessModel) model).getGeneralInformation().setName(name);
 		} else if (modelType.equalsIgnoreCase("consumptionModel")) {

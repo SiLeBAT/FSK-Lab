@@ -1,0 +1,16 @@
+{{#emitJSDoc}}
+/**
+ * The {{classname}} View  module.
+ * @module {{#invokerPackage}}{{invokerPackage}}/{{/invokerPackage}}{{#modelPackage}}{{modelPackage}}/{{/modelPackage}}{{classname}}
+ * @version {{projectVersion}}
+ */
+{{/emitJSDoc}}
+export class {{classname}}View {{#parentModel}}extends {{classname}}View {{/parentModel}}{{#parent}}{{^parentModel}}{{#vendorExtensions.x-isArray}}extends Array {{/vendorExtensions.x-isArray}}{{/parentModel}}{{/parent}}{
+{{#parentModelNotNUll}}
+{{>partial_model_view_subtype}}
+{{/parentModelNotNUll}}
+{{#parentOf}}
+{{>partial_model_view_supertype}}
+{{/parentOf}}
+
+}

@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.bund.bfr.knime.js</groupId>
 	<artifactId>de.bund.bfr.knime.js</artifactId>
-    <packaging>eclipse-plugin</packaging>
+	<packaging>eclipse-plugin</packaging>
 	<parent>
 		<groupId>de.bund.bfr.knime</groupId>
 		<artifactId>de.bund.bfr.knime.root</artifactId>
@@ -13,46 +13,52 @@
 	</parent>
 	<build>
 		<plugins>
-		    <plugin>
-                <groupId>io.swagger</groupId>
-                <artifactId>swagger-codegen-maven-plugin</artifactId>
-                <version>2.4.19</version>
-                <executions>
-                    <execution>
-                        <id>convert</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <configuration>
-                            <inputSpec>${basedir}/../de.bund.bfr.knime.fsklab.metadata.model/resources/model.yaml</inputSpec>
-            
-                            <!-- Output directory, relative to the project directory. Default is ${project.build.directory}/generated-sources/swagger -->
-                            <output>specs</output>
-            
-                            <!-- Use "swagger" to convert YAML->JSON or "swagger-yaml" to convert JSON->YAML -->
-                            <language>swagger</language>
-                            <configOptions>
-                                <!-- Default output file name is swagger.json or swagger.yaml -->
-                                <outputFile>SPOT.json</outputFile>
-                            </configOptions>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+			<plugin>
+				<groupId>io.swagger</groupId>
+				<artifactId>swagger-codegen-maven-plugin</artifactId>
+				<version>2.4.19</version>
+				<executions>
+					<execution>
+						<id>convert</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<inputSpec>
+								${basedir}/../de.bund.bfr.knime.fsklab.metadata.model/resources/model.yaml</inputSpec>
+
+							<!-- Output directory, relative to the project
+							directory. Default is
+							${project.build.directory}/generated-sources/swagger -->
+							<output>specs</output>
+
+							<!-- Use "swagger" to convert YAML->JSON or
+							"swagger-yaml" to convert JSON->YAML -->
+							<language>swagger</language>
+							<configOptions>
+								<!-- Default output file name is swagger.json or
+								swagger.yaml -->
+								<outputFile>SPOT.json</outputFile>
+							</configOptions>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<groupId>com.github.eirslett</groupId>
 				<artifactId>frontend-maven-plugin</artifactId>
 
 				<executions>
 					<execution>
-						<!-- optional: you don't really need execution ids, but it looks nice 
+						<!-- optional: you don't really need execution ids, but
+						it looks nice 
 							in your build log. -->
 						<id>install node and npm</id>
 						<goals>
 							<goal>install-node-and-npm</goal>
 						</goals>
-						
+
 					</execution>
 					<execution>
 						<id>npm install</id>
@@ -60,8 +66,11 @@
 							<goal>npm</goal>
 						</goals>
 						<configuration>
-							<!-- optional: The default argument is actually "install", so unless 
-								you need to run some other npm command, you can remove this whole <configuration> 
+							<!-- optional: The default argument is actually
+							"install", so unless 
+								you need to run some
+							other npm command, you can remove this whole
+							<configuration> 
 								section. -->
 							<arguments>install</arguments>
 						</configuration>
@@ -71,18 +80,92 @@
 						<goals>
 							<goal>grunt</goal>
 						</goals>
-						
 					</execution>
 				</executions>
 				<configuration>
 					<nodeVersion>v14.15.4</nodeVersion>
 
-					<!-- optional: with node version greater than 4.0.0 will use npm provided 
+					<!-- optional: with node version greater than 4.0.0 will use
+					npm provided 
 						by node distribution -->
 					<npmVersion>6.14.10</npmVersion>
 
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>io.swagger.codegen.v3</groupId>
+				<artifactId>swagger-codegen-maven-plugin</artifactId>
+				<version>3.0.54</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<inputSpec>
+								${project.basedir}/modelMetadataSchema104.json</inputSpec>
+							<language>kida-Codegen</language>
+							<!-- APIs are service interfaces or implementations. -->
+							<generateApis>true</generateApis>
+
+							<!-- Models are DTOs, generally from the schemas
+							portion of the spec. -->
+							<generateModels>true</generateModels>
+
+							<!-- In this example, we're generating the POM,
+							README, etc. Just 
+	                            the
+							code, ma'am. -->
+							<generateSupportingFiles>true</generateSupportingFiles>
+							<configOptions>
+								<sourceFolder>src/gen/js</sourceFolder>
+							</configOptions>
+						</configuration>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>de.bund.bfr.knime</groupId>
+						<artifactId>de.bund.bfr.knime.kidacodegen</artifactId>
+						<version>1.0.0-SNAPSHOT</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+			 <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>move-files-up</id>
+                        <phase>compile</phase> <!-- Adjust this phase as per your requirement -->
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>sh</executable>
+                            <arguments>
+                                <argument>-c</argument>
+                                <argument>mv ${project.build.directory}/generated-sources/swagger/src/gen/js/index.js ${project.build.directory}/generated-sources/swagger/src/ &amp;&amp; mv ${project.build.directory}/generated-sources/swagger/src/gen/js/ApiClient.js ${project.build.directory}/generated-sources/swagger/src/</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+	                    <id>compile-js</id>
+	                    <phase>compile</phase> <!-- Adjust the phase as necessary -->
+	                    <goals>
+	                        <goal>exec</goal>
+	                    </goals>
+	                    <configuration>
+	                        <executable>npm</executable>
+	                        <arguments>
+	                            <argument>run</argument>
+	                            <argument>build-js</argument> <!-- Custom NPM script to execute Browserify -->
+	                        </arguments>
+	                    </configuration>
+	                </execution>
+                </executions>
+            </plugin>
 		</plugins>
 	</build>
 </project>

@@ -1,0 +1,30 @@
+{{>licenseInfo}}
+import {{braces "left"}}ApiClient{{braces "right"}} from '../ApiClient';
+{{#imports}}
+import {{braces "left"}}{{import}}View{{braces "right"}} from './{{import}}View';
+{{/imports}}
+
+import {EventObserver} from '../app/EventObserver.js';
+import {ArrayForm} from '../app/ArrayForm.js';
+import {InputForm} from '../app/InputForm.js';
+import {SelectForm} from '../app/SelectForm.js';
+import {SimpleTable} from '../app/SimpleTable.js';
+import {TablePanel} from '../app/TablePanel.js';
+import {TextareaForm} from '../app/TextareaForm.js';
+import {FormPanel} from '../app/FormPanel.js';
+import {Dialog} from '../app/Dialog.js';
+import {APPTable} from '../app/APPTable.js';
+import {APPTableMT} from '../app/APPTableMT.js';
+import {APPModal} from '../app/APPModal.js';
+
+
+{{#models}}
+  {{#model}}
+    {{#isEnum}}
+	{{>partial_model_enum_class}}
+    {{/isEnum}}
+    {{^isEnum}}
+	{{>partial_model_view}}
+    {{/isEnum}}
+  {{/model}}
+{{/models}}

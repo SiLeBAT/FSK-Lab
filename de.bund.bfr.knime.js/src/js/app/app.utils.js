@@ -80,7 +80,7 @@ var addControlledVocabulary = (input, vocabularyName) => {
  * @param {string} value Input value. It can be *null* or *undefined* for
  *  missing values.
  * 
- * @returns InputForm or ArrayForm for the supported type. If wrong type
+ * @returns kidaLibrary.InputForm or ArrayForm for the supported type. If wrong type
  *  it returns undefined.
  */
 var createForm = (prop, value, port) =>   {
@@ -88,27 +88,27 @@ var createForm = (prop, value, port) =>   {
 
 	if (prop.type === "text" || prop.type === "number" || prop.type === "url" ||
 		prop.type === "date" || prop.type === "email"  || prop.type === "year_date")
-		return new InputForm(prop.label, isMandatory, prop.type, prop.description,
+		return new kidaLibrary.InputForm(prop.label, isMandatory, prop.type, prop.description,
 			value ? value : "", port, prop.vocabulary, prop.sid);
 	
 	else if (prop.type === "long-text"){
-		return new TextareaForm(prop.label, isMandatory, prop.description,
+		return new kidaLibrary.TextareaForm(prop.label, isMandatory, prop.description,
 			value ? value : "");
 	}
 	else if (prop.type === "enum")
-		return new SelectForm(prop.label, isMandatory, prop.description, value,
+		return new kidaLibrary.SelectForm(prop.label, isMandatory, prop.description, value,
 			port, prop.vocabulary);
 
 	else if (prop.type === "boolean")
-		return new InputForm(prop.label, false, "checkbox",
+		return new kidaLibrary.InputForm(prop.label, false, "checkbox",
 			prop.description, value, port);
 
 	else if (prop.type === "text-array")
-		return new ArrayForm(prop.label, isMandatory, prop.type,
+		return new kidaLibrary.ArrayForm(prop.label, isMandatory, prop.type,
 			value ? value : [], prop.description, port, prop.vocabulary);
 
 	else if (prop.type === "date-array")
-		return new ArrayForm(prop.label, isMandatory, prop.type,
+		return new kidaLibrary.ArrayForm(prop.label, isMandatory, prop.type,
 			value ? value : [], prop.description, port, prop.vocabulary);
 }
 

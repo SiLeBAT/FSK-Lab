@@ -38,7 +38,7 @@ public class DoseResponseSheetImporterTest {
 	}
 
 	private static void test(DoseResponseModelGeneralInformation information) throws Exception {
-		assertEquals("Listeria Monocytogenes (DR of gQMRA)", information.getModelName());
+		assertEquals("Listeria Monocytogenes (DR of gQMRA)", information.getName());
 		assertEquals("PUBLISHED SCIENTIFIC STUDIES", information.getSource());
 		assertEquals("DR000001", information.getIdentifier());
 		assertEquals(6, information.getAuthor().size());
