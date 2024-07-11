@@ -214,17 +214,17 @@ public class PredictiveModelSheetImporter implements SheetImporter {
 		PredictiveModelGeneralInformation information = new PredictiveModelGeneralInformation();
 
 		Cell nameCell = sheet.getRow(GENERAL_INFORMATION__NAME).getCell(J);
-		if (nameCell.getCellTypeEnum() == CellType.STRING) {
+		if (nameCell.getCellType() == CellType.STRING) {
 			information.setName(nameCell.getStringCellValue());
 		}
 
 		Cell sourceCell = sheet.getRow(GENERAL_INFORMATION__SOURCE).getCell(J);
-		if (sourceCell.getCellTypeEnum() == CellType.STRING) {
+		if (sourceCell.getCellType() == CellType.STRING) {
 			information.setSource(sourceCell.getStringCellValue());
 		}
 
 		Cell identifierCell = sheet.getRow(GENERAL_INFORMATION__IDENTIFIER).getCell(J);
-		if (identifierCell.getCellTypeEnum() == CellType.STRING) {
+		if (identifierCell.getCellType() == CellType.STRING) {
 			information.setIdentifier(identifierCell.getStringCellValue());
 		}
 
@@ -244,7 +244,7 @@ public class PredictiveModelSheetImporter implements SheetImporter {
 		}
 
 		Cell creationDateCell = sheet.getRow(GENERAL_INFORMATION_CREATION_DATE).getCell(J);
-		if (creationDateCell.getCellTypeEnum() == CellType.NUMERIC) {
+		if (creationDateCell.getCellType() == CellType.NUMERIC) {
 			LocalDate localDate = ImporterUtils.retrieveDate(creationDateCell);
 			information.setCreationDate(localDate);
 		}
@@ -252,22 +252,22 @@ public class PredictiveModelSheetImporter implements SheetImporter {
 		// TODO: modificationDate
 
 		Cell rightsCell = sheet.getRow(GENERAL_INFORMATION__RIGHTS).getCell(J);
-		if (rightsCell.getCellTypeEnum() == CellType.STRING) {
+		if (rightsCell.getCellType() == CellType.STRING) {
 			information.setRights(rightsCell.getStringCellValue());
 		}
 
 		Cell isAvailableCell = sheet.getRow(GENERAL_INFORMATION__AVAILABLE).getCell(J);
-		if (isAvailableCell.getCellTypeEnum() == CellType.STRING) {
+		if (isAvailableCell.getCellType() == CellType.STRING) {
 			information.setAvailability(isAvailableCell.getStringCellValue());
 		}
 
 		Cell urlCell = sheet.getRow(GENERAL_INFORMATION__URL).getCell(J);
-		if (urlCell.getCellTypeEnum() == CellType.STRING) {
+		if (urlCell.getCellType() == CellType.STRING) {
 			information.setUrl(urlCell.getStringCellValue());
 		}
 
 		Cell formatCell = sheet.getRow(GENERAL_INFORMATION__FORMAT).getCell(J);
-		if (formatCell.getCellTypeEnum() == CellType.STRING) {
+		if (formatCell.getCellType() == CellType.STRING) {
 			information.setFormat(formatCell.getStringCellValue());
 		}
 
@@ -282,17 +282,17 @@ public class PredictiveModelSheetImporter implements SheetImporter {
 		}
 
 		Cell languageCell = sheet.getRow(GENERAL_INFORMATION__LANGUAGE).getCell(J);
-		if (languageCell.getCellTypeEnum() == CellType.STRING) {
+		if (languageCell.getCellType() == CellType.STRING) {
 			information.setLanguage(languageCell.getStringCellValue());
 		}
 
 		Cell softwareCell = sheet.getRow(GENERAL_INFORMATION__SOFTWARE).getCell(J);
-		if (softwareCell.getCellTypeEnum() == CellType.STRING) {
+		if (softwareCell.getCellType() == CellType.STRING) {
 			information.setSoftware(softwareCell.getStringCellValue());
 		}
 
 		Cell languageWrittenInCell = sheet.getRow(GENERAL_INFORMATION__LANGUAGE_WRITTEN_IN).getCell(J);
-		if (languageWrittenInCell.getCellTypeEnum() == CellType.STRING) {
+		if (languageWrittenInCell.getCellType() == CellType.STRING) {
 			information.setLanguageWrittenIn(languageWrittenInCell.getStringCellValue());
 		}
 
@@ -304,17 +304,17 @@ public class PredictiveModelSheetImporter implements SheetImporter {
 		}
 
 		Cell statusCell = sheet.getRow(GENERAL_INFORMATION__STATUS).getCell(J);
-		if (statusCell.getCellTypeEnum() == CellType.STRING) {
+		if (statusCell.getCellType() == CellType.STRING) {
 			information.setStatus(statusCell.getStringCellValue());
 		}
 
 		Cell objectiveCell = sheet.getRow(GENERAL_INFORMATION__OBJECTIVE).getCell(J);
-		if (objectiveCell.getCellTypeEnum() == CellType.STRING) {
+		if (objectiveCell.getCellType() == CellType.STRING) {
 			information.setObjective(objectiveCell.getStringCellValue());
 		}
 
 		Cell descriptionCell = sheet.getRow(GENERAL_INFORMATION__DESCRIPTION).getCell(J);
-		if (descriptionCell.getCellTypeEnum() == CellType.STRING) {
+		if (descriptionCell.getCellType() == CellType.STRING) {
 			information.setDescription(descriptionCell.getStringCellValue());
 		}
 
@@ -342,7 +342,7 @@ public class PredictiveModelSheetImporter implements SheetImporter {
 			// ...
 		}
 		Cell fittingProcedureCell = sheet.getRow(MM_FITTING_PROCEDURE_ROW).getCell(J);
-		if (fittingProcedureCell.getCellTypeEnum() == CellType.STRING) {
+		if (fittingProcedureCell.getCellType() == CellType.STRING) {
 			math.setFittingProcedure(fittingProcedureCell.getStringCellValue());
 		}
 
@@ -411,12 +411,12 @@ public class PredictiveModelSheetImporter implements SheetImporter {
 		}
 
 		Cell generalCommentCell = sheet.getRow(SCOPE__GENERAL_COMMENT).getCell(J);
-		if (generalCommentCell.getCellTypeEnum() == CellType.STRING) {
+		if (generalCommentCell.getCellType() == CellType.STRING) {
 			scope.setGeneralComment(generalCommentCell.getStringCellValue());
 		}
 
 		Cell temporalInformationCell = sheet.getRow(SCOPE__TEMPORAL_INFORMATION).getCell(J);
-		if (temporalInformationCell.getCellTypeEnum() == CellType.STRING) {
+		if (temporalInformationCell.getCellType() == CellType.STRING) {
 			scope.setTemporalInformation(temporalInformationCell.getStringCellValue());
 		}
 
@@ -428,10 +428,10 @@ public class PredictiveModelSheetImporter implements SheetImporter {
 	private PredictiveModelScopeProduct retrieveProduct(Row row) {
 
 		// Check first mandatory properties
-		if (row.getCell(L).getCellTypeEnum() != CellType.STRING) {
+		if (row.getCell(L).getCellType() != CellType.STRING) {
 			throw new IllegalArgumentException("Missing product name");
 		}
-		if (row.getCell(N).getCellTypeEnum() != CellType.STRING) {
+		if (row.getCell(N).getCellType() != CellType.STRING) {
 			throw new IllegalArgumentException("Missing product unit");
 		}
 
@@ -440,48 +440,48 @@ public class PredictiveModelSheetImporter implements SheetImporter {
 		product.setUnit(row.getCell(N).getStringCellValue());
 
 		Cell descriptionCell = row.getCell(M);
-		if (descriptionCell.getCellTypeEnum() == CellType.STRING) {
+		if (descriptionCell.getCellType() == CellType.STRING) {
 			product.setDescription(descriptionCell.getStringCellValue());
 		}
 
 		Cell methodCell = row.getCell(O);
-		if (methodCell.getCellTypeEnum() == CellType.STRING) {
+		if (methodCell.getCellType() == CellType.STRING) {
 			product.addMethodItem(methodCell.getStringCellValue());
 		}
 
 		Cell packagingCell = row.getCell(P);
-		if (packagingCell.getCellTypeEnum() == CellType.STRING) {
+		if (packagingCell.getCellType() == CellType.STRING) {
 			product.addPackagingItem(packagingCell.getStringCellValue());
 		}
 
 		Cell treatmentCell = row.getCell(Q);
-		if (treatmentCell.getCellTypeEnum() == CellType.STRING) {
+		if (treatmentCell.getCellType() == CellType.STRING) {
 			product.addTreatmentItem(treatmentCell.getStringCellValue());
 		}
 
 		Cell originCountryCell = row.getCell(R);
-		if (originCountryCell.getCellTypeEnum() == CellType.STRING) {
+		if (originCountryCell.getCellType() == CellType.STRING) {
 			product.setOriginCountry(originCountryCell.getStringCellValue());
 		}
 
 		Cell originAreaCell = row.getCell(S);
-		if (originAreaCell.getCellTypeEnum() == CellType.STRING) {
+		if (originAreaCell.getCellType() == CellType.STRING) {
 			product.setOriginArea(originAreaCell.getStringCellValue());
 		}
 
 		Cell fisheriesAreaCell = row.getCell(T);
-		if (fisheriesAreaCell.getCellTypeEnum() == CellType.STRING) {
+		if (fisheriesAreaCell.getCellType() == CellType.STRING) {
 			product.setFisheriesArea(fisheriesAreaCell.getStringCellValue());
 		}
 
 		Cell productionDateCell = row.getCell(U);
-		if (productionDateCell.getCellTypeEnum() == CellType.NUMERIC) {
+		if (productionDateCell.getCellType() == CellType.NUMERIC) {
 			LocalDate date = ImporterUtils.retrieveDate(productionDateCell);
 			product.setProductionDate(date);
 		}
 
 		Cell expiryDateCell = row.getCell(V);
-		if (expiryDateCell.getCellTypeEnum() == CellType.NUMERIC) {
+		if (expiryDateCell.getCellType() == CellType.NUMERIC) {
 			LocalDate date = ImporterUtils.retrieveDate(expiryDateCell);
 			product.setExpiryDate(date);
 		}
@@ -491,7 +491,7 @@ public class PredictiveModelSheetImporter implements SheetImporter {
 
 	private ModelCategory retrieveModelCategory(Sheet sheet) {
 		// Check mandatory properties and throw exception if missing
-		if (sheet.getRow(MODEL_CATEGORY__MODEL_CLASS).getCell(J).getCellTypeEnum() != CellType.STRING) {
+		if (sheet.getRow(MODEL_CATEGORY__MODEL_CLASS).getCell(J).getCellType() != CellType.STRING) {
 			throw new IllegalArgumentException("Missing model class");
 		}
 
@@ -500,17 +500,17 @@ public class PredictiveModelSheetImporter implements SheetImporter {
 		category.setModelClass(sheet.getRow(MODEL_CATEGORY__MODEL_CLASS).getCell(J).getStringCellValue());
 
 		Cell subClassCell = sheet.getRow(MODEL_CATEGORY__MODEL_SUB_CLASS).getCell(J);
-		if (subClassCell.getCellTypeEnum() == CellType.STRING) {
+		if (subClassCell.getCellType() == CellType.STRING) {
 			category.addModelSubClassItem(subClassCell.getStringCellValue());
 		}
 
 		Cell modelClassCommentCell = sheet.getRow(MODEL_CATEGORY__CLASS_COMMENT).getCell(J);
-		if (modelClassCommentCell.getCellTypeEnum() == CellType.STRING) {
+		if (modelClassCommentCell.getCellType() == CellType.STRING) {
 			category.setModelClassComment(modelClassCommentCell.getStringCellValue());
 		}
 
 		Cell basicProcessCell = sheet.getRow(MODEL_CATEGORY__BASIC_PROCESS).getCell(J);
-		if (basicProcessCell.getCellTypeEnum() == CellType.STRING) {
+		if (basicProcessCell.getCellType() == CellType.STRING) {
 			category.addBasicProcessItem(basicProcessCell.getStringCellValue());
 		}
 
@@ -520,87 +520,87 @@ public class PredictiveModelSheetImporter implements SheetImporter {
 	private Study retrieveStudy(Sheet sheet) {
 
 		// Check first mandatory properties
-		if (sheet.getRow(STUDY__STUDY_TITLE).getCell(J).getCellTypeEnum() != CellType.STRING) {
+		if (sheet.getRow(STUDY__STUDY_TITLE).getCell(J).getCellType() != CellType.STRING) {
 			throw new IllegalArgumentException("Missing study title");
 		}
 
 		Study study = new Study();
 
 		Cell identifierCell = sheet.getRow(STUDY__STUDY_IDENTIFIER).getCell(J);
-		if (identifierCell.getCellTypeEnum() == CellType.STRING) {
+		if (identifierCell.getCellType() == CellType.STRING) {
 			study.setIdentifier(identifierCell.getStringCellValue());
 		}
 
 		study.setTitle(sheet.getRow(STUDY__STUDY_TITLE).getCell(J).getStringCellValue());
 
 		Cell descriptionCell = sheet.getRow(STUDY__STUDY_DESCRIPTION).getCell(J);
-		if (descriptionCell.getCellTypeEnum() == CellType.STRING) {
+		if (descriptionCell.getCellType() == CellType.STRING) {
 			study.setDescription(descriptionCell.getStringCellValue());
 		}
 
 		Cell designTypeCell = sheet.getRow(STUDY__STUDY_DESIGN_TYPE).getCell(J);
-		if (designTypeCell.getCellTypeEnum() == CellType.STRING) {
+		if (designTypeCell.getCellType() == CellType.STRING) {
 			study.setDesignType(designTypeCell.getStringCellValue());
 		}
 
 		Cell measurementTypeCell = sheet.getRow(STUDY__STUDY_ASSAY_MEASUREMENT_TYPE).getCell(J);
-		if (measurementTypeCell.getCellTypeEnum() == CellType.STRING) {
+		if (measurementTypeCell.getCellType() == CellType.STRING) {
 			study.setAssayMeasurementType(measurementTypeCell.getStringCellValue());
 		}
 
 		Cell technologyTypeCell = sheet.getRow(STUDY__STUDY_ASSAY_TECHNOLOGY_TYPE).getCell(J);
-		if (technologyTypeCell.getCellTypeEnum() == CellType.STRING) {
+		if (technologyTypeCell.getCellType() == CellType.STRING) {
 			study.setAssayTechnologyType(technologyTypeCell.getStringCellValue());
 		}
 
 		Cell technologyPlatformCell = sheet.getRow(STUDY__STUDY_ASSAY_TECHNOLOGY_PLATFORM).getCell(J);
-		if (technologyPlatformCell.getCellTypeEnum() == CellType.STRING) {
+		if (technologyPlatformCell.getCellType() == CellType.STRING) {
 			study.setAssayTechnologyPlatform(technologyPlatformCell.getStringCellValue());
 		}
 
 		Cell accreditationProcedureCell = sheet.getRow(STUDY__ACCREDITATION_PROCEDURE_FOR_THE_ASSAY_TECHNOLOGY)
 				.getCell(J);
-		if (accreditationProcedureCell.getCellTypeEnum() == CellType.STRING) {
+		if (accreditationProcedureCell.getCellType() == CellType.STRING) {
 			study.setAccreditationProcedureForTheAssayTechnology(accreditationProcedureCell.getStringCellValue());
 		}
 
 		Cell protocolNameCell = sheet.getRow(STUDY__STUDY_PROTOCOL_NAME).getCell(J);
-		if (protocolNameCell.getCellTypeEnum() == CellType.STRING) {
+		if (protocolNameCell.getCellType() == CellType.STRING) {
 			study.setProtocolName(protocolNameCell.getStringCellValue());
 		}
 
 		Cell protocolTypeCell = sheet.getRow(STUDY__STUDY_PROTOCOL_TYPE).getCell(J);
-		if (protocolTypeCell.getCellTypeEnum() == CellType.STRING) {
+		if (protocolTypeCell.getCellType() == CellType.STRING) {
 			study.setProtocolType(protocolTypeCell.getStringCellValue());
 		}
 
 		Cell protocolDescriptionCell = sheet.getRow(STUDY__STUDY_PROTOCOL_DESCRIPTION).getCell(J);
-		if (protocolDescriptionCell.getCellTypeEnum() == CellType.STRING) {
+		if (protocolDescriptionCell.getCellType() == CellType.STRING) {
 			study.setProtocolDescription(protocolDescriptionCell.getStringCellValue());
 		}
 
 		Cell protocolURICell = sheet.getRow(STUDY__STUDY_PROTOCOL_URI).getCell(J);
-		if (protocolURICell.getCellTypeEnum() == CellType.STRING) {
+		if (protocolURICell.getCellType() == CellType.STRING) {
 			study.setProtocolURI(protocolURICell.getStringCellValue());
 		}
 
 		Cell protocolVersionCell = sheet.getRow(STUDY__STUDY_PROTOCOL_VERSION).getCell(J);
-		if (protocolVersionCell.getCellTypeEnum() == CellType.STRING) {
+		if (protocolVersionCell.getCellType() == CellType.STRING) {
 			study.setProtocolVersion(protocolVersionCell.getStringCellValue());
 		}
 
 		Cell parameterNameCell = sheet.getRow(STUDY__STUDY_PROTOCOL_PARAMETERS_NAME).getCell(J);
-		if (parameterNameCell.getCellTypeEnum() == CellType.STRING) {
+		if (parameterNameCell.getCellType() == CellType.STRING) {
 			study.setProtocolParametersName(parameterNameCell.getStringCellValue());
 		}
 
 		Cell componentNameCell = sheet.getRow(STUDY__STUDY_PROTOCOL_COMPONENTS_NAME).getCell(J);
-		if (componentNameCell.getCellTypeEnum() == CellType.STRING) {
+		if (componentNameCell.getCellType() == CellType.STRING) {
 			study.setProtocolComponentsName(componentNameCell.getStringCellValue());
 		}
 
 		Cell componentTypeCell = sheet.getRow(STUDY__STUDY_PROTOCOL_COMPONENTS_TYPE).getCell(J);
-		if (componentTypeCell.getCellTypeEnum() == CellType.STRING) {
+		if (componentTypeCell.getCellType() == CellType.STRING) {
 			study.setProtocolComponentsType(componentTypeCell.getStringCellValue());
 		}
 
@@ -610,7 +610,7 @@ public class PredictiveModelSheetImporter implements SheetImporter {
 	private Laboratory retrieveLaboratory(Row row) {
 
 		// Check first mandatory properties
-		if (row.getCell(L).getCellTypeEnum() != CellType.STRING) {
+		if (row.getCell(L).getCellType() != CellType.STRING) {
 			throw new IllegalArgumentException("Missing laboratory accreditation");
 		}
 
@@ -618,12 +618,12 @@ public class PredictiveModelSheetImporter implements SheetImporter {
 		Arrays.stream(row.getCell(L).getStringCellValue().split(",")).forEach(laboratory::addAccreditationItem);
 
 		Cell nameCell = row.getCell(M);
-		if (nameCell.getCellTypeEnum() == CellType.STRING) {
+		if (nameCell.getCellType() == CellType.STRING) {
 			laboratory.setName(row.getCell(M).getStringCellValue());
 		}
 
 		Cell countryCell = row.getCell(N);
-		if (countryCell.getCellTypeEnum() == CellType.STRING) {
+		if (countryCell.getCellType() == CellType.STRING) {
 			laboratory.setCountry(row.getCell(N).getStringCellValue());
 		}
 
@@ -634,32 +634,32 @@ public class PredictiveModelSheetImporter implements SheetImporter {
 		QualityMeasures measures = new QualityMeasures();
 
 		Cell sseCell = sheet.getRow(QUALITY_MEASURES__SSE).getCell(M);
-		if (sseCell.getCellTypeEnum() == CellType.NUMERIC) {
+		if (sseCell.getCellType() == CellType.NUMERIC) {
 			measures.setSse(BigDecimal.valueOf(sseCell.getNumericCellValue()));
 		}
 
 		Cell mseCell = sheet.getRow(QUALITY_MEASURES__MSE).getCell(M);
-		if (mseCell.getCellTypeEnum() == CellType.NUMERIC) {
+		if (mseCell.getCellType() == CellType.NUMERIC) {
 			measures.setMse(BigDecimal.valueOf(mseCell.getNumericCellValue()));
 		}
 
 		Cell rmseCell = sheet.getRow(QUALITY_MEASURES__RMSE).getCell(M);
-		if (rmseCell.getCellTypeEnum() == CellType.NUMERIC) {
+		if (rmseCell.getCellType() == CellType.NUMERIC) {
 			measures.setRmse(BigDecimal.valueOf(rmseCell.getNumericCellValue()));
 		}
 
 		Cell rsquareCell = sheet.getRow(QUALITY_MEASURES__RSQUARE).getCell(M);
-		if (rsquareCell.getCellTypeEnum() == CellType.NUMERIC) {
+		if (rsquareCell.getCellType() == CellType.NUMERIC) {
 			measures.setRsquared(BigDecimal.valueOf(rsquareCell.getNumericCellValue()));
 		}
 
 		Cell aicCell = sheet.getRow(QUALITY_MEASURES__AIC).getCell(M);
-		if (aicCell.getCellTypeEnum() == CellType.NUMERIC) {
+		if (aicCell.getCellType() == CellType.NUMERIC) {
 			measures.setAic(BigDecimal.valueOf(aicCell.getNumericCellValue()));
 		}
 
 		Cell bicCell = sheet.getRow(QUALITY_MEASURES__BIC).getCell(M);
-		if (bicCell.getCellTypeEnum() == CellType.NUMERIC) {
+		if (bicCell.getCellType() == CellType.NUMERIC) {
 			measures.setBic(BigDecimal.valueOf(bicCell.getNumericCellValue()));
 		}
 

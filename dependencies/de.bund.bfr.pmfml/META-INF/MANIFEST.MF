@@ -12,6 +12,6 @@ Export-Package: de.bund.bfr.pmfml,
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Automatic-Module-Name: de.bund.bfr.pmfml
 Require-Bundle: de.unirostock.sems.CombineArchive;bundle-version="1.4.0",
- org.apache.commons.io;bundle-version="2.6.0",
  org.apache.commons.lang3;bundle-version="3.3.1",
- org.sbml.jsbml;bundle-version="1.0.0"
+ org.sbml.jsbml;bundle-version="1.0.0",
+ org.apache.commons.commons-io;bundle-version="2.15.1"

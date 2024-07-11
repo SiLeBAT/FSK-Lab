@@ -27,7 +27,7 @@ import org.threeten.bp.LocalDate;
 /**
  * Reference
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2019-07-12T14:55:16.594+02:00")
+@jakarta.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2019-07-12T14:55:16.594+02:00")
 public class Reference {
   @SerializedName("isReferenceDescription")
   private Boolean isReferenceDescription = null;

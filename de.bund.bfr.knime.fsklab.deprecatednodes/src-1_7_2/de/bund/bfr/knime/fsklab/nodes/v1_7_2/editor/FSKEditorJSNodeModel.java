@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.util.SystemOutLogger;
+
 import org.emfjson.jackson.module.EMFModule;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;

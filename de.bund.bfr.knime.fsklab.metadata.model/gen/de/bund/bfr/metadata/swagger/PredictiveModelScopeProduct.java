@@ -29,7 +29,7 @@ import org.threeten.bp.LocalDate;
 /**
  * PredictiveModelScopeProduct
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2019-07-02T16:22:48.194+02:00")
+@jakarta.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2019-07-02T16:22:48.194+02:00")
 public class PredictiveModelScopeProduct {
   @SerializedName("name")
   private String name = null;

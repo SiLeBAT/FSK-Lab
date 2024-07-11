@@ -47,7 +47,7 @@
 		<module>de.bund.bfr.knime.foodprocess.view</module>
 
 		<!-- Test plugins and fragments -->
-		<module>de.bund.bfr.knime.testflows</module>
+		<!--module>de.bund.bfr.knime.testflows</module>
 		<module>de.bund.bfr.knime.foodprocess.tests</module>
 		<module>de.bund.bfr.knime.pmm.common.tests</module>
 		<module>de.bund.bfr.knime.pmm.nodes.tests</module>
@@ -55,7 +55,7 @@
 		<module>de.bund.bfr.knime.fsklab.metadata.model.tests</module>
 		<module>de.bund.bfr.knime.fsklab.deprecatednodes.tests</module>
 		<module>de.bund.bfr.knime.fsklab.nodes.tests</module>
-		<module>de.bund.bfr.knime.fsklab.nodes.common.tests</module>
+		<module>de.bund.bfr.knime.fsklab.nodes.common.tests</module-->
 		
 		<!-- Test report -->
 		<module>de.bund.bfr.knime.testreport</module>

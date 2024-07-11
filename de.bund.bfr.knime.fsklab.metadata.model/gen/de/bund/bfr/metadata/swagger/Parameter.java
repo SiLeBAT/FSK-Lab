@@ -27,7 +27,7 @@ import java.io.IOException;
 /**
  * Parameter
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2019-07-25T13:56:22.998Z")
+@jakarta.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2019-07-25T13:56:22.998Z")
 public class Parameter {
   @SerializedName("id")
   private String id = null;

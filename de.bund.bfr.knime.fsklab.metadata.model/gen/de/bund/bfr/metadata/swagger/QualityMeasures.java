@@ -28,7 +28,7 @@ import java.math.BigDecimal;
 /**
  * QualityMeasures
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2019-07-26T06:49:42.862Z")
+@jakarta.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2019-07-26T06:49:42.862Z")
 public class QualityMeasures {
   @SerializedName("sse")
   private BigDecimal sse = null;

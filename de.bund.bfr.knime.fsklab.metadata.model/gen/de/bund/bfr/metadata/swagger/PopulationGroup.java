@@ -28,7 +28,7 @@ import java.util.List;
 /**
  * PopulationGroup
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2019-07-02T16:22:48.194+02:00")
+@jakarta.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2019-07-02T16:22:48.194+02:00")
 public class PopulationGroup {
   @SerializedName("name")
   private String name = null;

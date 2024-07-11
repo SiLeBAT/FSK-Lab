@@ -49,7 +49,7 @@ public class ImporterUtils {
 	public static Contact retrieveContact(Row row, Map<String, Integer> columns) {
 
 		// Check mandatory properties and throw exception if missing
-		if (row.getCell(columns.get("mail")).getCellTypeEnum() == CellType.BLANK) {
+		if (row.getCell(columns.get("mail")).getCellType() == CellType.BLANK) {
 			throw new IllegalArgumentException("Missing mail");
 		}
 
@@ -57,45 +57,45 @@ public class ImporterUtils {
 		contact.setEmail(row.getCell(columns.get("mail")).getStringCellValue());
 
 		final Cell titleCell = row.getCell(columns.get("title"));
-		if (titleCell.getCellTypeEnum() == CellType.STRING) {
+		if (titleCell.getCellType() == CellType.STRING) {
 			contact.setTitle(titleCell.getStringCellValue());
 		}
 
 		final Cell familyNameCell = row.getCell(columns.get("familyName"));
-		if (familyNameCell.getCellTypeEnum() == CellType.STRING) {
+		if (familyNameCell.getCellType() == CellType.STRING) {
 			contact.setFamilyName(familyNameCell.getStringCellValue());
 		}
 
 		final Cell givenNameCell = row.getCell(columns.get("givenName"));
-		if (givenNameCell.getCellTypeEnum() == CellType.STRING) {
+		if (givenNameCell.getCellType() == CellType.STRING) {
 			contact.setGivenName(givenNameCell.getStringCellValue());
 		}
 
 		final Cell telephoneCell = row.getCell(columns.get("telephone"));
-		if (telephoneCell.getCellTypeEnum() == CellType.STRING) {
+		if (telephoneCell.getCellType() == CellType.STRING) {
 			contact.setTelephone(telephoneCell.getStringCellValue());
 		}
 
 		final Cell streetAddressCell = row.getCell(columns.get("streetAddress"));
-		if (streetAddressCell.getCellTypeEnum() == CellType.STRING) {
+		if (streetAddressCell.getCellType() == CellType.STRING) {
 			contact.setStreetAddress(streetAddressCell.getStringCellValue());
 		}
 
 		final Cell countryCell = row.getCell(columns.get("country"));
-		if (countryCell.getCellTypeEnum() == CellType.STRING) {
+		if (countryCell.getCellType() == CellType.STRING) {
 			contact.setCountry(countryCell.getStringCellValue());
 		}
 
 		final Cell zipCodeCell = row.getCell(columns.get("zipCode"));
-		if (zipCodeCell.getCellTypeEnum() == CellType.NUMERIC) {
+		if (zipCodeCell.getCellType() == CellType.NUMERIC) {
 			double zipCodeAsDouble = zipCodeCell.getNumericCellValue();
 			contact.setZipCode(Integer.toString((int) zipCodeAsDouble));
-		} else if (zipCodeCell.getCellTypeEnum() == CellType.STRING) {
+		} else if (zipCodeCell.getCellType() == CellType.STRING) {
 			contact.setZipCode(zipCodeCell.getStringCellValue());
 		}
 
 		final Cell regionCell = row.getCell(columns.get("region"));
-		if (regionCell.getCellTypeEnum() == CellType.STRING) {
+		if (regionCell.getCellType() == CellType.STRING) {
 			contact.setRegion(regionCell.getStringCellValue());
 		}
 
@@ -104,7 +104,7 @@ public class ImporterUtils {
 		// note not included in spreadsheet
 
 		final Cell organizationCell = row.getCell(columns.get("organization"));
-		if (organizationCell.getCellTypeEnum() == CellType.STRING) {
+		if (organizationCell.getCellType() == CellType.STRING) {
 			contact.setOrganization(organizationCell.getStringCellValue());
 		}
 
@@ -114,10 +114,10 @@ public class ImporterUtils {
 	public static Product retrieveProduct(Row row, Map<String, Integer> columns) {
 
 		// Check first mandatory properties
-		if (row.getCell(columns.get("name")).getCellTypeEnum() != CellType.STRING) {
+		if (row.getCell(columns.get("name")).getCellType() != CellType.STRING) {
 			throw new IllegalArgumentException("Missing product name");
 		}
-		if (row.getCell(columns.get("unit")).getCellTypeEnum() != CellType.STRING) {
+		if (row.getCell(columns.get("unit")).getCellType() != CellType.STRING) {
 			throw new IllegalArgumentException("Missing product unit");
 		}
 
@@ -126,47 +126,47 @@ public class ImporterUtils {
 		product.setUnit(row.getCell(columns.get("unit")).getStringCellValue());
 
 		final Cell descriptionCell = row.getCell(columns.get("description"));
-		if (descriptionCell.getCellTypeEnum() == CellType.STRING) {
+		if (descriptionCell.getCellType() == CellType.STRING) {
 			product.setDescription(descriptionCell.getStringCellValue());
 		}
 
 		final Cell methodCell = row.getCell(columns.get("productionMethod"));
-		if (methodCell.getCellTypeEnum() == CellType.STRING) {
+		if (methodCell.getCellType() == CellType.STRING) {
 			product.addMethodItem(methodCell.getStringCellValue());
 		}
 
 		final Cell packagingCell = row.getCell(columns.get("packaging"));
-		if (packagingCell.getCellTypeEnum() == CellType.STRING) {
+		if (packagingCell.getCellType() == CellType.STRING) {
 			product.addPackagingItem(packagingCell.getStringCellValue());
 		}
 
 		final Cell treatmentCell = row.getCell(columns.get("treatment"));
-		if (treatmentCell.getCellTypeEnum() == CellType.STRING) {
+		if (treatmentCell.getCellType() == CellType.STRING) {
 			product.addTreatmentItem(treatmentCell.getStringCellValue());
 		}
 
 		final Cell originCountryCell = row.getCell(columns.get("originCountry"));
-		if (originCountryCell.getCellTypeEnum() == CellType.STRING) {
+		if (originCountryCell.getCellType() == CellType.STRING) {
 			product.setOriginCountry(originCountryCell.getStringCellValue());
 		}
 
 		final Cell originAreaCell = row.getCell(columns.get("originArea"));
-		if (originAreaCell.getCellTypeEnum() == CellType.STRING) {
+		if (originAreaCell.getCellType() == CellType.STRING) {
 			product.setOriginArea(originAreaCell.getStringCellValue());
 		}
 
 		final Cell fisheriesAreaCell = row.getCell(columns.get("fisheriesArea"));
-		if (fisheriesAreaCell.getCellTypeEnum() == CellType.STRING) {
+		if (fisheriesAreaCell.getCellType() == CellType.STRING) {
 			product.setFisheriesArea(fisheriesAreaCell.getStringCellValue());
 		}
 
 		final Cell productionDateCell = row.getCell(columns.get("productionDate"));
-		if (productionDateCell.getCellTypeEnum() == CellType.NUMERIC) {
+		if (productionDateCell.getCellType() == CellType.NUMERIC) {
 			product.setProductionDate(retrieveDate(productionDateCell));
 		}
 
 		final Cell expiryDateCell = row.getCell(columns.get("expiryDate"));
-		if (expiryDateCell.getCellTypeEnum() == CellType.NUMERIC) {
+		if (expiryDateCell.getCellType() == CellType.NUMERIC) {
 			product.setExpiryDate(retrieveDate(expiryDateCell));
 		}
 
@@ -197,7 +197,7 @@ public class ImporterUtils {
 		
 		// Check mandatory properties
 		final Cell nameCell = row.getCell(columns.get("name"));
-		if (nameCell.getCellTypeEnum() != CellType.STRING) {
+		if (nameCell.getCellType() != CellType.STRING) {
 			throw new IllegalArgumentException("Hazard name is missing");
 		}
 
@@ -205,67 +205,67 @@ public class ImporterUtils {
 		hazard.setName(nameCell.getStringCellValue());
 
 		final Cell typeCell = row.getCell(columns.get("type"));
-		if (typeCell.getCellTypeEnum() == CellType.STRING) {
+		if (typeCell.getCellType() == CellType.STRING) {
 			hazard.setType(typeCell.getStringCellValue());
 		}
 
 		final Cell hazardDescriptionCell = row.getCell(columns.get("description"));
-		if (hazardDescriptionCell.getCellTypeEnum() == CellType.STRING) {
+		if (hazardDescriptionCell.getCellType() == CellType.STRING) {
 			hazard.setDescription(hazardDescriptionCell.getStringCellValue());
 		}
 
 		final Cell hazardUnitCell = row.getCell(columns.get("unit"));
-		if (hazardUnitCell.getCellTypeEnum() == CellType.STRING) {
+		if (hazardUnitCell.getCellType() == CellType.STRING) {
 			hazard.setUnit(hazardUnitCell.getStringCellValue());
 		}
 
 		final Cell adverseEffect = row.getCell(columns.get("adverseEffect"));
-		if (adverseEffect.getCellTypeEnum() == CellType.STRING) {
+		if (adverseEffect.getCellType() == CellType.STRING) {
 			hazard.setAdverseEffect(adverseEffect.getStringCellValue());
 		}
 
 		final Cell sourceOfContaminationCell = row.getCell(columns.get("sourceOfContamination"));
-		if (sourceOfContaminationCell.getCellTypeEnum() == CellType.STRING) {
+		if (sourceOfContaminationCell.getCellType() == CellType.STRING) {
 			hazard.setSourceOfContamination(sourceOfContaminationCell.getStringCellValue());
 		}
 
 		final Cell bmdCell = row.getCell(columns.get("benchmarkDose"));
-		if (bmdCell.getCellTypeEnum() == CellType.STRING) {
+		if (bmdCell.getCellType() == CellType.STRING) {
 			hazard.setBenchmarkDose(bmdCell.getStringCellValue());
 		}
 
 		final Cell maximumResidueLimitCell = row.getCell(columns.get("maximumResidueLimit"));
-		if (maximumResidueLimitCell.getCellTypeEnum() == CellType.STRING) {
+		if (maximumResidueLimitCell.getCellType() == CellType.STRING) {
 			hazard.setMaximumResidueLimit(maximumResidueLimitCell.getStringCellValue());
 		}
 
 		final Cell noaelCell = row.getCell(columns.get("noObservedAdverseAffectLevel"));
-		if (noaelCell.getCellTypeEnum() == CellType.STRING) {
+		if (noaelCell.getCellType() == CellType.STRING) {
 			hazard.setNoObservedAdverseAffectLevel(noaelCell.getStringCellValue());
 		}
 
 		final Cell loaelCell = row.getCell(columns.get("lowestObservedAdverseAffectLevel"));
-		if (loaelCell.getCellTypeEnum() == CellType.STRING) {
+		if (loaelCell.getCellType() == CellType.STRING) {
 			hazard.setLowestObservedAdverseAffectLevel(loaelCell.getStringCellValue());
 		}
 
 		final Cell aoelCell = row.getCell(columns.get("acceptableOperatorsExposureLevel"));
-		if (aoelCell.getCellTypeEnum() == CellType.STRING) {
+		if (aoelCell.getCellType() == CellType.STRING) {
 			hazard.setAcceptableOperatorsExposureLevel(aoelCell.getStringCellValue());
 		}
 
 		final Cell arfdCell = row.getCell(columns.get("acuteReferenceDose"));
-		if (arfdCell.getCellTypeEnum() == CellType.STRING) {
+		if (arfdCell.getCellType() == CellType.STRING) {
 			hazard.setAcuteReferenceDose(arfdCell.getStringCellValue());
 		}
 
 		final Cell adiCell = row.getCell(columns.get("acceptableDailyIntake"));
-		if (adiCell.getCellTypeEnum() == CellType.STRING) {
+		if (adiCell.getCellType() == CellType.STRING) {
 			hazard.setAcceptableDailyIntake(adiCell.getStringCellValue());
 		}
 
 		final Cell indSumCell = row.getCell(columns.get("indSum"));
-		if (indSumCell.getCellTypeEnum() == CellType.STRING) {
+		if (indSumCell.getCellType() == CellType.STRING) {
 			hazard.setIndSum(indSumCell.getStringCellValue());
 		}
 
@@ -295,7 +295,7 @@ public class ImporterUtils {
 
 		// Check mandatory properties
 		Cell nameCell = row.getCell(columns.get("name"));
-		if (nameCell.getCellTypeEnum() != CellType.STRING) {
+		if (nameCell.getCellType() != CellType.STRING) {
 			throw new IllegalArgumentException("Missing population name");
 		}
 
@@ -303,62 +303,62 @@ public class ImporterUtils {
 		group.setName(nameCell.getStringCellValue());
 
 		Cell targetPopulationCell = row.getCell(columns.get("targetPopulation"));
-		if (targetPopulationCell.getCellTypeEnum() == CellType.STRING) {
+		if (targetPopulationCell.getCellType() == CellType.STRING) {
 			group.setTargetPopulation(targetPopulationCell.getStringCellValue());
 		}
 
 		Cell spanCell = row.getCell(columns.get("span"));
-		if (spanCell.getCellTypeEnum() == CellType.STRING) {
+		if (spanCell.getCellType() == CellType.STRING) {
 			Arrays.stream(spanCell.getStringCellValue().split(",")).forEach(group::addPopulationSpanItem);
 		}
 
 		Cell descriptionCell = row.getCell(columns.get("description"));
-		if (descriptionCell.getCellTypeEnum() == CellType.STRING) {
+		if (descriptionCell.getCellType() == CellType.STRING) {
 			Arrays.stream(descriptionCell.getStringCellValue().split(",")).forEach(group::addPopulationDescriptionItem);
 		}
 
 		Cell ageCell = row.getCell(columns.get("age"));
-		if (ageCell.getCellTypeEnum() == CellType.STRING) {
+		if (ageCell.getCellType() == CellType.STRING) {
 			Arrays.stream(ageCell.getStringCellValue().split(",")).forEach(group::addPopulationAgeItem);
 		}
 
 		Cell genderCell = row.getCell(columns.get("gender"));
-		if (genderCell.getCellTypeEnum() == CellType.STRING) {
+		if (genderCell.getCellType() == CellType.STRING) {
 			group.setPopulationGender(genderCell.getStringCellValue());
 		}
 
 		Cell bmiCell = row.getCell(columns.get("bmi"));
-		if (bmiCell.getCellTypeEnum() == CellType.STRING) {
+		if (bmiCell.getCellType() == CellType.STRING) {
 			Arrays.stream(bmiCell.getStringCellValue().split(",")).forEach(group::addBmiItem);
 		}
 
 		Cell dietCell = row.getCell(columns.get("diet"));
-		if (dietCell.getCellTypeEnum() == CellType.STRING) {
+		if (dietCell.getCellType() == CellType.STRING) {
 			Arrays.stream(dietCell.getStringCellValue().split(",")).forEach(group::addSpecialDietGroupsItem);
 		}
 
 		Cell consumptionCell = row.getCell(columns.get("consumption"));
-		if (consumptionCell.getCellTypeEnum() == CellType.STRING) {
+		if (consumptionCell.getCellType() == CellType.STRING) {
 			Arrays.stream(consumptionCell.getStringCellValue().split(",")).forEach(group::addPatternConsumptionItem);
 		}
 
 		Cell regionCell = row.getCell(columns.get("region"));
-		if (regionCell.getCellTypeEnum() == CellType.STRING) {
+		if (regionCell.getCellType() == CellType.STRING) {
 			Arrays.stream(regionCell.getStringCellValue().split(",")).forEach(group::addRegionItem);
 		}
 
 		Cell countryCell = row.getCell(columns.get("country"));
-		if (countryCell.getCellTypeEnum() == CellType.STRING) {
+		if (countryCell.getCellType() == CellType.STRING) {
 			Arrays.stream(countryCell.getStringCellValue().split(",")).forEach(group::addCountryItem);
 		}
 
 		Cell factorsCell = row.getCell(columns.get("risk"));
-		if (factorsCell.getCellTypeEnum() == CellType.STRING) {
+		if (factorsCell.getCellType() == CellType.STRING) {
 			Arrays.stream(factorsCell.getStringCellValue().split(",")).forEach(group::addPopulationRiskFactorItem);
 		}
 
 		Cell seasonCell = row.getCell(columns.get("season"));
-		if (seasonCell.getCellTypeEnum() == CellType.STRING) {
+		if (seasonCell.getCellType() == CellType.STRING) {
 			Arrays.stream(seasonCell.getStringCellValue().split(",")).forEach(group::addSeasonItem);
 		}
 
@@ -386,10 +386,10 @@ public class ImporterUtils {
 	public static Reference retrieveReference(Row row, Map<String, Integer> columns) {
 
 		// Check mandatory properties and throw exception if missing
-		if (row.getCell(columns.get("referenceDescription")).getCellTypeEnum() != CellType.STRING) {
+		if (row.getCell(columns.get("referenceDescription")).getCellType() != CellType.STRING) {
 			throw new IllegalArgumentException("Missing Is reference description?");
 		}
-		if (row.getCell(columns.get("doi")).getCellTypeEnum() != CellType.STRING) {
+		if (row.getCell(columns.get("doi")).getCellType() != CellType.STRING) {
 			throw new IllegalArgumentException("Missing DOI");
 		}
 
@@ -402,27 +402,27 @@ public class ImporterUtils {
 		// The annotation template must be updated or the values must be mapped here.
 
 		final Cell dateCell = row.getCell(columns.get("date"));
-		if (dateCell.getCellTypeEnum() == CellType.NUMERIC) {
+		if (dateCell.getCellType() == CellType.NUMERIC) {
 		  reference.setDate(""+((Double)dateCell.getNumericCellValue()).intValue());
 		}
 
 		final Cell pmidCell = row.getCell(columns.get("pmid"));
-		if (pmidCell.getCellTypeEnum() == CellType.STRING) {
+		if (pmidCell.getCellType() == CellType.STRING) {
 			reference.setPmid(pmidCell.getStringCellValue());
 		}
 
 		final Cell authorListCell = row.getCell(columns.get("author"));
-		if (authorListCell.getCellTypeEnum() == CellType.STRING) {
+		if (authorListCell.getCellType() == CellType.STRING) {
 			reference.setAuthorList(authorListCell.getStringCellValue());
 		}
 
 		final Cell titleCell = row.getCell(columns.get("title"));
-		if (titleCell.getCellTypeEnum() == CellType.STRING) {
+		if (titleCell.getCellType() == CellType.STRING) {
 			reference.setTitle(titleCell.getStringCellValue());
 		}
 
 		final Cell abstractCell = row.getCell(columns.get("abstract"));
-		if (abstractCell.getCellTypeEnum() == CellType.STRING) {
+		if (abstractCell.getCellType() == CellType.STRING) {
 			reference.setAbstract(abstractCell.getStringCellValue());
 		}
 		// journal
@@ -430,17 +430,17 @@ public class ImporterUtils {
 		// issue
 
 		final Cell statusCell = row.getCell(columns.get("status"));
-		if (statusCell.getCellTypeEnum() == CellType.STRING) {
+		if (statusCell.getCellType() == CellType.STRING) {
 			reference.setStatus(statusCell.getStringCellValue());
 		}
 
 		final Cell websiteCell = row.getCell(columns.get("website"));
-		if (websiteCell.getCellTypeEnum() == CellType.STRING) {
+		if (websiteCell.getCellType() == CellType.STRING) {
 			reference.setWebsite(websiteCell.getStringCellValue());
 		}
 
 		final Cell commentCell = row.getCell(columns.get("comment"));
-		if (commentCell.getCellTypeEnum() == CellType.STRING) {
+		if (commentCell.getCellType() == CellType.STRING) {
 			reference.setComment(commentCell.getStringCellValue());
 		}
 
@@ -467,27 +467,27 @@ public class ImporterUtils {
 
 		// Check mandatory properties
 		final Cell sampleNameCell = row.getCell(columns.get("sample"));
-		if (sampleNameCell.getCellTypeEnum() == CellType.BLANK) {
+		if (sampleNameCell.getCellType() == CellType.BLANK) {
 			throw new IllegalArgumentException("Missing sample name");
 		}
 		
 		final Cell protocolCell = row.getCell(columns.get("protocolOfSampleCollection"));
-		if (protocolCell.getCellTypeEnum() == CellType.BLANK) {
+		if (protocolCell.getCellType() == CellType.BLANK) {
 			throw new IllegalArgumentException("Missing protocol of sample collection");
 		}
 		
 		final Cell methodCell = row.getCell(columns.get("samplingMethod"));
-		if (methodCell.getCellTypeEnum() == CellType.BLANK) {
+		if (methodCell.getCellType() == CellType.BLANK) {
 			throw new IllegalArgumentException("Missing sampling method");
 		}
 		
 		final Cell weightCell = row.getCell(columns.get("samplingWeight"));
-		if (weightCell.getCellTypeEnum() == CellType.BLANK) {
+		if (weightCell.getCellType() == CellType.BLANK) {
 			throw new IllegalArgumentException("Missing sampling weight");
 		}
 		
 		final Cell sizeCell = row.getCell(columns.get("samplingSize"));
-		if (sizeCell.getCellTypeEnum() == CellType.BLANK) {
+		if (sizeCell.getCellType() == CellType.BLANK) {
 			throw new IllegalArgumentException("Missing sampling size");
 		}
 
@@ -496,17 +496,17 @@ public class ImporterUtils {
 		sample.setProtocolOfSampleCollection(protocolCell.getStringCellValue());
 
 		final Cell strategyCell = row.getCell(columns.get("samplingStrategy"));
-		if (strategyCell.getCellTypeEnum() == CellType.STRING) {
+		if (strategyCell.getCellType() == CellType.STRING) {
 			sample.setSamplingStrategy(strategyCell.getStringCellValue());
 		}
 
 		final Cell samplingProgramCell = row.getCell(columns.get("samplingProgramType"));
-		if (samplingProgramCell.getCellTypeEnum() == CellType.STRING) {
+		if (samplingProgramCell.getCellType() == CellType.STRING) {
 			sample.setTypeOfSamplingProgram(samplingProgramCell.getStringCellValue());
 		}
 
 		final Cell samplingMethodCell = row.getCell(columns.get("samplingMethod"));
-		if (samplingMethodCell.getCellTypeEnum() == CellType.STRING) {
+		if (samplingMethodCell.getCellType() == CellType.STRING) {
 			sample.setSamplingMethod(samplingMethodCell.getStringCellValue());
 		}
 
@@ -515,12 +515,12 @@ public class ImporterUtils {
 		sample.setSamplingSize(row.getCell(columns.get("samplingSize")).getStringCellValue());
 
 		final Cell unitCell = row.getCell(columns.get("lotSizeUnit"));
-		if (unitCell.getCellTypeEnum() == CellType.STRING) {
+		if (unitCell.getCellType() == CellType.STRING) {
 			sample.setLotSizeUnit(unitCell.getStringCellValue());
 		}
 
 		final Cell pointCell = row.getCell(columns.get("samplingPoint"));
-		if (pointCell.getCellTypeEnum() == CellType.STRING) {
+		if (pointCell.getCellType() == CellType.STRING) {
 			sample.setSamplingPoint((pointCell).getStringCellValue());
 		}
 
@@ -542,10 +542,10 @@ public class ImporterUtils {
 	public static DietaryAssessmentMethod retrieveDietaryAssessmentMethod(Row row, Map<String, Integer> columns) {
 
 		// Check first mandatory properties
-		if (row.getCell(columns.get("collectionTool")).getCellTypeEnum() != CellType.STRING) {
+		if (row.getCell(columns.get("collectionTool")).getCellType() != CellType.STRING) {
 			throw new IllegalArgumentException("Missing methodological tool to collect data");
 		}
-		if (row.getCell(columns.get("numberOfNonConsecutiveOneDay")).getCellTypeEnum() != CellType.NUMERIC) {
+		if (row.getCell(columns.get("numberOfNonConsecutiveOneDay")).getCellType() != CellType.NUMERIC) {
 			throw new IllegalArgumentException("Missing number of non consecutive one day");
 		}
 
@@ -556,22 +556,22 @@ public class ImporterUtils {
 				Double.toString(row.getCell(columns.get("numberOfNonConsecutiveOneDay")).getNumericCellValue()));
 
 		final Cell softwareCell = row.getCell(columns.get("softwareTool"));
-		if (softwareCell.getCellTypeEnum() == CellType.STRING) {
+		if (softwareCell.getCellType() == CellType.STRING) {
 			method.setSoftwareTool(softwareCell.getStringCellValue());
 		}
 
 		final Cell foodItemsCell = row.getCell(columns.get("numberOfFoodItems"));
-		if (foodItemsCell.getCellTypeEnum() == CellType.STRING) {
+		if (foodItemsCell.getCellType() == CellType.STRING) {
 			method.addNumberOfFoodItemsItem(foodItemsCell.getStringCellValue());
 		}
 
 		final Cell recordTypesCell = row.getCell(columns.get("recordTypes"));
-		if (recordTypesCell.getCellTypeEnum() == CellType.STRING) {
+		if (recordTypesCell.getCellType() == CellType.STRING) {
 			method.addRecordTypesItem(recordTypesCell.getStringCellValue());
 		}
 
 		final Cell foodDescriptorsCell = row.getCell(columns.get("foodDescriptors"));
-		if (foodDescriptorsCell.getCellTypeEnum() == CellType.STRING) {
+		if (foodDescriptorsCell.getCellType() == CellType.STRING) {
 			method.addFoodDescriptorsItem(foodDescriptorsCell.getStringCellValue());
 		}
 
@@ -590,7 +590,7 @@ public class ImporterUtils {
 	public static Laboratory retrieveLaboratory(Row row, HashMap<String, Integer> columns) {
 
 		// Check first mandatory properties
-		if (row.getCell(columns.get("accreditation")).getCellTypeEnum() != CellType.STRING) {
+		if (row.getCell(columns.get("accreditation")).getCellType() != CellType.STRING) {
 			throw new IllegalArgumentException("Missing laboratory accreditation");
 		}
 
@@ -599,12 +599,12 @@ public class ImporterUtils {
 				.forEach(laboratory::addAccreditationItem);
 
 		Cell nameCell = row.getCell(columns.get("name"));
-		if (nameCell.getCellTypeEnum() == CellType.STRING) {
+		if (nameCell.getCellType() == CellType.STRING) {
 			laboratory.setName(nameCell.getStringCellValue());
 		}
 
 		Cell countryCell = row.getCell(columns.get("country"));
-		if (countryCell.getCellTypeEnum() == CellType.STRING) {
+		if (countryCell.getCellType() == CellType.STRING) {
 			laboratory.setCountry(countryCell.getStringCellValue());
 		}
 
@@ -630,7 +630,7 @@ public class ImporterUtils {
 
 		// Check first mandatory properties
 		final Cell nameCell = row.getCell(columns.get("name"));
-		if (nameCell.getCellTypeEnum() != CellType.STRING) {
+		if (nameCell.getCellType() != CellType.STRING) {
 			throw new IllegalArgumentException("Missing assay name");
 		}
 
@@ -638,42 +638,42 @@ public class ImporterUtils {
 		assay.setName(nameCell.getStringCellValue());
 
 		final Cell descriptionCell = row.getCell(columns.get("description"));
-		if (descriptionCell.getCellTypeEnum() == CellType.STRING) {
+		if (descriptionCell.getCellType() == CellType.STRING) {
 			assay.setDescription(descriptionCell.getStringCellValue());
 		}
 
 		final Cell moistureCell = row.getCell(columns.get("moisturePercentage"));
-		if (moistureCell.getCellTypeEnum() == CellType.STRING) {
+		if (moistureCell.getCellType() == CellType.STRING) {
 			assay.setMoisturePercentage(moistureCell.getStringCellValue());
 		}
 
 		final Cell fatCell = row.getCell(columns.get("fatPercentage"));
-		if (fatCell.getCellTypeEnum() == CellType.STRING) {
+		if (fatCell.getCellType() == CellType.STRING) {
 			assay.setFatPercentage(fatCell.getStringCellValue());
 		}
 
 		final Cell detectionCell = row.getCell(columns.get("detectionLimit"));
-		if (detectionCell.getCellTypeEnum() == CellType.STRING) {
+		if (detectionCell.getCellType() == CellType.STRING) {
 			assay.setDetectionLimit(detectionCell.getStringCellValue());
 		}
 
 		final Cell quantificationCell = row.getCell(columns.get("quantificationLimit"));
-		if (quantificationCell.getCellTypeEnum() == CellType.STRING) {
+		if (quantificationCell.getCellType() == CellType.STRING) {
 			assay.setQuantificationLimit(quantificationCell.getStringCellValue());
 		}
 
 		final Cell dataCell = row.getCell(columns.get("leftCensoredData"));
-		if (dataCell.getCellTypeEnum() == CellType.STRING) {
+		if (dataCell.getCellType() == CellType.STRING) {
 			assay.setLeftCensoredData(dataCell.getStringCellValue());
 		}
 
 		final Cell contaminationCell = row.getCell(columns.get("contaminationRange"));
-		if (contaminationCell.getCellTypeEnum() == CellType.STRING) {
+		if (contaminationCell.getCellType() == CellType.STRING) {
 			assay.setContaminationRange(contaminationCell.getStringCellValue());
 		}
 
 		final Cell uncertaintyCell = row.getCell(columns.get("uncertaintyValue"));
-		if (uncertaintyCell.getCellTypeEnum() == CellType.STRING) {
+		if (uncertaintyCell.getCellType() == CellType.STRING) {
 			assay.setUncertaintyValue(uncertaintyCell.getStringCellValue());
 		}
 
@@ -705,27 +705,27 @@ public class ImporterUtils {
 
 		// Check first mandatory properties
 		final Cell idCell = row.getCell(columns.get("id"));
-		if (idCell == null || idCell.getCellTypeEnum() == CellType.BLANK) {
+		if (idCell == null || idCell.getCellType() == CellType.BLANK) {
 			throw new IllegalArgumentException("Missing parameter id");
 		}
 
 		final Cell classificationCell = row.getCell(columns.get("classification"));
-		if (classificationCell == null || classificationCell.getCellTypeEnum() == CellType.BLANK) {
+		if (classificationCell == null || classificationCell.getCellType() == CellType.BLANK) {
 			throw new IllegalArgumentException("Missing parameter classification");
 		}
 
 		final Cell nameCell = row.getCell(columns.get("name"));
-		if (nameCell == null || nameCell.getCellTypeEnum() == CellType.BLANK) {
+		if (nameCell == null || nameCell.getCellType() == CellType.BLANK) {
 			throw new IllegalArgumentException("Missing parameter name");
 		}
 
 		final Cell unitCell = row.getCell(columns.get("unit"));
-		if (unitCell == null || unitCell.getCellTypeEnum() == CellType.BLANK) {
+		if (unitCell == null || unitCell.getCellType() == CellType.BLANK) {
 			throw new IllegalArgumentException("Missing parameter unit");
 		}
 
 		final Cell dataTypeCell = row.getCell(columns.get("dataType"));
-		if (dataTypeCell == null || dataTypeCell.getCellTypeEnum() == CellType.BLANK) {
+		if (dataTypeCell == null || dataTypeCell.getCellType() == CellType.BLANK) {
 			throw new IllegalArgumentException("Missing data type");
 		}
 
@@ -740,12 +740,12 @@ public class ImporterUtils {
 		}
 
 		final Cell descriptionCell = row.getCell(columns.get("description"));
-		if (descriptionCell != null && descriptionCell.getCellTypeEnum() != CellType.BLANK) {
+		if (descriptionCell != null && descriptionCell.getCellType() != CellType.BLANK) {
 			param.setDescription(descriptionCell.getStringCellValue());
 		}
 
 		final Cell unitCategoryCell = row.getCell(columns.get("unitCategory"));
-		if (unitCategoryCell != null && unitCategoryCell.getCellTypeEnum() != CellType.BLANK) {
+		if (unitCategoryCell != null && unitCategoryCell.getCellType() != CellType.BLANK) {
 			param.setUnitCategory(unitCategoryCell.getStringCellValue());
 		}
 
@@ -755,24 +755,24 @@ public class ImporterUtils {
 		}
 
 		final Cell sourceCell = row.getCell(columns.get("source"));
-		if (sourceCell != null && sourceCell.getCellTypeEnum() != CellType.BLANK) {
+		if (sourceCell != null && sourceCell.getCellType() != CellType.BLANK) {
 			param.setSource(sourceCell.getStringCellValue());
 		}
 
 		final Cell subjectCell = row.getCell(columns.get("subject"));
-		if (subjectCell != null && subjectCell.getCellTypeEnum() != CellType.BLANK) {
+		if (subjectCell != null && subjectCell.getCellType() != CellType.BLANK) {
 			param.setSubject(subjectCell.getStringCellValue());
 		}
 
 		final Cell distributionCell = row.getCell(columns.get("distribution"));
-		if (distributionCell != null && distributionCell.getCellTypeEnum() != CellType.BLANK) {
+		if (distributionCell != null && distributionCell.getCellType() != CellType.BLANK) {
 			param.setDistribution(distributionCell.getStringCellValue());
 		}
 
 		final Cell valueCell = row.getCell(columns.get("value"));
-		if (valueCell != null && valueCell.getCellTypeEnum() != CellType.BLANK) {
+		if (valueCell != null && valueCell.getCellType() != CellType.BLANK) {
 
-			if (valueCell.getCellTypeEnum() == CellType.NUMERIC) {
+			if (valueCell.getCellType() == CellType.NUMERIC) {
 				final Double doubleValue = valueCell.getNumericCellValue();
 				if (parameterType == ParameterType.INTEGER) {
 					param.setValue(Integer.toString(doubleValue.intValue()));
@@ -787,13 +787,13 @@ public class ImporterUtils {
 		// TODO: reference
 
 		final Cell variabilitySubjectCell = row.getCell(columns.get("variability"));
-		if (variabilitySubjectCell != null && variabilitySubjectCell.getCellTypeEnum() != CellType.BLANK) {
+		if (variabilitySubjectCell != null && variabilitySubjectCell.getCellType() != CellType.BLANK) {
 			param.setVariabilitySubject(variabilitySubjectCell.getStringCellValue());
 		}
 
 		final Cell maxCell = row.getCell(columns.get("max"));
-		if (maxCell != null && maxCell.getCellTypeEnum() != CellType.BLANK) {
-			if (maxCell.getCellTypeEnum() != CellType.STRING) {
+		if (maxCell != null && maxCell.getCellType() != CellType.BLANK) {
+			if (maxCell.getCellType() != CellType.STRING) {
 				param.setMaxValue(String.valueOf(maxCell.getNumericCellValue()));
 			} else {
 				param.setMaxValue(maxCell.getStringCellValue());
@@ -802,8 +802,8 @@ public class ImporterUtils {
 		}
 
 		final Cell minCell = row.getCell(columns.get("min"));
-		if (minCell != null && minCell.getCellTypeEnum() != CellType.BLANK) {
-			if (minCell.getCellTypeEnum() != CellType.STRING) {
+		if (minCell != null && minCell.getCellType() != CellType.BLANK) {
+			if (minCell.getCellType() != CellType.STRING) {
 				param.setMinValue(String.valueOf(minCell.getNumericCellValue()));
 			} else {
 				param.setMinValue(minCell.getStringCellValue());
@@ -811,8 +811,8 @@ public class ImporterUtils {
 		}
 
 		final Cell errorCell = row.getCell(columns.get("error"));
-		if (errorCell != null && errorCell.getCellTypeEnum() != CellType.BLANK) {
-			if (errorCell.getCellTypeEnum() != CellType.STRING) {
+		if (errorCell != null && errorCell.getCellType() != CellType.BLANK) {
+			if (errorCell.getCellType() != CellType.STRING) {
 				param.setError(String.valueOf(errorCell.getNumericCellValue()));
 			} else {
 				param.setError(errorCell.getStringCellValue());

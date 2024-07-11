@@ -11,14 +11,14 @@ Require-Bundle: com.thoughtworks.xstream;bundle-version="1.4.20",
  org.eclipse.ui,
  org.hsh.bfr.db,
  org.knime.core;bundle-version="[5.1.0,6.0.0)",
- org.apache.poi;bundle-version="[4.1.1,5.0.0)",
  org.apache.batik.dom;bundle-version="[1.16.0,2.0.0)",
  org.knime.ext.svg;bundle-version="[5.1.0,6.0.0)",
  org.knime.ext.jfreechart;bundle-version="[5.1.0,6.0.0)",
  org.knime.ext.jep;bundle-version="5.1.0",
- org.apache.poi.ooxml;bundle-version="[4.1.1,5.0.0)",
  com.google.guava;bundle-version="31.0.1",
- org.jdom.2;bundle-version="2.0.6"
+ org.jdom.2;bundle-version="2.0.6",
+ org.apache.poi.ooxml;bundle-version="5.2.5",
+ org.apache.poi;bundle-version="5.2.5"
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: BfR

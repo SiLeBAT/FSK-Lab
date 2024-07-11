@@ -30,7 +30,7 @@ import java.util.List;
 /**
  * ModelEquation
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2019-07-25T13:50:49.666Z")
+@jakarta.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2019-07-25T13:50:49.666Z")
 public class ModelEquation {
   @SerializedName("name")
   private String name = null;
