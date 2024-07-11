@@ -17,5 +17,4 @@
          KNIME extension nodes for FSK-Lab. Includes FSK-Lab and PMM-Lab.
       </description>
    </category-def>
-   <repository-reference location="http://dl.bintray.com/silebat/RBundles" enabled="true" />
 </site>
