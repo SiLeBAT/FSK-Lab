@@ -20,6 +20,7 @@ package de.bund.bfr.knime.fsklab.v2_0.reader;
 
 import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
 import de.bund.bfr.knime.fsklab.v2_0.FskPortObjectSpec;
+import metadata.SwaggerUtil;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -29,6 +30,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Comparator;
+import java.util.stream.Collectors;
 import org.apache.commons.io.IOUtils;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
@@ -141,9 +143,13 @@ public class ReaderNodeModel extends NoInternalsModel {
       
       inObject = ReaderNodeUtil.readArchive(fskxFile);
     }
+    pushFlowVariableString("model_script", inObject.getModel());
+    pushFlowVariableString("packages", inObject.packages.stream().collect(Collectors.joining(", ")));
+    pushFlowVariableString("LanguageWrittenIn", SwaggerUtil.getLanguageWrittenIn(inObject.modelMetadata));
 
     return new PortObject[] {inObject};
   }
+  
   
   private String getDownloadedFilePath() {
     NodeContext nodeContext = NodeContext.getContext();
