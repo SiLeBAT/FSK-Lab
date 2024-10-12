@@ -49,3 +49,5 @@ Bundle-ClassPath: libs/bfr-swing-1.0-SNAPSHOT.jar,
  sedml_libs/jmathml-2.2.1.jar,
  sedml_libs/xom-1.2.5.jar
 Bundle-ActivationPolicy: lazy
+Import-Package: org.knime.conda
+

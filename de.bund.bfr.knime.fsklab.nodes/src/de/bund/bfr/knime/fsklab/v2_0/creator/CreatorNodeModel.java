@@ -327,7 +327,7 @@ class CreatorNodeModel extends NoInternalsModel {
     // Validate parameters from spreadsheet
     exec.checkCanceled();
     try (ScriptHandler handler = ScriptHandler
-        .createHandler(SwaggerUtil.getLanguageWrittenIn(modelMetadata), portObj.packages)) {
+        .createHandler(SwaggerUtil.getLanguageWrittenIn(modelMetadata), portObj.packages, null)) {
       if (!workingDirectory.isEmpty()) {
         Path workingDirectoryPath =
             FileUtil.getFileFromURL(FileUtil.toURL(workingDirectory)).toPath();

@@ -144,7 +144,7 @@ public class FsxkRunnerNodeModel extends ExtToolOutputNodeModel {
 			}
 		}
 
-		try (RController controller = new RController()) {
+		try (RController controller = new RController(null)) {
 			fskObj = runSnippet(controller, fskObj, exec, internalSettings.imageFile);
 		}
 		RPortObject rObj = new RPortObject(fskObj.workspace);

@@ -40,7 +40,7 @@ public class RScriptHandler extends ScriptHandler {
     RprofileManager.subscribe();
     // initialize LibRegistry before Controller to avoid errors on switching R in preferences
     LibRegistry.instance(); 
-    this.controller = new RController();
+    this.controller = new RController(null);
     this.executor = new ScriptExecutor(controller);
     
     if (packages.contains("ggplot2")) {

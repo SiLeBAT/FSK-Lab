@@ -21,6 +21,8 @@ import java.io.File;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
+
+import org.knime.conda.CondaEnvironmentIdentifier;
 import org.knime.core.data.MissingCell;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
@@ -78,7 +80,7 @@ public interface IRController extends AutoCloseable {
    *
    * @throws RException
    */
-  void initialize() throws RException;
+  void initialize(CondaEnvironmentIdentifier condaEnv) throws RException;
 
   /**
    * @return <code>true</code> if {@link #initialize()} was called on this instance and

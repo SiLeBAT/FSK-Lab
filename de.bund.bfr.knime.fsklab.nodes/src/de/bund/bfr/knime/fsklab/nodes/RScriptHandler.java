@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import metadata.SwaggerUtil;
+import org.knime.conda.CondaEnvironmentIdentifier;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
@@ -37,15 +38,16 @@ public class RScriptHandler extends ScriptHandler {
   ScriptExecutor executor;
   RController controller;
 
-  public RScriptHandler() throws RException, IOException {
-    this(new ArrayList<String>(0));
+  public RScriptHandler( CondaEnvironmentIdentifier condaEnv) throws RException, IOException {
+    this(new ArrayList<String>(0), condaEnv);
   }
 
-  public RScriptHandler(List<String> packages) throws RException, IOException {
+  public RScriptHandler(List<String> packages, CondaEnvironmentIdentifier condaEnv) throws RException, IOException {
     RprofileManager.subscribe();
     // initialize LibRegistry before Controller to avoid errors on switching R in preferences
-    LibRegistry.instance(); 
-    this.controller = new RController();
+    if(condaEnv == null)
+      LibRegistry.instance(); 
+    this.controller = new RController(condaEnv);
     this.executor = new ScriptExecutor(controller);
 
     if(PreferenceInitializer.isRConda()) {

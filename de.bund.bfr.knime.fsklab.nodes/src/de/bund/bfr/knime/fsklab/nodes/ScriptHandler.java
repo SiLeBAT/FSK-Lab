@@ -9,6 +9,7 @@ import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.knime.conda.CondaEnvironmentIdentifier;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.NodeLogger;
@@ -65,7 +66,7 @@ public abstract class ScriptHandler implements AutoCloseable {
    */
   public final void runSnippet(final FskPortObject fskObj, final FskSimulation simulation,
       final ExecutionContext exec, NodeLogger logger, File imageFile,
-      List<JoinRelationAdvanced> joinRelationList, String suffix) throws Exception {
+      List<JoinRelationAdvanced> joinRelationList, String suffix, CondaEnvironmentIdentifier condaEnv) throws Exception {
 
     // Sets up working directory with resource files. This directory needs to be deleted.
     exec.setProgress(0.05, "Add resource files");
@@ -207,27 +208,27 @@ public abstract class ScriptHandler implements AutoCloseable {
   public abstract void convertToKnimeDataTable(FskPortObject fskObj, ExecutionContext exec)
       throws Exception;
 
-  public static ScriptHandler createHandler(String script_type, List<String> packages)
+  public static ScriptHandler createHandler(String script_type, List<String> packages, CondaEnvironmentIdentifier condaEnv)
       throws Exception {
 
     final ScriptHandler handler;
 
     if (script_type == null) {
-      handler = new RScriptHandler(packages);
+      handler = new RScriptHandler(packages, condaEnv);
     } else {
       final String type = script_type.toLowerCase();
       if (type.startsWith("r")) {
-        handler = new RScriptHandler(packages);
+        handler = new RScriptHandler(packages, condaEnv);
       } else if (type.startsWith("py")) {
         if (type.startsWith("python 2")) {
-          handler = new PythonScriptHandler(PythonVersion.PYTHON2);
+          handler = new PythonScriptHandler(PythonVersion.PYTHON2, condaEnv);
         } else if (type.startsWith("python 3")) {
-          handler = new PythonScriptHandler(PythonVersion.PYTHON3);
+          handler = new PythonScriptHandler(PythonVersion.PYTHON3, condaEnv);
         } else {
           handler = new PythonScriptHandler(); // use version from KNIME preference page
         }
       } else {
-        handler = new RScriptHandler();
+        handler = new RScriptHandler(condaEnv);
       }
     }
 

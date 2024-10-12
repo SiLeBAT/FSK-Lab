@@ -63,7 +63,7 @@ public class LibRegistry {
   private final Set<String> installedLibs;
 
   /** Utility RController for running R commands. */
-  public final RController controller = new RController();
+  public final RController controller = new RController(null);
 
   private String type;
 

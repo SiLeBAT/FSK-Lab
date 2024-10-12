@@ -222,7 +222,7 @@ public class FskxReaderNodeModel extends NodeModel {
     FskMetaDataTuple metaDataTuple = new FskMetaDataTuple(portObj.template);
 
     // Validate model
-    try (RController controller = new RController()) {
+    try (RController controller = new RController(null)) {
       String fullScript = portObj.param + "\n" + portObj.model;
       controller.eval(fullScript, false);
     } catch (RException e) {

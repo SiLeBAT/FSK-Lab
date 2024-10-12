@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
+import org.knime.conda.CondaEnvironmentIdentifier;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.util.FileUtil;
@@ -26,13 +27,12 @@ public class PythonScriptHandler extends ScriptHandler {
   PythonKernel controller;
 
 
-  public PythonScriptHandler(PythonVersion version) throws IOException {
+  public PythonScriptHandler(PythonVersion version, CondaEnvironmentIdentifier condaEnv) throws IOException {
     PythonCommand command;
-
     if (version.equals(PythonVersion.PYTHON3)) {
       if (PreferenceInitializer.isPythonConda())
         command = new CondaPythonCommand(version, PreferenceInitializer.getCondaPath(),
-            PreferenceInitializer.getPython3Env());
+            condaEnv!= null?condaEnv.getDirectoryPath():PreferenceInitializer.getPython3Env());
       else
         command = new ManualPythonCommand(version, PreferenceInitializer.getPython3Path());
 
@@ -40,7 +40,7 @@ public class PythonScriptHandler extends ScriptHandler {
     } else if (version.equals(PythonVersion.PYTHON2)) {
       if (PreferenceInitializer.isPythonConda())
         command = new CondaPythonCommand(version, PreferenceInitializer.getCondaPath(),
-            PreferenceInitializer.getPython2Env());
+            condaEnv!= null?condaEnv.getName():PreferenceInitializer.getPython2Env());
       else
         command = new ManualPythonCommand(version, PreferenceInitializer.getPython2Path());
 
@@ -58,7 +58,7 @@ public class PythonScriptHandler extends ScriptHandler {
 
   // if no version is given in the model metadata, use the KNIME preference setting
   public PythonScriptHandler() throws IOException {
-    this(null);
+    this(null, null);
   }
 
   @Override

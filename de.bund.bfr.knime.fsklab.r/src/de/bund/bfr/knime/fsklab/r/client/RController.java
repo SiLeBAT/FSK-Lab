@@ -64,6 +64,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.knime.conda.CondaEnvironmentIdentifier;
 import org.knime.core.data.BooleanValue;
 import org.knime.core.data.DataCell;
 import org.knime.core.data.DataColumnSpec;
@@ -159,9 +160,9 @@ public class RController implements IRController {
    * 
    * @throws RException
    */
-  public RController() throws RException {
+  public RController(CondaEnvironmentIdentifier condaEnv) throws RException {
     this(false);
-    initialize();
+    initialize(condaEnv);
   }
 
   /**
@@ -186,9 +187,10 @@ public class RController implements IRController {
 
   // --- Initialization & RConnection lifecycle ---
   @Override
-  public void initialize() throws RException {
-    initR();
+  public void initialize(CondaEnvironmentIdentifier condaEnv) throws RException {
+    initR(condaEnv);
   }
+  
   
   /**
    * Check if the RController is initialized and throws {@link RControllerNotInitializedException}
@@ -282,10 +284,15 @@ public class RController implements IRController {
    * 
    * @throws IOException
    */
-  private void initR() throws RException {
+private void initR(CondaEnvironmentIdentifier condaEnv) throws RException {
     try {
-      String rHome = PreferenceInitializer.getR3Provider().getRHome();
-
+    	
+      String rHome;
+      if(condaEnv != null)
+    	  rHome = condaEnv.getDirectoryPath()+"/lib/R/";
+      else
+    	  rHome = PreferenceInitializer.getR3Provider().getRHome();
+    	  
       // FIXME: Workaround for Linux server in BfR. If R home is not configure then
       // defaults to /usr/lib/R/
       if (StringUtils.isEmpty(rHome) && Platform.isLinux()) {

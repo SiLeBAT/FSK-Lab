@@ -18,9 +18,6 @@
  */
 package de.bund.bfr.knime.fsklab.v2_0.reader;
 
-import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
-import de.bund.bfr.knime.fsklab.v2_0.FskPortObjectSpec;
-import metadata.SwaggerUtil;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -46,6 +43,9 @@ import org.knime.core.node.workflow.NodeContext;
 import org.knime.core.node.workflow.WorkflowContext;
 import org.knime.core.node.workflow.WorkflowManager;
 import org.knime.core.util.FileUtil;
+import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
+import de.bund.bfr.knime.fsklab.v2_0.FskPortObjectSpec;
+import metadata.SwaggerUtil;
 
 
 public class ReaderNodeModel extends NoInternalsModel {
@@ -143,9 +143,11 @@ public class ReaderNodeModel extends NoInternalsModel {
       
       inObject = ReaderNodeUtil.readArchive(fskxFile);
     }
-    pushFlowVariableString("model_script", inObject.getModel());
     pushFlowVariableString("packages", inObject.packages.stream().collect(Collectors.joining(", ")));
     pushFlowVariableString("LanguageWrittenIn", SwaggerUtil.getLanguageWrittenIn(inObject.modelMetadata));
+    pushFlowVariableString("modelId", SwaggerUtil.getModelId(inObject.modelMetadata));
+
+    
 
     return new PortObject[] {inObject};
   }

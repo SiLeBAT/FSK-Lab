@@ -174,7 +174,7 @@ public class FskxReaderNodeModel extends NoInternalsModel {
     }
 
     // Validate model
-    try (RController controller = new RController()) {
+    try (RController controller = new RController(null)) {
 
       // Add path
       LibRegistry libRegistry = LibRegistry.instance();

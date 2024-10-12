@@ -24,7 +24,7 @@ public class Ggplot2PlotterTest {
 
 		final File file = testFolder.newFile("plot.png");
 
-		try (RController controller = new RController()) {
+		try (RController controller = new RController(false)) {
 
 			// Install ggplot2 if missing
 			LibRegistry.instance().install(Arrays.asList("ggplot2"));
@@ -45,7 +45,7 @@ public class Ggplot2PlotterTest {
 
 		final File file = testFolder.newFile("plot.svg");
 
-		try (RController controller = new RController()) {
+		try (RController controller = new RController(false)) {
 
 			// Install ggplot2 if missing
 			LibRegistry.instance().install(Arrays.asList("ggplot2"));

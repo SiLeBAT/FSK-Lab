@@ -30,6 +30,7 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -38,6 +39,7 @@ import org.apache.commons.lang.StringUtils;
 import org.knime.base.data.xml.SvgCell;
 import org.knime.base.data.xml.SvgImageContent;
 import org.knime.base.node.util.exttool.ExtToolOutputNodeModel;
+import org.knime.conda.CondaEnvironmentPropagation.CondaEnvironmentType;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.ExecutionMonitor;
@@ -51,6 +53,7 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.image.ImagePortObject;
 import org.knime.core.node.port.image.ImagePortObjectSpec;
+import org.knime.core.node.workflow.FlowVariable;
 import org.knime.core.node.workflow.VariableType;
 import org.knime.core.util.FileUtil;
 import de.bund.bfr.knime.fsklab.nodes.DataArray;
@@ -68,6 +71,7 @@ import de.bund.bfr.knime.fsklab.v2_0.JoinRelation;
 import de.bund.bfr.knime.fsklab.v2_0.JoinRelationAdvanced;
 import de.bund.bfr.knime.fsklab.v2_0.joiner.JoinerNodeModel;
 import de.bund.bfr.knime.fsklab.v2_0.joiner.JoinerNodeUtil;
+import org.knime.conda.CondaEnvironmentIdentifier;
 import de.bund.bfr.metadata.swagger.Parameter;
 import metadata.SwaggerUtil;
 
@@ -174,6 +178,12 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
 
     this.setInternalPortObjects(inData);
 
+    Map<String, FlowVariable> flowVars = getAvailableFlowVariables(new VariableType [] {CondaEnvironmentType.INSTANCE});
+    FlowVariable fv = flowVars.get("Conda.environment");
+    CondaEnvironmentIdentifier condaEnv = null;
+    if(fv != null)
+     condaEnv = fv.getValue(CondaEnvironmentType.INSTANCE).getIdentifier();
+    
     FskPortObject fskObj = (FskPortObject) inData[0];
     // this.fskObj = fskObj;
 
@@ -203,7 +213,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
           */
       }
      
-      runFskPortObject(fskObj, combinedSim, exec, joinRelationList, "");
+      runFskPortObject(fskObj, combinedSim, exec, joinRelationList, "", condaEnv);
       
     } catch (Exception e) {
       throw new Exception(e.getLocalizedMessage(), e);
@@ -450,7 +460,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
       FskSimulation combinedSim,
       ExecutionContext exec,
       List<JoinRelationAdvanced> joinRelationList,
-      String suffix) throws Exception {
+      String suffix, CondaEnvironmentIdentifier condaEnv) throws Exception {
     LOGGER.info("Running Model: " + fskObj);
 
 
@@ -471,7 +481,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
              firstFskObj, modelsToSuffixMap.get(SwaggerUtil.getModelId(firstFskObj.modelMetadata)));
       } else {
         firstFskObj = stepIntoSubModel(firstFskObj, fskSimulationFirst, 
-            combinedSim, exec, joinRelationList, suffix + JoinerNodeModel.SUFFIX_FIRST);
+            combinedSim, exec, joinRelationList, suffix + JoinerNodeModel.SUFFIX_FIRST, condaEnv);
       }
 
 
@@ -487,7 +497,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
 
       if (!(firstFskObj instanceof CombinedFskPortObject)) {
         firstFskObj = runSnippet(firstFskObj, fskSimulationFirst, context, joinRelationList,
-            modelsToSuffixMap.get(SwaggerUtil.getModelId(firstFskObj.modelMetadata)));
+            modelsToSuffixMap.get(SwaggerUtil.getModelId(firstFskObj.modelMetadata)),condaEnv);
 
       }
 
@@ -509,9 +519,9 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
       if (secondFskObj instanceof CombinedFskPortObject) {
         //
         secondFskObj = stepIntoSubModel(secondFskObj, fskSimulationSecond,
-            combinedSim, exec, joinRelationList, suffix + JoinerNodeModel.SUFFIX_SECOND);
+            combinedSim, exec, joinRelationList, suffix + JoinerNodeModel.SUFFIX_SECOND, condaEnv);
       } else {
-       secondFskObj = runSnippet( secondFskObj, fskSimulationSecond, context, joinRelationList, modelsToSuffixMap.get(SwaggerUtil.getModelId(secondFskObj.modelMetadata)));
+       secondFskObj = runSnippet( secondFskObj, fskSimulationSecond, context, joinRelationList, modelsToSuffixMap.get(SwaggerUtil.getModelId(secondFskObj.modelMetadata)),condaEnv);
 
 
         // save output in the proper variable (with suffix)
@@ -541,8 +551,13 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
       }
 
       ExecutionContext context = exec.createSubExecutionContext(1.0);
-
-      fskObj = runSnippet(fskObj, fskSimulation, context, joinRelationList, suffix);
+      Map<String, FlowVariable> flowVars = getAvailableFlowVariables();
+      flowVars.forEach((key, value) -> {
+          if (key.equals("preferedcondaenv")) {
+              
+          }
+      });
+      fskObj = runSnippet(fskObj, fskSimulation, context, joinRelationList, suffix, condaEnv);
 
       return fskObj;
     }
@@ -552,14 +567,15 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
       FskSimulation combinedSim,
       final ExecutionContext exec,
       List<JoinRelationAdvanced> joinRelationList,
-      String suffix) {
+      String suffix,
+      CondaEnvironmentIdentifier condaEnv) {
 
     // carry correct simulation values
     int selectIndex = fskObj.selectedSimulationIndex;
     fskObj.selectedSimulationIndex = fskObj.simulations.size();
     fskObj.simulations.add(fskSimulation);
     try {
-      fskObj = runFskPortObject(fskObj, combinedSim, exec, joinRelationList, suffix);
+      fskObj = runFskPortObject(fskObj, combinedSim, exec, joinRelationList, suffix, condaEnv);
     } catch (Exception e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -577,10 +593,11 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
       final FskSimulation simulation,
       final ExecutionContext exec,
       List<JoinRelationAdvanced> joinRelationList,
-      String suffix) throws Exception {
+      String suffix,
+      CondaEnvironmentIdentifier condaEnv) throws Exception {
     
     try (ScriptHandler handler = ScriptHandler
-        .createHandler(SwaggerUtil.getLanguageWrittenIn(fskObj.modelMetadata), fskObj.packages)) {
+        .createHandler(SwaggerUtil.getLanguageWrittenIn(fskObj.modelMetadata), fskObj.packages, condaEnv)) {
      
       // push flowvariable of executed simulation
       this.pushFlowVariableString("selectedSimulation", simulation.getName());
@@ -588,7 +605,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel implements PortObjec
       
       // give handler info from checkBox that he needs to save parameter data to JSON 
       handler.setSaveToJsonChecked(saveToJsonChecked);
-      handler.runSnippet(fskObj, simulation, exec, LOGGER, internalSettings.imageFile, joinRelationList, suffix);
+      handler.runSnippet(fskObj, simulation, exec, LOGGER, internalSettings.imageFile, joinRelationList, suffix, condaEnv);
   
       // process the return value of error capturing and update error and
       // output views accordingly

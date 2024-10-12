@@ -369,7 +369,7 @@ class WriterNodeModel extends NoInternalsModel {
     
     FskPortObject ffskObj = fskObj.getFirstFskPortObject();
     try (ScriptHandler singleScriptHandler = ScriptHandler
-        .createHandler(SwaggerUtil.getLanguageWrittenIn(ffskObj.modelMetadata), ffskObj.packages)) {
+        .createHandler(SwaggerUtil.getLanguageWrittenIn(ffskObj.modelMetadata), ffskObj.packages, null)) {
 
       if (ffskObj instanceof CombinedFskPortObject) {
         writeCombinedObject((CombinedFskPortObject) ffskObj, archive, URIS, filePrefix,
@@ -385,7 +385,7 @@ class WriterNodeModel extends NoInternalsModel {
 
     FskPortObject sfskObj = fskObj.getSecondFskPortObject();
     try (ScriptHandler singleScriptHandler = ScriptHandler
-        .createHandler(SwaggerUtil.getLanguageWrittenIn(sfskObj.modelMetadata), sfskObj.packages)) {
+        .createHandler(SwaggerUtil.getLanguageWrittenIn(sfskObj.modelMetadata), sfskObj.packages, null)) {
 
       if (sfskObj instanceof CombinedFskPortObject) {
         writeCombinedObject((CombinedFskPortObject) sfskObj, archive, URIS, filePrefix,
@@ -453,7 +453,7 @@ class WriterNodeModel extends NoInternalsModel {
     FskPortObject in = (FskPortObject) inObjects[0];
     addModificationDate(in.modelMetadata);
     try (ScriptHandler scriptHandler = ScriptHandler
-        .createHandler(SwaggerUtil.getLanguageWrittenIn(in.modelMetadata), in.packages)) {
+        .createHandler(SwaggerUtil.getLanguageWrittenIn(in.modelMetadata), in.packages, null)) {
       
          
       URL url = FileUtil.toURL(filePath.getStringValue());

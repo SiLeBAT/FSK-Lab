@@ -26,10 +26,12 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -51,8 +53,10 @@ import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
+import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.workflow.FlowVariable;
+import org.knime.core.node.workflow.VariableType;
 import org.knime.core.util.Version;
 
 class FSKEnvironmentCreatorNodeDialog extends NodeDialogPane {
@@ -66,12 +70,16 @@ class FSKEnvironmentCreatorNodeDialog extends NodeDialogPane {
   private JTextArea logTextArea;  // JTextArea for logs
   private JScrollPane logScrollPane;
   private JTextField envNameTextField;  // To get environment name input from the user
-  private volatile FSKCondaEnvironmentCreationObserver.CondaEnvironmentCreationStatus m_status = new FSKCondaEnvironmentCreationObserver.CondaEnvironmentCreationStatus();
-  private String languageWrittenIn;
+  protected volatile FSKCondaEnvironmentCreationObserver.CondaEnvironmentCreationStatus m_status = new FSKCondaEnvironmentCreationObserver.CondaEnvironmentCreationStatus();
   private String[] additionalDependencies;
   private Conda conda;
   private String proposedEnvName;
+  private String[] languages = { "Python 2", "Python 3", "R 3", "R 4" };
+  private JComboBox languageComboBox = new JComboBox<>(languages);  private SettingsModelString condaEnvName;
+
   public FSKEnvironmentCreatorNodeDialog() {
+      condaEnvName = new SettingsModelString(FSKEnvironmentCreatorNodeModel.CFG_FILE, "");
+
       try {
           conda = new Conda();
           m_environmentsList = conda.getEnvironmentNames();
@@ -134,9 +142,8 @@ class FSKEnvironmentCreatorNodeDialog extends NodeDialogPane {
 
               
 
-              // Optionally, force the table to redraw
-              // table.revalidate(); // Refreshes the table's structure
-              // table.repaint();    // Forces a repaint of the table
+              proposedEnvName = selectedEnv;
+
           }
       });
       GridBagConstraints comboBoxGbc = new GridBagConstraints();
@@ -147,38 +154,43 @@ class FSKEnvironmentCreatorNodeDialog extends NodeDialogPane {
       panel.add(comboBoxPanel, gbc);
 
       
-      // 2. Add a separator with "OR" label
-      gbc.gridy++;
-      gbc.gridwidth = 2;
-      JPanel separatorPanel = new JPanel(new GridBagLayout());
+      // 2. Add a separator with "OR" label and a text field on the same line
+      gbc.gridy++;  // Move to the next row
+      gbc.gridwidth = 3;  // Span across all columns for the separator
       JSeparator separator = new JSeparator(SwingConstants.HORIZONTAL);
-      orLabel = new JLabel("OR CREATE A NEW ENVIRONMENT");
-      
-      GridBagConstraints separatorGbc = new GridBagConstraints();
-      separatorGbc.fill = GridBagConstraints.HORIZONTAL;
-      separatorGbc.gridx = 0;
-      separatorGbc.weightx = 1;
-      separatorPanel.add(separator, separatorGbc);  // Add the separator
+      gbc.fill = GridBagConstraints.HORIZONTAL;  // Make separator span the entire width
+      panel.add(separator, gbc);  // Add separator to the panel
 
-      separatorGbc.gridx = 1;
-      separatorGbc.weightx = 0;
-      separatorGbc.insets = new Insets(0, 5, 0, 5);  // Add padding around the label
-      separatorPanel.add(orLabel, separatorGbc);  // Add the "OR" label
-      
-      separatorGbc.gridx = 2;
-      separatorGbc.weightx = 1;
-      separatorPanel.add(new JSeparator(SwingConstants.HORIZONTAL), separatorGbc);  // Another separator after the label
+      // 2. Add the "Or Create an Environment For" label and the text field on the next line
+      gbc.gridy++;  // Move to the next row
+      gbc.gridwidth = 1;  // Reset the grid width for the label and text field
+      gbc.fill = GridBagConstraints.NONE;  // Reset fill to default
 
-      panel.add(separatorPanel, gbc);
-      // Step 3: Add the label and text field for "Environment Name"
-      gbc.gridy++;
-      gbc.gridwidth = 1;
-      JLabel envNameLabel = new JLabel("Name:");
-      panel.add(envNameLabel, gbc);
+      orLabel = new JLabel("Or Create an Environment For");
+      gbc.gridx = 0;  // First column for the label
+      gbc.insets = new Insets(5, 0, 5, 5);  // Add some padding
+      panel.add(orLabel, gbc);  // Add the label to the panel
 
-      gbc.gridx = 1;  // Positioning next to the label
+      gbc.gridx = 1;  // Move to the second column for the text field
+      gbc.gridwidth = 2;  // Span the text field across two columns if needed
+      gbc.fill = GridBagConstraints.HORIZONTAL;  // Make the text field expandable
+      languageComboBox.setSelectedItem("Python 3");
+      panel.add(languageComboBox, gbc);  // Add the text field to the panel
+
+      // Step 3: Add the label and text field for "Environment Name"// 1. Add the label and text field on the same line
+      gbc.gridy++;  // Move to the next row
+      gbc.gridwidth = 1;  // Ensure the grid width is set to 1 for individual components
+      gbc.gridx = 0;  // Set the x position to the first column
+      gbc.insets = new Insets(5, 0, 5, 5);  // Add some padding around the label
+
+      JLabel envNameLabel = new JLabel("Environment Name:");
+      panel.add(envNameLabel, gbc);  // Add the label to the panel
+
+      gbc.gridx = 1;  // Move to the second column for the text field
+      gbc.fill = GridBagConstraints.HORIZONTAL;  // Make the text field expandable horizontally
       envNameTextField = new JTextField(20);  // Text field for environment name input
-      panel.add(envNameTextField, gbc);
+      panel.add(envNameTextField, gbc);  // Add the text field to the panel
+
       
       // Step 4: Add the packages table (name, version)
       gbc.gridx = 0;
@@ -204,76 +216,14 @@ class FSKEnvironmentCreatorNodeDialog extends NodeDialogPane {
       // Step 5: Add an ActionListener to the button
 
       createEnvButton.addActionListener(e -> {
-          File tempYamlFile = null;
-          try {
-              // Choose the YAML content dynamically based on user input (or some other condition)
-              StringBuilder yamlContent = new StringBuilder();
-              CondaEnvVersion condaVersion = CondaEnvVersion.R4;
-              String environmentName = envNameTextField.getText();
-              int majorVersion = 4;
-              if (languageWrittenIn.toLowerCase().startsWith("python 2")) {
-                  yamlContent.append(EnvironmentYAML.getPython2EnvContent(environmentName));
-                  condaVersion = CondaEnvVersion.PYTHON2;
-                  majorVersion = 2;
-              } else if (languageWrittenIn.toLowerCase().startsWith("python 3")) {
-                  yamlContent.append(EnvironmentYAML.getPython3EnvContent(environmentName));
-                  condaVersion = CondaEnvVersion.PYTHON3;
-                  majorVersion = 3;
-              } else if (languageWrittenIn.toLowerCase().startsWith("r 3")) {
-                  yamlContent.append(EnvironmentYAML.getR3EnvContent(environmentName));
-                  condaVersion = CondaEnvVersion.R3;
-                  majorVersion = 3;
-              } else if (languageWrittenIn.toLowerCase().startsWith("r 4")) {
-                  yamlContent.append(EnvironmentYAML.getR4EnvContent(environmentName));
-                  condaVersion = CondaEnvVersion.R4;
-                  majorVersion = 4;
-              }
-              
-              if (additionalDependencies != null && additionalDependencies.length > 0) {
-                  for (String dependency : additionalDependencies) {
-                    if(!StringUtils.isBlank(dependency)) {
-                      if(languageWrittenIn.toLowerCase().startsWith("r "))
-                        dependency = "r-"+dependency;
-                        yamlContent.append("  - ").append(dependency).append("\n");
-                    }
-                  }
-              }
-              
-              // Create a temporary YAML file for the selected content
-              tempYamlFile = File.createTempFile("conda_env_", ".yaml");
-  
-              // Write the YAML content to the temporary file
-              try (FileWriter writer = new FileWriter(tempYamlFile)) {
-                  writer.write(yamlContent.toString());
-              }
-  
-              // Collect packages from the table model
-              List<CondaPackageSpec> packages = new ArrayList<>();
-              for (int i = 0; i < tableModel.getRowCount(); i++) {
-                  String packageName = (String) tableModel.getValueAt(i, 0);
-                  String packageVersion = (String) tableModel.getValueAt(i, 1);
-                  String packageChannel = (String) tableModel.getValueAt(i, 2);
-                  String packageBuild = (String) tableModel.getValueAt(i, 3);
-                  
-                  CondaPackageSpec packageSpec = new CondaPackageSpec(packageName, packageVersion, packageBuild, packageChannel);
-                  packages.add(packageSpec);
-              }
-  
-              
-              registerExternalHooks();
-  
-              // Use the temporary YAML file path for environment creation
-              FSKCondaEnvironmentCreationObserver obs = new FSKCondaEnvironmentCreationObserver(condaVersion); 
-              proposedEnvName = obs.getDefaultEnvironmentName(environmentName);
-              obs.startEnvironmentCreation(proposedEnvName, tempYamlFile.getAbsolutePath(),
-                  new Version(majorVersion, 0, 0), m_status);
-  
-              
-          } catch (IOException ex) {
-              JOptionPane.showMessageDialog(panel, "An error occurred: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-              ex.printStackTrace();
-          }
-      });
+        String environmentName = envNameTextField.getText();
+        proposedEnvName = environmentName;
+        String languageWrittenIn = (String) languageComboBox.getSelectedItem();
+        
+        // Assuming additionalDependencies and tableModel are accessible in this scope
+        EnvironmentManager.createEnvironment(environmentName, languageWrittenIn, additionalDependencies, tableModel, panel, FSKEnvironmentCreatorNodeDialog.this, m_status);
+    });
+
 
       
       // Initialize the log text area
@@ -295,15 +245,10 @@ class FSKEnvironmentCreatorNodeDialog extends NodeDialogPane {
       m_panel.add(panel);
       addTab("Options", m_panel, false);
   }
-
-  private void registerExternalHooks() {
-    m_status.getStatusMessage().addChangeListener(this::updateStatusMessage);
-    m_status.getProgress().addChangeListener(this::updateProgress);
-    m_status.getErrorLog().addChangeListener(this::updateErrorLog);
-  }
+  
   
 
-  private void updateStatusMessage(final ChangeEvent e) {
+  protected void updateStatusMessage(final ChangeEvent e) {
     logTextArea.append("Status: " + m_status.getStatusMessage().getStringValue() + "\n");
     if(m_status.getStatusMessage().getStringValue().startsWith("Environment creation finished.")) {
       // Regular expression pattern to match content between single quotes
@@ -320,13 +265,13 @@ class FSKEnvironmentCreatorNodeDialog extends NodeDialogPane {
     logTextArea.setCaretPosition(logTextArea.getDocument().getLength());  // Auto-scroll to the bottom
   }
 
-  private void updateProgress(final ChangeEvent e) {
+  protected void updateProgress(final ChangeEvent e) {
     final int progress = m_status.getProgress().getIntValue();
     logTextArea.append("Progress: " + progress + "%\n");
     logTextArea.setCaretPosition(logTextArea.getDocument().getLength());
   }
 
-  private void updateErrorLog(final ChangeEvent e) {
+  protected void updateErrorLog(final ChangeEvent e) {
     logTextArea.append("Error: " + m_status.getErrorLog().getStringValue() + "\n");
     logTextArea.setCaretPosition(logTextArea.getDocument().getLength());
   }
@@ -334,41 +279,56 @@ class FSKEnvironmentCreatorNodeDialog extends NodeDialogPane {
   @Override
   protected void loadSettingsFrom(NodeSettingsRO settings, PortObjectSpec[] specs)
           throws NotConfigurableException {
-      Map<String, FlowVariable> flowVars = getAvailableFlowVariables();
+      try {
+        condaEnvName.loadSettingsFrom(settings);
+      } catch (InvalidSettingsException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+      Map<String, FlowVariable> flowVars = getAvailableFlowVariables(new VariableType [] {VariableType.StringType.INSTANCE});
+
       flowVars.forEach((key, value) -> {
           if (key.equals("packages") && firstLoad) {
-              addNewPackage(convertCommaSeparatedStringToArray(value.getStringValue()));
-              additionalDependencies = getPackages(value.getStringValue());
+              addNewPackage(EnvironmentManager.convertCommaSeparatedStringToArray(value.getStringValue()));
+              additionalDependencies = EnvironmentManager.getPackages(value.getStringValue());
               firstLoad = false;
           } else if (key.equals("LanguageWrittenIn")) {
-              languageWrittenIn = value.getStringValue();
-              orLabel.setText("OR CREATE A NEW ENVIRONMENT FOR (" + languageWrittenIn + ")");
+              String language = value.getStringValue();
+              String closestLanguage = Arrays.stream(languages)
+                  .min((s1, s2) -> Integer.compare(getLevenshteinDistance(s1, language), getLevenshteinDistance(s2, language)))
+                  .orElse(languages[0]);
+              languageComboBox.setSelectedItem(closestLanguage);
           }
       });
   }
+  
+  //Utility method to calculate the Levenshtein distance between two strings
+  private int getLevenshteinDistance(String s1, String s2) {
+      int[][] dp = new int[s1.length() + 1][s2.length() + 1];
 
+      for (int i = 0; i <= s1.length(); i++) {
+          for (int j = 0; j <= s2.length(); j++) {
+              if (i == 0) {
+                  dp[i][j] = j;
+              } else if (j == 0) {
+                  dp[i][j] = i;
+              } else {
+                  dp[i][j] = Math.min(
+                          dp[i - 1][j - 1] + (s1.charAt(i - 1) == s2.charAt(j - 1) ? 0 : 1),
+                          Math.min(dp[i - 1][j] + 1, dp[i][j - 1] + 1)
+                  );
+              }
+          }
+      }
+
+      return dp[s1.length()][s2.length()];
+  }
+  
   @Override
   protected void saveSettingsTo(NodeSettingsWO settings) throws InvalidSettingsException {
-      // Save settings code (if necessary)
+    condaEnvName.setStringValue(proposedEnvName);
+    condaEnvName.saveSettingsTo(settings);
   }
-
-  public String[][] convertCommaSeparatedStringToArray(String input) {
-      String[] tokens = input.split("\\s*,\\s*");
-      String[][] result = new String[tokens.length][2];
-      for (int i = 0; i < tokens.length; i++) {
-          result[i][0] = tokens[i];
-          result[i][1] = "";
-      }
-      return result;
-  }
-  public String[] getPackages(String input) {
-    String[] tokens = input.split("\\s*,\\s*");
-    String[] result = new String[tokens.length];
-    for (int i = 0; i < tokens.length; i++) {
-        result[i] = tokens[i];
-    }
-    return result;
-}
 
   public void addNewPackage(String[][] packageData) {
       for (int i = 0; i < packageData.length; i++) {

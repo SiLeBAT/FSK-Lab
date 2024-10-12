@@ -182,7 +182,7 @@ class FskRunnerNodeModel extends ExtToolOutputNodeModel {
       }
     }
 
-    try (RController controller = new RController()) {
+    try (RController controller = new RController(null)) {
       fskObj =
           runSnippet(controller, (FskPortObject) inObjects[0], exec.createSubExecutionContext(1.0));
     }

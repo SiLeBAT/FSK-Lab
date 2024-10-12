@@ -22,7 +22,7 @@ public class BasePlotterTest {
 		
 		File file = testFolder.newFile("plot.png");
 		
-		try (RController controller = new RController()) {
+		try (RController controller = new RController(false)) {
 			BasePlotter plotter = new BasePlotter(controller);
 			String script = "hist(airquality$Temp)";
 			plotter.plotPng(file, script);
@@ -38,7 +38,7 @@ public class BasePlotterTest {
 		
 		File file = testFolder.newFile("plot.svg");
 		
-		try (RController controller = new RController()) {
+		try (RController controller = new RController(false)) {
 			BasePlotter plotter = new BasePlotter(controller);
 			String script = "hist(airquality$Temp)";
 			plotter.plotSvg(file, script);
