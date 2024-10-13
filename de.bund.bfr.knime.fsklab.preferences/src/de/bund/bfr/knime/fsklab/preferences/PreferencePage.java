@@ -16,10 +16,14 @@
  **************************************************************************************************/
 package de.bund.bfr.knime.fsklab.preferences;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -37,10 +41,8 @@ import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.FileFieldEditor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ComboViewer;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
@@ -60,7 +62,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.knime.conda.*;
+import org.knime.conda.Conda;
+import org.knime.conda.CondaEnvironmentIdentifier;
 import org.knime.conda.prefs.CondaPreferences;
 import org.knime.python2.Activator;
 import org.knime.python2.CondaPythonCommand;
@@ -188,7 +191,7 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 		rspacer2.setText("");
 		compositeRConda = new Composite(parent, SWT.VERTICAL);
 		GridLayout gridLayout = new GridLayout();
-		gridLayout.numColumns = 3;
+		gridLayout.numColumns = 4;
 		compositeRConda.setLayout(gridLayout);
 		if (!PreferenceInitializer.isRConda()) {
 			rManual.setSelection(true);
@@ -197,7 +200,7 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 			rConda.setSelection(true);
 		messageRConda = new Label(compositeRConda, SWT.WRAP);
 		GridData gridDataR2Normal = new GridData();
-		gridDataR2Normal.horizontalSpan = 3;
+		gridDataR2Normal.horizontalSpan = 4;
 		gridDataR2Normal.horizontalAlignment = SWT.FILL;
 		
 		messageRConda.setLayoutData(gridDataR2Normal);
@@ -227,12 +230,38 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 				}
 			}
 		});
+		Button deleteREnv = new Button(compositeRConda, SWT.BUTTON1);
+		deleteREnv.setText("Delete R Environment");
+		deleteREnv.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event e) {
+				switch (e.type) {
+				case SWT.Selection:
+					Display.getDefault().asyncExec(new Runnable() {
+						public void run() {
+							StructuredSelection sel = (StructuredSelection) rEnvs.getSelection();
+							String selectedRElement = (String) sel.getFirstElement();
+							try {
+								callCondaAndMonitorExecution(messageRConda, "env", "remove", "-n", selectedRElement, "-y");
+								envsMaps = null;
+								fillCondaEnvsforR(condaPath, messageRConda, compositeRConda);
+
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							
+						}
+					});
+					break;
+				}
+			}
+		});
 		fillCondaEnvsforR(condaPath, messageRConda, compositeRConda);
 		
 		compositeRNormal = new Composite(parent, SWT.MULTI);
 
 		GridData gridDataRNormal = new GridData();
-		gridDataRNormal.horizontalSpan = 3;
+		gridDataRNormal.horizontalSpan = 4;
 		gridDataRNormal.horizontalAlignment = SWT.FILL;
 		if (PreferenceInitializer.isRConda()) {
 			gridDataRNormal.exclude = true;
@@ -241,7 +270,7 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 		compositeRNormal.setLayoutData(gridDataRNormal);
 		messageRManual = new Label(compositeRNormal, SWT.WRAP);
 
-		messageRManual.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, true, 3, 1));
+		messageRManual.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, true, 4, 1));
 		new BooleanFieldEditor(PreferenceInitializer.RESTORE_RPROFILE, "restore .RProfile after every run",
 				compositeRNormal);
 		Label separator1 = new Label(compositeRNormal, SWT.HORIZONTAL);
@@ -313,7 +342,7 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 
 		compositePythonConda = new Composite(parent, SWT.MULTI);
 		GridLayout gridLayout2 = new GridLayout();
-		gridLayout2.numColumns = 3;
+		gridLayout2.numColumns = 4;
 		compositePythonConda.setLayout(gridLayout2);
 		if (!PreferenceInitializer.isPythonConda()) {
 			compositePythonConda.setVisible(false);
@@ -322,7 +351,7 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 			pythonConda.setSelection(true);
 		
 		Label messagePythonConda = new Label(compositePythonConda, SWT.WRAP);
-		messagePythonConda.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, true, 3, 1));
+		messagePythonConda.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, true, 4, 1));
 		messagePythonConda.setText("Path to Conda: "+condaPath);
 		fillCondaEnvsforPython(condaPath, messageRConda, compositePythonConda);
 		//pythonCondaFieldEditor = new CondaFieldEditor(PreferenceInitializer.CONDA_PATH_CFG,
@@ -331,7 +360,7 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 
 		messagePython2 = new Label(compositePythonConda, SWT.WRAP);
 
-		messagePython2.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, true, 3, 1));
+		messagePython2.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, true, 4, 1));
 
 		Label env2Label = new Label(compositePythonConda, SWT.NONE);
 		env2Label.setText("Select a Python 2 Environment:");
@@ -376,6 +405,33 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 				}
 			}
 		});
+		Button deletePython2Env = new Button(compositePythonConda, SWT.BUTTON1);
+		deletePython2Env.setText("Delete Python 2 Environment");
+		deletePython2Env.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event e) {
+				switch (e.type) {
+				case SWT.Selection:
+					Display.getDefault().asyncExec(new Runnable() {
+						public void run() {
+							StructuredSelection sel = (StructuredSelection) python2Envs.getSelection();
+							String selectedPython2Element = (String) sel.getFirstElement();
+							try {
+								callCondaAndMonitorExecution(messagePythonConda, "env", "remove", "-n", selectedPython2Element, "-y");
+								envsMaps = null;
+								fillCondaEnvsforPython(condaPath, messagePythonConda, compositePythonConda);
+
+
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							
+						}
+					});
+					break;
+				}
+			}
+		});
 
 		compositeNormal = new Composite(parent, SWT.MULTI);
 
@@ -390,7 +446,7 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 
 		messagepython2path = new Label(compositeNormal, SWT.WRAP);
 
-		messagepython2path.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, true, 3, 1));
+		messagepython2path.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, true, 4, 1));
 		this.python2FieldEditor = new PythonFileFieldEditor(PreferenceInitializer.PYTHON2_PATH_CFG,
 				"Path to Python2 execution", compositeNormal, "python2");
 		python2FieldEditor.setStringValue("python");
@@ -398,7 +454,7 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 
 		messagePython3 = new Label(compositePythonConda, SWT.WRAP);
 
-		messagePython3.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, true, 3, 1));
+		messagePython3.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, true, 4, 1));
 		Label env3Label = new Label(compositePythonConda, SWT.NONE);
 		env3Label.setText("Select a Python 3 Environment:");
 		python3Envs = new ComboViewer(compositePythonConda, SWT.READ_ONLY);
@@ -447,9 +503,35 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 				}
 			}
 		});
+		Button deletePython3Env = new Button(compositePythonConda, SWT.BUTTON1);
+		deletePython3Env.setText("Delete Python 3 Environment");
+		deletePython3Env.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event e) {
+				switch (e.type) {
+				case SWT.Selection:
+					Display.getDefault().asyncExec(new Runnable() {
+						public void run() {
+							StructuredSelection sel = (StructuredSelection) python3Envs.getSelection();
+							String selectedPython3Element = (String) sel.getFirstElement();
+							try {
+								callCondaAndMonitorExecution(messagePythonConda, "env", "remove", "-n", selectedPython3Element, "-y");
+								envsMaps = null;
+								fillCondaEnvsforPython(condaPath, messagePythonConda, compositePythonConda);
+
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							
+						}
+					});
+					break;
+				}
+			}
+		});
 		messagepython3path = new Label(compositeNormal, SWT.WRAP);
 
-		messagepython3path.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, true, 3, 1));
+		messagepython3path.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, true, 4, 1));
 
 		this.python3FieldEditor = new PythonFileFieldEditor(PreferenceInitializer.PYTHON3_PATH_CFG,
 				"Path to Python3 execution", compositeNormal, "python3");
@@ -875,4 +957,69 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 		
 		return super.performOk();
 	}
+	
+	private boolean callCondaAndMonitorExecution(Label label, final String... arguments ) throws IOException {
+		label.setText("Removing the conda Env");
+	    final Process conda = startCondaProcess(arguments);
+	    try {
+	        // Start threads to consume the input and error streams
+	    	Thread outputThread = new Thread(() -> {
+	    	    try (BufferedReader reader = new BufferedReader(new InputStreamReader(conda.getInputStream()))) {
+	    	        String line;
+	    	        while ((line = reader.readLine()) != null) {
+	    	            final String currentLine = line; // Declare a final variable for use in the lambda
+	    	            // Update the label on the UI thread
+	    	            Display.getDefault().asyncExec(() -> {
+	    	                if (!label.isDisposed() && !StringUtils.isEmpty(currentLine)) {
+	    	                    label.setText(currentLine); // Handle the standard output
+	    	                    System.out.println(currentLine);
+	    	                }
+	    	            });
+	    	        }
+	    	    } catch (IOException e) {
+	    	        e.printStackTrace();
+	    	    }
+	    	});
+	        outputThread.start();
+
+	        Thread errorThread = new Thread(() -> {
+	            try (BufferedReader reader = new BufferedReader(new InputStreamReader(conda.getErrorStream()))) {
+	                String line;
+	                while ((line = reader.readLine()) != null) {
+	                	label.setText(line); // Handle the error output
+	                }
+	            } catch (IOException e) {
+	                e.printStackTrace();
+	            }
+	        });
+	        errorThread.start();
+
+	        // Wait for the process to finish
+	        int exitCode = conda.waitFor();
+	        outputThread.join();
+	        errorThread.join();
+
+	        if (exitCode != 0) {
+	            throw new IOException("Conda process exited with error code " + exitCode);
+	        }
+	    } catch (InterruptedException e) {
+	        Thread.currentThread().interrupt();
+	        throw new IOException("Conda process was interrupted", e);
+	    } finally {
+	        conda.destroy();
+	    }
+	    return true;
+	}
+	private Process startCondaProcess(final String... arguments) throws IOException {
+	    List<String> command = new ArrayList<>();
+	    // Add the conda executable. If conda is in your system PATH, you can just use "conda"
+	    String app =getCondaInstallationPath()+ "/bin/conda"; 
+	    command.add(app);
+	    // Add all the provided arguments
+	    command.addAll(Arrays.asList(arguments));
+
+	    ProcessBuilder processBuilder = new ProcessBuilder(command);
+	    return processBuilder.start();
+	}
+
 }

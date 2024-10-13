@@ -6,56 +6,28 @@
 	<name>FSKX Environment Creator</name>
 
 	<shortDescription>
-		Creates Conda environment and propagates it to downstream nodes.
+		Creates and configures a Conda environment for FSKX modeling and propagates it to downstream nodes.
 	</shortDescription>
+
 	<fullDescription>
 		<intro>
-			This node creates a specific configurable Conda environment and propagates the environment
-			to Python, R, or other Conda-aware downstream nodes. 
-			This is useful to make workflows that contain Conda-aware nodes more portable by
-			allowing to recreate the Conda environment used on the source machine (for example your personal computer)
-			on the target machine (for example a KNIME Server instance). The node is intended to be used as follows:
+			This node creates a customizable Conda environment, designed for use in workflows involving FSKX models, and allows the environment to be propagated to downstream nodes that are Conda-aware. This enables users to replicate the environment configuration across different machines or servers seamlessly, making workflows portable and reproducible. Key steps for using this node are:
 			<ol>
-				<li>On your local machine, you need to have Conda set up and configured in the Preferences of the KNIME
-					Conda Integration as described in the
-					<a href="https://docs.knime.com/latest/python_installation_guide">
-					Python installation guide</a>.</li>
-				<li>Configure this node by selecting the Conda environment to propagate and selecting the packages to
-					include in the environment in case it needs to be recreated.</li>
-				<li>Connect the output port of the node to the variable input port of any Conda-aware node. For more
-					details on this, see the
-				    <a href="https://docs.knime.com/latest/analytics_platform_flow_control_guide">
-				    flow control guide</a>.</li>
-				<li>Successively open the configuration dialogues of the Conda-aware node and all subsequent Conda-aware 
-				    nodes in the flow that you want to make portable.<br></br>
-				    <b>Python nodes:</b> On each node's <i>Executable Selection</i> tab, 
-						enable <i>Use Conda environment variable</i> and choose the variable propagating the configured Conda
-						environment from the selection box.<br></br>
-					<b>R nodes:</b> In the <i>Advanced</i> tab of each R node, enable <i>Overwrite default path
-					to R home,</i> select <i>Use conda environment to find R home,</i> and choose the variable propagating 
-					the configured Conda environment from the selection box. 
-					</li>
-				    
-				<li>Deploy the workflow by uploading it to the KNIME Server, sharing it via the KNIME Hub, or exporting
-					it. Make sure that this node is reset before or during the deployment process.</li>
-				<li>On the target machine, Conda must also be set up and configured in the Preferences of the KNIME
-					Conda Integration. If the target machine runs a KNIME Server, you may need to contact your server
-					administrator and/or refer to the
-					<a href="https://docs.knime.com/latest/server_admin_guide">
-					server administration guides</a> in order to do this.</li>
-				<li>During execution (on either machine), the node will check whether a local Conda environment exists
-					that matches its configured environment. The node will recreate the environment if necessary,
-					ensuring its availability to the connected and properly configured downstream Conda-aware nodes.</li>
-			</ol> 
+				<li>Ensure Conda is installed and properly configured in the KNIME preferences. Refer to the KNIME <a href="https://docs.knime.com/latest/python_installation_guide">Python installation guide</a> for setup instructions.</li>
+				<li>Configure the node by selecting a Conda environment or creating a new one. If creating a new environment, specify the language and packages required.</li>
+				<li>Upon execution without a dialog opening, the node will create a Conda environment using the language specified in the previous node and assign it a name based on the pattern "conda" + the model ID. This ensures that downstream nodes can execute within the correct environment configured for the workflow.</li>			
+				<li>Connect this node’s output port to Conda-aware nodes downstream using a flow variable port.</li>
+				<li>The downstream nodes, will use the propagated Conda environment.</li>
+			</ol>
 		</intro>
 	</fullDescription>
 
 	<ports>
-	    <inPort name="Conda environment" index="0">
-			Flow variable of the specified name that points to the configured Conda environment.
+		<inPort name="Conda environment" index="0">
+			Optional flow variable to get LanguageWrittenIn and packages needed to be installed in the proposed Conda1 environment.
 		</inPort>
 		<outPort name="Conda environment" index="0">
-			Flow variable of the specified name that points to the configured Conda environment.
+			Flow variable pointing to the created or configured Conda environment.
 		</outPort>
 	</ports>
 </knimeNode>
