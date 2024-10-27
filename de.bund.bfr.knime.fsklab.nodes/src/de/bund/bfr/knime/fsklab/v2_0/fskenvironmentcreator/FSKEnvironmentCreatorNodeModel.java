@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.commons.lang.StringUtils;
 import org.knime.conda.Conda;
 import org.knime.conda.CondaEnvironmentIdentifier;
 import org.knime.conda.CondaEnvironmentPropagation.CondaEnvironmentSpec;
@@ -107,22 +108,26 @@ public class FSKEnvironmentCreatorNodeModel extends NoInternalsModel {
           
           // Trigger environment creation
           EnvironmentManager.createEnvironment(
-              "conda_" + modelId, languageWrittenIn, additionalDependencies, null, null, null, m_status
-          );
+               modelId, languageWrittenIn, additionalDependencies, null, null, null, m_status,
+          null);
           
           // Wait for the environment creation to complete
           boolean success = waitForEnvironmentCreation(m_status, exec);
           if(success)
-            environmentName = ("conda_" + modelId);
+            environmentName = modelId;
           else
             throw new IllegalStateException("An issue occured during creating environment: " + environmentName);
-
+          
       }
       
       // Get the environment path and push the flow variable
       String environmentPath = findEnvironmentPath(environmentName);
       if (environmentPath != null) {
-          pushEnvironmentFlowVariable(condaEnvName.getStringValue(), environmentPath);
+          if(!StringUtils.isEmpty(condaEnvName.getStringValue()))
+            pushEnvironmentFlowVariable(condaEnvName.getStringValue(), environmentPath);
+          else
+            pushEnvironmentFlowVariable(modelId, environmentPath);
+
       } else {
           throw new IllegalStateException("Environment path not found for: " + environmentName);
       }
@@ -174,5 +179,6 @@ public class FSKEnvironmentCreatorNodeModel extends NoInternalsModel {
     pushFlowVariable("Conda.environment", CondaEnvironmentType.INSTANCE,
         new CondaEnvironmentSpec(new CondaEnvironmentIdentifier(environmentName, environmentDirectoryPath)));
 }
+  
  
 }

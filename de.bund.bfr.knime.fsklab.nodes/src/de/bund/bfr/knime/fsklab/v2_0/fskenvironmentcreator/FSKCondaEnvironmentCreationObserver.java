@@ -133,8 +133,7 @@ public class FSKCondaEnvironmentCreationObserver {
                     createdEnvironment = createEnvironmentFromFile(conda, m_CondaEnvVersion,
                         pathToEnvFile, environmentName, m_currentCreationMonitor);
                 } else {
-                    createdEnvironment = createDefaultEnvironment(conda, environmentName,
-                        CondaEnvVersion, m_currentCreationMonitor);
+                	throw new IllegalStateException("Environment yaml file is not available.");
                 }
                 onEnvironmentCreationFinished(status, createdEnvironment);
             } catch (final CondaCanceledExecutionException ex) {
@@ -370,13 +369,5 @@ public class FSKCondaEnvironmentCreationObserver {
         return environmentName;
     }
     
-    public static CondaEnvironmentIdentifier createDefaultEnvironment(final Conda conda,
-        final String environmentName, final Version pythonVersion, final CondaEnvironmentCreationMonitor monitor)
-        throws IOException, CondaCanceledExecutionException {
-        final CondaEnvVersion pythonMajorVersion = pythonVersion.getMajor() == 3 //
-            ? CondaEnvVersion.PYTHON3 //
-            : CondaEnvVersion.PYTHON2;
-        return createEnvironmentFromFile(conda, pythonMajorVersion,
-            "/Users/ahmadswaid/git/FSK-Labt/de.bund.bfr.knime.fsklab.nodes/src/de/bund/bfr/knime/fsklab/v2_0/fskenvironmentcreator/R3_env.yaml", environmentName, monitor);
-    }
+    
 }

@@ -22,15 +22,20 @@ import java.awt.CardLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -43,6 +48,7 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.table.DefaultTableModel;
 import org.apache.commons.lang3.StringUtils;
@@ -63,19 +69,21 @@ class FSKEnvironmentCreatorNodeDialog extends NodeDialogPane {
 
   private final JPanel m_panel = new JPanel(new CardLayout());
   private List<String> m_environmentsList;
-  private boolean firstLoad = true;  // A flag to track if it's the first time loading settings
-  private List<String[]> m_packagesList;  // Each String[] will hold package name and version.
+  private boolean firstLoad = true;
+  private List<String[]> m_packagesList;
   private DefaultTableModel tableModel;
-  private JLabel orLabel;
-  private JTextArea logTextArea;  // JTextArea for logs
+  private JTextArea logTextArea;
   private JScrollPane logScrollPane;
-  private JTextField envNameTextField;  // To get environment name input from the user
+  private JTextField envNameTextField;
   protected volatile FSKCondaEnvironmentCreationObserver.CondaEnvironmentCreationStatus m_status = new FSKCondaEnvironmentCreationObserver.CondaEnvironmentCreationStatus();
   private String[] additionalDependencies;
   private Conda conda;
   private String proposedEnvName;
-  private String[] languages = { "Python 2", "Python 3", "R 3", "R 4" };
-  private JComboBox languageComboBox = new JComboBox<>(languages);  private SettingsModelString condaEnvName;
+  private String[] languages = {"Python 2", "Python 3", "R 3", "R 4"};
+  private JComboBox<String> versionComboBox = new JComboBox<>();
+  private JComboBox<String> languageComboBox = new JComboBox<>(languages);
+  private SettingsModelString condaEnvName;
+  private Map<String, List<String>> cachedVersions = new HashMap<>();
 
   public FSKEnvironmentCreatorNodeDialog() {
       condaEnvName = new SettingsModelString(FSKEnvironmentCreatorNodeModel.CFG_FILE, "");
@@ -87,164 +95,178 @@ class FSKEnvironmentCreatorNodeDialog extends NodeDialogPane {
           e.printStackTrace();
       }
 
-      m_packagesList = new ArrayList<>(); 
+      m_packagesList = new ArrayList<>();
       final JPanel panel = new JPanel(new GridBagLayout());
       final GridBagConstraints gbc = new GridBagConstraints();
-      gbc.anchor = GridBagConstraints.CENTER;
-      gbc.fill = GridBagConstraints.BOTH;
       gbc.insets = new Insets(5, 5, 5, 5);
+      gbc.fill = GridBagConstraints.HORIZONTAL;
+      gbc.anchor = GridBagConstraints.NORTHWEST;
 
-      // Step 1: Center the JComboBox
+      // Environment Selection ComboBox
       gbc.gridx = 0;
       gbc.gridy = 0;
       gbc.gridwidth = 2;
-      JPanel comboBoxPanel = new JPanel(new GridBagLayout());
       JComboBox<String> environmentsComboBox = new JComboBox<>();
-      environmentsComboBox.addItem("NEW Environment (Proposed)");  // Add the default item for creating a new environment
+      environmentsComboBox.addItem("NEW Environment (Proposed)");
       for (String env : m_environmentsList) {
           environmentsComboBox.addItem(env);
       }
-      // Add an ActionListener to handle item selection
-      // Add the ActionListener to the JComboBox to update the table model when a new environment is selected
-      
-
       environmentsComboBox.addActionListener(e -> {
-          // Get the selected environment from the combo box
           String selectedEnv = (String) environmentsComboBox.getSelectedItem();
-          if(selectedEnv.equals("NEW Environment (Proposed)")) {
-            tableModel.setRowCount(0);
-              for (int i = 0; i < additionalDependencies.length; i++) {
-                tableModel.addRow(new String[] {additionalDependencies[i],"","",""});
+          tableModel.setRowCount(0);
+
+          if ("NEW Environment (Proposed)".equals(selectedEnv)) {
+              for (String dep : additionalDependencies) {
+                  tableModel.addRow(new String[]{dep, "", "", ""});
               }
-          }else if (selectedEnv != null) {
-              // Fetch the package list for the selected environment
-              List<CondaPackageSpec> packages;
+          } else {
               try {
-                packages = conda.getPackages(selectedEnv);
-                // Clear the current content of the table model
-                tableModel.setRowCount(0);  // This clears all rows from the model
-
-                // Loop through the packages and add them to the table model
-                for (CondaPackageSpec packageSpec : packages) {
-                    // Convert CondaPackageSpec to an array of Strings (columns for the table)
-                    String[] packageRow = {
-                        packageSpec.getName(),
-                        packageSpec.getVersion(),
-                        packageSpec.getBuild(),
-                        packageSpec.getChannel()
-                    };
-                    tableModel.addRow(packageRow);  // Add the new row to the table model
-                }
+                  List<CondaPackageSpec> packages = conda.getPackages(selectedEnv);
+                  for (CondaPackageSpec packageSpec : packages) {
+                      tableModel.addRow(new String[]{
+                              packageSpec.getName(),
+                              packageSpec.getVersion(),
+                              packageSpec.getBuild(),
+                              packageSpec.getChannel()
+                      });
+                  }
               } catch (IOException e1) {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
+                  e1.printStackTrace();
               }
-
-              
-
               proposedEnvName = selectedEnv;
-
           }
       });
-      GridBagConstraints comboBoxGbc = new GridBagConstraints();
-      comboBoxGbc.anchor = GridBagConstraints.CENTER;
-      comboBoxGbc.gridx = 0;
-      comboBoxGbc.gridy = 0;
-      comboBoxPanel.add(environmentsComboBox, comboBoxGbc);
-      panel.add(comboBoxPanel, gbc);
+      panel.add(environmentsComboBox, gbc);
 
-      
-      // 2. Add a separator with "OR" label and a text field on the same line
-      gbc.gridy++;  // Move to the next row
-      gbc.gridwidth = 3;  // Span across all columns for the separator
-      JSeparator separator = new JSeparator(SwingConstants.HORIZONTAL);
-      gbc.fill = GridBagConstraints.HORIZONTAL;  // Make separator span the entire width
-      panel.add(separator, gbc);  // Add separator to the panel
-
-      // 2. Add the "Or Create an Environment For" label and the text field on the next line
-      gbc.gridy++;  // Move to the next row
-      gbc.gridwidth = 1;  // Reset the grid width for the label and text field
-      gbc.fill = GridBagConstraints.NONE;  // Reset fill to default
-
-      orLabel = new JLabel("Or Create an Environment For");
-      gbc.gridx = 0;  // First column for the label
-      gbc.insets = new Insets(5, 0, 5, 5);  // Add some padding
-      panel.add(orLabel, gbc);  // Add the label to the panel
-
-      gbc.gridx = 1;  // Move to the second column for the text field
-      gbc.gridwidth = 2;  // Span the text field across two columns if needed
-      gbc.fill = GridBagConstraints.HORIZONTAL;  // Make the text field expandable
-      languageComboBox.setSelectedItem("Python 3");
-      panel.add(languageComboBox, gbc);  // Add the text field to the panel
-
-      // Step 3: Add the label and text field for "Environment Name"// 1. Add the label and text field on the same line
-      gbc.gridy++;  // Move to the next row
-      gbc.gridwidth = 1;  // Ensure the grid width is set to 1 for individual components
-      gbc.gridx = 0;  // Set the x position to the first column
-      gbc.insets = new Insets(5, 0, 5, 5);  // Add some padding around the label
-
-      JLabel envNameLabel = new JLabel("Environment Name:");
-      panel.add(envNameLabel, gbc);  // Add the label to the panel
-
-      gbc.gridx = 1;  // Move to the second column for the text field
-      gbc.fill = GridBagConstraints.HORIZONTAL;  // Make the text field expandable horizontally
-      envNameTextField = new JTextField(20);  // Text field for environment name input
-      panel.add(envNameTextField, gbc);  // Add the text field to the panel
-
-      
-      // Step 4: Add the packages table (name, version)
-      gbc.gridx = 0;
+      // "OR" separator
       gbc.gridy++;
       gbc.gridwidth = 2;
+      JSeparator separator = new JSeparator(SwingConstants.HORIZONTAL);
+      panel.add(separator, gbc);
+
+      // Language ComboBox
+      gbc.gridy++;
+      gbc.gridwidth = 1;
+      panel.add(new JLabel("Language:"), gbc);
+
+      gbc.gridx = 1;
+      languageComboBox.setSelectedItem("Python 3");
+      panel.add(languageComboBox, gbc);
+
+      // Version ComboBox (initially hidden)
+      gbc.gridy++;
+      gbc.gridx = 0;
+      panel.add(new JLabel("Version:"), gbc);
+
+      gbc.gridx = 1;
+      versionComboBox.setVisible(false);
+      panel.add(versionComboBox, gbc);
+
+      // Language selection listener to load specific versions
+      languageComboBox.addActionListener(e -> {
+          String selectedLanguage = (String) languageComboBox.getSelectedItem();
+          versionComboBox.setVisible(true);
+          if (selectedLanguage != null && selectedLanguage.startsWith("Python")) {
+              EnvironmentManager.loadPythonVersions(selectedLanguage, versionComboBox, cachedVersions);
+          } else if (selectedLanguage != null && selectedLanguage.startsWith("R")) {
+              EnvironmentManager.loadRVersions(selectedLanguage, versionComboBox, cachedVersions);
+          }
+      });
+
+      // Environment Name Label and Text Field
+      gbc.gridy++;
+      gbc.gridx = 0;
+      panel.add(new JLabel("Environment Name:"), gbc);
+
+      gbc.gridx = 1;
+      envNameTextField = new JTextField(20);
+      panel.add(envNameTextField, gbc);
+
+      // Packages Table
+      gbc.gridy++;
+      gbc.gridx = 0;
+      gbc.gridwidth = 2;
       gbc.weighty = 1;
+      gbc.fill = GridBagConstraints.BOTH;
       String[] columnNames = {"Package Name", "Version", "Channel", "Build"};
-      tableModel = new DefaultTableModel(columnNames, 0);
+      tableModel = new DefaultTableModel(columnNames, 0) {
+          @Override
+          public boolean isCellEditable(int row, int column) {
+              return true; // Allow all cells to be editable
+          }
+      };
       for (String[] packageRow : m_packagesList) {
           tableModel.addRow(packageRow);
       }
-
       JTable packagesTable = new JTable(tableModel);
       panel.add(new JScrollPane(packagesTable), gbc);
 
-      // Step 4: Add the button to create the environment
+      // Add and Delete Row Buttons
       gbc.gridy++;
+      gbc.gridwidth = 1;
       gbc.weighty = 0;
+      gbc.fill = GridBagConstraints.HORIZONTAL;
+      JButton addRowButton = new JButton("Add Row");
+      panel.add(addRowButton, gbc);
+
+      gbc.gridx = 1;
+      JButton deleteRowButton = new JButton("Delete Row");
+      panel.add(deleteRowButton, gbc);
+
+      addRowButton.addActionListener(e -> {
+          tableModel.addRow(new String[]{"", "", "", ""});
+      });
+
+      deleteRowButton.addActionListener(e -> {
+          int selectedRow = packagesTable.getSelectedRow();
+          if (selectedRow != -1) {
+              tableModel.removeRow(selectedRow);
+          } else {
+              JOptionPane.showMessageDialog(panel, "Please select a row to delete.", "Warning", JOptionPane.WARNING_MESSAGE);
+          }
+      });
+
+      // Create Environment Button
+      gbc.gridy++;
+      gbc.gridx = 0;
       gbc.gridwidth = 2;
       JButton createEnvButton = new JButton("Create Environment");
       panel.add(createEnvButton, gbc);
 
-      // Step 5: Add an ActionListener to the button
-
       createEnvButton.addActionListener(e -> {
-        String environmentName = envNameTextField.getText();
-        proposedEnvName = environmentName;
-        String languageWrittenIn = (String) languageComboBox.getSelectedItem();
-        
-        // Assuming additionalDependencies and tableModel are accessible in this scope
-        EnvironmentManager.createEnvironment(environmentName, languageWrittenIn, additionalDependencies, tableModel, panel, FSKEnvironmentCreatorNodeDialog.this, m_status);
-    });
+          String environmentName = envNameTextField.getText();
+          if (environmentName.isEmpty()) {
+              JOptionPane.showMessageDialog(panel, "Environment name is required.", "Warning", JOptionPane.WARNING_MESSAGE);
+              return;
+          }
+          proposedEnvName = environmentName;
+          String languageWrittenIn = (String) languageComboBox.getSelectedItem();
+          String[] depArray = new String[tableModel.getRowCount()];
+          for (int i = 0; i < tableModel.getRowCount(); i++) {
+              depArray[i] = (String) tableModel.getValueAt(i, 0); // Assuming dep is in the first column
+          }
 
+          EnvironmentManager.createEnvironment(environmentName, languageWrittenIn, depArray, tableModel, panel, this, m_status,((String) versionComboBox.getSelectedItem()));
+      });
 
-      
-      // Initialize the log text area
-      logTextArea = new JTextArea(10, 50);  // 10 rows, 50 columns
-      logTextArea.setEditable(false);  // Make the log area non-editable
-      logScrollPane = new JScrollPane(logTextArea);  // Add the text area to a scroll pane
-      
-      gbc.gridx = 0;
+      // Log Text Area
       gbc.gridy++;
+      gbc.gridx = 0;
       gbc.gridwidth = 2;
       gbc.weighty = 1;
-      panel.add(new JLabel("Log Output:"), gbc);  // Add a label for the log area
-      
-      gbc.gridy++;
-      gbc.weighty = 1;  // Allow the log area to grow vertically
-      panel.add(logScrollPane, gbc);  // Add the log scroll pane to the panel
+      logTextArea = new JTextArea(10, 50);
+      logTextArea.setEditable(false);
+      logScrollPane = new JScrollPane(logTextArea);
+      panel.add(new JLabel("Log Output:"), gbc);
 
-      
+      gbc.gridy++;
+      gbc.fill = GridBagConstraints.BOTH;
+      panel.add(logScrollPane, gbc);
+
       m_panel.add(panel);
       addTab("Options", m_panel, false);
   }
+
   
   
 
@@ -326,6 +348,11 @@ class FSKEnvironmentCreatorNodeDialog extends NodeDialogPane {
   
   @Override
   protected void saveSettingsTo(NodeSettingsWO settings) throws InvalidSettingsException {
+    // Check if the proposedEnvName is empty
+    if (proposedEnvName == null || proposedEnvName.trim().isEmpty()) {
+        // Throw an exception indicating that the environment name is required
+        throw new InvalidSettingsException("Environment name is required and cannot be empty.");
+    }
     condaEnvName.setStringValue(proposedEnvName);
     condaEnvName.saveSettingsTo(settings);
   }
@@ -335,4 +362,7 @@ class FSKEnvironmentCreatorNodeDialog extends NodeDialogPane {
           tableModel.addRow(packageData[i]);
       }
   }
+
+  
+
 }

@@ -43,7 +43,9 @@ import java.nio.file.Paths;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.Platform;
+import org.knime.conda.CondaEnvironmentIdentifier;
 import org.knime.core.node.NodeLogger;
 
 /**
@@ -56,6 +58,8 @@ import org.knime.core.node.NodeLogger;
 public class DefaultRPreferenceProvider implements RPreferenceProvider {
 
 	private final String m_rHome;
+	private String condaEnvName;
+	
 
 	private Properties m_properties = null;
 
@@ -69,6 +73,13 @@ public class DefaultRPreferenceProvider implements RPreferenceProvider {
 	 */
 	public DefaultRPreferenceProvider(final String rHome) {
 		m_rHome = rHome;
+	}
+	public DefaultRPreferenceProvider(CondaEnvironmentIdentifier condaEnv ) {
+		m_rHome = Paths.get(condaEnv.getDirectoryPath()).resolve("lib/R/").toString();
+		condaEnvName = condaEnv.getName();
+	}
+	public String getCondaEnvName() {
+		return condaEnvName;
 	}
 
 	@Override
@@ -137,9 +148,11 @@ public class DefaultRPreferenceProvider implements RPreferenceProvider {
 		return m_properties;
 	}
 
-	public Map<String, String> setUpEnvironment(final Map<String, String> environment) {
+	public Map<String, String> setUpEnvironment(final Map<String, String> environment, String condaEnvPrefix) {
 		String r_prefix;
-		if (PreferenceInitializer.isRConda())
+		if( !StringUtils.isEmpty(condaEnvPrefix))
+			r_prefix = condaEnvPrefix;
+		else if (PreferenceInitializer.isRConda())
 			r_prefix = PreferenceInitializer.getREnv();
 		else {
 			r_prefix = PreferenceInitializer.getRPath();
@@ -150,6 +163,8 @@ public class DefaultRPreferenceProvider implements RPreferenceProvider {
 			pathVar.append(r_prefix).append(File.pathSeparator);
 			pathVar.append(r_prefix).append(File.separator).append("Library").append(File.separator).append("bin")
 					.append(File.pathSeparator);
+			pathVar.append(r_prefix).append(File.separator).append("bin").append(File.separator).append("x64")
+			.append(File.pathSeparator);
 			pathVar.append(r_prefix).append(File.separator).append("Library").append(File.separator).append("mingw-w64")
 					.append(File.separator).append("bin").append(File.pathSeparator);
 			pathVar.append(r_prefix).append(File.separator).append("Scripts").append(File.pathSeparator);

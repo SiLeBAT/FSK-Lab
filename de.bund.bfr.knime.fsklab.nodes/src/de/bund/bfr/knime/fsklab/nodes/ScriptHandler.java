@@ -8,13 +8,16 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
+import org.knime.conda.Conda;
 import org.knime.conda.CondaEnvironmentIdentifier;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.util.FileUtil;
 import org.knime.python2.PythonVersion;
+import org.knime.python2.prefs.PythonPreferences;
 import org.rosuda.REngine.REXPMismatchException;
 import de.bund.bfr.knime.fsklab.FskErrorMessages;
 import de.bund.bfr.knime.fsklab.JsonFileNotFoundException;
@@ -22,9 +25,9 @@ import de.bund.bfr.knime.fsklab.ModelScriptException;
 import de.bund.bfr.knime.fsklab.ResourceFileNotFoundException;
 import de.bund.bfr.knime.fsklab.VariableNotGlobalException;
 import de.bund.bfr.knime.fsklab.nodes.plot.ModelPlotter;
-import de.bund.bfr.knime.fsklab.r.client.ScriptExecutor;
 import de.bund.bfr.knime.fsklab.preferences.PreferenceInitializer;
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
+import de.bund.bfr.knime.fsklab.r.client.ScriptExecutor;
 import de.bund.bfr.knime.fsklab.v2_0.FskPortObject;
 import de.bund.bfr.knime.fsklab.v2_0.FskSimulation;
 import de.bund.bfr.knime.fsklab.v2_0.JoinRelationAdvanced;
@@ -84,8 +87,10 @@ public abstract class ScriptHandler implements AutoCloseable {
     setupOutputCapturing(exec);
 
     // Install needed libraries & set path to .fsk folder
-    installLibs(fskObj, exec, logger);
-    
+    if(condaEnv == null) {
+      condaEnv = getCondaEnv(SwaggerUtil.getLanguageWrittenIn(fskObj.modelMetadata));
+      installLibs(fskObj, exec, logger);
+    }
     exec.setProgress(0.3, "create JsonHandler");
     jsonHandler = JsonHandler.createHandler(this, exec);
     exec.setProgress(0.4, "apply Join Relations");
@@ -212,7 +217,8 @@ public abstract class ScriptHandler implements AutoCloseable {
       throws Exception {
 
     final ScriptHandler handler;
-
+    if(condaEnv == null)
+      condaEnv = getCondaEnv(script_type);
     if (script_type == null) {
       handler = new RScriptHandler(packages, condaEnv);
     } else {
@@ -234,7 +240,46 @@ public abstract class ScriptHandler implements AutoCloseable {
 
     return handler;
   }
+  public static CondaEnvironmentIdentifier getCondaEnv(String script_type)
+      throws Exception {
 
+    AtomicReference<CondaEnvironmentIdentifier> condaEnvRef = new AtomicReference<>(null);
+    final String type = script_type.toLowerCase();
+    
+
+    if (type.startsWith("r")) {
+      if( PreferenceInitializer.isRConda()) {
+          Conda conda = new Conda(PythonPreferences.getCondaInstallationPath());
+          conda.getEnvironments().forEach(env -> {
+              if (env.getDirectoryPath().equals(PreferenceInitializer.getREnv())) {
+                  condaEnvRef.set(env);
+              }
+          });
+      }
+    }else if (type.startsWith("py")) {
+      if (type.startsWith("python 2")) {
+        if(PreferenceInitializer.isPythonConda()) {
+          Conda conda = new Conda(PythonPreferences.getCondaInstallationPath());
+          conda.getEnvironments().forEach(env -> {
+              if (env.getDirectoryPath().equals(PreferenceInitializer.getPython2Env())) {
+                  condaEnvRef.set(env);
+              }
+          });
+        }
+      } else if (type.startsWith("python 3")) {
+        if(PreferenceInitializer.isPythonConda()) {
+          Conda conda = new Conda(PythonPreferences.getCondaInstallationPath());
+          conda.getEnvironments().forEach(env -> {
+              if (env.getDirectoryPath().equals(PreferenceInitializer.getPython3Env())) {
+                  condaEnvRef.set(env);
+              }
+          });
+        }
+      } 
+    }
+    return condaEnvRef.get();
+
+  }
 
   /**
    * Set the directory in which the interpreter can temporarily save data while executing the script

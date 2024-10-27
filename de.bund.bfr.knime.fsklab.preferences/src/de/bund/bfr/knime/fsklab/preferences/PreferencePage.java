@@ -96,7 +96,7 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 	private ComboViewer rEnvs;
 	private ComboViewer python3Envs;
 	private ComboViewer python2Envs;
-	private Map<String, String> envsMaps;
+	public static Map<String, String> envsMaps;
 	private Label messagePython2;
 	private Label messagePython3;
 	private Label messageRConda;
@@ -223,7 +223,7 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 							StructuredSelection sel = (StructuredSelection) rEnvs.getSelection();
 							String selectedRElement = (String) sel.getFirstElement();
 							String rEnvHome = envsMaps.get(selectedRElement);
-							testRHome(PreferenceInitializer.createExecutableString(rEnvHome), messageRConda);
+							testRHome(PreferenceInitializer.createExecutableString(rEnvHome), messageRConda,new CondaEnvironmentIdentifier(selectedRElement,rEnvHome) );
 						}
 					});
 					break;
@@ -742,7 +742,7 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 			Plugin.getDefault().getPreferenceStore().putValue(PreferenceInitializer.R3_PATH_CFG, rHome);
 			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {
-					testRHome(rHome, messageRManual);
+					testRHome(rHome, messageRManual,null);
 				}
 			});
 			return true;
@@ -771,7 +771,7 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 		// nothing to do
 	}
 
-	private boolean testRHome(String rHome, Label label) {
+	private boolean testRHome(String rHome, Label label,  CondaEnvironmentIdentifier condaEnv) {
 		Color red = new Color(label.getParent().getDisplay(), 255, 0, 0);
 		Color yellow = new Color(label.getParent().getDisplay(), 255, 255, 0);
 		if(!Files.exists(Paths.get(rHome))) {
@@ -792,8 +792,12 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 		try {
 			PreferenceInitializer.refresh = false;
 			RBinUtil.checkRHome(rHome, true);
+			DefaultRPreferenceProvider prefProvider;
+			if(condaEnv == null)
+				 prefProvider = new DefaultRPreferenceProvider(rHome);
+			else
+				 prefProvider = new DefaultRPreferenceProvider(condaEnv);
 
-			DefaultRPreferenceProvider prefProvider = new DefaultRPreferenceProvider(rHome);
 			final Properties props = prefProvider.getProperties();
 			// the version numbers may contain spaces
 			final String version = (props.getProperty("major") + "." + props.getProperty("minor")).replace(" ", "");

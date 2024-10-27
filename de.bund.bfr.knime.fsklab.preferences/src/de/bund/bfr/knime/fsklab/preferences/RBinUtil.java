@@ -45,10 +45,15 @@ import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.Platform;
+import org.knime.conda.CondaEnvironmentIdentifier;
 import org.knime.core.node.KNIMEConstants;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.util.FileUtil;
@@ -100,6 +105,16 @@ public class RBinUtil {
 	public static Properties retrieveRProperties() throws IOException {
 		return retrieveRProperties(PreferenceInitializer.getR3Provider());
 	}
+	/**
+	 * Get properties about the used R.
+	 *
+	 * @return properties about used R.
+	 * @throws IOException
+	 *             in case that running R fails.
+	 */
+	public static Properties retrieveRProperties(CondaEnvironmentIdentifier condaEnv) throws IOException {
+		return retrieveRProperties(PreferenceInitializer.getR3Provider(condaEnv));
+	}
 
 	/**
 	 * Get properties about the used R installation.
@@ -113,7 +128,6 @@ public class RBinUtil {
 		final File tmpPath = new File(TEMP_PATH);
 		File propsFile;
 		File rOutFile;
-
 		try {
 			propsFile = FileUtil.createTempFile("R-propsTempFile-", ".r", tmpPath, true);
 			rOutFile = FileUtil.createTempFile("R-propsTempFile-", ".Rout", tmpPath, true);
@@ -142,52 +156,84 @@ public class RBinUtil {
 		}
 		ProcessBuilder builder = new ProcessBuilder();
 		if (rpref != null ) {
-			rpref.setUpEnvironment(builder.environment());
+			rpref.setUpEnvironment(builder.environment(), rpref.getRHome());
         }
-		builder.command(rpref.getRBinPath("Rscript").toString(), "--vanilla", rCommandFile.getName(),
-				rOutFile.getName());
+		//builder.command(rpref.getRBinPath("Rscript").toString(), "--vanilla", "--verbose", rCommandFile.getName(),
+		//		rOutFile.getName());
+		// Command configuration for cross-platform compatibility
+        String os = System.getProperty("os.name").toLowerCase();
+
+        if(!StringUtils.isEmpty(rpref.getCondaEnvName())) {
+	        if (os.contains("win")) {
+	    		builder.command("cmd.exe", "/c", "conda activate "+rpref.getCondaEnvName()+" && Rscript --vanilla --verbose " + rCommandFile.getName() + " " + rOutFile.getName());
+	        } else {
+	            builder.command("/bin/bash", "/c", "conda activate "+rpref.getCondaEnvName()+" && Rscript --vanilla --verbose " + rCommandFile.getName() + " " + rOutFile.getName());
+	        }
+		}else {
+			builder.command(rpref.getRBinPath("Rscript").toString(), "--vanilla", "--verbose", rCommandFile.getName(),
+					rOutFile.getName());
+		}
+
 		builder.directory(rCommandFile.getParentFile());
 
 		/** Run R on the script to get properties */
 		try {
-			final Process process = builder.start();
-			final BufferedReader outputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-			final BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+		    final Process process = builder.start();
+		    final BufferedReader outputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+		    final BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
 
-			// Consume the output produced by the R process, otherwise may block
-			// process on some operating
-			// system
-			new Thread(() -> {
-				try {
-					final StringBuilder b = new StringBuilder();
-					String line;
-					while ((line = outputReader.readLine()) != null) {
-						b.append(line);
-					}
-					LOGGER.debug("External RScript process output: " + b.toString());
-				} catch (Exception e) {
-					LOGGER.error("Error reading output of external R process.", e);
-				}
-			}, "R Output Reader").start();
+		    // Use a thread-safe collection for storing output
+		    List<String> outputList = Collections.synchronizedList(new ArrayList<>());
+		    List<String> errorList = Collections.synchronizedList(new ArrayList<>());
 
-			new Thread(() -> {
-				try {
-					final StringBuilder b = new StringBuilder();
-					String line;
-					while ((line = errorReader.readLine()) != null) {
-						b.append(line);
-					}
-					LOGGER.debug("External Rscript process error output: " + b.toString());
-				} catch (Exception e) {
-					LOGGER.error("Error reading error output of external R process.", e);
-				}
-			}, "R Error Reader").start();
+		    // Consume the output stream in a separate thread
+		    Thread outputThread = new Thread(() -> {
+		        try {
+		            String line;
+		            while ((line = outputReader.readLine()) != null) {
+		                outputList.add(line); // Store output for further inspection
+		            }
+		        } catch (Exception e) {
+		            LOGGER.error("Error reading output of external R process.", e);
+		        }
+		    });
+		    
+		    // Consume the error stream in a separate thread
+		    Thread errorThread = new Thread(() -> {
+		        try {
+		            String line;
+		            while ((line = errorReader.readLine()) != null) {
+		                errorList.add(line); // Store error for further inspection
+		            }
+		        } catch (Exception e) {
+		            LOGGER.error("Error reading error output of external R process.", e);
+		        }
+		    });
 
-			process.waitFor();
+		    // Start the threads
+		    outputThread.start();
+		    errorThread.start();
+
+		    // Wait for the process to complete
+		    int exitCode = process.waitFor();
+		    System.out.println("R process finished with exit code: " + exitCode);
+
+		    // Ensure the threads finish reading
+		    outputThread.join();
+		    errorThread.join();
+
+		    // Check if there's any error in the output list
+		    if (!errorList.isEmpty()) {
+		        LOGGER.error("Errors from R process: " + String.join("\n", errorList));
+		    } else {
+		        LOGGER.debug("Output from R process: " + String.join("\n", outputList));
+		    }
+
 		} catch (Exception e) {
-			LOGGER.debug(e.getMessage(), e);
-			return new Properties();
+		    LOGGER.debug(e.getMessage(), e);
+		    return new Properties();
 		}
+
 
 		// load properties from propsFile
 		Properties props = new Properties();

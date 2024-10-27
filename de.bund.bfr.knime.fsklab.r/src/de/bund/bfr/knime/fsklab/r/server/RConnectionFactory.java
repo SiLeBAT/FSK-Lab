@@ -58,6 +58,7 @@ import javax.swing.filechooser.FileSystemView;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.knime.conda.CondaEnvironmentIdentifier;
 import org.knime.core.node.KNIMEConstants;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.util.FileUtil;
@@ -143,14 +144,35 @@ public class RConnectionFactory {
 	 * @param port    Port to start the Rserve server on
 	 * @return the started Rserve process
 	 */
-	private static Process launchRserveProcess(final String command, final String host, final Integer port)
+	private static Process launchRserveProcess(CondaEnvironmentIdentifier condaEnv, final String command, final String host, final Integer port)
 			throws IOException {
-		final String rHome = PreferenceInitializer.getR3Provider().getRHome();
-
+		final String rHome;
+		if(condaEnv != null)
+			rHome = PreferenceInitializer.getR3Provider(condaEnv).getRHome();
+		else
+			rHome = PreferenceInitializer.getR3Provider().getRHome();
+			
 		final File configFile = createRserverConfig();
 		final ProcessBuilder builder = new ProcessBuilder();
-		builder.command(command, "--RS-port", port.toString(), "--RS-conf \"" + configFile.getAbsolutePath() + "\"",
-				"--vanilla");
+
+		String os = System.getProperty("os.name").toLowerCase();
+
+        if (os.contains("win")) {
+
+    		builder.command("cmd.exe", "/c",
+    			    "conda activate "+condaEnv.getName()+" && " + 
+    			    command + " --RS-port " + port.toString() + 
+    			    " --RS-conf " + configFile.getAbsolutePath() + 
+    			    " --vanilla");
+    	} else {
+
+    		builder.command("/bin/bash", "/c",
+    			    "conda activate "+condaEnv.getName()+" && " + 
+    			    command + " --RS-port " + port.toString() + 
+    			    " --RS-conf " + configFile.getAbsolutePath() + 
+    			    " --vanilla");
+        }
+
 
 		final Map<String, String> env = builder.environment();
 		if (Platform.isWindows()) {
@@ -159,7 +181,11 @@ public class RConnectionFactory {
 			// bin folder on path
 
 			// archProperty is "i386" for 32 bit or "x86_64" for 64 bit
-			final String archProperty = PreferenceInitializer.getR3Provider().getProperties().getProperty("arch");
+			final String archProperty ;
+			if(condaEnv!=null)
+				 archProperty = PreferenceInitializer.getR3Provider(condaEnv).getProperties().getProperty("arch");
+			else
+				 archProperty = PreferenceInitializer.getR3Provider().getProperties().getProperty("arch");
 
 			// "x64" for 64 bit and "i386" for 32 bit.
 			final String arch = archProperty.equals("x86_64") ? "x64" : "i386";
@@ -167,7 +193,10 @@ public class RConnectionFactory {
 			env.put(DefaultRPreferenceProvider.findPathVariableName(env),
 					rHome + File.pathSeparator + rHome + "\\bin\\" + arch + "\\" + File.pathSeparator
 					+ env.get(DefaultRPreferenceProvider.findPathVariableName(env)));
-			PreferenceInitializer.getR3Provider().setUpEnvironment(env);
+			if(condaEnv!=null)
+				PreferenceInitializer.getR3Provider(condaEnv).setUpEnvironment(env,rHome);
+			else
+				PreferenceInitializer.getR3Provider().setUpEnvironment(env,rHome);
 
 		} else {
 			// on Unix we need priorize the "R_HOME/lib" folder in the
@@ -200,76 +229,71 @@ public class RConnectionFactory {
 	 *                     R is either not found or does not have Rserve package
 	 *                     installed.
 	 */
-	private static RInstance launchRserve(final String command, final String host, final Integer port)
-			throws IOException {
-		// if debugging, launch debug version of Rserve.
-		final String cmd = (DEBUG_RSERVE && Platform.isWindows()) ? command.replace(".exe", "_d.exe") : command;
+	private static RInstance launchRserve(CondaEnvironmentIdentifier condaEnv, final String command, final String host, final Integer port) throws IOException {
+	    // Check if debugging, then use the debug version of Rserve if on Windows.
+	    final String cmd = (DEBUG_RSERVE && Platform.isWindows()) ? command.replace(".exe", "_d.exe") : command;
 
-		File commandFile = new File(cmd);
-		if (!commandFile.exists()) {
-			throw new IOException("Command not found: " + cmd);
-		}
-		if (!commandFile.canExecute()) {
-			throw new IOException("Command is not an executable: " + cmd);
-		}
-		
-		RInstance rInstance = null;
-		try {
-			final Process p = launchRserveProcess(command, host, port);
+	    File commandFile = new File(cmd);
+	    if (!commandFile.exists()) {
+	        throw new IOException("Command not found: " + cmd);
+	    }
+	    if (!commandFile.canExecute()) {
+	        throw new IOException("Command is not an executable: " + cmd);
+	    }
 
-			// wrap the process, requires host and port to create RConnections
-			// later.
-			rInstance = new RInstance(p, host, port);
+	    RInstance rInstance = null;
+	    try {
+	        final Process p = launchRserveProcess(condaEnv, command, host, port);
 
-			/*
-			 * Consume output of process, to ensure buffer does not fill up, which blocks
-			 * processes on some OSs. Also, we can log errors in the external process this
-			 * way.
-			 */
-			new StreamReaderThread(p.getInputStream(), "R Output Reader (port: " + port + ")", (line) -> {
-				if (DEBUG_RSERVE) {
-					// intentionally print to stdout. This is only for debugging
-					// and would otherwise
-					// completely flood the log, which could then not be read
-					// simultaneously.
-					System.out.println(line);
-				} /* else discard */
-			}).start();
-			new StreamReaderThread(p.getErrorStream(), "R Error Reader (port:" + port + ")", LOGGER::debug).start();
+	        // Wrap the process and provide host and port for RConnections later
+	        rInstance = new RInstance(p, host, port);
 
-			// try connecting up to 5 times over the course of 500ms. Attempts
-			// may fail if Rserve is currently starting up.
-			for (int i = 1; i <= 4; i++) {
-				try {
-					RConnection connection = rInstance.createConnection();
-					if (connection != null) {
-						LOGGER.debug("Connected to Rserve in " + i + " attempts.");
-						break;
-					}
-				} catch (RserveException e) {
-					LOGGER.debug("An attempt (" + i + "/5) to connect to Rserve failed.", e);
-					Thread.sleep(2 ^ i * 100);
-				}
-			}
-			try {
-				if (rInstance.getLastConnection() == null) {
-					// try one last (5th) time.
-					rInstance.createConnection();
-				}
-			} catch (RserveException e) {
-				LOGGER.debug("Last attempt (5/5) to connect to Rserve failed.", e);
-				throw new IOException("Could not connect to RServe (host: " + host + ", port: " + port + ").");
-			}
+	        // Read the process output and error streams
+	        new StreamReaderThread(p.getInputStream(), "R Output Reader (port: " + port + ")", (line) -> {
+	            if (DEBUG_RSERVE) {
+	                System.out.println(line);  // Print output to stdout for debugging
+	            }
+	        }).start();
+	        
+	        new StreamReaderThread(p.getErrorStream(), "R Error Reader (port: " + port + ")", LOGGER::debug).start();
 
-			return rInstance;
-		} catch (Exception x) {
-			if (rInstance != null) {
-				// terminate the R process in case still running
-				rInstance.close();
-			}
-			throw new IOException("Could not start Rserve process.", x);
-		}
+	        
+
+	        // Try connecting to Rserve multiple times to allow time for startup
+	        for (int i = 1; i <= 4; i++) {
+	            try {
+	                RConnection connection = rInstance.createConnection();
+	                if (connection != null) {
+	                    LOGGER.debug("Connected to Rserve in " + i + " attempts.");
+	                    break;
+	                }
+	            } catch (RserveException e) {
+	                LOGGER.debug("Attempt (" + i + "/5) to connect to Rserve failed.", e);
+	                Thread.sleep(2 ^ i * 100);
+	            }
+	        }
+
+	        try {
+	            if (rInstance.getLastConnection() == null) {
+	                // Try one last (5th) time
+	                rInstance.createConnection();
+	            }
+	        } catch (RserveException e) {
+	            LOGGER.debug("Last attempt (5/5) to connect to Rserve failed.", e);
+	            throw new IOException("Could not connect to RServe (host: " + host + ", port: " + port + ").", e);
+	        }
+
+	        return rInstance;
+	    } catch (Exception x) {
+	        if (rInstance != null) {
+	            // Terminate the R process in case it is still running
+	            rInstance.close();
+	        }
+	        // Capture and log the error stream from the process
+	        throw new IOException("Could not start Rserve process. Check Rserve logs or error output for details.", x);
+	    }
 	}
+
 
 	/**
 	 * Create a new {@link RConnection}, creating a new R instance beforehand,
@@ -304,13 +328,54 @@ public class RConnectionFactory {
 			// no existing resource is available. Create a new one.
 			String path = PreferenceInitializer.getR3Provider().getRServeBinPath().toString();
 			int port = findFreePort();
-			final RInstance instance = launchRserve(path, "127.0.0.1", port);
+			final RInstance instance = launchRserve(null,path, "127.0.0.1", port);
 			RConnectionResource resource = new RConnectionResource(instance);
 			resource.acquire();
 			m_resources.add(resource);
 			return resource;
 		}
 	}
+	/**
+	 * Create a new {@link RConnection}, creating a new R instance beforehand,
+	 * unless a connection of an existing instance has been closed in which case an
+	 * R instance will be reused.
+	 * <p>
+	 * The method does not check {@link RConnection#isConnected()}.
+	 *
+	 * @return an RConnectionResource which has already been acquired, never
+	 *         <code>null</code>
+	 * @throws IOException if Rserve could not be launched. This may be the case if
+	 *                     R is either not found or does not have Rserve package
+	 *                     installed. Or if there was no open port found.
+	 */
+	public static RConnectionResource createConnection(CondaEnvironmentIdentifier condaEnv) throws RserveException, IOException {
+		initializeShutdownHook(); // checks for re-initialization
+
+		// synchronizing on the entire class would completely lag out KNIME for
+		// some reason
+		synchronized (m_resources) {
+			// try to reuse an existing instance. Ensures there is max one R
+			// instance per parallel executed node.
+			for (RConnectionResource resource : m_resources) {
+				if (resource.acquireIfAvailable()) {
+					// connections are closed when released => we need to
+					// reconnect
+					resource.getUnderlyingRInstance().createConnection();
+
+					return resource;
+				}
+			}
+			// no existing resource is available. Create a new one.
+			String path = PreferenceInitializer.getR3Provider(condaEnv).getRServeBinPath().toString();
+			int port = findFreePort();
+			final RInstance instance = launchRserve(condaEnv,path, "127.0.0.1", port);
+			RConnectionResource resource = new RConnectionResource(instance);
+			resource.acquire();
+			m_resources.add(resource);
+			return resource;
+		}
+	}
+	
 
 	/**
 	 * Find a free port to launch Rserve on

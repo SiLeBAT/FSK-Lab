@@ -43,10 +43,12 @@ public class RScriptHandler extends ScriptHandler {
   }
 
   public RScriptHandler(List<String> packages, CondaEnvironmentIdentifier condaEnv) throws RException, IOException {
-    RprofileManager.subscribe();
+      
     // initialize LibRegistry before Controller to avoid errors on switching R in preferences
-    if(condaEnv == null)
-      LibRegistry.instance(); 
+    if(condaEnv == null){
+      RprofileManager.subscribe();
+      LibRegistry.instance();
+    }
     this.controller = new RController(condaEnv);
     this.executor = new ScriptExecutor(controller);
 

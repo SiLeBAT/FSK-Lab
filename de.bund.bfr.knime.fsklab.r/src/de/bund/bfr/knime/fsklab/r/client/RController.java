@@ -278,6 +278,15 @@ public class RController implements IRController {
 
     return resource;
   }
+  private static RConnectionResource initRConnection(CondaEnvironmentIdentifier condaEnv) throws RserveException, IOException {
+    final RConnectionResource resource = RConnectionFactory.createConnection(condaEnv);
+
+    if (!resource.get().isConnected()) {
+      throw new IOException("Could not initialize RController: Resource was not connected");
+    }
+
+    return resource;
+  }
 
   /**
    * Initialize the underlying REngine with a backend.
@@ -289,7 +298,7 @@ private void initR(CondaEnvironmentIdentifier condaEnv) throws RException {
     	
       String rHome;
       if(condaEnv != null)
-    	  rHome = condaEnv.getDirectoryPath()+"/lib/R/";
+    	  rHome = Paths.get(condaEnv.getDirectoryPath()).resolve("lib/R/").toString();
       else
     	  rHome = PreferenceInitializer.getR3Provider().getRHome();
     	  
@@ -300,8 +309,10 @@ private void initR(CondaEnvironmentIdentifier condaEnv) throws RException {
       }
 
       RBinUtil.checkRHome(rHome);
-
-      m_rProps = RBinUtil.retrieveRProperties();
+      if(condaEnv != null)
+    	  m_rProps = RBinUtil.retrieveRProperties(condaEnv);
+      else
+    	  m_rProps = RBinUtil.retrieveRProperties();
 
       if (!m_rProps.containsKey("major")) {
         throw new RException("Cannot determine major version of R. "
@@ -319,8 +330,11 @@ private void initR(CondaEnvironmentIdentifier condaEnv) throws RException {
       if (StringUtils.isEmpty(miniCranProp)) {
         throw new RException("Missing required package: miniCRAN", null);
       }
+      if(condaEnv!=null)
+          m_connection = initRConnection(condaEnv);
+      else
+          m_connection = initRConnection();
 
-      m_connection = initRConnection();
 
     } catch (final InvalidRHomeException ex) {
       throw new RException("R Home is invalid", ex);

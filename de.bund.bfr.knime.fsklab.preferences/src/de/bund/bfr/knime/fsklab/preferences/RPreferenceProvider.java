@@ -40,6 +40,8 @@ import java.nio.file.Path;
 import java.util.Map;
 import java.util.Properties;
 
+import org.knime.conda.CondaEnvironmentIdentifier;
+
 /**
  * Class that provides a path to an R home directory.
  * 
@@ -47,7 +49,9 @@ import java.util.Properties;
  * @author Jonathan Hale
  */
 public interface RPreferenceProvider {
-
+ 
+   
+  public String getCondaEnvName();
   /** @return path to RHome */
   public String getRHome();
 
@@ -62,5 +66,6 @@ public interface RPreferenceProvider {
 
   public Properties getProperties();
   
-  public Map<String, String> setUpEnvironment( Map<String, String> environment);
+  public Map<String, String> setUpEnvironment(final Map<String, String> environment, String condaEnvPrefix);
+
 }

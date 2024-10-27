@@ -1,10 +1,19 @@
 package de.bund.bfr.knime.fsklab.v2_0.fskenvironmentcreator;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import org.apache.commons.lang3.StringUtils;
 import org.knime.core.util.Version;
@@ -12,86 +21,54 @@ import de.bund.bfr.knime.fsklab.v2_0.fskenvironmentcreator.FSKCondaEnvironmentCr
 
 public class EnvironmentManager {
 
-    public static String getPython2EnvContent(String envName) {
+    public static String getPython2EnvContent(String envName, String version) {
         return "name: "+envName+"\n"
                + "channels:\n"
                + "  - defaults\n"
                + "dependencies:\n"
-               + "  - python=2.7\n"
+               + "  - python="+(!StringUtils.isEmpty(version)?version:"2.7")+"\n"
                + "  - pandas\n"
                + "  - matplotlib\n";
     }
 
-    public static String getPython3EnvContent(String envName) {
+    public static String getPython3EnvContent(String envName, String version) {
         return "name: "+envName+"\n"
                + "channels:\n"
                + "  - defaults\n"
                + "dependencies:\n"
-               + "  - python=3.9\n"
+               + "  - python="+(!StringUtils.isEmpty(version)?version:"3.9")+"\n"
                + "  - pandas\n"
                + "  - matplotlib\n";
     }
 
-    public static String getR3EnvContent(String envName) {
+    public static String getR3EnvContent(String envName, String version) {
         return "name: "+envName+"\n"
                + "channels:\n"
                + "  - defaults\n"
                + "  - conda-forge\n"
                + "dependencies:\n"
-               + "  - r-base=3.6\n"
-               + "  - r-rserve\n"
+               + "  - r-base="+(!StringUtils.isEmpty(version)?version:"3.6.3")+"\n"
                + "  - r-cairo\n"
-               + "  - r-ggplot2\n"
+               + "  - r-rserve\n"
                + "  - r-jsonlite\n"
                + "  - r-svglite\n"
-               + "  - r-minicran\n"
-               + "  - r-msm\n"
-               + "  - r-mc2d\n"
-               + "  - r-tidyverse\n"
-               + "  - r-robustbase\n"
-               + "  - r-gridextra\n"
-               + "  - r-mcmcpack\n"
-               + "  - r-gridgraphics\n"
-               + "  - r-distr\n"
-               + "  - r-hmisc\n"
-               + "  - r-reshape2\n"
-               + "  - r-gsl\n"
-               + "  - r-triangle\n"
-               + "  - r-maldiquant\n"
-               + "  - r-kernsmooth\n"
-               + "  - r-r2openbugs\n";
+               + "  - r-minicran\n";
     }
 
-    public static String getR4EnvContent(String envName) {
+    public static String getR4EnvContent(String envName, String version) {
         return "name: "+envName+"\n"
               + "channels:\n"
               + "  - conda-forge\n"
               + "  - defaults\n"
               + "dependencies:\n"
-              + "  - r-base=4.2.2\n"
-              + "  - r-rserve\n"
+              + "  - r-base="+(!StringUtils.isEmpty(version)?version:"4.1.0")+"\n"
               + "  - r-cairo\n"
-              + "  - r-ggplot2\n"
+              + "  - r-rserve\n"
               + "  - r-jsonlite\n"
               + "  - r-svglite\n"
-              + "  - r-minicran\n"
-              + "  - r-msm\n"
-              + "  - r-mc2d\n"
-              + "  - r-tidyverse\n"
-              + "  - r-robustbase\n"
-              + "  - r-gridextra\n"
-              + "  - r-mcmcpack\n"
-              + "  - r-gridgraphics\n"
-              + "  - r-distr\n"
-              + "  - r-hmisc\n"
-              + "  - r-reshape2\n"
-              + "  - r-gsl\n"
-              + "  - r-triangle\n"
-              + "  - r-maldiquant\n"
-              + "  - r-kernsmooth\n"
-              + "  - r-r2openbugs\n";
+              + "  - r-minicran\n";
     }
-    public static void createEnvironment(String environmentName, String languageWrittenIn, String[] additionalDependencies, DefaultTableModel tableModel, JPanel panel, FSKEnvironmentCreatorNodeDialog instance, CondaEnvironmentCreationStatus m_status) {
+    public static void createEnvironment(String environmentName, String languageWrittenIn, String[] additionalDependencies, DefaultTableModel tableModel, JPanel panel, FSKEnvironmentCreatorNodeDialog instance, CondaEnvironmentCreationStatus m_status, String version) {
       File tempYamlFile = null;
       try {
           // Choose the YAML content dynamically based on user input (or some other condition)
@@ -100,19 +77,19 @@ public class EnvironmentManager {
           int majorVersion = 4;
 
           if (languageWrittenIn.toLowerCase().startsWith("python 2")) {
-              yamlContent.append(getPython2EnvContent(environmentName));
+              yamlContent.append(getPython2EnvContent(environmentName, version));
               condaVersion = CondaEnvVersion.PYTHON2;
               majorVersion = 2;
           } else if (languageWrittenIn.toLowerCase().startsWith("python 3")) {
-              yamlContent.append(getPython3EnvContent(environmentName));
+              yamlContent.append(getPython3EnvContent(environmentName, version));
               condaVersion = CondaEnvVersion.PYTHON3;
               majorVersion = 3;
           } else if (languageWrittenIn.toLowerCase().startsWith("r 3")) {
-              yamlContent.append(getR3EnvContent(environmentName));
+              yamlContent.append(getR3EnvContent(environmentName, version));
               condaVersion = CondaEnvVersion.R3;
               majorVersion = 3;
           } else if (languageWrittenIn.toLowerCase().startsWith("r 4")) {
-              yamlContent.append(getR4EnvContent(environmentName));
+              yamlContent.append(getR4EnvContent(environmentName, version));
               condaVersion = CondaEnvVersion.R4;
               majorVersion = 4;
           }
@@ -186,6 +163,122 @@ public class EnvironmentManager {
       }
       return result;
     }
-    
+ // Generic method to fetch available versions from Conda
+    public static List<String> fetchVersions(String packageName, String filter) {
+        List<String> versions = Collections.synchronizedList(new ArrayList<>());
+        List<String> errorList = Collections.synchronizedList(new ArrayList<>());
+
+        ProcessBuilder builder = new ProcessBuilder();
+        String os = System.getProperty("os.name").toLowerCase();
+        String command = "conda search " + packageName + " -c conda-forge";
+
+        // Command configuration for cross-platform compatibility
+        if (os.contains("win")) {
+            builder.command("cmd.exe", "/c", command);
+        } else {
+            builder.command("/bin/bash", "-c", command);
+        }
+
+        try {
+            final Process process = builder.start();
+
+            // Read output in a separate thread
+            Thread outputThread = new Thread(() -> {
+                try (BufferedReader outputReader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+                    String line;
+                    while ((line = outputReader.readLine()) != null) {
+                        if (line.startsWith(filter)) {
+                            String[] columns = line.trim().split("\\s+");
+                            if (columns.length > 1) {
+                                versions.add(columns[1]);
+                            }
+                        }
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+
+            // Read errors in a separate thread
+            Thread errorThread = new Thread(() -> {
+                try (BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()))) {
+                    String line;
+                    while ((line = errorReader.readLine()) != null) {
+                        errorList.add(line);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+
+            outputThread.start();
+            errorThread.start();
+            int exitCode = process.waitFor();
+            outputThread.join();
+            errorThread.join();
+
+            System.out.println(packageName + " version fetch process finished with exit code: " + exitCode);
+
+            if (!errorList.isEmpty()) {
+                System.err.println("Errors from Conda process: " + String.join("\n", errorList));
+            }
+
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return versions;
+    }
+
+    public static List<String> fetchPythonVersions() {
+        return fetchVersions("python", "python");
+    }
+
+    public static List<String> fetchRBaseVersions() {
+        return fetchVersions("r-base", "r-base");
+    }
+
+    public static void loadPythonVersions(String language, JComboBox<String> versionComboBox, Map<String, List<String>> cachedVersions) {
+        if (cachedVersions.containsKey(language)) {
+            SwingUtilities.invokeLater(() -> populateVersionComboBox(cachedVersions.get(language), versionComboBox));
+        } else {
+            versionComboBox.removeAllItems();
+            versionComboBox.addItem("Loading...");
+            new Thread(() -> {
+                List<String> pythonVersions = fetchPythonVersions();
+                cachedVersions.put("Python 2", filterVersions(pythonVersions, "2."));
+                cachedVersions.put("Python 3", filterVersions(pythonVersions, "3."));
+                SwingUtilities.invokeLater(() -> populateVersionComboBox(cachedVersions.get(language), versionComboBox));
+            }).start();
+        }
+    }
+
+    public static void loadRVersions(String language, JComboBox<String> versionComboBox, Map<String, List<String>> cachedVersions) {
+        if (cachedVersions.containsKey(language)) {
+            SwingUtilities.invokeLater(() -> populateVersionComboBox(cachedVersions.get(language), versionComboBox));
+        } else {
+            versionComboBox.removeAllItems();
+            versionComboBox.addItem("Loading...");
+            new Thread(() -> {
+                List<String> rVersions = fetchRBaseVersions();
+                cachedVersions.put("R 3", filterVersions(rVersions, "3."));
+                cachedVersions.put("R 4", filterVersions(rVersions, "4."));
+                SwingUtilities.invokeLater(() -> populateVersionComboBox(cachedVersions.get(language), versionComboBox));
+            }).start();
+        }
+    }
+
+    private static void populateVersionComboBox(List<String> versions, JComboBox<String> versionComboBox) {
+        versionComboBox.removeAllItems();
+        for (String version : versions) {
+            versionComboBox.addItem(version);
+        }
+    }
+
+    private static List<String> filterVersions(List<String> versions, String prefix) {
+        return versions.stream()
+                .filter(version -> version.startsWith(prefix))
+                .collect(Collectors.toList());
+    }
     
 }

@@ -21,6 +21,7 @@ import java.nio.file.Paths;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.knime.conda.CondaEnvironmentIdentifier;
 
 /**
  * Initializes preference page with default paths to R2 and R3 environments.
@@ -83,6 +84,11 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		}
 
 		return cachedRProvider;
+	}
+	
+	/** @return provider to the path to the R3 executable. */
+	public static final RPreferenceProvider getR3Provider(CondaEnvironmentIdentifier condaEnv) {
+		return new DefaultRPreferenceProvider(condaEnv);
 	}
 
 	public static final String getRPath() {

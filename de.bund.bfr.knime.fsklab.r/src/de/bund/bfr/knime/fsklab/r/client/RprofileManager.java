@@ -2,6 +2,7 @@ package de.bund.bfr.knime.fsklab.r.client;
 
 import java.io.IOException;
 import java.util.concurrent.locks.ReentrantLock;
+
 import com.sun.jna.Platform;
 import de.bund.bfr.knime.fsklab.preferences.PreferenceInitializer;
 import de.bund.bfr.knime.fsklab.r.server.RConnectionFactory;
