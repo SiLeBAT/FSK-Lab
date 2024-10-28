@@ -21,24 +21,100 @@ import de.bund.bfr.knime.fsklab.v2_0.fskenvironmentcreator.FSKCondaEnvironmentCr
 
 public class EnvironmentManager {
 
-    public static String getPython2EnvContent(String envName, String version) {
-        return "name: "+envName+"\n"
-               + "channels:\n"
-               + "  - defaults\n"
-               + "dependencies:\n"
-               + "  - python="+(!StringUtils.isEmpty(version)?version:"2.7")+"\n"
-               + "  - pandas\n"
-               + "  - matplotlib\n";
-    }
-
+    /**
+     * Generates the Conda environment YAML content for Python 3.
+     * The environment includes libraries for Data Analysis, Machine Learning, Plotting, and Utilities.
+     *
+     * @param envName The name of the environment.
+     * @param version The Python 3 version, defaulting to 3.9 if empty.
+     * @return A String representing the YAML configuration for the Conda environment.
+     * 
+     * ### Types of Libraries Included:
+     * - **Data Analysis and Machine Learning**:
+     *   - `numpy`: Array computing and mathematical operations.
+     *   - `pandas`: Data manipulation and analysis.
+     *   - `scikit-learn`: Machine learning algorithms.
+     *   - `scipy`: Scientific computing, including functions for optimization and statistics.
+     * 
+     * - **Plotting**:
+     *   - `matplotlib-base`: Basic 2D plotting.
+     *   - `plotly`: Interactive graphing and visualization.
+     *   - `seaborn`: Statistical data visualization based on matplotlib.
+     *   - `statsmodels`: Statistical models and hypothesis tests.
+     * 
+     * - **Utilities**:
+     *   - `requests`: HTTP library for sending HTTP requests.
+     *   - `pillow`: Image processing.
+     *   - `openpyxl`: Working with Excel files (.xlsx).
+     *   - `pyyaml`: YAML file parsing and writing.
+     */
     public static String getPython3EnvContent(String envName, String version) {
-        return "name: "+envName+"\n"
+        String pythonVersion = (version != null && !version.isEmpty()) ? version : "3.9";
+        return "name: " + envName + "\n"
                + "channels:\n"
                + "  - defaults\n"
                + "dependencies:\n"
-               + "  - python="+(!StringUtils.isEmpty(version)?version:"3.9")+"\n"
+               + "  - python=" + pythonVersion + "\n"
+               + "  - numpy\n"
                + "  - pandas\n"
-               + "  - matplotlib\n";
+               + "  - scikit-learn\n"
+               + "  - scipy\n"
+               + "  - matplotlib-base\n"
+               + "  - plotly\n"
+               + "  - seaborn\n"
+               + "  - statsmodels\n"
+               + "  - requests\n"
+               + "  - pillow\n"
+               + "  - openpyxl\n"
+               + "  - pyyaml\n";
+    }
+  
+    /**
+     * Generates the Conda environment YAML content for Python 2.
+     * The environment includes libraries for Data Analysis, Machine Learning, Plotting, and Utilities.
+     *
+     * @param envName The name of the environment.
+     * @param version The Python 2 version, defaulting to 2.7 if empty.
+     * @return A String representing the YAML configuration for the Conda environment.
+     * 
+     * ### Types of Libraries Included:
+     * - **Data Analysis and Machine Learning**:
+     *   - `numpy`: Array computing and mathematical operations.
+     *   - `pandas`: Data manipulation and analysis.
+     *   - `scikit-learn`: Machine learning algorithms.
+     *   - `scipy`: Scientific computing, including functions for optimization and statistics.
+     * 
+     * - **Plotting**:
+     *   - `matplotlib-base`: Basic 2D plotting.
+     *   - `plotly`: Interactive graphing and visualization.
+     *   - `seaborn`: Statistical data visualization based on matplotlib.
+     *   - `statsmodels`: Statistical models and hypothesis tests.
+     * 
+     * - **Utilities**:
+     *   - `requests`: HTTP library for sending HTTP requests.
+     *   - `pillow`: Image processing.
+     *   - `openpyxl`: Working with Excel files (.xlsx).
+     *   - `pyyaml`: YAML file parsing and writing.
+     */
+    public static String getPython2EnvContent(String envName, String version) {
+        String pythonVersion = (version != null && !version.isEmpty()) ? version : "2.7";
+        return "name: " + envName + "\n"
+               + "channels:\n"
+               + "  - defaults\n"
+               + "dependencies:\n"
+               + "  - python=" + pythonVersion + "\n"
+               + "  - numpy\n"
+               + "  - pandas\n"
+               + "  - scikit-learn\n"
+               + "  - scipy\n"
+               + "  - matplotlib-base\n"
+               + "  - plotly\n"
+               + "  - seaborn\n"
+               + "  - statsmodels\n"
+               + "  - requests\n"
+               + "  - pillow\n"
+               + "  - openpyxl\n"
+               + "  - pyyaml\n";
     }
 
     public static String getR3EnvContent(String envName, String version) {
