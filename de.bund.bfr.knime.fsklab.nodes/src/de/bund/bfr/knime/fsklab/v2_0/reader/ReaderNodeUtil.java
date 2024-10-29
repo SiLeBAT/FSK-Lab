@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.fskml.FSKML;
 import de.bund.bfr.fskml.FskMetaDataObject;
 import de.bund.bfr.fskml.FskMetaDataObject.ResourceType;
+import de.bund.bfr.fskml.PythonScript;
 import de.bund.bfr.fskml.RScript;
 import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
@@ -608,13 +609,26 @@ public class ReaderNodeUtil {
 
       // Retrieve missing libraries from CRAN
       HashSet<String> packagesSet = new HashSet<>();
+      HashSet<String> cleanedPackagesSet = new HashSet<>();
       if (!modelScript.isEmpty()) {
-        packagesSet.addAll(new RScript(modelScript).getLibraries());
+        packagesSet.addAll(languageWrittenIn.equals("r")? new RScript(modelScript).getLibraries():new PythonScript(modelScript).getLibraries());
       }
 
       if (!visualizationScript.isEmpty()) {
-        packagesSet.addAll(new RScript(visualizationScript).getLibraries());
+        packagesSet.addAll(languageWrittenIn.equals("r")? new RScript(visualizationScript).getLibraries():new PythonScript(visualizationScript).getLibraries());
+
       }
+
+      // Iterate over each library in packagesSet
+      for (String lib : packagesSet) {
+          // Split at the dot and take only the main library name
+          String mainLib = lib.split("\\.")[0];
+          // Add the main library name to the cleaned set
+          cleanedPackagesSet.add(mainLib);
+      }
+  
+     // Replace packagesSet with cleanedPackagesSet
+      packagesSet = cleanedPackagesSet;
       List<String> packagesList = new ArrayList<>(packagesSet);
 
       Path workspacePath = workspace == null ? null : workspace.toPath();

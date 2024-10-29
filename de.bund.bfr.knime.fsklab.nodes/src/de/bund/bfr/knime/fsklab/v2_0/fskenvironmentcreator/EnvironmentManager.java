@@ -52,6 +52,7 @@ public class EnvironmentManager {
         String pythonVersion = (version != null && !version.isEmpty()) ? version : "3.9";
         return "name: " + envName + "\n"
                + "channels:\n"
+               + "  - conda-forge\n"
                + "  - defaults\n"
                + "dependencies:\n"
                + "  - python=" + pythonVersion + "\n"
@@ -66,6 +67,8 @@ public class EnvironmentManager {
                + "  - requests\n"
                + "  - pillow\n"
                + "  - openpyxl\n"
+               + "  - descartes\n"
+               + "  - pyogrio\n"
                + "  - pyyaml\n";
     }
   
@@ -100,6 +103,7 @@ public class EnvironmentManager {
         String pythonVersion = (version != null && !version.isEmpty()) ? version : "2.7";
         return "name: " + envName + "\n"
                + "channels:\n"
+               + "  - conda-forge\n"
                + "  - defaults\n"
                + "dependencies:\n"
                + "  - python=" + pythonVersion + "\n"
@@ -114,6 +118,8 @@ public class EnvironmentManager {
                + "  - requests\n"
                + "  - pillow\n"
                + "  - openpyxl\n"
+               + "  - descartes\n"
+               + "  - pyogrio\n"
                + "  - pyyaml\n";
     }
 
