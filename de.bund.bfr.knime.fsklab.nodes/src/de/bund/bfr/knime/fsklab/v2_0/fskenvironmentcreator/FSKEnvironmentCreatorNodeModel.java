@@ -138,7 +138,7 @@ public class FSKEnvironmentCreatorNodeModel extends NoInternalsModel {
   private boolean waitForEnvironmentCreation(FSKCondaEnvironmentCreationObserver.CondaEnvironmentCreationStatus m_status, ExecutionContext exec) throws InterruptedException {
       int timeout = 300000; // Set a 300-second timeout
       int elapsed = 0;
-      int interval = 500;  // 500ms sleep interval
+      int interval = 5000;  // 500ms sleep interval
       
       while (elapsed < timeout) {
           // Get the current status message

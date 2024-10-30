@@ -49,28 +49,41 @@ public class EnvironmentManager {
      *   - `pyyaml`: YAML file parsing and writing.
      */
     public static String getPython3EnvContent(String envName, String version) {
-        String pythonVersion = (version != null && !version.isEmpty()) ? version : "3.9";
+        String pythonVersion = (version != null && !version.isEmpty()) ? version : "3.8";
         return "name: " + envName + "\n"
                + "channels:\n"
                + "  - conda-forge\n"
-               + "  - defaults\n"
+               + "  - knime\n"
                + "dependencies:\n"
-               + "  - python=" + pythonVersion + "\n"
-               + "  - numpy\n"
-               + "  - pandas\n"
-               + "  - scikit-learn\n"
-               + "  - scipy\n"
-               + "  - matplotlib-base\n"
-               + "  - plotly\n"
-               + "  - seaborn\n"
-               + "  - statsmodels\n"
-               + "  - requests\n"
-               + "  - pillow\n"
-               + "  - openpyxl\n"
+               + "  - knime-python-base\n"
+               //+ "  - beautifulsoup4\n"
+               //+ "  - cloudpickle\n"
+               //+ "  - ipython\n"
+               //+ "  - matplotlib-base\n"
+               //+ "  - markdown\n"
+               //+ "  - nbformat\n"
+               //+ "  - nltk\n"
+               //+ "  - nomkl\n"
+               //+ "  - numpy\n"
+               //+ "  - openpyxl\n"
+               //+ "  - pandas\n"
+               //+ "  - pillow\n"          
+               //+ "  - plotly\n"
+               //+ "  - py4j\n"
                + "  - descartes\n"
-               + "  - pyogrio\n"
-               + "  - pyyaml\n";
-    }
+               //+ "  - pyarrow\n"
+               + "  - python=" + pythonVersion + "\n"
+               //+ "  - pyogrio\n"
+               //+ "  - python-dateutil\n"
+               //+ "  - pytz\n"
+               //+ "  - pyyaml\n"
+               //+ "  - requests\n"
+               //+ "  - scikit-learn\n"
+               //+ "  - scipy\n"
+               //+ "  - seaborn\n"
+               //+ "  - statsmodels\n";
+               ;
+    }           
   
     /**
      * Generates the Conda environment YAML content for Python 2.
@@ -179,7 +192,7 @@ public class EnvironmentManager {
           // Add additional dependencies
           if (additionalDependencies != null && additionalDependencies.length > 0) {
               for (String dependency : additionalDependencies) {
-                  if (!StringUtils.isBlank(dependency)) {
+                  if (!StringUtils.isBlank(dependency) && !dependency.equalsIgnoreCase("os")) {
                       if (languageWrittenIn.toLowerCase().startsWith("r ")) {
                           dependency = "r-" + dependency;
                       }

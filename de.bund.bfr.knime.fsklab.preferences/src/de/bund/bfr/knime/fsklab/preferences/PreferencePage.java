@@ -68,11 +68,13 @@ import org.knime.conda.prefs.CondaPreferences;
 import org.knime.python2.Activator;
 import org.knime.python2.CondaPythonCommand;
 import org.knime.python2.ManualPythonCommand;
+import org.knime.python2.PythonCommand;
 import org.knime.python2.PythonKernelTester;
 import org.knime.python2.PythonKernelTester.PythonKernelTestResult;
 import org.knime.python2.PythonVersion;
 import org.knime.python2.config.CondaEnvironmentsConfig;
 import org.knime.python2.config.PythonConfigStorage;
+import org.knime.python2.kernel.PythonKernel;
 import org.knime.python2.prefs.PreferenceStorage;
 import org.knime.python2.prefs.PreferenceWrappingConfigStorage;
 import org.knime.python2.prefs.PythonPreferences;
@@ -1017,13 +1019,42 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 	private Process startCondaProcess(final String... arguments) throws IOException {
 	    List<String> command = new ArrayList<>();
 	    // Add the conda executable. If conda is in your system PATH, you can just use "conda"
-	    String app =getCondaInstallationPath()+ "/bin/conda"; 
-	    command.add(app);
+	    
+	     
+	    String os = System.getProperty("os.name").toLowerCase();
+       
+        // Command configuration for cross-platform compatibility
+        if (os.contains("win")) {
+        	command.add("cmd.exe");
+            command.add("/c");
+    	    command.add("conda");
+    	    
+        } else {
+        	command.add(getCondaInstallationPath()+ "/bin/conda");
+        }
+	    
 	    // Add all the provided arguments
 	    command.addAll(Arrays.asList(arguments));
-
+	    
 	    ProcessBuilder processBuilder = new ProcessBuilder(command);
 	    return processBuilder.start();
+	    
+	}
+	@Override
+	public void setVisible(boolean visible) {
+	    if (visible) {
+	        // Reset envsMaps to force refresh
+	        envsMaps = null;
+	        
+	        // Refresh the conda environments
+	        if (PreferenceInitializer.isPythonConda()) {
+	            fillCondaEnvsforPython(condaPath, messageRConda, compositePythonConda);
+	        }
+	        if (PreferenceInitializer.isRConda()) {
+	            fillCondaEnvsforR(condaPath, messageRConda, compositeRConda);
+	        }
+	    }
+	    super.setVisible(visible);
 	}
 
 }
