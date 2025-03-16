@@ -33,6 +33,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -54,6 +55,7 @@ import javax.swing.table.DefaultTableModel;
 import org.apache.commons.lang3.StringUtils;
 import org.knime.conda.Conda;
 import org.knime.conda.CondaPackageSpec;
+import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeSettingsRO;
@@ -239,14 +241,16 @@ class FSKEnvironmentCreatorNodeDialog extends NodeDialogPane {
               JOptionPane.showMessageDialog(panel, "Environment name is required.", "Warning", JOptionPane.WARNING_MESSAGE);
               return;
           }
-          proposedEnvName = environmentName;
+          
           String languageWrittenIn = (String) languageComboBox.getSelectedItem();
           String[] depArray = new String[tableModel.getRowCount()];
           for (int i = 0; i < tableModel.getRowCount(); i++) {
               depArray[i] = (String) tableModel.getValueAt(i, 0); // Assuming dep is in the first column
           }
+          
 
-          EnvironmentManager.createEnvironment(environmentName, languageWrittenIn, depArray, tableModel, panel, this, m_status,((String) versionComboBox.getSelectedItem()));
+          EnvironmentStatus envStatus = EnvironmentManager.createEnvironment(environmentName, languageWrittenIn, depArray, tableModel, panel, this, m_status,((String) versionComboBox.getSelectedItem()), null);
+          proposedEnvName = envStatus.getEnvironmentName();
       });
 
       // Log Text Area

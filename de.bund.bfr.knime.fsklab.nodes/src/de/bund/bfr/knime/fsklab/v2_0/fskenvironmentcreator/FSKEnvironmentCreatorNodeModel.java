@@ -20,6 +20,7 @@ package de.bund.bfr.knime.fsklab.v2_0.fskenvironmentcreator;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.commons.lang.StringUtils;
@@ -107,17 +108,17 @@ public class FSKEnvironmentCreatorNodeModel extends NoInternalsModel {
           FSKCondaEnvironmentCreationObserver.CondaEnvironmentCreationStatus m_status = new FSKCondaEnvironmentCreationObserver.CondaEnvironmentCreationStatus();
           
           // Trigger environment creation
-          EnvironmentManager.createEnvironment(
+          EnvironmentStatus envStatus = EnvironmentManager.createEnvironment(
                modelId, languageWrittenIn, additionalDependencies, null, null, null, m_status,
-          null);
+          null, exec);
           
           // Wait for the environment creation to complete
-          boolean success = waitForEnvironmentCreation(m_status, exec);
-          if(success)
-            environmentName = modelId;
-          else
-            throw new IllegalStateException("An issue occured during creating environment: " + environmentName);
-          
+          if(!envStatus.isEnvExist()) {
+            boolean success = waitForEnvironmentCreation(m_status, exec);
+            if(!success)
+              throw new IllegalStateException("An issue occured during creating environment: " + environmentName);
+          }
+          environmentName = envStatus.getEnvironmentName();
       }
       
       // Get the environment path and push the flow variable
@@ -126,7 +127,7 @@ public class FSKEnvironmentCreatorNodeModel extends NoInternalsModel {
           if(!StringUtils.isEmpty(condaEnvName.getStringValue()))
             pushEnvironmentFlowVariable(condaEnvName.getStringValue(), environmentPath);
           else
-            pushEnvironmentFlowVariable(modelId, environmentPath);
+            pushEnvironmentFlowVariable(environmentName, environmentPath);
 
       } else {
           throw new IllegalStateException("Environment path not found for: " + environmentName);
@@ -136,7 +137,7 @@ public class FSKEnvironmentCreatorNodeModel extends NoInternalsModel {
   }
 
   private boolean waitForEnvironmentCreation(FSKCondaEnvironmentCreationObserver.CondaEnvironmentCreationStatus m_status, ExecutionContext exec) throws InterruptedException {
-      int timeout = 300000; // Set a 300-second timeout
+      int timeout = 1800000; // Set a 300-second timeout
       int elapsed = 0;
       int interval = 500;  // 500ms sleep interval
       

@@ -5,10 +5,17 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
@@ -16,11 +23,13 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import org.apache.commons.lang3.StringUtils;
+import org.knime.core.node.ExecutionContext;
 import org.knime.core.util.Version;
 import de.bund.bfr.knime.fsklab.v2_0.fskenvironmentcreator.FSKCondaEnvironmentCreationObserver.CondaEnvironmentCreationStatus;
 
 public class EnvironmentManager {
-
+    private static final String ENV_DIR_PATH = System.getProperty("user.home") + "/.fsk";
+    private static final String ENV_FILE_PATH = ENV_DIR_PATH + "/.fskx_envs.yaml";
     /**
      * Generates the Conda environment YAML content for Python 3.
      * The environment includes libraries for Data Analysis, Machine Learning, Plotting, and Utilities.
@@ -48,28 +57,19 @@ public class EnvironmentManager {
      *   - `openpyxl`: Working with Excel files (.xlsx).
      *   - `pyyaml`: YAML file parsing and writing.
      */
-    public static String getPython3EnvContent(String envName, String version) {
+      public static String getPython3EnvContent(String envName, String version) {
         String pythonVersion = (version != null && !version.isEmpty()) ? version : "3.9";
         return "name: " + envName + "\n"
                + "channels:\n"
+               + "  - knime\n"
                + "  - conda-forge\n"
                + "  - defaults\n"
                + "dependencies:\n"
                + "  - python=" + pythonVersion + "\n"
-               + "  - numpy\n"
-               + "  - pandas\n"
-               + "  - scikit-learn\n"
-               + "  - scipy\n"
-               + "  - matplotlib-base\n"
-               + "  - plotly\n"
-               + "  - seaborn\n"
-               + "  - statsmodels\n"
-               + "  - requests\n"
-               + "  - pillow\n"
-               + "  - openpyxl\n"
+               + "  - knime-python-scripting\n"
                + "  - descartes\n"
-               + "  - pyogrio\n"
-               + "  - pyyaml\n";
+               + "  - geopandas\n"
+               + "  - networkx\n";
     }
   
     /**
@@ -92,8 +92,8 @@ public class EnvironmentManager {
      *   - `plotly`: Interactive graphing and visualization.
      *   - `seaborn`: Statistical data visualization based on matplotlib.
      *   - `statsmodels`: Statistical models and hypothesis tests.
-     * 
-     * - **Utilities**:
+     * CondaEnvironmentCreationStatus
+     *   - **Utilities**:
      *   - `requests`: HTTP library for sending HTTP requests.
      *   - `pillow`: Image processing.
      *   - `openpyxl`: Working with Excel files (.xlsx).
@@ -150,12 +150,14 @@ public class EnvironmentManager {
               + "  - r-svglite\n"
               + "  - r-minicran\n";
     }
-    public static void createEnvironment(String environmentName, String languageWrittenIn, String[] additionalDependencies, DefaultTableModel tableModel, JPanel panel, FSKEnvironmentCreatorNodeDialog instance, CondaEnvironmentCreationStatus m_status, String version) {
+    
+
+    public static EnvironmentStatus createEnvironment(String environmentName, String languageWrittenIn, String[] additionalDependencies, DefaultTableModel tableModel, JPanel panel, FSKEnvironmentCreatorNodeDialog instance, CondaEnvironmentCreationStatus m_status, String version,ExecutionContext exec) {
       File tempYamlFile = null;
+      EnvironmentStatus envStatus = new EnvironmentStatus(environmentName, false);
       try {
-          // Choose the YAML content dynamically based on user input (or some other condition)
           StringBuilder yamlContent = new StringBuilder();
-          CondaEnvVersion condaVersion = CondaEnvVersion.R4; // Default to R4
+          CondaEnvVersion condaVersion = CondaEnvVersion.R4;
           int majorVersion = 4;
 
           if (languageWrittenIn.toLowerCase().startsWith("python 2")) {
@@ -176,49 +178,134 @@ public class EnvironmentManager {
               majorVersion = 4;
           }
 
-          // Add additional dependencies
-          if (additionalDependencies != null && additionalDependencies.length > 0) {
-              for (String dependency : additionalDependencies) {
-                  if (!StringUtils.isBlank(dependency)) {
-                      if (languageWrittenIn.toLowerCase().startsWith("r ")) {
-                          dependency = "r-" + dependency;
-                      }
-                      yamlContent.append("  - ").append(dependency).append("\n");
-                  }
+          Set<String> requiredPackages = new HashSet<>();
+          if (additionalDependencies != null) {
+              requiredPackages.addAll(Arrays.asList(additionalDependencies));
+          }
+
+          Map<String, Set<String>> existingEnvs = loadExistingEnvironments();
+          String matchedEnv = findMatchingEnvironment(existingEnvs, languageWrittenIn, version, requiredPackages);
+          if(matchedEnv != null && existingEnvs.get(matchedEnv.replace("PARTIAL_MATCH:", "")) != null)
+            requiredPackages.addAll(existingEnvs.get(matchedEnv.replace("PARTIAL_MATCH:", "")));
+          if (matchedEnv != null) {
+              if (matchedEnv.startsWith("PARTIAL_MATCH:")) {
+                  String partialEnv = matchedEnv.replace("PARTIAL_MATCH:", "");
+                  deleteEnvironment(partialEnv, exec);
+                  existingEnvs.remove(partialEnv);
+                  environmentName = partialEnv;
+                  envStatus.setEnvExist(false);
+                  envStatus.setEnvironmentName(partialEnv);
+              } else {
+                  envStatus.setEnvExist(true);
+                  envStatus.setEnvironmentName(matchedEnv);
+                  return envStatus;
               }
           }
 
-          // Create a temporary YAML file for the selected content
+          updateEnvironmentFile(existingEnvs, environmentName, languageWrittenIn, version, requiredPackages);
           tempYamlFile = File.createTempFile("conda_env_", ".yaml");
-
-          // Write the YAML content to the temporary file
           try (FileWriter writer = new FileWriter(tempYamlFile)) {
               writer.write(yamlContent.toString());
           }
 
-         
+          FSKCondaEnvironmentCreationObserver obs = new FSKCondaEnvironmentCreationObserver(condaVersion);
+          obs.startEnvironmentCreation(environmentName, tempYamlFile.getAbsolutePath(), new Version(majorVersion, 0, 0), instance != null ? instance.m_status : m_status);
 
-          // Register any external hooks
-
-          if(instance != null) {
-            registerExternalHooksupdateUI(instance);
-            // Use the temporary YAML file path for environment creation
-            FSKCondaEnvironmentCreationObserver obs = new FSKCondaEnvironmentCreationObserver(condaVersion);
-            obs.startEnvironmentCreation(environmentName, tempYamlFile.getAbsolutePath(), new Version(majorVersion, 0, 0), instance.m_status);
-          }else {
-            // Use the temporary YAML file path for environment creation
-            FSKCondaEnvironmentCreationObserver obs = new FSKCondaEnvironmentCreationObserver(condaVersion);
-            obs.startEnvironmentCreation(environmentName, tempYamlFile.getAbsolutePath(), new Version(majorVersion, 0, 0), m_status);
-          
-          }
-
-          
-          
       } catch (IOException ex) {
           JOptionPane.showMessageDialog(panel, "An error occurred: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
           ex.printStackTrace();
       }
+      return envStatus;
   }
+
+    private static void deleteEnvironment(String envName, ExecutionContext exec) {
+      try {
+          ProcessBuilder builder = new ProcessBuilder("conda", "remove", "--name", envName, "--all", "-y");
+          builder.redirectErrorStream(true); // Merge error and output streams
+          Process process = builder.start();
+
+          // Read and log output from the process
+          try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+              String line;
+              while ((line = reader.readLine()) != null) {
+                if(exec!=null)  
+                  exec.setMessage("[Conda Remove] " + line); 
+                else
+                  System.out.println("[Conda Remove] " + line);
+              }
+          }
+
+          int exitCode = process.waitFor();
+          if (exitCode == 0) {
+            if(exec!=null)  
+              exec.setMessage("Successfully deleted Conda environment: " + envName);
+            else
+              System.out.println("Successfully deleted Conda environment: " + envName);
+          } else {
+            if(exec!=null)  
+              exec.setMessage("Failed to delete Conda environment: " + envName + " with exit code " + exitCode);
+            else
+              System.out.println("Failed to delete Conda environment: " + envName + " with exit code " + exitCode);
+          }
+      } catch (IOException | InterruptedException e) {
+          e.printStackTrace();
+      }
+  }
+
+
+    private static Map<String, Set<String>> loadExistingEnvironments() {
+        Map<String, Set<String>> envs = new HashMap<>();
+        File envDir = new File(ENV_DIR_PATH);
+        File envFile = new File(ENV_FILE_PATH);
+
+        if (!envDir.exists()) {
+            envDir.mkdirs();
+        }
+        if (!envFile.exists()) {
+            try {
+                envFile.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return envs;
+        }
+        try {
+            List<String> lines = Files.readAllLines(Paths.get(ENV_FILE_PATH));
+            for (String line : lines) {
+                String[] parts = line.split(";");
+                if (parts.length < 3) continue;
+                String envName = parts[0];
+                String language = parts[1];
+                Set<String> packages = new HashSet<>(Arrays.asList(parts[2].split(",")));
+                envs.put(envName, packages);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return envs;
+    }
+
+    private static String findMatchingEnvironment(Map<String, Set<String>> existingEnvs, String language, String version, Set<String> requiredPackages) {
+      for (Map.Entry<String, Set<String>> entry : existingEnvs.entrySet()) {
+          if (entry.getValue().containsAll(requiredPackages)) {
+              return entry.getKey(); // Exact match found
+          } else if (!Collections.disjoint(entry.getValue(), requiredPackages)) {
+              return "PARTIAL_MATCH:" + entry.getKey(); // Partial match found
+          }
+      }
+      return null;
+  }
+
+    private static void updateEnvironmentFile(Map<String, Set<String>> existingEnvs, String envName, String language, String version, Set<String> requiredPackages) {
+        existingEnvs.put(envName, requiredPackages);
+        try (FileWriter writer = new FileWriter(ENV_FILE_PATH)) {
+            for (Map.Entry<String, Set<String>> entry : existingEnvs.entrySet()) {
+                writer.write(entry.getKey() + ";" + language + ";" + String.join(",", entry.getValue()) + "\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     private static void registerExternalHooksupdateUI( FSKEnvironmentCreatorNodeDialog instance) {
       instance.m_status.getStatusMessage().addChangeListener(instance::updateStatusMessage);
