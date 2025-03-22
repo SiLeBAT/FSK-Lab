@@ -151,8 +151,7 @@ public class EnvironmentManager {
               + "  - r-minicran\n";
     }
     
-
-    public static EnvironmentStatus createEnvironment(String environmentName, String languageWrittenIn, String[] additionalDependencies, DefaultTableModel tableModel, JPanel panel, FSKEnvironmentCreatorNodeDialog instance, CondaEnvironmentCreationStatus m_status, String version,ExecutionContext exec) {
+    public static EnvironmentStatus createEnvironment(String environmentName, String languageWrittenIn, String[] additionalDependencies, DefaultTableModel tableModel, JPanel panel, FSKEnvironmentCreatorNodeDialog instance, CondaEnvironmentCreationStatus m_status, String version, ExecutionContext exec) {
       File tempYamlFile = null;
       EnvironmentStatus envStatus = new EnvironmentStatus(environmentName, false);
       try {
@@ -185,8 +184,12 @@ public class EnvironmentManager {
 
           Map<String, Set<String>> existingEnvs = loadExistingEnvironments();
           String matchedEnv = findMatchingEnvironment(existingEnvs, languageWrittenIn, version, requiredPackages);
-          if(matchedEnv != null && existingEnvs.get(matchedEnv.replace("PARTIAL_MATCH:", "")) != null)
-            requiredPackages.addAll(existingEnvs.get(matchedEnv.replace("PARTIAL_MATCH:", "")));
+
+          if (matchedEnv != null && existingEnvs.get(matchedEnv.replace("PARTIAL_MATCH:", "")) != null) {
+              requiredPackages.addAll(existingEnvs.get(matchedEnv.replace("PARTIAL_MATCH:", "")));
+          }
+         
+
           if (matchedEnv != null) {
               if (matchedEnv.startsWith("PARTIAL_MATCH:")) {
                   String partialEnv = matchedEnv.replace("PARTIAL_MATCH:", "");
@@ -203,11 +206,19 @@ public class EnvironmentManager {
           }
 
           updateEnvironmentFile(existingEnvs, environmentName, languageWrittenIn, version, requiredPackages);
+
+          // ** Step 1: Append Required Packages to YAML Content**
+          for (String pkg : requiredPackages) {
+              yamlContent.append("  - ").append(languageWrittenIn.toLowerCase().startsWith("r")? "r-"+pkg:pkg).append("\n");
+          }
+
+          // **🔹 Step 2: Write the YAML Content to File**
           tempYamlFile = File.createTempFile("conda_env_", ".yaml");
           try (FileWriter writer = new FileWriter(tempYamlFile)) {
               writer.write(yamlContent.toString());
           }
 
+          // **🔹 Step 3: Start Environment Creation**
           FSKCondaEnvironmentCreationObserver obs = new FSKCondaEnvironmentCreationObserver(condaVersion);
           obs.startEnvironmentCreation(environmentName, tempYamlFile.getAbsolutePath(), new Version(majorVersion, 0, 0), instance != null ? instance.m_status : m_status);
 
@@ -217,6 +228,7 @@ public class EnvironmentManager {
       }
       return envStatus;
   }
+
 
     private static void deleteEnvironment(String envName, ExecutionContext exec) {
       try {

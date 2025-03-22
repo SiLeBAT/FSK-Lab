@@ -21,6 +21,7 @@ package de.bund.bfr.knime.fsklab.v2_0.fskenvironmentcreator;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.commons.lang.StringUtils;
@@ -54,7 +55,7 @@ public class FSKEnvironmentCreatorNodeModel extends NoInternalsModel {
   String languageWrittenIn;
   String modelId;
   private final SettingsModelString condaEnvName = new SettingsModelString(CFG_FILE, null);
-
+  private static final ReentrantLock envCreationLock = new ReentrantLock();
   
   public FSKEnvironmentCreatorNodeModel() {
     super(IN_TYPES, OUT_TYPES);
@@ -105,21 +106,26 @@ public class FSKEnvironmentCreatorNodeModel extends NoInternalsModel {
       
       // If environment name is not set, create a new one
       if (environmentName == null || environmentName.isEmpty()) {
-          FSKCondaEnvironmentCreationObserver.CondaEnvironmentCreationStatus m_status = new FSKCondaEnvironmentCreationObserver.CondaEnvironmentCreationStatus();
-          
-          // Trigger environment creation
-          EnvironmentStatus envStatus = EnvironmentManager.createEnvironment(
-               modelId, languageWrittenIn, additionalDependencies, null, null, null, m_status,
-          null, exec);
-          
-          // Wait for the environment creation to complete
-          if(!envStatus.isEnvExist()) {
-            boolean success = waitForEnvironmentCreation(m_status, exec);
-            if(!success)
-              throw new IllegalStateException("An issue occured during creating environment: " + environmentName);
+          envCreationLock.lock();
+          try {
+              if (environmentName == null || environmentName.isEmpty()) {
+                  FSKCondaEnvironmentCreationObserver.CondaEnvironmentCreationStatus m_status = new FSKCondaEnvironmentCreationObserver.CondaEnvironmentCreationStatus();
+
+                  EnvironmentStatus envStatus = EnvironmentManager.createEnvironment(
+                      modelId, languageWrittenIn, additionalDependencies, null, null, null, m_status, null, exec);
+
+                  if (!envStatus.isEnvExist()) {
+                      boolean success = waitForEnvironmentCreation(m_status, exec);
+                      if (!success)
+                          throw new IllegalStateException("An issue occurred during creating environment: " + environmentName);
+                  }
+                  environmentName = envStatus.getEnvironmentName();
+              }
+          } finally {
+              envCreationLock.unlock();
           }
-          environmentName = envStatus.getEnvironmentName();
       }
+
       
       // Get the environment path and push the flow variable
       String environmentPath = findEnvironmentPath(environmentName);

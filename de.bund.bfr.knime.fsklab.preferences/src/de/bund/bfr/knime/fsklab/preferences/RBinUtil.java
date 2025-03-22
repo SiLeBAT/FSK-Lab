@@ -216,18 +216,23 @@ public class RBinUtil {
 
 		    // Wait for the process to complete
 		    int exitCode = process.waitFor();
-		    System.out.println("R process finished with exit code: " + exitCode);
+		    // System.out.println("R process finished with exit code: " + exitCode);
 
 		    // Ensure the threads finish reading
 		    outputThread.join();
 		    errorThread.join();
 
 		    // Check if there's any error in the output list
-		    if (!errorList.isEmpty()) {
-		        LOGGER.error("Errors from R process: " + String.join("\n", errorList));
-		    } else {
-		        LOGGER.debug("Output from R process: " + String.join("\n", outputList));
+		    boolean hasRealErrors = errorList.stream().allMatch(line ->{
+			       return  !(line.trim().isEmpty() || line.trim().toLowerCase().startsWith("running"));
 		    }
+			);
+		
+			if (hasRealErrors && !errorList.isEmpty()) {
+			    LOGGER.error("Errors from R process: " + String.join("\n", errorList));
+			} else {
+			    LOGGER.debug("R process wrote to stderr (non-error messages): " + String.join("\n", errorList));
+			}
 
 		} catch (Exception e) {
 		    LOGGER.debug(e.getMessage(), e);
