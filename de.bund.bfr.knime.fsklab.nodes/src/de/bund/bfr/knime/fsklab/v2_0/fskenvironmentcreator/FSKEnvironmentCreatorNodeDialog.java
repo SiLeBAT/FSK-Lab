@@ -22,22 +22,15 @@ import java.awt.CardLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -52,10 +45,8 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.table.DefaultTableModel;
-import org.apache.commons.lang3.StringUtils;
 import org.knime.conda.Conda;
 import org.knime.conda.CondaPackageSpec;
-import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeSettingsRO;
@@ -65,7 +56,6 @@ import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.workflow.FlowVariable;
 import org.knime.core.node.workflow.VariableType;
-import org.knime.core.util.Version;
 
 class FSKEnvironmentCreatorNodeDialog extends NodeDialogPane {
 
@@ -201,7 +191,9 @@ class FSKEnvironmentCreatorNodeDialog extends NodeDialogPane {
           tableModel.addRow(packageRow);
       }
       JTable packagesTable = new JTable(tableModel);
+      packagesTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
       panel.add(new JScrollPane(packagesTable), gbc);
+      
 
       // Add and Delete Row Buttons
       gbc.gridy++;
@@ -245,11 +237,17 @@ class FSKEnvironmentCreatorNodeDialog extends NodeDialogPane {
           String languageWrittenIn = (String) languageComboBox.getSelectedItem();
           String[] depArray = new String[tableModel.getRowCount()];
           for (int i = 0; i < tableModel.getRowCount(); i++) {
-              depArray[i] = (String) tableModel.getValueAt(i, 0); // Assuming dep is in the first column
+              depArray[i] = (String) tableModel.getValueAt(i, 0); 
           }
           
 
           EnvironmentStatus envStatus = EnvironmentManager.createEnvironment(environmentName, languageWrittenIn, depArray, tableModel, panel, this, m_status,((String) versionComboBox.getSelectedItem()), null);
+          if (!envStatus.isEnvExist()) {
+              AtomicBoolean success = new AtomicBoolean(false);
+              waitForEnvironmentCreationAsync(m_status, logTextArea, success);
+              if (!success.get())
+                  throw new IllegalStateException("An issue occurred during creating environment: " + environmentName);
+          }
           proposedEnvName = envStatus.getEnvironmentName();
       });
 
@@ -272,7 +270,58 @@ class FSKEnvironmentCreatorNodeDialog extends NodeDialogPane {
   }
 
   
-  
+
+  private void waitForEnvironmentCreationAsync(
+          FSKCondaEnvironmentCreationObserver.CondaEnvironmentCreationStatus m_status,
+          JTextArea logTextArea,
+          AtomicBoolean successFlag) {
+
+      new Thread(() -> {
+          int timeout = 1800000; // 30 minutes
+          int elapsed = 0;
+          int interval = 500;    // 0.5 seconds
+
+          while (elapsed < timeout) {
+              String statusMessage = m_status.getStatusMessage().getStringValue();
+
+              // Update logTextArea safely in the Swing UI thread
+              SwingUtilities.invokeLater(() -> {
+                  logTextArea.append(statusMessage + "\n");
+                  logTextArea.setCaretPosition(logTextArea.getDocument().getLength()); // Auto-scroll
+              });
+
+              System.out.println(statusMessage); // Also log to console
+
+              // Success condition
+              if (statusMessage.contains("New environment's name") ||
+                  statusMessage.contains("already exists. Please use a different, unique name")) {
+
+                  successFlag.set(true); // Mark environment creation as successful
+                  return;
+              }
+
+              try {
+                  Thread.sleep(interval);
+              } catch (InterruptedException e) {
+                  e.printStackTrace();
+                  return;
+              }
+
+              elapsed += interval;
+          }
+
+          // If we reach here, it means timeout occurred
+          SwingUtilities.invokeLater(() -> {
+              JOptionPane.showMessageDialog(null,
+                  "Environment creation timed out after 30 minutes.",
+                  "Timeout",
+                  JOptionPane.ERROR_MESSAGE);
+          });
+
+      }).start();
+  }
+
+
 
   protected void updateStatusMessage(final ChangeEvent e) {
     logTextArea.append("Status: " + m_status.getStatusMessage().getStringValue() + "\n");
