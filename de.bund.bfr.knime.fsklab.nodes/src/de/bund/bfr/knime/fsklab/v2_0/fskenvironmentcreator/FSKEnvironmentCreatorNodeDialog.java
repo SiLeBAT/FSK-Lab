@@ -28,6 +28,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -75,7 +76,7 @@ class FSKEnvironmentCreatorNodeDialog extends NodeDialogPane {
   private JComboBox<String> versionComboBox = new JComboBox<>();
   private JComboBox<String> languageComboBox = new JComboBox<>(languages);
   private SettingsModelString condaEnvName;
-  private Map<String, List<String>> cachedVersions = new HashMap<>();
+  private Map<String, Set<String>> cachedVersions = new HashMap<>();
 
   public FSKEnvironmentCreatorNodeDialog() {
       condaEnvName = new SettingsModelString(FSKEnvironmentCreatorNodeModel.CFG_FILE, "");
@@ -247,6 +248,8 @@ class FSKEnvironmentCreatorNodeDialog extends NodeDialogPane {
               waitForEnvironmentCreationAsync(m_status, logTextArea, success);
               if (!success.get())
                   throw new IllegalStateException("An issue occurred during creating environment: " + environmentName);
+          }else {
+            logTextArea.append(envStatus.EnvironmentName + " already exists.");
           }
           proposedEnvName = envStatus.getEnvironmentName();
       });
@@ -402,9 +405,12 @@ class FSKEnvironmentCreatorNodeDialog extends NodeDialogPane {
   @Override
   protected void saveSettingsTo(NodeSettingsWO settings) throws InvalidSettingsException {
     // Check if the proposedEnvName is empty
-    if (proposedEnvName == null || proposedEnvName.trim().isEmpty()) {
+    if (proposedEnvName == null || proposedEnvName.trim().isEmpty() ) {
+        proposedEnvName = envNameTextField.getText();
         // Throw an exception indicating that the environment name is required
+        if (proposedEnvName == null || proposedEnvName.trim().isEmpty() ) {
         throw new InvalidSettingsException("Environment name is required and cannot be empty.");
+        }
     }
     condaEnvName.setStringValue(proposedEnvName);
     condaEnvName.saveSettingsTo(settings);

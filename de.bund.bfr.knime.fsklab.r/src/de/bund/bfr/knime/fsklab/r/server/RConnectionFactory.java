@@ -156,22 +156,27 @@ public class RConnectionFactory {
 		final ProcessBuilder builder = new ProcessBuilder();
 
 		String os = System.getProperty("os.name").toLowerCase();
+		if(condaEnv == null) {
+			builder.command(command, "--RS-port", port.toString(), "--RS-conf \"" + configFile.getAbsolutePath() + "\"",
+					"--vanilla");
+		}
+		else {
+			if (os.contains("win")) {
 
-        if (os.contains("win")) {
+	    		builder.command("cmd.exe", "/c",
+	    			    "conda activate "+condaEnv.getName()+" && " + 
+	    			    command + " --RS-port " + port.toString() + 
+	    			    " --RS-conf " + configFile.getAbsolutePath() + 
+	    			    " --vanilla");
+	    	} else {
 
-    		builder.command("cmd.exe", "/c",
-    			    "conda activate "+condaEnv.getName()+" && " + 
-    			    command + " --RS-port " + port.toString() + 
-    			    " --RS-conf " + configFile.getAbsolutePath() + 
-    			    " --vanilla");
-    	} else {
-
-    		builder.command("/bin/bash", "/c",
-    			    "conda activate "+condaEnv.getName()+" && " + 
-    			    command + " --RS-port " + port.toString() + 
-    			    " --RS-conf " + configFile.getAbsolutePath() + 
-    			    " --vanilla");
-        }
+	    		builder.command("/bin/bash", "/c",
+	    			    "conda activate "+condaEnv.getName()+" && " + 
+	    			    command + " --RS-port " + port.toString() + 
+	    			    " --RS-conf " + configFile.getAbsolutePath() + 
+	    			    " --vanilla");
+	        }
+		}
 
 
 		final Map<String, String> env = builder.environment();

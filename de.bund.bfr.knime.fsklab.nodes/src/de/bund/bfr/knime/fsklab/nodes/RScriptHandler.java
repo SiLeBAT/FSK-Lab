@@ -49,7 +49,11 @@ public class RScriptHandler extends ScriptHandler {
       RprofileManager.subscribe();
       LibRegistry.instance();
     }
-    this.controller = new RController(condaEnv);
+    if(!PreferenceInitializer.isRConda()) 
+      this.controller = new RController(null);
+    else 
+      this.controller = new RController(condaEnv);
+    
     this.executor = new ScriptExecutor(controller);
 
     if(PreferenceInitializer.isRConda()) {

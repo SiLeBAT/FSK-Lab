@@ -2,6 +2,7 @@ package de.bund.bfr.knime.fsklab.v2_0.fskenvironmentcreator;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -15,6 +16,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import javax.swing.JComboBox;
@@ -195,6 +197,7 @@ public class EnvironmentManager {
                   String partialEnv = matchedEnv.replace("PARTIAL_MATCH:", "");
                   deleteEnvironment(partialEnv, exec);
                   existingEnvs.remove(partialEnv);
+                  removeEnvironmentEntry(partialEnv);
                   environmentName = partialEnv;
                   envStatus.setEnvExist(false);
                   envStatus.setEnvironmentName(partialEnv);
@@ -285,10 +288,10 @@ public class EnvironmentManager {
             List<String> lines = Files.readAllLines(Paths.get(ENV_FILE_PATH));
             for (String line : lines) {
                 String[] parts = line.split(";");
-                if (parts.length < 3) continue;
+                if (parts.length < 4) continue;
                 String envName = parts[0];
                 String language = parts[1];
-                Set<String> packages = new HashSet<>(Arrays.asList(parts[2].split(",")));
+                Set<String> packages = new HashSet<>(Arrays.asList(parts[3].split(",")));
                 envs.put(envName, packages);
             }
         } catch (IOException e) {
@@ -308,12 +311,67 @@ public class EnvironmentManager {
       return null;
   }
 
-    private static void updateEnvironmentFile(Map<String, Set<String>> existingEnvs, String envName, String language, String version, Set<String> requiredPackages) {
-        existingEnvs.put(envName, requiredPackages);
-        try (FileWriter writer = new FileWriter(ENV_FILE_PATH)) {
-            for (Map.Entry<String, Set<String>> entry : existingEnvs.entrySet()) {
-                writer.write(entry.getKey() + ";" + language + ";" + String.join(",", entry.getValue()) + "\n");
+    private static String[] normalizeLanguageAndVersion(String languageInput, String versionInput) {
+        if (languageInput == null || languageInput.trim().isEmpty()) {
+            return new String[]{"unknown", versionInput != null ? versionInput.trim() : "unknown"};
+        }
+  
+        String lang = languageInput.trim();
+        String version = versionInput != null ? versionInput.trim() : null;
+  
+        String[] parts = lang.split("\\s+");
+        if (parts.length == 2 && parts[1].matches("\\d+(\\.\\d+)*")) {
+            // Case: "python 3.6.2" → extract both language and version
+            if (version == null || version.isEmpty()) {
+                version = parts[1];
             }
+            lang = parts[0] + " " + parts[1].split("\\.")[0];
+        } else if (parts.length == 2) {
+            // Case: "python 3" or "R 4" → already in expected format
+            lang = parts[0] + " " + parts[1];
+        }
+  
+        return new String[]{lang, version != null ? version : "unknown"};
+    }
+  
+    private static void updateEnvironmentFile(Map<String, Set<String>> existingEnvs, String envName, String languageInput, String versionInput, Set<String> requiredPackages) {
+        String[] langAndVer = normalizeLanguageAndVersion(languageInput, versionInput);
+        String language = langAndVer[0];
+        String version = langAndVer[1];
+        existingEnvs.put(envName, requiredPackages);
+        if(language != null && language.startsWith("R"))
+          version =  version.startsWith("3") ? "3.6.3" : "4.1.0";
+        try (FileWriter writer = new FileWriter(ENV_FILE_PATH, true)) { // append mode = true
+            writer.write(envName + ";" + language + ";" + version + ";" + String.join(",", requiredPackages) + "\n");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    
+    private static void removeEnvironmentEntry(String envNameToRemove) {
+        File file = new File(ENV_FILE_PATH);
+        if (!file.exists()) return;
+  
+        try {
+            List<String> updatedLines = new ArrayList<>();
+  
+            try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    String[] parts = line.split(";", 2); // split only on the first semicolon
+                    if (!parts[0].equals(envNameToRemove)) {
+                        updatedLines.add(line);
+                    }
+                }
+            }
+  
+            try (FileWriter writer = new FileWriter(file, false)) { // overwrite mode = false
+                for (String line : updatedLines) {
+                    writer.write(line + System.lineSeparator());
+                }
+            }
+  
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -344,122 +402,140 @@ public class EnvironmentManager {
       }
       return result;
     }
- // Generic method to fetch available versions from Conda
-    public static List<String> fetchVersions(String packageName, String filter) {
-        List<String> versions = Collections.synchronizedList(new ArrayList<>());
-        List<String> errorList = Collections.synchronizedList(new ArrayList<>());
+    // Generic method to fetch available versions from Conda
+    public static Set<String> fetchVersions(String packageName, String filter) {
+      Set<String> versions = Collections.synchronizedSet(new TreeSet<>());
+      List<String> errorList = Collections.synchronizedList(new ArrayList<>());
 
-        ProcessBuilder builder = new ProcessBuilder();
-        String os = System.getProperty("os.name").toLowerCase();
-        String command = "conda search " + packageName + " -c conda-forge";
+      ProcessBuilder builder = new ProcessBuilder();
+      String os = System.getProperty("os.name").toLowerCase();
+      String command = "conda search " + packageName + " -c conda-forge";
 
-        // Command configuration for cross-platform compatibility
-        if (os.contains("win")) {
-            builder.command("cmd.exe", "/c", command);
-        } else {
-            builder.command("/bin/bash", "-c", command);
-        }
+      // Command configuration for cross-platform compatibility
+      if (os.contains("win")) {
+          builder.command("cmd.exe", "/c", command);
+      } else {
+          builder.command("/bin/bash", "-c", command);
+      }
 
-        try {
-            final Process process = builder.start();
+      try {
+          final Process process = builder.start();
 
-            // Read output in a separate thread
-            Thread outputThread = new Thread(() -> {
-                try (BufferedReader outputReader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
-                    String line;
-                    while ((line = outputReader.readLine()) != null) {
-                        if (line.startsWith(filter)) {
-                            String[] columns = line.trim().split("\\s+");
-                            if (columns.length > 1) {
-                                versions.add(columns[1]);
-                            }
-                        }
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
+          // Read output in a separate thread
+          Thread outputThread = new Thread(() -> {
+              try (BufferedReader outputReader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+                  String line;
+                  while ((line = outputReader.readLine()) != null) {
+                      if (line.startsWith(filter)) {
+                          String[] columns = line.trim().split("\\s+");
+                          if (columns.length > 1) {
+                              versions.add(columns[1]);
+                          }
+                      }
+                  }
+              } catch (IOException e) {
+                  e.printStackTrace();
+              }
+          });
 
-            // Read errors in a separate thread
-            Thread errorThread = new Thread(() -> {
-                try (BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()))) {
-                    String line;
-                    while ((line = errorReader.readLine()) != null) {
-                        errorList.add(line);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
+          // Read errors in a separate thread
+          Thread errorThread = new Thread(() -> {
+              try (BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()))) {
+                  String line;
+                  while ((line = errorReader.readLine()) != null) {
+                      errorList.add(line);
+                  }
+              } catch (IOException e) {
+                  e.printStackTrace();
+              }
+          });
 
-            outputThread.start();
-            errorThread.start();
-            int exitCode = process.waitFor();
-            outputThread.join();
-            errorThread.join();
+          outputThread.start();
+          errorThread.start();
+          int exitCode = process.waitFor();
+          outputThread.join();
+          errorThread.join();
 
-            System.out.println(packageName + " version fetch process finished with exit code: " + exitCode);
+          System.out.println(packageName + " version fetch process finished with exit code: " + exitCode);
 
-            if (!errorList.isEmpty()) {
-                System.err.println("Errors from Conda process: " + String.join("\n", errorList));
-            }
+          if (!errorList.isEmpty()) {
+              System.err.println("Errors from Conda process: " + String.join("\n", errorList));
+          }
 
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
+      } catch (IOException | InterruptedException e) {
+          e.printStackTrace();
+      }
 
-        return versions;
-    }
+      return versions;
+  }
 
-    public static List<String> fetchPythonVersions() {
-        return fetchVersions("python", "python");
-    }
+  public static Set<String> fetchPythonVersions() {
+    return new TreeSet<>(Set.of(
+        "2.7",  
+        "3.6",    
+        "3.7",
+        "3.8",
+        "3.9",
+        "3.10",
+        "3.11"
+    ));
+  }
 
-    public static List<String> fetchRBaseVersions() {
-        return fetchVersions("r-base", "r-base");
-    }
+  public static Set<String> fetchRBaseVersions() {
+    return new TreeSet<>(Set.of(
+        "3.6.3",    
+        "3.3.3",
+        "3.4.4",
+        "3.5.3",
+        "4.0.5",
+        "4.1.3",
+        "4.2.3",
+        "4.3.3"     
+    ));
 
-    public static void loadPythonVersions(String language, JComboBox<String> versionComboBox, Map<String, List<String>> cachedVersions) {
-        if (cachedVersions.containsKey(language)) {
-            SwingUtilities.invokeLater(() -> populateVersionComboBox(cachedVersions.get(language), versionComboBox));
-        } else {
-            versionComboBox.removeAllItems();
-            versionComboBox.addItem("Loading...");
-            new Thread(() -> {
-                List<String> pythonVersions = fetchPythonVersions();
-                cachedVersions.put("Python 2", filterVersions(pythonVersions, "2."));
-                cachedVersions.put("Python 3", filterVersions(pythonVersions, "3."));
-                SwingUtilities.invokeLater(() -> populateVersionComboBox(cachedVersions.get(language), versionComboBox));
-            }).start();
-        }
-    }
+  }
 
-    public static void loadRVersions(String language, JComboBox<String> versionComboBox, Map<String, List<String>> cachedVersions) {
-        if (cachedVersions.containsKey(language)) {
-            SwingUtilities.invokeLater(() -> populateVersionComboBox(cachedVersions.get(language), versionComboBox));
-        } else {
-            versionComboBox.removeAllItems();
-            versionComboBox.addItem("Loading...");
-            new Thread(() -> {
-                List<String> rVersions = fetchRBaseVersions();
-                cachedVersions.put("R 3", filterVersions(rVersions, "3."));
-                cachedVersions.put("R 4", filterVersions(rVersions, "4."));
-                SwingUtilities.invokeLater(() -> populateVersionComboBox(cachedVersions.get(language), versionComboBox));
-            }).start();
-        }
-    }
+  public static void loadPythonVersions(String language, JComboBox<String> versionComboBox, Map<String, Set<String>> cachedVersions) {
+      if (cachedVersions.containsKey(language)) {
+          SwingUtilities.invokeLater(() -> populateVersionComboBox(cachedVersions.get(language), versionComboBox));
+      } else {
+          versionComboBox.removeAllItems();
+          versionComboBox.addItem("Loading...");
+          new Thread(() -> {
+              Set<String> pythonVersions = fetchPythonVersions();
+              cachedVersions.put("Python 2", filterVersions(pythonVersions, "2."));
+              cachedVersions.put("Python 3", filterVersions(pythonVersions, "3."));
+              SwingUtilities.invokeLater(() -> populateVersionComboBox(cachedVersions.get(language), versionComboBox));
+          }).start();
+      }
+  }
 
-    private static void populateVersionComboBox(List<String> versions, JComboBox<String> versionComboBox) {
-        versionComboBox.removeAllItems();
-        for (String version : versions) {
-            versionComboBox.addItem(version);
-        }
-    }
+  public static void loadRVersions(String language, JComboBox<String> versionComboBox, Map<String, Set<String>> cachedVersions) {
+      if (cachedVersions.containsKey(language)) {
+          SwingUtilities.invokeLater(() -> populateVersionComboBox(cachedVersions.get(language), versionComboBox));
+      } else {
+          versionComboBox.removeAllItems();
+          versionComboBox.addItem("Loading...");
+          new Thread(() -> {
+              Set<String> rVersions = fetchRBaseVersions();
+              cachedVersions.put("R 3", filterVersions(rVersions, "3."));
+              cachedVersions.put("R 4", filterVersions(rVersions, "4."));
+              SwingUtilities.invokeLater(() -> populateVersionComboBox(cachedVersions.get(language), versionComboBox));
+          }).start();
+      }
+  }
 
-    private static List<String> filterVersions(List<String> versions, String prefix) {
-        return versions.stream()
-                .filter(version -> version.startsWith(prefix))
-                .collect(Collectors.toList());
-    }
-    
+  private static void populateVersionComboBox(Set<String> versions, JComboBox<String> versionComboBox) {
+      versionComboBox.removeAllItems();
+      for (String version : versions) {
+          versionComboBox.addItem(version);
+      }
+  }
+
+  private static Set<String> filterVersions(Set<String> versions, String prefix) {
+      return versions.stream()
+              .filter(version -> version.startsWith(prefix))
+              .collect(Collectors.toCollection(TreeSet::new));
+  }
+
 }
