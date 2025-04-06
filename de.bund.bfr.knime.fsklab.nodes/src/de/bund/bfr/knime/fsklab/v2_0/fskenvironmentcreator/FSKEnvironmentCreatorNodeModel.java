@@ -32,6 +32,7 @@ import org.knime.conda.CondaEnvironmentPropagation.CondaEnvironmentType;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NoInternalsModel;
+import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
@@ -42,6 +43,8 @@ import org.knime.core.node.port.flowvariable.FlowVariablePortObject;
 import org.knime.core.node.util.CheckUtils;
 import org.knime.core.node.workflow.FlowVariable;
 import org.knime.core.node.workflow.VariableType;
+import de.binfalse.bflog.LOGGER;
+import de.bund.bfr.knime.fsklab.preferences.CondaEnvironmentManager;
 import de.bund.bfr.knime.fsklab.v2_0.FskPortObjectSpec;
 
 
@@ -79,6 +82,7 @@ public class FSKEnvironmentCreatorNodeModel extends NoInternalsModel {
 
   @Override
   protected void reset() {
+    condaEnvName.setStringValue(null);
   }
 
 
@@ -94,7 +98,7 @@ public class FSKEnvironmentCreatorNodeModel extends NoInternalsModel {
       
       flowVars.forEach((key, value) -> {
           if (key.equals("packages")) {
-              additionalDependencies = EnvironmentManager.getPackages(value.getStringValue());
+              additionalDependencies = CondaEnvironmentManager.getPackages(value.getStringValue());
           } else if (key.equals("LanguageWrittenIn")) {
               languageWrittenIn = value.getStringValue();
           } else if (key.equals("modelId")) {
@@ -143,7 +147,7 @@ public class FSKEnvironmentCreatorNodeModel extends NoInternalsModel {
   }
 
   private boolean waitForEnvironmentCreation(FSKCondaEnvironmentCreationObserver.CondaEnvironmentCreationStatus m_status, ExecutionContext exec) throws InterruptedException {
-      int timeout = 1800000; // Set a 300-second timeout
+      int timeout = 1800000; // Set a 30 Minutes timeout
       int elapsed = 0;
       int interval = 500;  // 500ms sleep interval
       
@@ -151,7 +155,9 @@ public class FSKEnvironmentCreatorNodeModel extends NoInternalsModel {
           // Get the current status message
           String statusMessage = m_status.getStatusMessage().getStringValue();
           exec.setMessage(statusMessage);
-          System.out.println(statusMessage);
+          NodeLogger.getLogger(FSKCondaEnvironmentCreationObserver.class).debug(statusMessage);
+
+          LOGGER.info(statusMessage);
           
           // Check if the environment creation is finished
           if (statusMessage.contains("New environment's name") || statusMessage.contains("already exists. Please use a different, unique name")) {
@@ -164,7 +170,7 @@ public class FSKEnvironmentCreatorNodeModel extends NoInternalsModel {
       }
       
       // If we reach the timeout, throw an exception
-      throw new IllegalStateException("Environment creation timed out after 300 seconds.");
+      throw new IllegalStateException("Environment creation timed out after 30 Minutes.");
   }
 
   private String findEnvironmentPath(String environmentName) throws IOException {

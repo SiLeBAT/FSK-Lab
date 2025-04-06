@@ -13,6 +13,7 @@ import org.knime.core.node.defaultnodesettings.SettingsModelBoolean;
 import org.knime.core.node.defaultnodesettings.SettingsModelInteger;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.util.Version;
+import de.binfalse.bflog.LOGGER;
 
 
 
@@ -139,8 +140,9 @@ public class FSKCondaEnvironmentCreationObserver {
             } catch (final CondaCanceledExecutionException ex) {
                 onEnvironmentCreationCanceled(status);
             } catch (final Exception ex) {
-                NodeLogger.getLogger(FSKCondaEnvironmentCreationObserver.class).debug(ex.getMessage(), ex);
+                NodeLogger.getLogger(FSKCondaEnvironmentCreationObserver.class).error(ex.getMessage(), ex);
                 onEnvironmentCreationFailed(status, ex.getMessage());
+                return;
             } finally {
                 synchronized (FSKCondaEnvironmentCreationObserver.this) {
                     m_currentCreationMonitor = null;
@@ -160,11 +162,15 @@ public class FSKCondaEnvironmentCreationObserver {
         if (m_currentCreationMonitor != null) {
             m_currentCreationMonitor.cancel();
             status.m_statusMessage.setStringValue("Canceling environment creation...");
+            NodeLogger.getLogger(FSKCondaEnvironmentCreationObserver.class).error("Canceling environment creation...");
         }
     }
 
     private void onEnvironmentCreationStarting(final CondaEnvironmentCreationStatus status) {
         status.m_statusMessage.setStringValue(IN_PROGRESS_MESSAGE);
+        NodeLogger.getLogger(FSKCondaEnvironmentCreationObserver.class).info(IN_PROGRESS_MESSAGE);
+        
+
         for (final CondaEnvironmentCreationStatusListener listener : m_listeners) {
             listener.condaEnvironmentCreationStarting(status);
         }
@@ -174,6 +180,8 @@ public class FSKCondaEnvironmentCreationObserver {
         final CondaEnvironmentIdentifier createdEnvironment) {
         status.m_statusMessage.setStringValue(
             "Environment creation finished.\nNew environment's name: '" + createdEnvironment.getName() + "'.");
+        NodeLogger.getLogger(FSKCondaEnvironmentCreationObserver.class).info("Environment creation finished.\nNew environment's name: '" + createdEnvironment.getName() + "'.");
+
         for (final CondaEnvironmentCreationStatusListener listener : m_listeners) {
             listener.condaEnvironmentCreationFinished(status, createdEnvironment);
         }
@@ -181,6 +189,8 @@ public class FSKCondaEnvironmentCreationObserver {
 
     private void onEnvironmentCreationCanceled(final CondaEnvironmentCreationStatus status) {
         status.m_statusMessage.setStringValue("Environment creation was canceled.");
+        NodeLogger.getLogger(FSKCondaEnvironmentCreationObserver.class).warn("Environment creation was canceled.");
+
         for (final CondaEnvironmentCreationStatusListener listener : m_listeners) {
             listener.condaEnvironmentCreationCanceled(status);
         }
@@ -188,6 +198,8 @@ public class FSKCondaEnvironmentCreationObserver {
 
     private void onEnvironmentCreationFailed(final CondaEnvironmentCreationStatus status, final String errorMessage) {
         status.m_statusMessage.setStringValue("Environment creation failed: " + errorMessage);
+        NodeLogger.getLogger(FSKCondaEnvironmentCreationObserver.class).error("Environment creation failed: " + errorMessage);
+
         for (final CondaEnvironmentCreationStatusListener listener : m_listeners) {
             listener.condaEnvironmentCreationFailed(status, errorMessage);
         }
@@ -310,8 +322,12 @@ public class FSKCondaEnvironmentCreationObserver {
             final double progress) {
             if (!packageFinished) {
                 m_status.m_statusMessage.setStringValue("Downloading package '" + currentPackage + "'...");
+                NodeLogger.getLogger(FSKCondaEnvironmentCreationObserver.class).info("Downloading package '" + currentPackage + "'...");
+
             } else {
                 m_status.m_statusMessage.setStringValue(IN_PROGRESS_MESSAGE);
+                NodeLogger.getLogger(FSKCondaEnvironmentCreationObserver.class).info(IN_PROGRESS_MESSAGE);
+
             }
             m_status.m_progress.setIntValue((int)(progress * 100));
         }
@@ -319,11 +335,15 @@ public class FSKCondaEnvironmentCreationObserver {
         @Override
         protected void handleWarningMessage(final String warning) {
             handleErrorMessage(warning);
+            NodeLogger.getLogger(FSKCondaEnvironmentCreationObserver.class).warn(warning);
+
         }
 
         @Override
         protected void handleErrorMessage(final String message) {
             m_status.m_errorLog.setStringValue(m_status.m_errorLog.getStringValue() + message + "\n");
+            NodeLogger.getLogger(FSKCondaEnvironmentCreationObserver.class).error(m_status.m_errorLog.getStringValue() + message + "\n");
+
         }
     }
     

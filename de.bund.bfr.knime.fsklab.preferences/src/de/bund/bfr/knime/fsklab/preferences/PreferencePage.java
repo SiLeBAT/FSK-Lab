@@ -17,6 +17,9 @@
 package de.bund.bfr.knime.fsklab.preferences;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
@@ -240,17 +243,16 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 						public void run() {
 							StructuredSelection sel = (StructuredSelection) rEnvs.getSelection();
 							String selectedRElement = (String) sel.getFirstElement();
-							try {
-								callCondaAndMonitorExecution(messageRConda, "env", "remove", "-n", selectedRElement, "-y");
+								//callCondaAndMonitorExecution(messageRConda, "env", "remove", "-n", selectedRElement, "-y");
+								CondaEnvironmentManager.deleteEnvironment(selectedRElement, null);
+								CondaEnvironmentManager.removeEnvironmentEntry(selectedRElement);
 								envsMaps = null;
 								fillCondaEnvsforR(condaPath, messageRConda, compositeRConda);
 
-							} catch (IOException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
+							
 							
 						}
+
 					});
 					break;
 				}
@@ -415,17 +417,12 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 						public void run() {
 							StructuredSelection sel = (StructuredSelection) python2Envs.getSelection();
 							String selectedPython2Element = (String) sel.getFirstElement();
-							try {
-								callCondaAndMonitorExecution(messagePythonConda, "env", "remove", "-n", selectedPython2Element, "-y");
-								envsMaps = null;
-								fillCondaEnvsforPython(condaPath, messagePythonConda, compositePythonConda);
+							//callCondaAndMonitorExecution(messagePythonConda, "env", "remove", "-n", selectedPython2Element, "-y");
+							CondaEnvironmentManager.deleteEnvironment(selectedPython2Element, null);
+							CondaEnvironmentManager.removeEnvironmentEntry(selectedPython2Element);
+							envsMaps = null;
+							fillCondaEnvsforPython(condaPath, messagePythonConda, compositePythonConda);
 
-
-							} catch (IOException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-							
 						}
 					});
 					break;
@@ -513,15 +510,11 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 						public void run() {
 							StructuredSelection sel = (StructuredSelection) python3Envs.getSelection();
 							String selectedPython3Element = (String) sel.getFirstElement();
-							try {
-								callCondaAndMonitorExecution(messagePythonConda, "env", "remove", "-n", selectedPython3Element, "-y");
-								envsMaps = null;
-								fillCondaEnvsforPython(condaPath, messagePythonConda, compositePythonConda);
-
-							} catch (IOException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
+							//callCondaAndMonitorExecution(messagePythonConda, "env", "remove", "-n", selectedPython3Element, "-y");
+							CondaEnvironmentManager.deleteEnvironment(selectedPython3Element, null);
+							CondaEnvironmentManager.removeEnvironmentEntry(selectedPython3Element);
+							envsMaps = null;
+							fillCondaEnvsforPython(condaPath, messagePythonConda, compositePythonConda);
 							
 						}
 					});

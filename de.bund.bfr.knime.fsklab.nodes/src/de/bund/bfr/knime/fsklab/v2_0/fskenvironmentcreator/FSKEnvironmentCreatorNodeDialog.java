@@ -50,6 +50,7 @@ import org.knime.conda.Conda;
 import org.knime.conda.CondaPackageSpec;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeDialogPane;
+import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
@@ -57,6 +58,7 @@ import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.workflow.FlowVariable;
 import org.knime.core.node.workflow.VariableType;
+import de.bund.bfr.knime.fsklab.preferences.CondaEnvironmentManager;
 
 class FSKEnvironmentCreatorNodeDialog extends NodeDialogPane {
 
@@ -227,13 +229,11 @@ class FSKEnvironmentCreatorNodeDialog extends NodeDialogPane {
       gbc.gridwidth = 2;
       JButton createEnvButton = new JButton("Create Environment");
       panel.add(createEnvButton, gbc);
-
+      
+      
       createEnvButton.addActionListener(e -> {
           String environmentName = envNameTextField.getText();
-          if (environmentName.isEmpty()) {
-              JOptionPane.showMessageDialog(panel, "Environment name is required.", "Warning", JOptionPane.WARNING_MESSAGE);
-              return;
-          }
+   
           
           String languageWrittenIn = (String) languageComboBox.getSelectedItem();
           String[] depArray = new String[tableModel.getRowCount()];
@@ -245,7 +245,7 @@ class FSKEnvironmentCreatorNodeDialog extends NodeDialogPane {
           EnvironmentStatus envStatus = EnvironmentManager.createEnvironment(environmentName, languageWrittenIn, depArray, tableModel, panel, this, m_status,((String) versionComboBox.getSelectedItem()), null);
           if (!envStatus.isEnvExist()) {
               AtomicBoolean success = new AtomicBoolean(false);
-              waitForEnvironmentCreationAsync(m_status, logTextArea, success);
+              waitForEnvironmentCreationAsync(m_status, logTextArea, success, environmentName);
               if (!success.get())
                   throw new IllegalStateException("An issue occurred during creating environment: " + environmentName);
           }else {
@@ -277,52 +277,66 @@ class FSKEnvironmentCreatorNodeDialog extends NodeDialogPane {
   private void waitForEnvironmentCreationAsync(
           FSKCondaEnvironmentCreationObserver.CondaEnvironmentCreationStatus m_status,
           JTextArea logTextArea,
-          AtomicBoolean successFlag) {
-
+          AtomicBoolean successFlag, String environmentName) {
+    
       new Thread(() -> {
           int timeout = 1800000; // 30 minutes
           int elapsed = 0;
           int interval = 500;    // 0.5 seconds
-
-          while (elapsed < timeout) {
+          boolean errorOccurred = false; // Flag to track errors
+    
+          while (elapsed < timeout && !errorOccurred) {
               String statusMessage = m_status.getStatusMessage().getStringValue();
-
+    
               // Update logTextArea safely in the Swing UI thread
               SwingUtilities.invokeLater(() -> {
                   logTextArea.append(statusMessage + "\n");
                   logTextArea.setCaretPosition(logTextArea.getDocument().getLength()); // Auto-scroll
               });
-
-              System.out.println(statusMessage); // Also log to console
-
+    
+              NodeLogger.getLogger(FSKCondaEnvironmentCreationObserver.class).debug(statusMessage);
+              // Check for error condition and stop the process
+              if (statusMessage.contains("Environment creation failed") || statusMessage.contains("Exception")) {
+                  errorOccurred = true;
+                  SwingUtilities.invokeLater(() -> {
+                      logTextArea.append("Error: " + statusMessage + "\n");
+                  });
+                  CondaEnvironmentManager.removeEnvironmentEntry(environmentName);
+                  break; // Break the loop if an error occurs
+              }
+    
               // Success condition
               if (statusMessage.contains("New environment's name") ||
                   statusMessage.contains("already exists. Please use a different, unique name")) {
-
+    
                   successFlag.set(true); // Mark environment creation as successful
                   return;
               }
-
+    
               try {
                   Thread.sleep(interval);
               } catch (InterruptedException e) {
-                  e.printStackTrace();
-                  return;
+                  // Thread was interrupted
+                  Thread.currentThread().interrupt(); // Mark the thread as interrupted
+                  return; // Exit the method if interrupted
               }
-
+    
               elapsed += interval;
           }
-
-          // If we reach here, it means timeout occurred
-          SwingUtilities.invokeLater(() -> {
-              JOptionPane.showMessageDialog(null,
-                  "Environment creation timed out after 30 minutes.",
-                  "Timeout",
-                  JOptionPane.ERROR_MESSAGE);
-          });
-
+    
+          // If we reach here and no error occurred, it means timeout occurred
+          if (!errorOccurred) {
+              SwingUtilities.invokeLater(() -> {
+                  JOptionPane.showMessageDialog(null,
+                          "Environment creation timed out after 30 minutes.",
+                          "Timeout",
+                          JOptionPane.ERROR_MESSAGE);
+              });
+          }
       }).start();
-  }
+    }
+
+
 
 
 
@@ -367,8 +381,8 @@ class FSKEnvironmentCreatorNodeDialog extends NodeDialogPane {
 
       flowVars.forEach((key, value) -> {
           if (key.equals("packages") && firstLoad) {
-              addNewPackage(EnvironmentManager.convertCommaSeparatedStringToArray(value.getStringValue()));
-              additionalDependencies = EnvironmentManager.getPackages(value.getStringValue());
+              addNewPackage(CondaEnvironmentManager.convertCommaSeparatedStringToArray(value.getStringValue()));
+              additionalDependencies = CondaEnvironmentManager.getPackages(value.getStringValue());
               firstLoad = false;
           } else if (key.equals("LanguageWrittenIn")) {
               String language = value.getStringValue();
