@@ -153,51 +153,84 @@ public class CondaEnvironmentManager {
 	    
 	   
 	    public static void deleteEnvironment(String envName, ExecutionContext exec) {
-	      try {
-	          ProcessBuilder builder = new ProcessBuilder("conda", "remove", "--name", envName, "--all", "-y");
-	          builder.redirectErrorStream(true); // Merge error and output streams
-	          Process process = builder.start();
+	        List<String> errorList = Collections.synchronizedList(new ArrayList<>());
+	        String os = System.getProperty("os.name").toLowerCase();
+	        boolean isWindows = os.contains("win");
 
-	          // Read and log output from the process
-	          try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
-	              String line;
-	              while ((line = reader.readLine()) != null) {
-	                if(exec!=null)  {
-	                  exec.setMessage("[Conda Remove] " + line); 
-	                  NodeLogger.getLogger(CondaEnvironmentManager.class).info("[Conda Remove] " + line);
+	        // Update this to your known Conda installation root
+	        String condaRoot = "/Users/" + System.getProperty("user.name") + "/opt/anaconda3";
+	        String condaSh = condaRoot + "/etc/profile.d/conda.sh";
+
+	        String deleteCommand;
+	        ProcessBuilder builder;
+
+	        if (isWindows) {
+	            deleteCommand = "conda remove --name " + envName + " --all -y";
+	            builder = new ProcessBuilder("cmd.exe", "/c", deleteCommand);
+	        } else {
+	            deleteCommand = "source \"" + condaSh + "\" && conda deactivate && conda remove --name " + envName + " --all -y";
+	            builder = new ProcessBuilder("/bin/bash", "-c", deleteCommand);
+	        }
+
+	        try {
+	            Process process = builder.start();
+
+	            Thread outputThread = new Thread(() -> {
+	                try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+	                    String line;
+	                    while ((line = reader.readLine()) != null) {
+	                        if (exec != null) {
+	                            exec.setMessage("[Conda Remove] " + line);
+	                            NodeLogger.getLogger(CondaEnvironmentManager.class).info("[Conda Remove] " + line);
+	                        } else {
+	                            System.out.println("[Conda Remove] " + line);
+	                            NodeLogger.getLogger(CondaEnvironmentManager.class).info("[Conda Remove] " + line);
+	                        }
+	                    }
+	                } catch (IOException e) {
+	                    e.printStackTrace();
 	                }
-	                else {
-	                  System.out.println("[Conda Remove] " + line);
-	                  NodeLogger.getLogger(CondaEnvironmentManager.class).info("[Conda Remove] " + line);
+	            });
 
+	            Thread errorThread = new Thread(() -> {
+	                try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream()))) {
+	                    String line;
+	                    while ((line = reader.readLine()) != null) {
+	                        errorList.add(line);
+	                    }
+	                } catch (IOException e) {
+	                    e.printStackTrace();
 	                }
-	                
-	              }
-	          }
+	            });
 
-	          int exitCode = process.waitFor();
-	          if (exitCode == 0) {
-	            if(exec!=null)  {
-	              NodeLogger.getLogger(CondaEnvironmentManager.class).info("Successfully deleted Conda environment: " + envName);
-	            }
-	            else {
-	              NodeLogger.getLogger(CondaEnvironmentManager.class).info("Successfully deleted Conda environment: " + envName);
-	            }
-	          } else {
-	            if(exec!=null)  {
-	              exec.setMessage("Failed to delete Conda environment: " + envName + " with exit code " + exitCode);
-	              NodeLogger.getLogger(CondaEnvironmentManager.class).info("Failed to delete Conda environment: " + envName + " with exit code " + exitCode);
+	            outputThread.start();
+	            errorThread.start();
 
-	            }
-	            else {
-	              NodeLogger.getLogger(CondaEnvironmentManager.class).info("Failed to delete Conda environment: " + envName + " with exit code " + exitCode);
+	            int exitCode = process.waitFor();
+	            outputThread.join();
+	            errorThread.join();
 
+	            if (exitCode == 0) {
+	                String msg = " Successfully deleted Conda environment: " + envName;
+	                if (exec != null) exec.setMessage(msg);
+	                NodeLogger.getLogger(CondaEnvironmentManager.class).info(msg);
+	            } else {
+	                String msg = " Failed to delete Conda environment: " + envName + " with exit code " + exitCode;
+	                if (exec != null) exec.setMessage(msg);
+	                NodeLogger.getLogger(CondaEnvironmentManager.class).warn(msg);
 	            }
-	          }
-	      } catch (IOException | InterruptedException e) {
-	          e.printStackTrace();
-	      }
-	  }
+
+	            if (!errorList.isEmpty()) {
+	                String errors = String.join("\n", errorList);
+	                System.err.println("Errors during Conda delete:\n" + errors);
+	                NodeLogger.getLogger(CondaEnvironmentManager.class).warn("Errors during Conda delete:\n" + errors);
+	            }
+
+	        } catch (IOException | InterruptedException e) {
+	            e.printStackTrace();
+	        }
+	    }
+
 
 
 	    public static Map<String, Set<String>> loadExistingEnvironments() {
