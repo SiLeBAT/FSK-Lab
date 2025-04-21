@@ -53,13 +53,13 @@ import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import javax.swing.filechooser.FileSystemView;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.knime.conda.CondaEnvironmentIdentifier;
-import org.knime.core.node.KNIMEConstants;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.util.FileUtil;
 import org.knime.core.util.KNIMETimer;
@@ -68,6 +68,7 @@ import org.rosuda.REngine.Rserve.RserveException;
 
 import com.sun.jna.Platform;
 
+import de.bund.bfr.knime.fsklab.preferences.CondaEnvironmentManager;
 import de.bund.bfr.knime.fsklab.preferences.DefaultRPreferenceProvider;
 import de.bund.bfr.knime.fsklab.preferences.PreferenceInitializer;
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
@@ -170,11 +171,15 @@ public class RConnectionFactory {
 	    			    " --vanilla");
 	    	} else {
 
-	    		builder.command("/bin/bash", "/c",
-	    			    "conda activate "+condaEnv.getName()+" && " + 
-	    			    command + " --RS-port " + port.toString() + 
-	    			    " --RS-conf " + configFile.getAbsolutePath() + 
-	    			    " --vanilla");
+	    		Path condaPath = CondaEnvironmentManager.findConda(); // path to "conda" binary
+
+	    		builder.command(
+	    		    condaPath.toString(), "run", "-n", condaEnv.getName(),
+	    		    command, "--RS-port", port.toString(),
+	    		    "--RS-conf", configFile.getAbsolutePath(),
+	    		    "--vanilla"
+	    		);
+
 	        }
 		}
 
@@ -274,7 +279,7 @@ public class RConnectionFactory {
 	                }
 	            } catch (RserveException e) {
 	                LOGGER.debug("Attempt (" + i + "/5) to connect to Rserve failed.", e);
-	                Thread.sleep(2 ^ i * 100);
+	                Thread.sleep(2 ^ i * 1000);
 	            }
 	        }
 

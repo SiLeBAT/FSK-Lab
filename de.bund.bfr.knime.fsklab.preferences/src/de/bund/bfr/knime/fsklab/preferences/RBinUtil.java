@@ -54,7 +54,6 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.Platform;
 import org.knime.conda.CondaEnvironmentIdentifier;
-import org.knime.core.node.KNIMEConstants;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.util.FileUtil;
 
@@ -167,7 +166,10 @@ public class RBinUtil {
 	        if (os.contains("win")) {
 	    		builder.command("cmd.exe", "/c", "conda activate "+rpref.getCondaEnvName()+" && Rscript --vanilla --verbose " + rCommandFile.getName() + " " + rOutFile.getName());
 	        } else {
-	            builder.command("/bin/bash", "/c", "conda activate "+rpref.getCondaEnvName()+" && Rscript --vanilla --verbose " + rCommandFile.getName() + " " + rOutFile.getName());
+	        	Path path = CondaEnvironmentManager.findConda();
+	        	builder.command(path.toString(), "run", "-n", rpref.getCondaEnvName(),
+	        	        "Rscript", "--vanilla", "--verbose",
+	        	        rCommandFile.getName(), rOutFile.getName());	        
 	        }
 		}else {
 			builder.command(rpref.getRBinPath("Rscript").toString(), "--vanilla", "--verbose", rCommandFile.getName(),
@@ -250,6 +252,7 @@ public class RBinUtil {
 
 		return props;
 	}
+	
 
 	/**
 	 * Writes the given string into a file and returns it.

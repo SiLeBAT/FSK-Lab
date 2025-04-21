@@ -19,11 +19,10 @@
 package de.bund.bfr.knime.fsklab.v2_0.fskenvironmentcreator;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.apache.commons.lang.StringUtils;
 import org.knime.conda.Conda;
 import org.knime.conda.CondaEnvironmentIdentifier;
@@ -40,7 +39,6 @@ import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.flowvariable.FlowVariablePortObject;
-import org.knime.core.node.util.CheckUtils;
 import org.knime.core.node.workflow.FlowVariable;
 import org.knime.core.node.workflow.VariableType;
 import de.binfalse.bflog.LOGGER;
@@ -110,6 +108,7 @@ public class FSKEnvironmentCreatorNodeModel extends NoInternalsModel {
       
       // If environment name is not set, create a new one
       if (environmentName == null || environmentName.isEmpty()) {
+        
           envCreationLock.lock();
           try {
               if (environmentName == null || environmentName.isEmpty()) {
@@ -120,14 +119,30 @@ public class FSKEnvironmentCreatorNodeModel extends NoInternalsModel {
 
                   if (!envStatus.isEnvExist()) {
                       boolean success = waitForEnvironmentCreation(m_status, exec);
-                      if (!success)
+                      if (!success) {
+                        List<String> versionFallbacks = generateVersionFallbacks(envStatus.version);
+
+                        for (String fallbackVersion : versionFallbacks) {
+                           CondaEnvironmentManager.removeEnvironmentEntry(modelId);
+                           m_status = new FSKCondaEnvironmentCreationObserver.CondaEnvironmentCreationStatus();
+
+                           envStatus = EnvironmentManager.createEnvironment(
+                              modelId, languageWrittenIn, additionalDependencies, null, null, null, m_status, fallbackVersion, exec);
+                           success = waitForEnvironmentCreation(m_status, exec);
+                           if (success) {
+                             break;
+                           }
+                        }
+                        if (!success)
                           throw new IllegalStateException("An issue occurred during creating environment: " + environmentName);
+                      }
                   }
                   environmentName = envStatus.getEnvironmentName();
               }
           } finally {
               envCreationLock.unlock();
           }
+        
       }
 
       
@@ -145,7 +160,36 @@ public class FSKEnvironmentCreatorNodeModel extends NoInternalsModel {
 
       return new PortObject[]{FlowVariablePortObject.INSTANCE};
   }
+  
+  /**
+   * Generate version fallback options: full version -> major.minor.* -> major.*
+   * @param version Original version string
+   * @return List of fallback versions
+   */
+  private static List<String> generateVersionFallbacks(String version) {
+      List<String> fallbacks = new ArrayList<>();
+  
+      if (version != null && !version.isBlank()) {
+          String[] parts = version.trim().split("\\.");
+  
+          // Step 1: Try exact major.minor version with wildcard (e.g., 3.6 -> 3.6.*)
+          if (parts.length >= 2) {
+              fallbacks.add(parts[0] + "." + parts[1] + ".*");
+          }
+  
+          // Step 2: Try major version only with wildcard (e.g., 3 -> 3.*)
+          if (parts.length >= 1) {
+              fallbacks.add(parts[0] + ".*");
+          }
+      }
+  
+      // Step 3: Fallback with no version specified
+      fallbacks.add(""); 
+  
+      return fallbacks;
+  }
 
+  
   private boolean waitForEnvironmentCreation(FSKCondaEnvironmentCreationObserver.CondaEnvironmentCreationStatus m_status, ExecutionContext exec) throws InterruptedException {
       int timeout = 1800000; // Set a 30 Minutes timeout
       int elapsed = 0;
@@ -158,10 +202,12 @@ public class FSKEnvironmentCreatorNodeModel extends NoInternalsModel {
           NodeLogger.getLogger(FSKCondaEnvironmentCreationObserver.class).debug(statusMessage);
 
           LOGGER.info(statusMessage);
-          
+          System.out.println(statusMessage);
           // Check if the environment creation is finished
           if (statusMessage.contains("New environment's name") || statusMessage.contains("already exists. Please use a different, unique name")) {
               return true;
+          }else if (statusMessage.contains("Environment creation failed")) {
+              return false;
           }
           
           // Sleep for 500ms and increment elapsed time

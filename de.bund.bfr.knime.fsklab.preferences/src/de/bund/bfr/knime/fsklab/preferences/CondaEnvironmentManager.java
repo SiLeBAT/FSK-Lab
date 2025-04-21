@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,6 +16,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -58,14 +60,14 @@ public class CondaEnvironmentManager {
 	     *   - `pyyaml`: YAML file parsing and writing.
 	     */
 	      public static String getPython3EnvContent(String envName, String version) {
-	        String pythonVersion = (version != null && !version.isEmpty()) ? version : "3.9";
+	        
 	        return "name: " + envName + "\n"
 	               + "channels:\n"
 	               + "  - knime\n"
 	               + "  - conda-forge\n"
 	               + "  - defaults\n"
 	               + "dependencies:\n"
-	               + "  - python=" + pythonVersion + "\n"
+	               + "  - python=" + version + "\n"
 	               + "  - knime-python-scripting\n"
 	               + "  - descartes\n"
 	               + "  - geopandas\n"
@@ -100,13 +102,12 @@ public class CondaEnvironmentManager {
 	     *   - `pyyaml`: YAML file parsing and writing.
 	     */
 	    public static String getPython2EnvContent(String envName, String version) {
-	        String pythonVersion = (version != null && !version.isEmpty()) ? version : "2.7";
 	        return "name: " + envName + "\n"
 	               + "channels:\n"
 	               + "  - conda-forge\n"
 	               + "  - defaults\n"
 	               + "dependencies:\n"
-	               + "  - python=" + pythonVersion + "\n"
+	               + "  - python=" + version + "\n"
 	               + "  - numpy\n"
 	               + "  - pandas\n"
 	               + "  - scikit-learn\n"
@@ -168,8 +169,11 @@ public class CondaEnvironmentManager {
 	            deleteCommand = "conda remove --name " + envName + " --all -y";
 	            builder = new ProcessBuilder("cmd.exe", "/c", deleteCommand);
 	        } else {
-	            deleteCommand = "source \"" + condaSh + "\" && conda deactivate && conda remove --name " + envName + " --all -y";
-	            builder = new ProcessBuilder("/bin/bash", "-c", deleteCommand);
+	            builder = new ProcessBuilder();
+	            Path condaPath = CondaEnvironmentManager.findConda(); // points to "conda"
+	            builder.command(
+	                condaPath.toString(), "remove", "--name", envName, "--all", "-y"
+	            );
 	        }
 
 	        try {
@@ -304,8 +308,6 @@ public class CondaEnvironmentManager {
 	        String language = langAndVer[0];
 	        String version = langAndVer[1];
 	        existingEnvs.put(envName, requiredPackages);
-	        if(language != null && language.startsWith("R"))
-	          version =  version.startsWith("3") ? "3.6.3" : "4.1.0";
 	        try (FileWriter writer = new FileWriter(ENV_FILE_PATH, true)) { // append mode = true
 	            writer.write(envName + ";" + language + ";" + version + ";" + String.join(",", requiredPackages) + "\n");
 	        } catch (IOException e) {
@@ -362,72 +364,66 @@ public class CondaEnvironmentManager {
 	      }
 	      return result;
 	    }
-	    // Generic method to fetch available versions from Conda
-	    public static Set<String> fetchVersions(String packageName, String filter) {
-	      Set<String> versions = Collections.synchronizedSet(new TreeSet<>());
-	      List<String> errorList = Collections.synchronizedList(new ArrayList<>());
+	    
+	    public static Path findConda() {
+		    /* If we’re already in an activated env, CONDA_EXE is exact. */
+		    String exe = System.getenv("CONDA_EXE");
+		    if (exe != null && Files.isExecutable(Path.of(exe)))
+		        return Path.of(exe);
 
-	      ProcessBuilder builder = new ProcessBuilder();
-	      String os = System.getProperty("os.name").toLowerCase();
-	      String command = "conda search " + packageName + " -c conda-forge";
+		    /*  If $PATH already points to a real file, use that. */
+		    Path onPath = firstExecutableOnPath(isWindows() ? "conda.bat" : "conda");
+		    if (onPath != null) return onPath;
 
-	      // Command configuration for cross-platform compatibility
-	      if (os.contains("win")) {
-	          builder.command("cmd.exe", "/c", command);
-	      } else {
-	          builder.command("/bin/bash", "-c", command);
-	      }
+		    /*   macOS/Linux: spawn the user’s login shell and ask it. */
+		    if (!isWindows()) {
+		        String shell = Optional.ofNullable(System.getenv("SHELL"))
+		                               .orElse("/bin/bash");
+		        String base = runCommand(shell, "-l", "-i", "-c", "conda info --base 2>/dev/null");
+		        if (base != null && !base.isBlank()) {
+		            Path exe4 = Path.of(base.trim(), "bin", isWindows() ? "conda.bat" : "conda");
+		            if (Files.isExecutable(exe4)) return exe4;
+		        }
 
-	      try {
-	          final Process process = builder.start();
+		    }
 
-	          // Read output in a separate thread
-	          Thread outputThread = new Thread(() -> {
-	              try (BufferedReader outputReader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
-	                  String line;
-	                  while ((line = outputReader.readLine()) != null) {
-	                      if (line.startsWith(filter)) {
-	                          String[] columns = line.trim().split("\\s+");
-	                          if (columns.length > 1) {
-	                              versions.add(columns[1]);
-	                          }
-	                      }
-	                  }
-	              } catch (IOException e) {
-	                  e.printStackTrace();
-	              }
-	          });
+		    /*   Windows: use the built‑in ‘where’. */
+		    if (isWindows()) {
+		        String path = runCommand("cmd.exe", "/c", "where conda.bat");
+		        if (path != null && Files.isExecutable(Path.of(path)))
+		            return Path.of(path);
+		    }
 
-	          // Read errors in a separate thread
-	          Thread errorThread = new Thread(() -> {
-	              try (BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()))) {
-	                  String line;
-	                  while ((line = errorReader.readLine()) != null) {
-	                      errorList.add(line);
-	                  }
-	              } catch (IOException e) {
-	                  e.printStackTrace();
-	              }
-	          });
+		    throw new IllegalStateException(
+		        "Conda executable not found – add it to PATH or set CONDA_EXE");
+		}
+	    private static String runCommand(String... cmd) {
+		    try {
+		        Process p = new ProcessBuilder(cmd).redirectErrorStream(true).start();
+		        try (BufferedReader br = new BufferedReader(
+		                 new InputStreamReader(p.getInputStream()))) {
+		            String line = br.readLine();          // only need the first
+		            if (p.waitFor() == 0 && line != null && !line.isBlank())
+		                return line.trim();
+		        }
+		    } catch (IOException | InterruptedException ignored) {}
+		    return null;
+		}
 
-	          outputThread.start();
-	          errorThread.start();
-	          int exitCode = process.waitFor();
-	          outputThread.join();
-	          errorThread.join();
-
-	          System.out.println(packageName + " version fetch process finished with exit code: " + exitCode);
-
-	          if (!errorList.isEmpty()) {
-	              System.err.println("Errors from Conda process: " + String.join("\n", errorList));
-	          }
-
-	      } catch (IOException | InterruptedException e) {
-	          e.printStackTrace();
-	      }
-
-	      return versions;
-	  }
+		/* ---------- helpers -------------------------------------------------- */
+		private static boolean isWindows() {
+		    return System.getProperty("os.name").toLowerCase().contains("win");
+		}
+		private static Path firstExecutableOnPath(String name) {
+		    String p = System.getenv("PATH");
+		    if (p == null) return null;
+		    for (String dir : p.split(File.pathSeparator)) {
+		        Path cand = Paths.get(dir, name);
+		        if (Files.isExecutable(cand)) return cand;
+		    }
+		    return null;
+		}
+	    
 
 	  public static Set<String> fetchPythonVersions() {
 	    return new TreeSet<>(Set.of(

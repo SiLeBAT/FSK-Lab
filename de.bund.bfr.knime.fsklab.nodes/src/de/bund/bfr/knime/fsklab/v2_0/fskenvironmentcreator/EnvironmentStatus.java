@@ -4,7 +4,7 @@ public class EnvironmentStatus {
   
   public String EnvironmentName;
   public boolean envExist;
-  
+  public String version;
   public EnvironmentStatus(String environmentName, boolean envExist) {
     EnvironmentName = environmentName;
     this.envExist = envExist;

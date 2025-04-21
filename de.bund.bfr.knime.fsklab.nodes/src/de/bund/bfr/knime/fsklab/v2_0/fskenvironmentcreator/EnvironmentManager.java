@@ -43,23 +43,27 @@ public class EnvironmentManager {
           int majorVersion = 4;
 
           if (languageWrittenIn.toLowerCase().startsWith("python 2")) {
+              version = (version != null && !version.isEmpty()) ? version : "2.7";
               yamlContent.append(CondaEnvironmentManager.getPython2EnvContent(environmentName, version));
               condaVersion = CondaEnvVersion.PYTHON2;
               majorVersion = 2;
           } else if (languageWrittenIn.toLowerCase().startsWith("python 3")) {
+              version = (version != null && !version.isEmpty()) ? version : "3.9";
               yamlContent.append(CondaEnvironmentManager.getPython3EnvContent(environmentName, version));
               condaVersion = CondaEnvVersion.PYTHON3;
               majorVersion = 3;
           } else if (languageWrittenIn.toLowerCase().startsWith("r 3")) {
+              version = (version != null && !StringUtils.isEmpty(version) ? version : "3.6.3");
               yamlContent.append(CondaEnvironmentManager.getR3EnvContent(environmentName, version));
               condaVersion = CondaEnvVersion.R3;
               majorVersion = 3;
           } else if (languageWrittenIn.toLowerCase().startsWith("r 4")) {
+              version = (version != null && !StringUtils.isEmpty(version)?version:"4.1.0");
               yamlContent.append(CondaEnvironmentManager.getR4EnvContent(environmentName, version));
               condaVersion = CondaEnvVersion.R4;
               majorVersion = 4;
           }
-
+          envStatus.version = version;
           Set<String> requiredPackages = new HashSet<>();
           if (additionalDependencies != null) {
               requiredPackages.addAll(Arrays.asList(additionalDependencies));
@@ -99,13 +103,13 @@ public class EnvironmentManager {
               yamlContent.append("  - ").append(languageWrittenIn.toLowerCase().startsWith("r")? "r-"+pkg:pkg).append("\n");
           }
 
-          // **🔹 Step 2: Write the YAML Content to File**
+          // ** Step 2: Write the YAML Content to File**
           tempYamlFile = File.createTempFile("conda_env_", ".yaml");
           try (FileWriter writer = new FileWriter(tempYamlFile)) {
               writer.write(yamlContent.toString());
           }
 
-          // **🔹 Step 3: Start Environment Creation**
+          // ** Step 3: Start Environment Creation**
           FSKCondaEnvironmentCreationObserver obs = new FSKCondaEnvironmentCreationObserver(condaVersion);
           obs.startEnvironmentCreation(environmentName, tempYamlFile.getAbsolutePath(), new Version(majorVersion, 0, 0), instance != null ? instance.m_status : m_status);
 
@@ -113,6 +117,7 @@ public class EnvironmentManager {
           JOptionPane.showMessageDialog(panel, "An error occurred: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
           ex.printStackTrace();
       }
+      
       return envStatus;
   }
 
