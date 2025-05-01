@@ -37,6 +37,9 @@ public class EnvironmentManager {
     public static EnvironmentStatus createEnvironment(String environmentName, String languageWrittenIn, String[] additionalDependencies, DefaultTableModel tableModel, JPanel panel, FSKEnvironmentCreatorNodeDialog instance, CondaEnvironmentCreationStatus m_status, String version, ExecutionContext exec) {
       File tempYamlFile = null;
       EnvironmentStatus envStatus = new EnvironmentStatus(environmentName, false);
+      List<String> cleanedDependencies = Arrays.stream(additionalDependencies)
+          .filter(s -> s != null && !s.trim().isEmpty())
+          .collect(Collectors.toList());
       try {
           StringBuilder yamlContent = new StringBuilder();
           CondaEnvVersion condaVersion = CondaEnvVersion.R4;
@@ -63,10 +66,11 @@ public class EnvironmentManager {
               condaVersion = CondaEnvVersion.R4;
               majorVersion = 4;
           }
+          
           envStatus.version = version;
           Set<String> requiredPackages = new HashSet<>();
-          if (additionalDependencies != null) {
-              requiredPackages.addAll(Arrays.asList(additionalDependencies));
+          if (cleanedDependencies != null) {
+              requiredPackages.addAll(cleanedDependencies);
           }
 
           Map<String, Set<String>> existingEnvs = CondaEnvironmentManager.loadExistingEnvironments();
@@ -100,6 +104,7 @@ public class EnvironmentManager {
 
           // ** Step 1: Append Required Packages to YAML Content**
           for (String pkg : requiredPackages) {
+            if(StringUtils.isEmpty(pkg))  
               yamlContent.append("  - ").append(languageWrittenIn.toLowerCase().startsWith("r")? "r-"+pkg:pkg).append("\n");
           }
 
