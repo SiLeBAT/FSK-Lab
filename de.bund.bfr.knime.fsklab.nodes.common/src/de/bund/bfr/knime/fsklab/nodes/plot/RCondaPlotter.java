@@ -3,6 +3,7 @@ package de.bund.bfr.knime.fsklab.nodes.plot;
 import java.io.File;
 
 import org.apache.commons.io.FilenameUtils;
+import com.sun.jna.Platform;
 
 
 import de.bund.bfr.knime.fsklab.r.client.RController;
@@ -29,29 +30,28 @@ public class RCondaPlotter implements ModelPlotter {
 
 	}
 
-	private void createPlot(File file, String script, String image_type) throws Exception{
+	private void createPlot(File file, String script, String format) throws Exception {
 
-		String configCmd = "library(Cairo); options(device='png', bitmapType='cairo')";
-		// Get image path (with proper slashes)
-		final String path = FilenameUtils.separatorsToUnix(file.getAbsolutePath());
+	    String configCmd = Platform.isMac()
+	            ? "library(Cairo); options(device='png', bitmapType='cairo')"
+	            : "options(device='"+format+"')";
+	    final String path = FilenameUtils.separatorsToUnix(file.getAbsolutePath());
 
-		final String wholeScript =String.join("\n", configCmd, 
-				"Cairo(file='" + path + "',type='" + image_type + "',dpi=72,bg='white')",
-				script, "dev.off()");
-		controller.eval(wholeScript, false);
+	    controller.eval(configCmd, false);
 
-		//		 
-		// if image is empty, try with print(last_plot())
-		// this happens in rserve, if a plot is not explicitly printed
-		// (e.g. when the ggplot function is stored in a variable
-		// however, the last_plot() really only prints the very last plot
-		// thus omitting any previous ones, therefore this zig-zagging
-		if(file.length() < 1000 && !script.isBlank()) {
-			controller.eval("Cairo(file='" + path + "',type='" + image_type + "',dpi=72,bg='white')",
-					false);
-			controller.eval(script, false);
-			controller.eval("print(last_plot());dev.off()", false);
-		}
+	    String openDevice = Platform.isMac()
+	            ? "Cairo(file='" + path + "',type='" + format + "',dpi=72,bg='white')"
+	            : format + "('" + path + "')";
+	    controller.eval(openDevice, false);
+	    controller.eval(script, false);
+	    controller.eval("dev.off()", false);
+
+	    if (file.length() < 1000 && !script.isBlank()) {
+	        controller.eval(openDevice, false);
+	        controller.eval(script, false);
+	        controller.eval("print(last_plot());dev.off()", false);
+	    }
 	}
+
 
 }

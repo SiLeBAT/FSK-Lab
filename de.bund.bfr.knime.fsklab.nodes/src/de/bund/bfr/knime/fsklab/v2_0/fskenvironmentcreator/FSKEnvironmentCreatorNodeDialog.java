@@ -155,6 +155,7 @@ class FSKEnvironmentCreatorNodeDialog extends NodeDialogPane {
 
       gbc.gridx = 1;
       versionComboBox.setVisible(false);
+      versionComboBox.setEditable(true);
       panel.add(versionComboBox, gbc);
 
       // Language selection listener to load specific versions
@@ -230,7 +231,6 @@ class FSKEnvironmentCreatorNodeDialog extends NodeDialogPane {
       JButton createEnvButton = new JButton("Create Environment");
       panel.add(createEnvButton, gbc);
       
-      
       createEnvButton.addActionListener(e -> {
           String environmentName = envNameTextField.getText();
    
@@ -240,8 +240,10 @@ class FSKEnvironmentCreatorNodeDialog extends NodeDialogPane {
           for (int i = 0; i < tableModel.getRowCount(); i++) {
               depArray[i] = (String) tableModel.getValueAt(i, 0); 
           }
+          logTextArea.append(
+              "Validating the environment: running Conda’s solver in “dry run” mode (no packages are installed yet)…\n");
+          logTextArea.paintImmediately(logTextArea.getVisibleRect());
           
-
           EnvironmentStatus envStatus = EnvironmentManager.createEnvironment(environmentName, languageWrittenIn, depArray, tableModel, panel, this, m_status,((String) versionComboBox.getSelectedItem()), null);
           if (!envStatus.isEnvExist()) {
               AtomicBoolean success = new AtomicBoolean(false);
@@ -253,6 +255,7 @@ class FSKEnvironmentCreatorNodeDialog extends NodeDialogPane {
           }
           proposedEnvName = envStatus.getEnvironmentName();
       });
+
 
       // Log Text Area
       gbc.gridy++;

@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,6 +26,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import org.apache.commons.lang3.StringUtils;
+import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.util.Version;
@@ -33,7 +35,78 @@ import de.bund.bfr.knime.fsklab.v2_0.fskenvironmentcreator.FSKCondaEnvironmentCr
 
 public class EnvironmentManager {
     
-    
+  /**
+   * Runs “conda env create --dry-run …” to check whether the YAML spec
+   * can be solved, taking care of the OS‑specific launch semantics
+   * you use elsewhere (cmd / conda‑run on Windows, direct exec on Unix).
+   * @throws CanceledExecutionException 
+   */
+  public static DryRunResult runDryCreate(File yamlFile, ExecutionContext exec)
+          throws IOException, InterruptedException, CanceledExecutionException {
+      NodeLogger.getLogger(FSKCondaEnvironmentCreationObserver.class).debug("Simulate creating a Conda environment (dry-run).");
+      String os = System.getProperty("os.name").toLowerCase();
+      Path conda = CondaEnvironmentManager.findConda();   // full path to conda(.exe|.sh|.bat)
+
+      /* ---------- Build the command list ---------- */
+      List<String> cmd = new ArrayList<>();
+
+      if (os.contains("win")) {
+          /*  On Windows ProcessBuilder can’t invoke *.bat directly.
+           *  We follow the same pattern you use for RServe:
+           *  cmd.exe /c conda env create … --dry-run
+           */
+          cmd.add("cmd.exe");
+          cmd.add("/c");
+          cmd.add(conda.toString());
+      } else {
+          cmd.add(conda.toString());
+      }
+
+      /* Common part for all OSes */
+      Collections.addAll(cmd,
+              "env", "create",
+              "--file", yamlFile.getAbsolutePath(),
+              "--dry-run");
+
+      /* ---------- Launch the process ---------- */
+      ProcessBuilder pb = new ProcessBuilder(cmd);
+      pb.redirectErrorStream(true);               // merge stderr into stdout
+      Process proc = pb.start();
+
+      StringBuilder log = new StringBuilder(8_192);
+      try (BufferedReader r =
+              new BufferedReader(new InputStreamReader(proc.getInputStream()))) {
+          String line;
+          while ((line = r.readLine()) != null) {
+              if (exec != null) exec.checkCanceled();     // honour KNIME cancel
+              log.append(line).append('\n');
+          }
+      }
+
+      int rc = proc.waitFor();
+      boolean solvable = rc == 0;
+
+      /* Extra guard: some Conda versions exit 0 yet print UnsatisfiableError */
+      if (solvable && log.indexOf("UnsatisfiableError") >= 0) {
+          solvable = false;
+      }
+
+      return new DryRunResult(solvable, log.toString());
+  }
+
+  /** POJO returned by {@link #runDryCreate}. */
+  public static final class DryRunResult {
+      private final boolean solvable;
+      private final String logText;
+
+      public DryRunResult(boolean solvable, String logText) {
+          this.solvable = solvable;
+          this.logText = logText;
+      }
+      public boolean isSolvable()  { return solvable; }
+      public String  getLogText()  { return logText;  }
+  }
+
     public static EnvironmentStatus createEnvironment(String environmentName, String languageWrittenIn, String[] additionalDependencies, DefaultTableModel tableModel, JPanel panel, FSKEnvironmentCreatorNodeDialog instance, CondaEnvironmentCreationStatus m_status, String version, ExecutionContext exec) {
       File tempYamlFile = null;
       EnvironmentStatus envStatus = new EnvironmentStatus(environmentName, false);
@@ -51,7 +124,7 @@ public class EnvironmentManager {
               condaVersion = CondaEnvVersion.PYTHON2;
               majorVersion = 2;
           } else if (languageWrittenIn.toLowerCase().startsWith("python 3")) {
-              version = (version != null && !version.isEmpty()) ? version : "3.9";
+              version = (version != null && !version.isEmpty()) ? version : "3.8";
               yamlContent.append(CondaEnvironmentManager.getPython3EnvContent(environmentName, version));
               condaVersion = CondaEnvVersion.PYTHON3;
               majorVersion = 3;
@@ -61,7 +134,7 @@ public class EnvironmentManager {
               condaVersion = CondaEnvVersion.R3;
               majorVersion = 3;
           } else if (languageWrittenIn.toLowerCase().startsWith("r 4")) {
-              version = (version != null && !StringUtils.isEmpty(version)?version:"4.1.0");
+              version = (version != null && !StringUtils.isEmpty(version)?version:"4.1.3");
               yamlContent.append(CondaEnvironmentManager.getR4EnvContent(environmentName, version));
               condaVersion = CondaEnvVersion.R4;
               majorVersion = 4;
@@ -80,14 +153,13 @@ public class EnvironmentManager {
               requiredPackages.addAll(existingEnvs.get(matchedEnv.replace("PARTIAL_MATCH:", "")));
           }
          
-
+          String partialEnv = null;
           if (matchedEnv != null) {
               if (matchedEnv.startsWith("PARTIAL_MATCH:")) {
-                  String partialEnv = matchedEnv.replace("PARTIAL_MATCH:", "");
-                  CondaEnvironmentManager.deleteEnvironment(partialEnv, exec);
-                  existingEnvs.remove(partialEnv);
-                  CondaEnvironmentManager.removeEnvironmentEntry(partialEnv);
-                  environmentName = partialEnv;
+                  partialEnv = matchedEnv.replace("PARTIAL_MATCH:", "");
+                  //CondaEnvironmentManager.deleteEnvironment(partialEnv, exec);
+                  //existingEnvs.remove(partialEnv);
+                  //CondaEnvironmentManager.removeEnvironmentEntry(partialEnv);
                   envStatus.setEnvExist(false);
                   envStatus.setEnvironmentName(partialEnv);
               } else {
@@ -99,12 +171,10 @@ public class EnvironmentManager {
               JOptionPane.showMessageDialog(panel, "Environment name is required.", "Warning", JOptionPane.WARNING_MESSAGE);
               return null;
           }
-
-          CondaEnvironmentManager.updateEnvironmentFile(existingEnvs, environmentName, languageWrittenIn, version, requiredPackages);
-
+          Set<String> buitlinPackages = RBuiltIns.builtIns();
           // ** Step 1: Append Required Packages to YAML Content**
           for (String pkg : requiredPackages) {
-            if(StringUtils.isEmpty(pkg))  
+            if(!StringUtils.isEmpty(pkg) && !buitlinPackages.contains(pkg))  
               yamlContent.append("  - ").append(languageWrittenIn.toLowerCase().startsWith("r")? "r-"+pkg:pkg).append("\n");
           }
 
@@ -114,13 +184,37 @@ public class EnvironmentManager {
               writer.write(yamlContent.toString());
           }
 
+          // ---------- Dry run the solver first ----------
+          DryRunResult dryRun = runDryCreate(tempYamlFile, exec);
+          
+          if (!dryRun.isSolvable()) {
+            CondaEnvironmentManager.removeEnvironmentEntry(environmentName);
+            NodeLogger.getLogger(FSKCondaEnvironmentCreationObserver.class).debug("Conda solver could not satisfy the requested packages.\n\n"
+                + dryRun.getLogText());
+
+            
+              envStatus.status="unresolvable";
+              return envStatus;            // abort: no env deleted, nothing created
+          }
+          
+          if (partialEnv != null) {
+              environmentName = partialEnv;
+              CondaEnvironmentManager.deleteEnvironment(partialEnv, exec);
+              existingEnvs.remove(partialEnv);
+              CondaEnvironmentManager.removeEnvironmentEntry(partialEnv);
+          }
+          CondaEnvironmentManager.updateEnvironmentFile(existingEnvs, environmentName, languageWrittenIn, version, requiredPackages);
+
           // ** Step 3: Start Environment Creation**
           FSKCondaEnvironmentCreationObserver obs = new FSKCondaEnvironmentCreationObserver(condaVersion);
           obs.startEnvironmentCreation(environmentName, tempYamlFile.getAbsolutePath(), new Version(majorVersion, 0, 0), instance != null ? instance.m_status : m_status);
 
-      } catch (IOException ex) {
+      } catch (IOException | InterruptedException | CanceledExecutionException ex) {
           JOptionPane.showMessageDialog(panel, "An error occurred: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
           ex.printStackTrace();
+      } catch (Exception e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
       }
       
       return envStatus;

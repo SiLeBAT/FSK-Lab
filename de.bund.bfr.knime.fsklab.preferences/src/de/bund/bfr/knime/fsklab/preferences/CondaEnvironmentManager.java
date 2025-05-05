@@ -19,6 +19,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import javax.swing.JComboBox;
@@ -27,7 +29,6 @@ import javax.swing.SwingUtilities;
 import org.apache.commons.lang3.StringUtils;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.NodeLogger;
-
 public class CondaEnvironmentManager {
 
 	    public static final String ENV_DIR_PATH = System.getProperty("user.home") + "/.fsk";
@@ -129,6 +130,7 @@ public class CondaEnvironmentManager {
 	               + "channels:\n"
 	               + "  - defaults\n"
 	               + "  - conda-forge\n"
+	               + "  - pkgs/r\n"
 	               + "dependencies:\n"
 	               + "  - r-base="+(!StringUtils.isEmpty(version)?version:"3.6.3")+"\n"
 	               + "  - r-cairo\n"
@@ -139,20 +141,46 @@ public class CondaEnvironmentManager {
 	    }
 
 	    public static String getR4EnvContent(String envName, String version) {
-	        return "name: "+envName+"\n"
-	              + "channels:\n"
-	              + "  - conda-forge\n"
-	              + "  - defaults\n"
-	              + "dependencies:\n"
-	              + "  - r-base="+(!StringUtils.isEmpty(version)?version:"4.1.0")+"\n"
-	              + "  - r-cairo\n"
-	              + "  - r-rserve\n"
-	              + "  - r-jsonlite\n"
-	              + "  - r-svglite\n"
-	              + "  - r-minicran\n";
+
+	        final String rVersion = StringUtils.isBlank(version) ? "4.1.3" : version.trim();
+
+	        boolean cairoSupported = isCairoPrebuiltOnWin(rVersion);
+
+	        StringBuilder yml = new StringBuilder()
+	            .append("name: ").append(envName).append('\n')
+	            .append("channels:\n")
+	            .append("  - conda-forge\n")
+	            .append("  - r\n")
+	            .append("  - defaults\n")
+	            .append("dependencies:\n")
+	            .append("  - r-base=").append(rVersion).append('\n');
+
+	        if (cairoSupported) {
+	            yml.append("  - r-cairo\n");
+	        } else {
+	            yml.append("  # r-cairo      # (omitted – no Win‑64 build for R ")
+	               .append(rVersion).append(")\n");
+	        }
+
+	        yml.append("  - r-rserve\n")
+	           .append("  - r-jsonlite\n")
+	           .append("  - r-svglite\n")
+	           .append("  - r-minicran\n");
+
+	        return yml.toString();
 	    }
 	    
-	   
+	    private static boolean isCairoPrebuiltOnWin(String rVersion) {
+	        Pattern p = Pattern.compile("^(\\d+)\\.(\\d+)");
+	        Matcher m = p.matcher(rVersion);
+	        if (!m.find()) return false;           // unknown format → play safe
+	        int major = Integer.parseInt(m.group(1));
+	        int minor = Integer.parseInt(m.group(2));
+
+	        // anything before R 4 or up to 4.1.x is okay
+	        return (major < 4) || (major == 4 && minor <= 1);
+	    }
+	    
 	    public static void deleteEnvironment(String envName, ExecutionContext exec) {
 	        List<String> errorList = Collections.synchronizedList(new ArrayList<>());
 	        String os = System.getProperty("os.name").toLowerCase();
@@ -425,31 +453,26 @@ public class CondaEnvironmentManager {
 		}
 	    
 
-	  public static Set<String> fetchPythonVersions() {
-	    return new TreeSet<>(Set.of(
-	        "2.7",  
-	        "3.6",    
-	        "3.7",
-	        "3.8",
-	        "3.9",
-	        "3.10",
-	        "3.11"
-	    ));
-	  }
+		public static Set<String> fetchPythonVersions() {
+		    // Arm‑Mac support begins at 3.8
+		    return new TreeSet<>(Set.of(
+		        "3.8",
+		        "3.9",
+		        "3.10",
+		        "3.11"
+		    ));
+		}
 
-	  public static Set<String> fetchRBaseVersions() {
-	    return new TreeSet<>(Set.of(
-	        "3.6.3",    
-	        "3.3.3",
-	        "3.4.4",
-	        "3.5.3",
-	        "4.0.5",
-	        "4.1.3",
-	        "4.2.3",
-	        "4.3.3"     
-	    ));
+		public static Set<String> fetchRBaseVersions() {
+		    // Smallest set that has binaries for linux, Windows and both macOS variants
+		    return new TreeSet<>(Set.of(
+		        "3.6.3",  
+		        "4.1.3",   
+		        "4.3.3",   
+		        "4.4.3"    
+		    ));
+		}
 
-	  }
 
 	  public static void loadPythonVersions(String language, JComboBox<String> versionComboBox, Map<String, Set<String>> cachedVersions) {
 	      if (cachedVersions.containsKey(language)) {

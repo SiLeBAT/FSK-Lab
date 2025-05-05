@@ -105,7 +105,7 @@ public class FSKEnvironmentCreatorNodeModel extends NoInternalsModel {
       });
       
       String environmentName = condaEnvName.getStringValue();
-      
+
       // If environment name is not set, create a new one
       if (environmentName == null || environmentName.isEmpty()) {
         
@@ -116,18 +116,28 @@ public class FSKEnvironmentCreatorNodeModel extends NoInternalsModel {
 
                   EnvironmentStatus envStatus = EnvironmentManager.createEnvironment(
                       modelId, languageWrittenIn, additionalDependencies, null, null, null, m_status, null, exec);
-
-                  if (!envStatus.isEnvExist()) {
+                  if (envStatus.status=="unresolvable") {
+                    List<String> versionFallbacks = generateVersionFallbacks(envStatus.version);
+                    for (String fallbackVersion : versionFallbacks) {
+                       m_status = new FSKCondaEnvironmentCreationObserver.CondaEnvironmentCreationStatus();
+                       envStatus = EnvironmentManager.createEnvironment(
+                             modelId, languageWrittenIn, additionalDependencies, null, null, null, m_status, fallbackVersion, exec);
+                       if (envStatus.status=="unresolvable") 
+                         continue;
+                       boolean success  = waitForEnvironmentCreation(m_status, exec);
+                       if (success) {
+                         break;
+                       }
+                    }
+                  }else if (!envStatus.isEnvExist()) {
                       boolean success = waitForEnvironmentCreation(m_status, exec);
                       if (!success) {
                         List<String> versionFallbacks = generateVersionFallbacks(envStatus.version);
-
                         for (String fallbackVersion : versionFallbacks) {
                            CondaEnvironmentManager.removeEnvironmentEntry(modelId);
                            m_status = new FSKCondaEnvironmentCreationObserver.CondaEnvironmentCreationStatus();
-
                            envStatus = EnvironmentManager.createEnvironment(
-                              modelId, languageWrittenIn, additionalDependencies, null, null, null, m_status, fallbackVersion, exec);
+                                 modelId, languageWrittenIn, additionalDependencies, null, null, null, m_status, fallbackVersion, exec);
                            success = waitForEnvironmentCreation(m_status, exec);
                            if (success) {
                              break;
@@ -137,6 +147,7 @@ public class FSKEnvironmentCreatorNodeModel extends NoInternalsModel {
                           throw new IllegalStateException("An issue occurred during creating environment: " + environmentName);
                       }
                   }
+                   
                   environmentName = envStatus.getEnvironmentName();
               }
           } finally {
