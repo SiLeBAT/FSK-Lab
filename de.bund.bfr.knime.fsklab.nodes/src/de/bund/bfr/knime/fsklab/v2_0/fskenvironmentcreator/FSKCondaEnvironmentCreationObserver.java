@@ -2,8 +2,10 @@ package de.bund.bfr.knime.fsklab.v2_0.fskenvironmentcreator;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.knime.conda.Conda;
 import org.knime.conda.CondaCanceledExecutionException;
 import org.knime.conda.CondaEnvironmentCreationMonitor;
@@ -204,6 +206,8 @@ public class FSKCondaEnvironmentCreationObserver {
             listener.condaEnvironmentCreationFailed(status, errorMessage);
         }
     }
+
+    
 
     /**
      * @param listener A listener which will be notified about changes in the status of the any environment creation
