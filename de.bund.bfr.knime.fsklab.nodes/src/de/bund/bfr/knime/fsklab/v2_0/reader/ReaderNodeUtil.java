@@ -609,26 +609,41 @@ public class ReaderNodeUtil {
 
       // Retrieve missing libraries from CRAN
       HashSet<String> packagesSet = new HashSet<>();
-      HashSet<String> cleanedPackagesSet = new HashSet<>();
-      if (!modelScript.isEmpty()) {
-        packagesSet.addAll(languageWrittenIn.equals("r")? new RScript(modelScript).getLibraries():new PythonScript(modelScript).getLibraries());
-      }
+      
+   // Gets packages from packages entry (packages.json)
+      Optional<ArchiveEntry> packagesEntry =
+          entries.stream().filter(entry -> entry.getFormat().equals(jsonUri))
+          .filter(entry -> entry.getEntityPath().endsWith("packages.json")).findAny();
+      if (packagesEntry.isPresent()) {
+        
+        File temp = File.createTempFile("packages", ".json", new File(PreferenceInitializer.getFSKWorkingDirectory()));
+        packagesEntry.get().extractFile(temp);
+        
 
-      if (!visualizationScript.isEmpty()) {
-        packagesSet.addAll(languageWrittenIn.equals("r")? new RScript(visualizationScript).getLibraries():new PythonScript(visualizationScript).getLibraries());
-
+        // Load metadata from temporary file
+        final ObjectMapper mapper = FskPlugin.getDefault().MAPPER104;
+        JsonNode jsonNode = mapper.readTree(temp);
+       
+     // Extract package names from the JSON and add to packagesSet
+        if (jsonNode.has("PackageList") && jsonNode.get("PackageList").isArray()) {
+            JsonNode packageList = jsonNode.get("PackageList");
+            for (JsonNode packageNode : packageList) {
+                if (packageNode.has("Package")) {
+                    String packageName = packageNode.get("Package").asText();
+                    // Filter out some known issues
+                    if(packageName.contains("scikit_learn"))
+                      packageName = "scikit-learn";// replace pip name with conda name
+                    packagesSet.add(packageName);
+                    
+                    
+                }
+            }
+        }
+        temp.delete(); // Delete temporary file
       }
-
-      // Iterate over each library in packagesSet
-      for (String lib : packagesSet) {
-          // Split at the dot and take only the main library name
-          String mainLib = lib.split("\\.")[0];
-          // Add the main library name to the cleaned set
-          cleanedPackagesSet.add(mainLib);
-      }
+      
   
-     // Replace packagesSet with cleanedPackagesSet
-      packagesSet = cleanedPackagesSet;
+     
       List<String> packagesList = new ArrayList<>(packagesSet);
 
       Path workspacePath = workspace == null ? null : workspace.toPath();
@@ -898,3 +913,4 @@ public class ReaderNodeUtil {
     return new SimulationSettings(selectedSimulationIndex, simulations);
   }
 }
+

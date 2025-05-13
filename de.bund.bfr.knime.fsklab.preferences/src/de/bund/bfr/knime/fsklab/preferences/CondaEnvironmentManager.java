@@ -38,7 +38,7 @@ public class CondaEnvironmentManager {
 	     * The environment includes libraries for Data Analysis, Machine Learning, Plotting, and Utilities.
 	     *
 	     * @param envName The name of the environment.
-	     * @param version The Python 3 version, defaulting to 3.9 if empty.
+	     * @param version The Python 3 version, defaulting to 3.8 if empty.
 	     * @return A String representing the YAML configuration for the Conda environment.
 	     * 
 	     * ### Types of Libraries Included:
