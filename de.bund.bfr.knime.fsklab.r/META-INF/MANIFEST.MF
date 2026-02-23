@@ -7,6 +7,7 @@ Bundle-Activator: de.bund.bfr.knime.fsklab.r.Activator
 Bundle-Vendor: German Federal Institute for Risk Assessment (BfR)
 Require-Bundle: com.sun.jna;bundle-version="4.4.0",
  de.bund.bfr.knime.fsklab.preferences;bundle-version="1.0.0",
+ org.apache.commons.commons-io;bundle-version="2.15.1",
  org.apache.commons.lang3;bundle-version="3.3.1",
  org.eclipse.core.runtime,
  org.knime.core;bundle-version="[5.1.0,6.0.0)",

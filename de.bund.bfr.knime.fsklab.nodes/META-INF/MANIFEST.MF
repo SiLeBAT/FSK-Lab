@@ -17,6 +17,7 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations;bundle-version="2
  de.bund.bfr.knime.js;bundle-version="1.0.0",
  de.bund.bfr.knime.nodes.util;bundle-version="1.0.0",
  de.unirostock.sems.CombineArchive;bundle-version="1.2.1",
+ org.apache.commons.commons-io;bundle-version="2.15.1",
  org.apache.commons.lang;bundle-version="2.6.0",
  org.apache.commons.lang3;bundle-version="3.3.1",
  org.eclipse.ui;bundle-version="3.109.0",
